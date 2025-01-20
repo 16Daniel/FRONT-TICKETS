@@ -1,0 +1,55 @@
+<div class="container" style="height: 100vh;">
+  <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-6 col-xxl-5">
+      <div class="card border border-light-subtle rounded-4">
+        <div class="card-body p-3 p-md-4 p-xl-5">
+
+          <div class="text-center mb-4">
+            <!-- <img src="/front/planeacion/assets/img/RW_LogoWEB.png" alt="Logo" width="60%"> -->
+            <img src="/front/tickets/assets/img/RW_LogoWEB.png" alt="Logo" width="60%">
+        </div>
+        <h4 class="text-center mb-4">BIENVENID{{'@'}}</h4>
+
+          <form action="#!">
+            <div class="row gy-3 overflow-hidden">
+              <div class="col-12">
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" placeholder="name@example.com" required [(ngModel)]="email" [ngModelOptions]="{standalone: true}"> 
+                  <label class="form-label">Email</label>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating mb-3">
+                  <input [type]="typei" class="form-control" placeholder="Password" required [(ngModel)]="pass" [ngModelOptions]="{standalone: true}">
+                  <label class="form-label">Password</label>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="showpass" (click)="showpasschange()" [ngModelOptions]="{standalone: true}">
+                    <label class="form-check-label">Mostrar contraseña</label>
+                  </div>
+              </div>
+              <div class="col-12">
+                <div class="d-grid">
+                  <div class="d-flex justify-content-center" *ngIf="loading">
+                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                  </div>
+                  <button class="btn bg-p-b p-3" type="submit" (click)="onLogin()" [disabled]="loading"> INICIAR SESIÓN </button>
+                </div>
+              </div>
+
+              <div class="row m-0 mt-3">
+                V1.0
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>

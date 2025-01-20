@@ -1,0 +1,313 @@
+<div class="pt-3">
+   
+    <div class="bg-white rounded-3 p-3">
+        <div class="row align-items-center gap-3">
+          <div class="col-auto"><p class="fw-bold">FECHA INICIAL</p></div>
+          <div class="col-auto">
+            <p-calendar 
+            [(ngModel)]="fechaini" 
+            [iconDisplay]="'input'" 
+            [showIcon]="true" 
+            inputId="icondisplay" />
+        </div>
+          <div class="col-auto"><p class="fw-bold">FECHA FINAL</p></div> 
+          <div class="col-auto">
+            <p-calendar 
+            [(ngModel)]="fechafin" 
+            [iconDisplay]="'input'" 
+            [showIcon]="true" 
+            inputId="icondisplay" />
+        
+            </div>
+          <div class="col-auto"><button class="btn bg-p-b p-3" (click)="buscartk();">BUSCAR</button>
+        </div>
+        <div class="col-auto">
+            <button class="btn bg-p-b p-2" style="background-color: #FF5722;" (click)="showModalFiltros()"><i class='bx bx-filter bx-sm'></i></button>
+        </div>
+       
+        </div>
+      </div>
+
+<div *ngIf="arr_tickets.length > 0" class="bg-white p-1 mt-3">
+ 
+<div class="m-0 pb-4" style="background-color: transparent;">
+    <p-table [value]="arr_tickets" [tableStyle]="{'min-width': '10rem', 'padding':'10px'}" 
+    styleClass="p-datatable-gridlines table-tk" 
+    [scrollable]="true" scrollHeight="62vh"
+    selectionMode="single" 
+    [(selection)]="selectedtk"
+    (onRowSelect)="showticket()"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>P.</th>
+                <th>AREA</th>
+                <th>CATEGORÍA</th>
+                <th>FECHA</th>
+                <!-- <th>FECHA</th>
+                <th>FECHA FIN</th> -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tk>
+            <tr [pSelectableRow]="tk">
+                <td *ngIf="tk.prioridadsuc == 'PÁNICO'"><i class='bx bxs-hot bx-sm' style="color: red;"></i></td>
+                <td *ngIf="tk.prioridadsuc != 'PÁNICO'"><i class='bx bxs-circle bx-sm' [style]="{'color':getBgPrioridad(tk.prioridadsuc)}"></i></td>
+                <td>{{getNameProveedor(tk.idprov)}}</td>
+                <td>{{tk.nombrecategoria == null ? '':tk.nombrecategoria}}</td>
+                <td>{{tk.fecha | date}}</td>
+                <!-- <td class="text-center">
+                    <i *ngIf="tk.status == '1'" class='bx bx-dots-horizontal-rounded bx-tada bx-sm' style='color:#ff0028'></i>
+                    <i *ngIf="tk.status == '2'" class='bx bx-loader bx-rotate-180 bx-spin bx-sm' style='color:#ff7b00'  ></i>
+                    <i *ngIf="tk.status == '4'" class='bx bx-pause bx-tada bx-md' style='color:#a300ff' ></i> 
+                    <i *ngIf="tk.status == '3'" class='bx bx-check bx-tada bx-sm' style='color:#008500' ></i>
+                    <i *ngIf="tk.status == '5'" class='bx bxs-cart bx-tada bx-sm' style='color:#0200ff' ></i>
+                </td> -->
+                <!-- <td></td>
+                <td></td> -->
+            </tr>
+        </ng-template>
+    </p-table>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<p-dialog 
+    header="DETALLES TICKET" 
+    [modal]="true"
+    [(visible)]="modalticket" 
+    [style]="{ width: '50rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true">
+    
+    <div class="d-flex justify-content-between mt-3">
+        <button class="btn btn-success ms-3" (click)="showcomentarios()">CHAT <i class='bx bxl-whatsapp' ></i></button>
+    </div>
+     <p></p>
+
+     <div class="p-3" *ngIf="selectedtk!=undefined">
+       
+    
+        <div class="d-flex justify-content-center">
+            <div style="max-width: 50rem; width: 100%;">
+                    <table class="table table-bordered text-center">
+                        <thead class="table-dark">
+                        <tr>
+                            <th colspan="2"> <h5 class="text-center">{{getNameDpto(selectedtk!.idsucordpto)}}</h5></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>FECHA Y HORA</th>
+                            <td>{{selectedtk!.fecha | date}} - {{ selectedtk!.fecha | date: 'HH:mm'}}</td>
+                        </tr>
+                        <tr>
+                            <th>PRIORIDAD</th>
+                            <td> <p-tag [severity]="getseverityp(selectedtk!.prioridadsuc)" [value]="selectedtk!.prioridadsuc"/></td>
+                        </tr>
+                        <tr>
+                            <th>ÁREA</th>
+                            <td>  <p-tag [severity]="'info'" [value]="getNameProveedor(selectedtk!.idprov)"/></td>
+                        </tr>
+                        <tr>
+                            <th>CATEGORÍA</th>
+                            <td><p-tag [severity]="'secondary'" [value]="selectedtk!.nombrecategoria == null ? '':selectedtk!.nombrecategoria"/></td>
+                        </tr>
+                        <tr>
+                            <th>STATUS</th>
+                            <td><p-tag [severity]="'contrast'" [value]="getNameStatus(selectedtk!.status)"/></td>
+                        </tr>
+                        
+                        <tr>
+                            <th>SOLICITANTE</th>
+                            <td> <p class="text-center">{{selectedtk!.solicitante | uppercase}}</p></td>
+                        </tr>
+                        
+                        <tr>
+                            <th>FECHA DE FINALIZACIÓN</th>
+                            <td>{{selectedtk!.fechafin | date}} - {{ selectedtk!.fechafin | date: 'HH:mm'}}</td>
+                        </tr>
+
+                    </table>
+            </div>
+        </div>
+
+       
+            <div class="d-flex justify-content-center mb-3 gap-3 flex-wrap">
+                
+               
+                
+                
+            </div>
+     </div>
+
+    <p></p>
+    <div *ngIf="selectedtk != undefined">
+        <p-editor [(ngModel)]="selectedtk.descripcion" [readonly]="true" [style]="{ height: '100%' }" />
+    </div>
+    
+
+</p-dialog>
+
+<p-dialog 
+    header="CHAT" 
+    [modal]="true"
+    [(visible)]="modalcomentarios" 
+    [style]="{ width: '50rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true">
+
+        <div *ngIf="selectedtk != undefined && modaladdcomentario">
+            <div class="d-flex w-100"
+            *ngFor="let item of getComentariostk(selectedtk!.comentarios)"
+            [ngClass]="{'justify-content-start':esmiuid(item.uid) == false, 'justify-content-end':esmiuid(item.uid)}">
+
+                <div class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(35, 153, 221);"
+                *ngIf="esmiuid(item.uid) == false">
+                <p class="p-1" style="color: white;">{{item.nombre}}</p>
+                    <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto'}"  [readonly]="true">
+                        <ng-template pTemplate="header">
+                        </ng-template>
+                    </p-editor>
+                   </div>
+
+                   <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(163 180 201)">
+                    <p class="p-1" style="color: rgb(0, 0, 0);">{{item.nombre}}</p>
+                    <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto'}"  [readonly]="true">
+                        <ng-template pTemplate="header">
+                        </ng-template>
+                    </p-editor>
+                   </div>
+            </div> 
+        </div>
+ 
+
+</p-dialog>
+
+
+<p-dialog 
+    header="FILTRAR TICKETS" 
+    [modal]="true"
+    [(visible)]="modalfiltros" 
+    [style]="{ width: '50rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"> 
+
+    <p-dropdown 
+[options]="catproveedores"
+[(ngModel)]="filterarea"
+optionLabel="nombre"
+[filter]="true"
+filterBy="nombre" 
+[showClear]="true"
+placeholder="SELECCIONAR ÁREA"
+[style]="{width:'100%'}"
+(onChange)="changeprovFilter()"
+>
+<ng-template pTemplate="selectedItem" let-selectedOption>
+    <div class="flex align-items-center gap-2">
+        <div>{{ selectedOption.nombre }}</div>
+    </div>
+</ng-template>
+<ng-template let-dep pTemplate="item">
+    <div class="flex align-items-center gap-2">
+        <div>{{ dep.nombre }}</div>
+    </div>
+</ng-template>
+</p-dropdown>
+<p></p>
+<p-dropdown 
+[options]="catcategorias"
+[(ngModel)]="filtercategoria"
+optionLabel="name"
+[filter]="true"
+filterBy="nombre" 
+[showClear]="true"
+placeholder="SELECCIONAR CATEGORIA"
+[style]="{width:'100%'}"
+>
+    <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.nombre }}</div>
+        </div>
+    </ng-template>
+    <ng-template let-categoria pTemplate="item">
+        <div class="flex align-items-center gap-2">
+            <div>{{ categoria.nombre }}</div>
+        </div>
+    </ng-template>
+</p-dropdown>
+<P></P>
+<p-dropdown 
+[options]="[{name:'PÁNICO'},{name:'ALTA'},{name:'MEDIA'},{name:'BAJA'}]"
+[(ngModel)]="filterPrioridad"
+optionLabel="name"
+[filter]="false"
+filterBy="nombre" 
+[showClear]="true"
+placeholder="SELECCIONAR PRIORIDAD"
+[style]="{width:'100%'}"
+>
+    <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.name }}</div>
+        </div>
+    </ng-template>
+    <ng-template let-item pTemplate="item">
+        <div class="flex align-items-center gap-2">
+            <div class="d-flex justify-content-start align-items-center gap-3">
+                <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-sm rounded-3' style="color: red;"></i></td>
+                <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%;" class="p-3" [style]="{'background-color':getBgPrioridad(item.name),'width':'30px','height':'30px'}"></div>
+                <div>{{ item.name }}</div>
+            </div>
+        </div>
+    </ng-template>
+</p-dropdown>
+<p></p>
+<p-dropdown 
+[options]="catStatusT"
+[(ngModel)]="filterstatus"
+optionLabel="nombre"
+[filter]="false"
+filterBy="nombre" 
+[showClear]="true"
+placeholder="SELECCIONAR STATUS"
+[style]="{width:'100%'}"
+(onChange)="changeprov()"
+>
+<ng-template pTemplate="selectedItem" let-selectedOption>
+    <div class="flex align-items-center gap-2">
+        <div>{{ selectedOption.nombre }}</div>
+    </div>
+</ng-template>
+<ng-template let-dep pTemplate="item">
+    <div class="flex align-items-center gap-2">
+        <div>{{ dep.nombre }}</div>
+    </div>
+</ng-template>
+</p-dropdown>
+<p></p>
+
+<div style="height: 150px;"></div>
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-secondary p-3" (click)="limpiarfiltro()">LIMPIAR <i class='bx bx-brush-alt bx-sm'></i></button>
+        <button class="btn bg-p-b p-3" style="background-color: #FF5722;" (click)="filtrarT()">FILTRAR <i class='bx bx-filter bx-sm' ></i></button>
+    </div>
+
+</p-dialog>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog>
+    <ng-template pTemplate="message" let-message>
+        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+            <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+            <p>{{ message.message }}</p>
+        </div>
+    </ng-template>
+</p-confirmDialog>

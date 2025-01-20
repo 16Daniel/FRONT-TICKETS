@@ -1,0 +1,369 @@
+@import 'bootstrap/scss/bootstrap';
+@import "primeng/resources/themes/lara-light-purple/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+
+:root {
+  --white-color: #111827;
+  --grey-color: #707070;
+  --grey-color-light: #555;
+  --text-color: rgb(0, 0, 0);
+  --bgcontededor:#eee; 
+
+     /* ====== Transition ====== */
+     --tran-03: all 0.2s ease;
+     --tran-03: all 0.3s ease;
+     --tran-04: all 0.3s ease;
+     --tran-05: all 0.3s ease;
+}
+
+
+
+ $ptc:#0e98e7fb; 
+//$ptc:#d30202; 
+body {
+  background-color: #e5ebed;
+  transition: all 0.3s ease;
+  color: var(--text-color) !important;
+}
+
+.bg-p-b
+{
+    background-color: $ptc;
+    color: white;
+    border: none;
+}
+
+.bg-p-b:hover
+{
+    background-color: darken($ptc, 10%);
+    color: white;
+}
+
+
+.bg-p-l
+{
+    background-color: $ptc;
+    color: white;
+}
+.bg-g-l
+{
+    background-color: #eee;
+    color: black;
+}
+
+
+.form-check-input:checked {
+  background-color: $ptc;
+  border-color: $ptc;
+}
+
+.form-check-input:focus
+{
+  border-color: $ptc;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight {
+  border-color: $ptc;
+  background: $ptc;
+}
+
+.form-control:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid $ptc;
+}
+
+.form-select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid $ptc;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.expanded {
+  left: 78px;
+  width: calc(100% - 88px);
+  padding: 0px 0px 0px 10px;
+}
+
+
+.lds-ring {
+  /* change color here */
+  color: $ptc
+}
+.lds-ring,
+.lds-ring div {
+  box-sizing: border-box;
+}
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid currentColor;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: currentColor transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+  .bg-cont
+  {
+    background-color: var(--bgcontededor);
+  }
+
+          
+
+  .container-c {
+    width: 100%;
+    margin: auto;
+  }
+  
+  .navbar-c {
+    width: 100%;
+  }
+  
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 62px;
+  }
+  
+  .navbar-c .menu-items {
+    display: flex;
+  }
+  
+  .navbar-c .nav-container li {
+    list-style: none;
+  }
+  
+  .navbar-c .nav-container a {
+    text-decoration: none;
+    color: #000000;
+    font-weight: 500;
+    font-size: 1.2rem;
+    padding: 0.7rem;
+  }
+  
+  .navbar-c .nav-container a:hover{
+      font-weight: bolder;
+  }
+  
+  .nav-container {
+    display: block;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    height: 60px;
+    background-color: #ffffff;
+  }
+  
+  .nav-container .checkbox {
+    position: absolute;
+    display: block;
+    height: 32px;
+    width: 32px;
+    top: 20px;
+    left: 20px;
+    z-index: 5;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .nav-container .hamburger-lines {
+    display: block;
+    height: 26px;
+    width: 32px;
+    position: absolute;
+    top: 17px;
+    left: 20px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .nav-container .hamburger-lines .line {
+    display: block;
+    height: 4px;
+    width: 100%;
+    border-radius: 10px;
+    background: rgb(0, 0, 0);
+  }
+  
+  .nav-container .hamburger-lines .line1 {
+    transform-origin: 0% 0%;
+    transition: transform 0.4s ease-in-out;
+  }
+  
+  .nav-container .hamburger-lines .line2 {
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .nav-container .hamburger-lines .line3 {
+    transform-origin: 0% 100%;
+    transition: transform 0.4s ease-in-out;
+  }
+  
+  .navbar-c .menu-items {
+    padding-top: 120px;
+    height: 100vh;
+    width: 100%;
+    transform: translate(-150%);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.5s ease-in-out;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.274);
+    z-index: 3;
+    position: relative;
+    backdrop-filter: blur(10px) saturate(150%); /* Desenfoque y saturación */
+    -webkit-backdrop-filter: blur(10px) saturate(150%); 
+  }
+  
+  .navbar-c .menu-items li {
+    margin-bottom: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  
+  .logo {
+    position: absolute;
+    top: 3px;
+    right: 20px;
+    font-size: 1.2rem;
+    color: #000000;
+  }
+
+  
+  .nav-container input[type="checkbox"]:checked ~ .menu-items {
+    transform: translateX(0);
+  }
+  
+  .nav-container input[type="checkbox"]:checked ~ .hamburger-lines .line1 {
+    transform: rotate(45deg);
+  }
+  
+  .nav-container input[type="checkbox"]:checked ~ .hamburger-lines .line2 {
+    transform: scaleY(0);
+  }
+  
+  .nav-container input[type="checkbox"]:checked ~ .hamburger-lines .line3 {
+    transform: rotate(-45deg);
+  }
+  
+  .nav-container input[type="checkbox"]:checked ~ .logo{
+    display: none;
+  }
+  
+.card-g
+{
+  min-width: 15rem;
+}
+
+input[type="password" i],input[type="email" i] {
+  width: 100%;
+  height: 48px;
+  padding: 10px;
+  color: black;
+}
+
+
+
+.sttemp:after {
+  font-family:FontAwesome;
+  font-size:50px;
+  animation-duration:2s;
+  animation-iteration-count:infinite;
+  animation-timing-function:linear;
+  color:blue;
+  content:"\f2cb"
+}
+
+.cardt
+{
+  width: 20rem;
+
+}
+
+.table-tk
+{
+  table-layout: auto;
+  width: 100%;
+  font-size: medium;
+}
+
+/* Pantallas de tabletas (ancho máximo de 1024px) */
+@media (max-width: 1024px) {
+  .table-tk {
+    font-size: medium; /* Tamaño de texto para tabletas */
+  }
+}
+
+/* Pantallas de móviles (ancho máximo de 768px) */
+@media (max-width: 768px) {
+  .table-tk{
+    font-size:small; /* Tamaño de texto para móviles */
+  }
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  background: #00b0ff;
+  color: #ffffff;
+}
+
+.p-accordion-header-link
+{
+  padding: 10px;
+}
+
+ol, ul {
+  padding-left: 3px;
+}
+
+// .p-accordion .p-accordion-header .p-accordion-header-link
+// {
+//   text-decoration: none;
+//   color: rgb(65, 65, 65);
+// }
+.text-r
+{
+  text-align: right;
+}
+
+.text-l
+{
+  text-align: left;
+}

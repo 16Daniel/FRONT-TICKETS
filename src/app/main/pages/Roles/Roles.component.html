@@ -1,0 +1,149 @@
+<div class="pt-5">
+    <div class="pt-3"></div>
+
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>
+    <p-confirmDialog>
+        <ng-template pTemplate="message" let-message>
+            <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+                <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+                <p>{{ message.message }}</p>
+            </div>
+        </ng-template>
+    </p-confirmDialog>
+
+    <div class="m-2">
+        <button class="btn bg-p-b p-3 m-3" (click)="showAgregar()"><i class='bx bx-plus'></i> Agregar </button>
+    </div>
+
+    <!-- sin resultados -->
+    <div class="m-2 mt-3 bg-white p-3 shadow-sm rounded-3" *ngIf="foundData == false && loading == false">
+        <h5 class="text-center">LISTA DE ROLES</h5>
+        <div class="bg-white m-4 p-3 d-flex align-items-center rounded-3 flex-column">
+            <img src="assets/img/nodata.jpg" style="width: 80%; max-width: 25rem;">
+            <p>NO SE ENCONTRARON REGISTROS</p>
+
+        </div>
+    </div>
+
+    <!-- skeleton -->
+
+    <div class="m-2 mt-3 bg-white p-3 shadow-sm rounded-3" *ngIf="loading">
+        <div class="row m-0">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="3rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="3rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="3rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="3rem"></p-skeleton> </div>
+        </div>
+       
+        <div class="row m-0 mt-3">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+        </div>
+        <div class="row m-0 mt-2">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+        </div>
+        <div class="row m-0 mt-2">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+        </div>
+        <div class="row m-0 mt-2">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+        </div>
+        <div class="row m-0 mt-2">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+        </div>
+        <div class="row m-0 mt-2">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+        </div>
+        <div class="row m-0 mt-2">
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+            <div class="col-3"> <p-skeleton width="auto" styleClass="mb-2" height="1.5rem"></p-skeleton> </div>
+        </div>
+
+    </div>
+
+
+    <div class="m-2 mt-3" *ngIf="foundData && loading == false">
+        <h5 class="text-center">LISTA DE ROLES</h5>
+        <div class="m-4 p-3 bg-white shadow rounded-3">
+
+            <table class="table">
+                <thead >
+                    <tr>
+                        <th style="background-color: #fafafa;">DESCRIPCIÓN</th>
+                        <th style="background-color: #fafafa;"></th>
+                        <th style="background-color: #fafafa;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr *ngFor="let item of catroles; let i=index">
+                        <td>{{item.nombre}}</td>
+                        <td>
+                            <button class="btn btn-primary me-3" (click)="showEdit(item)"><i class='bx bx-edit bx-sm' ></i></button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" (click)="confirm(item.id)"><i class='bx bx-trash bx-sm' ></i></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- MODAL AGREGAR DIA ESPECIAL -->
+
+<p-dialog [header]="actualizar ? 'Actualizar' :'Agregar'" [(visible)]="modalAgregar" [modal]="true" [style]="{ 'width': '95vh', 'max-width':'50rem' }" [draggable]="false" [resizable]="false">
+      
+    <p class="text-center fw-bold">NOMBRE DEL ROL</p>
+    <input class="form-control p-3 text-center" [(ngModel)]="formdescripcion">
+
+    <P class="fw-bold mt-3 text-center">ACCESOS</P>
+
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+
+        @for (item of catrutas; track $index) 
+            {
+              <div class="col-sm-6 col-lg-3 mt-3">
+                <div class="p-3 rounded-3 card" [ngClass]="{'op-selected': selectedRoutes[$index]==1}"  (click)="chageStatusRol($index)">
+                  @if(selectedRoutes[$index]==0)
+                  {
+                    <i class='bx bx-circle bx-sm'></i>
+                  } @else
+                  {
+                    <i class='bx bxs-check-circle bx-sm color-t'></i>
+                  }
+                  {{item.descripcion}}
+                </div>
+              </div>
+            }
+    </div>
+
+    <div class="mt-3 mb-3 d-flex  justify-content-end">
+        <button class="btn bg-p-b p-3 rounded-4" (click)="saveData()" *ngIf="actualizar == false"> <i class='bx bx-save' ></i> GUARDAR</button>
+        <button class="btn bg-p-b p-3 rounded-4" (click)="updateData()" *ngIf="actualizar"> <i class='bx bx-save' ></i> ACTUALIZAR</button>
+    </div>
+
+
+</p-dialog>
+</div>

@@ -1,0 +1,190 @@
+<div style="height: 70px;"></div>
+
+<div class="d-flex justify-content-between mt-3">
+    <!-- <button class="btn btn-success ms-3" (click)="showcomentarios(itemtk!)">CHAT <i class='bx bxl-whatsapp' ></i></button> -->
+    <button *ngIf="itemtk != undefined && itemtk!.statusSuc != 'PÁNICO'" class="btn ms-3 btn-dark" (click)="panico(itemtk!.id)">
+        <i class='bx bxs-hot bx-sm' style="color: rgb(255, 255, 255);"></i>
+        &nbsp;PÁNICO
+    </button>
+</div>
+ <p></p>
+
+<div class="accordion" id="accordionExample" *ngIf="itemtk != undefined">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <i class='bx bx-info-circle bx-sm'></i>&nbsp;DESCRIPCIÓN
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          
+            <table class="table table-borderless text-center ">
+                <thead>
+                <tr>
+                    <th colspan="2" style="background-color: #eee !important;"> <span class="text-center"><span class="text-dark">ID:&nbsp;</span>{{itemtk.id}}</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="text-l">Fecha y hora</th>
+                    <td>{{getdate(itemtk!.fecha) | date}} - {{ getdate(itemtk!.fecha) | date: 'HH:mm'}}</td>
+                </tr>
+                <tr>
+                    <th class="text-l">Prioridad</th>
+                    <td class="text-center"> <p-tag [severity]="getseverityp(itemtk!.prioridadsuc)" [value]="itemtk!.prioridadsuc"/></td>
+                </tr>
+                
+                <tr>
+                    <th class="text-l">Solicitante</th>
+                    <td class="text-r"> <p class="text-center">{{itemtk!.solicitante | uppercase}}</p></td>
+                </tr>
+
+                <tr>
+                    <th class="text-l">Responsable</th>
+                    <td class="text-r"> <p class="text-center">{{getNameResponsable(itemtk!.responsable)}}</p></td>
+                </tr>
+
+                <tr *ngIf="userdata.idRol == '4'">
+                    <th class="text-l">Asistencia</th>
+                    <td class="text-r"> <p class="text-center">{{itemtk!.tiposoporte}}</p></td>
+                </tr>
+
+            </table>
+
+            <div *ngIf="itemtk != undefined">
+                <p-editor [(ngModel)]="itemtk.decripcion" [readonly]="true" [style]="{ height: '100%' }" >
+                    <ng-template pTemplate="header">
+                        <span class="ql-formats">
+                       
+                        </span>
+                    </ng-template>
+                </p-editor>
+            </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <i class='bx bx-edit bx-sm' ></i>&nbsp;ACTUALIZACIÓN
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+        
+            <div *ngIf="itemtk.tiposoporte == null && userdata.idRol=='4'">
+                <P>TIPO DE ASISTENCIA</P>
+                <select class="form-select" [(ngModel)]="formtiposoporte">
+                    <option value="FÍSICA">FÍSICA</option>
+                    <option value="REMOTA">REMOTA</option>
+                  </select>
+                  <button class="btn bg-p-b mt-3 mb-3" (click)="updateasistencia()">ACTUALIZAR</button>
+            </div>
+
+          <div *ngIf="itemtk.tiposoporte != null && userdata.idRol=='4'">
+            <p-dropdown 
+            [options]="catStatusT"
+            [(ngModel)]="formstatus"
+            optionLabel="nombre"
+            [filter]="false"
+            filterBy="nombre" 
+            [showClear]="true"
+            placeholder="SELECCIONAR STATUS"
+            [style]="{width:'100%'}"
+            >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+            </p-dropdown>
+            <button class="btn bg-p-b mt-3 mb-3" (click)="updatestatustk()">ACTUALIZAR</button>
+          </div>
+
+
+          <div class="d-flex justify-content-center mt-3 mb-3" *ngIf="userdata.idRol == '2'">
+            <button class="btn btn-success p-2" (click)="showfinalizar()"><i class='bx bx-check-circle bx-md'></i><p class="m-1">FINALIZAR</p></button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <i class='bx bx-message-square-dots bx-sm' ></i>&nbsp;CONVERSACIÓN
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+        
+
+            <div class="d-flex justify-content-end sticky-top">
+                <button class="btn bg-p-b p-2" (click)="showaddcomentario()"><i class='bx bx-message-square-add bx-sm'></i></button>
+                </div>
+        
+                <div *ngIf="itemtk != undefined" style="overflow: auto;">
+                    <div class="d-flex w-100"
+                    *ngFor="let item of itemtk!.comentarios"
+                    [ngClass]="{'justify-content-start':esmiuid(item.uid) == false, 'justify-content-end':esmiuid(item.uid)}">
+        
+                        <div class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(35, 153, 221);"
+                        *ngIf="esmiuid(item.uid) == false">
+                        <p class="p-1" style="color: white;">{{item.nombre}}</p>
+                            <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto'}"  [readonly]="true">
+                                <ng-template pTemplate="header">
+                                </ng-template>
+                            </p-editor>
+                           </div>
+        
+                           <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(163 180 201)">
+                            <p class="p-1" style="color: rgb(0, 0, 0);">{{item.nombre}}</p>
+                            <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto'}"  [readonly]="true">
+                                <ng-template pTemplate="header">
+                                </ng-template>
+                            </p-editor>
+                           </div>
+                    </div> 
+                </div>
+
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<p-dialog 
+    header="ENVIAR MENSAJE" 
+    [modal]="true"
+    [(visible)]="modaladdcomentario" 
+    [style]="{ width: '50rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true">
+<p></p>
+<p></p>
+<p-editor [(ngModel)]="formcomentario" [style]="{ height: '400px' }"/>  
+<div class="d-flex justify-content-end mt-3">
+    <button class="btn bg-p-b p-3" (click)="addComentariotk()"><i class='bx bx-send'></i>ENVIAR</button>
+</div>
+
+</p-dialog>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog>
+    <ng-template pTemplate="message" let-message>
+        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+            <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+            <p>{{ message.message }}</p>
+        </div>
+    </ng-template>
+</p-confirmDialog>
