@@ -19,7 +19,8 @@ export interface Ticket
     duracion:string|null; 
     tiposoporte:string|null; 
     iduser:string;
-    nombreCategoria:string; 
+    nombreCategoria:string;
+    folio:string;
  }
 
  export interface TicketDB
