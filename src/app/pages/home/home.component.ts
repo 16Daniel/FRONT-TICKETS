@@ -30,12 +30,15 @@ import { AccordionModule } from 'primeng/accordion';
 import { UsuarioDB } from '../../models/usuario-db.model';
 import { StatusTicket } from '../../models/status-ticket.model';
 import { TicketDB } from '../../models/ticket-db.model';
-import { FolioGeneratorService } from './folio-generator.service';
+import { FolioGeneratorService } from '../../services/folio-generator.service';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { CatalogosService } from '../../services/catalogs.service';
 import { DocumentsService } from '../../services/documents.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
+import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 
 @Component({
   selector: 'app-home',
@@ -53,11 +56,14 @@ import { DocumentsService } from '../../services/documents.service';
     OverlayPanelModule,
     HistorialTkComponent,
     AccordionModule,
+    ModalGenerateTicketComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
 })
 export default class HomeComponent implements OnInit {
+  isModalGenerateTicket: boolean = false;
+
   public modalagregart: boolean = false;
   public formdepto: any;
   public formprov: any;
@@ -110,16 +116,14 @@ export default class HomeComponent implements OnInit {
     private usersService: UsersService,
     private notificationsService: NotificationsService,
     private catalogosService: CatalogosService,
-    private documentsService: DocumentsService
+    private documentsService: DocumentsService,
+    private modal: MatDialog
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
     console.log(this.userdata);
 
     this.getcatStatust();
-    this.getDepartamentos();
-    this.getProveedores();
-    this.getCategorias();
     this.getusuarioshelp();
 
     if (this.userdata.idRol == '2') {
@@ -134,110 +138,8 @@ export default class HomeComponent implements OnInit {
   }
   ngOnInit(): void {}
 
-  openadd() {
-    this.modalagregart = true;
-  }
-
-  async enviartk(): Promise<void> {
-    this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
-      let folio = this.folioGeneratorService.generarFolio(
-        this.formdepto.id,
-        count
-      );
-
-      console.log('Folio:', folio);
-
-      let idu = this.userdata.uid;
-      let comtk: any[] = [];
-      let tk: Ticket = {
-        fecha: new Date(),
-        idsucordpto: this.formdepto.id,
-        statusSuc: null,
-        idproveedor: this.formprov.id,
-        idcategoria: this.formcategoria.id,
-        decripcion: this.formdescripcion,
-        solicitante: this.formnomsolicitante,
-        prioridadsuc: this.formprioridad.name,
-        prioridadProv: null,
-        status: '1',
-        responsable: this.getResponsabletk(),
-        comentarios: comtk,
-        fechafin: null,
-        duracion: null,
-        tiposoporte: null,
-        iduser: idu,
-        nombreCategoria: this.formcategoria.nombre,
-        folio,
-      };
-
-      const docid = await this.ticketsService.addticket(tk);
-      this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-
-      let dataNot: Notificacion = {
-        titulo: 'NUEVO TICKET',
-        mensaje:
-          'SE GENERÓ UN NUEVO TICKET PARA LA SUCURSAL: ' +
-          this.formdepto.nombre,
-        uid: this.getResponsabletk(),
-        fecha: new Date(),
-        abierta: false,
-        idtk: docid,
-        notificado: false,
-      };
-
-      let idn = this.notificationsService.addNotifiacion(dataNot);
-
-      this.modalagregart = false;
-      this.formdescripcion = '';
-      this.formnomsolicitante = '';
-      this.formcategoria = undefined;
-      this.formstatussuc = undefined;
-      this.formprov = undefined;
-      this.formprioridad = undefined;
-    });
-  }
-
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
-
-  getDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
-      next: (data) => {
-        this.catsucursales = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  getCategorias() {
-    this.catalogosService.getCategorias().subscribe({
-      next: (data) => {
-        this.catcategorias = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  getProveedores() {
-    this.catalogosService.getProveedores().subscribe({
-      next: (data) => {
-        this.catproveedores = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
   }
 
   getcatStatust() {
@@ -251,18 +153,6 @@ export default class HomeComponent implements OnInit {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
-  }
-
-  changeprov() {
-    this.formcategoria = undefined;
-    this.cdr.detectChanges();
-  }
-  getCategoriasProv(): Categoria[] {
-    let arr: Categoria[] = [];
-    if (this.formprov != undefined) {
-      arr = this.catcategorias.filter((x) => x.idprov == this.formprov.id);
-    }
-    return arr;
   }
 
   changeprovFilter() {
@@ -737,7 +627,10 @@ export default class HomeComponent implements OnInit {
 
             this.ticketsService.AddTkSQL(tk).subscribe({
               next: (data) => {
-                this.documentsService.deleteDocument('tickets', this.itemtk!.id);
+                this.documentsService.deleteDocument(
+                  'tickets',
+                  this.itemtk!.id
+                );
                 this.itemtk = undefined;
                 this.modalticket = false;
               },
