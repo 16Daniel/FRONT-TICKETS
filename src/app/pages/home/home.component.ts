@@ -36,8 +36,8 @@ import { UsersService } from '../../services/users.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { CatalogosService } from '../../services/catalogs.service';
 import { DocumentsService } from '../../services/documents.service';
-import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
+import { RequesterTicketsListComponent } from '../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 
 @Component({
   selector: 'app-home',
@@ -56,6 +56,7 @@ import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generat
     HistorialTkComponent,
     AccordionModule,
     ModalGenerateTicketComponent,
+    RequesterTicketsListComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
@@ -75,17 +76,17 @@ export default class HomeComponent implements OnInit {
   public catproveedores: Proveedor[] = [];
   public catcategorias: Categoria[] = [];
   public catStatusT: StatusTicket[] = [];
-  public arr_tickets: TicketDB[] = [];
+  public arr_tickets: TicketDB[] = []; //aqui
   public subscriptiontk: Subscription | undefined;
-  public modalticket: boolean = false;
+  public modalticket: boolean = false; //aqui
   public modalcomentarios: boolean = false;
   public modaladdcomentario: boolean = false;
-  public itemtk: TicketDB | undefined;
+  public itemtk: TicketDB | undefined; //aqui
   public formcomentario: string = '';
   public userdata: any;
   public sucursal: Sucursal | undefined;
   public catusuarioshelp: UsuarioDB[] = [];
-  public selectedtk: TicketDB | undefined;
+  public selectedtk: TicketDB | undefined; //aqui
   public all_arr_tickets: TicketDB[] = [];
   public modalfiltros: boolean = false;
   public filterPrioridad: any | undefined;
@@ -104,25 +105,21 @@ export default class HomeComponent implements OnInit {
   @ViewChild('dialogHtk') dialog!: Dialog;
 
   constructor(
-    private http: HttpClient,
-    private firestore: Firestore,
-    private auth: Auth,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private folioGeneratorService: FolioGeneratorService,
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private notificationsService: NotificationsService,
     private catalogosService: CatalogosService,
-    private documentsService: DocumentsService,
+    private documentsService: DocumentsService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
-    console.log(this.userdata);
 
     this.getcatStatust();
     this.getusuarioshelp();
+    this.getProveedores();
 
     if (this.userdata.idRol == '2') {
       this.getTicketsUser(idu);
@@ -367,6 +364,18 @@ export default class HomeComponent implements OnInit {
     }, 50);
   }
 
+  abrirModalDetalleTicket(ticket: any) {
+    this.itemtk = ticket;
+    this.modalticket = true;
+
+    setTimeout(() => {
+      var accordionItems = document.querySelectorAll('.accordion-collapse');
+      accordionItems.forEach(function (item) {
+        item.classList.remove('show'); // Cierra todas las secciones del accordion
+      });
+    }, 50);
+  }
+
   showcomentarios(item: TicketDB) {
     this.itemtk = item;
     this.modalcomentarios = true;
@@ -488,6 +497,19 @@ export default class HomeComponent implements OnInit {
       str = temp[0].nombre;
     }
     return str;
+  }
+
+  getProveedores() {
+    this.catalogosService.getProveedores().subscribe({
+      next: (data) => {
+        this.catproveedores = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
   }
 
   getNameStatus(idst: string): string {

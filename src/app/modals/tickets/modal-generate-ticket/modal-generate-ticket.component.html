@@ -15,8 +15,9 @@
         </ng-template>
     </p-dropdown>
     <p></p>
-    <p-dropdown [options]="proveedores" [(ngModel)]="formProveedor" optionLabel="nombre" [filter]="true" filterBy="nombre"
-        [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}" (onChange)="changeProveedor()">
+    <p-dropdown [options]="proveedores" [(ngModel)]="formProveedor" optionLabel="nombre" [filter]="true"
+        filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
+        (onChange)="changeProveedor()">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
                 <div>{{ selectedOption.nombre }}</div>
@@ -60,7 +61,8 @@
                     <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-sm rounded-3' style="color: red;"></i>
                     </td>
                     <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%;" class="p-3"
-                        [style]="{'background-color':getBackgroundColorPrioridad(item.name),'width':'30px','height':'30px'}"></div>
+                        [style]="{'background-color':obtenerBackgroundColorPrioridad(item.name),'width':'30px','height':'30px'}">
+                    </div>
                     <div>{{ item.name }}</div>
                 </div>
             </div>

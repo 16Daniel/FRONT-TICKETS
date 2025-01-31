@@ -130,7 +130,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     return arr;
   }
 
-  getBackgroundColorPrioridad(value: string): string {
+  obtenerBackgroundColorPrioridad(value: string): string {
     let str = '';
 
     if (value == 'ALTA') {
