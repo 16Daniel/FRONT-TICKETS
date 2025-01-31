@@ -1,12 +1,12 @@
 import { Sucursal } from './sucursal.model';
 
-export interface Usuario {
-  nombre: string;
-  apellidoP: string;
-  apellidoM: string;
-  idRol: string;
-  email: string;
-  password: string;
-  uid: string;
-  sucursales: Sucursal[];
+export class Usuario {
+  nombre: string = '';
+  apellidoP: string = '';
+  apellidoM: string = '';
+  idRol: string = '';
+  email: string = '';
+  password: string = '';
+  uid: string = '';
+  sucursales: Sucursal[] = [];
 }

@@ -30,7 +30,7 @@ import { BadgeModule } from 'primeng/badge';
 import { StatusTicket } from '../../models/status-ticket.model';
 import { TicketDB } from '../../models/ticket-db.model';
 import { UsuarioDB } from '../../models/usuario-db.model';
-import { FolioGeneratorService } from '../home/folio-generator.service';
+import { FolioGeneratorService } from '../../services/folio-generator.service';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
 import { CatalogosService } from '../../services/catalogs.service';

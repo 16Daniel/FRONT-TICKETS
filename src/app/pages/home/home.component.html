@@ -6,39 +6,13 @@
             class="text-center text-primary">{{sucursal?.nombre}}</span></h3>
 
     <div class="d-flex justify-content-start gap-3 p-3 pb-0">
-        <button class="btn bg-p-b p-2" (click)="openadd()"><i class='bx bx-plus bx-sm'></i></button>
+        <button class="btn bg-p-b p-2" (click)="isModalGenerateTicket = true"><i class='bx bx-plus bx-sm'></i></button>
         <button class="btn bg-p-b p-2" style="background-color: #FF5722;" (click)="showModalFiltros()"><i
                 class='bx bx-filter bx-sm'></i></button>
         <button class="btn bg-p-b p-2" style="background-color: #29d998;" (click)="showHistorial()"><i
                 class='bx bx-history bx-flip-horizontal bx-sm'></i></button>
     </div>
 
-
-    <!-- <div class=" p-3 " *ngIf="getTicketsPanico().length>0">
-
-    <h3 class="text-center">  <img width="40" height="40" class="bx-tada" src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/external-alarm-customer-support-sbts2018-flat-sbts2018.png" alt="external-alarm-customer-support-sbts2018-flat-sbts2018"/> PÁNICO</h3>
-
-    <div class="d-flex justify-content-center gap-3 flex-wrap pt-3 pb-5 mt-3 rounded-3" style="background-color: red;">
-        <div class="shadow bg-white rounded-3 cardt d-flex justify-content-center" [ngStyle]="{'border-bottom':'5px solid '+getBgPrioridad(item.prioridadsuc,false)}" *ngFor="let item of getTicketsPanico()">
-            <div class="p-3 text-dark">
-                <h5 class="text-center text-primary">{{getNameDpto(item.idsucordpto)}}</h5>
-                <p class="text-center">{{getdate(item.fecha) | date}} - {{ getdate(item.fecha) | date: 'HH:mm'}}</p>
-                <p class="text-center">{{item.solicitante | uppercase}}</p>
-                    <div class="d-flex justify-content-center mb-3 gap-3 flex-wrap">
-                        <p-tag [severity]="getseverityp(item.prioridadsuc)" [value]="item.prioridadsuc"/>
-                        <p-tag [severity]="'info'" [value]="getNameProveedor(item.idproveedor)"/>
-                        <p-tag [severity]="'secondary'" [value]="item.nombreCategoria == null ? '':item.nombreCategoria"/>
-                        <p-tag [severity]="'contrast'" [value]="getNameStatus(item.status)"/>
-                    </div>
-                <p>
-                    <button class="btn bg-p-b ms-3" (click)="showticket(item)"><i class='bx bxs-show' ></i></button>
-                    <button class="btn bg-p-b ms-3"  (click)="showcomentarios(item)"><i class='bx bx-message-square-dots'></i></button>
-                </p>
-            </div>
-        </div>
-    </div>
-
-</div> -->
     <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
         *ngIf="arr_tickets.length == 0">
         @if (loading)
@@ -52,95 +26,6 @@
 
     </div>
     <div *ngIf="arr_tickets.length > 0" class=" p-1 mt-3">
-
-        <!-- <div style="background-color: rgb(255, 200, 200);" class="rounded-3">
-    <p>&nbsp;</p>
-    <p-tag [severity]="'danger'" [value]="'ALTA'" class="ms-3"/>
-
-    <div class="d-flex justify-content-center gap-3 flex-wrap pt-3 pb-5 mt-3 rounded-3">
-        <div class="shadow bg-white rounded-3 cardt d-flex justify-content-center" [ngStyle]="{'border-bottom':'5px solid '+getBgPrioridad(item.prioridadsuc)}" *ngFor="let item of getTicketsP('ALTA')">
-            <div class="p-3">
-             
-                <h5 class="text-center text-primary">{{getNameDpto(item.idsucordpto)}}</h5>
-                <p class="text-center">{{getdate(item.fecha) | date}} - {{ getdate(item.fecha) | date: 'HH:mm'}}</p>
-                <p class="text-center">{{item.solicitante | uppercase}}</p>
-                    <div class="d-flex justify-content-center mb-3 gap-3 flex-wrap">
-                        <p-tag [severity]="getseverityp(item.prioridadsuc)" [value]="item.prioridadsuc"/>
-                        <p-tag [severity]="'info'" [value]="getNameProveedor(item.idproveedor)"/>
-                        <p-tag [severity]="'secondary'" [value]="item.nombreCategoria == null ? '':item.nombreCategoria"/>
-                        <p-tag [severity]="'contrast'" [value]="getNameStatus(item.status)"/>
-                    </div>
-                <p>
-                    <button class="btn bg-p-b ms-3" (click)="showticket(item)"><i class='bx bxs-show' ></i></button>
-                    <button class="btn bg-p-b ms-3"  (click)="showcomentarios(item)"><i class='bx bx-message-square-dots'></i></button>
-                    <button class="btn btn-warning ms-3" (click)="panico(item.id)">
-                        <img width="20" height="20" src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/external-alarm-customer-support-sbts2018-flat-sbts2018.png" alt="external-alarm-customer-support-sbts2018-flat-sbts2018"/>
-                        &nbsp;PÁNICO
-                    </button>
-                </p>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-        <!-- <div style="background-color: rgb(255, 251, 202);" class="rounded-3">
-    <p>&nbsp;</p>
-    <p-tag [severity]="'warning'" [value]="'MEDIA'" class="ms-3"/>
-
-    <div class="d-flex justify-content-center gap-3 flex-wrap pt-3 pb-5 mt-3 rounded-3">
-        <div class="shadow bg-white rounded-3 cardt d-flex justify-content-center" [ngStyle]="{'border-bottom':'5px solid '+getBgPrioridad(item.prioridadsuc)}" *ngFor="let item of getTicketsP('MEDIA')">
-            <div class="p-3">
-              <h5 class="text-center text-primary">{{getNameDpto(item.idsucordpto)}}</h5>
-              <p class="text-center">{{getdate(item.fecha) | date}} - {{ getdate(item.fecha) | date: 'HH:mm'}}</p>
-              <p class="text-center">{{item.solicitante | uppercase}}</p>
-                  <div class="d-flex justify-content-center mb-3 gap-3 flex-wrap">
-                      <p-tag [severity]="getseverityp(item.prioridadsuc)" [value]="item.prioridadsuc"/>
-                      <p-tag [severity]="'info'" [value]="getNameProveedor(item.idproveedor)"/>
-                      <p-tag [severity]="'secondary'" [value]="item.nombreCategoria == null ? '':item.nombreCategoria"/>
-                      <p-tag [severity]="'contrast'" [value]="getNameStatus(item.status)"/>
-                  </div>
-              <p>
-                  <button class="btn bg-p-b ms-3" (click)="showticket(item)"><i class='bx bxs-show' ></i></button>
-                  <button class="btn bg-p-b ms-3"  (click)="showcomentarios(item)"><i class='bx bx-message-square-dots'></i></button>
-                  <button class="btn btn-warning ms-3" (click)="panico(item.id)">
-                      <img width="20" height="20" src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/external-alarm-customer-support-sbts2018-flat-sbts2018.png" alt="external-alarm-customer-support-sbts2018-flat-sbts2018"/>
-                      &nbsp;PÁNICO
-                  </button>
-              </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div style="background-color: rgb(202, 255, 211);" class="rounded-3">
-    <p>&nbsp;</p>
-    <p-tag [severity]="'success'" [value]="'BAJA'" class="ms-3"/>
-
-    <div class="d-flex justify-content-center gap-3 flex-wrap pt-3 pb-5 mt-3 rounded-3">
-        <div class="shadow bg-white rounded-3 cardt d-flex justify-content-center" [ngStyle]="{'border-bottom':'5px solid '+getBgPrioridad(item.prioridadsuc)}" *ngFor="let item of getTicketsP('BAJA')">
-            <div class="p-3">
-               <h5 class="text-center text-primary">{{getNameDpto(item.idsucordpto)}}</h5>
-               <p class="text-center">{{getdate(item.fecha) | date}} - {{ getdate(item.fecha) | date: 'HH:mm'}}</p>
-               <p class="text-center">{{item.solicitante | uppercase}}</p>
-                   <div class="d-flex justify-content-center mb-3 gap-3 flex-wrap">
-                       <p-tag [severity]="getseverityp(item.prioridadsuc)" [value]="item.prioridadsuc"/>
-                       <p-tag [severity]="'info'" [value]="getNameProveedor(item.idproveedor)"/>
-                       <p-tag [severity]="'secondary'" [value]="item.nombreCategoria == null ? '':item.nombreCategoria"/>
-                       <p-tag [severity]="'contrast'" [value]="getNameStatus(item.status)"/>
-                   </div>
-               <p>
-                   <button class="btn bg-p-b ms-3" (click)="showticket(item)"><i class='bx bxs-show' ></i></button>
-                   <button class="btn bg-p-b ms-3"  (click)="showcomentarios(item)"><i class='bx bx-message-square-dots'></i></button>
-                   <button class="btn btn-warning ms-3" (click)="panico(item.id)">
-                       <img width="20" height="20" src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/external-alarm-customer-support-sbts2018-flat-sbts2018.png" alt="external-alarm-customer-support-sbts2018-flat-sbts2018"/>
-                       &nbsp;PÁNICO
-                   </button>
-               </p>
-            </div>
-        </div>
-    </div>
-</div> -->
-
         <div class="m-0 pb-4" style="background-color: transparent;">
             <p-table *ngIf="userdata.idRol == '2'" [value]="arr_tickets"
                 [tableStyle]="{'min-width': '10rem', 'padding':'10px'}" styleClass="p-datatable-gridlines table-tk"
@@ -236,105 +121,7 @@
 
 </div>
 
-<p-dialog header="GENERAR TICKET" [modal]="true" [(visible)]="modalagregart" [style]="{ width: '50rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-
-    <p-dropdown [options]="catsucursales" [(ngModel)]="formdepto" optionLabel="nombre" [filter]="true" filterBy="nombre"
-        [showClear]="true" placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}"
-        [disabled]="userdata.idRol == '2'">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-dep pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ dep.nombre }}</div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <p></p>
-    <p-dropdown [options]="catproveedores" [(ngModel)]="formprov" optionLabel="nombre" [filter]="true" filterBy="nombre"
-        [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}" (onChange)="changeprov()">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-dep pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ dep.nombre }}</div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <p></p>
-    <p-dropdown [options]="getCategoriasProv()" [(ngModel)]="formcategoria" optionLabel="name" [filter]="true"
-        filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA" [style]="{width:'100%'}">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-categoria pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ categoria.nombre }}</div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <P></P>
-    <input class="form-control" style="height: 48px;" type="text" placeholder="NOMBRE DEL SOLICITANTE"
-        [(ngModel)]="formnomsolicitante">
-    <p></p>
-    <p-dropdown [options]="[{name:'PÁNICO'},{name:'ALTA'},{name:'MEDIA'},{name:'BAJA'}]" [(ngModel)]="formprioridad"
-        optionLabel="name" [filter]="false" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR PRIORIDAD"
-        [style]="{width:'100%'}">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.name }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-item pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div class="d-flex justify-content-start align-items-center gap-3">
-                    <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-sm rounded-3' style="color: red;"></i>
-                    </td>
-                    <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%;" class="p-3"
-                        [style]="{'background-color':getBgPrioridad(item.name),'width':'30px','height':'30px'}"></div>
-                    <div>{{ item.name }}</div>
-                </div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <p></p>
-    <!-- <p-dropdown 
-[options]="[{name:'FRÍA'},{name:'MEDIA'},{name:'CALIENTE'},{name:'PÁNICO'}]"
-[(ngModel)]="formstatussuc"
-optionLabel="name"
-[filter]="true"
-filterBy="nombre" 
-[showClear]="true"
-placeholder="ESTATUS TICKET"
-[style]="{width:'100%'}"
->
-    <ng-template pTemplate="selectedItem" let-selectedOption>
-        <div class="flex align-items-center gap-2">
-            <div>{{ selectedOption.name }}</div>
-        </div>
-    </ng-template>
-    <ng-template let-item pTemplate="item">
-        <div class="flex align-items-center gap-2">
-            <div>{{ item.name }}</div>
-        </div>
-    </ng-template>
-</p-dropdown>
-<p></p> -->
-    <P>FAVOR DE INGRESAR UNA DESCRIPCIÓN DEL PROBLEMA, SI ES NECESARIO PUEDE ADJUNTAR IMÁGENES</P>
-    <p-editor [(ngModel)]="formdescripcion" [style]="{ height: '320px' }" />
-
-    <div class="d-flex justify-content-end mt-3">
-        <button class="btn bg-p-b p-3" (click)="enviartk()"><i class='bx bx-send'></i>ENVIAR</button>
-    </div>
-</p-dialog>
+<app-modal-generate-ticket [isModalVisible]="isModalGenerateTicket" (closeEvent)="isModalGenerateTicket = false"></app-modal-generate-ticket>
 
 <p-dialog header="DETALLES TICKET" [modal]="true" [(visible)]="modalticket" [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
