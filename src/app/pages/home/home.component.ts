@@ -36,7 +36,6 @@ import { UsersService } from '../../services/users.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { CatalogosService } from '../../services/catalogs.service';
 import { DocumentsService } from '../../services/documents.service';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 
@@ -117,7 +116,6 @@ export default class HomeComponent implements OnInit {
     private notificationsService: NotificationsService,
     private catalogosService: CatalogosService,
     private documentsService: DocumentsService,
-    private modal: MatDialog
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
