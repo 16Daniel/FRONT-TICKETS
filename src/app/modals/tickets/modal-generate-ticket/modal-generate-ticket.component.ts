@@ -237,4 +237,8 @@ export class ModalGenerateTicketComponent implements OnInit {
       },
     });
   }
+
+  onHide() {
+    this.closeEvent.emit(false); // Cerrar modal
+  }
 }

@@ -1,0 +1,33 @@
+<p-dialog header="CHAT" [modal]="true" [(visible)]="showModalChatTicket" [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+    <div *ngIf="ticket != undefined" style="overflow: auto">
+        <div class="d-flex w-100" *ngFor="let item of ticket!.comentarios" [ngClass]="{
+      'justify-content-start': esmiuid(item.uid) == false,
+      'justify-content-end': esmiuid(item.uid)
+    }">
+            <div class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(35, 153, 221)"
+                *ngIf="esmiuid(item.uid) == false">
+                <p class="p-1" style="color: white">{{ item.nombre }}</p>
+                <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
+                    <ng-template pTemplate="header"> </ng-template>
+                </p-editor>
+            </div>
+
+            <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3"
+                style="width: 80%; background-color: rgb(163 180 201)">
+                <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
+                <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
+                    <ng-template pTemplate="header"> </ng-template>
+                </p-editor>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-container" style="display: flex; width: 100%; margin-top: 10px">
+        <input pInputText placeholder="Escribe algo..." style="flex-grow: 1; margin-right: 10px;" />
+        <button class="btn btn-dark" style="flex-shrink: 0; padding: 10px;">
+            <i class="bx bxs-send bx-sm" style="color: rgb(255, 255, 255)"></i>
+        </button>
+    </div>
+
+</p-dialog>

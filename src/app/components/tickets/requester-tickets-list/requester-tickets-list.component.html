@@ -1,4 +1,4 @@
-<p-table *ngIf="userdata.idRol == '2'" [value]="tickets" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+<p-table [value]="tickets" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
   styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
   [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
   <ng-template pTemplate="header">
@@ -22,12 +22,12 @@
       <td class="text-center" *ngIf="ticket.prioridadsuc != 'PÁNICO'">
         <i class="bx bxs-circle bx-sm" [style]="{ color: obtenerBackgroundColorPrioridad(ticket.prioridadsuc) }"></i>
       </td>
-      <td>{{ ticket.folio }}</td>
-      <td>{{ getdate(ticket!.fecha) | date }} -
+      <td class="text-center">{{ ticket.folio }}</td>
+      <td class="text-center">{{ getdate(ticket!.fecha) | date }} -
         {{ getdate(ticket!.fecha) | date : "HH:mm" }}</td>
       <td class="text-center">{{ obtenerNombreProveedor(ticket.idproveedor) }}</td>
-      <td>{{ ticket.solicitante | uppercase }}</td>
-      <td>{{ obtenerNombreResponsable(ticket!.responsable) }}</td>
+      <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
+      <td class="text-center">{{ obtenerNombreResponsable(ticket!.responsable) }}</td>
       <td class="text-center">
         {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
       </td>
@@ -41,11 +41,10 @@
       </td>
 
       <td style="display: flex; gap: 10px;">
-        <button class="btn btn-success" (click)="onClickFinalizar()" style="margin: 2px;">
+        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px;">
           <i class="bx bx-check-circle bx-sm"></i>
         </button>
-        <button class="btn btn-primary"
-          (click)="onPanicoClick(ticket!.id)" style="margin: 2px;">
+        <button class="btn btn-primary" (click)="onClickChat(ticket)" style="margin: 2px;">
           <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
         <button *ngIf="ticket != undefined && ticket!.statusSuc != 'PÁNICO'" class="btn btn-dark"
@@ -56,3 +55,9 @@
     </tr>
   </ng-template>
 </p-table>
+
+<app-modal-finalize-ticket [showModalFinalizeTicket]="showModalFinalizeTicket" [ticket]="ticketAccion"
+  (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
+
+<app-modal-ticket-chat [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
+  (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>

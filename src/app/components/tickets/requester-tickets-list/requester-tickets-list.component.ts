@@ -11,32 +11,43 @@ import { TableModule } from 'primeng/table';
 import { Proveedor } from '../../../models/proveedor.model';
 import { CommonModule } from '@angular/common';
 import { CatalogosService } from '../../../services/catalogs.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
 import { UsuarioDB } from '../../../models/usuario-db.model';
 import { UsersService } from '../../../services/users.service';
+import { Notificacion } from '../../../models/notificacion.model';
+import { NotificationsService } from '../../../services/notifications.service';
+import { TicketsService } from '../../../services/tickets.service';
+import { ModalFinalizeTicketComponent } from '../../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
+import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
 
 @Component({
   selector: 'app-requester-tickets-list',
   standalone: true,
-  imports: [TableModule, CommonModule],
+  imports: [TableModule, CommonModule, ModalFinalizeTicketComponent, ModalTicketChatComponent],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
 export class RequesterTicketsListComponent implements OnInit {
   @Input() tickets: TicketDB[] = [];
   @Output() clickEvent = new EventEmitter<TicketDB>();
-
+  
+  showModalFinalizeTicket: boolean = false;
+  showModalChatTicket: boolean = false;
   proveedores: Proveedor[] = [];
   ticketSeleccionado: TicketDB | undefined;
   userdata: any;
   usuariosHelp: UsuarioDB[] = [];
+  ticketAccion: TicketDB | any;
 
   constructor(
     private catalogosService: CatalogosService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private confirmationService: ConfirmationService,
+    private notificationsService: NotificationsService,
+    private ticketsService: TicketsService
   ) {}
 
   ngOnInit(): void {
@@ -109,6 +120,22 @@ export class RequesterTicketsListComponent implements OnInit {
     return nombre;
   }
 
+  obtenerIdResponsableTicket(): string {
+    let idr = '';
+    for (let item of this.usuariosHelp) {
+      if (item.idRol == '4') {
+        const existeSucursal = item.sucursales.some(
+          (x) => x.id == this.userdata.sucursales[0]
+        );
+        if (existeSucursal) {
+          idr = item.uid;
+        }
+      }
+    }
+
+    return idr;
+  }
+
   obtenerUsuariosHelp() {
     this.usersService.getusers().subscribe({
       next: (data) => {
@@ -122,12 +149,61 @@ export class RequesterTicketsListComponent implements OnInit {
     });
   }
 
-  onPanicoClick(idTicket: string) {
-    console.log(idTicket)
+  actualizaTicketStatusSuc(idTicket: string) {
+    let temp = this.tickets.filter((x) => x.id == idTicket);
+    if (temp.length > 0) {
+      let ticket = temp[0];
+      ticket.statusSuc = 'PÁNICO';
+      ticket.prioridadsuc = 'PÁNICO';
+
+      this.ticketsService
+        .updateTicket(ticket)
+        .then(() => {
+          this.showMessage('success', 'Success', 'Enviado correctamente');
+        })
+        .catch((error) =>
+          console.error('Error al actualizar los comentarios:', error)
+        );
+    }
   }
 
-  onClickFinalizar() {
-    // this.formfinalizar = '';
-    // this.modalfinalizar = true;
+  onPanicoClick(idTicket: string) {
+    this.confirmationService.confirm({
+      header: 'Confirmación',
+      message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      accept: () => {
+        this.actualizaTicketStatusSuc(idTicket);
+
+        let dataNot: Notificacion = {
+          titulo: 'ALERTA DE PÁNICO',
+          mensaje:
+            'EL TICKET CON EL ID: ' +
+            idTicket +
+            ' HA CAMBIADO AL ESTATUS DE PÁNICO',
+          uid: this.obtenerIdResponsableTicket(),
+          fecha: new Date(),
+          abierta: false,
+          idtk: idTicket,
+          notificado: false,
+        };
+
+        let idn = this.notificationsService.addNotifiacion(dataNot);
+      },
+      reject: () => {},
+    });
+  }
+
+  onClickFinalizar(ticket: TicketDB) {
+    this.ticketAccion = ticket;
+    this.showModalFinalizeTicket = true;
+  }
+
+  onClickChat(ticket: TicketDB) {
+    this.ticketAccion = ticket;
+    this.showModalChatTicket = true;
   }
 }

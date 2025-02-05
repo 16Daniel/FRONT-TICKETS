@@ -30,14 +30,14 @@
 
   <div *ngIf="arr_tickets.length > 0" class="p-1 mt-3">
     <div class="m-0 pb-4" style="background-color: transparent">
-      <app-requester-tickets-list [tickets]="arr_tickets"
+      <app-requester-tickets-list *ngIf="userdata.idRol == '2'" [tickets]="arr_tickets"
         (clickEvent)="abrirModalDetalleTicket($event)"></app-requester-tickets-list>
 
       <div *ngIf="userdata.idRol == '4'">
         <div *ngFor="let item of userdata.sucursales" class="mb-3">
           <p-table [value]="getTicketsSuc(item.id)" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
             styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
-            [(selection)]="selectedtk" (onRowSelect)="showticket($event)">
+            [(selection)]="selectedtk" (onRowSelect)="abrirModalDetalleTicket($event)">
             <ng-template pTemplate="header">
               <tr>
                 <th colspan="4" class="text-center text-primary">
@@ -88,209 +88,8 @@
 <app-modal-generate-ticket [isModalVisible]="isModalGenerateTicket"
   (closeEvent)="isModalGenerateTicket = false"></app-modal-generate-ticket>
 
-<p-dialog header="DETALLES TICKET" [modal]="true" [(visible)]="modalticket" [style]="{ width: '50rem' }"
-  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-  <div class="d-flex justify-content-between mt-3">
-    <!-- <button class="btn btn-success ms-3" (click)="showcomentarios(itemtk!)">CHAT <i class='bx bxl-whatsapp' ></i></button> -->
-    <button *ngIf="itemtk != undefined && itemtk!.statusSuc != 'PÁNICO'" class="btn ms-3 btn-dark"
-      (click)="panico(itemtk!.id)">
-      <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
-      &nbsp;PÁNICO
-    </button>
-  </div>
-  <p></p>
-
-  <div class="accordion" id="accordionExample" *ngIf="itemtk != undefined">
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-          aria-expanded="true" aria-controls="collapseOne">
-          <i class="bx bx-info-circle bx-sm"></i>&nbsp;DESCRIPCIÓN
-        </button>
-      </h2>
-      <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-          <table class="table table-borderless text-center">
-            <thead>
-              <tr>
-                <th colspan="2" style="background-color: #eee !important">
-                  <span class="text-center"><span class="text-dark">FOLIO:&nbsp;</span>{{ itemtk.folio }}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th class="text-l">Fecha y hora</th>
-                <td>
-                  {{ getdate(itemtk!.fecha) | date }} -
-                  {{ getdate(itemtk!.fecha) | date : "HH:mm" }}
-                </td>
-              </tr>
-              <tr>
-                <th class="text-l">Prioridad</th>
-                <td class="text-center">
-                  <p-tag [severity]="getseverityp(itemtk!.prioridadsuc)" [value]="itemtk!.prioridadsuc" />
-                </td>
-              </tr>
-
-              <tr>
-                <th class="text-l">Solicitante</th>
-                <td class="text-r">
-                  <p class="text-center">
-                    {{ itemtk!.solicitante | uppercase }}
-                  </p>
-                </td>
-              </tr>
-
-              <tr>
-                <th class="text-l">Responsable</th>
-                <td class="text-r">
-                  <p class="text-center">
-                    {{ getNameResponsable(itemtk!.responsable) }}
-                  </p>
-                </td>
-              </tr>
-
-              <tr *ngIf="userdata.idRol == '4'">
-                <th class="text-l">Asistencia</th>
-                <td class="text-r">
-                  <p class="text-center">{{ itemtk!.tiposoporte }}</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div *ngIf="itemtk != undefined">
-            <p-editor [(ngModel)]="itemtk.decripcion" [readonly]="true" [style]="{ height: '100%' }">
-              <ng-template pTemplate="header">
-                <span class="ql-formats"> </span>
-              </ng-template>
-            </p-editor>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-          aria-expanded="false" aria-controls="collapseTwo">
-          <i class="bx bx-edit bx-sm"></i>&nbsp;ACTUALIZACIÓN
-        </button>
-      </h2>
-      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-          <div *ngIf="itemtk.tiposoporte == null && userdata.idRol == '4'">
-            <P>TIPO DE ASISTENCIA</P>
-            <select class="form-select" [(ngModel)]="formtiposoporte">
-              <option value="FÍSICA">FÍSICA</option>
-              <option value="REMOTA">REMOTA</option>
-            </select>
-            <button class="btn bg-p-b mt-3 mb-3" (click)="updateasistencia()">
-              ACTUALIZAR
-            </button>
-          </div>
-
-          <div *ngIf="itemtk.tiposoporte != null && userdata.idRol == '4'">
-            <p-dropdown [options]="catStatusT" [(ngModel)]="formstatus" optionLabel="nombre" [filter]="false"
-              filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR STATUS" [style]="{ width: '100%' }">
-              <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                  <div>{{ selectedOption.nombre }}</div>
-                </div>
-              </ng-template>
-              <ng-template let-dep pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                  <div>{{ dep.nombre }}</div>
-                </div>
-              </ng-template>
-            </p-dropdown>
-            <button class="btn bg-p-b mt-3 mb-3" (click)="updatestatustk()">
-              ACTUALIZAR
-            </button>
-          </div>
-
-          <div class="d-flex justify-content-center mt-3 mb-3" *ngIf="userdata.idRol == '2'">
-            <button class="btn btn-success p-2" (click)="showfinalizar()">
-              <i class="bx bx-check-circle bx-md"></i>
-              <p class="m-1">FINALIZAR</p>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-          data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          <i class="bx bx-message-square-dots bx-sm"></i>&nbsp;CONVERSACIÓN
-        </button>
-      </h2>
-      <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-          <div class="d-flex justify-content-end sticky-top">
-            <button class="btn bg-p-b p-2" (click)="showaddcomentario()">
-              <i class="bx bx-message-square-add bx-sm"></i>
-            </button>
-          </div>
-
-          <div *ngIf="itemtk != undefined" style="overflow: auto">
-            <div class="d-flex w-100" *ngFor="let item of itemtk!.comentarios" [ngClass]="{
-                'justify-content-start': esmiuid(item.uid) == false,
-                'justify-content-end': esmiuid(item.uid)
-              }">
-              <div class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(35, 153, 221)"
-                *ngIf="esmiuid(item.uid) == false">
-                <p class="p-1" style="color: white">{{ item.nombre }}</p>
-                <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
-                  <ng-template pTemplate="header"> </ng-template>
-                </p-editor>
-              </div>
-
-              <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3"
-                style="width: 80%; background-color: rgb(163 180 201)">
-                <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
-                <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
-                  <ng-template pTemplate="header"> </ng-template>
-                </p-editor>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</p-dialog>
-
-<p-dialog header="CHAT" [modal]="true" [(visible)]="modalcomentarios" [style]="{ width: '50rem' }"
-  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-  <div class="d-flex justify-content-end sticky-top">
-    <button class="btn bg-p-b p-2" (click)="showaddcomentario()">
-      <i class="bx bx-message-square-add bx-sm"></i>
-    </button>
-  </div>
-
-  <div *ngIf="itemtk != undefined">
-    <div class="d-flex w-100" *ngFor="let item of itemtk!.comentarios" [ngClass]="{
-        'justify-content-start': esmiuid(item.uid) == false,
-        'justify-content-end': esmiuid(item.uid)
-      }">
-      <div class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(35, 153, 221)"
-        *ngIf="esmiuid(item.uid) == false">
-        <p class="p-1" style="color: white">{{ item.nombre }}</p>
-        <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
-          <ng-template pTemplate="header"> </ng-template>
-        </p-editor>
-      </div>
-
-      <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(163 180 201)">
-        <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
-        <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
-          <ng-template pTemplate="header"> </ng-template>
-        </p-editor>
-      </div>
-    </div>
-  </div>
-</p-dialog>
+<app-modal-ticket-detail [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
 
 <p-dialog header="ENVIAR MENSAJE" [modal]="true" [(visible)]="modaladdcomentario" [style]="{ width: '50rem' }"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
@@ -304,105 +103,9 @@
   </div>
 </p-dialog>
 
-<p-dialog header="FILTRAR TICKETS" [modal]="true" [(visible)]="modalfiltros" [style]="{ width: '50rem' }"
-  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-  <p-dropdown [options]="catproveedores" [(ngModel)]="filterarea" optionLabel="nombre" [filter]="true" filterBy="nombre"
-    [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{ width: '100%' }" (onChange)="changeprovFilter()">
-    <ng-template pTemplate="selectedItem" let-selectedOption>
-      <div class="flex align-items-center gap-2">
-        <div>{{ selectedOption.nombre }}</div>
-      </div>
-    </ng-template>
-    <ng-template let-dep pTemplate="item">
-      <div class="flex align-items-center gap-2">
-        <div>{{ dep.nombre }}</div>
-      </div>
-    </ng-template>
-  </p-dropdown>
-  <p></p>
-  <p-dropdown [options]="catcategorias" [(ngModel)]="filtercategoria" optionLabel="name" [filter]="true"
-    filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA" [style]="{ width: '100%' }">
-    <ng-template pTemplate="selectedItem" let-selectedOption>
-      <div class="flex align-items-center gap-2">
-        <div>{{ selectedOption.nombre }}</div>
-      </div>
-    </ng-template>
-    <ng-template let-categoria pTemplate="item">
-      <div class="flex align-items-center gap-2">
-        <div>{{ categoria.nombre }}</div>
-      </div>
-    </ng-template>
-  </p-dropdown>
-  <P></P>
-  <p-dropdown [options]="[
-      { name: 'PÁNICO' },
-      { name: 'ALTA' },
-      { name: 'MEDIA' },
-      { name: 'BAJA' }
-    ]" [(ngModel)]="filterPrioridad" optionLabel="name" [filter]="false" filterBy="nombre" [showClear]="true"
-    placeholder="SELECCIONAR PRIORIDAD" [style]="{ width: '100%' }">
-    <ng-template pTemplate="selectedItem" let-selectedOption>
-      <div class="flex align-items-center gap-2">
-        <div>{{ selectedOption.name }}</div>
-      </div>
-    </ng-template>
-    <ng-template let-item pTemplate="item">
-      <div class="flex align-items-center gap-2">
-        <div class="d-flex justify-content-start align-items-center gap-3">
-          <td *ngIf="item.name == 'PÁNICO'">
-            <i class="bx bxs-hot bx-sm rounded-3" style="color: red"></i>
-          </td>
-          <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%" class="p-3" [style]="{
-              'background-color': getBgPrioridad(item.name),
-              width: '30px',
-              height: '30px'
-            }"></div>
-          <div>{{ item.name }}</div>
-        </div>
-      </div>
-    </ng-template>
-  </p-dropdown>
-  <p></p>
-  <p-dropdown [options]="catStatusT" [(ngModel)]="filterstatus" optionLabel="nombre" [filter]="false" filterBy="nombre"
-    [showClear]="true" placeholder="SELECCIONAR STATUS" [style]="{ width: '100%' }">
-    <ng-template pTemplate="selectedItem" let-selectedOption>
-      <div class="flex align-items-center gap-2">
-        <div>{{ selectedOption.nombre }}</div>
-      </div>
-    </ng-template>
-    <ng-template let-dep pTemplate="item">
-      <div class="flex align-items-center gap-2">
-        <div>{{ dep.nombre }}</div>
-      </div>
-    </ng-template>
-  </p-dropdown>
-  <p></p>
-
-  <div style="height: 150px"></div>
-  <div class="d-flex justify-content-between">
-    <button class="btn btn-secondary p-3" (click)="limpiarfiltro()">
-      LIMPIAR <i class="bx bx-brush-alt bx-sm"></i>
-    </button>
-    <button class="btn bg-p-b p-3" style="background-color: #ff5722" (click)="filtrarT()">
-      FILTRAR <i class="bx bx-filter bx-sm"></i>
-    </button>
-  </div>
-</p-dialog>
-
 <p-dialog #dialogHtk header="HISTORIAL DE TICKETS" [modal]="true" [(visible)]="modalhistorial"
   [style]="{ width: '100vw', height: '100vh' }" [maximizable]="true">
   <app-tickets-history *ngIf="modalhistorial"></app-tickets-history>
-</p-dialog>
-
-<p-dialog #dialogHtk header="FINALIZAR TICKET" [modal]="true" [(visible)]="modalfinalizar"
-  [style]="{ width: '100vw', height: '100vh' }" [maximizable]="true">
-  <p class="text-center fw-bold">INGRESA EVIDENCIA Y COMENTARIOS FINALES</p>
-  <p-editor [(ngModel)]="formfinalizar" [style]="{ height: '320px' }" />
-  <div class="d-flex justify-content-end mt-3">
-    <button class="btn btn-success p-2 text-center" (click)="finalizartk()" [disabled]="formfinalizar == ''">
-      <i class="bx bx-check-circle bx-md"></i>
-    </button>
-  </div>
 </p-dialog>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
