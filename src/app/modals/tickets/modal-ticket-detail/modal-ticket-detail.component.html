@@ -9,7 +9,7 @@
                 </button>
             </h2>
             <div class="accordion-body">
-                <label *ngIf="ticket.decripcion">{{ ticket.decripcion }}</label>
+                <label *ngIf="ticket.decripcion" [innerHTML]="ticket.decripcion"></label>
                 <label *ngIf="!ticket.decripcion">No hay descripción</label>
             </div>
         </div>

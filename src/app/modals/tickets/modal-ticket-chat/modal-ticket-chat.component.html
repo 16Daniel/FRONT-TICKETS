@@ -5,29 +5,27 @@
       'justify-content-start': esmiuid(item.uid) == false,
       'justify-content-end': esmiuid(item.uid)
     }">
-            <div class="p-1 rounded-3 mt-3" style="width: 80%; background-color: rgb(35, 153, 221)"
+            <div class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: rgb(163 180 201)"
                 *ngIf="esmiuid(item.uid) == false">
-                <p class="p-1" style="color: white">{{ item.nombre }}</p>
-                <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
-                    <ng-template pTemplate="header"> </ng-template>
-                </p-editor>
+                <p class="p-1" style="color: black">{{ item.nombre }}</p>
+                <label [innerHTML]="item.comentario"></label>
             </div>
 
-            <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3"
-                style="width: 80%; background-color: rgb(163 180 201)">
+            <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: #F3F3F3">
                 <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
-                <p-editor [(ngModel)]="item.comentario" [style]="{ height: 'auto' }" [readonly]="true">
-                    <ng-template pTemplate="header"> </ng-template>
-                </p-editor>
+                <!-- <label>{{ item.comentario }}</label> -->
+                <label [innerHTML]="item.comentario"></label>
             </div>
         </div>
     </div>
 
-    <div class="input-container" style="display: flex; width: 100%; margin-top: 10px">
-        <input pInputText placeholder="Escribe algo..." style="flex-grow: 1; margin-right: 10px;" />
-        <button class="btn btn-dark" style="flex-shrink: 0; padding: 10px;">
-            <i class="bx bxs-send bx-sm" style="color: rgb(255, 255, 255)"></i>
-        </button>
-    </div>
-
+    <p-footer>
+        <div class="input-container" style="display: flex; width: 100%; margin-top: 10px">
+            <input pInputText placeholder="Escribe algo..." style="flex-grow: 1; margin-right: 10px;"
+                [(ngModel)]="comentario" (keyup.enter)="enviarComentarioChat()" />
+            <button class="btn btn-dark" style="flex-shrink: 0; padding: 10px;" (click)="enviarComentarioChat()">
+                <i class="bx bxs-send bx-sm" style="color: rgb(255, 255, 255)"></i>
+            </button>
+        </div>
+    </p-footer>
 </p-dialog>

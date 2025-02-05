@@ -107,7 +107,6 @@ export default class HomeComponent implements OnInit {
       .getRealTimeTicketsByUserId(userid)
       .subscribe({
         next: (data) => {
-          console.log(data);
 
           this.arr_tickets = data;
           let arr_temp: TicketDB[] = [];
@@ -151,7 +150,7 @@ export default class HomeComponent implements OnInit {
           }
 
           this.loading = false;
-          // this.cdr.detectChanges();
+          this.cdr.detectChanges();
         },
         error: (error) => {
           this.loading = false;

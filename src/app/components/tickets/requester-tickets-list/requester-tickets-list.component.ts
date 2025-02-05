@@ -3,8 +3,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { TicketDB } from '../../../models/ticket-db.model';
 import { TableModule } from 'primeng/table';
@@ -24,14 +26,19 @@ import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-c
 @Component({
   selector: 'app-requester-tickets-list',
   standalone: true,
-  imports: [TableModule, CommonModule, ModalFinalizeTicketComponent, ModalTicketChatComponent],
+  imports: [
+    TableModule,
+    CommonModule,
+    ModalFinalizeTicketComponent,
+    ModalTicketChatComponent,
+  ],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
-export class RequesterTicketsListComponent implements OnInit {
+export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: TicketDB[] = [];
   @Output() clickEvent = new EventEmitter<TicketDB>();
-  
+
   showModalFinalizeTicket: boolean = false;
   showModalChatTicket: boolean = false;
   proveedores: Proveedor[] = [];
@@ -54,6 +61,15 @@ export class RequesterTicketsListComponent implements OnInit {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.obtenerProveedores();
     this.obtenerUsuariosHelp();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['tickets'] && changes['tickets'].currentValue) {
+      if (this.ticketAccion)
+        this.ticketAccion = this.tickets.filter(
+          (x) => x.id == this.ticketAccion.id
+        )[0];
+    }
   }
 
   obtenerNombreProveedor(idProveedor: string): string {
@@ -206,4 +222,8 @@ export class RequesterTicketsListComponent implements OnInit {
     this.ticketAccion = ticket;
     this.showModalChatTicket = true;
   }
+
+  // obtenerTicketSeleccionadoAcciones(){
+  //   return this.tickets.filter(x => x.id == this.ticketAccion);
+  // }
 }
