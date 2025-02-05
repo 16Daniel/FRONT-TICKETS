@@ -64,6 +64,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.observaActualizacionesChatTicket(changes);
+  }
+
+  observaActualizacionesChatTicket(changes: SimpleChanges) {
     if (changes['tickets'] && changes['tickets'].currentValue) {
       if (this.ticketAccion)
         this.ticketAccion = this.tickets.filter(
@@ -222,8 +226,4 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     this.ticketAccion = ticket;
     this.showModalChatTicket = true;
   }
-
-  // obtenerTicketSeleccionadoAcciones(){
-  //   return this.tickets.filter(x => x.id == this.ticketAccion);
-  // }
 }

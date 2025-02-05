@@ -14,8 +14,9 @@
       <th>ACCIONES</th>
     </tr>
   </ng-template>
+  <!-- FF495F -->
   <ng-template pTemplate="body" let-ticket>
-    <tr [pSelectableRow]="ticket">
+    <tr [pSelectableRow]="ticket" [style]="'background-color: ' + (ticket.statusSuc === 'PÁNICO' ? '#FFE24F' : 'white')">
       <td class="text-center" *ngIf="ticket.prioridadsuc == 'PÁNICO'">
         <i class="bx bxs-hot bx-sm" style="color: red"></i>
       </td>
