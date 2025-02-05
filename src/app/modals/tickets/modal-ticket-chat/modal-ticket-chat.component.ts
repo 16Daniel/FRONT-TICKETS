@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TicketDB } from '../../../models/ticket-db.model';
@@ -25,11 +32,12 @@ import { NotificationsService } from '../../../services/notifications.service';
   templateUrl: './modal-ticket-chat.component.html',
   styleUrl: './modal-ticket-chat.component.scss',
 })
-export class ModalTicketChatComponent {
+export class ModalTicketChatComponent implements AfterViewChecked {
   @Input() showModalChatTicket: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
-  
   @Input() ticket: TicketDB | any;
+  @ViewChild('chatContainer') private chatContainer: any;
+
   userdata: any;
   comentario: string = '';
 
@@ -59,7 +67,7 @@ export class ModalTicketChatComponent {
     if (!this.comentario) {
       return;
     }
-    
+
     let idu = this.userdata.uid;
 
     let data = {
@@ -97,5 +105,19 @@ export class ModalTicketChatComponent {
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+  // Detecta cuando el componente ha sido actualizado
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
+
+  // Método para hacer scroll hacia abajo
+  private scrollToBottom(): void {
+    if (this.chatContainer) {
+      // Desplazarse hacia abajo del contenedor
+      this.chatContainer.nativeElement.scrollTop =
+        this.chatContainer.nativeElement.scrollHeight;
+    }
   }
 }
