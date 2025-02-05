@@ -28,6 +28,7 @@ import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generat
 import { RequesterTicketsListComponent } from '../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
+import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 
 @Component({
   selector: 'app-home',
@@ -48,13 +49,14 @@ import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finaliz
     ModalGenerateTicketComponent,
     RequesterTicketsListComponent,
     ModalTicketDetailComponent,
-    ModalFinalizeTicketComponent
+    ModalFinalizeTicketComponent,
+    ModalFilterTicketsComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
 })
 export default class HomeComponent implements OnInit {
-  isModalGenerateTicket: boolean = false;
+  showModalGenerateTicket: boolean = false;
   public formdepto: any;
   public catproveedores: Proveedor[] = [];
   public arr_tickets: TicketDB[] = []; //aqui
@@ -68,7 +70,7 @@ export default class HomeComponent implements OnInit {
   public sucursal: Sucursal | undefined;
   public selectedtk: TicketDB | undefined; //aqui
   public all_arr_tickets: TicketDB[] = [];
-  public modalfiltros: boolean = false;
+  public showModalFinalizeTicket: boolean = false;
   public modalhistorial: boolean = false;
   public formstatus: any;
   public loading: boolean = false;
@@ -107,7 +109,7 @@ export default class HomeComponent implements OnInit {
       .getRealTimeTicketsByUserId(userid)
       .subscribe({
         next: (data) => {
-
+          console.log(data);
           this.arr_tickets = data;
           let arr_temp: TicketDB[] = [];
           let temp1: TicketDB[] = this.arr_tickets.filter(
@@ -306,7 +308,7 @@ export default class HomeComponent implements OnInit {
   }
 
   showModalFiltros() {
-    this.modalfiltros = true;
+    this.showModalFinalizeTicket = true;
   }
 
   showHistorial() {

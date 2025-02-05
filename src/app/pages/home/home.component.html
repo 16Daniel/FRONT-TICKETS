@@ -7,10 +7,10 @@
   </h3>
 
   <div class="d-flex justify-content-start gap-3 p-3 pb-0">
-    <button class="btn bg-p-b p-2" (click)="isModalGenerateTicket = true">
+    <button class="btn bg-p-b p-2" (click)="showModalGenerateTicket = true">
       <i class="bx bx-plus bx-sm"></i>
     </button>
-    <button class="btn bg-p-b p-2" style="background-color: #ff5722" (click)="showModalFiltros()">
+    <button class="btn bg-p-b p-2" style="background-color: #ff5722" (click)="showModalFinalizeTicket = true">
       <i class="bx bx-filter bx-sm"></i>
     </button>
     <button class="btn bg-p-b p-2" style="background-color: #29d998" (click)="showHistorial()">
@@ -85,23 +85,14 @@
   </div>
 </div>
 
-<app-modal-generate-ticket [isModalVisible]="isModalGenerateTicket"
-  (closeEvent)="isModalGenerateTicket = false"></app-modal-generate-ticket>
+<app-modal-generate-ticket [showModalGenerateTicket]="showModalGenerateTicket"
+  (closeEvent)="showModalGenerateTicket = false"></app-modal-generate-ticket>
 
 <app-modal-ticket-detail [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
   (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
 
-<p-dialog header="ENVIAR MENSAJE" [modal]="true" [(visible)]="modaladdcomentario" [style]="{ width: '50rem' }"
-  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-  <p></p>
-  <p></p>
-  <p-editor [(ngModel)]="formcomentario" [style]="{ height: '400px' }" />
-  <div class="d-flex justify-content-end mt-3">
-    <button class="btn bg-p-b p-3" (click)="addComentariotk()">
-      <i class="bx bx-send"></i>ENVIAR
-    </button>
-  </div>
-</p-dialog>
+<app-modal-filter-tickets [showModalFinalizeTicket]="showModalFinalizeTicket"
+  [tickets]="all_arr_tickets" (closeEvent)="showModalFinalizeTicket = false"></app-modal-filter-tickets>
 
 <p-dialog #dialogHtk header="HISTORIAL DE TICKETS" [modal]="true" [(visible)]="modalhistorial"
   [style]="{ width: '100vw', height: '100vh' }" [maximizable]="true">
@@ -111,6 +102,7 @@
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
   [showTransformOptions]="'translateX(100%)'"></p-toast>
+
 <p-confirmDialog>
   <ng-template pTemplate="message" let-message>
     <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">

@@ -39,7 +39,7 @@ import { UsersService } from '../../../services/users.service';
   styleUrl: './modal-generate-ticket.component.scss',
 })
 export class ModalGenerateTicketComponent implements OnInit {
-  @Input() isModalVisible: boolean = false;
+  @Input() showModalGenerateTicket: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
