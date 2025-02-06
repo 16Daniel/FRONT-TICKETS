@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -17,6 +18,7 @@ import { TicketsService } from '../../../services/tickets.service';
 import { MessageService } from 'primeng/api';
 import { Notificacion } from '../../../models/notificacion.model';
 import { NotificationsService } from '../../../services/notifications.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-modal-ticket-chat',
@@ -32,10 +34,10 @@ import { NotificationsService } from '../../../services/notifications.service';
   templateUrl: './modal-ticket-chat.component.html',
   styleUrl: './modal-ticket-chat.component.scss',
 })
-export class ModalTicketChatComponent implements AfterViewChecked {
+export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
   @Input() showModalChatTicket: boolean = false;
-  @Output() closeEvent = new EventEmitter<boolean>();
   @Input() ticket: TicketDB | any;
+  @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 
   userdata: any;
@@ -47,6 +49,11 @@ export class ModalTicketChatComponent implements AfterViewChecked {
     private notificationsService: NotificationsService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
+  ngOnInit(): void {
+    this.ticketsService.getTicketById(this.ticket.id).subscribe((x) => {
+      console.log(x);
+    });
   }
 
   esmiuid(id: string): boolean {
@@ -96,7 +103,6 @@ export class ModalTicketChatComponent implements AfterViewChecked {
         let idn = this.notificationsService.addNotifiacion(dataNot);
 
         this.comentario = '';
-        // this.closeEvent.emit(false); // Cerrar modal
       })
       .catch((error) =>
         console.error('Error al actualizar los comentarios:', error)
@@ -119,5 +125,12 @@ export class ModalTicketChatComponent implements AfterViewChecked {
       this.chatContainer.nativeElement.scrollTop =
         this.chatContainer.nativeElement.scrollHeight;
     }
+  }
+
+  getDate(tsmp: Timestamp): Date {
+    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+    const firestoreTimestamp = tsmp; // Ejemplo
+    const date = firestoreTimestamp.toDate(); // Convierte a Date
+    return date;
   }
 }

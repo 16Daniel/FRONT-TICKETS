@@ -124,9 +124,9 @@ export default class TicketsComponent implements OnInit {
   }
 
   getdataTK() {
-    this.ticketsService.getTk(this.idt).subscribe({
+    this.ticketsService.getTicketById(this.idt).subscribe({
       next: (data) => {
-        this.itemtk = data[0];
+        this.itemtk = data;
         this.cdr.detectChanges();
       },
       error: (error) => {

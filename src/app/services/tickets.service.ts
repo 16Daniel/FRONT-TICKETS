@@ -4,6 +4,7 @@ import {
   collection,
   collectionData,
   doc,
+  docData,
   Firestore,
   getDocs,
   onSnapshot,
@@ -15,6 +16,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/enviroments';
 import { Ticket } from '../models/ticket.model';
+import { TicketDB } from '../models/ticket-db.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +28,29 @@ export class TicketsService {
   constructor(private firestore: Firestore, private http: HttpClient) {
     this.headers.append('Accept', 'application/json');
     this.headers.append('content-type', 'application/json');
+  }
+
+  getTickets(): Observable<any[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    return collectionData(ticketsCollection, { idField: 'id' });
+  }
+
+  getTicketById(idTicket: string): Observable<TicketDB> {
+    const ticketDoc = doc(this.firestore, `tickets/${idTicket}`); // Usamos 'doc()' en lugar de 'collection()'
+    return docData(ticketDoc, { idField: 'id' }) as Observable<TicketDB>;
+  }
+
+  async createTicket(ticket: Ticket) {
+    const ref = collection(this.firestore, 'tickets');
+    const docRef = await addDoc(ref, ticket);
+    return docRef.id; // Devolver el ID del documento creado
+  }
+
+  async updateTicket(data: any): Promise<void> {
+    let collectionName = 'tickets';
+    let docId = data.id;
+    const documentRef = doc(this.firestore, `${collectionName}/${docId}`);
+    return updateDoc(documentRef, data);
   }
 
   AddTkSQL(data: any): Observable<any> {
@@ -130,33 +155,5 @@ export class TicketsService {
       console.error('Error al obtener el count de tickets:', error);
       throw error;
     }
-  }
-
-  async addticket(ticket: Ticket) {
-    const ref = collection(this.firestore, 'tickets');
-    const docRef = await addDoc(ref, ticket);
-    return docRef.id; // Devolver el ID del documento creado
-  }
-
-  async updateTicket(data: any): Promise<void> {
-    let collectionName = 'tickets';
-    let docId = data.id;
-    const documentRef = doc(this.firestore, `${collectionName}/${docId}`);
-    return updateDoc(documentRef, data);
-  }
-
-  getTk(idtk: string): Observable<any[]> {
-    const sucursalesCollection = collection(this.firestore, 'tickets/' + idtk);
-    return collectionData(sucursalesCollection, { idField: 'id' }); // Incluye el ID del documento
-  }
-
-  getalltk(): Observable<any[]> {
-    const usersCollection = collection(this.firestore, 'tickets');
-    return collectionData(usersCollection, { idField: 'id' });
-  }
-
-  getTickets(iduser: string): Observable<any[]> {
-    const vcollection = collection(this.firestore, 'tickets');
-    return collectionData(vcollection, { idField: 'id' }); // Incluye el ID del documento
   }
 }

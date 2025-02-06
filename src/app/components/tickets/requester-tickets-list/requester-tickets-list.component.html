@@ -24,8 +24,8 @@
         <i class="bx bxs-circle bx-sm" [style]="{ color: obtenerBackgroundColorPrioridad(ticket.prioridadsuc) }"></i>
       </td>
       <td class="text-center">{{ ticket.folio }}</td>
-      <td class="text-center">{{ getdate(ticket!.fecha) | date }} -
-        {{ getdate(ticket!.fecha) | date : "HH:mm" }}</td>
+      <td class="text-center">{{ getDate(ticket!.fecha) | date }} -
+        {{ getDate(ticket!.fecha) | date : "HH:mm" }}</td>
       <td class="text-center">{{ obtenerNombreProveedor(ticket.idproveedor) }}</td>
       <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
       <td class="text-center">{{ obtenerNombreResponsable(ticket!.responsable) }}</td>

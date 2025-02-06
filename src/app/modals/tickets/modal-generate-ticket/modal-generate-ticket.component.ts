@@ -104,7 +104,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     });
   }
 
-  changeProveedor() {
+  onChangeProveedor() {
     this.formCategoria = undefined;
     this.cdr.detectChanges();
   }
@@ -178,7 +178,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       };
 
       
-      const docid = await this.ticketsService.addticket(tk);
+      const docid = await this.ticketsService.createTicket(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       this.closeEvent.emit(false); // Cerrar modal
 

@@ -123,7 +123,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  getdate(tsmp: Timestamp): Date {
+  getDate(tsmp: Timestamp): Date {
     // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
     const firestoreTimestamp = tsmp; // Ejemplo
     const date = firestoreTimestamp.toDate(); // Convierte a Date

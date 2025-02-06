@@ -162,7 +162,7 @@ export default class HomeAComponent implements OnInit {
         folio,
       };
       debugger;
-      const docid = await this.ticketsService.addticket(tk);
+      const docid = await this.ticketsService.createTicket(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
 
       let dataNot: Notificacion = {
@@ -276,7 +276,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   async getTicketsUser(): Promise<void> {
-    this.subscriptiontk = this.ticketsService.getalltk().subscribe({
+    this.subscriptiontk = this.ticketsService.getTickets().subscribe({
       next: (data) => {
         this.arr_tickets = data;
         let arr_temp: TicketDB[] = [];

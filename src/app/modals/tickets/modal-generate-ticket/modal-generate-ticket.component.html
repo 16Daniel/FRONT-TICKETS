@@ -17,7 +17,7 @@
     <p></p>
     <p-dropdown [options]="proveedores" [(ngModel)]="formProveedor" optionLabel="nombre" [filter]="true"
         filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
-        (onChange)="changeProveedor()">
+        (onChange)="onChangeProveedor()">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
                 <div>{{ selectedOption.nombre }}</div>

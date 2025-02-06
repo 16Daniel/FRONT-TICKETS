@@ -8,7 +8,9 @@
         }">
             <div class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: rgb(163 180 201)"
                 *ngIf="esmiuid(item.uid) == false">
-                <p class="p-1" style="color: black">{{ item.nombre }}</p>
+                <p class="p-1" style="color: black">
+                    {{ item.nombre }} <label style="font-size: 10px;">{{ getDate(item.fecha) | date }}</label>
+                </p>
                 <label [innerHTML]="item.comentario"></label>
             </div>
 

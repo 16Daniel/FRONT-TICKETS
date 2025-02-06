@@ -6,24 +6,16 @@ import {
 } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { Dialog, DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
-import { EditorModule } from 'primeng/editor';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Sucursal } from '../../models/sucursal.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Proveedor } from '../../models/proveedor.model';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Notificacion } from '../../models/notificacion.model';
 import HistorialTkComponent from '../../components/tickets/tickets-history/tickets-history.component';
-import { AccordionModule } from 'primeng/accordion';
 import { TicketDB } from '../../models/ticket-db.model';
 import { TicketsService } from '../../services/tickets.service';
-import { NotificationsService } from '../../services/notifications.service';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { RequesterTicketsListComponent } from '../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
@@ -36,52 +28,42 @@ import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-t
   imports: [
     TableModule,
     DialogModule,
-    DropdownModule,
-    FormsModule,
-    EditorModule,
     ToastModule,
-    CommonModule,
-    TagModule,
     ConfirmDialogModule,
-    OverlayPanelModule,
+    CommonModule,
     HistorialTkComponent,
-    AccordionModule,
     ModalGenerateTicketComponent,
     RequesterTicketsListComponent,
     ModalTicketDetailComponent,
     ModalFinalizeTicketComponent,
-    ModalFilterTicketsComponent
+    ModalFilterTicketsComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
 })
 export default class HomeComponent implements OnInit {
-  showModalGenerateTicket: boolean = false;
-  public formdepto: any;
-  public catproveedores: Proveedor[] = [];
-  public arr_tickets: TicketDB[] = []; //aqui
-  public subscriptiontk: Subscription | undefined;
-  public showModalTicketDetail: boolean = false; //aqui
-  public modalcomentarios: boolean = false;
-  public modaladdcomentario: boolean = false;
-  public itemtk: TicketDB | undefined; //aqui
-  public formcomentario: string = '';
-  public userdata: any;
-  public sucursal: Sucursal | undefined;
-  public selectedtk: TicketDB | undefined; //aqui
-  public all_arr_tickets: TicketDB[] = [];
-  public showModalFinalizeTicket: boolean = false;
-  public modalhistorial: boolean = false;
-  public formstatus: any;
-  public loading: boolean = false;
-
   @ViewChild('dialogHtk') dialog!: Dialog;
+
+  showModalGenerateTicket: boolean = false;
+  showModalFinalizeTicket: boolean = false;
+  showModalTicketDetail: boolean = false;
+
+  sucursal: Sucursal | undefined;
+  tickets: TicketDB[] = [];
+  todosLosTickets: TicketDB[] = [];
+
+  formdepto: any;
+  catproveedores: Proveedor[] = [];
+  subscriptiontk: Subscription | undefined;
+  itemtk: TicketDB | undefined;
+  userdata: any;
+  selectedtk: TicketDB | undefined;
+  modalhistorial: boolean = false;
+  loading: boolean = false;
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private messageService: MessageService,
-    private ticketsService: TicketsService,
-    private notificationsService: NotificationsService,
+    private ticketsService: TicketsService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
@@ -99,8 +81,10 @@ export default class HomeComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  ngOnDestroy() {
+    if (this.subscriptiontk != undefined) {
+      this.subscriptiontk.unsubscribe();
+    }
   }
 
   async getTicketsUser(userid: string): Promise<void> {
@@ -110,18 +94,18 @@ export default class HomeComponent implements OnInit {
       .subscribe({
         next: (data) => {
           console.log(data);
-          this.arr_tickets = data;
+          this.tickets = data;
           let arr_temp: TicketDB[] = [];
-          let temp1: TicketDB[] = this.arr_tickets.filter(
+          let temp1: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
-          let temp2: TicketDB[] = this.arr_tickets.filter(
+          let temp2: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'ALTA'
           );
-          let temp3: TicketDB[] = this.arr_tickets.filter(
+          let temp3: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'MEDIA'
           );
-          let temp4: TicketDB[] = this.arr_tickets.filter(
+          let temp4: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'BAJA'
           );
 
@@ -141,11 +125,11 @@ export default class HomeComponent implements OnInit {
             (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
           );
           arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.all_arr_tickets = [...arr_temp];
-          this.arr_tickets = arr_temp;
+          this.todosLosTickets = [...arr_temp];
+          this.tickets = arr_temp;
 
           if (this.itemtk != undefined) {
-            let temp = this.arr_tickets.filter((x) => x.id == this.itemtk!.id);
+            let temp = this.tickets.filter((x) => x.id == this.itemtk!.id);
             if (temp.length > 0) {
               this.itemtk = temp[0];
             }
@@ -167,18 +151,18 @@ export default class HomeComponent implements OnInit {
       .getTicketsResponsable(userid)
       .subscribe({
         next: (data) => {
-          this.arr_tickets = data;
+          this.tickets = data;
           let arr_temp: TicketDB[] = [];
-          let temp1: TicketDB[] = this.arr_tickets.filter(
+          let temp1: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
-          let temp2: TicketDB[] = this.arr_tickets.filter(
+          let temp2: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'ALTA'
           );
-          let temp3: TicketDB[] = this.arr_tickets.filter(
+          let temp3: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'MEDIA'
           );
-          let temp4: TicketDB[] = this.arr_tickets.filter(
+          let temp4: TicketDB[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'BAJA'
           );
 
@@ -198,11 +182,11 @@ export default class HomeComponent implements OnInit {
             (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
           );
           arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.all_arr_tickets = [...arr_temp];
-          this.arr_tickets = arr_temp;
+          this.todosLosTickets = [...arr_temp];
+          this.tickets = arr_temp;
 
           if (this.itemtk != undefined) {
-            let temp = this.arr_tickets.filter((x) => x.id == this.itemtk!.id);
+            let temp = this.tickets.filter((x) => x.id == this.itemtk!.id);
             if (temp.length > 0) {
               this.itemtk = temp[0];
             }
@@ -217,13 +201,7 @@ export default class HomeComponent implements OnInit {
       });
   }
 
-  ngOnDestroy() {
-    if (this.subscriptiontk != undefined) {
-      this.subscriptiontk.unsubscribe();
-    }
-  }
-
-  getBgPrioridad(value: string): string {
+  obtenerBackgroundColorPrioridad(value: string): string {
     let str = '';
 
     if (value == 'ALTA') {
@@ -240,7 +218,7 @@ export default class HomeComponent implements OnInit {
     return str;
   }
 
-  abrirModalDetalleTicket(ticket: any) {
+  abrirModalDetalleTicket(ticket: TicketDB | any) {
     this.itemtk = ticket;
     this.showModalTicketDetail = true;
 
@@ -252,63 +230,13 @@ export default class HomeComponent implements OnInit {
     }, 50);
   }
 
-  addComentariotk() {
-    let idu = this.userdata.uid;
-
-    let data = {
-      nombre: this.userdata.nombre + ' ' + this.userdata.apellidoP,
-      uid: idu,
-      comentario: this.formcomentario,
-      fecha: new Date(),
-    };
-    this.itemtk!.comentarios.push(data);
-
-    this.ticketsService
-      .updateTicket(this.itemtk)
-      .then(() => {
-        this.showMessage('success', 'Success', 'Enviado correctamente');
-
-        let dataNot: Notificacion = {
-          titulo: 'NUEVO COMENTARIO',
-          mensaje: 'HAY UN NUEVO COMENTARIO PARA EL TICKET: ' + this.itemtk!.id,
-          uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
-          fecha: new Date(),
-          abierta: false,
-          idtk: this.itemtk!.id,
-          notificado: false,
-        };
-
-        let idn = this.notificationsService.addNotifiacion(dataNot);
-
-        this.formcomentario = '';
-        this.modaladdcomentario = false;
-      })
-      .catch((error) =>
-        console.error('Error al actualizar los comentarios:', error)
-      );
-  }
-
-  esmiuid(id: string): boolean {
-    let st = false;
-    let userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idu = this.userdata.uid;
-    if (id == idu) {
-      st = true;
+  obtenerNombreProveedor(idp: string): string {
+    let nombre = '';
+    let proveedor = this.catproveedores.filter((x) => x.id == idp);
+    if (proveedor.length > 0) {
+      nombre = proveedor[0].nombre;
     }
-    return st;
-  }
-
-  getNameProveedor(idp: string): string {
-    let str = '';
-    let temp = this.catproveedores.filter((x) => x.id == idp);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
-  }
-
-  showModalFiltros() {
-    this.showModalFinalizeTicket = true;
+    return nombre;
   }
 
   showHistorial() {
@@ -316,7 +244,7 @@ export default class HomeComponent implements OnInit {
     this.dialog.maximized = true;
   }
 
-  getTicketsSuc(ids: string) {
-    return this.arr_tickets.filter((x) => x.idsucordpto == ids);
+  obtenerTicketsPorSucursal(idSucursal: string) {
+    return this.tickets.filter((x) => x.idsucordpto == idSucursal);
   }
 }

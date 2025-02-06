@@ -1,8 +1,8 @@
 <p-dialog header="FILTRAR TICKETS" [modal]="true" [(visible)]="showModalFinalizeTicket" [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
-    <p-dropdown [options]="catproveedores" [(ngModel)]="filterarea" optionLabel="nombre" [filter]="true"
+    <p-dropdown [options]="proveedores" [(ngModel)]="filterarea" optionLabel="nombre" [filter]="true"
         filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{ width: '100%' }"
-        (onChange)="changeprovFilter()">
+        (onChange)="onChangeProveedor()">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
                 <div>{{ selectedOption.nombre }}</div>
@@ -15,7 +15,7 @@
         </ng-template>
     </p-dropdown>
     <p></p>
-    <p-dropdown [options]="catcategorias" [(ngModel)]="filtercategoria" optionLabel="name" [filter]="true"
+    <p-dropdown [options]="categorias" [(ngModel)]="filtercategoria" optionLabel="name" [filter]="true"
         filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA" [style]="{ width: '100%' }">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
@@ -48,7 +48,7 @@
                         <i class="bx bxs-hot bx-sm rounded-3" style="color: red"></i>
                     </td>
                     <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%" class="p-3" [style]="{
-              'background-color': getBgPrioridad(item.name),
+              'background-color': obtenerBackgroundColorPrioridad(item.name),
               width: '30px',
               height: '30px'
             }"></div>
@@ -58,7 +58,7 @@
         </ng-template>
     </p-dropdown>
     <p></p>
-    <p-dropdown [options]="catStatusT" [(ngModel)]="filterstatus" optionLabel="nombre" [filter]="false"
+    <p-dropdown [options]="statusTicket" [(ngModel)]="filterstatus" optionLabel="nombre" [filter]="false"
         filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR STATUS" [style]="{ width: '100%' }">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
@@ -75,10 +75,10 @@
 
     <div style="height: 150px"></div>
     <div class="d-flex justify-content-between">
-        <button class="btn btn-secondary p-3" (click)="limpiarfiltro()">
+        <button class="btn btn-secondary p-3" (click)="limpiarFiltros()">
             LIMPIAR <i class="bx bx-brush-alt bx-sm"></i>
         </button>
-        <button class="btn bg-p-b p-3" style="background-color: #ff5722" (click)="filtrarT()">
+        <button class="btn bg-p-b p-3" style="background-color: #ff5722" (click)="filtrarTickets()">
             FILTRAR <i class="bx bx-filter bx-sm"></i>
         </button>
     </div>
