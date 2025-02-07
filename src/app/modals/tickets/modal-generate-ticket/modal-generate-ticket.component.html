@@ -76,7 +76,7 @@
             <ng-template let-item pTemplate="item">
                 <div class="flex align-items-center gap-2">
                     <div class="d-flex justify-content-start align-items-center gap-3">
-                        <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-sm rounded-3' style="color: red;"></i>
+                        <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-md rounded-3' style="color: red;"></i>
                         </td>
                         <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%;" class="p-3"
                             [style]="{'background-color':obtenerBackgroundColorPrioridad(item.name),'width':'30px','height':'30px'}">

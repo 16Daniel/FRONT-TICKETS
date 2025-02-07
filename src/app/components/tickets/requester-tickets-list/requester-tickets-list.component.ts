@@ -22,6 +22,10 @@ import { NotificationsService } from '../../../services/notifications.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { ModalFinalizeTicketComponent } from '../../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
+import { AccordionModule } from 'primeng/accordion';
+import { BadgeModule } from 'primeng/badge';
+
+// type Prioridad = 'PÁNICO' | 'ALTA' | 'MEDIA' | 'BAJA';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -31,6 +35,8 @@ import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-c
     CommonModule,
     ModalFinalizeTicketComponent,
     ModalTicketChatComponent,
+    AccordionModule,
+    BadgeModule,
   ],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
@@ -98,6 +104,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
     if (value == 'BAJA') {
       str = '#61ff00';
+    }
+
+    if (value == 'PÁNICO') {
+      str = 'black';
     }
     return str;
   }
@@ -225,5 +235,25 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   onClickChat(ticket: TicketDB) {
     this.ticketAccion = ticket;
     this.showModalChatTicket = true;
+  }
+
+  obtenerContadorTickets(prioridad: any): number {
+    if (prioridad === 'PÁNICO')
+      return this.tickets.filter((x) => x.prioridadsuc === 'PÁNICO').length;
+    else if (prioridad === 'ALTA')
+      return this.tickets.filter((x) => x.prioridadsuc === 'ALTA').length;
+    else if (prioridad === 'MEDIA')
+      return this.tickets.filter((x) => x.prioridadsuc === 'MEDIA').length;
+    else return this.tickets.filter((x) => x.prioridadsuc === 'BAJA').length;
+  }
+
+  obtenerTicketsFiltrados(prioridad: any): TicketDB[] {
+    if (prioridad === 'PÁNICO')
+      return this.tickets.filter((x) => x.prioridadsuc === 'PÁNICO');
+    else if (prioridad === 'ALTA')
+      return this.tickets.filter((x) => x.prioridadsuc === 'ALTA');
+    else if (prioridad === 'MEDIA')
+      return this.tickets.filter((x) => x.prioridadsuc === 'MEDIA');
+    else return this.tickets.filter((x) => x.prioridadsuc === 'BAJA');
   }
 }
