@@ -1,78 +1,105 @@
 <p-dialog header="GENERAR TICKET" [modal]="true" [(visible)]="showModalGenerateTicket" [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
-    <p-dropdown [options]="sucursales" [(ngModel)]="sucursal" optionLabel="nombre" [filter]="true" filterBy="nombre"
-        [showClear]="true" placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}"
-        [disabled]="userdata.idRol == '2'">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-dep pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ dep.nombre }}</div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <p></p>
-    <p-dropdown [options]="proveedores" [(ngModel)]="formProveedor" optionLabel="nombre" [filter]="true"
-        filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
-        (onChange)="onChangeProveedor()">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-dep pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ dep.nombre }}</div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <p></p>
-    <p-dropdown [options]="obtenerCategoriasProveedor()" [(ngModel)]="formCategoria" optionLabel="name" [filter]="true"
-        filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA" [style]="{width:'100%'}">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-categoria pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ categoria.nombre }}</div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <P></P>
-    <input class="form-control" style="height: 48px;" type="text" placeholder="NOMBRE DEL SOLICITANTE"
-        [(ngModel)]="formNombreSolicitante">
-    <p></p>
-    <p-dropdown [options]="[{name:'PÁNICO'},{name:'ALTA'},{name:'MEDIA'},{name:'BAJA'}]" [(ngModel)]="formPrioridad"
-        optionLabel="name" [filter]="false" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR PRIORIDAD"
-        [style]="{width:'100%'}">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.name }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-item pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div class="d-flex justify-content-start align-items-center gap-3">
-                    <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-sm rounded-3' style="color: red;"></i>
-                    </td>
-                    <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%;" class="p-3"
-                        [style]="{'background-color':obtenerBackgroundColorPrioridad(item.name),'width':'30px','height':'30px'}">
-                    </div>
-                    <div>{{ item.name }}</div>
-                </div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-    <p></p>
-    <P>FAVOR DE INGRESAR UNA DESCRIPCIÓN DEL PROBLEMA, SI ES NECESARIO PUEDE ADJUNTAR IMÁGENES</P>
-    <p-editor [(ngModel)]="formDescripcion" [style]="{ height: '320px' }" />
+    <form #form="ngForm" (ngSubmit)="enviarTicket(form)">
 
-    <div class="d-flex justify-content-end mt-3">
-        <button class="btn bg-p-b p-3" (click)="enviarTicket()"><i class='bx bx-send'></i>ENVIAR</button>
-    </div>
+        <p-dropdown [options]="sucursales" [(ngModel)]="sucursal" name="sucursal" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO"
+            [style]="{width:'100%'}" [disabled]="userdata.idRol == '2'">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <p></p>
+        <p-dropdown [options]="proveedores" [(ngModel)]="formProveedor" name="proveedor" optionLabel="nombre"
+            [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
+            (onChange)="onChangeProveedor()" #formProveedorCtrl="ngModel"
+            [ngClass]="{'p-invalid': formProveedorCtrl.invalid && formProveedorCtrl.touched}" required>
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <small *ngIf="formProveedorCtrl.invalid && formProveedorCtrl.touched" class="p-error">Campo requerido.</small>
+
+        <p></p>
+        <p-dropdown [options]="obtenerCategoriasProveedor()" [(ngModel)]="formCategoria" name="categoria"
+            optionLabel="name" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA"
+            [style]="{width:'100%'}" #formCategoriaCtrl="ngModel"
+            [ngClass]="{'p-invalid': formProveedorCtrl.invalid && formProveedorCtrl.touched}" required>
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-categoria pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ categoria.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <small *ngIf="formCategoriaCtrl.invalid && formCategoriaCtrl.touched" class="p-error">Campo requerido.</small>
+        <P></P>
+
+        <input class="form-control" style="height: 48px;" type="text" placeholder="NOMBRE DEL SOLICITANTE"
+            [(ngModel)]="formNombreSolicitante" name="nombreSolicitante"
+            [ngClass]="{'p-invalid': formNombreSolicitanteCtrl.invalid && formNombreSolicitanteCtrl.touched}"
+            #formNombreSolicitanteCtrl="ngModel" name="nombreSolicitante" required>
+        <small *ngIf="formNombreSolicitanteCtrl.invalid && formNombreSolicitanteCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+
+        <p></p>
+
+        <p-dropdown [options]="[{name:'PÁNICO'},{name:'ALTA'},{name:'MEDIA'},{name:'BAJA'}]" [(ngModel)]="formPrioridad"
+            name="formPrioridad" name="prioridad" optionLabel="name" [filter]="false" filterBy="nombre"
+            [showClear]="true" placeholder="SELECCIONAR PRIORIDAD" [style]="{width:'100%'}"
+            [ngClass]="{'p-invalid': formPrioridadCtrl.invalid && formPrioridadCtrl.touched}"
+            #formPrioridadCtrl="ngModel" required>
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.name }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div class="d-flex justify-content-start align-items-center gap-3">
+                        <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-sm rounded-3' style="color: red;"></i>
+                        </td>
+                        <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%;" class="p-3"
+                            [style]="{'background-color':obtenerBackgroundColorPrioridad(item.name),'width':'30px','height':'30px'}">
+                        </div>
+                        <div>{{ item.name }}</div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <small *ngIf="formPrioridadCtrl.invalid && formPrioridadCtrl.touched" class="p-error">Campo requerido.</small>
+
+        <p></p>
+        <P>FAVOR DE INGRESAR UNA DESCRIPCIÓN DEL PROBLEMA, SI ES NECESARIO PUEDE ADJUNTAR IMÁGENES</P>
+        <p-editor [(ngModel)]="formDescripcion" name="descripcion" [style]="{ height: '320px' }"
+            [ngClass]="{'p-invalid': formDescripcionCtrl.invalid && formDescripcionCtrl.touched}"
+            #formDescripcionCtrl="ngModel" name="formDescripcion" required />
+        <small *ngIf="formDescripcionCtrl.invalid && formDescripcionCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3"><i class='bx bx-send'></i>ENVIAR</button>
+        </div>
+
+    </form>
 </p-dialog>

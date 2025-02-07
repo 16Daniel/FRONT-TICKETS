@@ -19,7 +19,7 @@ import { Usuario } from '../../../models/usuario.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { CatalogosService } from '../../../services/catalogs.service';
 import { Proveedor } from '../../../models/proveedor.model';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Categoria } from '../../../models/categoria.mdoel';
 import { EditorModule } from 'primeng/editor';
 import { CommonModule } from '@angular/common';
@@ -147,7 +147,20 @@ export class ModalGenerateTicketComponent implements OnInit {
     return str;
   }
 
-  async enviarTicket(): Promise<void> {
+  async enviarTicket(form: NgForm): Promise<void> {
+    if (form.form.status == 'INVALID') {
+      Object.values(form.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+
+      this.showMessage(
+        'error',
+        'Error',
+        'Campos requeridos incompletos'
+      );
+      return;
+    }
+
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
       let folio = this.folioGeneratorService.generarFolio(
         this.formDepartamento.id,
