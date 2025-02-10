@@ -45,6 +45,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: TicketDB[] = [];
   @Output() clickEvent = new EventEmitter<TicketDB>();
 
+  activeIndex: number = -1;
   showModalFinalizeTicket: boolean = false;
   showModalChatTicket: boolean = false;
   proveedores: Proveedor[] = [];
