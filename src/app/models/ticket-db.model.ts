@@ -2,7 +2,7 @@ import { Timestamp } from '@angular/fire/firestore';
 
 export interface TicketDB {
   id: string;
-  fecha: Timestamp;
+  fecha: Timestamp | any;
   idsucordpto: string;
   statusSuc: string;
   idproveedor: string;

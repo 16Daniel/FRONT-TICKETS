@@ -13,7 +13,7 @@
     <button class="btn bg-p-b p-2" style="background-color: #ff5722" (click)="showModalFinalizeTicket = true">
       <i class="bx bx-filter bx-sm"></i>
     </button>
-    <button class="btn bg-p-b p-2" style="background-color: #29d998" (click)="showHistorial()">
+    <button class="btn bg-p-b p-2" style="background-color: #29d998" (click)="showModalHistorial = true">
       <i class="bx bx-history bx-flip-horizontal bx-sm"></i>
     </button>
   </div>
@@ -96,10 +96,8 @@
   [tickets]="todosLosTickets" (closeEvent)="showModalFinalizeTicket = false"
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
-<p-dialog #dialogHtk header="HISTORIAL DE TICKETS" [modal]="true" [(visible)]="modalhistorial"
-  [style]="{ width: '100vw', height: '100vh' }" [maximizable]="true">
-  <app-tickets-history *ngIf="modalhistorial"></app-tickets-history>
-</p-dialog>
+<app-modal-tickets-history *ngIf="showModalHistorial" [showModalHistorial]="showModalHistorial"
+  (closeEvent)="showModalHistorial = false"></app-modal-tickets-history>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

@@ -21,6 +21,7 @@ import { RequesterTicketsListComponent } from '../../components/tickets/requeste
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
+import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 
 @Component({
   selector: 'app-home',
@@ -37,6 +38,7 @@ import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-t
     ModalTicketDetailComponent,
     ModalFinalizeTicketComponent,
     ModalFilterTicketsComponent,
+    ModalTicketsHistoryComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
@@ -47,6 +49,7 @@ export default class HomeComponent implements OnInit {
   showModalGenerateTicket: boolean = false;
   showModalFinalizeTicket: boolean = false;
   showModalTicketDetail: boolean = false;
+  showModalHistorial: boolean = false;
 
   sucursal: Sucursal | undefined;
   tickets: TicketDB[] = [];
@@ -58,7 +61,6 @@ export default class HomeComponent implements OnInit {
   itemtk: TicketDB | undefined;
   userdata: any;
   selectedtk: TicketDB | undefined;
-  modalhistorial: boolean = false;
   loading: boolean = false;
 
   constructor(
@@ -239,10 +241,10 @@ export default class HomeComponent implements OnInit {
     return nombre;
   }
 
-  showHistorial() {
-    this.modalhistorial = true;
-    this.dialog.maximized = true;
-  }
+  // showHistorial() {
+  //   this.modalhistorial = true;
+  //   this.dialog.maximized = true;
+  // }
 
   obtenerTicketsPorSucursal(idSucursal: string) {
     return this.tickets.filter((x) => x.idsucordpto == idSucursal);
