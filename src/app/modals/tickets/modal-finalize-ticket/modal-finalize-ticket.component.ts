@@ -61,7 +61,7 @@ export class ModalFinalizeTicketComponent implements OnChanges {
       .updateTicket(this.ticket)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
-        console.log(ticket)
+
         let tk = {
           Idtk: ticket!.id,
           Fecha: this.getdate(ticket!.fecha),
