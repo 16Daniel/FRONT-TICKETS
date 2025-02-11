@@ -17,4 +17,5 @@ export interface Ticket {
   iduser: string;
   nombreCategoria: string;
   folio: string;
+  calificacion: number;
 }

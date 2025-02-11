@@ -167,8 +167,6 @@ export class ModalGenerateTicketComponent implements OnInit {
         count
       );
 
-      let idu = this.userdata.uid;
-      let comtk: any[] = [];
       let tk: Ticket = {
         fecha: new Date(),
         idsucordpto: this.formDepartamento.id,
@@ -181,16 +179,16 @@ export class ModalGenerateTicketComponent implements OnInit {
         prioridadProv: null,
         status: '1',
         responsable: this.obtenerResponsableTicket(),
-        comentarios: comtk,
+        comentarios: [],
         fechafin: null,
         duracion: null,
         tiposoporte: null,
-        iduser: idu,
+        iduser: this.userdata.uid,
         nombreCategoria: this.formCategoria.nombre,
         folio,
+        calificacion: 0
       };
 
-      
       const docid = await this.ticketsService.createTicket(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       this.closeEvent.emit(false); // Cerrar modal

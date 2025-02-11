@@ -21,4 +21,5 @@ export interface TicketDB {
   nombreCategoria: string | null;
   comentariosfinales: string | null;
   folio: string;
+  calificacion: number;
 }

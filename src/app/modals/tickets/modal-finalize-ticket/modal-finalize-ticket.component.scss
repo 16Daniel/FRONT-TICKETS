@@ -1,0 +1,19 @@
+// .star-rating {
+//   font-size: 30px;
+//   color: gold;
+//   cursor: pointer;
+// }
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: gold;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.star {
+  padding: 0 5px;
+}

@@ -160,6 +160,7 @@ export default class HomeAComponent implements OnInit {
         iduser: idu,
         nombreCategoria: this.formcategoria.nombre,
         folio,
+        calificacion: 0
       };
       debugger;
       const docid = await this.ticketsService.createTicket(tk);

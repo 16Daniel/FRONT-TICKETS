@@ -1,26 +1,16 @@
 <p-accordion class="w-full" [(activeIndex)]="activeIndex">
   <p-accordionTab *ngFor="let item of ['PÁNICO', 'ALTA', 'MEDIA', 'BAJA']; let i = index">
     <ng-template pTemplate="header">
-      <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100" 
-            [style]="{'background-color': obtenerBackgroundColorPrioridad(item)}"
-            (click)="activeIndex = i">
-        <p-badge [value]="obtenerContadorTickets(item)" class="ml-auto mr-2" size="large" 
-                 [style]="{'background-color':'white','color':'black'}"/>
-        <span class="fw-bold" 
-              [style]="{ 'color': (item === 'MEDIA' || item === 'BAJA') ? 'black' : 'white' }">
+      <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100" [style]="{'background-color':obtenerBackgroundColorPrioridad(item)}" (click)="activeIndex = i">
+        <p-badge [value]="obtenerContadorTickets(item)" class="ml-auto mr-2" size="large" [style]="{'background-color':'white','color':'black'}"/>
+        <span class="fw-bold" [style]="{ 'color': (item === 'MEDIA' || item === 'BAJA') ? 'black' : 'white' }">
           {{ item }}
         </span>
       </span>
     </ng-template>
-    
-    <p-table [value]="obtenerTicketsFiltrados(item)" 
-             [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-             styleClass="p-datatable-gridlines table-tk" 
-             [scrollable]="true" 
-             scrollHeight="62vh" 
-             selectionMode="single"
-             [(selection)]="ticketSeleccionado" 
-             (onRowSelect)="onClick()">
+    <p-table [value]="obtenerTicketsFiltrados(item)" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+      styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+      [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
       <ng-template pTemplate="header">
         <tr class="text-center">
           <th><span class="fs-1">🚥</span></th>
@@ -34,18 +24,21 @@
           <th>ACCIONES</th>
         </tr>
       </ng-template>
+      <!-- FF495F -->
       <ng-template pTemplate="body" let-ticket>
         <tr [pSelectableRow]="ticket">
           <td class="text-center" *ngIf="ticket.prioridadsuc == 'PÁNICO'">
             <i class="bx bxs-hot bx-sm" style="color: red"></i>
           </td>
           <td class="text-center" *ngIf="ticket.prioridadsuc != 'PÁNICO'">
-            <i class="bx bxs-circle bx-sm" 
-               [style]="{color: obtenerBackgroundColorPrioridad(ticket.prioridadsuc)}"></i>
+            <i class="bx bxs-circle bx-sm" [style]="{
+                color: obtenerBackgroundColorPrioridad(ticket.prioridadsuc)
+              }"></i>
           </td>
           <td class="text-center">{{ ticket.folio }}</td>
           <td class="text-center">
-            {{ getDate(ticket!.fecha) | date }} - {{ getDate(ticket!.fecha) | date : "HH:mm" }}
+            {{ getDate(ticket!.fecha) | date }} -
+            {{ getDate(ticket!.fecha) | date : "HH:mm" }}
           </td>
           <td class="text-center">
             {{ obtenerNombreProveedor(ticket.idproveedor) }}
@@ -58,13 +51,15 @@
             {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
           </td>
           <td class="text-center">
-            <i *ngIf="ticket.status == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028"></i>
+            <i *ngIf="ticket.status == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm"
+              style="color: #ff0028"></i>
             <i *ngIf="ticket.status == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00"></i>
             <i *ngIf="ticket.status == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff"></i>
             <i *ngIf="ticket.status == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500"></i>
             <i *ngIf="ticket.status == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00"></i>
             <i *ngIf="ticket.status == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500"></i>
           </td>
+
           <td style="display: flex; gap: 10px">
             <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px">
               <i class="bx bx-check-circle bx-sm"></i>
@@ -72,9 +67,8 @@
             <button class="btn btn-primary" (click)="onClickChat(ticket)" style="margin: 2px">
               <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
             </button>
-            <button *ngIf="ticket != undefined && ticket!.statusSuc != 'PÁNICO'" 
-                    class="btn btn-dark"
-                    (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
+            <button *ngIf="ticket != undefined && ticket!.statusSuc != 'PÁNICO'" class="btn btn-dark"
+              (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
               <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
             </button>
           </td>
@@ -83,3 +77,9 @@
     </p-table>
   </p-accordionTab>
 </p-accordion>
+
+<app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket" [ticket]="ticketAccion"
+  (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
+
+<app-modal-ticket-chat *ngIf="ticketAccion" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
+  (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>

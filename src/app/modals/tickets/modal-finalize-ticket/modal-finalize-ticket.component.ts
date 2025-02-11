@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
@@ -16,11 +23,15 @@ import { MessageService } from 'primeng/api';
   templateUrl: './modal-finalize-ticket.component.html',
   styleUrl: './modal-finalize-ticket.component.scss',
 })
-export class ModalFinalizeTicketComponent {
+export class ModalFinalizeTicketComponent implements OnChanges {
   @Input() showModalFinalizeTicket: boolean = false;
   @Input() ticket: TicketDB | any;
   @Output() closeEvent = new EventEmitter<boolean>();
+
   evidencia: string = '';
+  rating: number = 0; // Calificación inicial
+
+  stars: boolean[] = [false, false, false, false, false]; // Estrellas desmarcadas
 
   constructor(
     private ticketsService: TicketsService,
@@ -28,38 +39,55 @@ export class ModalFinalizeTicketComponent {
     private messageService: MessageService
   ) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.updateStars();
+  }
+
+  updateStars() {
+    this.stars = this.stars.map((_, index) => index < this.rating);
+  }
+
+  setRating(index: number) {
+    this.rating = index + 1;
+    this.updateStars();
+  }
+
   finalizarTicket() {
     this.ticket!.status = '3';
+    this.ticket!.calificacion = this.rating;
+    const ticket = this.ticket;
+
     this.ticketsService
       .updateTicket(this.ticket)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
-
+        console.log(ticket)
         let tk = {
-          Idtk: this.ticket!.id,
-          Fecha: this.getdate(this.ticket!.fecha),
-          IdSuc: this.ticket!.idsucordpto,
-          Statussuc: this.ticket!.statusSuc,
-          Idprov: this.ticket!.idproveedor,
-          Idcat: this.ticket!.idcategoria,
-          Descripcion: this.ticket!.decripcion,
-          Solicitante: this.ticket!.solicitante,
-          Prioridadsuc: this.ticket!.prioridadsuc,
-          Prioridadprov: this.ticket!.prioridadProv,
+          Idtk: ticket!.id,
+          Fecha: this.getdate(ticket!.fecha),
+          IdSuc: ticket!.idsucordpto,
+          Statussuc: ticket!.statusSuc,
+          Idprov: ticket!.idproveedor,
+          Idcat: ticket!.idcategoria,
+          Descripcion: ticket!.decripcion,
+          Solicitante: ticket!.solicitante,
+          Prioridadsuc: ticket!.prioridadsuc,
+          Prioridadprov: ticket!.prioridadProv,
           Status: '3',
-          Responsable: this.ticket!.responsable,
+          Responsable: ticket!.responsable,
           FechaFin: new Date(),
           Duracion: '',
-          Tiposoporte: this.ticket!.tiposoporte,
-          Iduser: this.ticket!.iduser,
-          Comentarios: JSON.stringify(this.ticket!.comentarios),
-          Nombrecategoria: this.ticket!.nombreCategoria,
+          Tiposoporte: ticket!.tiposoporte,
+          Iduser: ticket!.iduser,
+          Comentarios: JSON.stringify(ticket!.comentarios),
+          Nombrecategoria: ticket!.nombreCategoria,
           Comentariosfinales: this.evidencia,
+          calificacion: this.rating
         };
 
         this.ticketsService.AddTkSQL(tk).subscribe({
-          next: (data) => {
-            this.documentsService.deleteDocument('tickets', this.ticket!.id);
+          next: () => {
+            this.documentsService.deleteDocument('tickets', ticket!.id);
             this.ticket = undefined;
             this.closeEvent.emit(false); // Cerrar modal
             this.evidencia = '';

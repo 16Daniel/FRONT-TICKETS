@@ -34,7 +34,7 @@ import { Timestamp } from '@angular/fire/firestore';
   templateUrl: './modal-ticket-chat.component.html',
   styleUrl: './modal-ticket-chat.component.scss',
 })
-export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
+export class ModalTicketChatComponent implements AfterViewChecked {
   @Input() showModalChatTicket: boolean = false;
   @Input() ticket: TicketDB | any;
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -49,11 +49,6 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
     private notificationsService: NotificationsService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-  }
-  ngOnInit(): void {
-    this.ticketsService.getTicketById(this.ticket.id).subscribe((x) => {
-      console.log(x);
-    });
   }
 
   esmiuid(id: string): boolean {
