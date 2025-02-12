@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ModalFilterTicketsComponent implements OnInit {
   @Input() tickets: TicketDB[] = [];
-  @Input() showModalFinalizeTicket: boolean = false;
+  @Input() showModalFilterTickets: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Output() ticketsFiltradosEvent = new EventEmitter<TicketDB[]>();
 

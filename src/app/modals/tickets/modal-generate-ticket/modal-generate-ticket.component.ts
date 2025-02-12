@@ -170,7 +170,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       let tk: Ticket = {
         fecha: new Date(),
         idsucordpto: this.formDepartamento.id,
-        statusSuc: null,
+        statusSuc: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
         idproveedor: this.formProveedor.id,
         idcategoria: this.formCategoria.id,
         decripcion: this.formDescripcion,

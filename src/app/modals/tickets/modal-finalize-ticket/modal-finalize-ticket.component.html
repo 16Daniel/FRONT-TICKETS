@@ -1,10 +1,12 @@
 <p-dialog header="FINALIZAR TICKET" [modal]="true" [(visible)]="showModalFinalizeTicket" [style]="{ width: '50rem' }"
     [maximizable]="true" (onHide)="onHide()">
-    <p class="text-center fw-bold">INGRESA EVIDENCIA Y COMENTARIOS FINALES</p>
+    <p class="text-center fw-bold" style="color: black;">INGRESA EVIDENCIA Y COMENTARIOS FINALES</p>
     <p-editor [(ngModel)]="evidencia" [style]="{ height: '320px' }" *ngIf="showModalFinalizeTicket" />
 
+    <br>
+    <br>
     <div class="rating-container">
-        <p>Califica tu experiencia con nuestro soporte:</p>
+        <p style="color: black;">Califica tu experiencia con nuestro soporte:</p>
         <div class="star-rating">
             <span *ngFor="let star of stars; let i = index" (click)="setRating(i)" class="star">
                 <ng-container *ngIf="star">★</ng-container>

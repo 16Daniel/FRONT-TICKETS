@@ -10,7 +10,7 @@
     <button class="btn bg-p-b p-2" (click)="showModalGenerateTicket = true">
       <i class="bx bx-plus bx-sm"></i>
     </button>
-    <button class="btn bg-p-b p-2" style="background-color: #ff5722" (click)="showModalFinalizeTicket = true">
+    <button class="btn bg-p-b p-2" style="background-color: #ff5722" (click)="showModalFilterTickets = true">
       <i class="bx bx-filter bx-sm"></i>
     </button>
     <button class="btn bg-p-b p-2" style="background-color: #29d998" (click)="showModalHistorial = true">
@@ -30,9 +30,8 @@
 
   <div *ngIf="tickets.length > 0" class="p-1 mt-3">
     <div class="m-0 pb-4" style="background-color: transparent">
-      <app-requester-tickets-list *ngIf="userdata.idRol == '2'" [tickets]="tickets"
-        (clickEvent)="abrirModalDetalleTicket($event)"></app-requester-tickets-list>
-
+        <app-priority-tickets-accordion *ngIf="userdata.idRol == '2'" [tickets]="tickets"
+        (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion>
       <div *ngIf="userdata.idRol == '4'">
         <div *ngFor="let item of userdata.sucursales" class="mb-3">
           <p-table [value]="obtenerTicketsPorSucursal(item.id)" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
@@ -92,8 +91,8 @@
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
   (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-modal-filter-tickets *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
-  [tickets]="todosLosTickets" (closeEvent)="showModalFinalizeTicket = false"
+<app-modal-filter-tickets *ngIf="showModalFilterTickets" [showModalFilterTickets]="showModalFilterTickets"
+  [tickets]="todosLosTickets" (closeEvent)="showModalFilterTickets = false"
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
 <app-modal-tickets-history *ngIf="showModalHistorial" [showModalHistorial]="showModalHistorial"

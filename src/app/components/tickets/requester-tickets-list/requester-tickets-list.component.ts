@@ -43,9 +43,9 @@ import { BadgeModule } from 'primeng/badge';
 })
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: TicketDB[] = [];
+  @Input() mostrarAcciones: boolean = true;;
   @Output() clickEvent = new EventEmitter<TicketDB>();
 
-  activeIndex: number = -1;
   showModalFinalizeTicket: boolean = false;
   showModalChatTicket: boolean = false;
   proveedores: Proveedor[] = [];
@@ -134,11 +134,16 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  getDate(tsmp: Timestamp): Date {
+  getDate(tsmp: Timestamp | any): Date {
+    try {
     // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
     const firestoreTimestamp = tsmp; // Ejemplo
     const date = firestoreTimestamp.toDate(); // Convierte a Date
     return date;
+    }
+    catch {
+      return tsmp;
+    }
   }
 
   obtenerNombreResponsable(id: string): string {
@@ -236,25 +241,5 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   onClickChat(ticket: TicketDB) {
     this.ticketAccion = ticket;
     this.showModalChatTicket = true;
-  }
-
-  obtenerContadorTickets(prioridad: any): number {
-    if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.prioridadsuc === 'PÁNICO').length;
-    else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'ALTA').length;
-    else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'MEDIA').length;
-    else return this.tickets.filter((x) => x.prioridadsuc === 'BAJA').length;
-  }
-
-  obtenerTicketsFiltrados(prioridad: any): TicketDB[] {
-    if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.prioridadsuc === 'PÁNICO');
-    else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'ALTA');
-    else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'MEDIA');
-    else return this.tickets.filter((x) => x.prioridadsuc === 'BAJA');
   }
 }

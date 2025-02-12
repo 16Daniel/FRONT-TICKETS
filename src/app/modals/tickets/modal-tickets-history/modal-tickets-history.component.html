@@ -1,4 +1,39 @@
 <p-dialog #dialogHtk header="HISTORIAL DE TICKETS" [modal]="true" [(visible)]="showModalHistorial"
-  [style]="{ width: '100vw', height: '100vh' }" [maximizable]="true" (onHide)="onHide()">
-  <!-- <app-tickets-history *ngIf="modalhistorial"></app-tickets-history> -->
+  [style]="{ width: '80vw', height: '80vh' }" [maximizable]="true" (onHide)="onHide()" >
+
+  <input class="invisible">
+  <div class="bg-white rounded-3 p-3">
+    <div class="row align-items-center gap-3">
+      <div class="col-auto">
+        <p class="fw-bold">FECHA INICIAL</p>
+      </div>
+      <div class="col-auto">
+        <p-calendar [(ngModel)]="fechaini" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+      </div>
+      <div class="col-auto">
+        <p class="fw-bold">FECHA FINAL</p>
+      </div>
+      <div class="col-auto">
+        <p-calendar [(ngModel)]="fechafin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+      </div>
+
+      <div class="col-auto">
+        <button class="btn bg-p-b p-2" (click)="buscar();">BUSCAR</button>
+      </div>
+      <div class="col-auto">
+        <button class="btn bg-p-b p-2" style="background-color: #FF5722;" (click)="showModalFilterTickets = true">
+          <i class='bx bx-filter bx-sm'></i></button>
+      </div>
+    </div>
+  </div>
+
+  <app-requester-tickets-list [tickets]="tickets" (clickEvent)="abrirModalDetalleTicket($event)"
+    [mostrarAcciones]="false"></app-requester-tickets-list>
 </p-dialog>
+
+<app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
+
+<app-modal-filter-tickets *ngIf="showModalFilterTickets" [showModalFilterTickets]="showModalFilterTickets"
+  [tickets]="todosLosTickets" (closeEvent)="showModalFilterTickets = false"
+  (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>

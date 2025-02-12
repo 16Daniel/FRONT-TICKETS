@@ -7,7 +7,7 @@ export interface TicketDB {
   statusSuc: string;
   idproveedor: string;
   idcategoria: number;
-  decripcion: string;
+  decripcion: string;// <---
   solicitante: string;
   prioridadsuc: string;
   prioridadProv: string | null;
@@ -18,7 +18,7 @@ export interface TicketDB {
   tiposoporte: string | null;
   iduser: string;
   comentarios: any[];
-  nombreCategoria: string | null;
+  nombreCategoria: string | null; // <--
   comentariosfinales: string | null;
   folio: string;
   calificacion: number;

@@ -17,11 +17,11 @@ import HistorialTkComponent from '../../components/tickets/tickets-history/ticke
 import { TicketDB } from '../../models/ticket-db.model';
 import { TicketsService } from '../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { RequesterTicketsListComponent } from '../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
+import { PriorityTicketsAccordionComponent } from '../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
 
 @Component({
   selector: 'app-home',
@@ -34,11 +34,11 @@ import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets
     CommonModule,
     HistorialTkComponent,
     ModalGenerateTicketComponent,
-    RequesterTicketsListComponent,
     ModalTicketDetailComponent,
     ModalFinalizeTicketComponent,
     ModalFilterTicketsComponent,
-    ModalTicketsHistoryComponent
+    ModalTicketsHistoryComponent,
+    PriorityTicketsAccordionComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
@@ -47,7 +47,7 @@ export default class HomeComponent implements OnInit {
   @ViewChild('dialogHtk') dialog!: Dialog;
 
   showModalGenerateTicket: boolean = false;
-  showModalFinalizeTicket: boolean = false;
+  showModalFilterTickets: boolean = false;
   showModalTicketDetail: boolean = false;
   showModalHistorial: boolean = false;
 
@@ -240,11 +240,6 @@ export default class HomeComponent implements OnInit {
     }
     return nombre;
   }
-
-  // showHistorial() {
-  //   this.modalhistorial = true;
-  //   this.dialog.maximized = true;
-  // }
 
   obtenerTicketsPorSucursal(idSucursal: string) {
     return this.tickets.filter((x) => x.idsucordpto == idSucursal);
