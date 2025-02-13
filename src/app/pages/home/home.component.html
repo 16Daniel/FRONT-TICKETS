@@ -33,7 +33,7 @@
 
   <div *ngIf="tickets.length > 0" class="p-1 mt-3">
     <div class="m-0 pb-4" style="background-color: transparent">
-        <app-priority-tickets-accordion *ngIf="userdata.idRol == '2'" [tickets]="tickets"
+      <app-priority-tickets-accordion *ngIf="userdata.idRol == '2'" [tickets]="tickets"
         (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion>
       <div *ngIf="userdata.idRol == '4'">
         <div *ngFor="let item of userdata.sucursales" class="mb-3">
@@ -101,7 +101,8 @@
 <app-modal-tickets-history *ngIf="showModalHistorial" [showModalHistorial]="showModalHistorial"
   (closeEvent)="showModalHistorial = false"></app-modal-tickets-history>
 
-  <app-ten-xten-maintenance-check *ngIf="showModal10x10" [showModal10x10]="showModal10x10" (closeEvent)="showModal10x10 = false"></app-ten-xten-maintenance-check>
+<app-modal-ten-xten-maintenance-check *ngIf="showModal10x10" [showModal10x10]="showModal10x10"
+  (closeEvent)="showModal10x10 = false"></app-modal-ten-xten-maintenance-check>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

@@ -21,7 +21,7 @@ import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finaliz
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
-import { TenXtenMaintenanceCheckComponent } from '../../modals/maintenance/ten-xten-maintenance-check/ten-xten-maintenance-check.component';
+import { ModalTenXtenMaintenanceCheckComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 
 @Component({
   selector: 'app-home',
@@ -38,7 +38,7 @@ import { TenXtenMaintenanceCheckComponent } from '../../modals/maintenance/ten-x
     ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,
-    TenXtenMaintenanceCheckComponent
+    ModalTenXtenMaintenanceCheckComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',

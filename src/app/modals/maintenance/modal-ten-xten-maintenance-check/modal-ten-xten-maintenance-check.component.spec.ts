@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TenXtenMaintenanceCheckComponent } from './ten-xten-maintenance-check.component';
+import { ModalTenXtenMaintenanceCheckComponent } from './modal-ten-xten-maintenance-check.component';
 
 describe('TenXtenMaintenanceCheckComponent', () => {
-  let component: TenXtenMaintenanceCheckComponent;
-  let fixture: ComponentFixture<TenXtenMaintenanceCheckComponent>;
+  let component: ModalTenXtenMaintenanceCheckComponent;
+  let fixture: ComponentFixture<ModalTenXtenMaintenanceCheckComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TenXtenMaintenanceCheckComponent]
+      imports: [ModalTenXtenMaintenanceCheckComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(TenXtenMaintenanceCheckComponent);
+    fixture = TestBed.createComponent(ModalTenXtenMaintenanceCheckComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

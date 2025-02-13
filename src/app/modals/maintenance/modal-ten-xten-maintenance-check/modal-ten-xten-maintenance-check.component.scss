@@ -14,11 +14,6 @@
     margin: 10px;
 }
 
-
-
-
-
-
 /* Estilos para el textarea */
 .custom-dialog textarea {
     width: 100%;
@@ -27,14 +22,14 @@
     border-radius: 4px;
     font-family: inherit;
     font-size: 14px;
-    resize: vertical; /* Permite redimensionar verticalmente */
+    resize: vertical;
     transition: border-color 0.3s ease;
 }
 
 .custom-dialog textarea:focus {
-    border-color: #007bff; /* Cambia el color del borde al enfocar */
-    outline: none; /* Elimina el contorno por defecto */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra al enfocar */
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 /* Estilos para el label */
@@ -45,7 +40,10 @@
     display: block;
 }
 
-/* Estilos para el contenedor del textarea */
 .custom-dialog .p-field {
     margin-bottom: 20px;
+}
+
+.p-invalid {
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }

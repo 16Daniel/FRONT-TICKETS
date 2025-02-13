@@ -4,6 +4,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { DialogModule } from 'primeng/dialog';
@@ -11,7 +12,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-ten-xten-maintenance-check',
+  selector: 'app-modal-ten-xten-maintenance-check',
   standalone: true,
   imports: [
     DialogModule,
@@ -20,16 +21,16 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './ten-xten-maintenance-check.component.html',
-  styleUrl: './ten-xten-maintenance-check.component.scss',
+  templateUrl: './modal-ten-xten-maintenance-check.component.html',
+  styleUrl: './modal-ten-xten-maintenance-check.component.scss',
 })
-export class TenXtenMaintenanceCheckComponent {
+export class ModalTenXtenMaintenanceCheckComponent {
   @Input() showModal10x10: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  maintenanceForm: FormGroup;
+  formularioDeMantenimiento: FormGroup;
 
-  maintenanceOptions = [
+  opcionesDeMantenimiento = [
     { label: 'MANTENIMIENTO CAJA', controlName: 'mantenimientoCaja' },
     { label: 'MANTENIMIENTO DE IMPRESORAS', controlName: 'mantenimientoImpresoras' },
     { label: 'MANTENIMIENTO DE RACK', controlName: 'mantenimientoRack' },
@@ -55,21 +56,29 @@ export class TenXtenMaintenanceCheckComponent {
   ];
 
   constructor(private fb: FormBuilder) {
-    this.maintenanceForm = this.fb.group({
-      observaciones: ['']
+    this.formularioDeMantenimiento = this.fb.group({
+      observaciones: ['', Validators.required]
     });
 
-    this.maintenanceOptions.forEach((option) => {
-      this.maintenanceForm.addControl(
-        option.controlName,
+    this.opcionesDeMantenimiento.forEach((opcion) => {
+      this.formularioDeMantenimiento.addControl(
+        opcion.controlName,
         this.fb.control(false)
       );
     });
   }
 
-  saveToFirebase() {
+  enviar() {
+    if (this.formularioDeMantenimiento.invalid) {
+      this.formularioDeMantenimiento.markAllAsTouched();
+      return;
+    }
+
     const formData: Mantenimiento10x10 = {
-      ...this.maintenanceForm.value,
+      ...this.formularioDeMantenimiento.value,
+      idSucursal: 1,
+      idUsuarioSoporte: 1,
+      estatus: false,
       timestamp: new Date(),
     };
     console.log(formData);
