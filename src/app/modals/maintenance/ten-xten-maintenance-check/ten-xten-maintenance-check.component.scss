@@ -1,0 +1,51 @@
+.custom-dialog .p-dialog-content {
+    padding: 20px;
+}
+
+.p-field-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.check-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    margin: 10px;
+}
+
+
+
+
+
+
+/* Estilos para el textarea */
+.custom-dialog textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical; /* Permite redimensionar verticalmente */
+    transition: border-color 0.3s ease;
+}
+
+.custom-dialog textarea:focus {
+    border-color: #007bff; /* Cambia el color del borde al enfocar */
+    outline: none; /* Elimina el contorno por defecto */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra al enfocar */
+}
+
+/* Estilos para el label */
+.custom-dialog label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Estilos para el contenedor del textarea */
+.custom-dialog .p-field {
+    margin-bottom: 20px;
+}

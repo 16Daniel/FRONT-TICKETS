@@ -16,6 +16,9 @@
     <button class="btn bg-p-b p-2" style="background-color: #29d998" (click)="showModalHistorial = true">
       <i class="bx bx-history bx-flip-horizontal bx-sm"></i>
     </button>
+    <button class="btn bg-p-b p-2" style="background-color: #949494" (click)="showModal10x10 = true">
+      <i class="bx bx-filter bx-sm"></i>
+    </button>
   </div>
 
   <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
@@ -97,6 +100,8 @@
 
 <app-modal-tickets-history *ngIf="showModalHistorial" [showModalHistorial]="showModalHistorial"
   (closeEvent)="showModalHistorial = false"></app-modal-tickets-history>
+
+  <app-ten-xten-maintenance-check *ngIf="showModal10x10" [showModal10x10]="showModal10x10" (closeEvent)="showModal10x10 = false"></app-ten-xten-maintenance-check>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

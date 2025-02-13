@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Proveedor } from '../../models/proveedor.model';
-import HistorialTkComponent from '../../components/tickets/tickets-history/tickets-history.component';
 import { TicketDB } from '../../models/ticket-db.model';
 import { TicketsService } from '../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
@@ -22,6 +21,7 @@ import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finaliz
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
+import { TenXtenMaintenanceCheckComponent } from '../../modals/maintenance/ten-xten-maintenance-check/ten-xten-maintenance-check.component';
 
 @Component({
   selector: 'app-home',
@@ -32,13 +32,13 @@ import { PriorityTicketsAccordionComponent } from '../../components/tickets/prio
     ToastModule,
     ConfirmDialogModule,
     CommonModule,
-    HistorialTkComponent,
     ModalGenerateTicketComponent,
     ModalTicketDetailComponent,
     ModalFinalizeTicketComponent,
     ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
-    PriorityTicketsAccordionComponent
+    PriorityTicketsAccordionComponent,
+    TenXtenMaintenanceCheckComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
@@ -50,6 +50,7 @@ export default class HomeComponent implements OnInit {
   showModalFilterTickets: boolean = false;
   showModalTicketDetail: boolean = false;
   showModalHistorial: boolean = false;
+  showModal10x10: boolean = false;
 
   sucursal: Sucursal | undefined;
   tickets: TicketDB[] = [];

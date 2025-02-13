@@ -24,7 +24,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Proveedor } from '../../models/proveedor.model';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Notificacion } from '../../models/notificacion.model';
-import HistorialTkComponent from '../../components/tickets/tickets-history/tickets-history.component';
+// import HistorialTkComponent from '../../components/tickets/tickets-history/tickets-history.component';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { StatusTicket } from '../../models/status-ticket.model';
@@ -51,7 +51,7 @@ import { DocumentsService } from '../../services/documents.service';
     TagModule,
     ConfirmDialogModule,
     OverlayPanelModule,
-    HistorialTkComponent,
+    // HistorialTkComponent,
     AccordionModule,
     BadgeModule,
   ],
