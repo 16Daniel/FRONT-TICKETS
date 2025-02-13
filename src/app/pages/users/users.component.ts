@@ -14,7 +14,6 @@ import { Ruta } from '../../models/ruta.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Usuario } from '../../models/usuario.model';
 import { Sucursal } from '../../models/sucursal.model';
-import { UsuarioDB } from '../../models/usuario-db.model';
 import { UsersService } from '../../services/users.service';
 import { CatalogosService } from '../../services/catalogs.service';
 import { DocumentsService } from '../../services/documents.service';
@@ -40,8 +39,8 @@ export default class UsersComponent {
   public loading: boolean = true;
   public modalAgregar: boolean = false;
   public actualizar: boolean = false;
-  public catusuarios: UsuarioDB[] = [];
-  public usuariosel: UsuarioDB | undefined;
+  public catusuarios: Usuario[] = [];
+  public usuariosel: Usuario | undefined;
   public catroles: Rol[] = [];
   public formrolsel: string | undefined;
   public formnombre: string | undefined;
@@ -133,7 +132,7 @@ export default class UsersComponent {
     });
   }
 
-  showEdit(data: UsuarioDB) {
+  showEdit(data: Usuario) {
     this.actualizar = true;
     this.modalAgregar = true;
     this.usuariosel = data;
@@ -196,7 +195,7 @@ export default class UsersComponent {
   }
 
   updateData() {
-    const data: UsuarioDB = {
+    const data: Usuario = {
       id: this.usuariosel!.id,
       nombre: this.formnombre!,
       apellidoP: this.formapellidop!,

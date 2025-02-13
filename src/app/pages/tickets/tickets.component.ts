@@ -4,7 +4,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, Timestamp } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
-import { Notificacion } from '../../models/notificacion.model';
 import { Sucursal } from '../../models/sucursal.model';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -15,13 +14,14 @@ import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Proveedor } from '../../models/proveedor.model';
-import { UsuarioDB } from '../../models/usuario-db.model';
-import { TicketDB } from '../../models/ticket-db.model';
+import { Ticket } from '../../models/ticket.model';
 import { StatusTicket } from '../../models/status-ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { CatalogosService } from '../../services/catalogs.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
+import { Notificacion } from '../../models/notificacion.model';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-tickets',
@@ -41,7 +41,7 @@ import { DocumentsService } from '../../services/documents.service';
 })
 export default class TicketsComponent implements OnInit {
   public idt: string = '';
-  public itemtk: TicketDB | undefined;
+  public itemtk: Ticket | undefined;
   public modalcomentarios: boolean = false;
   public catsucursales: Sucursal[] = [];
   public catproveedores: Proveedor[] = [];
@@ -53,7 +53,7 @@ export default class TicketsComponent implements OnInit {
   public formtiposoporte: string = '';
   public modalfinalizar: boolean = false;
   public formfinalizar: string = '';
-  public catusuarioshelp: UsuarioDB[] = [];
+  public catusuarioshelp: Usuario[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -135,7 +135,7 @@ export default class TicketsComponent implements OnInit {
       },
     });
   }
-  showcomentarios(item: TicketDB) {
+  showcomentarios(item: Ticket) {
     this.itemtk = item;
     this.modalcomentarios = true;
   }

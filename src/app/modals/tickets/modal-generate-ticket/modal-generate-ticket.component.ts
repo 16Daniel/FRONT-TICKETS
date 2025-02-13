@@ -8,11 +8,8 @@ import {
 } from '@angular/core';
 import { TicketsService } from '../../../services/tickets.service';
 import { FolioGeneratorService } from '../../../services/folio-generator.service';
-import { Ticket } from '../../../models/ticket.model';
-import { Notificacion } from '../../../models/notificacion.model';
 import { MessageService } from 'primeng/api';
 import { NotificationsService } from '../../../services/notifications.service';
-import { UsuarioDB } from '../../../models/usuario-db.model';
 import { DialogModule } from 'primeng/dialog';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
@@ -24,6 +21,8 @@ import { Categoria } from '../../../models/categoria.mdoel';
 import { EditorModule } from 'primeng/editor';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
+import { Notificacion } from '../../../models/notificacion.model';
+import { Ticket } from '../../../models/ticket.model';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -55,7 +54,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   formNombreSolicitante: any;
   formPrioridad: any;
   formStatusSucursal: any;
-  catusuarioshelp: UsuarioDB[] = [];
+  catusuarioshelp: Usuario[] = [];
 
   constructor(
     private ticketsService: TicketsService,

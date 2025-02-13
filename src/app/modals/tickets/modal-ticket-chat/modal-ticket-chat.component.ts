@@ -10,15 +10,15 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
-import { TicketDB } from '../../../models/ticket-db.model';
+import { Ticket } from '../../../models/ticket.model';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TicketsService } from '../../../services/tickets.service';
 import { MessageService } from 'primeng/api';
-import { Notificacion } from '../../../models/notificacion.model';
 import { NotificationsService } from '../../../services/notifications.service';
 import { Timestamp } from '@angular/fire/firestore';
+import { Notificacion } from '../../../models/notificacion.model';
 
 @Component({
   selector: 'app-modal-ticket-chat',
@@ -36,7 +36,7 @@ import { Timestamp } from '@angular/fire/firestore';
 })
 export class ModalTicketChatComponent implements AfterViewChecked {
   @Input() showModalChatTicket: boolean = false;
-  @Input() ticket: TicketDB | any;
+  @Input() ticket: Ticket | any;
   @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 

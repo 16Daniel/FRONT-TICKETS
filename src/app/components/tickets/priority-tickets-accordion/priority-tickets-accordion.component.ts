@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TicketDB } from '../../../models/ticket-db.model';
+import { Ticket } from '../../../models/ticket.model';
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
@@ -18,8 +18,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './priority-tickets-accordion.component.scss',
 })
 export class PriorityTicketsAccordionComponent implements OnInit {
-  @Input() tickets: TicketDB[] = [];
-  @Output() clickEvent = new EventEmitter<TicketDB>();
+  @Input() tickets: Ticket[] = [];
+  @Output() clickEvent = new EventEmitter<Ticket>();
 
   ngOnInit(): void {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -28,7 +28,7 @@ export class PriorityTicketsAccordionComponent implements OnInit {
   activeIndex: number | null = null;
   userdata: any;
 
-  abrirModalDetalleTicket(ticket: TicketDB | any) {
+  abrirModalDetalleTicket(ticket: Ticket | any) {
     this.clickEvent.emit(ticket);
   }
 
@@ -63,7 +63,7 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     return str;
   }
 
-  obtenerTicketsFiltrados(prioridad: any): TicketDB[] {
+  obtenerTicketsFiltrados(prioridad: any): Ticket[] {
     if (prioridad === 'PÁNICO')
       return this.tickets.filter((x) => x.prioridadsuc === 'PÁNICO');
     else if (prioridad === 'ALTA')

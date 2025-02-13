@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TicketDB } from '../../../models/ticket-db.model';
+import { Ticket } from '../../../models/ticket.model';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 
@@ -11,7 +11,7 @@ import { DialogModule } from 'primeng/dialog';
   styleUrl: './modal-ticket-detail.component.scss',
 })
 export class ModalTicketDetailComponent {
-  @Input() ticket: TicketDB | undefined;
+  @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 

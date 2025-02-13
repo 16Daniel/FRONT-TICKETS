@@ -16,7 +16,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/enviroments';
 import { Ticket } from '../models/ticket.model';
-import { TicketDB } from '../models/ticket-db.model';
 
 @Injectable({
   providedIn: 'root',
@@ -35,9 +34,9 @@ export class TicketsService {
     return collectionData(ticketsCollection, { idField: 'id' });
   }
 
-  getTicketById(idTicket: string): Observable<TicketDB> {
+  getTicketById(idTicket: string): Observable<Ticket> {
     const ticketDoc = doc(this.firestore, `tickets/${idTicket}`); // Usamos 'doc()' en lugar de 'collection()'
-    return docData(ticketDoc, { idField: 'id' }) as Observable<TicketDB>;
+    return docData(ticketDoc, { idField: 'id' }) as Observable<Ticket>;
   }
 
   async createTicket(ticket: Ticket) {

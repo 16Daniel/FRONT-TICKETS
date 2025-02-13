@@ -15,7 +15,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { NotFoundError, Subscription } from 'rxjs';
 import { Timestamp } from '@angular/fire/firestore';
 import { environment } from '../../../environments/enviroments';
-import { NotificacionDB } from '../../models/notificacion-db.model';
+import { Notificacion } from '../../models/notificacion.model';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
 @Component({
@@ -41,7 +41,7 @@ export class SideMenuComponent implements OnInit {
   public items: MenuItem[] = [];
   public contador: number = 1;
   public showmenu: boolean = false;
-  public notificaciones: NotificacionDB[] = [];
+  public notificaciones: Notificacion[] = [];
   public subscriptionnt: Subscription | undefined;
   public userdata: any;
   public urlbase: string = '';
@@ -173,11 +173,11 @@ export class SideMenuComponent implements OnInit {
     };
   }
 
-  updateNotificacion(nt: NotificacionDB) {
+  updateNotificacion(nt: Notificacion) {
     this.documentsService.updateDoc('Notificaciones', nt);
   }
 
-  showticket(item: NotificacionDB) {
+  showticket(item: Notificacion) {
     item.abierta = true;
     this.updateNotificacion(item);
 
@@ -191,11 +191,11 @@ export class SideMenuComponent implements OnInit {
     window.open(origin + url + '/#/main/ticket/' + item.idtk, '_blank');
   }
 
-  getNotificacionesNuevas(): NotificacionDB[] {
+  getNotificacionesNuevas(): Notificacion[] {
     return this.notificaciones.filter((x) => x.abierta == false);
   }
 
-  getNotificacionesAbiertas(): NotificacionDB[] {
+  getNotificacionesAbiertas(): Notificacion[] {
     return this.notificaciones.filter((x) => x.abierta == true);
   }
 

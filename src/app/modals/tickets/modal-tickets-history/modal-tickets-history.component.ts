@@ -9,7 +9,7 @@ import {
 import { DialogModule } from 'primeng/dialog';
 import { Subscription } from 'rxjs';
 import { TicketsService } from '../../../services/tickets.service';
-import { TicketDB } from '../../../models/ticket-db.model';
+import { Ticket } from '../../../models/ticket.model';
 import { RequesterTicketsListComponent } from '../../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
@@ -42,10 +42,10 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   userdata: any;
   fechaini: Date = new Date();
   fechafin: Date = new Date();
-  tickets: TicketDB[] = [];
-  todosLosTickets: TicketDB[] = [];
+  tickets: Ticket[] = [];
+  todosLosTickets: Ticket[] = [];
 
-  itemtk: TicketDB | undefined;
+  itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
 
   constructor(
@@ -81,17 +81,17 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
         next: (data) => {
           console.log(data);
           this.tickets = data;
-          let arr_temp: TicketDB[] = [];
-          let temp1: TicketDB[] = this.tickets.filter(
+          let arr_temp: Ticket[] = [];
+          let temp1: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
-          let temp2: TicketDB[] = this.tickets.filter(
+          let temp2: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'ALTA'
           );
-          let temp3: TicketDB[] = this.tickets.filter(
+          let temp3: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'MEDIA'
           );
-          let temp4: TicketDB[] = this.tickets.filter(
+          let temp4: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'BAJA'
           );
 
@@ -115,7 +115,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
       });
   }
 
-  abrirModalDetalleTicket(ticket: TicketDB | any) {
+  abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
     this.showModalTicketDetail = true;
   }
@@ -131,17 +131,17 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
       .subscribe({
         next: (data) => {
           this.tickets = data;
-          let arr_temp: TicketDB[] = [];
-          let temp1: TicketDB[] = this.tickets.filter(
+          let arr_temp: Ticket[] = [];
+          let temp1: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
-          let temp2: TicketDB[] = this.tickets.filter(
+          let temp2: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'ALTA'
           );
-          let temp3: TicketDB[] = this.tickets.filter(
+          let temp3: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'MEDIA'
           );
-          let temp4: TicketDB[] = this.tickets.filter(
+          let temp4: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'BAJA'
           );
 

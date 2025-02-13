@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Proveedor } from '../../models/proveedor.model';
-import { TicketDB } from '../../models/ticket-db.model';
+import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
@@ -53,15 +53,15 @@ export default class HomeComponent implements OnInit {
   showModal10x10: boolean = false;
 
   sucursal: Sucursal | undefined;
-  tickets: TicketDB[] = [];
-  todosLosTickets: TicketDB[] = [];
+  tickets: Ticket[] = [];
+  todosLosTickets: Ticket[] = [];
 
   formdepto: any;
   catproveedores: Proveedor[] = [];
   subscriptiontk: Subscription | undefined;
-  itemtk: TicketDB | undefined;
+  itemtk: Ticket | undefined;
   userdata: any;
-  selectedtk: TicketDB | undefined;
+  selectedtk: Ticket | undefined;
   loading: boolean = false;
 
   constructor(
@@ -98,17 +98,17 @@ export default class HomeComponent implements OnInit {
         next: (data) => {
           console.log(data);
           this.tickets = data;
-          let arr_temp: TicketDB[] = [];
-          let temp1: TicketDB[] = this.tickets.filter(
+          let arr_temp: Ticket[] = [];
+          let temp1: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
-          let temp2: TicketDB[] = this.tickets.filter(
+          let temp2: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'ALTA'
           );
-          let temp3: TicketDB[] = this.tickets.filter(
+          let temp3: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'MEDIA'
           );
-          let temp4: TicketDB[] = this.tickets.filter(
+          let temp4: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'BAJA'
           );
 
@@ -155,17 +155,17 @@ export default class HomeComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.tickets = data;
-          let arr_temp: TicketDB[] = [];
-          let temp1: TicketDB[] = this.tickets.filter(
+          let arr_temp: Ticket[] = [];
+          let temp1: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
-          let temp2: TicketDB[] = this.tickets.filter(
+          let temp2: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'ALTA'
           );
-          let temp3: TicketDB[] = this.tickets.filter(
+          let temp3: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'MEDIA'
           );
-          let temp4: TicketDB[] = this.tickets.filter(
+          let temp4: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'BAJA'
           );
 
@@ -221,7 +221,7 @@ export default class HomeComponent implements OnInit {
     return str;
   }
 
-  abrirModalDetalleTicket(ticket: TicketDB | any) {
+  abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
     this.showModalTicketDetail = true;
 

@@ -8,22 +8,22 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { TicketDB } from '../../../models/ticket-db.model';
+import { Ticket } from '../../../models/ticket.model';
 import { TableModule } from 'primeng/table';
 import { Proveedor } from '../../../models/proveedor.model';
 import { CommonModule } from '@angular/common';
 import { CatalogosService } from '../../../services/catalogs.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
-import { UsuarioDB } from '../../../models/usuario-db.model';
 import { UsersService } from '../../../services/users.service';
-import { Notificacion } from '../../../models/notificacion.model';
 import { NotificationsService } from '../../../services/notifications.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { ModalFinalizeTicketComponent } from '../../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
+import { Usuario } from '../../../models/usuario.model';
+import { Notificacion } from '../../../models/notificacion.model';
 
 // type Prioridad = 'PÁNICO' | 'ALTA' | 'MEDIA' | 'BAJA';
 
@@ -42,17 +42,17 @@ import { BadgeModule } from 'primeng/badge';
   styleUrl: './requester-tickets-list.component.scss',
 })
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
-  @Input() tickets: TicketDB[] = [];
+  @Input() tickets: Ticket[] = [];
   @Input() mostrarAcciones: boolean = true;;
-  @Output() clickEvent = new EventEmitter<TicketDB>();
+  @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;
   showModalChatTicket: boolean = false;
   proveedores: Proveedor[] = [];
-  ticketSeleccionado: TicketDB | undefined;
+  ticketSeleccionado: Ticket | undefined;
   userdata: any;
-  usuariosHelp: UsuarioDB[] = [];
-  ticketAccion: TicketDB | any;
+  usuariosHelp: Usuario[] = [];
+  ticketAccion: Ticket | any;
 
   constructor(
     private catalogosService: CatalogosService,
@@ -233,12 +233,12 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     });
   }
 
-  onClickFinalizar(ticket: TicketDB) {
+  onClickFinalizar(ticket: Ticket) {
     this.ticketAccion = ticket;
     this.showModalFinalizeTicket = true;
   }
 
-  onClickChat(ticket: TicketDB) {
+  onClickChat(ticket: Ticket) {
     this.ticketAccion = ticket;
     this.showModalChatTicket = true;
   }

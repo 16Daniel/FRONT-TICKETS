@@ -10,7 +10,7 @@ import {
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
-import { TicketDB } from '../../../models/ticket-db.model';
+import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { DocumentsService } from '../../../services/documents.service';
@@ -25,7 +25,7 @@ import { MessageService } from 'primeng/api';
 })
 export class ModalFinalizeTicketComponent implements OnChanges {
   @Input() showModalFinalizeTicket: boolean = false;
-  @Input() ticket: TicketDB | any;
+  @Input() ticket: Ticket | any;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   evidencia: string = '';

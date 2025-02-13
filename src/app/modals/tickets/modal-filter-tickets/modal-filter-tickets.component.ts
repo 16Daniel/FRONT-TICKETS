@@ -10,7 +10,7 @@ import {
 import { StatusTicket } from '../../../models/status-ticket.model';
 import { Categoria } from '../../../models/categoria.mdoel';
 import { Proveedor } from '../../../models/proveedor.model';
-import { TicketDB } from '../../../models/ticket-db.model';
+import { Ticket } from '../../../models/ticket.model';
 import { CatalogosService } from '../../../services/catalogs.service';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
@@ -26,12 +26,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './modal-filter-tickets.component.scss',
 })
 export class ModalFilterTicketsComponent implements OnInit {
-  @Input() tickets: TicketDB[] = [];
+  @Input() tickets: Ticket[] = [];
   @Input() showModalFilterTickets: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
-  @Output() ticketsFiltradosEvent = new EventEmitter<TicketDB[]>();
+  @Output() ticketsFiltradosEvent = new EventEmitter<Ticket[]>();
 
-  ticketsFiltrados: TicketDB[] = [];
+  ticketsFiltrados: Ticket[] = [];
 
   filterstatus: any | undefined;
   filterPrioridad: any | undefined;

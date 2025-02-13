@@ -15,7 +15,6 @@ import { Auth, user } from '@angular/fire/auth';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Sucursal } from '../../models/sucursal.model';
-import { Ticket } from '../../models/ticket.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
@@ -23,19 +22,18 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Proveedor } from '../../models/proveedor.model';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Notificacion } from '../../models/notificacion.model';
-// import HistorialTkComponent from '../../components/tickets/tickets-history/tickets-history.component';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { StatusTicket } from '../../models/status-ticket.model';
-import { TicketDB } from '../../models/ticket-db.model';
-import { UsuarioDB } from '../../models/usuario-db.model';
 import { FolioGeneratorService } from '../../services/folio-generator.service';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
 import { CatalogosService } from '../../services/catalogs.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
+import { Usuario } from '../../models/usuario.model';
+import { Notificacion } from '../../models/notificacion.model';
+import { Ticket } from '../../models/ticket.model';
 
 @Component({
   selector: 'app-home-a',
@@ -71,18 +69,18 @@ export default class HomeAComponent implements OnInit {
   public catproveedores: Proveedor[] = [];
   public catcategorias: Sucursal[] = [];
   public catStatusT: StatusTicket[] = [];
-  public arr_tickets: TicketDB[] = [];
+  public arr_tickets: Ticket[] = [];
   public subscriptiontk: Subscription | undefined;
   public modalticket: boolean = false;
   public modalcomentarios: boolean = false;
   public modaladdcomentario: boolean = false;
-  public itemtk: TicketDB | undefined;
+  public itemtk: Ticket | undefined;
   public formcomentario: string = '';
   public userdata: any;
   public sucursal: Sucursal | undefined;
-  public catusuarioshelp: UsuarioDB[] = [];
-  public selectedtk: TicketDB | undefined;
-  public all_arr_tickets: TicketDB[] = [];
+  public catusuarioshelp: Usuario[] = [];
+  public selectedtk: Ticket | undefined;
+  public all_arr_tickets: Ticket[] = [];
   public modalfiltros: boolean = false;
   public filterPrioridad: any | undefined;
   public filterarea: any | undefined;
@@ -93,7 +91,7 @@ export default class HomeAComponent implements OnInit {
   public formstatus: any;
 
   public showagrupacion: boolean = false;
-  public usergroup: UsuarioDB | undefined;
+  public usergroup: Usuario | undefined;
 
   @ViewChild('dialogHtk') dialog!: Dialog;
 
@@ -280,17 +278,17 @@ export default class HomeAComponent implements OnInit {
     this.subscriptiontk = this.ticketsService.getTickets().subscribe({
       next: (data) => {
         this.arr_tickets = data;
-        let arr_temp: TicketDB[] = [];
-        let temp1: TicketDB[] = this.arr_tickets.filter(
+        let arr_temp: Ticket[] = [];
+        let temp1: Ticket[] = this.arr_tickets.filter(
           (x) => x.prioridadsuc == 'PÁNICO'
         );
-        let temp2: TicketDB[] = this.arr_tickets.filter(
+        let temp2: Ticket[] = this.arr_tickets.filter(
           (x) => x.prioridadsuc == 'ALTA'
         );
-        let temp3: TicketDB[] = this.arr_tickets.filter(
+        let temp3: Ticket[] = this.arr_tickets.filter(
           (x) => x.prioridadsuc == 'MEDIA'
         );
-        let temp4: TicketDB[] = this.arr_tickets.filter(
+        let temp4: Ticket[] = this.arr_tickets.filter(
           (x) => x.prioridadsuc == 'BAJA'
         );
 
@@ -410,7 +408,7 @@ export default class HomeAComponent implements OnInit {
     this.modalticket = true;
   }
 
-  showcomentarios(item: TicketDB) {
+  showcomentarios(item: Ticket) {
     this.modalcomentarios = true;
   }
 
@@ -464,7 +462,7 @@ export default class HomeAComponent implements OnInit {
     return st;
   }
 
-  getTicketsP(value: string): TicketDB[] {
+  getTicketsP(value: string): Ticket[] {
     let temp = this.arr_tickets.filter(
       (x) => x.prioridadsuc == value && x.statusSuc != 'PÁNICO'
     );
@@ -473,7 +471,7 @@ export default class HomeAComponent implements OnInit {
     );
   }
 
-  getTicketsPanico(): TicketDB[] {
+  getTicketsPanico(): Ticket[] {
     return this.arr_tickets.filter((x) => x.statusSuc == 'PÁNICO');
   }
 
@@ -723,7 +721,7 @@ export default class HomeAComponent implements OnInit {
     return name;
   }
 
-  agrupar(user: UsuarioDB) {
+  agrupar(user: Usuario) {
     this.usergroup = user;
     this.showagrupacion = true;
   }
@@ -770,7 +768,7 @@ export default class HomeAComponent implements OnInit {
     return str;
   }
 
-  updatetk(tk: TicketDB) {
+  updatetk(tk: Ticket) {
     this.ticketsService
       .updateTicket(tk)
       .then(() => {})
