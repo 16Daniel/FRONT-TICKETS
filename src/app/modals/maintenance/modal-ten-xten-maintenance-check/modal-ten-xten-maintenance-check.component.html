@@ -1,12 +1,15 @@
 <p-dialog header="REGISTRO DE MANTENIMIENTO 10 DE 10" [(visible)]="showModal10x10" [modal]="true" [maximizable]="true"
     (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
 
+    <h2>{{ getDate(mantenimientoActivo?.fecha) | date }}</h2>
     <form [formGroup]="formularioDeMantenimiento" class="p-fluid">
         <div class="p-grid p-ai-center">
-            <div *ngFor="let opcion of opcionesDeMantenimiento" class="p-col-12 p-md-6 p-lg-2">
+            <div *ngFor="let opcion of opcionesDeMantenimiento; let i = index" class="p-col-12 p-md-6 p-lg-2">
                 <div class="p-field-checkbox flex align-items-center">
-                    <p-checkbox [binary]="true" [formControlName]="opcion.controlName"></p-checkbox>
-                    <label class="check-text ml-2">{{ opcion.label }}</label>
+                    <p-checkbox [binary]="true" [formControlName]="opcion.controlName"
+                        (onChange)="onCheckboxChange($event)">
+                        ></p-checkbox>
+                    <label class="check-text ml-2">{{ i + 1 }}.- {{ opcion.label }}</label>
                 </div>
             </div>
         </div>
@@ -14,12 +17,18 @@
         <div class="p-field p-col-12 mt-3">
             <label for="observaciones" class="block mb-2">Observaciones</label>
             <textarea id="observaciones" formControlName="observaciones" pInputTextarea rows="5" class="w-full"
-            [ngClass]="{'p-invalid': formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched}"></textarea>
-            <small *ngIf="formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched" class="p-error">
+                [ngClass]="{'p-invalid': formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched}"></textarea>
+            <small
+                *ngIf="formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched"
+                class="p-error">
                 Campo requerido.
             </small>
         </div>
     </form>
+
+    <app-progress-bar [progreso]="progreso"></app-progress-bar>
+
+
 
     <p-footer class="footer-buttons">
         <div class="d-flex justify-content-end mt-3">

@@ -30,7 +30,6 @@ export class ModalFinalizeTicketComponent implements OnChanges {
 
   evidencia: string = '';
   rating: number = 0; // Calificación inicial
-
   stars: boolean[] = [false, false, false, false, false]; // Estrellas desmarcadas
 
   constructor(

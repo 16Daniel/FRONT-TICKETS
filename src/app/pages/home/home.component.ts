@@ -22,6 +22,8 @@ import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-t
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
+import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-home',
@@ -38,7 +40,7 @@ import { ModalTenXtenMaintenanceCheckComponent } from '../../modals/maintenance/
     ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,
-    ModalTenXtenMaintenanceCheckComponent
+    ModalTenXtenMaintenanceCheckComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
@@ -55,7 +57,7 @@ export default class HomeComponent implements OnInit {
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
-
+  mantenimientoActivo: Mantenimiento10x10 | null = null;
   formdepto: any;
   catproveedores: Proveedor[] = [];
   subscriptiontk: Subscription | undefined;
@@ -64,9 +66,12 @@ export default class HomeComponent implements OnInit {
   selectedtk: Ticket | undefined;
   loading: boolean = false;
 
+  private unsubscribe!: () => void;
+
   constructor(
     public cdr: ChangeDetectorRef,
-    private ticketsService: TicketsService
+    private ticketsService: TicketsService,
+    private mantenimientoService: Maintenance10x10Service
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
@@ -82,11 +87,20 @@ export default class HomeComponent implements OnInit {
     this.formdepto = this.sucursal;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.obtenerMantenimientoActivo();
+    this.mantenimientoService.get().subscribe(data => {
+      console.log(data)
+    });
+  }
 
   ngOnDestroy() {
     if (this.subscriptiontk != undefined) {
       this.subscriptiontk.unsubscribe();
+    }
+
+    if (this.unsubscribe) {
+      this.unsubscribe();
     }
   }
 
@@ -244,5 +258,39 @@ export default class HomeComponent implements OnInit {
 
   obtenerTicketsPorSucursal(idSucursal: string) {
     return this.tickets.filter((x) => x.idsucordpto == idSucursal);
+  }
+
+  async obtenerMantenimientoActivo() {
+    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+      1,
+      (mantenimiento) => {
+        this.mantenimientoActivo = mantenimiento;
+        this.cdr.detectChanges();
+        console.log('Mantenimiento activo:', this.mantenimientoActivo);
+      }
+    );
+  }
+
+  async nuevoMantenimiento() {
+    const mantenimiento: Mantenimiento10x10 = {
+      idSucursal: 1,
+      idUsuarioSoporte: 1,
+      fecha: new Date(),
+      estatus: true,
+      mantenimientoCaja: false,
+      mantenimientoCCTV: false,
+      mantenimientoConcentradorApps: false,
+      mantenimientoContenidosSistemaCable: false,
+      mantenimientoImpresoras: false,
+      mantenimientoInternet: false,
+      mantenimientoNoBrakes: false,
+      mantenimientoPuntosVentaTabletas: false,
+      mantenimientoRack: false,
+      mantenimientoTiemposCocina: false,
+      observaciones: '',
+    };
+
+    await this.mantenimientoService.create(mantenimiento);
+    console.log('ok')
   }
 }

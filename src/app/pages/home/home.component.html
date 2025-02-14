@@ -7,18 +7,42 @@
   </h3>
 
   <div class="d-flex justify-content-start gap-3 p-3 pb-0">
-    <button class="btn bg-p-b p-2" (click)="showModalGenerateTicket = true">
-      <i class="bx bx-plus bx-sm"></i>
+    <!-- <button class="btn bg-p-b p-3" (click)="showModalGenerateTicket = true">
+      <i class="pi pi-plus"></i> Crear ticket
     </button>
     <button class="btn bg-p-b p-2" style="background-color: #ff5722" (click)="showModalFilterTickets = true">
-      <i class="bx bx-filter bx-sm"></i>
+      <i class="pi pi-plus"></i> Filtros
     </button>
     <button class="btn bg-p-b p-2" style="background-color: #29d998" (click)="showModalHistorial = true">
-      <i class="bx bx-history bx-flip-horizontal bx-sm"></i>
+      <i class="pi pi-plus"></i> Ver historial
     </button>
-    <button class="btn bg-p-b p-2" style="background-color: #949494" (click)="showModal10x10 = true">
-      <i class="bx bx-filter bx-sm"></i>
+    <button class="btn bg-p-b p-2" style="background-color: #949494" (click)="showModal10x10 = true" *ngIf="mantenimientoActivo?.id">
+      <i class="pi pi-plus"></i>
     </button>
+
+    <button class="btn bg-p-b p-2" style="background-color: #781818" (click)="nuevoMantenimiento()">
+      <i class="pi pi-plus"></i>
+    </button> -->
+
+    <p-button label="Crear ticket" icon="pi pi-plus" styleClass="p-button-primary"
+      (click)="showModalGenerateTicket = true">
+    </p-button>
+
+    <p-button label="Filtrar tickets" icon="pi pi-plus" styleClass="p-button-success"
+      (click)="showModalFilterTickets = true">
+    </p-button>
+
+    <p-button label="Ver historial" icon="pi pi-plus" styleClass="p-button-warning"
+      (click)="showModalHistorial = true">
+    </p-button>
+
+    <p-button label="10 de 10" icon="pi pi-plus" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
+      (click)="showModal10x10 = true">
+    </p-button>
+
+    <!-- <p-button label="Crear ticket" icon="pi pi-plus" styleClass="p-button-help"
+      (click)="nuevoMantenimiento()">
+    </p-button> -->
   </div>
 
   <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
@@ -102,7 +126,8 @@
   (closeEvent)="showModalHistorial = false"></app-modal-tickets-history>
 
 <app-modal-ten-xten-maintenance-check *ngIf="showModal10x10" [showModal10x10]="showModal10x10"
-  (closeEvent)="showModal10x10 = false"></app-modal-ten-xten-maintenance-check>
+  (closeEvent)="showModal10x10 = false"
+  [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

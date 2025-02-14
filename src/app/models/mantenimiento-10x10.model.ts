@@ -1,9 +1,10 @@
 import { Timestamp } from "@angular/fire/firestore";
 
 export interface Mantenimiento10x10 {
-  id: string;
-  idSucursal: number;
-  idUsuarioSoporte: number;
+  id?: string | any;
+  idSucursal: number | undefined;
+  idUsuarioSoporte: number | undefined;
+  fecha: Date | undefined;
   mantenimientoCaja: boolean;
   mantenimientoImpresoras: boolean;
   mantenimientoRack: boolean;
@@ -14,7 +15,7 @@ export interface Mantenimiento10x10 {
   mantenimientoNoBrakes: boolean;
   mantenimientoTiemposCocina: boolean;
   mantenimientoConcentradorApps: boolean;
-  observaciones: string;
+  observaciones: string | undefined;
   estatus: boolean;
-  timestamp: Timestamp | Date;
+  timestamp?: Timestamp | Date;
 }
