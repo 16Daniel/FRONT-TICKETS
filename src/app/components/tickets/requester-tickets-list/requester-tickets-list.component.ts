@@ -193,7 +193,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       ticket.prioridadsuc = 'PÁNICO';
 
       this.ticketsService
-        .updateTicket(ticket)
+        .update(ticket)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
         })

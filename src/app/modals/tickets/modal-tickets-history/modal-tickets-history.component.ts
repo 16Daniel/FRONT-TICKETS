@@ -28,7 +28,7 @@ import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-
     FormsModule,
     ModalFilterTicketsComponent,
     CommonModule,
-    ModalTicketDetailComponent
+    ModalTicketDetailComponent,
   ],
   templateUrl: './modal-tickets-history.component.html',
   styleUrl: './modal-tickets-history.component.scss',
@@ -38,7 +38,8 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   @Output() closeEvent = new EventEmitter<boolean>();
 
   showModalFilterTickets: boolean = false;
-  subscriptiontk: Subscription | undefined;
+  // subscriptiontk: Subscription | undefined;
+  private unsubscribe!: () => void;
   userdata: any;
   fechaini: Date = new Date();
   fechafin: Date = new Date();
@@ -60,9 +61,9 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscriptiontk != undefined) {
-      this.subscriptiontk.unsubscribe();
-    }
+    // if (this.subscriptiontk != undefined) {
+    //   this.subscriptiontk.unsubscribe();
+    // }
   }
 
   onHide() {
@@ -70,18 +71,17 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   }
 
   async obtenerTicketsPorUsuario(userid: string): Promise<void> {
-    this.subscriptiontk = this.ticketsService
-      .getHistorialtickets(
-        this.fechaini,
-        this.fechafin,
-        userid,
-        this.userdata.idRol
-      )
-      .subscribe({
-        next: (data) => {
-          console.log(data);
-          this.tickets = data;
-          let arr_temp: Ticket[] = [];
+    this.unsubscribe = this.ticketsService.getHistorialticketsPorUsuario(
+      this.fechaini,
+      this.fechafin,
+      userid,
+      (tickets: any) => {
+        // console.log(tickets);
+
+        this.tickets = tickets;
+        let arr_temp: Ticket[] = [];
+
+        if (tickets) {
           let temp1: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
@@ -102,17 +102,15 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
           temp3 = temp3.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
 
           temp4 = temp4.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.todosLosTickets = [...arr_temp];
-          this.tickets = arr_temp;
 
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error al escuchar los tickets:', error);
-          this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-        },
-      });
+          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
+        }
+        this.todosLosTickets = [...arr_temp];
+        this.tickets = arr_temp;
+
+        this.cdr.detectChanges();
+      }
+    );
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
@@ -121,47 +119,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   }
 
   buscar() {
-    this.subscriptiontk = this.ticketsService
-      .getHistorialtickets(
-        this.fechaini,
-        this.fechafin,
-        this.userdata.uid,
-        this.userdata.idRol
-      )
-      .subscribe({
-        next: (data) => {
-          this.tickets = data;
-          let arr_temp: Ticket[] = [];
-          let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'PÁNICO'
-          );
-          let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'ALTA'
-          );
-          let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'MEDIA'
-          );
-          let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'BAJA'
-          );
-
-          temp1 = temp1.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-
-          temp2 = temp2.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-
-          temp3 = temp3.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-
-          temp4 = temp4.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.todosLosTickets = [...arr_temp];
-          this.tickets = arr_temp;
-
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error al escuchar los tickets:', error);
-        },
-      });
+    this.obtenerTicketsPorUsuario(this.userdata.uid);
   }
 
   showMessage(sev: string, summ: string, det: string) {

@@ -161,7 +161,7 @@ export default class HomeAComponent implements OnInit {
         calificacion: 0
       };
       debugger;
-      const docid = await this.ticketsService.createTicket(tk);
+      const docid = await this.ticketsService.create(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
 
       let dataNot: Notificacion = {
@@ -275,7 +275,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   async getTicketsUser(): Promise<void> {
-    this.subscriptiontk = this.ticketsService.getTickets().subscribe({
+    this.subscriptiontk = this.ticketsService.get().subscribe({
       next: (data) => {
         this.arr_tickets = data;
         let arr_temp: Ticket[] = [];
@@ -428,7 +428,7 @@ export default class HomeAComponent implements OnInit {
     this.itemtk!.comentarios.push(data);
 
     this.ticketsService
-      .updateTicket(this.itemtk)
+      .update(this.itemtk)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -511,7 +511,7 @@ export default class HomeAComponent implements OnInit {
       ticket.prioridadsuc = 'PÁNICO';
 
       this.ticketsService
-        .updateTicket(ticket)
+        .update(ticket)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
         })
@@ -636,7 +636,7 @@ export default class HomeAComponent implements OnInit {
     if (this.formtiposoporte != '') {
       this.itemtk!.tiposoporte = this.formtiposoporte;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
           this.formtiposoporte = '';
@@ -651,7 +651,7 @@ export default class HomeAComponent implements OnInit {
     if (this.formstatus != null && this.formstatus != undefined) {
       this.itemtk!.status = this.formstatus.id;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -770,7 +770,7 @@ export default class HomeAComponent implements OnInit {
 
   updatetk(tk: Ticket) {
     this.ticketsService
-      .updateTicket(tk)
+      .update(tk)
       .then(() => {})
       .catch((error) => console.error(error));
   }

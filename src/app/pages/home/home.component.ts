@@ -77,7 +77,8 @@ export default class HomeComponent implements OnInit {
     let idu = this.userdata.uid;
 
     if (this.userdata.idRol == '2') {
-      this.getTicketsUser(idu);
+      //sucursal
+      this.getTicketsPorUsuario(idu);
     }
 
     if (this.userdata.idRol == '4') {
@@ -89,9 +90,9 @@ export default class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerMantenimientoActivo();
-    this.mantenimientoService.get().subscribe(data => {
-      console.log(data)
-    });
+    // this.mantenimientoService.get().subscribe(data => {
+    //   console.log(data)
+    // });
   }
 
   ngOnDestroy() {
@@ -104,13 +105,13 @@ export default class HomeComponent implements OnInit {
     }
   }
 
-  async getTicketsUser(userid: string): Promise<void> {
+  async getTicketsPorUsuario(userid: string): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
-      .getRealTimeTicketsByUserId(userid)
+      .getTicketsPorUsuario(userid)
       .subscribe({
         next: (data) => {
-          console.log(data);
+          // console.log(data);
           this.tickets = data;
           let arr_temp: Ticket[] = [];
           let temp1: Ticket[] = this.tickets.filter(
@@ -266,7 +267,7 @@ export default class HomeComponent implements OnInit {
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
         this.cdr.detectChanges();
-        console.log('Mantenimiento activo:', this.mantenimientoActivo);
+        // console.log('Mantenimiento activo:', this.mantenimientoActivo);
       }
     );
   }
@@ -291,6 +292,6 @@ export default class HomeComponent implements OnInit {
     };
 
     await this.mantenimientoService.create(mantenimiento);
-    console.log('ok')
+    console.log('ok');
   }
 }

@@ -34,11 +34,6 @@ export class Maintenance10x10Service {
   }
 
   get(): Observable<Mantenimiento10x10[]> {
-    // const mantenimientoRef = collection(this.firestore, this.pathName);
-    // return collectionData(mantenimientoRef, { idField: 'id' }) as Observable<
-    //   Mantenimiento10x10[]
-    // >;
-
     const mantenimientoRef = collection(this.firestore, this.pathName);
     const q = query(mantenimientoRef, where('estatus', '==', true));
     return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento10x10[]>;

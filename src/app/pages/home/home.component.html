@@ -28,15 +28,15 @@
       (click)="showModalGenerateTicket = true">
     </p-button>
 
-    <p-button label="Filtrar tickets" icon="pi pi-plus" styleClass="p-button-success"
+    <p-button label="Filtrar tickets" icon="pi pi-filter" styleClass="p-button-success"
       (click)="showModalFilterTickets = true">
     </p-button>
 
-    <p-button label="Ver historial" icon="pi pi-plus" styleClass="p-button-warning"
+    <p-button label="Ver historial" icon="pi pi-history" styleClass="p-button-warning"
       (click)="showModalHistorial = true">
     </p-button>
 
-    <p-button label="10 de 10" icon="pi pi-plus" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
+    <p-button label="10 de 10" icon="pi pi-wrench" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
       (click)="showModal10x10 = true">
     </p-button>
 

@@ -81,7 +81,7 @@ export class ModalTicketChatComponent implements AfterViewChecked {
     this.ticket!.comentarios.push(data);
 
     this.ticketsService
-      .updateTicket(this.ticket)
+      .update(this.ticket)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
 

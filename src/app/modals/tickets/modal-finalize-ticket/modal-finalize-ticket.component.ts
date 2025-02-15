@@ -13,7 +13,6 @@ import { EditorModule } from 'primeng/editor';
 import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Timestamp } from '@angular/fire/firestore';
-import { DocumentsService } from '../../../services/documents.service';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -34,7 +33,6 @@ export class ModalFinalizeTicketComponent implements OnChanges {
 
   constructor(
     private ticketsService: TicketsService,
-    private documentsService: DocumentsService,
     private messageService: MessageService
   ) {}
 
@@ -54,52 +52,15 @@ export class ModalFinalizeTicketComponent implements OnChanges {
   finalizarTicket() {
     this.ticket!.status = '3';
     this.ticket!.calificacion = this.rating;
+    this.ticket.fechaFin = new Date();
+
     const ticket = this.ticket;
 
     this.ticketsService
-      .updateTicket(this.ticket)
+      .update(this.ticket)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
-
-        let tk = {
-          Idtk: ticket!.id,
-          Fecha: this.getdate(ticket!.fecha),
-          IdSuc: ticket!.idsucordpto,
-          Statussuc: ticket!.statusSuc,
-          Idprov: ticket!.idproveedor,
-          Idcat: ticket!.idcategoria,
-          Descripcion: ticket!.decripcion,
-          Solicitante: ticket!.solicitante,
-          Prioridadsuc: ticket!.prioridadsuc,
-          Prioridadprov: ticket!.prioridadProv,
-          Status: '3',
-          Responsable: ticket!.responsable,
-          FechaFin: new Date(),
-          Duracion: '',
-          Tiposoporte: ticket!.tiposoporte,
-          Iduser: ticket!.iduser,
-          Comentarios: JSON.stringify(ticket!.comentarios),
-          Nombrecategoria: ticket!.nombreCategoria,
-          Comentariosfinales: this.evidencia,
-          calificacion: this.rating
-        };
-
-        this.ticketsService.AddTkSQL(tk).subscribe({
-          next: () => {
-            this.documentsService.deleteDocument('tickets', ticket!.id);
-            this.ticket = undefined;
-            this.closeEvent.emit(false); // Cerrar modal
-            this.evidencia = '';
-          },
-          error: (error) => {
-            console.log(error);
-            this.showMessage(
-              'error',
-              'Error',
-              'Error al procesar la solicitud'
-            );
-          },
-        });
+        this.closeEvent.emit(false);
       })
       .catch((error) =>
         console.error('Error al actualizar los comentarios:', error)

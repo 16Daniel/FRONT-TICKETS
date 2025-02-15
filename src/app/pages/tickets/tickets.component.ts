@@ -124,7 +124,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   getdataTK() {
-    this.ticketsService.getTicketById(this.idt).subscribe({
+    this.ticketsService.getById(this.idt).subscribe({
       next: (data) => {
         this.itemtk = data;
         this.cdr.detectChanges();
@@ -175,7 +175,7 @@ export default class TicketsComponent implements OnInit {
       ticket.prioridadsuc = 'PÁNICO';
 
       this.ticketsService
-        .updateTicket(ticket)
+        .update(ticket)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
         })
@@ -267,7 +267,7 @@ export default class TicketsComponent implements OnInit {
     this.itemtk!.comentarios.push(data);
 
     this.ticketsService
-      .updateTicket(this.itemtk)
+      .update(this.itemtk)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -304,7 +304,7 @@ export default class TicketsComponent implements OnInit {
     if (this.formstatus != null && this.formstatus != undefined) {
       this.itemtk!.status = this.formstatus.id;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -363,7 +363,7 @@ export default class TicketsComponent implements OnInit {
   finalizartk() {
     this.itemtk!.status = '3';
     this.ticketsService
-      .updateTicket(this.itemtk)
+      .update(this.itemtk)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -414,7 +414,7 @@ export default class TicketsComponent implements OnInit {
     if (this.formtiposoporte != '') {
       this.itemtk!.tiposoporte = this.formtiposoporte;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
           this.formtiposoporte = '';
