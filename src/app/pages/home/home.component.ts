@@ -24,6 +24,8 @@ import { PriorityTicketsAccordionComponent } from '../../components/tickets/prio
 import { ModalTenXtenMaintenanceCheckComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { ModalTenXtenMaintenanceHistoryComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-home',
@@ -41,6 +43,7 @@ import { Maintenance10x10Service } from '../../services/maintenance-10x10.servic
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,
     ModalTenXtenMaintenanceCheckComponent,
+    ModalTenXtenMaintenanceHistoryComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home.component.html',
@@ -53,6 +56,7 @@ export default class HomeComponent implements OnInit {
   showModalTicketDetail: boolean = false;
   showModalHistorial: boolean = false;
   showModal10x10: boolean = false;
+  showModalHistorialMantenimientos: boolean = false;
 
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
@@ -62,7 +66,7 @@ export default class HomeComponent implements OnInit {
   catproveedores: Proveedor[] = [];
   subscriptiontk: Subscription | undefined;
   itemtk: Ticket | undefined;
-  userdata: any;
+  usuario: Usuario;
   selectedtk: Ticket | undefined;
   loading: boolean = false;
 
@@ -73,18 +77,18 @@ export default class HomeComponent implements OnInit {
     private ticketsService: TicketsService,
     private mantenimientoService: Maintenance10x10Service
   ) {
-    this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idu = this.userdata.uid;
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    let idu = this.usuario.uid;
 
-    if (this.userdata.idRol == '2') {
+    if (this.usuario.idRol == '2') {
       //sucursal
       this.getTicketsPorUsuario(idu);
     }
 
-    if (this.userdata.idRol == '4') {
+    if (this.usuario.idRol == '4') {
       this.getTicketsResponsable(idu);
     }
-    this.sucursal = this.userdata.sucursales[0];
+    this.sucursal = this.usuario.sucursales[0];
     this.formdepto = this.sucursal;
   }
 

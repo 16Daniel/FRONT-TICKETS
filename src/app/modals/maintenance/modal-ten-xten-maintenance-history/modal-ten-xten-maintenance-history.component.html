@@ -1,0 +1,30 @@
+<p-dialog header="HISTORIAL DE MANTENIMIENTOS 10 DE 10" [modal]="true" [(visible)]="showModalHistorialMantenimientos"
+    [style]="{ width: '80vw', height: '80vh' }" [maximizable]="true" (onHide)="onHide()">
+
+    <input class="invisible">
+    <div class="bg-white rounded-3 p-3">
+        <div class="row align-items-center gap-3">
+            <div class="col-auto">
+                <p class="fw-bold">FECHA INICIAL</p>
+            </div>
+            <div class="col-auto">
+                <p-calendar [(ngModel)]="fechaInicio" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+            </div>
+            <div class="col-auto">
+                <p class="fw-bold">FECHA FINAL</p>
+            </div>
+            <div class="col-auto">
+                <p-calendar [(ngModel)]="fechaFin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+            </div>
+
+            <div class="col-auto">
+                <button class="btn bg-p-b p-2" (click)="buscar();">BUSCAR</button>
+            </div>
+        </div>
+    </div>
+
+    <p-table [value]="mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+        styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+        [(selection)]="mantenimientoSeleccionado" (onRowSelect)="onClick()">
+    </p-table>
+</p-dialog>

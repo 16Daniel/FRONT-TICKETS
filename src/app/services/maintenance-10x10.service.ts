@@ -94,4 +94,38 @@ export class Maintenance10x10Service {
     // Retorna la función para desuscribirse
     return unsubscribe;
   }
+
+  getHistorialMantenimeintos(
+    fechaInicio: Date,
+    fechaFin: Date,
+    idSucursal: number,
+    callback: (mantenimientos: Mantenimiento10x10[] | null) => void
+  ): () => void {
+    fechaInicio.setHours(0, 0, 0, 0);
+
+    const mantenimientosRef = collection(this.firestore, this.pathName);
+
+    const q = query(
+      mantenimientosRef,
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      where('idSucursal', '==', idSucursal),
+      where('estatus', '==', false)
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        callback(null);
+      } else {
+        const primerDoc = querySnapshot.docs[0];
+        const mantenimientos = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Mantenimiento10x10[];
+        callback(mantenimientos);
+      }
+    });
+
+    return unsubscribe;
+  }
 }

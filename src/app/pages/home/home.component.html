@@ -1,8 +1,8 @@
 <div class="pt-5">
   <div class="mt-5"></div>
 
-  <h3 class="m-3 text-center" *ngIf="userdata.idRol == '4'">MIS TICKETS</h3>
-  <h3 class="m-3 text-center" *ngIf="userdata.idRol == '2'">
+  <h3 class="m-3 text-center" *ngIf="usuario.idRol == '4'">MIS TICKETS</h3>
+  <h3 class="m-3 text-center" *ngIf="usuario.idRol == '2'">
     TICKETS <span class="text-center text-primary">{{ sucursal?.nombre }}</span>
   </h3>
 
@@ -32,10 +32,14 @@
       (click)="showModalFilterTickets = true">
     </p-button>
 
-    <p-button label="Ver historial" icon="pi pi-history" styleClass="p-button-warning"
+    <p-button label="Historial tickets" icon="pi pi-history" styleClass="p-button-warning"
       (click)="showModalHistorial = true">
     </p-button>
 
+    <p-button label="Historial mantenimientos" icon="pi pi-history" styleClass="p-button-secondary"
+      (click)="showModalHistorialMantenimientos = true">
+    </p-button>
+    
     <p-button label="10 de 10" icon="pi pi-wrench" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
       (click)="showModal10x10 = true">
     </p-button>
@@ -57,10 +61,10 @@
 
   <div *ngIf="tickets.length > 0" class="p-1 mt-3">
     <div class="m-0 pb-4" style="background-color: transparent">
-      <app-priority-tickets-accordion *ngIf="userdata.idRol == '2'" [tickets]="tickets"
+      <app-priority-tickets-accordion *ngIf="usuario.idRol == '2'" [tickets]="tickets"
         (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion>
-      <div *ngIf="userdata.idRol == '4'">
-        <div *ngFor="let item of userdata.sucursales" class="mb-3">
+      <div *ngIf="usuario.idRol == '4'">
+        <div *ngFor="let item of usuario.sucursales" class="mb-3">
           <p-table [value]="obtenerTicketsPorSucursal(item.id)" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
             styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
             [(selection)]="selectedtk" (onRowSelect)="abrirModalDetalleTicket($event)">
@@ -124,6 +128,9 @@
 
 <app-modal-tickets-history *ngIf="showModalHistorial" [showModalHistorial]="showModalHistorial"
   (closeEvent)="showModalHistorial = false"></app-modal-tickets-history>
+  
+<app-modal-ten-xten-maintenance-history *ngIf="showModalHistorialMantenimientos" [showModalHistorialMantenimientos]="showModalHistorialMantenimientos"
+  (closeEvent)="showModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
 
 <app-modal-ten-xten-maintenance-check *ngIf="showModal10x10" [showModal10x10]="showModal10x10"
   (closeEvent)="showModal10x10 = false"

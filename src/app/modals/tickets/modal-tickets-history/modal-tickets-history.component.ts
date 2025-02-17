@@ -41,8 +41,8 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   // subscriptiontk: Subscription | undefined;
   private unsubscribe!: () => void;
   userdata: any;
-  fechaini: Date = new Date();
-  fechafin: Date = new Date();
+  fechaInicio: Date = new Date();
+  fechaFin: Date = new Date();
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
 
@@ -72,8 +72,8 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
 
   async obtenerTicketsPorUsuario(userid: string): Promise<void> {
     this.unsubscribe = this.ticketsService.getHistorialticketsPorUsuario(
-      this.fechaini,
-      this.fechafin,
+      this.fechaInicio,
+      this.fechaFin,
       userid,
       (tickets: any) => {
         // console.log(tickets);
