@@ -24,6 +24,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { Usuario } from '../../../models/usuario.model';
 import { Notificacion } from '../../../models/notificacion.model';
+import { RatingStarsComponent } from '../../common/rating-stars/rating-stars.component';
 
 // type Prioridad = 'PÁNICO' | 'ALTA' | 'MEDIA' | 'BAJA';
 
@@ -37,13 +38,15 @@ import { Notificacion } from '../../../models/notificacion.model';
     ModalTicketChatComponent,
     AccordionModule,
     BadgeModule,
+    RatingStarsComponent
   ],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
-  @Input() mostrarAcciones: boolean = true;;
+  @Input() mostrarAcciones: boolean = true;
+  @Input() mostrarEstrellas: boolean = false;
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;

@@ -14,40 +14,38 @@ import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { MessageService } from 'primeng/api';
+import { RatingStarsComponent } from '../../../components/common/rating-stars/rating-stars.component';
 
 @Component({
   selector: 'app-modal-finalize-ticket',
   standalone: true,
-  imports: [EditorModule, CommonModule, DialogModule, FormsModule],
+  imports: [
+    EditorModule,
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    RatingStarsComponent,
+  ],
   templateUrl: './modal-finalize-ticket.component.html',
   styleUrl: './modal-finalize-ticket.component.scss',
 })
-export class ModalFinalizeTicketComponent implements OnChanges {
+export class ModalFinalizeTicketComponent {
   @Input() showModalFinalizeTicket: boolean = false;
   @Input() ticket: Ticket | any;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   evidencia: string = '';
   rating: number = 0; // Calificación inicial
-  stars: boolean[] = [false, false, false, false, false]; // Estrellas desmarcadas
+  // stars: boolean[] = [false, false, false, false, false]; // Estrellas desmarcadas
 
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.updateStars();
-  }
-
-  updateStars() {
-    this.stars = this.stars.map((_, index) => index < this.rating);
-  }
-
-  setRating(index: number) {
-    this.rating = index + 1;
-    this.updateStars();
-  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.updateStars();
+  // }
 
   finalizarTicket() {
     this.ticket!.status = '3';

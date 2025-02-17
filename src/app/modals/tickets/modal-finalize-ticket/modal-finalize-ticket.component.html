@@ -5,15 +5,7 @@
 
     <br>
     <br>
-    <div class="rating-container">
-        <p style="color: black;">Califica tu experiencia con nuestro soporte:</p>
-        <div class="star-rating">
-            <span *ngFor="let star of stars; let i = index" (click)="setRating(i)" class="star">
-                <ng-container *ngIf="star">★</ng-container>
-                <ng-container *ngIf="!star">☆</ng-container>
-            </span>
-        </div>
-    </div>
+    <app-rating-stars [rating]="rating" (ratingChange)="rating = $event"></app-rating-stars>
 
     <div class="d-flex justify-content-end mt-3">
         <button class="btn btn-success p-2 text-center" (click)="finalizarTicket()"

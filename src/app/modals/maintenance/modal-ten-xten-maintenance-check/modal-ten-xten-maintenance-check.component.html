@@ -2,6 +2,8 @@
     (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
 
     <h2>{{ getDate(mantenimientoActivo?.fecha) | date }}</h2>
+    <app-progress-bar [progreso]="progreso"></app-progress-bar>
+
     <form [formGroup]="formularioDeMantenimiento" class="p-fluid">
         <div class="p-grid p-ai-center">
             <div *ngFor="let opcion of opcionesDeMantenimiento; let i = index" class="p-col-12 p-md-6 p-lg-2">
@@ -25,9 +27,6 @@
             </small>
         </div>
     </form>
-
-    <app-progress-bar [progreso]="progreso"></app-progress-bar>
-
 
 
     <p-footer class="footer-buttons">

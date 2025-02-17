@@ -11,6 +11,7 @@
       <th>RESPONSABLE</th>
       <th>CATEGORÍA</th>
       <th>STATUS</th>
+      <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
       <th *ngIf="mostrarAcciones">ACCIONES</th>
     </tr>
   </ng-template>
@@ -47,6 +48,10 @@
         <i *ngIf="ticket.status == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500"></i>
         <i *ngIf="ticket.status == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00"></i>
         <i *ngIf="ticket.status == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500"></i>
+      </td>
+
+      <td *ngIf="mostrarEstrellas">
+        <app-rating-stars [rating]="ticket.calificacion" [editable]="true"></app-rating-stars>
       </td>
 
       <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
