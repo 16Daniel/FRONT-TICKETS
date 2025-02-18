@@ -141,21 +141,21 @@ export default class HomeAComponent implements OnInit {
       let comtk: any[] = [];
       let tk: Ticket = {
         fecha: new Date(),
-        idsucordpto: this.formdepto.id,
-        statusSuc: null,
-        idproveedor: this.formprov.id,
-        idcategoria: this.formcategoria.id,
+        idSucursal: this.formdepto.id,
+        estatusSucursal: null,
+        idProveedor: this.formprov.id,
+        idCategoria: this.formcategoria.id,
         decripcion: this.formdescripcion,
         solicitante: this.formnomsolicitante,
-        prioridadsuc: this.formprioridad.name,
-        prioridadProv: null,
-        status: '1',
+        prioridadSucursal: this.formprioridad.name,
+        prioridadProveedor: null,
+        estatus: 1,
         responsable: this.getResponsabletk(),
         comentarios: comtk,
-        fechafin: null,
+        fechaFin: null,
         duracion: null,
-        tiposoporte: null,
-        iduser: idu,
+        tipoSoporte: null,
+        idUsuario: idu,
         nombreCategoria: this.formcategoria.nombre,
         folio,
         calificacion: 0
@@ -172,7 +172,7 @@ export default class HomeAComponent implements OnInit {
         uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
         fecha: new Date(),
         abierta: false,
-        idtk: docid,
+        idTicket: docid,
         notificado: false,
       };
 
@@ -280,16 +280,16 @@ export default class HomeAComponent implements OnInit {
         this.arr_tickets = data;
         let arr_temp: Ticket[] = [];
         let temp1: Ticket[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'PÁNICO'
+          (x) => x.prioridadSucursal == 'PÁNICO'
         );
         let temp2: Ticket[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'ALTA'
+          (x) => x.prioridadSucursal == 'ALTA'
         );
         let temp3: Ticket[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'MEDIA'
+          (x) => x.prioridadSucursal == 'MEDIA'
         );
         let temp4: Ticket[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'BAJA'
+          (x) => x.prioridadSucursal == 'BAJA'
         );
 
         temp1 = temp1.sort(
@@ -438,7 +438,7 @@ export default class HomeAComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: this.itemtk!.id,
+          idTicket: this.itemtk!.id,
           notificado: false,
         };
 
@@ -464,7 +464,7 @@ export default class HomeAComponent implements OnInit {
 
   getTicketsP(value: string): Ticket[] {
     let temp = this.arr_tickets.filter(
-      (x) => x.prioridadsuc == value && x.statusSuc != 'PÁNICO'
+      (x) => x.prioridadSucursal == value && x.estatusSucursal != 'PÁNICO'
     );
     return temp.sort(
       (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
@@ -472,7 +472,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getTicketsPanico(): Ticket[] {
-    return this.arr_tickets.filter((x) => x.statusSuc == 'PÁNICO');
+    return this.arr_tickets.filter((x) => x.estatusSucursal == 'PÁNICO');
   }
 
   panico(id: string) {
@@ -493,7 +493,7 @@ export default class HomeAComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: id,
+          idTicket: id,
           notificado: false,
         };
 
@@ -507,8 +507,8 @@ export default class HomeAComponent implements OnInit {
     let temp = this.arr_tickets.filter((x) => x.id == idt);
     if (temp.length > 0) {
       let ticket = temp[0];
-      ticket.statusSuc = 'PÁNICO';
-      ticket.prioridadsuc = 'PÁNICO';
+      ticket.estatusSucursal = 'PÁNICO';
+      ticket.prioridadSucursal = 'PÁNICO';
 
       this.ticketsService
         .update(ticket)
@@ -591,24 +591,24 @@ export default class HomeAComponent implements OnInit {
     this.arr_tickets = [...this.all_arr_tickets];
     if (this.filterPrioridad != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.prioridadsuc == this.filterPrioridad.name
+        (x) => x.prioridadSucursal == this.filterPrioridad.name
       );
     }
 
     if (this.filterarea != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.idproveedor == this.filterarea.id
+        (x) => x.idProveedor == this.filterarea.id
       );
     }
 
     if (this.filtercategoria != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.idcategoria == this.filtercategoria.id
+        (x) => x.idCategoria == this.filtercategoria.id
       );
     }
     if (this.filterstatus != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.status == this.filterstatus.id
+        (x) => x.estatus == this.filterstatus.id
       );
     }
     this.modalfiltros = false;
@@ -628,13 +628,13 @@ export default class HomeAComponent implements OnInit {
     this.dialog.maximized = true;
   }
 
-  getTicketsSuc(ids: string) {
-    return this.arr_tickets.filter((x) => x.idsucordpto == ids);
+  getTicketsSuc(ids: number | any) {
+    return this.arr_tickets.filter((x) => x.idSucursal == ids);
   }
 
   updateasistencia() {
     if (this.formtiposoporte != '') {
-      this.itemtk!.tiposoporte = this.formtiposoporte;
+      this.itemtk!.tipoSoporte = this.formtiposoporte;
       this.ticketsService
         .update(this.itemtk)
         .then(() => {
@@ -649,7 +649,7 @@ export default class HomeAComponent implements OnInit {
 
   updatestatustk() {
     if (this.formstatus != null && this.formstatus != undefined) {
-      this.itemtk!.status = this.formstatus.id;
+      this.itemtk!.estatus = this.formstatus.id;
       this.ticketsService
         .update(this.itemtk)
         .then(() => {
@@ -659,20 +659,20 @@ export default class HomeAComponent implements OnInit {
             let tk = {
               Idtk: this.itemtk!.id,
               Fecha: this.getdate(this.itemtk!.fecha),
-              IdSuc: this.itemtk!.idsucordpto,
-              Statussuc: this.itemtk!.statusSuc,
-              Idprov: this.itemtk!.idproveedor,
-              Idcat: this.itemtk!.idcategoria,
+              IdSuc: this.itemtk!.idSucursal,
+              Statussuc: this.itemtk!.estatusSucursal,
+              Idprov: this.itemtk!.idProveedor,
+              Idcat: this.itemtk!.idCategoria,
               Descripcion: this.itemtk!.decripcion,
               Solicitante: this.itemtk!.solicitante,
-              Prioridadsuc: this.itemtk!.prioridadsuc,
-              Prioridadprov: this.itemtk!.prioridadProv,
-              Status: this.itemtk!.status,
+              Prioridadsuc: this.itemtk!.prioridadSucursal,
+              Prioridadprov: this.itemtk!.prioridadProveedor,
+              Status: this.itemtk!.estatus,
               Responsable: this.itemtk!.responsable,
               FechaFin: new Date(),
               Duracion: '',
-              Tiposoporte: this.itemtk!.tiposoporte,
-              Iduser: this.itemtk!.iduser,
+              Tiposoporte: this.itemtk!.tipoSoporte,
+              Iduser: this.itemtk!.idUsuario,
               Comentarios: JSON.stringify(this.itemtk!.comentarios),
               Nombrecategoria: this.itemtk!.nombreCategoria,
             };

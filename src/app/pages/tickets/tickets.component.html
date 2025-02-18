@@ -2,7 +2,7 @@
 
 <div class="d-flex justify-content-between mt-3">
     <!-- <button class="btn btn-success ms-3" (click)="showcomentarios(itemtk!)">CHAT <i class='bx bxl-whatsapp' ></i></button> -->
-    <button *ngIf="itemtk != undefined && itemtk!.statusSuc != 'PÁNICO'" class="btn ms-3 btn-dark" (click)="panico(itemtk!.id)">
+    <button *ngIf="itemtk != undefined && itemtk!.estatusSucursal != 'PÁNICO'" class="btn ms-3 btn-dark" (click)="panico(itemtk!.id)">
         <i class='bx bxs-hot bx-sm' style="color: rgb(255, 255, 255);"></i>
         &nbsp;PÁNICO
     </button>
@@ -32,7 +32,7 @@
                 </tr>
                 <tr>
                     <th class="text-l">Prioridad</th>
-                    <td class="text-center"> <p-tag [severity]="getseverityp(itemtk!.prioridadsuc)" [value]="itemtk!.prioridadsuc"/></td>
+                    <td class="text-center"> <p-tag [severity]="getseverityp(itemtk!.prioridadSucursal)" [value]="itemtk!.prioridadSucursal"/></td>
                 </tr>
                 
                 <tr>
@@ -47,7 +47,7 @@
 
                 <tr *ngIf="userdata.idRol == '4'">
                     <th class="text-l">Asistencia</th>
-                    <td class="text-r"> <p class="text-center">{{itemtk!.tiposoporte}}</p></td>
+                    <td class="text-r"> <p class="text-center">{{itemtk!.tipoSoporte}}</p></td>
                 </tr>
 
             </table>
@@ -75,7 +75,7 @@
       <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
         
-            <div *ngIf="itemtk.tiposoporte == null && userdata.idRol=='4'">
+            <div *ngIf="itemtk.tipoSoporte == null && userdata.idRol=='4'">
                 <P>TIPO DE ASISTENCIA</P>
                 <select class="form-select" [(ngModel)]="formtiposoporte">
                     <option value="FÍSICA">FÍSICA</option>
@@ -84,7 +84,7 @@
                   <button class="btn bg-p-b mt-3 mb-3" (click)="updateasistencia()">ACTUALIZAR</button>
             </div>
 
-          <div *ngIf="itemtk.tiposoporte != null && userdata.idRol=='4'">
+          <div *ngIf="itemtk.tipoSoporte != null && userdata.idRol=='4'">
             <p-dropdown 
             [options]="catStatusT"
             [(ngModel)]="formstatus"

@@ -34,12 +34,12 @@ export class PriorityTicketsAccordionComponent implements OnInit {
 
   obtenerContadorTickets(prioridad: any): number {
     if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.prioridadsuc === 'PÁNICO').length;
+      return this.tickets.filter((x) => x.prioridadSucursal === 'PÁNICO').length;
     else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'ALTA').length;
+      return this.tickets.filter((x) => x.prioridadSucursal === 'ALTA').length;
     else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'MEDIA').length;
-    else return this.tickets.filter((x) => x.prioridadsuc === 'BAJA').length;
+      return this.tickets.filter((x) => x.prioridadSucursal === 'MEDIA').length;
+    else return this.tickets.filter((x) => x.prioridadSucursal === 'BAJA').length;
   }
 
   obtenerBackgroundColorPrioridad(value: string): string {
@@ -65,12 +65,12 @@ export class PriorityTicketsAccordionComponent implements OnInit {
 
   obtenerTicketsFiltrados(prioridad: any): Ticket[] {
     if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.prioridadsuc === 'PÁNICO');
+      return this.tickets.filter((x) => x.prioridadSucursal === 'PÁNICO');
     else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'ALTA');
+      return this.tickets.filter((x) => x.prioridadSucursal === 'ALTA');
     else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.prioridadsuc === 'MEDIA');
-    else return this.tickets.filter((x) => x.prioridadsuc === 'BAJA');
+      return this.tickets.filter((x) => x.prioridadSucursal === 'MEDIA');
+    else return this.tickets.filter((x) => x.prioridadSucursal === 'BAJA');
   }
 
   toggleAccordion(index: number) {

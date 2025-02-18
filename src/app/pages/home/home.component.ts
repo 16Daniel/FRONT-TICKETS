@@ -119,16 +119,16 @@ export default class HomeComponent implements OnInit {
           this.tickets = data;
           let arr_temp: Ticket[] = [];
           let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'PÁNICO'
+            (x) => x.prioridadSucursal == 'PÁNICO'
           );
           let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'ALTA'
+            (x) => x.prioridadSucursal == 'ALTA'
           );
           let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'MEDIA'
+            (x) => x.prioridadSucursal == 'MEDIA'
           );
           let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'BAJA'
+            (x) => x.prioridadSucursal == 'BAJA'
           );
 
           temp1 = temp1.sort(
@@ -176,16 +176,16 @@ export default class HomeComponent implements OnInit {
           this.tickets = data;
           let arr_temp: Ticket[] = [];
           let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'PÁNICO'
+            (x) => x.prioridadSucursal == 'PÁNICO'
           );
           let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'ALTA'
+            (x) => x.prioridadSucursal == 'ALTA'
           );
           let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'MEDIA'
+            (x) => x.prioridadSucursal == 'MEDIA'
           );
           let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadsuc == 'BAJA'
+            (x) => x.prioridadSucursal == 'BAJA'
           );
 
           temp1 = temp1.sort(
@@ -261,8 +261,8 @@ export default class HomeComponent implements OnInit {
     return nombre;
   }
 
-  obtenerTicketsPorSucursal(idSucursal: string) {
-    return this.tickets.filter((x) => x.idsucordpto == idSucursal);
+  obtenerTicketsPorSucursal(idSucursal: number | any) {
+    return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
   async obtenerMantenimientoActivo() {

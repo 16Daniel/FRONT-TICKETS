@@ -77,6 +77,7 @@ export default class UsersComponent {
   getusuarios() {
     this.usersService.getusers().subscribe({
       next: (data) => {
+        console.log(data)
         this.catusuarios = data;
         this.loading = false;
         if (data.length == 0) {

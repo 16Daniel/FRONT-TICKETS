@@ -66,8 +66,8 @@ export class TicketsService {
       // Consulta filtrada por el ID del usuario
       const q = query(
         collectionRef,
-        where('iduser', '==', userId),
-        where('status', 'in', ['1', '2', '4', '5', '6'])
+        where('idUsuario', '==', userId),
+        where('estatus', 'in', [1, 2, 4, 5, 6])
       );
 
       // Escucha en tiempo real
@@ -105,8 +105,8 @@ export class TicketsService {
 
     const q = query(
       collectionRef,
-      where('iduser', '==', idUsuario),
-      where('status', '==', '3'),
+      where('idUsuario', '==', idUsuario),
+      where('estatus', '==', 3),
       where('fechaFin', '>=', fechaInicio),
       where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
     );

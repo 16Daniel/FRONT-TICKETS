@@ -120,7 +120,7 @@ export class SideMenuComponent implements OnInit {
                     registration.showNotification(item.titulo, {
                       body: item.mensaje,
                       icon: 'https://operamx.no-ip.net/front/tickets/assets/img/RW_LogoWEB.png', // URL del icono
-                      data: { urltk: this.urlbase + item.idtk },
+                      data: { urltk: this.urlbase + item.idTicket },
                     });
 
                     item.notificado = true;
@@ -188,7 +188,7 @@ export class SideMenuComponent implements OnInit {
       url = '/front/tickets';
     }
 
-    window.open(origin + url + '/#/main/ticket/' + item.idtk, '_blank');
+    window.open(origin + url + '/#/main/ticket/' + item.idTicket, '_blank');
   }
 
   getNotificacionesNuevas(): Notificacion[] {

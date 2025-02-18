@@ -91,7 +91,7 @@ export class ModalTicketChatComponent implements AfterViewChecked {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: this.ticket!.id,
+          idTicket: this.ticket!.id,
           notificado: false,
         };
 

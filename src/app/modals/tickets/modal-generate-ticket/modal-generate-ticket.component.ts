@@ -124,7 +124,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   obtenerCategoriasProveedor(): Categoria[] {
     let arr: Categoria[] = [];
     if (this.formProveedor != undefined) {
-      arr = this.categorias.filter((x) => x.idprov == this.formProveedor.id);
+      arr = this.categorias.filter((x) => x.idProveedor == this.formProveedor.id);
     }
     return arr;
   }
@@ -152,11 +152,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         control.markAsTouched();
       });
 
-      this.showMessage(
-        'error',
-        'Error',
-        'Campos requeridos incompletos'
-      );
+      this.showMessage('error', 'Error', 'Campos requeridos incompletos');
       return;
     }
 
@@ -168,24 +164,24 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       let tk: Ticket = {
         fecha: new Date(),
-        idsucordpto: this.formDepartamento.id,
-        statusSuc: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
-        idproveedor: this.formProveedor.id,
-        idcategoria: this.formCategoria.id,
+        idSucursal: parseInt(this.formDepartamento.id),
+        estatusSucursal: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
+        idProveedor: parseInt(this.formProveedor.id),
+        idCategoria: parseInt(this.formCategoria.id),
         decripcion: this.formDescripcion,
         solicitante: this.formNombreSolicitante,
-        prioridadsuc: this.formPrioridad.name,
-        prioridadProv: null,
-        status: '1',
+        prioridadSucursal: this.formPrioridad.name,
+        prioridadProveedor: null,
+        estatus: 1,
         responsable: this.obtenerResponsableTicket(),
         comentarios: [],
-        fechafin: null,
+        fechaFin: null,
         duracion: null,
-        tiposoporte: null,
-        iduser: this.userdata.uid,
+        tipoSoporte: null,
+        idUsuario: this.userdata.uid,
         nombreCategoria: this.formCategoria.nombre,
         folio,
-        calificacion: 0
+        calificacion: 0,
       };
 
       const docid = await this.ticketsService.create(tk);
@@ -200,7 +196,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         uid: this.obtenerResponsableTicket(),
         fecha: new Date(),
         abierta: false,
-        idtk: docid,
+        idTicket: docid,
         notificado: false,
       };
 

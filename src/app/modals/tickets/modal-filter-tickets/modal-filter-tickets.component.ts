@@ -97,24 +97,24 @@ export class ModalFilterTicketsComponent implements OnInit {
     this.ticketsFiltrados = [...this.tickets];
     if (this.filterPrioridad != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.prioridadsuc == this.filterPrioridad.name
+        (x) => x.prioridadSucursal == this.filterPrioridad.name
       );
     }
 
     if (this.filterarea != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.idproveedor == this.filterarea.id
+        (x) => x.idProveedor == this.filterarea.id
       );
     }
 
     if (this.filtercategoria != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.idcategoria == this.filtercategoria.id
+        (x) => x.idCategoria == this.filtercategoria.id
       );
     }
     if (this.filterstatus != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.status == this.filterstatus.id
+        (x) => x.estatus == this.filterstatus.id
       );
     }
 

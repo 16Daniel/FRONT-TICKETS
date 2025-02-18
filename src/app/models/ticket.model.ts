@@ -2,24 +2,24 @@ import { Timestamp } from '@angular/fire/firestore';
 
 export interface Ticket {
   id?: string | any;
+  idUsuario: string;
+  idSucursal: number;
+  idProveedor: number;
+  idCategoria: number;
   fecha: Timestamp | any;
-  idsucordpto: string;
-  statusSuc: string | any;
-  idproveedor: string;
-  idcategoria: number;
-  decripcion: string;// <---
-  solicitante: string;
-  prioridadsuc: string;
-  prioridadProv: string | null;
-  status: string;
-  responsable: string;
-  fechafin: Timestamp | null;
+  fechaFin: Timestamp | null;
   duracion: string | null;
-  tiposoporte: string | null;
-  iduser: string;
+  solicitante: string;
+  prioridadSucursal: string;
+  prioridadProveedor: string | null;
+  responsable: string;
+  tipoSoporte: string | null;
+  nombreCategoria: string | null;
+  decripcion: string;
   comentarios: any[];
-  nombreCategoria: string | null; // <--
-  comentariosfinales?: string | null;
+  comentariosFinales?: string | null;
+  estatusSucursal: string | any;
+  estatus: number;
   folio: string;
   calificacion: number;
 }

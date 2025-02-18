@@ -158,7 +158,7 @@ export default class TicketsComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: id,
+          idTicket: id,
           notificado: false,
         };
 
@@ -171,8 +171,8 @@ export default class TicketsComponent implements OnInit {
   updatestatusSuc(idt: string) {
     if (this.itemtk != undefined) {
       let ticket = this.itemtk;
-      ticket.statusSuc = 'PÁNICO';
-      ticket.prioridadsuc = 'PÁNICO';
+      ticket.estatusSucursal = 'PÁNICO';
+      ticket.prioridadSucursal = 'PÁNICO';
 
       this.ticketsService
         .update(ticket)
@@ -277,7 +277,7 @@ export default class TicketsComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: this.itemtk!.id,
+          idTicket: this.itemtk!.id,
           notificado: false,
         };
 
@@ -302,7 +302,7 @@ export default class TicketsComponent implements OnInit {
 
   updatestatustk() {
     if (this.formstatus != null && this.formstatus != undefined) {
-      this.itemtk!.status = this.formstatus.id;
+      this.itemtk!.estatus = this.formstatus.id;
       this.ticketsService
         .update(this.itemtk)
         .then(() => {
@@ -312,20 +312,20 @@ export default class TicketsComponent implements OnInit {
             let tk = {
               Idtk: this.itemtk!.id,
               Fecha: this.getdate(this.itemtk!.fecha),
-              IdSuc: this.itemtk!.idsucordpto,
-              Statussuc: this.itemtk!.statusSuc,
-              Idprov: this.itemtk!.idproveedor,
-              Idcat: this.itemtk!.idcategoria,
+              IdSuc: this.itemtk!.idSucursal,
+              Statussuc: this.itemtk!.estatusSucursal,
+              Idprov: this.itemtk!.idProveedor,
+              Idcat: this.itemtk!.idCategoria,
               Descripcion: this.itemtk!.decripcion,
               Solicitante: this.itemtk!.solicitante,
-              Prioridadsuc: this.itemtk!.prioridadsuc,
-              Prioridadprov: this.itemtk!.prioridadProv,
-              Status: this.itemtk!.status,
+              Prioridadsuc: this.itemtk!.prioridadSucursal,
+              Prioridadprov: this.itemtk!.prioridadProveedor,
+              Status: this.itemtk!.estatus,
               Responsable: this.itemtk!.responsable,
               FechaFin: new Date(),
               Duracion: '',
-              Tiposoporte: this.itemtk!.tiposoporte,
-              Iduser: this.itemtk!.iduser,
+              Tiposoporte: this.itemtk!.tipoSoporte,
+              Iduser: this.itemtk!.idUsuario,
               Comentarios: JSON.stringify(this.itemtk!.comentarios),
               Nombrecategoria: this.itemtk!.nombreCategoria,
               Comentariosfinales: '',
@@ -361,7 +361,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   finalizartk() {
-    this.itemtk!.status = '3';
+    this.itemtk!.estatus = 3;
     this.ticketsService
       .update(this.itemtk)
       .then(() => {
@@ -370,20 +370,20 @@ export default class TicketsComponent implements OnInit {
         let tk = {
           Idtk: this.itemtk!.id,
           Fecha: this.getdate(this.itemtk!.fecha),
-          IdSuc: this.itemtk!.idsucordpto,
-          Statussuc: this.itemtk!.statusSuc,
-          Idprov: this.itemtk!.idproveedor,
-          Idcat: this.itemtk!.idcategoria,
+          IdSuc: this.itemtk!.idSucursal,
+          Statussuc: this.itemtk!.estatusSucursal,
+          Idprov: this.itemtk!.idProveedor,
+          Idcat: this.itemtk!.idCategoria,
           Descripcion: this.itemtk!.decripcion,
           Solicitante: this.itemtk!.solicitante,
-          Prioridadsuc: this.itemtk!.prioridadsuc,
-          Prioridadprov: this.itemtk!.prioridadProv,
+          Prioridadsuc: this.itemtk!.prioridadSucursal,
+          Prioridadprov: this.itemtk!.prioridadProveedor,
           Status: '3',
           Responsable: this.itemtk!.responsable,
           FechaFin: new Date(),
           Duracion: '',
-          Tiposoporte: this.itemtk!.tiposoporte,
-          Iduser: this.itemtk!.iduser,
+          Tiposoporte: this.itemtk!.tipoSoporte,
+          Iduser: this.itemtk!.idUsuario,
           Comentarios: JSON.stringify(this.itemtk!.comentarios),
           Nombrecategoria: this.itemtk!.nombreCategoria,
           Comentariosfinales: this.formfinalizar,
@@ -412,7 +412,7 @@ export default class TicketsComponent implements OnInit {
 
   updateasistencia() {
     if (this.formtiposoporte != '') {
-      this.itemtk!.tiposoporte = this.formtiposoporte;
+      this.itemtk!.tipoSoporte = this.formtiposoporte;
       this.ticketsService
         .update(this.itemtk)
         .then(() => {

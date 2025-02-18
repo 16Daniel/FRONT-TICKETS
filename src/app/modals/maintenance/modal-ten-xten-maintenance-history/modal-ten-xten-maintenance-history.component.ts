@@ -31,12 +31,12 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   mantenimientos: Mantenimiento10x10[] = [];
   usuario: Usuario;
   mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
+  idSucursal: number = 0;
 
   constructor(private maintenance10x10Service: Maintenance10x10Service) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idSucursal = this.usuario.sucursales[0].id;
-    console.log(idSucursal);
-    this.obtenerTicketsPorUsuario(parseInt(idSucursal));
+    this.idSucursal = parseInt(this.usuario.sucursales[0].id);
+    this.obtenerMantenimientosPorSucursal(this.idSucursal);
   }
 
   onHide() {
@@ -44,10 +44,10 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   buscar() {
-    // this.obtenerTicketsPorUsuario(this.userdata.uid);
+    this.obtenerMantenimientosPorSucursal(this.idSucursal);
   }
 
-  async obtenerTicketsPorUsuario(idSucursal: number): Promise<void> {
+  async obtenerMantenimientosPorSucursal(idSucursal: number): Promise<void> {
     this.maintenance10x10Service.getHistorialMantenimeintos(
       this.fechaInicio,
       this.fechaFin,

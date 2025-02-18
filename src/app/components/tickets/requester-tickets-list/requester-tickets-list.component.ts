@@ -192,8 +192,8 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     let temp = this.tickets.filter((x) => x.id == idTicket);
     if (temp.length > 0) {
       let ticket = temp[0];
-      ticket.statusSuc = 'PÁNICO';
-      ticket.prioridadsuc = 'PÁNICO';
+      ticket.estatusSucursal = 'PÁNICO';
+      ticket.prioridadSucursal = 'PÁNICO';
 
       this.ticketsService
         .update(ticket)
@@ -226,7 +226,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
           uid: this.obtenerIdResponsableTicket(),
           fecha: new Date(),
           abierta: false,
-          idtk: idTicket,
+          idTicket: idTicket,
           notificado: false,
         };
 
