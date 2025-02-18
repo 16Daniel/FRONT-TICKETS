@@ -3,9 +3,9 @@ import { Timestamp } from '@angular/fire/firestore';
 export interface Ticket {
   id?: string | any;
   idUsuario: string;
-  idSucursal: number;
-  idProveedor: number;
-  idCategoria: number;
+  idSucursal: string;
+  idProveedor: string;
+  idCategoria: string;
   fecha: Timestamp | any;
   fechaFin: Timestamp | null;
   duracion: string | null;

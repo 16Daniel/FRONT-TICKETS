@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "nombre": "SISTEMAS"
+    },
+    {
+        "id": 2,
+        "nombre": "AUDIO Y VIDEO"
+    },
+    {
+        "id": 3,
+        "nombre": "SISTEMA CCTV"
+    }
+]

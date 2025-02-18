@@ -188,7 +188,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     });
   }
 
-  actualizaTicketStatusSuc(idTicket: string) {
+  actualizaTicketEstatusSucursal(idTicket: string) {
     let temp = this.tickets.filter((x) => x.id == idTicket);
     if (temp.length > 0) {
       let ticket = temp[0];
@@ -215,7 +215,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
-        this.actualizaTicketStatusSuc(idTicket);
+        this.actualizaTicketEstatusSucursal(idTicket);
 
         let dataNot: Notificacion = {
           titulo: 'ALERTA DE PÁNICO',

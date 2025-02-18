@@ -17,6 +17,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CategoriasService } from '../../../services/categorias.service';
 
 @Component({
   selector: 'app-modal-filter-tickets',
@@ -44,6 +45,7 @@ export class ModalFilterTicketsComponent implements OnInit {
 
   constructor(
     private catalogosService: CatalogosService,
+    private categoriasService: CategoriasService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -55,7 +57,7 @@ export class ModalFilterTicketsComponent implements OnInit {
   }
 
   obtenerCategorias() {
-    this.catalogosService.getCategorias().subscribe({
+    this.categoriasService.get().subscribe({
       next: (data) => {
         this.categorias = data;
         this.cdr.detectChanges();

@@ -17,6 +17,7 @@ import { Sucursal } from '../../models/sucursal.model';
 import { UsersService } from '../../services/users.service';
 import { CatalogosService } from '../../services/catalogs.service';
 import { DocumentsService } from '../../services/documents.service';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-users',
@@ -58,7 +59,8 @@ export default class UsersComponent {
     private config: PrimeNGConfig,
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
-    private catalogosService: CatalogosService
+    private catalogosService: CatalogosService,
+    private sucursalesServices: SucursalesService
   ) {
     this.getRoles();
     this.getusuarios();
@@ -77,7 +79,7 @@ export default class UsersComponent {
   getusuarios() {
     this.usersService.getusers().subscribe({
       next: (data) => {
-        console.log(data)
+        console.log(data);
         this.catusuarios = data;
         this.loading = false;
         if (data.length == 0) {
@@ -118,7 +120,7 @@ export default class UsersComponent {
     return name;
   }
 
-  confirm(id: string) {
+  confirm(id: string | any) {
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: '¿Está seguro que desea eliminar?',
@@ -234,7 +236,7 @@ export default class UsersComponent {
   }
 
   getDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
+    this.sucursalesServices.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();

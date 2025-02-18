@@ -1,5 +1,5 @@
 export interface Categoria {
   id: string;
-  idProveedor: string;
+  idProveedor: number;
   nombre: string;
 }

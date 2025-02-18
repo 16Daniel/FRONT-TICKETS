@@ -1,0 +1,197 @@
+[
+    {
+        "id": 1,
+        "idProveedor": 1,
+        "nombre": "AJUSTE DE TICKET"
+    },
+    {
+        "id": 2,
+        "idProveedor": 1,
+        "nombre": "REPORTES"
+    },
+    {
+        "id": 3,
+        "idProveedor": 1,
+        "nombre": "IMPRESORAS"
+    },
+    {
+        "id": 4,
+        "idProveedor": 1,
+        "nombre": "ALTA DE PERSONAL"
+    },
+    {
+        "id": 5,
+        "idProveedor": 1,
+        "nombre": "INTERNET"
+    },
+    {
+        "id": 6,
+        "idProveedor": 1,
+        "nombre": "ALBARANES"
+    },
+    {
+        "id": 7,
+        "idProveedor": 1,
+        "nombre": "PAGINA WEB"
+    },
+    {
+        "id": 8,
+        "idProveedor": 1,
+        "nombre": "BIOSTAR"
+    },
+    {
+        "id": 9,
+        "idProveedor": 1,
+        "nombre": "FORTIA"
+    },
+    {
+        "id": 10,
+        "idProveedor": 1,
+        "nombre": "ICG MANAGER"
+    },
+    {
+        "id": 11,
+        "idProveedor": 1,
+        "nombre": "FRONT REST"
+    },
+    {
+        "id": 12,
+        "idProveedor": 1,
+        "nombre": "TIEMPOS EN COCINA"
+    },
+    {
+        "id": 13,
+        "idProveedor": 1,
+        "nombre": "INVENTARIOS"
+    },
+    {
+        "id": 14,
+        "idProveedor": 1,
+        "nombre": "ALTA DE ARTICULOS"
+    },
+    {
+        "id": 15,
+        "idProveedor": 1,
+        "nombre": "TELEFONÍA"
+    },
+    {
+        "id": 16,
+        "idProveedor": 1,
+        "nombre": "APP MONDAY"
+    },
+    {
+        "id": 17,
+        "idProveedor": 1,
+        "nombre": "APP DELIVERY"
+    },
+    {
+        "id": 18,
+        "idProveedor": 1,
+        "nombre": "MANTENIMIENTO"
+    },
+    {
+        "id": 19,
+        "idProveedor": 1,
+        "nombre": "SERVIDOR"
+    },
+    {
+        "id": 20,
+        "idProveedor": 1,
+        "nombre": "MAIL"
+    },
+    {
+        "id": 21,
+        "idProveedor": 1,
+        "nombre": "COMPRA DE EQUIPO"
+    },
+    {
+        "id": 22,
+        "idProveedor": 1,
+        "nombre": "FACTURACIÓN"
+    },
+    {
+        "id": 23,
+        "idProveedor": 1,
+        "nombre": "PROGRAMACIÓN"
+    },
+    {
+        "id": 24,
+        "idProveedor": 1,
+        "nombre": "OTROS"
+    },
+    {
+        "id": 25,
+        "idProveedor": 2,
+        "nombre": "CONTENIDOS"
+    },
+    {
+        "id": 26,
+        "idProveedor": 2,
+        "nombre": "FALLA EN AUDIO"
+    },
+    {
+        "id": 27,
+        "idProveedor": 2,
+        "nombre": "FALLA EN VIDEO"
+    },
+    {
+        "id": 28,
+        "idProveedor": 2,
+        "nombre": "CONSOLA"
+    },
+    {
+        "id": 29,
+        "idProveedor": 2,
+        "nombre": "COMPRA DE EQUIPO"
+    },
+    {
+        "id": 30,
+        "idProveedor": 2,
+        "nombre": "MANTENIMIENTO"
+    },
+    {
+        "id": 31,
+        "idProveedor": 2,
+        "nombre": "SISTEMA DE CABLE"
+    },
+    {
+        "id": 32,
+        "idProveedor": 2,
+        "nombre": "OTROS"
+    },
+    {
+        "id": 33,
+        "idProveedor": 3,
+        "nombre": "FALLA EN CAMARAS"
+    },
+    {
+        "id": 34,
+        "idProveedor": 3,
+        "nombre": "FALLA EN DVR"
+    },
+    {
+        "id": 35,
+        "idProveedor": 3,
+        "nombre": "FALLA EN DISCO DURO"
+    },
+    {
+        "id": 36,
+        "idProveedor": 3,
+        "nombre": "CAMARAS OFFLINE"
+    },
+    {
+        "id": 37,
+        "idProveedor": 3,
+        "nombre": "LIMPIEZA DE CAMARAS"
+    },
+    {
+        "id": 38,
+        "idProveedor": 3,
+        "nombre": "MANTENIMIENTO"
+    },
+    {
+        "id": 39,
+        "idProveedor": 3,
+        "nombre": "OTROS"
+    }
+]

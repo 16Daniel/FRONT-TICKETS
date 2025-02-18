@@ -19,14 +19,6 @@ export class CatalogosService {
     return collectionData(usersCollection, { idField: 'id' });
   }
 
-  getSucursalesDepto(): Observable<any[]> {
-    const sucursalesCollection = collection(
-      this.firestore,
-      'cat_departamentos'
-    );
-    return collectionData(sucursalesCollection, { idField: 'id' }); // Incluye el ID del documento
-  }
-
   getProveedores(): Observable<any[]> {
     const vcollection = collection(this.firestore, 'cat_proveedores');
     return collectionData(vcollection, { idField: 'id' }); // Incluye el ID del documento
@@ -37,11 +29,6 @@ export class CatalogosService {
       this.firestore,
       'cat_proveedores/' + idprov + '/cat_categorias'
     );
-    return collectionData(vcollection, { idField: 'id' }); // Incluye el ID del documento
-  }
-
-  getCategorias(): Observable<any[]> {
-    const vcollection = collection(this.firestore, 'cat_categorias');
     return collectionData(vcollection, { idField: 'id' }); // Incluye el ID del documento
   }
 

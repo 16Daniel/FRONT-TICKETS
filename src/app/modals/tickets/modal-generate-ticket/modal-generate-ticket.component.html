@@ -4,7 +4,7 @@
 
         <p-dropdown [options]="sucursales" [(ngModel)]="sucursal" name="sucursal" optionLabel="nombre" [filter]="true"
             filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO"
-            [style]="{width:'100%'}" [disabled]="userdata.idRol == '2'">
+            [style]="{width:'100%'}" [disabled]="usuarioActivo.idRol == '2'">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -17,9 +17,9 @@
             </ng-template>
         </p-dropdown>
         <p></p>
-        <p-dropdown [options]="proveedores" [(ngModel)]="formProveedor" name="proveedor" optionLabel="nombre"
+        <p-dropdown [options]="areas" [(ngModel)]="formProveedor" name="proveedor" optionLabel="nombre"
             [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
-            (onChange)="onChangeProveedor()" #formProveedorCtrl="ngModel"
+            (onChange)="onChangeArea()" #formProveedorCtrl="ngModel"
             [ngClass]="{'p-invalid': formProveedorCtrl.invalid && formProveedorCtrl.touched}" required>
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
@@ -35,7 +35,7 @@
         <small *ngIf="formProveedorCtrl.invalid && formProveedorCtrl.touched" class="p-error">Campo requerido.</small>
 
         <p></p>
-        <p-dropdown [options]="obtenerCategoriasProveedor()" [(ngModel)]="formCategoria" name="categoria"
+        <p-dropdown [options]="obtenerCategoriasPorArea()" [(ngModel)]="formCategoria" name="categoria"
             optionLabel="name" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA"
             [style]="{width:'100%'}" #formCategoriaCtrl="ngModel"
             [ngClass]="{'p-invalid': formProveedorCtrl.invalid && formProveedorCtrl.touched}" required>

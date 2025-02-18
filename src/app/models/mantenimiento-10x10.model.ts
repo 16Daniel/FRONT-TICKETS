@@ -3,7 +3,7 @@ import { Timestamp } from "@angular/fire/firestore";
 export interface Mantenimiento10x10 {
   id?: string | any;
   idSucursal: number | undefined;
-  idUsuarioSoporte: number | undefined;
+  idUsuarioSoporte: string | undefined;
   fecha: Date | undefined;
   mantenimientoCaja: boolean;
   mantenimientoImpresoras: boolean;

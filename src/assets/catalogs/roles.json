@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "nombre": "ADMINISTRADOR"
+    },
+    {
+        "id": 2,
+        "nombre": "SOLICITANTE"
+    },
+    {
+        "id": 3,
+        "nombre": "ADMINISTRADOR DE AREA"
+    },
+    {
+        "id": 4,
+        "nombre": "SOPORTE"
+    }
+]

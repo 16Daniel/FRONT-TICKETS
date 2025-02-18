@@ -279,7 +279,7 @@ export default class HomeComponent implements OnInit {
   async nuevoMantenimiento() {
     const mantenimiento: Mantenimiento10x10 = {
       idSucursal: 1,
-      idUsuarioSoporte: 1,
+      idUsuarioSoporte: "JhPZN7fQD1REyldGXop17qR8Now1",
       fecha: new Date(),
       estatus: true,
       mantenimientoCaja: false,

@@ -8,6 +8,8 @@ import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
 import { TableModule } from 'primeng/table';
 import { Timestamp } from '@angular/fire/firestore';
+import { MessageService } from 'primeng/api';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',
@@ -31,12 +33,18 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   mantenimientos: Mantenimiento10x10[] = [];
   usuario: Usuario;
   mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
-  idSucursal: number = 0;
+  idSucursal: string;
+  usuariosHelp: Usuario[] = [];
 
-  constructor(private maintenance10x10Service: Maintenance10x10Service) {
+  constructor(
+    private maintenance10x10Service: Maintenance10x10Service,
+    private messageService: MessageService,
+    private usersService: UsersService
+  ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.idSucursal = parseInt(this.usuario.sucursales[0].id);
+    this.idSucursal = this.usuario.sucursales[0].id;
     this.obtenerMantenimientosPorSucursal(this.idSucursal);
+    this.obtenerUsuariosHelp();
   }
 
   onHide() {
@@ -47,15 +55,23 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     this.obtenerMantenimientosPorSucursal(this.idSucursal);
   }
 
-  async obtenerMantenimientosPorSucursal(idSucursal: number): Promise<void> {
+  async obtenerMantenimientosPorSucursal(idSucursal: string): Promise<void> {
     this.maintenance10x10Service.getHistorialMantenimeintos(
       this.fechaInicio,
       this.fechaFin,
       idSucursal,
       (mantenimientos: any) => {
-        console.log(mantenimientos);
-        this.mantenimientos = mantenimientos;
-        // this.cdr.detectChanges();
+        if (mantenimientos) {
+          this.showMessage('success', 'Success', 'Información localizada');
+          this.mantenimientos = mantenimientos;
+          // this.cdr.detectChanges();
+        } else {
+          this.showMessage(
+            'warning',
+            'Atención!',
+            'No se encontró información'
+          );
+        }
       }
     );
   }
@@ -71,5 +87,54 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     } catch {
       return tsmp;
     }
+  }
+
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+  calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
+    let porcentaje = 0;
+    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoPuntosVentaTabletas
+      ? (porcentaje += 10)
+      : porcentaje;
+    mantenimiento.mantenimientoContenidosSistemaCable
+      ? (porcentaje += 10)
+      : porcentaje;
+    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoConcentradorApps
+      ? (porcentaje += 10)
+      : porcentaje;
+
+    return porcentaje;
+  }
+
+  obtenerUsuariosHelp() {
+    this.usersService.getusers().subscribe({
+      next: (data) => {
+        this.usuariosHelp = data;
+        // this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerNombreResponsable(idUsuario: string): string {
+    let nombre = '';
+
+    let temp = this.usuariosHelp.filter((x) => x.uid == idUsuario);
+    if (temp.length > 0) {
+      nombre = temp[0].nombre + ' ' + temp[0].apellidoP;
+    }
+    return nombre;
   }
 }

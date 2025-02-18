@@ -98,7 +98,7 @@ export class Maintenance10x10Service {
   getHistorialMantenimeintos(
     fechaInicio: Date,
     fechaFin: Date,
-    idSucursal: number,
+    idSucursal: string,
     callback: (mantenimientos: Mantenimiento10x10[] | null) => void
   ): () => void {
     fechaInicio.setHours(0, 0, 0, 0);

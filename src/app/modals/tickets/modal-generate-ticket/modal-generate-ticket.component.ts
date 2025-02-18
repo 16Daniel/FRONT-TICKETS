@@ -23,6 +23,8 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
 import { Notificacion } from '../../../models/notificacion.model';
 import { Ticket } from '../../../models/ticket.model';
+import { SucursalesService } from '../../../services/sucursales.service';
+import { CategoriasService } from '../../../services/categorias.service';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -43,8 +45,8 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   sucursales: Sucursal[] = [];
   sucursal: Sucursal | undefined;
-  userdata: Usuario = new Usuario();
-  proveedores: Proveedor[] = [];
+  usuarioActivo: Usuario = new Usuario();
+  areas: Proveedor[] = [];
   categorias: Categoria[] = [];
 
   formDepartamento: any;
@@ -54,7 +56,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   formNombreSolicitante: any;
   formPrioridad: any;
   formStatusSucursal: any;
-  catusuarioshelp: Usuario[] = [];
+  catUsuariosHelp: Usuario[] = [];
 
   constructor(
     private ticketsService: TicketsService,
@@ -62,66 +64,65 @@ export class ModalGenerateTicketComponent implements OnInit {
     private messageService: MessageService,
     private notificationsService: NotificationsService,
     private catalogosService: CatalogosService,
+    private categoriasService: CategoriasService,
     private cdr: ChangeDetectorRef,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private sucursalesServices: SucursalesService
   ) {}
 
   ngOnInit(): void {
-    this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.obtenerDepartamentos();
-    this.obtenerProveedores();
+    this.usuarioActivo = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.obtenerSucursales();
+    this.obtenerAreas();
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
 
-    this.sucursal = this.userdata.sucursales[0];
+    this.sucursal = this.usuarioActivo.sucursales[0];
     this.formDepartamento = this.sucursal;
   }
 
-  obtenerDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
+  obtenerSucursales() {
+    this.sucursalesServices.get().subscribe({
       next: (data) => {
         this.sucursales = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
   }
 
-  obtenerProveedores() {
+  obtenerAreas() {
     this.catalogosService.getProveedores().subscribe({
       next: (data) => {
-        this.proveedores = data;
+        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
   }
 
-  onChangeProveedor() {
+  onChangeArea() {
     this.formCategoria = undefined;
     this.cdr.detectChanges();
   }
 
   obtenerCategorias() {
-    this.catalogosService.getCategorias().subscribe({
+    this.categoriasService.get().subscribe({
       next: (data) => {
         this.categorias = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
   }
 
-  obtenerCategoriasProveedor(): Categoria[] {
+  obtenerCategoriasPorArea(): Categoria[] {
     let arr: Categoria[] = [];
     if (this.formProveedor != undefined) {
       arr = this.categorias.filter((x) => x.idProveedor == this.formProveedor.id);
@@ -164,10 +165,10 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       let tk: Ticket = {
         fecha: new Date(),
-        idSucursal: parseInt(this.formDepartamento.id),
+        idSucursal: this.formDepartamento.id,
         estatusSucursal: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
-        idProveedor: parseInt(this.formProveedor.id),
-        idCategoria: parseInt(this.formCategoria.id),
+        idProveedor: this.formProveedor.id,
+        idCategoria: this.formCategoria.id,
         decripcion: this.formDescripcion,
         solicitante: this.formNombreSolicitante,
         prioridadSucursal: this.formPrioridad.name,
@@ -178,7 +179,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         fechaFin: null,
         duracion: null,
         tipoSoporte: null,
-        idUsuario: this.userdata.uid,
+        idUsuario: this.usuarioActivo.uid,
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
@@ -213,7 +214,7 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   obtenerResponsableTicket(): string {
     let idr = '';
-    for (let item of this.catusuarioshelp) {
+    for (let item of this.catUsuariosHelp) {
       if (item.idRol == '4') {
         const existeSucursal = item.sucursales.some(
           (x) => x.id == this.formDepartamento.id
@@ -234,11 +235,10 @@ export class ModalGenerateTicketComponent implements OnInit {
   obtenerUsuariosHelp() {
     this.usersService.getusers().subscribe({
       next: (data) => {
-        this.catusuarioshelp = data;
+        this.catUsuariosHelp = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });

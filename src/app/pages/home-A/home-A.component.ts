@@ -34,6 +34,8 @@ import { DocumentsService } from '../../services/documents.service';
 import { Usuario } from '../../models/usuario.model';
 import { Notificacion } from '../../models/notificacion.model';
 import { Ticket } from '../../models/ticket.model';
+import { SucursalesService } from '../../services/sucursales.service';
+import { CategoriasService } from '../../services/categorias.service';
 
 @Component({
   selector: 'app-home-a',
@@ -107,7 +109,9 @@ export default class HomeAComponent implements OnInit {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private catalogosService: CatalogosService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private sucursalesServices: SucursalesService,
+    private categoriasService: CategoriasService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
@@ -193,7 +197,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
+    this.sucursalesServices.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();
@@ -232,7 +236,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getCategorias() {
-    this.catalogosService.getCategorias().subscribe({
+    this.categoriasService.get().subscribe({
       next: (data) => {
         this.catcategorias = data;
         this.cdr.detectChanges();

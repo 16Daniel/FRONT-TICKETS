@@ -22,6 +22,7 @@ import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
 import { Notificacion } from '../../models/notificacion.model';
 import { Usuario } from '../../models/usuario.model';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-tickets',
@@ -66,7 +67,8 @@ export default class TicketsComponent implements OnInit {
     private ticketsService: TicketsService,
     private catalogosService: CatalogosService,
     private notificationsService: NotificationsService,
-    private documentsService: DocumentsService
+    private documentsService: DocumentsService,
+    private sucursalesServices: SucursalesService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 
@@ -111,7 +113,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   getDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
+    this.sucursalesServices.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();

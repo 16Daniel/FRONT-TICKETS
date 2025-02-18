@@ -87,7 +87,7 @@ export default class RolesComponent {
     }
   }
 
-  confirm(id: string) {
+  confirm(id: string | number) {
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: '¿Está seguro que desea eliminar?',
@@ -141,7 +141,7 @@ export default class RolesComponent {
     });
   }
 
-  deleteRol(id: string) {
+  deleteRol(id: string | number) {
     this.loading = true;
   }
 
@@ -182,8 +182,8 @@ export default class RolesComponent {
     // });
   }
 
-  saveAccesos(idr: number) {
-    let arrdata: number[] = [];
+  saveAccesos(idr: string) {
+    let arrdata: string[] = [];
     for (let i = 0; i < this.selectedRoutes.length; i++) {
       if (this.selectedRoutes[i] == 1) {
         arrdata.push(this.catrutas[i].id);
