@@ -7,11 +7,18 @@ import { Maintenance10x10Service } from '../../../services/maintenance-10x10.ser
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
 import { TableModule } from 'primeng/table';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',
   standalone: true,
-  imports: [DialogModule, CommonModule, CalendarModule, FormsModule, TableModule],
+  imports: [
+    DialogModule,
+    CommonModule,
+    CalendarModule,
+    FormsModule,
+    TableModule,
+  ],
   templateUrl: './modal-ten-xten-maintenance-history.component.html',
   styleUrl: './modal-ten-xten-maintenance-history.component.scss',
 })
@@ -54,4 +61,15 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   onClick() {}
+
+  getDate(tsmp: Timestamp | any): Date {
+    try {
+      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+      const firestoreTimestamp = tsmp; // Ejemplo
+      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      return date;
+    } catch {
+      return tsmp;
+    }
+  }
 }

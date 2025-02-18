@@ -28,8 +28,7 @@
       </td>
       <td class="text-center">{{ ticket.folio }}</td>
       <td class="text-center">
-        {{ getDate(ticket!.fecha) | date }} -
-        {{ getDate(ticket!.fecha) | date : "HH:mm" }}
+        {{ getDate(ticket!.fecha) | date: 'short' }}
       </td>
       <td class="text-center">
         {{ obtenerNombreProveedor(ticket.idproveedor) }}

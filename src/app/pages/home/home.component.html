@@ -36,7 +36,7 @@
       (click)="showModalHistorial = true">
     </p-button>
 
-    <p-button label="Historial mantenimientos" icon="pi pi-history" styleClass="p-button-secondary"
+    <p-button label="Historial 10 de 10" icon="pi pi-history" styleClass="p-button-secondary"
       (click)="showModalHistorialMantenimientos = true">
     </p-button>
     
@@ -122,7 +122,7 @@
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
   (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-modal-filter-tickets *ngIf="showModalFilterTickets" [showModalFilterTickets]="showModalFilterTickets"
+<app-modal-filter-tickets [showModalFilterTickets]="showModalFilterTickets"
   [tickets]="todosLosTickets" (closeEvent)="showModalFilterTickets = false"
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 

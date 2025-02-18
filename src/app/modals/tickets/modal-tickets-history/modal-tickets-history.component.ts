@@ -33,7 +33,7 @@ import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-
   templateUrl: './modal-tickets-history.component.html',
   styleUrl: './modal-tickets-history.component.scss',
 })
-export class ModalTicketsHistoryComponent implements OnDestroy {
+export class ModalTicketsHistoryComponent {
   @Input() showModalHistorial: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -60,12 +60,6 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
     this.obtenerTicketsPorUsuario(idUsuario);
   }
 
-  ngOnDestroy() {
-    // if (this.subscriptiontk != undefined) {
-    //   this.subscriptiontk.unsubscribe();
-    // }
-  }
-
   onHide() {
     this.closeEvent.emit(); // Cerrar modal
   }
@@ -82,6 +76,8 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
         let arr_temp: Ticket[] = [];
 
         if (tickets) {
+          this.showMessage('success', 'Success', 'Información localizada');
+
           let temp1: Ticket[] = this.tickets.filter(
             (x) => x.prioridadsuc == 'PÁNICO'
           );
@@ -104,6 +100,12 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
           temp4 = temp4.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
 
           arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
+        } else {
+          this.showMessage(
+            'warning',
+            'Atención!',
+            'No se encontró información'
+          );
         }
         this.todosLosTickets = [...arr_temp];
         this.tickets = arr_temp;
