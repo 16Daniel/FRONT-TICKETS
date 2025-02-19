@@ -1,197 +1,236 @@
 [
     {
         "id": 1,
-        "idProveedor": 1,
-        "nombre": "AJUSTE DE TICKET"
+        "idArea": 1,
+        "nombre": "AJUSTE DE TICKET",
+        "estimacion": 3
     },
     {
         "id": 2,
-        "idProveedor": 1,
-        "nombre": "REPORTES"
+        "idArea": 1,
+        "nombre": "REPORTES",
+        "estimacion": 5
     },
     {
         "id": 3,
-        "idProveedor": 1,
-        "nombre": "IMPRESORAS"
+        "idArea": 1,
+        "nombre": "IMPRESORAS",
+        "estimacion": 2
     },
     {
         "id": 4,
-        "idProveedor": 1,
-        "nombre": "ALTA DE PERSONAL"
+        "idArea": 1,
+        "nombre": "ALTA DE PERSONAL",
+        "estimacion": 4
     },
     {
         "id": 5,
-        "idProveedor": 1,
-        "nombre": "INTERNET"
+        "idArea": 1,
+        "nombre": "INTERNET",
+        "estimacion": 1
     },
     {
         "id": 6,
-        "idProveedor": 1,
-        "nombre": "ALBARANES"
+        "idArea": 1,
+        "nombre": "ALBARANES",
+        "estimacion": 3
     },
     {
         "id": 7,
-        "idProveedor": 1,
-        "nombre": "PAGINA WEB"
+        "idArea": 1,
+        "nombre": "PAGINA WEB",
+        "estimacion": 5
     },
     {
         "id": 8,
-        "idProveedor": 1,
-        "nombre": "BIOSTAR"
+        "idArea": 1,
+        "nombre": "BIOSTAR",
+        "estimacion": 2
     },
     {
         "id": 9,
-        "idProveedor": 1,
-        "nombre": "FORTIA"
+        "idArea": 1,
+        "nombre": "FORTIA",
+        "estimacion": 4
     },
     {
         "id": 10,
-        "idProveedor": 1,
-        "nombre": "ICG MANAGER"
+        "idArea": 1,
+        "nombre": "ICG MANAGER",
+        "estimacion": 1
     },
     {
         "id": 11,
-        "idProveedor": 1,
-        "nombre": "FRONT REST"
+        "idArea": 1,
+        "nombre": "FRONT REST",
+        "estimacion": 3
     },
     {
         "id": 12,
-        "idProveedor": 1,
-        "nombre": "TIEMPOS EN COCINA"
+        "idArea": 1,
+        "nombre": "TIEMPOS EN COCINA",
+        "estimacion": 5
     },
     {
         "id": 13,
-        "idProveedor": 1,
-        "nombre": "INVENTARIOS"
+        "idArea": 1,
+        "nombre": "INVENTARIOS",
+        "estimacion": 2
     },
     {
         "id": 14,
-        "idProveedor": 1,
-        "nombre": "ALTA DE ARTICULOS"
+        "idArea": 1,
+        "nombre": "ALTA DE ARTICULOS",
+        "estimacion": 4
     },
     {
         "id": 15,
-        "idProveedor": 1,
-        "nombre": "TELEFONÍA"
+        "idArea": 1,
+        "nombre": "TELEFONÍA",
+        "estimacion": 1
     },
     {
         "id": 16,
-        "idProveedor": 1,
-        "nombre": "APP MONDAY"
+        "idArea": 1,
+        "nombre": "APP MONDAY",
+        "estimacion": 3
     },
     {
         "id": 17,
-        "idProveedor": 1,
-        "nombre": "APP DELIVERY"
+        "idArea": 1,
+        "nombre": "APP DELIVERY",
+        "estimacion": 5
     },
     {
         "id": 18,
-        "idProveedor": 1,
-        "nombre": "MANTENIMIENTO"
+        "idArea": 1,
+        "nombre": "MANTENIMIENTO",
+        "estimacion": 2
     },
     {
         "id": 19,
-        "idProveedor": 1,
-        "nombre": "SERVIDOR"
+        "idArea": 1,
+        "nombre": "SERVIDOR",
+        "estimacion": 4
     },
     {
         "id": 20,
-        "idProveedor": 1,
-        "nombre": "MAIL"
+        "idArea": 1,
+        "nombre": "MAIL",
+        "estimacion": 1
     },
     {
         "id": 21,
-        "idProveedor": 1,
-        "nombre": "COMPRA DE EQUIPO"
+        "idArea": 1,
+        "nombre": "COMPRA DE EQUIPO",
+        "estimacion": 3
     },
     {
         "id": 22,
-        "idProveedor": 1,
-        "nombre": "FACTURACIÓN"
+        "idArea": 1,
+        "nombre": "FACTURACIÓN",
+        "estimacion": 5
     },
     {
         "id": 23,
-        "idProveedor": 1,
-        "nombre": "PROGRAMACIÓN"
+        "idArea": 1,
+        "nombre": "PROGRAMACIÓN",
+        "estimacion": 2
     },
     {
         "id": 24,
-        "idProveedor": 1,
-        "nombre": "OTROS"
+        "idArea": 1,
+        "nombre": "OTROS",
+        "estimacion": 4
     },
     {
         "id": 25,
-        "idProveedor": 2,
-        "nombre": "CONTENIDOS"
+        "idArea": 2,
+        "nombre": "CONTENIDOS",
+        "estimacion": 1
     },
     {
         "id": 26,
-        "idProveedor": 2,
-        "nombre": "FALLA EN AUDIO"
+        "idArea": 2,
+        "nombre": "FALLA EN AUDIO",
+        "estimacion": 3
     },
     {
         "id": 27,
-        "idProveedor": 2,
-        "nombre": "FALLA EN VIDEO"
+        "idArea": 2,
+        "nombre": "FALLA EN VIDEO",
+        "estimacion": 5
     },
     {
         "id": 28,
-        "idProveedor": 2,
-        "nombre": "CONSOLA"
+        "idArea": 2,
+        "nombre": "CONSOLA",
+        "estimacion": 2
     },
     {
         "id": 29,
-        "idProveedor": 2,
-        "nombre": "COMPRA DE EQUIPO"
+        "idArea": 2,
+        "nombre": "COMPRA DE EQUIPO",
+        "estimacion": 4
     },
     {
         "id": 30,
-        "idProveedor": 2,
-        "nombre": "MANTENIMIENTO"
+        "idArea": 2,
+        "nombre": "MANTENIMIENTO",
+        "estimacion": 1
     },
     {
         "id": 31,
-        "idProveedor": 2,
-        "nombre": "SISTEMA DE CABLE"
+        "idArea": 2,
+        "nombre": "SISTEMA DE CABLE",
+        "estimacion": 3
     },
     {
         "id": 32,
-        "idProveedor": 2,
-        "nombre": "OTROS"
+        "idArea": 2,
+        "nombre": "OTROS",
+        "estimacion": 5
     },
     {
         "id": 33,
-        "idProveedor": 3,
-        "nombre": "FALLA EN CAMARAS"
+        "idArea": 3,
+        "nombre": "FALLA EN CAMARAS",
+        "estimacion": 2
     },
     {
         "id": 34,
-        "idProveedor": 3,
-        "nombre": "FALLA EN DVR"
+        "idArea": 3,
+        "nombre": "FALLA EN DVR",
+        "estimacion": 4
     },
     {
         "id": 35,
-        "idProveedor": 3,
-        "nombre": "FALLA EN DISCO DURO"
+        "idArea": 3,
+        "nombre": "FALLA EN DISCO DURO",
+        "estimacion": 1
     },
     {
         "id": 36,
-        "idProveedor": 3,
-        "nombre": "CAMARAS OFFLINE"
+        "idArea": 3,
+        "nombre": "CAMARAS OFFLINE",
+        "estimacion": 3
     },
     {
         "id": 37,
-        "idProveedor": 3,
-        "nombre": "LIMPIEZA DE CAMARAS"
+        "idArea": 3,
+        "nombre": "LIMPIEZA DE CAMARAS",
+        "estimacion": 5
     },
     {
         "id": 38,
-        "idProveedor": 3,
-        "nombre": "MANTENIMIENTO"
+        "idArea": 3,
+        "nombre": "MANTENIMIENTO",
+        "estimacion": 2
     },
     {
         "id": 39,
-        "idProveedor": 3,
-        "nombre": "OTROS"
+        "idArea": 3,
+        "nombre": "OTROS",
+        "estimacion": 4
     }
 ]

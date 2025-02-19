@@ -12,6 +12,7 @@ import {
   where,
   getDocs,
   onSnapshot,
+  orderBy,
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -61,7 +62,7 @@ export class Maintenance10x10Service {
   }
 
   getMantenimientoActivo(
-    idSucursal: number,
+    idSucursal: string | undefined,
     callback: (mantenimiento: Mantenimiento10x10 | null) => void
   ): () => void {
     const hoy = new Date();
@@ -110,7 +111,8 @@ export class Maintenance10x10Service {
       where('fecha', '>=', fechaInicio),
       where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
       where('idSucursal', '==', idSucursal),
-      where('estatus', '==', false)
+      where('estatus', '==', false),
+      orderBy('fecha', 'desc') // 🔥 Ordena por fecha descendente (más recientes primero)
     );
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {

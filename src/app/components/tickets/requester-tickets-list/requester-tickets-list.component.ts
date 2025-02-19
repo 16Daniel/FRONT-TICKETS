@@ -10,9 +10,7 @@ import {
 } from '@angular/core';
 import { Ticket } from '../../../models/ticket.model';
 import { TableModule } from 'primeng/table';
-import { Proveedor } from '../../../models/proveedor.model';
 import { CommonModule } from '@angular/common';
-import { CatalogosService } from '../../../services/catalogs.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
 import { UsersService } from '../../../services/users.service';
@@ -25,6 +23,8 @@ import { BadgeModule } from 'primeng/badge';
 import { Usuario } from '../../../models/usuario.model';
 import { Notificacion } from '../../../models/notificacion.model';
 import { RatingStarsComponent } from '../../common/rating-stars/rating-stars.component';
+import { AreasService } from '../../../services/areas.service';
+import { Area } from '../../../models/area';
 
 // type Prioridad = 'PÁNICO' | 'ALTA' | 'MEDIA' | 'BAJA';
 
@@ -51,25 +51,25 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
   showModalFinalizeTicket: boolean = false;
   showModalChatTicket: boolean = false;
-  proveedores: Proveedor[] = [];
+  areas: Area[] = [];
   ticketSeleccionado: Ticket | undefined;
   userdata: any;
   usuariosHelp: Usuario[] = [];
   ticketAccion: Ticket | any;
 
   constructor(
-    private catalogosService: CatalogosService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private usersService: UsersService,
     private confirmationService: ConfirmationService,
     private notificationsService: NotificationsService,
-    private ticketsService: TicketsService
+    private ticketsService: TicketsService,
+    private areasService: AreasService,
   ) {}
 
   ngOnInit(): void {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.obtenerProveedores();
+    this.obtenerAreas();
     this.obtenerUsuariosHelp();
   }
 
@@ -88,7 +88,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
   obtenerNombreProveedor(idProveedor: string): string {
     let nombre = '';
-    let proveedor = this.proveedores.filter((x) => x.id == idProveedor);
+    let proveedor = this.areas.filter((x) => x.id == idProveedor);
     if (proveedor.length > 0) {
       nombre = proveedor[0].nombre;
     }
@@ -116,10 +116,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     return str;
   }
 
-  obtenerProveedores() {
-    this.catalogosService.getProveedores().subscribe({
+  obtenerAreas() {
+    this.areasService.get().subscribe({
       next: (data) => {
-        this.proveedores = data;
+        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {

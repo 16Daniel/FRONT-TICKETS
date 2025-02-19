@@ -47,3 +47,22 @@
 .p-invalid {
   box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  /* Color de fondo */
+  z-index: 1;
+  /* Asegúrate de que esté por encima del contenido */
+  padding: 10px;
+  // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: sombra para destacar */
+}
+
+.sticky-header h2 {
+  margin: 0;
+}
+
+.sticky-header app-progress-bar {
+  margin-top: 10px;
+}

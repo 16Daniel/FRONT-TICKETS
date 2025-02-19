@@ -10,14 +10,13 @@ import { PrimeNGConfig } from 'primeng/api';
 import { ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Rol } from '../../models/rol.model';
-import { Ruta } from '../../models/ruta.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Usuario } from '../../models/usuario.model';
 import { Sucursal } from '../../models/sucursal.model';
 import { UsersService } from '../../services/users.service';
-import { CatalogosService } from '../../services/catalogs.service';
 import { DocumentsService } from '../../services/documents.service';
 import { SucursalesService } from '../../services/sucursales.service';
+import { RolesService } from '../../services/roles.service';
 
 @Component({
   selector: 'app-users',
@@ -59,7 +58,7 @@ export default class UsersComponent {
     private config: PrimeNGConfig,
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
-    private catalogosService: CatalogosService,
+    private rolesService: RolesService,
     private sucursalesServices: SucursalesService
   ) {
     this.getRoles();
@@ -95,7 +94,7 @@ export default class UsersComponent {
   }
 
   getRoles() {
-    this.catalogosService.getRoles().subscribe({
+    this.rolesService.get().subscribe({
       next: (data) => {
         this.catroles = data;
         this.loading = false;

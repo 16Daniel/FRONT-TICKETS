@@ -12,7 +12,6 @@ import { Sucursal } from '../../models/sucursal.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Proveedor } from '../../models/proveedor.model';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
@@ -26,6 +25,7 @@ import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { Usuario } from '../../models/usuario.model';
+import { Area } from '../../models/area';
 
 @Component({
   selector: 'app-home',
@@ -63,7 +63,7 @@ export default class HomeComponent implements OnInit {
   todosLosTickets: Ticket[] = [];
   mantenimientoActivo: Mantenimiento10x10 | null = null;
   formdepto: any;
-  catproveedores: Proveedor[] = [];
+  areas: Area[] = [];
   subscriptiontk: Subscription | undefined;
   itemtk: Ticket | undefined;
   usuario: Usuario;
@@ -254,7 +254,7 @@ export default class HomeComponent implements OnInit {
 
   obtenerNombreProveedor(idp: string): string {
     let nombre = '';
-    let proveedor = this.catproveedores.filter((x) => x.id == idp);
+    let proveedor = this.areas.filter((x) => x.id == idp);
     if (proveedor.length > 0) {
       nombre = proveedor[0].nombre;
     }
@@ -267,7 +267,7 @@ export default class HomeComponent implements OnInit {
 
   async obtenerMantenimientoActivo() {
     this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
-      1,
+      this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
         this.cdr.detectChanges();
@@ -278,7 +278,7 @@ export default class HomeComponent implements OnInit {
 
   async nuevoMantenimiento() {
     const mantenimiento: Mantenimiento10x10 = {
-      idSucursal: 1,
+      idSucursal: '1',
       idUsuarioSoporte: "JhPZN7fQD1REyldGXop17qR8Now1",
       fecha: new Date(),
       estatus: true,

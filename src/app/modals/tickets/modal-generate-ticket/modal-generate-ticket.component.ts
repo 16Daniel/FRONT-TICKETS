@@ -14,8 +14,6 @@ import { DialogModule } from 'primeng/dialog';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
 import { DropdownModule } from 'primeng/dropdown';
-import { CatalogosService } from '../../../services/catalogs.service';
-import { Proveedor } from '../../../models/proveedor.model';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Categoria } from '../../../models/categoria.mdoel';
 import { EditorModule } from 'primeng/editor';
@@ -25,6 +23,8 @@ import { Notificacion } from '../../../models/notificacion.model';
 import { Ticket } from '../../../models/ticket.model';
 import { SucursalesService } from '../../../services/sucursales.service';
 import { CategoriasService } from '../../../services/categorias.service';
+import { AreasService } from '../../../services/areas.service';
+import { Area } from '../../../models/area';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -46,11 +46,11 @@ export class ModalGenerateTicketComponent implements OnInit {
   sucursales: Sucursal[] = [];
   sucursal: Sucursal | undefined;
   usuarioActivo: Usuario = new Usuario();
-  areas: Proveedor[] = [];
+  areas: Area[] = [];
   categorias: Categoria[] = [];
 
   formDepartamento: any;
-  formProveedor: any;
+  formArea: any;
   formCategoria: any;
   formDescripcion: string = '';
   formNombreSolicitante: any;
@@ -63,11 +63,11 @@ export class ModalGenerateTicketComponent implements OnInit {
     private folioGeneratorService: FolioGeneratorService,
     private messageService: MessageService,
     private notificationsService: NotificationsService,
-    private catalogosService: CatalogosService,
     private categoriasService: CategoriasService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
-    private sucursalesServices: SucursalesService
+    private sucursalesServices: SucursalesService,
+    private areasService: AreasService
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +94,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   }
 
   obtenerAreas() {
-    this.catalogosService.getProveedores().subscribe({
+    this.areasService.get().subscribe({
       next: (data) => {
         this.areas = data;
         this.cdr.detectChanges();
@@ -124,8 +124,8 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   obtenerCategoriasPorArea(): Categoria[] {
     let arr: Categoria[] = [];
-    if (this.formProveedor != undefined) {
-      arr = this.categorias.filter((x) => x.idProveedor == this.formProveedor.id);
+    if (this.formArea != undefined) {
+      arr = this.categorias.filter((x) => x.idArea == this.formArea.id);
     }
     return arr;
   }
@@ -163,11 +163,15 @@ export class ModalGenerateTicketComponent implements OnInit {
         count
       );
 
+      const fechaEstimacion = new Date(); // Obtiene la fecha actual
+      fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
+
+      debugger
       let tk: Ticket = {
-        fecha: new Date(),
+        fecha: new Date,
         idSucursal: this.formDepartamento.id,
         estatusSucursal: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
-        idProveedor: this.formProveedor.id,
+        idProveedor: this.formArea.id,
         idCategoria: this.formCategoria.id,
         decripcion: this.formDescripcion,
         solicitante: this.formNombreSolicitante,
@@ -177,7 +181,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         responsable: this.obtenerResponsableTicket(),
         comentarios: [],
         fechaFin: null,
-        duracion: null,
+        fechaEstimacion,
         tipoSoporte: null,
         idUsuario: this.usuarioActivo.uid,
         nombreCategoria: this.formCategoria.nombre,
@@ -207,7 +211,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       this.formNombreSolicitante = '';
       this.formCategoria = undefined;
       this.formStatusSucursal = undefined;
-      this.formProveedor = undefined;
+      this.formArea = undefined;
       this.formPrioridad = undefined;
     });
   }

@@ -1,4 +1,4 @@
-export interface Proveedor {
+export interface Area {
   id: string;
   nombre: string;
 }

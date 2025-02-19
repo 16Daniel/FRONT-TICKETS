@@ -20,7 +20,6 @@ import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Proveedor } from '../../models/proveedor.model';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
@@ -28,7 +27,6 @@ import { StatusTicket } from '../../models/status-ticket.model';
 import { FolioGeneratorService } from '../../services/folio-generator.service';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
-import { CatalogosService } from '../../services/catalogs.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
 import { Usuario } from '../../models/usuario.model';
@@ -36,6 +34,9 @@ import { Notificacion } from '../../models/notificacion.model';
 import { Ticket } from '../../models/ticket.model';
 import { SucursalesService } from '../../services/sucursales.service';
 import { CategoriasService } from '../../services/categorias.service';
+import { AreasService } from '../../services/areas.service';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { Area } from '../../models/area';
 
 @Component({
   selector: 'app-home-a',
@@ -68,7 +69,7 @@ export default class HomeAComponent implements OnInit {
   public formprioridad: any;
   public formstatussuc: any;
   public catsucursales: Sucursal[] = [];
-  public catproveedores: Proveedor[] = [];
+  public areas: Area[] = [];
   public catcategorias: Sucursal[] = [];
   public catStatusT: StatusTicket[] = [];
   public arr_tickets: Ticket[] = [];
@@ -108,10 +109,11 @@ export default class HomeAComponent implements OnInit {
     private folioGeneratorService: FolioGeneratorService,
     private ticketsService: TicketsService,
     private usersService: UsersService,
-    private catalogosService: CatalogosService,
     private notificationsService: NotificationsService,
     private sucursalesServices: SucursalesService,
-    private categoriasService: CategoriasService
+    private categoriasService: CategoriasService,
+    private areasService: AreasService,
+    private estatusTicketService: EstatusTicketService,
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
@@ -157,7 +159,8 @@ export default class HomeAComponent implements OnInit {
         responsable: this.getResponsabletk(),
         comentarios: comtk,
         fechaFin: null,
-        duracion: null,
+        // duracion: null,
+        fechaEstimacion: null,
         tipoSoporte: null,
         idUsuario: idu,
         nombreCategoria: this.formcategoria.nombre,
@@ -210,9 +213,9 @@ export default class HomeAComponent implements OnInit {
   }
 
   getProveedores() {
-    this.catalogosService.getProveedores().subscribe({
+    this.areasService.get().subscribe({
       next: (data) => {
-        this.catproveedores = data;
+        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -223,7 +226,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getcatStatust() {
-    this.catalogosService.getCatStatus().subscribe({
+    this.estatusTicketService.get().subscribe({
       next: (data) => {
         this.catStatusT = data;
         this.cdr.detectChanges();
@@ -250,7 +253,7 @@ export default class HomeAComponent implements OnInit {
 
   changeprov() {
     if (this.formprov != undefined) {
-      this.catalogosService.getCategoriasprov(this.formprov.id).subscribe({
+      this.categoriasService.getCategoriasprov(this.formprov.id).subscribe({
         next: (data) => {
           this.catcategorias = data;
           this.cdr.detectChanges();
@@ -265,7 +268,7 @@ export default class HomeAComponent implements OnInit {
 
   changeprovFilter() {
     if (this.filterarea != undefined) {
-      this.catalogosService.getCategoriasprov(this.filterarea.id).subscribe({
+      this.categoriasService.getCategoriasprov(this.filterarea.id).subscribe({
         next: (data) => {
           this.catcategorias = data;
           this.cdr.detectChanges();
@@ -527,7 +530,7 @@ export default class HomeAComponent implements OnInit {
 
   getNameProveedor(idp: string): string {
     let str = '';
-    let temp = this.catproveedores.filter((x) => x.id == idp);
+    let temp = this.areas.filter((x) => x.id == idp);
     if (temp.length > 0) {
       str = temp[0].nombre;
     }
@@ -546,7 +549,7 @@ export default class HomeAComponent implements OnInit {
   async getNameCategoria(idp: string, idc: number): Promise<string> {
     let str = '';
     try {
-      let documentData = await this.catalogosService.getCategoria(
+      let documentData = await this.categoriasService.getCategoria(
         idp,
         idc.toString()
       );

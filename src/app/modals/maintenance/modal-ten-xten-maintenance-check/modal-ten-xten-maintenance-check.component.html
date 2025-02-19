@@ -1,8 +1,10 @@
 <p-dialog header="REGISTRO DE MANTENIMIENTO 10 DE 10" [(visible)]="showModal10x10" [modal]="true" [maximizable]="true"
     (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
 
-    <h2>{{ getDate(mantenimientoActivo?.fecha) | date }}</h2>
-    <app-progress-bar [progreso]="progreso"></app-progress-bar>
+    <div class="sticky-header">
+        <h2>{{ getDate(mantenimientoActivo?.fecha) | date }}</h2>
+        <app-progress-bar [progreso]="progreso"></app-progress-bar>
+    </div>
 
     <form [formGroup]="formularioDeMantenimiento" class="p-fluid">
         <div class="p-grid p-ai-center">

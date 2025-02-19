@@ -17,10 +17,10 @@
             </ng-template>
         </p-dropdown>
         <p></p>
-        <p-dropdown [options]="areas" [(ngModel)]="formProveedor" name="proveedor" optionLabel="nombre"
+        <p-dropdown [options]="areas" [(ngModel)]="formArea" name="proveedor" optionLabel="nombre"
             [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
-            (onChange)="onChangeArea()" #formProveedorCtrl="ngModel"
-            [ngClass]="{'p-invalid': formProveedorCtrl.invalid && formProveedorCtrl.touched}" required>
+            (onChange)="onChangeArea()" #formAreaCtrl="ngModel"
+            [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -32,13 +32,13 @@
                 </div>
             </ng-template>
         </p-dropdown>
-        <small *ngIf="formProveedorCtrl.invalid && formProveedorCtrl.touched" class="p-error">Campo requerido.</small>
+        <small *ngIf="formAreaCtrl.invalid && formAreaCtrl.touched" class="p-error">Campo requerido.</small>
 
         <p></p>
         <p-dropdown [options]="obtenerCategoriasPorArea()" [(ngModel)]="formCategoria" name="categoria"
             optionLabel="name" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA"
             [style]="{width:'100%'}" #formCategoriaCtrl="ngModel"
-            [ngClass]="{'p-invalid': formProveedorCtrl.invalid && formProveedorCtrl.touched}" required>
+            [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>

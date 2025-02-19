@@ -7,8 +7,9 @@ export interface Ticket {
   idProveedor: string;
   idCategoria: string;
   fecha: Timestamp | any;
+  fechaEstimacion: Timestamp | any;
   fechaFin: Timestamp | null;
-  duracion: string | null;
+  // duracion: string | null;
   solicitante: string;
   prioridadSucursal: string;
   prioridadProveedor: string | null;

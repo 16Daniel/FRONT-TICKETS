@@ -9,15 +9,16 @@ import {
 } from '@angular/core';
 import { StatusTicket } from '../../../models/status-ticket.model';
 import { Categoria } from '../../../models/categoria.mdoel';
-import { Proveedor } from '../../../models/proveedor.model';
 import { Ticket } from '../../../models/ticket.model';
-import { CatalogosService } from '../../../services/catalogs.service';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CategoriasService } from '../../../services/categorias.service';
+import { EstatusTicketService } from '../../../services/estatus-ticket.service';
+import { Area } from '../../../models/area';
+import { AreasService } from '../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-filter-tickets',
@@ -41,18 +42,19 @@ export class ModalFilterTicketsComponent implements OnInit {
 
   statusTicket: StatusTicket[] = [];
   categorias: Categoria[] = [];
-  proveedores: Proveedor[] = [];
+  areas: Area[] = [];
 
   constructor(
-    private catalogosService: CatalogosService,
     private categoriasService: CategoriasService,
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private estatusTicketService: EstatusTicketService,
+    private areasService: AreasService,
   ) {}
 
   ngOnInit(): void {
     this.obtenerCategorias();
-    this.obtenerProveedores();
+    this.obtenerAreas();
     this.obtenerStatusTickets();
   }
 
@@ -69,10 +71,10 @@ export class ModalFilterTicketsComponent implements OnInit {
     });
   }
 
-  obtenerProveedores() {
-    this.catalogosService.getProveedores().subscribe({
+  obtenerAreas() {
+    this.areasService.get().subscribe({
       next: (data) => {
-        this.proveedores = data;
+        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -83,7 +85,7 @@ export class ModalFilterTicketsComponent implements OnInit {
   }
 
   obtenerStatusTickets() {
-    this.catalogosService.getCatStatus().subscribe({
+    this.estatusTicketService.get().subscribe({
       next: (data) => {
         this.statusTicket = data;
         this.cdr.detectChanges();
@@ -154,7 +156,7 @@ export class ModalFilterTicketsComponent implements OnInit {
 
   onChangeProveedor() {
     if (this.filterarea != undefined) {
-      this.catalogosService.getCategoriasprov(this.filterarea.id).subscribe({
+      this.categoriasService.getCategoriasprov(this.filterarea.id).subscribe({
         next: (data) => {
           this.categorias = data;
           // this.cdr.detectChanges();

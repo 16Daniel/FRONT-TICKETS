@@ -13,16 +13,17 @@ import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Proveedor } from '../../models/proveedor.model';
 import { Ticket } from '../../models/ticket.model';
 import { StatusTicket } from '../../models/status-ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { CatalogosService } from '../../services/catalogs.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
 import { Notificacion } from '../../models/notificacion.model';
 import { Usuario } from '../../models/usuario.model';
 import { SucursalesService } from '../../services/sucursales.service';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { AreasService } from '../../services/areas.service';
+import { Area } from '../../models/area';
 
 @Component({
   selector: 'app-tickets',
@@ -45,7 +46,7 @@ export default class TicketsComponent implements OnInit {
   public itemtk: Ticket | undefined;
   public modalcomentarios: boolean = false;
   public catsucursales: Sucursal[] = [];
-  public catproveedores: Proveedor[] = [];
+  public catAreas: Area[] = [];
   public catStatusT: StatusTicket[] = [];
   public userdata: any;
   public modaladdcomentario: boolean = false;
@@ -58,17 +59,16 @@ export default class TicketsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private firestore: Firestore,
-    private auth: Auth,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
-    private catalogosService: CatalogosService,
+    private estatusTicketService: EstatusTicketService,
     private notificationsService: NotificationsService,
     private documentsService: DocumentsService,
-    private sucursalesServices: SucursalesService
+    private sucursalesServices: SucursalesService,
+    private areasService: AreasService
+    
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 
@@ -87,9 +87,9 @@ export default class TicketsComponent implements OnInit {
   }
 
   getProveedores() {
-    this.catalogosService.getProveedores().subscribe({
+    this.areasService.get().subscribe({
       next: (data) => {
-        this.catproveedores = data;
+        this.catAreas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -100,7 +100,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   getcatStatust() {
-    this.catalogosService.getCatStatus().subscribe({
+    this.estatusTicketService.get().subscribe({
       next: (data) => {
         this.catStatusT = data;
         this.cdr.detectChanges();
@@ -237,7 +237,7 @@ export default class TicketsComponent implements OnInit {
 
   getNameProveedor(idp: string): string {
     let str = '';
-    let temp = this.catproveedores.filter((x) => x.id == idp);
+    let temp = this.catAreas.filter((x) => x.id == idp);
     if (temp.length > 0) {
       str = temp[0].nombre;
     }

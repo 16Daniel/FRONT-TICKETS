@@ -1,50 +1,28 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Area } from '../models/area';
 import {
   collection,
   collectionData,
   doc,
   Firestore,
-  getDoc,
   setDoc,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { Categoria } from '../models/categoria.mdoel';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CategoriasService {
-  pathName: string = 'cat_categorias';
+export class AreasService {
+  pathName: string = 'cat_areas';
 
   constructor(private firestore: Firestore, private http: HttpClient) {
-    // this.inicializarCatalogo();
+    // this.inicializarCatalogo()
   }
 
-  get(): Observable<Categoria[] | any[]> {
+  get(): Observable<Area[] | any> {
     const vcollection = collection(this.firestore, this.pathName);
-    return collectionData(vcollection, { idField: 'id' });
-  }
-
-  getCategoriasprov(idprov: string): Observable<any[]> {
-    const vcollection = collection(
-      this.firestore,
-      'cat_areas/' + idprov + '/cat_categorias'
-    );
     return collectionData(vcollection, { idField: 'id' }); // Incluye el ID del documento
-  }
-
-  async getCategoria(idprov: string, docId: string): Promise<any> {
-    const documentRef = doc(
-      this.firestore,
-      `/cat_areas/${idprov}/cat_categorias/${docId}`
-    ); // Referencia al documento
-    const documentSnapshot = await getDoc(documentRef); // Consulta única
-    if (documentSnapshot.exists()) {
-      return documentSnapshot.data(); // Retorna los datos del documento
-    } else {
-      throw new Error('Documento no encontrado');
-    }
   }
 
   private inicializarCatalogo() {
@@ -74,6 +52,6 @@ export class CategoriasService {
   }
 
   private loadJson(): Observable<any> {
-    return this.http.get('/assets/catalogs/categorias.json'); // Ruta al archivo JSON
+    return this.http.get('/assets/catalogs/areas.json'); // Ruta al archivo JSON
   }
 }

@@ -82,7 +82,7 @@
                 </td>
                 <td class="text-center"
                     [ngClass]="{'bg-success': mantenimiento.mantenimientoNoBrakes, 'bg-danger': !mantenimiento.mantenimientoNoBrakes}">
-                    <label style="color: white;">{{ mantenimiento.mantenimientoImpresoras ? 'Si' : 'No' }}</label>
+                    <label style="color: white;">{{ mantenimiento.mantenimientoNoBrakes ? 'Si' : 'No' }}</label>
                 </td>
                 <td class="text-center"
                     [ngClass]="{'bg-success': mantenimiento.mantenimientoTiemposCocina, 'bg-danger': !mantenimiento.mantenimientoTiemposCocina}">
