@@ -15,7 +15,7 @@ import { Usuario } from '../../models/usuario.model';
 import { Sucursal } from '../../models/sucursal.model';
 import { UsersService } from '../../services/users.service';
 import { DocumentsService } from '../../services/documents.service';
-import { SucursalesService } from '../../services/sucursales.service';
+import { BranchesService } from '../../services/branches.service';
 import { RolesService } from '../../services/roles.service';
 
 @Component({
@@ -59,7 +59,7 @@ export default class UsersComponent {
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
     private rolesService: RolesService,
-    private sucursalesServices: SucursalesService
+    private branchesService: BranchesService
   ) {
     this.getRoles();
     this.getusuarios();
@@ -235,7 +235,7 @@ export default class UsersComponent {
   }
 
   getDepartamentos() {
-    this.sucursalesServices.get().subscribe({
+    this.branchesService.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();

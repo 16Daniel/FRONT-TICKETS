@@ -15,8 +15,8 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CategoriasService } from '../../../services/categorias.service';
-import { EstatusTicketService } from '../../../services/estatus-ticket.service';
+import { CategoriesService } from '../../../services/categories.service';
+import { StatusTicketService } from '../../../services/status-ticket.service';
 import { Area } from '../../../models/area';
 import { AreasService } from '../../../services/areas.service';
 
@@ -45,10 +45,10 @@ export class ModalFilterTicketsComponent implements OnInit {
   areas: Area[] = [];
 
   constructor(
-    private categoriasService: CategoriasService,
+    private categoriesService: CategoriesService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private estatusTicketService: EstatusTicketService,
+    private statusTicketService: StatusTicketService,
     private areasService: AreasService,
   ) {}
 
@@ -59,7 +59,7 @@ export class ModalFilterTicketsComponent implements OnInit {
   }
 
   obtenerCategorias() {
-    this.categoriasService.get().subscribe({
+    this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data;
         this.cdr.detectChanges();
@@ -85,7 +85,7 @@ export class ModalFilterTicketsComponent implements OnInit {
   }
 
   obtenerStatusTickets() {
-    this.estatusTicketService.get().subscribe({
+    this.statusTicketService.get().subscribe({
       next: (data) => {
         this.statusTicket = data;
         this.cdr.detectChanges();
@@ -156,7 +156,7 @@ export class ModalFilterTicketsComponent implements OnInit {
 
   onChangeProveedor() {
     if (this.filterarea != undefined) {
-      this.categoriasService.getCategoriasprov(this.filterarea.id).subscribe({
+      this.categoriesService.getCategoriasprov(this.filterarea.id).subscribe({
         next: (data) => {
           this.categorias = data;
           // this.cdr.detectChanges();

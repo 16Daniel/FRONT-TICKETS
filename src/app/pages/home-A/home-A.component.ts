@@ -5,20 +5,15 @@ import {
   type OnInit,
 } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Dialog, DialogModule } from 'primeng/dialog';
+import { Dialog } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { EditorModule } from 'primeng/editor';
-import { HttpClient } from '@angular/common/http';
-import { Firestore, namedQuery } from '@angular/fire/firestore';
-import { Auth, user } from '@angular/fire/auth';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Sucursal } from '../../models/sucursal.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
-import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { AccordionModule } from 'primeng/accordion';
@@ -28,39 +23,40 @@ import { FolioGeneratorService } from '../../services/folio-generator.service';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
 import { NotificationsService } from '../../services/notifications.service';
-import { DocumentsService } from '../../services/documents.service';
 import { Usuario } from '../../models/usuario.model';
 import { Notificacion } from '../../models/notificacion.model';
 import { Ticket } from '../../models/ticket.model';
-import { SucursalesService } from '../../services/sucursales.service';
-import { CategoriasService } from '../../services/categorias.service';
+import { BranchesService } from '../../services/branches.service';
+import { CategoriesService } from '../../services/categories.service';
 import { AreasService } from '../../services/areas.service';
-import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
 import { Area } from '../../models/area';
+import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
+import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 
 @Component({
   selector: 'app-home-a',
   standalone: true,
   imports: [
     TableModule,
-    DialogModule,
     DropdownModule,
     FormsModule,
-    EditorModule,
     ToastModule,
     CommonModule,
-    TagModule,
     ConfirmDialogModule,
     OverlayPanelModule,
-    // HistorialTkComponent,
     AccordionModule,
     BadgeModule,
+    ModalFilterTicketsComponent,
+    ModalGenerateTicketComponent,
+    ModalTicketsHistoryComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-A.component.html',
 })
 export default class HomeAComponent implements OnInit {
-  public modalagregart: boolean = false;
+  public showModalGenerateTicket: boolean = false;
   public formdepto: any;
   public formprov: any;
   public formcategoria: any;
@@ -75,23 +71,15 @@ export default class HomeAComponent implements OnInit {
   public arr_tickets: Ticket[] = [];
   public subscriptiontk: Subscription | undefined;
   public modalticket: boolean = false;
-  public modalcomentarios: boolean = false;
-  public modaladdcomentario: boolean = false;
   public itemtk: Ticket | undefined;
-  public formcomentario: string = '';
   public userdata: any;
   public sucursal: Sucursal | undefined;
   public catusuarioshelp: Usuario[] = [];
   public selectedtk: Ticket | undefined;
   public all_arr_tickets: Ticket[] = [];
-  public modalfiltros: boolean = false;
-  public filterPrioridad: any | undefined;
+  public showModalFilterTickets: boolean = false;
   public filterarea: any | undefined;
-  public filtercategoria: any | undefined;
-  public filterstatus: any | undefined;
-  public modalhistorial: boolean = false;
-  public formtiposoporte: string = '';
-  public formstatus: any;
+  public showModalHistorial: boolean = false;
 
   public showagrupacion: boolean = false;
   public usergroup: Usuario | undefined;
@@ -99,25 +87,18 @@ export default class HomeAComponent implements OnInit {
   @ViewChild('dialogHtk') dialog!: Dialog;
 
   constructor(
-    private http: HttpClient,
-    private firestore: Firestore,
-    private auth: Auth,
     public cdr: ChangeDetectorRef,
-    private documentsService: DocumentsService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService,
     private folioGeneratorService: FolioGeneratorService,
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private notificationsService: NotificationsService,
-    private sucursalesServices: SucursalesService,
-    private categoriasService: CategoriasService,
+    private branchesService: BranchesService,
+    private categoriesService: CategoriesService,
     private areasService: AreasService,
-    private estatusTicketService: EstatusTicketService,
+    private statusTicketService: StatusTicketService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idu = this.userdata.uid;
-    console.log(this.userdata);
 
     this.getcatStatust();
     this.getDepartamentos();
@@ -131,7 +112,7 @@ export default class HomeAComponent implements OnInit {
   ngOnInit(): void {}
 
   openadd() {
-    this.modalagregart = true;
+    this.showModalGenerateTicket = true;
   }
 
   async enviartk(): Promise<void> {
@@ -165,7 +146,7 @@ export default class HomeAComponent implements OnInit {
         idUsuario: idu,
         nombreCategoria: this.formcategoria.nombre,
         folio,
-        calificacion: 0
+        calificacion: 0,
       };
       debugger;
       const docid = await this.ticketsService.create(tk);
@@ -185,7 +166,7 @@ export default class HomeAComponent implements OnInit {
 
       let idn = this.notificationsService.addNotifiacion(dataNot);
 
-      this.modalagregart = false;
+      this.showModalGenerateTicket = false;
       this.formdescripcion = '';
       this.formnomsolicitante = '';
       this.formcategoria = undefined;
@@ -200,7 +181,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getDepartamentos() {
-    this.sucursalesServices.get().subscribe({
+    this.branchesService.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();
@@ -226,7 +207,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getcatStatust() {
-    this.estatusTicketService.get().subscribe({
+    this.statusTicketService.get().subscribe({
       next: (data) => {
         this.catStatusT = data;
         this.cdr.detectChanges();
@@ -239,7 +220,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getCategorias() {
-    this.categoriasService.get().subscribe({
+    this.categoriesService.get().subscribe({
       next: (data) => {
         this.catcategorias = data;
         this.cdr.detectChanges();
@@ -253,7 +234,7 @@ export default class HomeAComponent implements OnInit {
 
   changeprov() {
     if (this.formprov != undefined) {
-      this.categoriasService.getCategoriasprov(this.formprov.id).subscribe({
+      this.categoriesService.getCategoriasprov(this.formprov.id).subscribe({
         next: (data) => {
           this.catcategorias = data;
           this.cdr.detectChanges();
@@ -268,7 +249,7 @@ export default class HomeAComponent implements OnInit {
 
   changeprovFilter() {
     if (this.filterarea != undefined) {
-      this.categoriasService.getCategoriasprov(this.filterarea.id).subscribe({
+      this.categoriesService.getCategoriasprov(this.filterarea.id).subscribe({
         next: (data) => {
           this.catcategorias = data;
           this.cdr.detectChanges();
@@ -346,48 +327,6 @@ export default class HomeAComponent implements OnInit {
     return date;
   }
 
-  getNameDpto(id: string): string {
-    let name = '';
-    let temp = this.catsucursales.filter((x) => x.id == id);
-    if (temp.length > 0) {
-      name = temp[0].nombre;
-    }
-    return name;
-  }
-
-  getseverityp(
-    value: string
-  ):
-    | 'success'
-    | 'secondary'
-    | 'info'
-    | 'warning'
-    | 'danger'
-    | 'contrast'
-    | undefined {
-    let str:
-      | 'success'
-      | 'secondary'
-      | 'info'
-      | 'warning'
-      | 'danger'
-      | 'contrast'
-      | undefined;
-    str = 'danger';
-    if (value == 'ALTA') {
-      str = 'danger';
-    }
-
-    if (value == 'MEDIA') {
-      str = 'warning';
-    }
-
-    if (value == 'BAJA') {
-      str = 'success';
-    }
-    return str;
-  }
-
   getBgPrioridad(value: string): string {
     let str = '';
 
@@ -405,109 +344,9 @@ export default class HomeAComponent implements OnInit {
     return str;
   }
 
-  showticket(item: any) {
-    this.itemtk = this.selectedtk;
-    this.modalticket = true;
-  }
-
   showticketA(item: any) {
     this.itemtk = item;
     this.modalticket = true;
-  }
-
-  showcomentarios(item: Ticket) {
-    this.modalcomentarios = true;
-  }
-
-  showaddcomentario() {
-    this.modaladdcomentario = true;
-  }
-
-  addComentariotk() {
-    let idu = this.userdata.uid;
-
-    let data = {
-      nombre: this.userdata.nombre + ' ' + this.userdata.apellidoP,
-      uid: idu,
-      comentario: this.formcomentario,
-      fecha: new Date(),
-    };
-    this.itemtk!.comentarios.push(data);
-
-    this.ticketsService
-      .update(this.itemtk)
-      .then(() => {
-        this.showMessage('success', 'Success', 'Enviado correctamente');
-
-        let dataNot: Notificacion = {
-          titulo: 'NUEVO COMENTARIO',
-          mensaje: 'HAY UN NUEVO COMENTARIO PARA EL TICKET: ' + this.itemtk!.id,
-          uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
-          fecha: new Date(),
-          abierta: false,
-          idTicket: this.itemtk!.id,
-          notificado: false,
-        };
-
-        let idn = this.notificationsService.addNotifiacion(dataNot);
-
-        this.formcomentario = '';
-        this.modaladdcomentario = false;
-      })
-      .catch((error) =>
-        console.error('Error al actualizar los comentarios:', error)
-      );
-  }
-
-  esmiuid(id: string): boolean {
-    let st = false;
-    let userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idu = this.userdata.uid;
-    if (id == idu) {
-      st = true;
-    }
-    return st;
-  }
-
-  getTicketsP(value: string): Ticket[] {
-    let temp = this.arr_tickets.filter(
-      (x) => x.prioridadSucursal == value && x.estatusSucursal != 'PÁNICO'
-    );
-    return temp.sort(
-      (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-    );
-  }
-
-  getTicketsPanico(): Ticket[] {
-    return this.arr_tickets.filter((x) => x.estatusSucursal == 'PÁNICO');
-  }
-
-  panico(id: string) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.updatestatusSuc(id);
-
-        let dataNot: Notificacion = {
-          titulo: 'ALERTA DE PÁNICO',
-          mensaje:
-            'EL TICKET CON EL ID: ' + id + ' HA CAMBIADO AL ESTATUS DE PÁNICO',
-          uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
-          fecha: new Date(),
-          abierta: false,
-          idTicket: id,
-          notificado: false,
-        };
-
-        let idn = this.notificationsService.addNotifiacion(dataNot);
-      },
-      reject: () => {},
-    });
   }
 
   updatestatusSuc(idt: string) {
@@ -526,38 +365,6 @@ export default class HomeAComponent implements OnInit {
           console.error('Error al actualizar los comentarios:', error)
         );
     }
-  }
-
-  getNameProveedor(idp: string): string {
-    let str = '';
-    let temp = this.areas.filter((x) => x.id == idp);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
-  }
-
-  getNameStatus(idst: string): string {
-    let str = '';
-    let temp = this.catStatusT.filter((x) => x.id == idst);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
-  }
-
-  async getNameCategoria(idp: string, idc: number): Promise<string> {
-    let str = '';
-    try {
-      let documentData = await this.categoriasService.getCategoria(
-        idp,
-        idc.toString()
-      );
-      str = documentData.nombre;
-    } catch (error) {
-      console.error('Error obteniendo el documento:', error);
-    }
-    return str;
   }
 
   getusuarioshelp() {
@@ -591,122 +398,16 @@ export default class HomeAComponent implements OnInit {
   }
 
   showModalFiltros() {
-    this.modalfiltros = true;
-  }
-
-  filtrarT() {
-    this.arr_tickets = [...this.all_arr_tickets];
-    if (this.filterPrioridad != undefined) {
-      this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.prioridadSucursal == this.filterPrioridad.name
-      );
-    }
-
-    if (this.filterarea != undefined) {
-      this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.idProveedor == this.filterarea.id
-      );
-    }
-
-    if (this.filtercategoria != undefined) {
-      this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.idCategoria == this.filtercategoria.id
-      );
-    }
-    if (this.filterstatus != undefined) {
-      this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.estatus == this.filterstatus.id
-      );
-    }
-    this.modalfiltros = false;
-  }
-
-  limpiarfiltro() {
-    this.arr_tickets = [...this.all_arr_tickets];
-    this.filterPrioridad = undefined;
-    this.filterarea = undefined;
-    this.filtercategoria = undefined;
-    this.filterstatus = undefined;
-    this.modalfiltros = false;
+    this.showModalFilterTickets = true;
   }
 
   showHistorial() {
-    this.modalhistorial = true;
+    this.showModalHistorial = true;
     this.dialog.maximized = true;
   }
 
   getTicketsSuc(ids: number | any) {
     return this.arr_tickets.filter((x) => x.idSucursal == ids);
-  }
-
-  updateasistencia() {
-    if (this.formtiposoporte != '') {
-      this.itemtk!.tipoSoporte = this.formtiposoporte;
-      this.ticketsService
-        .update(this.itemtk)
-        .then(() => {
-          this.showMessage('success', 'Success', 'Enviado correctamente');
-          this.formtiposoporte = '';
-        })
-        .catch((error) =>
-          console.error('Error al actualizar los comentarios:', error)
-        );
-    }
-  }
-
-  updatestatustk() {
-    if (this.formstatus != null && this.formstatus != undefined) {
-      this.itemtk!.estatus = this.formstatus.id;
-      this.ticketsService
-        .update(this.itemtk)
-        .then(() => {
-          this.showMessage('success', 'Success', 'Enviado correctamente');
-
-          if (this.formstatus.id == '3') {
-            let tk = {
-              Idtk: this.itemtk!.id,
-              Fecha: this.getdate(this.itemtk!.fecha),
-              IdSuc: this.itemtk!.idSucursal,
-              Statussuc: this.itemtk!.estatusSucursal,
-              Idprov: this.itemtk!.idProveedor,
-              Idcat: this.itemtk!.idCategoria,
-              Descripcion: this.itemtk!.decripcion,
-              Solicitante: this.itemtk!.solicitante,
-              Prioridadsuc: this.itemtk!.prioridadSucursal,
-              Prioridadprov: this.itemtk!.prioridadProveedor,
-              Status: this.itemtk!.estatus,
-              Responsable: this.itemtk!.responsable,
-              FechaFin: new Date(),
-              Duracion: '',
-              Tiposoporte: this.itemtk!.tipoSoporte,
-              Iduser: this.itemtk!.idUsuario,
-              Comentarios: JSON.stringify(this.itemtk!.comentarios),
-              Nombrecategoria: this.itemtk!.nombreCategoria,
-            };
-
-            this.ticketsService.AddTkSQL(tk).subscribe({
-              next: (data) => {
-                this.documentsService.deleteDocument('tickets', this.itemtk!.id);
-                this.itemtk = undefined;
-                this.modalticket = false;
-              },
-              error: (error) => {
-                console.log(error);
-                this.showMessage(
-                  'error',
-                  'Error',
-                  'Error al procesar la solicitud'
-                );
-              },
-            });
-          }
-
-          this.formstatus = undefined;
-        })
-        .catch((error) =>
-          console.error('Error al actualizar los comentarios:', error)
-        );
-    }
   }
 
   getNameSuc(ids: string): string {

@@ -4,25 +4,47 @@ import {
   collectionData,
   doc,
   Firestore,
+  getDoc,
   setDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Sucursal } from '../models/sucursal.model';
+import { Categoria } from '../models/categoria.mdoel';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SucursalesService {
-  pathName: string = 'cat_sucursales';
+export class CategoriesService {
+  pathName: string = 'cat_categorias';
 
   constructor(private firestore: Firestore, private http: HttpClient) {
     // this.inicializarCatalogo();
   }
 
-  get(): Observable<Sucursal[] | any[]> {
-    const sucursalesCollection = collection(this.firestore, this.pathName);
-    return collectionData(sucursalesCollection, { idField: 'id' });
+  get(): Observable<Categoria[] | any[]> {
+    const vcollection = collection(this.firestore, this.pathName);
+    return collectionData(vcollection, { idField: 'id' });
+  }
+
+  getCategoriasprov(idprov: string): Observable<any[]> {
+    const vcollection = collection(
+      this.firestore,
+      'cat_areas/' + idprov + '/cat_categorias'
+    );
+    return collectionData(vcollection, { idField: 'id' }); // Incluye el ID del documento
+  }
+
+  async getCategoria(idprov: string, docId: string): Promise<any> {
+    const documentRef = doc(
+      this.firestore,
+      `/cat_areas/${idprov}/cat_categorias/${docId}`
+    ); // Referencia al documento
+    const documentSnapshot = await getDoc(documentRef); // Consulta única
+    if (documentSnapshot.exists()) {
+      return documentSnapshot.data(); // Retorna los datos del documento
+    } else {
+      throw new Error('Documento no encontrado');
+    }
   }
 
   private inicializarCatalogo() {
@@ -52,6 +74,6 @@ export class SucursalesService {
   }
 
   private loadJson(): Observable<any> {
-    return this.http.get('/assets/catalogs/sucursales.json'); // Ruta al archivo JSON
+    return this.http.get('/assets/catalogs/categorias.json'); // Ruta al archivo JSON
   }
 }

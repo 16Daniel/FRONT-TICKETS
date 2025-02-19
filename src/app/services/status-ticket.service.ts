@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class EstatusTicketService {
+export class StatusTicketService {
   pathName: string = 'cat_estatus_ticket';
 
   constructor(private firestore: Firestore, private http: HttpClient) {
