@@ -20,8 +20,8 @@ import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
 import { Notificacion } from '../../models/notificacion.model';
 import { Usuario } from '../../models/usuario.model';
-import { SucursalesService } from '../../services/sucursales.service';
-import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { BranchesService } from '../../services/branches.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
 import { AreasService } from '../../services/areas.service';
 import { Area } from '../../models/area';
 
@@ -63,10 +63,10 @@ export default class TicketsComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
-    private estatusTicketService: EstatusTicketService,
+    private statusTicketService: StatusTicketService,
     private notificationsService: NotificationsService,
     private documentsService: DocumentsService,
-    private sucursalesServices: SucursalesService,
+    private branchesService: BranchesService,
     private areasService: AreasService
     
   ) {
@@ -100,7 +100,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   getcatStatust() {
-    this.estatusTicketService.get().subscribe({
+    this.statusTicketService.get().subscribe({
       next: (data) => {
         this.catStatusT = data;
         this.cdr.detectChanges();
@@ -113,7 +113,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   getDepartamentos() {
-    this.sucursalesServices.get().subscribe({
+    this.branchesService.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();
