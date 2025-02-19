@@ -4,7 +4,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, Timestamp } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
-import { Notificacion } from '../../models/notificacion.model';
 import { Sucursal } from '../../models/sucursal.model';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -14,14 +13,17 @@ import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Proveedor } from '../../models/proveedor.model';
-import { UsuarioDB } from '../../models/usuario-db.model';
-import { TicketDB } from '../../models/ticket-db.model';
+import { Ticket } from '../../models/ticket.model';
 import { StatusTicket } from '../../models/status-ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { CatalogosService } from '../../services/catalogs.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
+import { Notificacion } from '../../models/notificacion.model';
+import { Usuario } from '../../models/usuario.model';
+import { SucursalesService } from '../../services/sucursales.service';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { AreasService } from '../../services/areas.service';
+import { Area } from '../../models/area';
 
 @Component({
   selector: 'app-tickets',
@@ -41,10 +43,10 @@ import { DocumentsService } from '../../services/documents.service';
 })
 export default class TicketsComponent implements OnInit {
   public idt: string = '';
-  public itemtk: TicketDB | undefined;
+  public itemtk: Ticket | undefined;
   public modalcomentarios: boolean = false;
   public catsucursales: Sucursal[] = [];
-  public catproveedores: Proveedor[] = [];
+  public catAreas: Area[] = [];
   public catStatusT: StatusTicket[] = [];
   public userdata: any;
   public modaladdcomentario: boolean = false;
@@ -53,20 +55,20 @@ export default class TicketsComponent implements OnInit {
   public formtiposoporte: string = '';
   public modalfinalizar: boolean = false;
   public formfinalizar: string = '';
-  public catusuarioshelp: UsuarioDB[] = [];
+  public catusuarioshelp: Usuario[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private firestore: Firestore,
-    private auth: Auth,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
-    private catalogosService: CatalogosService,
+    private estatusTicketService: EstatusTicketService,
     private notificationsService: NotificationsService,
-    private documentsService: DocumentsService
+    private documentsService: DocumentsService,
+    private sucursalesServices: SucursalesService,
+    private areasService: AreasService
+    
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 
@@ -85,9 +87,9 @@ export default class TicketsComponent implements OnInit {
   }
 
   getProveedores() {
-    this.catalogosService.getProveedores().subscribe({
+    this.areasService.get().subscribe({
       next: (data) => {
-        this.catproveedores = data;
+        this.catAreas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -98,7 +100,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   getcatStatust() {
-    this.catalogosService.getCatStatus().subscribe({
+    this.estatusTicketService.get().subscribe({
       next: (data) => {
         this.catStatusT = data;
         this.cdr.detectChanges();
@@ -111,7 +113,7 @@ export default class TicketsComponent implements OnInit {
   }
 
   getDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
+    this.sucursalesServices.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();
@@ -124,9 +126,9 @@ export default class TicketsComponent implements OnInit {
   }
 
   getdataTK() {
-    this.ticketsService.getTk(this.idt).subscribe({
+    this.ticketsService.getById(this.idt).subscribe({
       next: (data) => {
-        this.itemtk = data[0];
+        this.itemtk = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -135,7 +137,7 @@ export default class TicketsComponent implements OnInit {
       },
     });
   }
-  showcomentarios(item: TicketDB) {
+  showcomentarios(item: Ticket) {
     this.itemtk = item;
     this.modalcomentarios = true;
   }
@@ -158,7 +160,7 @@ export default class TicketsComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: id,
+          idTicket: id,
           notificado: false,
         };
 
@@ -171,11 +173,11 @@ export default class TicketsComponent implements OnInit {
   updatestatusSuc(idt: string) {
     if (this.itemtk != undefined) {
       let ticket = this.itemtk;
-      ticket.statusSuc = 'PÁNICO';
-      ticket.prioridadsuc = 'PÁNICO';
+      ticket.estatusSucursal = 'PÁNICO';
+      ticket.prioridadSucursal = 'PÁNICO';
 
       this.ticketsService
-        .updateTicket(ticket)
+        .update(ticket)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
         })
@@ -235,7 +237,7 @@ export default class TicketsComponent implements OnInit {
 
   getNameProveedor(idp: string): string {
     let str = '';
-    let temp = this.catproveedores.filter((x) => x.id == idp);
+    let temp = this.catAreas.filter((x) => x.id == idp);
     if (temp.length > 0) {
       str = temp[0].nombre;
     }
@@ -267,7 +269,7 @@ export default class TicketsComponent implements OnInit {
     this.itemtk!.comentarios.push(data);
 
     this.ticketsService
-      .updateTicket(this.itemtk)
+      .update(this.itemtk)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -277,7 +279,7 @@ export default class TicketsComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: this.itemtk!.id,
+          idTicket: this.itemtk!.id,
           notificado: false,
         };
 
@@ -302,9 +304,9 @@ export default class TicketsComponent implements OnInit {
 
   updatestatustk() {
     if (this.formstatus != null && this.formstatus != undefined) {
-      this.itemtk!.status = this.formstatus.id;
+      this.itemtk!.estatus = this.formstatus.id;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -312,20 +314,20 @@ export default class TicketsComponent implements OnInit {
             let tk = {
               Idtk: this.itemtk!.id,
               Fecha: this.getdate(this.itemtk!.fecha),
-              IdSuc: this.itemtk!.idsucordpto,
-              Statussuc: this.itemtk!.statusSuc,
-              Idprov: this.itemtk!.idproveedor,
-              Idcat: this.itemtk!.idcategoria,
+              IdSuc: this.itemtk!.idSucursal,
+              Statussuc: this.itemtk!.estatusSucursal,
+              Idprov: this.itemtk!.idProveedor,
+              Idcat: this.itemtk!.idCategoria,
               Descripcion: this.itemtk!.decripcion,
               Solicitante: this.itemtk!.solicitante,
-              Prioridadsuc: this.itemtk!.prioridadsuc,
-              Prioridadprov: this.itemtk!.prioridadProv,
-              Status: this.itemtk!.status,
+              Prioridadsuc: this.itemtk!.prioridadSucursal,
+              Prioridadprov: this.itemtk!.prioridadProveedor,
+              Status: this.itemtk!.estatus,
               Responsable: this.itemtk!.responsable,
               FechaFin: new Date(),
               Duracion: '',
-              Tiposoporte: this.itemtk!.tiposoporte,
-              Iduser: this.itemtk!.iduser,
+              Tiposoporte: this.itemtk!.tipoSoporte,
+              Iduser: this.itemtk!.idUsuario,
               Comentarios: JSON.stringify(this.itemtk!.comentarios),
               Nombrecategoria: this.itemtk!.nombreCategoria,
               Comentariosfinales: '',
@@ -361,29 +363,29 @@ export default class TicketsComponent implements OnInit {
   }
 
   finalizartk() {
-    this.itemtk!.status = '3';
+    this.itemtk!.estatus = 3;
     this.ticketsService
-      .updateTicket(this.itemtk)
+      .update(this.itemtk)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
 
         let tk = {
           Idtk: this.itemtk!.id,
           Fecha: this.getdate(this.itemtk!.fecha),
-          IdSuc: this.itemtk!.idsucordpto,
-          Statussuc: this.itemtk!.statusSuc,
-          Idprov: this.itemtk!.idproveedor,
-          Idcat: this.itemtk!.idcategoria,
+          IdSuc: this.itemtk!.idSucursal,
+          Statussuc: this.itemtk!.estatusSucursal,
+          Idprov: this.itemtk!.idProveedor,
+          Idcat: this.itemtk!.idCategoria,
           Descripcion: this.itemtk!.decripcion,
           Solicitante: this.itemtk!.solicitante,
-          Prioridadsuc: this.itemtk!.prioridadsuc,
-          Prioridadprov: this.itemtk!.prioridadProv,
+          Prioridadsuc: this.itemtk!.prioridadSucursal,
+          Prioridadprov: this.itemtk!.prioridadProveedor,
           Status: '3',
           Responsable: this.itemtk!.responsable,
           FechaFin: new Date(),
           Duracion: '',
-          Tiposoporte: this.itemtk!.tiposoporte,
-          Iduser: this.itemtk!.iduser,
+          Tiposoporte: this.itemtk!.tipoSoporte,
+          Iduser: this.itemtk!.idUsuario,
           Comentarios: JSON.stringify(this.itemtk!.comentarios),
           Nombrecategoria: this.itemtk!.nombreCategoria,
           Comentariosfinales: this.formfinalizar,
@@ -412,9 +414,9 @@ export default class TicketsComponent implements OnInit {
 
   updateasistencia() {
     if (this.formtiposoporte != '') {
-      this.itemtk!.tiposoporte = this.formtiposoporte;
+      this.itemtk!.tipoSoporte = this.formtiposoporte;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
           this.formtiposoporte = '';

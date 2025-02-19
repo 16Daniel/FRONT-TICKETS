@@ -14,12 +14,14 @@ import { Notificacion } from '../models/notificacion.model';
   providedIn: 'root',
 })
 export class NotificationsService {
+  pathName: string = 'notificaciones';
+
   constructor(private firestore: Firestore) {}
 
   getNotificaciones(userId: string): Observable<any[]> {
     return new Observable((observer) => {
       // Referencia a la colección
-      const collectionRef = collection(this.firestore, 'Notificaciones');
+      const collectionRef = collection(this.firestore, this.pathName);
 
       // Consulta filtrada por el ID del usuario
       const q = query(collectionRef, where('uid', '==', userId));
@@ -48,7 +50,7 @@ export class NotificationsService {
   }
 
   async addNotifiacion(notificacion: Notificacion) {
-    const ref = collection(this.firestore, 'Notificaciones');
+    const ref = collection(this.firestore, this.pathName);
     const docRef = await addDoc(ref, notificacion);
     return docRef.id; // Devolver el ID del documento creado
   }

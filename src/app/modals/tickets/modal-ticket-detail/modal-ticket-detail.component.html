@@ -1,0 +1,17 @@
+<p-dialog header="DETALLES TICKET" [modal]="true" [(visible)]="showModalTicketDetail" [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+    <div class="accordion" id="accordionExample" *ngIf="ticket != undefined">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    <i class="bx bx-info-circle bx-sm"></i>&nbsp;DESCRIPCIÓN
+                </button>
+            </h2>
+            <div class="accordion-body">
+                <label *ngIf="ticket.decripcion" [innerHTML]="ticket.decripcion"></label>
+                <label *ngIf="!ticket.decripcion">No hay descripción</label>
+            </div>
+        </div>
+    </div>
+</p-dialog>

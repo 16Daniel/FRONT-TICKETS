@@ -367,3 +367,9 @@ ol, ul {
 {
   text-align: left;
 }
+
+
+// Quita el subrayado de p-accordion
+.p-accordion .p-accordion-header a {
+  text-decoration: none !important;
+}

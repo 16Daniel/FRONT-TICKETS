@@ -1,5 +1,5 @@
 export interface Ruta {
-  id: number;
+  id: string;
   ruta: string;
   descripcion: string;
   icon: string | null;

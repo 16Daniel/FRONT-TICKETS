@@ -1,5 +1,6 @@
 export interface Categoria {
   id: string;
-  idprov: string;
+  idArea: string;
   nombre: string;
+  estimacion: number;
 }

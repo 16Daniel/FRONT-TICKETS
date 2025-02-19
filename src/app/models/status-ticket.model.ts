@@ -1,5 +1,5 @@
 export interface StatusTicket {
-  nombre: string;
   id: string;
+  nombre: string;
   icon: string;
 }

@@ -12,7 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Rol } from '../../models/rol.model';
 import { Ruta } from '../../models/ruta.model';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { CatalogosService } from '../../services/catalogs.service';
+import { RolesService } from '../../services/roles.service';
 
 @Component({
   selector: 'app-roles',
@@ -46,7 +46,7 @@ export default class RolesComponent {
     public cdr: ChangeDetectorRef,
     private config: PrimeNGConfig,
     private confirmationService: ConfirmationService,
-    private catalogosService: CatalogosService
+    private rolesService: RolesService
   ) {
     this.getRoles();
     this.getRutas();
@@ -59,7 +59,7 @@ export default class RolesComponent {
   }
 
   getRoles() {
-    this.catalogosService.getRoles().subscribe({
+    this.rolesService.get().subscribe({
       next: (data) => {
         this.catroles = data;
         this.loading = false;
@@ -87,7 +87,7 @@ export default class RolesComponent {
     }
   }
 
-  confirm(id: string) {
+  confirm(id: string | number) {
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: '¿Está seguro que desea eliminar?',
@@ -141,7 +141,7 @@ export default class RolesComponent {
     });
   }
 
-  deleteRol(id: string) {
+  deleteRol(id: string | number) {
     this.loading = true;
   }
 
@@ -182,8 +182,8 @@ export default class RolesComponent {
     // });
   }
 
-  saveAccesos(idr: number) {
-    let arrdata: number[] = [];
+  saveAccesos(idr: string) {
+    let arrdata: string[] = [];
     for (let i = 0; i < this.selectedRoutes.length; i++) {
       if (this.selectedRoutes[i] == 1) {
         arrdata.push(this.catrutas[i].id);

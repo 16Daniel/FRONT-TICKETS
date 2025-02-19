@@ -1,0 +1,194 @@
+[
+    {
+        "id": 1,
+        "nombre": "RW INSURGENTES"
+    },
+    {
+        "id": 2,
+        "nombre": "RW ARCOS"
+    },
+    {
+        "id": 3,
+        "nombre": "RW GRAN SUR"
+    },
+    {
+        "id": 4,
+        "nombre": "RW PLAZA CENTRAL"
+    },
+    {
+        "id": 5,
+        "nombre": "RW POLANCO"
+    },
+    {
+        "id": 6,
+        "nombre": "RW PABELLON CUAUHTEMOC"
+    },
+    {
+        "id": 7,
+        "nombre": "RW CENTRO HISTORICO"
+    },
+    {
+        "id": 8,
+        "nombre": "RW AZCAPOTZALCO"
+    },
+    {
+        "id": 9,
+        "nombre": "RW UNIVERSIDAD"
+    },
+    {
+        "id": 10,
+        "nombre": "RW CONDESA"
+    },
+    {
+        "id": 11,
+        "nombre": "RW LA VIGA"
+    },
+    {
+        "id": 12,
+        "nombre": "RW ARMAND"
+    },
+    {
+        "id": 13,
+        "nombre": "RW SATELITE"
+    },
+    {
+        "id": 14,
+        "nombre": "RW APATLACO"
+    },
+    {
+        "id": 15,
+        "nombre": "RW COAPA"
+    },
+    {
+        "id": 16,
+        "nombre": "RW CUERNAVACA"
+    },
+    {
+        "id": 17,
+        "nombre": "RW ECATEPEC"
+    },
+    {
+        "id": 18,
+        "nombre": "RW CORTIJO"
+    },
+    {
+        "id": 19,
+        "nombre": "RW SANTA FE"
+    },
+    {
+        "id": 20,
+        "nombre": "RW ZARAGOZA"
+    },
+    {
+        "id": 21,
+        "nombre": "RW CUERNAVACA D10"
+    },
+    {
+        "id": 22,
+        "nombre": "RW BUCARELI"
+    },
+    {
+        "id": 23,
+        "nombre": "RW ATANA"
+    },
+    {
+        "id": 24,
+        "nombre": "RW TLAHUAC"
+    },
+    {
+        "id": 25,
+        "nombre": "RW CITY SHOP DEL VALLE"
+    },
+    {
+        "id": 26,
+        "nombre": "RW PUNTA MUSEO"
+    },
+    {
+        "id": 27,
+        "nombre": "RW HAMBURGO"
+    },
+    {
+        "id": 28,
+        "nombre": "RW PICACHO AJUSCO"
+    },
+    {
+        "id": 29,
+        "nombre": "RW MONTEVIDEO"
+    },
+    {
+        "id": 30,
+        "nombre": "RW SAN JUAN"
+    },
+    {
+        "id": 31,
+        "nombre": "RW CONSTITUYENTES"
+    },
+    {
+        "id": 32,
+        "nombre": "RW SENDERO"
+    },
+    {
+        "id": 33,
+        "nombre": "RW JURIQUILLA"
+    },
+    {
+        "id": 34,
+        "nombre": "RW UAQ"
+    },
+    {
+        "id": 35,
+        "nombre": "RW GUANAJUATO"
+    },
+    {
+        "id": 36,
+        "nombre": "RW ALAMEDA"
+    },
+    {
+        "id": 37,
+        "nombre": "RW PEÑUELAS"
+    },
+    {
+        "id": 38,
+        "nombre": "RW CENTRO SUR"
+    },
+    {
+        "id": 39,
+        "nombre": "RW TECNOLOGICO"
+    },
+    {
+        "id": 40,
+        "nombre": "RW CANDILES"
+    },
+    {
+        "id": 41,
+        "nombre": "RW EL REFUGIO"
+    },
+    {
+        "id": 42,
+        "nombre": "RW SATELITE QRO"
+    },
+    {
+        "id": 43,
+        "nombre": "RW SAN JUAN 2"
+    },
+    {
+        "id": 44,
+        "nombre": "RW MARTIN CARRERA"
+    },
+    {
+        "id": 45,
+        "nombre": "RW PATIO UNIVERSIDAD"
+    },
+    {
+        "id": 46,
+        "nombre": "RW PATIO CHALCO"
+    },
+    {
+        "id": 47,
+        "nombre": "RW RIO DE LOS REMEDIOS"
+    },
+    {
+        "id": 48,
+        "nombre": "RW PEDREGAL"
+    }
+]

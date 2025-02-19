@@ -1,6 +1,7 @@
 import { Sucursal } from './sucursal.model';
 
 export class Usuario {
+  id?: string | any;
   nombre: string = '';
   apellidoP: string = '';
   apellidoM: string = '';

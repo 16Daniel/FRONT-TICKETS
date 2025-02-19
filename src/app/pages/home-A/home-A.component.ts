@@ -15,27 +15,28 @@ import { Auth, user } from '@angular/fire/auth';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Sucursal } from '../../models/sucursal.model';
-import { Ticket } from '../../models/ticket.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Proveedor } from '../../models/proveedor.model';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Notificacion } from '../../models/notificacion.model';
-import HistorialTkComponent from '../../components/tickets/tickets-history/tickets-history.component';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { StatusTicket } from '../../models/status-ticket.model';
-import { TicketDB } from '../../models/ticket-db.model';
-import { UsuarioDB } from '../../models/usuario-db.model';
 import { FolioGeneratorService } from '../../services/folio-generator.service';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
-import { CatalogosService } from '../../services/catalogs.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
+import { Usuario } from '../../models/usuario.model';
+import { Notificacion } from '../../models/notificacion.model';
+import { Ticket } from '../../models/ticket.model';
+import { SucursalesService } from '../../services/sucursales.service';
+import { CategoriasService } from '../../services/categorias.service';
+import { AreasService } from '../../services/areas.service';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { Area } from '../../models/area';
 
 @Component({
   selector: 'app-home-a',
@@ -51,7 +52,7 @@ import { DocumentsService } from '../../services/documents.service';
     TagModule,
     ConfirmDialogModule,
     OverlayPanelModule,
-    HistorialTkComponent,
+    // HistorialTkComponent,
     AccordionModule,
     BadgeModule,
   ],
@@ -68,21 +69,21 @@ export default class HomeAComponent implements OnInit {
   public formprioridad: any;
   public formstatussuc: any;
   public catsucursales: Sucursal[] = [];
-  public catproveedores: Proveedor[] = [];
+  public areas: Area[] = [];
   public catcategorias: Sucursal[] = [];
   public catStatusT: StatusTicket[] = [];
-  public arr_tickets: TicketDB[] = [];
+  public arr_tickets: Ticket[] = [];
   public subscriptiontk: Subscription | undefined;
   public modalticket: boolean = false;
   public modalcomentarios: boolean = false;
   public modaladdcomentario: boolean = false;
-  public itemtk: TicketDB | undefined;
+  public itemtk: Ticket | undefined;
   public formcomentario: string = '';
   public userdata: any;
   public sucursal: Sucursal | undefined;
-  public catusuarioshelp: UsuarioDB[] = [];
-  public selectedtk: TicketDB | undefined;
-  public all_arr_tickets: TicketDB[] = [];
+  public catusuarioshelp: Usuario[] = [];
+  public selectedtk: Ticket | undefined;
+  public all_arr_tickets: Ticket[] = [];
   public modalfiltros: boolean = false;
   public filterPrioridad: any | undefined;
   public filterarea: any | undefined;
@@ -93,7 +94,7 @@ export default class HomeAComponent implements OnInit {
   public formstatus: any;
 
   public showagrupacion: boolean = false;
-  public usergroup: UsuarioDB | undefined;
+  public usergroup: Usuario | undefined;
 
   @ViewChild('dialogHtk') dialog!: Dialog;
 
@@ -108,8 +109,11 @@ export default class HomeAComponent implements OnInit {
     private folioGeneratorService: FolioGeneratorService,
     private ticketsService: TicketsService,
     private usersService: UsersService,
-    private catalogosService: CatalogosService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private sucursalesServices: SucursalesService,
+    private categoriasService: CategoriasService,
+    private areasService: AreasService,
+    private estatusTicketService: EstatusTicketService,
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.userdata.uid;
@@ -143,26 +147,28 @@ export default class HomeAComponent implements OnInit {
       let comtk: any[] = [];
       let tk: Ticket = {
         fecha: new Date(),
-        idsucordpto: this.formdepto.id,
-        statusSuc: null,
-        idproveedor: this.formprov.id,
-        idcategoria: this.formcategoria.id,
+        idSucursal: this.formdepto.id,
+        estatusSucursal: null,
+        idProveedor: this.formprov.id,
+        idCategoria: this.formcategoria.id,
         decripcion: this.formdescripcion,
         solicitante: this.formnomsolicitante,
-        prioridadsuc: this.formprioridad.name,
-        prioridadProv: null,
-        status: '1',
+        prioridadSucursal: this.formprioridad.name,
+        prioridadProveedor: null,
+        estatus: 1,
         responsable: this.getResponsabletk(),
         comentarios: comtk,
-        fechafin: null,
-        duracion: null,
-        tiposoporte: null,
-        iduser: idu,
+        fechaFin: null,
+        // duracion: null,
+        fechaEstimacion: null,
+        tipoSoporte: null,
+        idUsuario: idu,
         nombreCategoria: this.formcategoria.nombre,
         folio,
+        calificacion: 0
       };
       debugger;
-      const docid = await this.ticketsService.addticket(tk);
+      const docid = await this.ticketsService.create(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
 
       let dataNot: Notificacion = {
@@ -173,7 +179,7 @@ export default class HomeAComponent implements OnInit {
         uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
         fecha: new Date(),
         abierta: false,
-        idtk: docid,
+        idTicket: docid,
         notificado: false,
       };
 
@@ -194,7 +200,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
+    this.sucursalesServices.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();
@@ -207,9 +213,9 @@ export default class HomeAComponent implements OnInit {
   }
 
   getProveedores() {
-    this.catalogosService.getProveedores().subscribe({
+    this.areasService.get().subscribe({
       next: (data) => {
-        this.catproveedores = data;
+        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -220,7 +226,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getcatStatust() {
-    this.catalogosService.getCatStatus().subscribe({
+    this.estatusTicketService.get().subscribe({
       next: (data) => {
         this.catStatusT = data;
         this.cdr.detectChanges();
@@ -233,7 +239,7 @@ export default class HomeAComponent implements OnInit {
   }
 
   getCategorias() {
-    this.catalogosService.getCategorias().subscribe({
+    this.categoriasService.get().subscribe({
       next: (data) => {
         this.catcategorias = data;
         this.cdr.detectChanges();
@@ -247,7 +253,7 @@ export default class HomeAComponent implements OnInit {
 
   changeprov() {
     if (this.formprov != undefined) {
-      this.catalogosService.getCategoriasprov(this.formprov.id).subscribe({
+      this.categoriasService.getCategoriasprov(this.formprov.id).subscribe({
         next: (data) => {
           this.catcategorias = data;
           this.cdr.detectChanges();
@@ -262,7 +268,7 @@ export default class HomeAComponent implements OnInit {
 
   changeprovFilter() {
     if (this.filterarea != undefined) {
-      this.catalogosService.getCategoriasprov(this.filterarea.id).subscribe({
+      this.categoriasService.getCategoriasprov(this.filterarea.id).subscribe({
         next: (data) => {
           this.catcategorias = data;
           this.cdr.detectChanges();
@@ -276,21 +282,21 @@ export default class HomeAComponent implements OnInit {
   }
 
   async getTicketsUser(): Promise<void> {
-    this.subscriptiontk = this.ticketsService.getalltk().subscribe({
+    this.subscriptiontk = this.ticketsService.get().subscribe({
       next: (data) => {
         this.arr_tickets = data;
-        let arr_temp: TicketDB[] = [];
-        let temp1: TicketDB[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'PÁNICO'
+        let arr_temp: Ticket[] = [];
+        let temp1: Ticket[] = this.arr_tickets.filter(
+          (x) => x.prioridadSucursal == 'PÁNICO'
         );
-        let temp2: TicketDB[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'ALTA'
+        let temp2: Ticket[] = this.arr_tickets.filter(
+          (x) => x.prioridadSucursal == 'ALTA'
         );
-        let temp3: TicketDB[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'MEDIA'
+        let temp3: Ticket[] = this.arr_tickets.filter(
+          (x) => x.prioridadSucursal == 'MEDIA'
         );
-        let temp4: TicketDB[] = this.arr_tickets.filter(
-          (x) => x.prioridadsuc == 'BAJA'
+        let temp4: Ticket[] = this.arr_tickets.filter(
+          (x) => x.prioridadSucursal == 'BAJA'
         );
 
         temp1 = temp1.sort(
@@ -409,7 +415,7 @@ export default class HomeAComponent implements OnInit {
     this.modalticket = true;
   }
 
-  showcomentarios(item: TicketDB) {
+  showcomentarios(item: Ticket) {
     this.modalcomentarios = true;
   }
 
@@ -429,7 +435,7 @@ export default class HomeAComponent implements OnInit {
     this.itemtk!.comentarios.push(data);
 
     this.ticketsService
-      .updateTicket(this.itemtk)
+      .update(this.itemtk)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -439,7 +445,7 @@ export default class HomeAComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: this.itemtk!.id,
+          idTicket: this.itemtk!.id,
           notificado: false,
         };
 
@@ -463,17 +469,17 @@ export default class HomeAComponent implements OnInit {
     return st;
   }
 
-  getTicketsP(value: string): TicketDB[] {
+  getTicketsP(value: string): Ticket[] {
     let temp = this.arr_tickets.filter(
-      (x) => x.prioridadsuc == value && x.statusSuc != 'PÁNICO'
+      (x) => x.prioridadSucursal == value && x.estatusSucursal != 'PÁNICO'
     );
     return temp.sort(
       (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
     );
   }
 
-  getTicketsPanico(): TicketDB[] {
-    return this.arr_tickets.filter((x) => x.statusSuc == 'PÁNICO');
+  getTicketsPanico(): Ticket[] {
+    return this.arr_tickets.filter((x) => x.estatusSucursal == 'PÁNICO');
   }
 
   panico(id: string) {
@@ -494,7 +500,7 @@ export default class HomeAComponent implements OnInit {
           uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
           fecha: new Date(),
           abierta: false,
-          idtk: id,
+          idTicket: id,
           notificado: false,
         };
 
@@ -508,11 +514,11 @@ export default class HomeAComponent implements OnInit {
     let temp = this.arr_tickets.filter((x) => x.id == idt);
     if (temp.length > 0) {
       let ticket = temp[0];
-      ticket.statusSuc = 'PÁNICO';
-      ticket.prioridadsuc = 'PÁNICO';
+      ticket.estatusSucursal = 'PÁNICO';
+      ticket.prioridadSucursal = 'PÁNICO';
 
       this.ticketsService
-        .updateTicket(ticket)
+        .update(ticket)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
         })
@@ -524,7 +530,7 @@ export default class HomeAComponent implements OnInit {
 
   getNameProveedor(idp: string): string {
     let str = '';
-    let temp = this.catproveedores.filter((x) => x.id == idp);
+    let temp = this.areas.filter((x) => x.id == idp);
     if (temp.length > 0) {
       str = temp[0].nombre;
     }
@@ -543,7 +549,7 @@ export default class HomeAComponent implements OnInit {
   async getNameCategoria(idp: string, idc: number): Promise<string> {
     let str = '';
     try {
-      let documentData = await this.catalogosService.getCategoria(
+      let documentData = await this.categoriasService.getCategoria(
         idp,
         idc.toString()
       );
@@ -592,24 +598,24 @@ export default class HomeAComponent implements OnInit {
     this.arr_tickets = [...this.all_arr_tickets];
     if (this.filterPrioridad != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.prioridadsuc == this.filterPrioridad.name
+        (x) => x.prioridadSucursal == this.filterPrioridad.name
       );
     }
 
     if (this.filterarea != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.idproveedor == this.filterarea.id
+        (x) => x.idProveedor == this.filterarea.id
       );
     }
 
     if (this.filtercategoria != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.idcategoria == this.filtercategoria.id
+        (x) => x.idCategoria == this.filtercategoria.id
       );
     }
     if (this.filterstatus != undefined) {
       this.arr_tickets = this.arr_tickets.filter(
-        (x) => x.status == this.filterstatus.id
+        (x) => x.estatus == this.filterstatus.id
       );
     }
     this.modalfiltros = false;
@@ -629,15 +635,15 @@ export default class HomeAComponent implements OnInit {
     this.dialog.maximized = true;
   }
 
-  getTicketsSuc(ids: string) {
-    return this.arr_tickets.filter((x) => x.idsucordpto == ids);
+  getTicketsSuc(ids: number | any) {
+    return this.arr_tickets.filter((x) => x.idSucursal == ids);
   }
 
   updateasistencia() {
     if (this.formtiposoporte != '') {
-      this.itemtk!.tiposoporte = this.formtiposoporte;
+      this.itemtk!.tipoSoporte = this.formtiposoporte;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
           this.formtiposoporte = '';
@@ -650,9 +656,9 @@ export default class HomeAComponent implements OnInit {
 
   updatestatustk() {
     if (this.formstatus != null && this.formstatus != undefined) {
-      this.itemtk!.status = this.formstatus.id;
+      this.itemtk!.estatus = this.formstatus.id;
       this.ticketsService
-        .updateTicket(this.itemtk)
+        .update(this.itemtk)
         .then(() => {
           this.showMessage('success', 'Success', 'Enviado correctamente');
 
@@ -660,20 +666,20 @@ export default class HomeAComponent implements OnInit {
             let tk = {
               Idtk: this.itemtk!.id,
               Fecha: this.getdate(this.itemtk!.fecha),
-              IdSuc: this.itemtk!.idsucordpto,
-              Statussuc: this.itemtk!.statusSuc,
-              Idprov: this.itemtk!.idproveedor,
-              Idcat: this.itemtk!.idcategoria,
+              IdSuc: this.itemtk!.idSucursal,
+              Statussuc: this.itemtk!.estatusSucursal,
+              Idprov: this.itemtk!.idProveedor,
+              Idcat: this.itemtk!.idCategoria,
               Descripcion: this.itemtk!.decripcion,
               Solicitante: this.itemtk!.solicitante,
-              Prioridadsuc: this.itemtk!.prioridadsuc,
-              Prioridadprov: this.itemtk!.prioridadProv,
-              Status: this.itemtk!.status,
+              Prioridadsuc: this.itemtk!.prioridadSucursal,
+              Prioridadprov: this.itemtk!.prioridadProveedor,
+              Status: this.itemtk!.estatus,
               Responsable: this.itemtk!.responsable,
               FechaFin: new Date(),
               Duracion: '',
-              Tiposoporte: this.itemtk!.tiposoporte,
-              Iduser: this.itemtk!.iduser,
+              Tiposoporte: this.itemtk!.tipoSoporte,
+              Iduser: this.itemtk!.idUsuario,
               Comentarios: JSON.stringify(this.itemtk!.comentarios),
               Nombrecategoria: this.itemtk!.nombreCategoria,
             };
@@ -722,7 +728,7 @@ export default class HomeAComponent implements OnInit {
     return name;
   }
 
-  agrupar(user: UsuarioDB) {
+  agrupar(user: Usuario) {
     this.usergroup = user;
     this.showagrupacion = true;
   }
@@ -769,9 +775,9 @@ export default class HomeAComponent implements OnInit {
     return str;
   }
 
-  updatetk(tk: TicketDB) {
+  updatetk(tk: Ticket) {
     this.ticketsService
-      .updateTicket(tk)
+      .update(tk)
       .then(() => {})
       .catch((error) => console.error(error));
   }

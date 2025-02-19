@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nombre": "POR RESOLVER",
+        "icon": "bx-time"
+    },
+    {
+        "id": 2,
+        "nombre": "TRABAJANDO",
+        "icon": "bx-briefcase-alt-2"
+    },
+    {
+        "id": 3,
+        "nombre": "TERMINADO",
+        "icon": "bx-check-circle"
+    },
+    {
+        "id": 4,
+        "nombre": "EN PAUSA",
+        "icon": "bx-pause-circle"
+    },
+    {
+        "id": 5,
+        "nombre": "COMPRANDO",
+        "icon": "bx-shopping-bag"
+    },
+    {
+        "id": 6,
+        "nombre": "COMPRADO",
+        "icon": null
+    }
+]

@@ -10,14 +10,13 @@ import { PrimeNGConfig } from 'primeng/api';
 import { ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Rol } from '../../models/rol.model';
-import { Ruta } from '../../models/ruta.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Usuario } from '../../models/usuario.model';
 import { Sucursal } from '../../models/sucursal.model';
-import { UsuarioDB } from '../../models/usuario-db.model';
 import { UsersService } from '../../services/users.service';
-import { CatalogosService } from '../../services/catalogs.service';
 import { DocumentsService } from '../../services/documents.service';
+import { SucursalesService } from '../../services/sucursales.service';
+import { RolesService } from '../../services/roles.service';
 
 @Component({
   selector: 'app-users',
@@ -40,8 +39,8 @@ export default class UsersComponent {
   public loading: boolean = true;
   public modalAgregar: boolean = false;
   public actualizar: boolean = false;
-  public catusuarios: UsuarioDB[] = [];
-  public usuariosel: UsuarioDB | undefined;
+  public catusuarios: Usuario[] = [];
+  public usuariosel: Usuario | undefined;
   public catroles: Rol[] = [];
   public formrolsel: string | undefined;
   public formnombre: string | undefined;
@@ -59,7 +58,8 @@ export default class UsersComponent {
     private config: PrimeNGConfig,
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
-    private catalogosService: CatalogosService
+    private rolesService: RolesService,
+    private sucursalesServices: SucursalesService
   ) {
     this.getRoles();
     this.getusuarios();
@@ -78,6 +78,7 @@ export default class UsersComponent {
   getusuarios() {
     this.usersService.getusers().subscribe({
       next: (data) => {
+        console.log(data);
         this.catusuarios = data;
         this.loading = false;
         if (data.length == 0) {
@@ -93,7 +94,7 @@ export default class UsersComponent {
   }
 
   getRoles() {
-    this.catalogosService.getRoles().subscribe({
+    this.rolesService.get().subscribe({
       next: (data) => {
         this.catroles = data;
         this.loading = false;
@@ -118,7 +119,7 @@ export default class UsersComponent {
     return name;
   }
 
-  confirm(id: string) {
+  confirm(id: string | any) {
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: '¿Está seguro que desea eliminar?',
@@ -133,7 +134,7 @@ export default class UsersComponent {
     });
   }
 
-  showEdit(data: UsuarioDB) {
+  showEdit(data: Usuario) {
     this.actualizar = true;
     this.modalAgregar = true;
     this.usuariosel = data;
@@ -196,7 +197,7 @@ export default class UsersComponent {
   }
 
   updateData() {
-    const data: UsuarioDB = {
+    const data: Usuario = {
       id: this.usuariosel!.id,
       nombre: this.formnombre!,
       apellidoP: this.formapellidop!,
@@ -234,7 +235,7 @@ export default class UsersComponent {
   }
 
   getDepartamentos() {
-    this.catalogosService.getSucursalesDepto().subscribe({
+    this.sucursalesServices.get().subscribe({
       next: (data) => {
         this.catsucursales = data;
         this.cdr.detectChanges();
