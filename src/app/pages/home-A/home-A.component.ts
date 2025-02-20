@@ -147,6 +147,7 @@ export default class HomeAComponent implements OnInit {
         nombreCategoria: this.formcategoria.nombre,
         folio,
         calificacion: 0,
+        participantesChat: []
       };
       debugger;
       const docid = await this.ticketsService.create(tk);

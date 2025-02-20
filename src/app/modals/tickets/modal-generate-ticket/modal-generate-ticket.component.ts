@@ -186,6 +186,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
+        participantesChat: []
       };
 
       const docid = await this.ticketsService.create(tk);

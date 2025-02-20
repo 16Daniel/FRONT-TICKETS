@@ -38,7 +38,7 @@ import { Area } from '../../../models/area';
     ModalTicketChatComponent,
     AccordionModule,
     BadgeModule,
-    RatingStarsComponent
+    RatingStarsComponent,
   ],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
@@ -68,7 +68,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private notificationsService: NotificationsService,
     private ticketsService: TicketsService,
-    private areasService: AreasService,
+    private areasService: AreasService
   ) {}
 
   ngOnInit(): void {
@@ -143,12 +143,11 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
   getDate(tsmp: Timestamp | any): Date {
     try {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date;
-    }
-    catch {
+      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+      const firestoreTimestamp = tsmp; // Ejemplo
+      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      return date;
+    } catch {
       return tsmp;
     }
   }
@@ -248,5 +247,20 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   onClickChat(ticket: Ticket) {
     this.ticketAccion = ticket;
     this.showModalChatTicket = true;
+  }
+
+  verificarChatNoLeido(ticket: Ticket, idUsuario: string) {
+    const participantes = ticket.participantesChat;
+    const participante = participantes.find((p) => p.idUsuario === idUsuario);
+
+    if (participante) {
+      const ultimoComentarioLeido = participante.ultimoComentarioLeido;
+      const comentarios = ticket.comentarios;
+
+      // Si el último comentario leído es menor que la longitud actual de los comentarios
+      return comentarios.length > ultimoComentarioLeido;
+    }
+
+    return false;
   }
 }
