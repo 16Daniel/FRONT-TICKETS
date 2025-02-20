@@ -1,0 +1,115 @@
+<div class="pt-5">
+    <div class="mt-5"></div>
+  
+    <h3 class="m-3 text-center">MIS TICKETS</h3>
+    <div class="d-flex justify-content-start gap-3 p-3 pb-0">
+  
+      <p-button label="Crear ticket" icon="pi pi-plus" styleClass="p-button-primary"
+        (click)="showModalGenerateTicket = true">
+      </p-button>
+  
+      <p-button label="Filtrar tickets" icon="pi pi-filter" styleClass="p-button-success"
+        (click)="showModalFilterTickets = true">
+      </p-button>
+  
+      <p-button label="Historial tickets" icon="pi pi-history" styleClass="p-button-warning"
+        (click)="showModalHistorial = true">
+      </p-button>
+  
+      <!-- <p-button label="Historial 10 de 10" icon="pi pi-history" styleClass="p-button-secondary"
+        (click)="showModalHistorialMantenimientos = true">
+      </p-button>
+      
+      <p-button label="10 de 10" icon="pi pi-wrench" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
+        (click)="showModal10x10 = true">
+      </p-button> -->
+  
+      <!-- <p-button label="Crear ticket" icon="pi pi-plus" styleClass="p-button-help"
+        (click)="nuevoMantenimiento()">
+      </p-button> -->
+    </div>
+  
+    <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+      *ngIf="tickets.length == 0">
+      @if (loading) {
+      <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+      }@else {
+      <i class="bx bx-file-blank bx-md" style="color: rgb(43, 92, 226)"></i>
+      <p>SIN TICKETS PENDIENTES</p>
+      }
+    </div>
+  
+    <div *ngIf="tickets.length > 0" class="p-1 mt-3">
+      <div class="m-0 pb-4" style="background-color: transparent">
+        <div>
+            <div class="mt-4">
+                <p-accordion class="w-full">
+                  <p-accordionTab
+                    *ngFor="let item of ordenarSucursalesUser(usuario.sucursales)"
+                  >
+                    <ng-template pTemplate="header">
+                      <span
+                        class="ms-3 d-flex gap-3 p-3 rounded-3 w-100"
+                        [style]="{
+                          'background-color': getBGSuc(getTicketsSuc(item.id).length)
+                        }"
+                      >
+                        <p-badge
+                          [value]="getTicketsSuc(item.id).length"
+                          class="ml-auto mr-2"
+                          [size]="'large'"
+                          [style]="{ 'background-color': 'white', color: 'black' }"
+                        />
+                        <span
+                          class="fw-bold"
+                          [style]="{ color: getColortxt(getTicketsSuc(item.id).length) }"
+                        >
+                          {{ item.nombre }}
+                        </span>
+                      </span>
+                    </ng-template>
+            
+                    <app-requester-tickets-list-s [tickets]="getTicketsSuc(item.id)"
+                      (clickEvent)="abrirModalDetalleTicket($event)"></app-requester-tickets-list-s>
+
+                  </p-accordionTab>
+                </p-accordion>
+              </div>
+            
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <app-modal-generate-ticket *ngIf="showModalGenerateTicket" [showModalGenerateTicket]="showModalGenerateTicket"
+    (closeEvent)="showModalGenerateTicket = false"></app-modal-generate-ticket>
+  
+  <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+    (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
+  
+  <app-modal-filter-tickets [showModalFilterTickets]="showModalFilterTickets"
+    [tickets]="todosLosTickets" (closeEvent)="showModalFilterTickets = false"
+    (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
+  
+  <app-modal-tickets-history *ngIf="showModalHistorial" [showModalHistorial]="showModalHistorial"
+    (closeEvent)="showModalHistorial = false"></app-modal-tickets-history>
+    
+  <app-modal-ten-xten-maintenance-history *ngIf="showModalHistorialMantenimientos" [showModalHistorialMantenimientos]="showModalHistorialMantenimientos"
+    (closeEvent)="showModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
+  
+  <app-modal-ten-xten-maintenance-check *ngIf="showModal10x10" [showModal10x10]="showModal10x10"
+    (closeEvent)="showModal10x10 = false"
+    [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
+  
+  <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+    [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+    [showTransformOptions]="'translateX(100%)'"></p-toast>
+  
+  <p-confirmDialog>
+    <ng-template pTemplate="message" let-message>
+      <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+        <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+        <p>{{ message.message }}</p>
+      </div>
+    </ng-template>
+  </p-confirmDialog>
