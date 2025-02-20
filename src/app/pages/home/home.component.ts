@@ -79,17 +79,18 @@ export default class HomeComponent implements OnInit {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.usuario.uid;
-
+    this.sucursal = this.usuario.sucursales[0];
+    this.formdepto = this.sucursal;
+    
     if (this.usuario.idRol == '2') {
       //sucursal
-      this.getTicketsPorUsuario(idu);
+      this.getTicketsPorSucursal(this.sucursal?.id);
     }
 
     if (this.usuario.idRol == '4') {
       this.getTicketsResponsable(idu);
     }
-    this.sucursal = this.usuario.sucursales[0];
-    this.formdepto = this.sucursal;
+    
   }
 
   ngOnInit(): void {
@@ -109,10 +110,10 @@ export default class HomeComponent implements OnInit {
     }
   }
 
-  async getTicketsPorUsuario(userid: string): Promise<void> {
+  async getTicketsPorSucursal(idSucursal: string | any): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
-      .getTicketsPorUsuario(userid)
+      .getByBranchId(idSucursal)
       .subscribe({
         next: (data) => {
           // console.log(data);
