@@ -58,14 +58,16 @@
       </td>
 
       <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
-        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px" *ngIf="mostrarAccionFinalizar">
+        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
+          *ngIf="mostrarAccionFinalizar">
           <i class="bx bx-check-circle bx-sm"></i>
         </button>
-        <button class="btn btn-primary" (click)="onClickChat(ticket)" style="margin: 2px" *ngIf="mostrarAccionChat">
+        <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px" *ngIf="mostrarAccionChat"
+          [ngClass]="{'has-notification': true}">
           <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
-        <button *ngIf="(ticket != undefined && ticket!.estatusSucursal != 'PÁNICO') && mostrarAccionPanico" class="btn btn-dark"
-          (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
+        <button *ngIf="(ticket != undefined && ticket!.estatusSucursal != 'PÁNICO') && mostrarAccionPanico"
+          class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
           <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
       </td>

@@ -1,4 +1,6 @@
 import { Timestamp } from '@angular/fire/firestore';
+import { Comentario } from './comentario-chat.model';
+import { ParticipanteChat } from './participante-chat.model';
 
 export interface Ticket {
   id?: string | any;
@@ -9,7 +11,6 @@ export interface Ticket {
   fecha: Timestamp | any;
   fechaEstimacion: Timestamp | any;
   fechaFin: Timestamp | null;
-  // duracion: string | null;
   solicitante: string;
   prioridadSucursal: string;
   prioridadProveedor: string | null;
@@ -17,10 +18,11 @@ export interface Ticket {
   tipoSoporte: string | null;
   nombreCategoria: string | null;
   decripcion: string;
-  comentarios: any[];
+  comentarios: Comentario[];
   comentariosFinales?: string | null;
   estatusSucursal: string | any;
   estatus: number;
   folio: string;
   calificacion: number;
+  participantesChat: ParticipanteChat[];
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   addDoc,
+  arrayUnion,
   collection,
   collectionData,
   doc,
@@ -52,41 +53,6 @@ export class TicketsService {
     return updateDoc(documentRef, data);
   }
 
-  // getTicketsPorUsuario(userId: string): Observable<any[]> {
-  //   return new Observable((observer) => {
-  //     // Referencia a la colección
-  //     const collectionRef = collection(this.firestore, 'tickets');
-
-  //     // Consulta filtrada por el ID del usuario
-  //     const q = query(
-  //       collectionRef,
-  //       where('idUsuario', '==', userId),
-  //       where('estatus', 'in', [1, 2, 4, 5, 6])
-  //     );
-
-  //     // Escucha en tiempo real
-  //     const unsubscribe = onSnapshot(
-  //       q,
-  //       (querySnapshot) => {
-  //         const tickets = querySnapshot.docs.map((doc) => ({
-  //           id: doc.id,
-  //           ...doc.data(),
-  //         }));
-
-  //         // Emitir los tickets actualizados
-  //         observer.next(tickets);
-  //       },
-  //       (error) => {
-  //         console.error('Error en la suscripción:', error);
-  //         observer.error(error);
-  //       }
-  //     );
-
-  //     // Manejo de limpieza
-  //     return { unsubscribe };
-  //   });
-  // }
-
   getByBranchId(idSucursal: string): Observable<any[]> {
     return new Observable((observer) => {
       // Referencia a la colección
@@ -119,6 +85,22 @@ export class TicketsService {
 
       // Manejo de limpieza
       return { unsubscribe };
+    });
+  }
+
+  updatelastCommentRead(
+    ticketId: string,
+    idUsuario: string,
+    ultimoComentarioLeido: number
+  ) {
+    const ticketRef = doc(this.firestore, `tickets/${ticketId}`);
+
+    // Actualizar el índice del último comentario leído para un participante
+    return updateDoc(ticketRef, {
+      participantes: arrayUnion({
+        idUsuario,
+        ultimoComentarioLeido,
+      }),
     });
   }
 
@@ -159,7 +141,6 @@ export class TicketsService {
     return unsubscribe;
   }
 
-
   getHistorialticketsPorResponsable(
     fechaInicio: Date,
     fechaFin: Date,
@@ -197,7 +178,40 @@ export class TicketsService {
     return unsubscribe;
   }
 
+  getTicketsPorUsuario(userId: string): Observable<any[]> {
+    return new Observable((observer) => {
+      // Referencia a la colección
+      const collectionRef = collection(this.firestore, 'tickets');
 
+      // Consulta filtrada por el ID del usuario
+      const q = query(
+        collectionRef,
+        where('idUsuario', '==', userId),
+        where('estatus', 'in', [1, 2, 4, 5, 6])
+      );
+
+      // Escucha en tiempo real
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          const tickets = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          // Emitir los tickets actualizados
+          observer.next(tickets);
+        },
+        (error) => {
+          console.error('Error en la suscripción:', error);
+          observer.error(error);
+        }
+      );
+
+      // Manejo de limpieza
+      return { unsubscribe };
+    });
+  }
 
   getTicketsResponsable(userId: string): Observable<any[]> {
     return new Observable((observer) => {
