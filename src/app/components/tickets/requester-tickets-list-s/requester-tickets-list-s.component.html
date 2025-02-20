@@ -1,0 +1,70 @@
+<p-table [value]="tickets" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+  styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+  [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
+  <ng-template pTemplate="header">
+    <tr class="text-center">
+      <th><span class="fs-1">🚥</span></th>
+      <th>FOLIO</th>
+      <th>FECHA</th>
+      <th>AREA</th>
+      <th>SOLICITANTE</th>
+      <th>RESPONSABLE</th>
+      <th>CATEGORÍA</th>
+      <th>ESTATUS</th>
+      <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
+      <th *ngIf="mostrarAcciones">ACCIONES</th>
+    </tr>
+  </ng-template>
+  <!-- FF495F -->
+  <ng-template pTemplate="body" let-ticket>
+    <tr [pSelectableRow]="ticket">
+      <td class="text-center" *ngIf="ticket.prioridadSucursal == 'PÁNICO'">
+        <i class="bx bxs-hot bx-sm" style="color: red"></i>
+      </td>
+      <td class="text-center" *ngIf="ticket.prioridadSucursal != 'PÁNICO'">
+        <i class="bx bxs-circle bx-sm" [style]="{
+                color: obtenerBackgroundColorPrioridad(ticket.prioridadSucursal)
+              }"></i>
+      </td>
+      <td class="text-center">{{ ticket.folio }}</td>
+      <td class="text-center">
+        {{ getDate(ticket!.fecha) | date: 'short' }}
+      </td>
+      <td class="text-center">
+        {{ obtenerNombreProveedor(ticket.idProveedor) }}
+      </td>
+      <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
+      <td class="text-center">
+        {{ obtenerNombreResponsable(ticket!.responsable) }}
+      </td>
+      <td class="text-center">
+        {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
+      </td>
+      <td class="text-center">
+        <i *ngIf="ticket.estatus == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028"></i>
+        <i *ngIf="ticket.estatus == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00"></i>
+        <i *ngIf="ticket.estatus == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff"></i>
+        <i *ngIf="ticket.estatus == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500"></i>
+        <i *ngIf="ticket.estatus == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00"></i>
+        <i *ngIf="ticket.estatus == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500"></i>
+      </td>
+
+      <td *ngIf="mostrarEstrellas">
+        <app-rating-stars [rating]="ticket.calificacion" [editable]="true"></app-rating-stars>
+      </td>
+
+      <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
+        <button class="btn btn-primary" (click)="onClickChat(ticket)" style="margin: 2px">
+          <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
+        </button>
+        <button *ngIf="ticket != undefined && ticket!.estatusSucursal != 'PÁNICO'" class="btn btn-dark"
+          (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
+          <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<app-modal-ticket-chat *ngIf="ticketAccion" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
+  (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>

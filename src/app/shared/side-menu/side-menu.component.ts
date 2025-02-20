@@ -110,29 +110,29 @@ export class SideMenuComponent implements OnInit {
 
           let nsl = this.notificaciones.filter((x) => x.abierta == false);
           for (let item of nsl) {
-            if ('serviceWorker' in navigator) {
-              navigator.serviceWorker
-                .register('service-worker.js')
-                .then((registration) => {
-                  // Mostrar una notificación usando el Service Worker
+            // if ('serviceWorker' in navigator) {
+            //   navigator.serviceWorker
+            //     .register('service-worker.js')
+            //     .then((registration) => {
+            //       // Mostrar una notificación usando el Service Worker
 
-                  if (item.notificado == false) {
-                    registration.showNotification(item.titulo, {
-                      body: item.mensaje,
-                      icon: 'https://operamx.no-ip.net/front/tickets/assets/img/RW_LogoWEB.png', // URL del icono
-                      data: { urltk: this.urlbase + item.idTicket },
-                    });
+            //       if (item.notificado == false) {
+            //         registration.showNotification(item.titulo, {
+            //           body: item.mensaje,
+            //           icon: 'https://operamx.no-ip.net/front/tickets/assets/img/RW_LogoWEB.png', // URL del icono
+            //           data: { urltk: this.urlbase + item.idTicket },
+            //         });
 
-                    item.notificado = true;
-                    this.updateNotificacion(item);
-                  }
-                })
-                .catch((error) => {
-                  console.error('Error al registrar el Service Worker:', error);
-                });
-            } else {
-              console.log('Service Worker no es compatible en este navegador.');
-            }
+            //         item.notificado = true;
+            //         this.updateNotificacion(item);
+            //       }
+            //     })
+            //     .catch((error) => {
+            //       console.error('Error al registrar el Service Worker:', error);
+            //     });
+            // } else {
+            //   console.log('Service Worker no es compatible en este navegador.');
+            // }
           }
 
           this.cdr.detectChanges();

@@ -130,6 +130,46 @@ export class TicketsService {
     return unsubscribe;
   }
 
+
+  getHistorialticketsPorResponsable(
+    fechaInicio: Date,
+    fechaFin: Date,
+    idUsuario: string,
+    callback: (result: Ticket[] | null) => void
+  ): () => void {
+    fechaInicio.setHours(0, 0, 0, 0);
+
+    const collectionRef = collection(this.firestore, 'tickets');
+
+    const q = query(
+      collectionRef,
+      where('responsable', '==', idUsuario),
+      where('estatus', '==', 3),
+      where('fechaFin', '>=', fechaInicio),
+      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
+    );
+
+    // Suscribirse a cambios en tiempo real
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        callback(null); // No hay registros
+      } else {
+        const tickets = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as Ticket)
+        ); // Tipar cada objeto como Ticket
+        callback(tickets); // Devuelve el primer registro
+      }
+    });
+
+    return unsubscribe;
+  }
+
+
+
   getTicketsResponsable(userId: string): Observable<any[]> {
     return new Observable((observer) => {
       // Referencia a la colección
@@ -139,7 +179,7 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('responsable', '==', userId),
-        where('status', 'in', ['1', '2', '4', '5', '6'])
+        where('estatus', 'in', [1, 2, 4, 5, 6])
       );
 
       // Escucha en tiempo real
