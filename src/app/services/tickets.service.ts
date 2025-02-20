@@ -52,13 +52,42 @@ export class TicketsService {
     return updateDoc(documentRef, data);
   }
 
-  AddTkSQL(data: any): Observable<any> {
-    return this.http.post<any>(this.url + 'Tickets/addTicket', data, {
-      headers: this.headers,
-    });
-  }
+  // getTicketsPorUsuario(userId: string): Observable<any[]> {
+  //   return new Observable((observer) => {
+  //     // Referencia a la colección
+  //     const collectionRef = collection(this.firestore, 'tickets');
 
-  getTicketsPorUsuario(userId: string): Observable<any[]> {
+  //     // Consulta filtrada por el ID del usuario
+  //     const q = query(
+  //       collectionRef,
+  //       where('idUsuario', '==', userId),
+  //       where('estatus', 'in', [1, 2, 4, 5, 6])
+  //     );
+
+  //     // Escucha en tiempo real
+  //     const unsubscribe = onSnapshot(
+  //       q,
+  //       (querySnapshot) => {
+  //         const tickets = querySnapshot.docs.map((doc) => ({
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         }));
+
+  //         // Emitir los tickets actualizados
+  //         observer.next(tickets);
+  //       },
+  //       (error) => {
+  //         console.error('Error en la suscripción:', error);
+  //         observer.error(error);
+  //       }
+  //     );
+
+  //     // Manejo de limpieza
+  //     return { unsubscribe };
+  //   });
+  // }
+
+  getByBranchId(idSucursal: string): Observable<any[]> {
     return new Observable((observer) => {
       // Referencia a la colección
       const collectionRef = collection(this.firestore, 'tickets');
@@ -66,7 +95,7 @@ export class TicketsService {
       // Consulta filtrada por el ID del usuario
       const q = query(
         collectionRef,
-        where('idUsuario', '==', userId),
+        where('idSucursal', '==', idSucursal),
         where('estatus', 'in', [1, 2, 4, 5, 6])
       );
 

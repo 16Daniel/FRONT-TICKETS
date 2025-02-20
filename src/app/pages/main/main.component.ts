@@ -53,7 +53,7 @@ export default class MainComponent implements OnInit {
             console.log('Service Worker registrado con éxito:', registration);
         })
         .catch(error => {
-            console.error('Error al registrar el Service Worker:', error);
+            // console.error('Error al registrar el Service Worker:', error);
         });
 } else {
     console.log('Service Worker no es compatible en este navegador.');
