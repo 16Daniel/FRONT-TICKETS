@@ -13,6 +13,11 @@ export const routes: Routes = [
             loadComponent: () => import('./pages/home/home.component')
         },
         {
+            path:'home-s',
+            title:'Inicio',
+            loadComponent: () => import('./pages/home-s/home-s.component')
+        },
+        {
             path:'home-a',
             title:'Inicio',
             loadComponent: () => import('./pages/home-A/home-A.component')

@@ -6,7 +6,6 @@
       <th><span class="fs-1">🚥</span></th>
       <th>FOLIO</th>
       <th>FECHA</th>
-      <th *ngIf="mostrarFedchaEstimacion">FECHA ESTIMADA</th>
       <th>AREA</th>
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
@@ -30,9 +29,6 @@
       <td class="text-center">{{ ticket.folio }}</td>
       <td class="text-center">
         {{ getDate(ticket!.fecha) | date: 'short' }}
-      </td>
-      <td class="text-center" *ngIf="mostrarFedchaEstimacion">
-        {{ getDate(ticket!.fechaEstimacion) | date: 'short' }}
       </td>
       <td class="text-center">
         {{ obtenerNombreProveedor(ticket.idProveedor) }}
@@ -58,26 +54,17 @@
       </td>
 
       <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
-        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
-          *ngIf="mostrarAccionFinalizar">
-          <i class="bx bx-check-circle bx-sm"></i>
-        </button>
-        <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px" *ngIf="mostrarAccionChat"
-          [ngClass]="{'has-notification': true}">
+        <button class="btn btn-primary" (click)="onClickChat(ticket)" style="margin: 2px">
           <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
-        <button *ngIf="(ticket != undefined && ticket!.estatusSucursal != 'PÁNICO') && mostrarAccionPanico"
-          class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
+        <button *ngIf="ticket != undefined && ticket!.estatusSucursal != 'PÁNICO'" class="btn btn-dark"
+          (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
           <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
       </td>
     </tr>
   </ng-template>
 </p-table>
-
-
-<app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
-  [ticket]="ticketAccion" (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
 
 <app-modal-ticket-chat *ngIf="ticketAccion" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
   (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>
