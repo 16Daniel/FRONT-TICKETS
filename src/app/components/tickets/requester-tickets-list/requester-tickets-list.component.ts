@@ -46,7 +46,11 @@ import { Area } from '../../../models/area';
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() mostrarAcciones: boolean = true;
-  @Input() mostrarEstrellas: boolean = false;
+  @Input() mostrarAccionChat: boolean = true;
+  @Input() mostrarAccionPanico: boolean = true;
+  @Input() mostrarAccionFinalizar: boolean = true;
+  @Input() mostrarEstrellas: boolean = true;
+  @Input() mostrarFedchaEstimacion: boolean = true;
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;
