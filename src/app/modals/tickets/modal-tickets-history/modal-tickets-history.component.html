@@ -28,7 +28,7 @@
   </div>
 
   <app-requester-tickets-list [tickets]="tickets" (clickEvent)="abrirModalDetalleTicket($event)"
-    [mostrarAcciones]="false" [mostrarEstrellas]="true"></app-requester-tickets-list>
+    [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false"></app-requester-tickets-list>
 </p-dialog>
 
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"

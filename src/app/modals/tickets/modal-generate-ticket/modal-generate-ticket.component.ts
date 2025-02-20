@@ -21,8 +21,8 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
 import { Notificacion } from '../../../models/notificacion.model';
 import { Ticket } from '../../../models/ticket.model';
-import { SucursalesService } from '../../../services/sucursales.service';
-import { CategoriasService } from '../../../services/categorias.service';
+import { BranchesService } from '../../../services/branches.service';
+import { CategoriesService } from '../../../services/categories.service';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
 
@@ -44,7 +44,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
-  sucursal: Sucursal | undefined;
+  sucursal: Sucursal | any;
   usuarioActivo: Usuario = new Usuario();
   areas: Area[] = [];
   categorias: Categoria[] = [];
@@ -63,10 +63,10 @@ export class ModalGenerateTicketComponent implements OnInit {
     private folioGeneratorService: FolioGeneratorService,
     private messageService: MessageService,
     private notificationsService: NotificationsService,
-    private categoriasService: CategoriasService,
+    private categoriesService: CategoriesService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
-    private sucursalesServices: SucursalesService,
+    private branchesService: BranchesService,
     private areasService: AreasService
   ) {}
 
@@ -82,7 +82,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   }
 
   obtenerSucursales() {
-    this.sucursalesServices.get().subscribe({
+    this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
         this.cdr.detectChanges();
@@ -111,7 +111,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   }
 
   obtenerCategorias() {
-    this.categoriasService.get().subscribe({
+    this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data;
         this.cdr.detectChanges();
@@ -159,17 +159,16 @@ export class ModalGenerateTicketComponent implements OnInit {
 
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
       let folio = this.folioGeneratorService.generarFolio(
-        this.formDepartamento.id,
+        parseInt(this.sucursal?.id),
         count
       );
 
       const fechaEstimacion = new Date(); // Obtiene la fecha actual
       fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
 
-      debugger
       let tk: Ticket = {
         fecha: new Date,
-        idSucursal: this.formDepartamento.id,
+        idSucursal: this.sucursal.id,
         estatusSucursal: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
         idProveedor: this.formArea.id,
         idCategoria: this.formCategoria.id,
@@ -197,7 +196,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         titulo: 'NUEVO TICKET',
         mensaje:
           'SE GENERÓ UN NUEVO TICKET PARA LA SUCURSAL: ' +
-          this.formDepartamento.nombre,
+          this.sucursal.nombre,
         uid: this.obtenerResponsableTicket(),
         fecha: new Date(),
         abierta: false,
@@ -221,7 +220,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     for (let item of this.catUsuariosHelp) {
       if (item.idRol == '4') {
         const existeSucursal = item.sucursales.some(
-          (x) => x.id == this.formDepartamento.id
+          (x) => x.id == this.sucursal.id
         );
         if (existeSucursal) {
           idr = item.uid;

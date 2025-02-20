@@ -9,8 +9,19 @@
 
 .progress-bar {
   height: 100%;
-  background-color: #8B5CF6;
-  // background-color: #76c7c0;
+  // background-color: #8b5cf6;
   border-radius: 10px;
   transition: width 0.3s ease-in-out;
+}
+
+.progress-bar-red {
+  background-color: #ff0000;
+}
+
+.progress-bar-green {
+  background-color: #61ff00;
+}
+
+.progress-bar-yellow {
+  background-color: #ffe800;
 }

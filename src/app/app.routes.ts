@@ -37,11 +37,6 @@ export const routes: Routes = [
             title:'Usuarios',
             loadComponent: () => import('./pages/users/users.component')
         },
-        {
-            path:'ticket/:idt',
-            title:'Ticket',
-            loadComponent: () => import('./pages/tickets/tickets.component')
-        }
     ]
 },
 {
