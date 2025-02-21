@@ -63,7 +63,7 @@
           <i class="bx bx-check-circle bx-sm"></i>
         </button>
         <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px" *ngIf="mostrarAccionChat"
-          [ngClass]="{'has-notification': true}">
+          [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
           <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
         <button *ngIf="(ticket != undefined && ticket!.estatusSucursal != 'PÁNICO') && mostrarAccionPanico"
@@ -79,5 +79,5 @@
 <app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
   [ticket]="ticketAccion" (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
 
-<app-modal-ticket-chat *ngIf="ticketAccion" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
+<app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
   (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>

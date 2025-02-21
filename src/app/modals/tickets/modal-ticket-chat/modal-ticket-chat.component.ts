@@ -4,8 +4,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +36,7 @@ import { Notificacion } from '../../../models/notificacion.model';
   templateUrl: './modal-ticket-chat.component.html',
   styleUrl: './modal-ticket-chat.component.scss',
 })
-export class ModalTicketChatComponent implements AfterViewChecked {
+export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
   @Input() showModalChatTicket: boolean = false;
   @Input() ticket: Ticket | any;
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -49,6 +51,14 @@ export class ModalTicketChatComponent implements AfterViewChecked {
     private notificationsService: NotificationsService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
+
+  ngOnInit(): void {
+    this.ticketsService.updateLastCommentRead(
+      this.ticket.id,
+      this.userdata.id,
+      this.ticket.comentarios.length
+    );
   }
 
   esmiuid(id: string): boolean {
@@ -94,10 +104,17 @@ export class ModalTicketChatComponent implements AfterViewChecked {
           idTicket: this.ticket!.id,
           notificado: false,
         };
+        
 
         let idn = this.notificationsService.addNotifiacion(dataNot);
-
         this.comentario = '';
+        
+        this.ticketsService.updateLastCommentRead(
+          this.ticket.id,
+          this.userdata.id,
+          this.ticket.comentarios.length
+        );
+
       })
       .catch((error) =>
         console.error('Error al actualizar los comentarios:', error)

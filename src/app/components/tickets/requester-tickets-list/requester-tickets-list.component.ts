@@ -60,6 +60,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   userdata: any;
   usuariosHelp: Usuario[] = [];
   ticketAccion: Ticket | any;
+  chatsSinLeer = 0;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -249,9 +250,9 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     this.showModalChatTicket = true;
   }
 
-  verificarChatNoLeido(ticket: Ticket, idUsuario: string) {
-    const participantes = ticket.participantesChat;
-    const participante = participantes.find((p) => p.idUsuario === idUsuario);
+  verificarChatNoLeido(ticket: Ticket) {
+    const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
+    const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
 
     if (participante) {
       const ultimoComentarioLeido = participante.ultimoComentarioLeido;
@@ -259,6 +260,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
       // Si el último comentario leído es menor que la longitud actual de los comentarios
       return comentarios.length > ultimoComentarioLeido;
+      // this.chatsSinLeer = comentarios.length - ultimoComentarioLeido;
     }
 
     return false;
