@@ -58,9 +58,12 @@ export default class LoginComponent {
 
             if (userd.idRol == '1') {
               this.router.navigate(['/main/home-a']);
-            } else {
+            } else if(userd.idRol == '2'){
               this.router.navigate(['/main/home']);
-            }
+            }else if(userd.idRol == '4')
+              {
+                this.router.navigate(['/main/home-s']);
+              }
           },
           error: (error) => {
             console.log(error);

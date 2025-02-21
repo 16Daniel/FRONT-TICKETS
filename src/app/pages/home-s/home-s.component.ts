@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Dialog, DialogModule } from 'primeng/dialog';
+import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Sucursal } from '../../models/sucursal.model';
@@ -11,10 +11,8 @@ import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { PriorityTicketsAccordionComponent } from '../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
@@ -23,7 +21,7 @@ import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../models/area';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-import { RequesterTicketsListSComponent } from '../../components/tickets/requester-tickets-list-s/requester-tickets-list-s.component';
+import { RequesterTicketsListComponent } from '../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 @Component({
   selector: 'app-home-s',
   standalone: true,
@@ -41,7 +39,7 @@ import { RequesterTicketsListSComponent } from '../../components/tickets/request
     ModalTenXtenMaintenanceHistoryComponent,
     BadgeModule,
     AccordionModule,
-    RequesterTicketsListSComponent
+    RequesterTicketsListComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-s.component.html',
@@ -82,10 +80,6 @@ export default class homeSComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerMantenimientoActivo();
-    // this.mantenimientoService.get().subscribe(data => {
-    //   console.log(data)
-    // });
   }
 
   ngOnDestroy() {
@@ -98,66 +92,8 @@ export default class homeSComponent implements OnInit {
     }
   }
 
-  async getTicketsPorUsuario(userid: string): Promise<void> {
-    this.loading = true;
-    this.subscriptiontk = this.ticketsService
-      .getTicketsPorUsuario(userid)
-      .subscribe({
-        next: (data) => {
-          // console.log(data);
-          this.tickets = data;
-          let arr_temp: Ticket[] = [];
-          let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'PÁNICO'
-          );
-          let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'ALTA'
-          );
-          let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'MEDIA'
-          );
-          let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'BAJA'
-          );
-
-          temp1 = temp1.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp2 = temp2.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp3 = temp3.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp4 = temp4.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.todosLosTickets = [...arr_temp];
-          this.tickets = arr_temp;
-
-          if (this.itemtk != undefined) {
-            let temp = this.tickets.filter((x) => x.id == this.itemtk!.id);
-            if (temp.length > 0) {
-              this.itemtk = temp[0];
-            }
-          }
-
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error al escuchar los tickets:', error);
-        },
-      });
-  }
 
   async getTicketsResponsable(userid: string): Promise<void> {
-    debugger
     this.loading = true;
     this.subscriptiontk = this.ticketsService
       .getTicketsResponsable(userid)
@@ -263,7 +199,6 @@ export default class homeSComponent implements OnInit {
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
         this.cdr.detectChanges();
-        // console.log('Mantenimiento activo:', this.mantenimientoActivo);
       }
     );
   }
@@ -294,17 +229,13 @@ export default class homeSComponent implements OnInit {
 
   ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
     return catsucursales.sort((a, b) => {
-      const ticketsA = this.getTicketsSuc(a.id).length;
-      const ticketsB = this.getTicketsSuc(b.id).length;
+      const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
+      const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
       return ticketsB - ticketsA; // Ordena de mayor a menor
     });
   }
 
-  getTicketsSuc(ids: number | any) {
-    return this.tickets.filter((x) => x.idSucursal == ids);
-  }
-
-  getColortxt(value: number): string {
+  obtenerColorDeTexto(value: number): string {
     let str = '';
 
     if (value >= 5) {
@@ -322,7 +253,7 @@ export default class homeSComponent implements OnInit {
     return str;
   }
 
- getBGSuc(value: number): string {
+ obtenerColorDeFondoSucursal(value: number): string {
     let str = '';
 
     if (value >= 5) {

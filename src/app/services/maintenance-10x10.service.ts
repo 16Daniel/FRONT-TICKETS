@@ -13,9 +13,10 @@ import {
   getDocs,
   onSnapshot,
   orderBy,
+  limit,
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { forkJoin, from, map, Observable } from 'rxjs';
 import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
 
 @Injectable({
@@ -130,4 +131,39 @@ export class Maintenance10x10Service {
 
     return unsubscribe;
   }
+
+ 
+  obtenerUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
+
+    const fechaActual = new Date();
+    const fechaHaceUnMes = new Date(fechaActual);
+    fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
+    fechaHaceUnMes.setHours(0,0,0,0); 
+    // Mapea cada sucursal a una consulta independiente
+    const consultas = idsSucursales.map(idSucursal => {
+      const mantenimientosRef = collection(this.firestore, 'mantenimientos-10x10');
+      const q = query(
+        mantenimientosRef,
+        where('idSucursal', '==', idSucursal),
+        where('fecha', '>=', fechaHaceUnMes),
+        orderBy('fecha', 'desc'), // Ordena por fecha descendente
+        limit(1) // Solo el más reciente
+      );
+
+      // Ejecutar la consulta y obtener los datos
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            return { id: doc.id, ...doc.data() };
+          }
+          return null; // Si no hay mantenimientos para la sucursal
+        })
+      );
+    });
+
+    // Ejecutar todas las consultas en paralelo y combinar los resultados
+    return forkJoin(consultas);
+  }
+
 }
