@@ -88,7 +88,7 @@ export class TicketsService {
     });
   }
 
-  updatelastCommentRead(
+  updateLastCommentRead(
     ticketId: string,
     idUsuario: string,
     ultimoComentarioLeido: number
@@ -97,7 +97,7 @@ export class TicketsService {
 
     // Actualizar el índice del último comentario leído para un participante
     return updateDoc(ticketRef, {
-      participantes: arrayUnion({
+      participantesChat: arrayUnion({
         idUsuario,
         ultimoComentarioLeido,
       }),
