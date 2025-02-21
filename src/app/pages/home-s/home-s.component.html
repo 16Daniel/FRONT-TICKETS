@@ -69,8 +69,11 @@
                       </span>
                     </ng-template>
             
-                    <app-requester-tickets-list-s [tickets]="getTicketsSuc(item.id)"
-                      (clickEvent)="abrirModalDetalleTicket($event)"></app-requester-tickets-list-s>
+                    <app-requester-tickets-list [tickets]="getTicketsSuc(item.id)"
+                      (clickEvent)="abrirModalDetalleTicket($event)"
+                      [mostrarAccionFinalizar]="false"
+                      [mostrarEstrellas] = "false"
+                      ></app-requester-tickets-list>
 
                   </p-accordionTab>
                 </p-accordion>

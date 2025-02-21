@@ -23,7 +23,7 @@ import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../models/area';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-import { RequesterTicketsListSComponent } from '../../components/tickets/requester-tickets-list-s/requester-tickets-list-s.component';
+import { RequesterTicketsListComponent } from '../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 @Component({
   selector: 'app-home-s',
   standalone: true,
@@ -41,7 +41,7 @@ import { RequesterTicketsListSComponent } from '../../components/tickets/request
     ModalTenXtenMaintenanceHistoryComponent,
     BadgeModule,
     AccordionModule,
-    RequesterTicketsListSComponent
+    RequesterTicketsListComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-s.component.html',
@@ -82,7 +82,7 @@ export default class homeSComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerMantenimientoActivo();
+   // this.obtenerMantenimientoActivo();
     // this.mantenimientoService.get().subscribe(data => {
     //   console.log(data)
     // });
