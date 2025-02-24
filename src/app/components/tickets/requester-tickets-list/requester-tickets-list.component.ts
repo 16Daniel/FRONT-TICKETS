@@ -255,7 +255,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
 
     if (participante) {
-      const ultimoComentarioLeido = participante.ultimoComentarioLeido;
+      const ultimoComentarioLeido = this.showModalChatTicket ? ticket.comentarios.length : participante.ultimoComentarioLeido;
       const comentarios = ticket.comentarios;
 
       // Si el último comentario leído es menor que la longitud actual de los comentarios
