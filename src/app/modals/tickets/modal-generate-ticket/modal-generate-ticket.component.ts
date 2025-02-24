@@ -167,7 +167,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
 
       let tk: Ticket = {
-        fecha: new Date,
+        fecha: new Date(),
         idSucursal: this.sucursal.id,
         estatusSucursal: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
         idProveedor: this.formArea.id,
@@ -177,7 +177,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         prioridadSucursal: this.formPrioridad.name,
         prioridadProveedor: null,
         estatus: 1,
-        responsable: this.obtenerResponsableTicket(),
+        responsable: this.obtenerUidResponsableTicket(),
         comentarios: [],
         fechaFin: null,
         fechaEstimacion,
@@ -186,7 +186,16 @@ export class ModalGenerateTicketComponent implements OnInit {
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
-        participantesChat: []
+        participantesChat: [
+          {
+            idUsuario: this.usuarioActivo.id,
+            ultimoComentarioLeido: 0,
+          },
+          {
+            idUsuario: this.obtenerIdResponsableTicket(),
+            ultimoComentarioLeido: 0,
+          },
+        ],
       };
 
       const docid = await this.ticketsService.create(tk);
@@ -196,9 +205,8 @@ export class ModalGenerateTicketComponent implements OnInit {
       let dataNot: Notificacion = {
         titulo: 'NUEVO TICKET',
         mensaje:
-          'SE GENERÓ UN NUEVO TICKET PARA LA SUCURSAL: ' +
-          this.sucursal.nombre,
-        uid: this.obtenerResponsableTicket(),
+          'SE GENERÓ UN NUEVO TICKET PARA LA SUCURSAL: ' + this.sucursal.nombre,
+        uid: this.obtenerUidResponsableTicket(),
         fecha: new Date(),
         abierta: false,
         idTicket: docid,
@@ -216,7 +224,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     });
   }
 
-  obtenerResponsableTicket(): string {
+  obtenerUidResponsableTicket(): string {
     let idr = '';
     for (let item of this.catUsuariosHelp) {
       if (item.idRol == '4') {
@@ -230,6 +238,22 @@ export class ModalGenerateTicketComponent implements OnInit {
     }
 
     return idr;
+  }
+
+  obtenerIdResponsableTicket(): string {
+    let id = '';
+    for (let item of this.catUsuariosHelp) {
+      if (item.idRol == '4') {
+        const existeSucursal = item.sucursales.some(
+          (x) => x.id == this.sucursal.id
+        );
+        if (existeSucursal) {
+          id = item.id;
+        }
+      }
+    }
+
+    return id;
   }
 
   showMessage(sev: string, summ: string, det: string) {
