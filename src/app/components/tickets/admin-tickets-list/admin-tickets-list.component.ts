@@ -19,6 +19,8 @@ import { Categoria } from '../../../models/categoria.mdoel';
 import { CategoriesService } from '../../../services/categories.service';
 import { SupportTypesService } from '../../../services/support-types.service';
 import { TipoSoporte } from '../../../models/tipo-soporte.model';
+import { TicketsPriorityService } from '../../../services/tickets-priority.service';
+import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 
 @Component({
   selector: 'app-admin-tickets-list',
@@ -38,6 +40,7 @@ export class AdminTicketsListComponent {
   @Input() tickets: Ticket[] = [];
   sucursales: Sucursal[] = [];
   tiposSoporte: TipoSoporte[] = [];
+  prioridadesTicket: PrioridadTicket[] = [];
   categorias: Categoria[] = [];
   areas: Area[] = [];
   ticket: Ticket | undefined;
@@ -52,10 +55,12 @@ export class AdminTicketsListComponent {
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private categoriesService: CategoriesService,
-    private supportTypesService: SupportTypesService
+    private supportTypesService: SupportTypesService,
+    private ticketsPriorityService: TicketsPriorityService,
   ) {
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
+    this.obtenerPrioridadesTicket();
     this.obtenerTiposSoporte();
     this.obtenerAreas();
     this.obtenerCategorias();
@@ -78,6 +83,19 @@ export class AdminTicketsListComponent {
     this.supportTypesService.get().subscribe({
       next: (data) => {
         this.tiposSoporte = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerPrioridadesTicket() {
+    this.ticketsPriorityService.get().subscribe({
+      next: (data) => {
+        this.prioridadesTicket = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -144,23 +162,6 @@ export class AdminTicketsListComponent {
     const firestoreTimestamp = tsmp; // Ejemplo
     const date = firestoreTimestamp.toDate(); // Convierte a Date
     return date;
-  }
-
-  obtenerBackGroundPrioridad(value: string): string {
-    let str = '';
-
-    if (value == 'ALTA') {
-      str = '#ff0000';
-    }
-
-    if (value == 'MEDIA') {
-      str = '#ffe800';
-    }
-
-    if (value == 'BAJA') {
-      str = '#61ff00';
-    }
-    return str;
   }
 
   obtenerUsuariosHelp() {

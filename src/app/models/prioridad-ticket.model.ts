@@ -1,5 +1,5 @@
 export interface PrioridadTicket {
-  id: number;
+  id: string;
   nombre: string;
   color: string;
 }

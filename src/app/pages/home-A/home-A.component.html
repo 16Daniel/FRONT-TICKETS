@@ -49,7 +49,11 @@
     <p>SIN TICKETS PENDIENTES</p>
   </div>
 
-  <app-admin-tickets-list [tickets]="arr_tickets" *ngIf="showagrupacion == false"></app-admin-tickets-list>
+  <div *ngIf="arr_tickets.length > 0" class="p-1 mt-3">
+    <div class="m-0 pb-4" style="background-color: transparent">
+      <app-admin-tickets-list [tickets]="arr_tickets" *ngIf="showagrupacion == false"></app-admin-tickets-list>
+    </div>
+  </div>
 </div>
 
 <app-modal-generate-ticket *ngIf="showModalGenerateTicket" [showModalGenerateTicket]="showModalGenerateTicket"
