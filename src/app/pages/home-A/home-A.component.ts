@@ -34,6 +34,7 @@ import { Area } from '../../models/area';
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
+import { AdminTicketsListComponent } from '../../components/tickets/admin-tickets-list/admin-tickets-list.component';
 
 @Component({
   selector: 'app-home-a',
@@ -51,6 +52,7 @@ import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets
     ModalFilterTicketsComponent,
     ModalGenerateTicketComponent,
     ModalTicketsHistoryComponent,
+    AdminTicketsListComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-A.component.html',
