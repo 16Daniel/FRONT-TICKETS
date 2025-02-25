@@ -1,0 +1,184 @@
+<div *ngIf="tickets.length > 0" class="p-1 mt-3">
+    <div class="m-0 pb-4" style="background-color: transparent">
+        <p-table [value]="tickets" [tableStyle]="{
+          'min-width': '10rem',
+          padding: '10px',
+          'min-height': '500px'
+        }" styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="65vh" selectionMode="single"
+            [(selection)]="ticketSeleccionado">
+            <ng-template pTemplate="header">
+                <tr class="text-center">
+                    <th>PRIORIDAD</th>
+                    <th>FECHA</th>
+                    <th>SUCURSAL</th>
+                    <th>AREA</th>
+                    <th>CATEGORÍA</th>
+                    <th>STATUS</th>
+                    <th>SOLICITANTE</th>
+                    <th>RESPONSABLE</th>
+                    <th>ASISTENCIA</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tk>
+                <tr [pSelectableRow]="tk">
+                    <td>
+                        <p-dropdown [options]="[
+                  { name: 'PÁNICO' },
+                  { name: 'ALTA' },
+                  { name: 'MEDIA' },
+                  { name: 'BAJA' }
+                ]" [(ngModel)]="tk.prioridadsuc" optionLabel="name" [showClear]="false" optionValue="name"
+                            (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+                            <ng-template pTemplate="selectedItem" let-selectedOption>
+                                <div class="flex align-items-center gap-2">
+                                    <div>
+                    <td *ngIf="selectedOption.name == 'PÁNICO'">
+                        <i class="bx bxs-hot bx-sm rounded-3" style="color: red"></i>
+                    </td>
+                    <div *ngIf="selectedOption.name != 'PÁNICO'" style="border-radius: 50%" class="p-1" [style]="{
+                          'background-color': obtenerBackGroundPrioridad(
+                            selectedOption.name
+                          ),
+                          width: '20px',
+                          height: '20px'
+                        }"></div>
+    </div>
+</div>
+</ng-template>
+<ng-template let-item pTemplate="item">
+    <div class="flex align-items-center gap-2">
+        <div class="d-flex justify-content-start align-items-center gap-3">
+            <td *ngIf="item.name == 'PÁNICO'">
+                <i class="bx bxs-hot bx-sm rounded-3" style="color: red"></i>
+            </td>
+            <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%" class="p-1" [style]="{
+                          'background-color': obtenerBackGroundPrioridad(item.name),
+                          width: '25px',
+                          height: '25px'
+                        }"></div>
+            <div>{{ item.name }}</div>
+        </div>
+    </div>
+</ng-template>
+</p-dropdown>
+</td>
+<td class="text-center">{{ getDate(tk.fecha) | date }}</td>
+<td class="text-center">{{ obtenerNombreSucursal(tk.idsucordpto) }}</td>
+<td class="text-center">
+    <p-dropdown [options]="areas" [(ngModel)]="tk.idproveedor" optionLabel="nombre" [showClear]="false" optionValue="id"
+        (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+                <div>{{ selectedOption.nombre }}</div>
+            </div>
+        </ng-template>
+        <ng-template let-dep pTemplate="item">
+            <div class="flex align-items-center gap-2">
+                <div>{{ dep.nombre }}</div>
+            </div>
+        </ng-template>
+    </p-dropdown>
+</td>
+<td class="text-center">
+    <p-dropdown [options]="sucursales" [(ngModel)]="tk.idcategoria" optionLabel="name" [showClear]="false"
+        optionValue="id" [style]="{ width: '100%' }">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+                <div>{{ selectedOption.nombre }}</div>
+            </div>
+        </ng-template>
+        <ng-template let-categoria pTemplate="item">
+            <div class="flex align-items-center gap-2">
+                <div>{{ categoria.nombre }}</div>
+            </div>
+        </ng-template>
+    </p-dropdown>
+</td>
+<td class="text-center">
+    <p-dropdown [options]="[
+                  {
+                    id: '1',
+                    icon: 'bx bx-dots-horizontal-rounded',
+                    animation: 'bx-tada',
+                    color: '#ff0028'
+                  },
+                  {
+                    id: '2',
+                    icon: 'bx-loader',
+                    animation: 'bx-rotate-180 bx-spin bx-sm',
+                    color: '#ff7b00'
+                  },
+                  {
+                    id: '3',
+                    icon: 'bx bx-check',
+                    animation: 'bx-tada',
+                    color: '#008500'
+                  },
+                  {
+                    id: '4',
+                    icon: 'bx bx-pause',
+                    animation: 'bx-tada',
+                    color: '#a300ff'
+                  },
+                  {
+                    id: '5',
+                    icon: 'bx bxs-cart',
+                    animation: 'bx-tada',
+                    color: '#ff7b00'
+                  },
+                  {
+                    id: '6',
+                    icon: 'bx bxs-cart',
+                    animation: 'bx-tada',
+                    color: '#008500'
+                  }
+                ]" [(ngModel)]="tk.status" optionLabel="nombre" [showClear]="false" optionValue="id"
+        (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+                <i class="bx {{ selectedOption.icon }} {{
+                        selectedOption.animation
+                      }} bx-sm" [style]="{ color: selectedOption.color }"></i>
+            </div>
+        </ng-template>
+        <ng-template let-st pTemplate="item">
+            <div class="flex align-items-center gap-2">
+                <i class="bx {{ st.icon }} {{ st.animation }} bx-sm" [style]="{ color: st.color }"></i>
+            </div>
+        </ng-template>
+    </p-dropdown>
+</td>
+<td class="text-center">{{ tk.solicitante | uppercase }}</td>
+<td class="text-center">
+    {{ obtenerNombreResponsable(tk.responsable) }}
+</td>
+<td class="text-center">
+    <p-dropdown [options]="[{ name: 'FÍSICA' }, { name: 'REMOTA' }]" [(ngModel)]="tk.tiposoporte" optionLabel="name"
+        [showClear]="false" optionValue="name" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+                <div>
+                    {{ selectedOption.name }}
+                </div>
+            </div>
+        </ng-template>
+        <ng-template let-item pTemplate="item">
+            <div class="flex align-items-center gap-2">
+                <div class="d-flex justify-content-start align-items-center gap-3">
+                    <div>{{ item.name }}</div>
+                </div>
+            </div>
+        </ng-template>
+    </p-dropdown>
+</td>
+<td>
+    <button class="btn bg-p-b p-1" (click)="showticketA(tk)">
+        <i class="bx bx-show bx-sm"></i>
+    </button>
+</td>
+</tr>
+</ng-template>
+</p-table>
+</div>
+</div>
