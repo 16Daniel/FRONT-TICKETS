@@ -2,31 +2,43 @@
     {
         "id": 1,
         "nombre": "POR RESOLVER",
-        "icon": "bx-time"
+        "icon": "bx bx-dots-horizontal-rounded",
+        "animation": "bx-tada",
+        "color": "#ff0028"
     },
     {
         "id": 2,
         "nombre": "TRABAJANDO",
-        "icon": "bx-briefcase-alt-2"
+        "icon": "bx-loader",
+        "animation": "bx-rotate-180 bx-spin bx-sm",
+        "color": "#ff7b00"
     },
     {
         "id": 3,
         "nombre": "TERMINADO",
-        "icon": "bx-check-circle"
+        "icon": "bx bx-check",
+        "animation": "bx-tada",
+        "color": "#008500"
     },
     {
         "id": 4,
         "nombre": "EN PAUSA",
-        "icon": "bx-pause-circle"
+        "icon": "bx bx-pause",
+        "animation": "bx-tada",
+        "color": "#a300ff"
     },
     {
         "id": 5,
         "nombre": "COMPRANDO",
-        "icon": "bx-shopping-bag"
+        "icon": "bx bxs-cart",
+        "animation": "bx-tada",
+        "color": "#ff7b00"
     },
     {
         "id": 6,
         "nombre": "COMPRADO",
-        "icon": null
+        "icon": "bx bxs-cart",
+        "animation": "bx-tada",
+        "color": "#008500"
     }
 ]

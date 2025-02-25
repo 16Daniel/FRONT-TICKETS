@@ -35,7 +35,7 @@
         {{ getDate(ticket!.fechaEstimacion) | date: 'short' }}
       </td>
       <td class="text-center">
-        {{ obtenerNombreProveedor(ticket.idProveedor) }}
+        {{ obtenerNombreArea(ticket.idArea) }}
       </td>
       <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
       <td class="text-center">

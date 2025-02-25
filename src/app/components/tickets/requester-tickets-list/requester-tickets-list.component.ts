@@ -91,11 +91,11 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     }
   }
 
-  obtenerNombreProveedor(idProveedor: string): string {
+  obtenerNombreArea(idArea: string): string {
     let nombre = '';
-    let proveedor = this.areas.filter((x) => x.id == idProveedor);
-    if (proveedor.length > 0) {
-      nombre = proveedor[0].nombre;
+    let area = this.areas.filter((x) => x.id == idArea);
+    if (area.length > 0) {
+      nombre = area[0].nombre;
     }
     return nombre;
   }

@@ -59,7 +59,7 @@
         {{ obtenerNombreSucursal(tk.idSucursal) }}
     </td>
     <td class="text-center">
-        <p-dropdown [options]="areas" [(ngModel)]="tk.idProveedor" optionLabel="nombre" [showClear]="false"
+        <p-dropdown [options]="areas" [(ngModel)]="tk.idArea" optionLabel="nombre" [showClear]="false"
             optionValue="id" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">

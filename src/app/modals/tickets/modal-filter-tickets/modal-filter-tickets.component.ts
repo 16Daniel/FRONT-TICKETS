@@ -107,7 +107,7 @@ export class ModalFilterTicketsComponent implements OnInit {
 
     if (this.filterarea != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.idProveedor == this.filterarea.id
+        (x) => x.idArea == this.filterarea.id
       );
     }
 
@@ -154,7 +154,7 @@ export class ModalFilterTicketsComponent implements OnInit {
     return str;
   }
 
-  onChangeProveedor() {
+  onChangeArea() {
     if (this.filterarea != undefined) {
       this.categoriesService.getCategoriasprov(this.filterarea.id).subscribe({
         next: (data) => {
