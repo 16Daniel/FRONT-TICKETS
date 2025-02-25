@@ -20,6 +20,7 @@ import { Maintenance10x10Service } from '../../services/maintenance-10x10.servic
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../models/area';
+import { ModalTenXtenMaintenanceNewComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { PriorityTicketsAccordionSComponent } from '../../components/tickets/priority-tickets-accordion-s/priority-tickets-accordion-s.component';
 @Component({
   selector: 'app-home-s',
@@ -37,7 +38,8 @@ import { PriorityTicketsAccordionSComponent } from '../../components/tickets/pri
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
     FormsModule,
-    PriorityTicketsAccordionSComponent
+    PriorityTicketsAccordionSComponent,
+    ModalTenXtenMaintenanceNewComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-s.component.html',
@@ -49,6 +51,7 @@ export default class homeSComponent implements OnInit {
   showModalTicketDetail: boolean = false;
   showModalHistorial: boolean = false;
   showModal10x10: boolean = false;
+  ShowModal10x10New:boolean = false; 
   showModalHistorialMantenimientos: boolean = false;
   public itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
@@ -212,28 +215,7 @@ export default class homeSComponent implements OnInit {
     );
   }
 
-  async nuevoMantenimiento() {
-    const mantenimiento: Mantenimiento10x10 = {
-      idSucursal: '1',
-      idUsuarioSoporte: "JhPZN7fQD1REyldGXop17qR8Now1",
-      fecha: new Date(),
-      estatus: true,
-      mantenimientoCaja: false,
-      mantenimientoCCTV: false,
-      mantenimientoConcentradorApps: false,
-      mantenimientoContenidosSistemaCable: false,
-      mantenimientoImpresoras: false,
-      mantenimientoInternet: false,
-      mantenimientoNoBrakes: false,
-      mantenimientoPuntosVentaTabletas: false,
-      mantenimientoRack: false,
-      mantenimientoTiemposCocina: false,
-      observaciones: '',
-    };
 
-    await this.mantenimientoService.create(mantenimiento);
-    console.log('ok');
-  }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
@@ -247,7 +229,10 @@ export default class homeSComponent implements OnInit {
     }, 50);
   }
 
-  
+  nuevoMantenimiento()
+  {
+      this.ShowModal10x10New = true; 
+  }
 
  
 }

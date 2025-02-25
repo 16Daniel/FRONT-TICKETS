@@ -1,7 +1,13 @@
 <div class="pt-5">
     <div class="mt-5"></div>
   
-    <h3 class="m-3 text-center">MIS TICKETS</h3>
+    @if(ordenarxmantenimiento==false)
+    {
+      <h3 class="m-3 text-center">MIS TICKETS</h3>
+    }@else
+    {
+      <h3 class="m-3 text-center">MANTENIMIENTOS</h3>
+    }
     <div class="d-flex justify-content-start gap-3 p-3 pb-0 flex-wrap">
   
       <p-button label="Crear ticket" icon="pi pi-plus" styleClass="p-button-primary"
@@ -15,6 +21,10 @@
       <p-button label="Historial tickets" icon="pi pi-history" styleClass="p-button-warning"
         (click)="showModalHistorial = true">
       </p-button>
+
+       <p-button label="Nuevo Mantenimiento" icon="pi pi-plus" styleClass="p-button-info"
+      (click)="nuevoMantenimiento()">
+    </p-button>
 
       <div class="form-check form-switch d-flex align-items-center gap-3">
         <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarxmantenimiento">
@@ -62,6 +72,10 @@
   <app-modal-ten-xten-maintenance-check *ngIf="showModal10x10" [showModal10x10]="showModal10x10"
     (closeEvent)="showModal10x10 = false"
     [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
+
+    <app-modal-ten-xten-maintenance-new *ngIf="ShowModal10x10New" [ShowModal10x10New]="ShowModal10x10New"
+    (closeEvent)="ShowModal10x10New = false"
+    ></app-modal-ten-xten-maintenance-new>
   
   <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
     [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
