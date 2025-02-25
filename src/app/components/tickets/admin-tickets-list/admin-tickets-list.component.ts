@@ -11,6 +11,7 @@ import { Usuario } from '../../../models/usuario.model';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Area } from '../../../models/area';
 import { Timestamp } from '@firebase/firestore';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-admin-tickets-list',
@@ -28,14 +29,19 @@ import { Timestamp } from '@firebase/firestore';
 })
 export class AdminTicketsListComponent {
   @Input() tickets: Ticket[] = [];
-  sucursales: Sucursal[] = [];
-  areas: Area[] = [];
+  @Input() sucursales: Sucursal[] = [];
+  @Input() areas: Area[] = [];
 
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   ticketSeleccionado: Ticket | undefined;
 
-  constructor(private ticketsService: TicketsService) {}
+  constructor(
+    private ticketsService: TicketsService,
+    private usersService: UsersService
+  ) {
+    this.obtenerUsuariosHelp();
+  }
 
   actualizaTicket(tk: Ticket) {
     this.ticketsService
@@ -90,5 +96,19 @@ export class AdminTicketsListComponent {
       str = '#61ff00';
     }
     return str;
+  }
+
+  obtenerUsuariosHelp() {
+    this.usersService.getusers().subscribe({
+      next: (data) => {
+        this.usuariosHelp = data;
+        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
+        // this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        // this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
   }
 }

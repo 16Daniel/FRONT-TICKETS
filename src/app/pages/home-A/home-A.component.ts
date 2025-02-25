@@ -4,20 +4,14 @@ import {
   ViewChild,
   type OnInit,
 } from '@angular/core';
-import { TableModule } from 'primeng/table';
 import { Dialog } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Sucursal } from '../../models/sucursal.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Timestamp } from '@angular/fire/firestore';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { AccordionModule } from 'primeng/accordion';
-import { BadgeModule } from 'primeng/badge';
 import { StatusTicket } from '../../models/status-ticket.model';
 import { FolioGeneratorService } from '../../services/folio-generator.service';
 import { TicketsService } from '../../services/tickets.service';
@@ -36,25 +30,22 @@ import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generat
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { AdminTicketsListComponent } from '../../components/tickets/admin-tickets-list/admin-tickets-list.component';
 import { BranchesTicketsAccordionComponent } from '../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
+import { UserTicketsAccordionComponent } from '../../components/tickets/user-tickets-accordion/user-tickets-accordion.component';
 
 @Component({
   selector: 'app-home-a',
   standalone: true,
   imports: [
-    TableModule,
-    DropdownModule,
-    FormsModule,
     ToastModule,
     CommonModule,
     ConfirmDialogModule,
     OverlayPanelModule,
-    AccordionModule,
-    BadgeModule,
     ModalFilterTicketsComponent,
     ModalGenerateTicketComponent,
     ModalTicketsHistoryComponent,
     AdminTicketsListComponent,
-    BranchesTicketsAccordionComponent
+    BranchesTicketsAccordionComponent,
+    UserTicketsAccordionComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-A.component.html',
@@ -114,10 +105,6 @@ export default class HomeAComponent implements OnInit {
     this.formdepto = this.sucursal;
   }
   ngOnInit(): void {}
-
-  openadd() {
-    this.showModalGenerateTicket = true;
-  }
 
   async enviartk(): Promise<void> {
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
@@ -325,53 +312,6 @@ export default class HomeAComponent implements OnInit {
     }
   }
 
-  getDate(tsmp: Timestamp): Date {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date;
-  }
-
-  getBgPrioridad(value: string): string {
-    let str = '';
-
-    if (value == 'ALTA') {
-      str = '#ff0000';
-    }
-
-    if (value == 'MEDIA') {
-      str = '#ffe800';
-    }
-
-    if (value == 'BAJA') {
-      str = '#61ff00';
-    }
-    return str;
-  }
-
-  showticketA(item: any) {
-    this.itemtk = item;
-    this.modalticket = true;
-  }
-
-  updatestatusSuc(idt: string) {
-    let temp = this.arr_tickets.filter((x) => x.id == idt);
-    if (temp.length > 0) {
-      let ticket = temp[0];
-      ticket.estatusSucursal = 'PÁNICO';
-      ticket.prioridadSucursal = 'PÁNICO';
-
-      this.ticketsService
-        .update(ticket)
-        .then(() => {
-          this.showMessage('success', 'Success', 'Enviado correctamente');
-        })
-        .catch((error) =>
-          console.error('Error al actualizar los comentarios:', error)
-        );
-    }
-  }
-
   getusuarioshelp() {
     this.usersService.getusers().subscribe({
       next: (data) => {
@@ -402,36 +342,8 @@ export default class HomeAComponent implements OnInit {
     return idr;
   }
 
-  showModalFiltros() {
-    this.showModalFilterTickets = true;
-  }
-
-  showHistorial() {
-    this.showModalHistorial = true;
-    this.dialog.maximized = true;
-  }
-
   getTicketsSuc(ids: number | any) {
     return this.arr_tickets.filter((x) => x.idSucursal == ids);
-  }
-
-  getNameSuc(ids: string): string {
-    let str = '';
-    let temp = this.catsucursales.filter((x) => x.id == ids);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
-  }
-
-  getNameResponsable(id: string): string {
-    let name = '';
-
-    let temp = this.catusuarioshelp.filter((x) => x.uid == id);
-    if (temp.length > 0) {
-      name = temp[0].nombre + ' ' + temp[0].apellidoP;
-    }
-    return name;
   }
 
   agrupar(user: Usuario) {
@@ -445,82 +357,9 @@ export default class HomeAComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  getBGSuc(value: number): string {
-    let str = '';
-
-    if (value >= 5) {
-      str = '#ff0000';
-    }
-
-    if (value > 0 && value <= 4) {
-      str = '#ffe800';
-    }
-
-    if (value == 0) {
-      str = '#00a312';
-    }
-
-    return str;
-  }
-
-  getColortxt(value: number): string {
-    let str = '';
-
-    if (value >= 5) {
-      str = '#fff';
-    }
-
-    if (value > 0 && value <= 4) {
-      str = '#000';
-    }
-
-    if (value == 0) {
-      str = '#fff';
-    }
-
-    return str;
-  }
-
-  updatetk(tk: Ticket) {
-    this.ticketsService
-      .update(tk)
-      .then(() => {})
-      .catch((error) => console.error(error));
-  }
-
   agruparSucs() {
     this.usergroup = undefined;
     this.showagrupacion = true;
     this.cdr.detectChanges();
-  }
-
-  getResponsablesUC(ids: string): string {
-    let idr = '';
-    for (let item of this.catusuarioshelp) {
-      const existeSucursal = item.sucursales.some(
-        (sucursal) => sucursal.id == ids
-      );
-      if (existeSucursal) {
-        idr = item.nombre + ' ' + item.apellidoP;
-      }
-    }
-
-    return idr;
-  }
-
-  ordenarSucursales(): Sucursal[] {
-    return this.catsucursales.sort((a, b) => {
-      const ticketsA = this.getTicketsSuc(a.id).length;
-      const ticketsB = this.getTicketsSuc(b.id).length;
-      return ticketsB - ticketsA; // Ordena de mayor a menor
-    });
-  }
-
-  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
-    return catsucursales.sort((a, b) => {
-      const ticketsA = this.getTicketsSuc(a.id).length;
-      const ticketsB = this.getTicketsSuc(b.id).length;
-      return ticketsB - ticketsA; // Ordena de mayor a menor
-    });
   }
 }

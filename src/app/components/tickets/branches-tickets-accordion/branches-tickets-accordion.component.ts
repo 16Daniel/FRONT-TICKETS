@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Usuario } from '../../../models/usuario.model';
 import { Area } from '../../../models/area';
-import { Timestamp } from '@firebase/firestore';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
+import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
+
 @Component({
   selector: 'app-branches-tickets-accordion',
   standalone: true,
@@ -21,19 +22,19 @@ import { AccordionModule } from 'primeng/accordion';
     TableModule,
     BadgeModule,
     AccordionModule,
+    AdminTicketsListComponent
   ],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
 })
+
 export class BranchesTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
-  sucursales: Sucursal[] = [];
+  @Input() sucursales: Sucursal[] = [];
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   ticketSeleccionado: Ticket | undefined;
-
-  constructor(private ticketsService: TicketsService) {}
 
   ordenarSucursales(): Sucursal[] {
     return this.sucursales.sort((a, b) => {
@@ -45,61 +46,6 @@ export class BranchesTicketsAccordionComponent {
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
-  }
-
-  actualizaTicket(tk: Ticket) {
-    this.ticketsService
-      .update(tk)
-      .then(() => {})
-      .catch((error) => console.error(error));
-  }
-
-  showticketA(item: any) {
-    this.ticket = item;
-    // this.modalticket = true;
-  }
-
-  obtenerNombreResponsable(id: string): string {
-    let name = '';
-
-    let temp = this.usuariosHelp.filter((x) => x.uid == id);
-    if (temp.length > 0) {
-      name = temp[0].nombre + ' ' + temp[0].apellidoP;
-    }
-    return name;
-  }
-
-  obtenerNombreSucursal(idSucursal: string): string {
-    let str = '';
-    let temp = this.sucursales.filter((x) => x.id == idSucursal);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
-  }
-
-  getDate(tsmp: Timestamp): Date {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date;
-  }
-
-  obtenerBackGroundPrioridad(value: string): string {
-    let str = '';
-
-    if (value == 'ALTA') {
-      str = '#ff0000';
-    }
-
-    if (value == 'MEDIA') {
-      str = '#ffe800';
-    }
-
-    if (value == 'BAJA') {
-      str = '#61ff00';
-    }
-    return str;
   }
 
   obtenerResponsablesUC(idSucursal: string): string {
