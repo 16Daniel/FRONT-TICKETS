@@ -17,7 +17,7 @@
             </ng-template>
         </p-dropdown>
         <p></p>
-        <p-dropdown [options]="areas" [(ngModel)]="formArea" name="proveedor" optionLabel="nombre"
+        <p-dropdown [options]="areas" [(ngModel)]="formArea" name="area" optionLabel="nombre"
             [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
             (onChange)="onChangeArea()" #formAreaCtrl="ngModel"
             [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>

@@ -2,7 +2,7 @@
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
     <p-dropdown [options]="areas" [(ngModel)]="filterarea" optionLabel="nombre" [filter]="true"
         filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{ width: '100%' }"
-        (onChange)="onChangeProveedor()">
+        (onChange)="onChangeArea()">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
                 <div>{{ selectedOption.nombre }}</div>

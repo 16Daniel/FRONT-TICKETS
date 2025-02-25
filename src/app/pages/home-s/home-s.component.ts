@@ -195,11 +195,11 @@ export default class homeSComponent implements OnInit {
   }
 
 
-  obtenerNombreProveedor(idp: string): string {
+  obtenerNombreArea(idp: string): string {
     let nombre = '';
-    let proveedor = this.areas.filter((x) => x.id == idp);
-    if (proveedor.length > 0) {
-      nombre = proveedor[0].nombre;
+    let area = this.areas.filter((x) => x.id == idp);
+    if (area.length > 0) {
+      nombre = area[0].nombre;
     }
     return nombre;
   }
