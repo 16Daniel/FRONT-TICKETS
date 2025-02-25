@@ -35,6 +35,7 @@ import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-t
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { AdminTicketsListComponent } from '../../components/tickets/admin-tickets-list/admin-tickets-list.component';
+import { BranchesTicketsAccordionComponent } from '../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
   selector: 'app-home-a',
@@ -52,7 +53,8 @@ import { AdminTicketsListComponent } from '../../components/tickets/admin-ticket
     ModalFilterTicketsComponent,
     ModalGenerateTicketComponent,
     ModalTicketsHistoryComponent,
-    AdminTicketsListComponent
+    AdminTicketsListComponent,
+    BranchesTicketsAccordionComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-A.component.html',
@@ -323,7 +325,7 @@ export default class HomeAComponent implements OnInit {
     }
   }
 
-  getdate(tsmp: Timestamp): Date {
+  getDate(tsmp: Timestamp): Date {
     // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
     const firestoreTimestamp = tsmp; // Ejemplo
     const date = firestoreTimestamp.toDate(); // Convierte a Date

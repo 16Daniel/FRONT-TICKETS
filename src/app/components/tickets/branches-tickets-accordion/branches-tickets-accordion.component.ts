@@ -1,19 +1,18 @@
 import { Component, Input } from '@angular/core';
+import { Sucursal } from '../../../models/sucursal.model';
+import { Ticket } from '../../../models/ticket.model';
+import { TicketsService } from '../../../services/tickets.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Usuario } from '../../../models/usuario.model';
+import { Area } from '../../../models/area';
+import { Timestamp } from '@firebase/firestore';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { Usuario } from '../../../models/usuario.model';
-import { Sucursal } from '../../../models/sucursal.model';
-import { Area } from '../../../models/area';
-import { Timestamp } from '@firebase/firestore';
-
 @Component({
-  selector: 'app-admin-tickets-list',
+  selector: 'app-branches-tickets-accordion',
   standalone: true,
   imports: [
     DropdownModule,
@@ -23,19 +22,30 @@ import { Timestamp } from '@firebase/firestore';
     BadgeModule,
     AccordionModule,
   ],
-  templateUrl: './admin-tickets-list.component.html',
-  styleUrl: './admin-tickets-list.component.scss',
+  templateUrl: './branches-tickets-accordion.component.html',
+  styleUrl: './branches-tickets-accordion.component.scss',
 })
-export class AdminTicketsListComponent {
+export class BranchesTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   sucursales: Sucursal[] = [];
   areas: Area[] = [];
-
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   ticketSeleccionado: Ticket | undefined;
 
   constructor(private ticketsService: TicketsService) {}
+
+  ordenarSucursales(): Sucursal[] {
+    return this.sucursales.sort((a, b) => {
+      const ticketsA = this.filtrarTicketsPorSucursal(a.id).length;
+      const ticketsB = this.filtrarTicketsPorSucursal(b.id).length;
+      return ticketsB - ticketsA; // Ordena de mayor a menor
+    });
+  }
+
+  filtrarTicketsPorSucursal(idSucursal: number | any) {
+    return this.tickets.filter((x) => x.idSucursal == idSucursal);
+  }
 
   actualizaTicket(tk: Ticket) {
     this.ticketsService
@@ -89,6 +99,56 @@ export class AdminTicketsListComponent {
     if (value == 'BAJA') {
       str = '#61ff00';
     }
+    return str;
+  }
+
+  obtenerResponsablesUC(idSucursal: string): string {
+    let idr = '';
+    for (let item of this.usuariosHelp) {
+      const existeSucursal = item.sucursales.some(
+        (sucursal) => sucursal.id == idSucursal
+      );
+      if (existeSucursal) {
+        idr = item.nombre + ' ' + item.apellidoP;
+      }
+    }
+
+    return idr;
+  }
+
+  obtenerColorTexto(value: number): string {
+    let str = '';
+
+    if (value >= 5) {
+      str = '#fff';
+    }
+
+    if (value > 0 && value <= 4) {
+      str = '#000';
+    }
+
+    if (value == 0) {
+      str = '#fff';
+    }
+
+    return str;
+  }
+
+  obtenerBackGroundAcordion(value: number): string {
+    let str = '';
+
+    if (value >= 5) {
+      str = '#ff0000';
+    }
+
+    if (value > 0 && value <= 4) {
+      str = '#ffe800';
+    }
+
+    if (value == 0) {
+      str = '#00a312';
+    }
+
     return str;
   }
 }
