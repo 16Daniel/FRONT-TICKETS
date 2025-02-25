@@ -17,7 +17,6 @@
                     <th>SOLICITANTE</th>
                     <th>RESPONSABLE</th>
                     <th>ASISTENCIA</th>
-                    <!-- <th></th> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-tk>
@@ -65,7 +64,7 @@
 </ng-template>
 </p-dropdown>
 </td>
-<td class="text-center">{{ getDate(tk.fecha) | date }}</td>
+<td class="text-center">{{ getDate(tk.fecha) | date: 'short' }}</td>
 <td class="text-center">
     {{ obtenerNombreSucursal(tk.idSucursal) }}
 </td>
@@ -85,7 +84,7 @@
     </p-dropdown>
 </td>
 <td class="text-center">
-    <p-dropdown [options]="sucursales" [(ngModel)]="tk.idSucursal" optionLabel="name" [showClear]="false"
+    <p-dropdown [options]="categorias" [(ngModel)]="tk.idCategoria" optionLabel="name" [showClear]="false"
         optionValue="id" [style]="{ width: '100%' }">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
@@ -158,29 +157,24 @@
     {{ obtenerNombreResponsable(tk.responsable) }}
 </td>
 <td class="text-center">
-    <p-dropdown [options]="[{ name: 'FÍSICA' }, { name: 'REMOTA' }]" [(ngModel)]="tk.tipoSoporte" optionLabel="name"
-        [showClear]="false" optionValue="name" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+    <p-dropdown [options]="tiposSoporte" [(ngModel)]="tk.tipoSoporte" optionLabel="nombre" optionValue="id"
+        [showClear]="false" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
                 <div>
-                    {{ selectedOption.name }}
+                    {{ selectedOption.nombre }}
                 </div>
             </div>
         </ng-template>
         <ng-template let-item pTemplate="item">
             <div class="flex align-items-center gap-2">
                 <div class="d-flex justify-content-start align-items-center gap-3">
-                    <div>{{ item.name }}</div>
+                    <div>{{ item.nombre }}</div>
                 </div>
             </div>
         </ng-template>
     </p-dropdown>
 </td>
-<!-- <td>
-    <button class="btn bg-p-b p-1" (click)="showticketA(tk)">
-        <i class="bx bx-show bx-sm"></i>
-    </button>
-</td> -->
 </tr>
 </ng-template>
 </p-table>

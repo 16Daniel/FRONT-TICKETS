@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,13 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Area } from '../../../models/area';
 import { Timestamp } from '@firebase/firestore';
 import { UsersService } from '../../../services/users.service';
+import { BranchesService } from '../../../services/branches.service';
+import { AreasService } from '../../../services/areas.service';
+import { MessageService } from 'primeng/api';
+import { Categoria } from '../../../models/categoria.mdoel';
+import { CategoriesService } from '../../../services/categories.service';
+import { SupportTypesService } from '../../../services/support-types.service';
+import { TipoSoporte } from '../../../models/tipo-soporte.model';
 
 @Component({
   selector: 'app-admin-tickets-list',
@@ -29,30 +36,88 @@ import { UsersService } from '../../../services/users.service';
 })
 export class AdminTicketsListComponent {
   @Input() tickets: Ticket[] = [];
-  @Input() sucursales: Sucursal[] = [];
-  @Input() areas: Area[] = [];
-
+  sucursales: Sucursal[] = [];
+  tiposSoporte: TipoSoporte[] = [];
+  categorias: Categoria[] = [];
+  areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   ticketSeleccionado: Ticket | undefined;
 
   constructor(
     private ticketsService: TicketsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private branchesService: BranchesService,
+    private areasService: AreasService,
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService,
+    private categoriesService: CategoriesService,
+    private supportTypesService: SupportTypesService
   ) {
     this.obtenerUsuariosHelp();
+    this.obtenerSucursales();
+    this.obtenerTiposSoporte();
+    this.obtenerAreas();
+    this.obtenerCategorias();
   }
 
-  actualizaTicket(tk: Ticket) {
+  obtenerSucursales() {
+    this.branchesService.get().subscribe({
+      next: (data) => {
+        this.sucursales = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerTiposSoporte() {
+    this.supportTypesService.get().subscribe({
+      next: (data) => {
+        this.tiposSoporte = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerAreas() {
+    this.areasService.get().subscribe({
+      next: (data) => {
+        this.areas = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerCategorias() {
+    this.categoriesService.get().subscribe({
+      next: (data) => {
+        this.categorias = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  actualizaTicket(ticket: Ticket) {
     this.ticketsService
-      .update(tk)
+      .update(ticket)
       .then(() => {})
       .catch((error) => console.error(error));
-  }
-
-  showticketA(item: any) {
-    this.ticket = item;
-    // this.modalticket = true;
   }
 
   obtenerNombreResponsable(id: string): string {
@@ -103,12 +168,16 @@ export class AdminTicketsListComponent {
       next: (data) => {
         this.usuariosHelp = data;
         this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
-        // this.cdr.detectChanges();
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.log(error);
-        // this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
+  }
+
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 }

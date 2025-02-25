@@ -4,35 +4,13 @@
   <h3 class="m-3 text-center">TICKETS</h3>
 
   <div class="d-flex justify-content-start gap-3 p-3 pb-0">
-    <!-- <button class="btn bg-p-b p-2" (click)="openadd()">
-      <i class="bx bx-plus bx-sm"></i>
-    </button>
-    <button class="btn bg-p-b p-2" style="background-color: #ff5722" (click)="showModalFiltros()">
-      <i class="bx bx-filter bx-sm"></i>
-    </button>
-    <button class="btn bg-p-b p-2" style="background-color: #29d998" (click)="showHistorial()">
-      <i class="bx bx-history bx-flip-horizontal bx-sm"></i>
-    </button> -->
-    <p-button (onClick)="opg.toggle($event)" icon="pi pi-users" label="AGRUPAR" styleClass="rounded-3" />
     <p-button label="Crear ticket" icon="pi pi-plus" styleClass="p-button-primary"
       (click)="showModalGenerateTicket = true">
     </p-button>
-
     <p-button label="Filtrar tickets" icon="pi pi-filter" styleClass="p-button-success"
       (click)="showModalFilterTickets = true">
     </p-button>
-
-    <!-- <p-button label="Historial tickets" icon="pi pi-history" styleClass="p-button-warning"
-      (click)="showModalHistorial = true">
-    </p-button> -->
-
-    <!-- <p-button label="Historial 10 de 10" icon="pi pi-history" styleClass="p-button-secondary"
-      (click)="showModalHistorialMantenimientos = true">
-    </p-button> -->
-<!-- 
-    <p-button label="10 de 10" icon="pi pi-wrench" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
-      (click)="showModal10x10 = true">
-    </p-button> -->
+    <p-button (onClick)="opg.toggle($event)" icon="pi pi-users" label="AGRUPAR" styleClass="p-button-danger" />
   </div>
 
   <p-overlayPanel #opg>
@@ -62,8 +40,7 @@
     <H4 class="text-center text-primary fw-bold">{{
       usergroup.nombre + " " + usergroup.apellidoP
       }}</H4>
-    <app-user-tickets-accordion [tickets]="arr_tickets" [sucursales]="catcategorias"
-      [usuarioAgrupacion]="usergroup"></app-user-tickets-accordion>
+    <app-user-tickets-accordion [tickets]="arr_tickets" [usuarioAgrupacion]="usergroup"></app-user-tickets-accordion>
   </div>
 
   <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
@@ -72,7 +49,7 @@
     <p>SIN TICKETS PENDIENTES</p>
   </div>
 
-  <app-admin-tickets-list [tickets]="arr_tickets" [sucursales]="catcategorias" [areas]="areas" *ngIf="showagrupacion == false"></app-admin-tickets-list>
+  <app-admin-tickets-list [tickets]="arr_tickets" *ngIf="showagrupacion == false"></app-admin-tickets-list>
 </div>
 
 <app-modal-generate-ticket *ngIf="showModalGenerateTicket" [showModalGenerateTicket]="showModalGenerateTicket"

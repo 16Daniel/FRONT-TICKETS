@@ -23,8 +23,8 @@ import { Usuario } from '../../../models/usuario.model';
 })
 export class UserTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
-  @Input() sucursales: Sucursal[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
+  sucursales: Sucursal[] = [];
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
