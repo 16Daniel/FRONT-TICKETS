@@ -10,6 +10,7 @@ import { TableModule } from 'primeng/table';
 import { Timestamp } from '@angular/fire/firestore';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../../services/users.service';
+import { BranchMaintenanceTableComponent } from "../../../components/maintenance/branch-maintenance-table/branch-maintenance-table.component";
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',
@@ -20,7 +21,8 @@ import { UsersService } from '../../../services/users.service';
     CalendarModule,
     FormsModule,
     TableModule,
-  ],
+    BranchMaintenanceTableComponent
+],
   templateUrl: './modal-ten-xten-maintenance-history.component.html',
   styleUrl: './modal-ten-xten-maintenance-history.component.scss',
 })
@@ -32,7 +34,6 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   fechaFin: Date = new Date();
   mantenimientos: Mantenimiento10x10[] = [];
   usuario: Usuario;
-  mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
   idSucursal: string;
   usuariosHelp: Usuario[] = [];
 
@@ -76,44 +77,11 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     );
   }
 
-  onClick() {}
-
-  getDate(tsmp: Timestamp | any): Date {
-    try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    } catch {
-      return tsmp;
-    }
-  }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
-    let porcentaje = 0;
-    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoPuntosVentaTabletas
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoContenidosSistemaCable
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoConcentradorApps
-      ? (porcentaje += 10)
-      : porcentaje;
-
-    return porcentaje;
-  }
 
   obtenerUsuariosHelp() {
     this.usersService.getusers().subscribe({
@@ -128,13 +96,5 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     });
   }
 
-  obtenerNombreResponsable(idUsuario: string): string {
-    let nombre = '';
 
-    let temp = this.usuariosHelp.filter((x) => x.uid == idUsuario);
-    if (temp.length > 0) {
-      nombre = temp[0].nombre + ' ' + temp[0].apellidoP;
-    }
-    return nombre;
-  }
 }

@@ -16,7 +16,6 @@ import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
@@ -38,7 +37,6 @@ import { Area } from '../../models/area';
     CommonModule,
     ModalGenerateTicketComponent,
     ModalTicketDetailComponent,
-    ModalFinalizeTicketComponent,
     ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,

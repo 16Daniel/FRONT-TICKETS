@@ -251,6 +251,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   verificarChatNoLeido(ticket: Ticket) {
+    
     const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
     const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
 
