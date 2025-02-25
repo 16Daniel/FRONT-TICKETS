@@ -1,10 +1,10 @@
 [
     {
         "id": 1,
-        "name": "FÍSICA"
+        "nombre": "FÍSICA"
     },
     {
         "id": 2,
-        "name": "REMOTA"
+        "nombre": "REMOTA"
     }
 ]
