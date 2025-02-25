@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "nombre": "PÁNICO",
+        "color": "black"
+    },
+    {
+        "id": 2,
+        "nombre": "ALTA",
+        "color": "#ff0000"
+    },
+    {
+        "id": 3,
+        "nombre": "MEDIA",
+        "color": "#ffe800"
+    },
+    {
+        "id": 4,
+        "nombre": "BAJA",
+        "color": "#61ff00"
+    }
+]
