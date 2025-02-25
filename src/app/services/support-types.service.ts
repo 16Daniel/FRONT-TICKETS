@@ -52,6 +52,6 @@ export class SupportTypesService {
   }
 
   private loadJson(): Observable<any> {
-    return this.http.get('/assets/catalogs/sucursales.json'); // Ruta al archivo JSON
+    return this.http.get('/assets/catalogs/tipos-soporte.json'); // Ruta al archivo JSON
   }
 }
