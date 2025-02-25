@@ -1,1 +1,17 @@
-<p>user-tickets-accordion works!</p>
+<p-accordion class="w-full">
+    <p-accordionTab *ngFor="let item of ordenarSucursalesUser(usuarioAgrupacion.sucursales)">
+        <ng-template pTemplate="header">
+            <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100" [style]="{
+          'background-color': obtenerBackGroundSucursal(filtrarTicketsPorSucursal(item.id).length)
+        }">
+                <p-badge [value]="filtrarTicketsPorSucursal(item.id).length" class="ml-auto mr-2" [size]="'large'"
+                    [style]="{ 'background-color': 'white', color: 'black' }" />
+                <span class="fw-bold" [style]="{ color: obtenerColorTexto(filtrarTicketsPorSucursal(item.id).length) }">
+                    {{ item.nombre }}
+                </span>
+            </span>
+        </ng-template>
+
+        <app-admin-tickets-list [tickets]="tickets"></app-admin-tickets-list>
+    </p-accordionTab>
+</p-accordion>
