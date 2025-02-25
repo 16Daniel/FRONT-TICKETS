@@ -1,4 +1,4 @@
 export interface TipoSoporte {
-  id: number;
+  id: string;
   name: string;
 }
