@@ -146,6 +146,7 @@ export class Maintenance10x10Service {
         mantenimientosRef,
         where('idSucursal', '==', idSucursal),
         where('fecha', '>=', fechaHaceUnMes),
+        where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
         limit(1) // Solo el más reciente
       );

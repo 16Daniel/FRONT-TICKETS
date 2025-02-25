@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -19,9 +20,7 @@ import { Maintenance10x10Service } from '../../services/maintenance-10x10.servic
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../models/area';
-import { BadgeModule } from 'primeng/badge';
-import { AccordionModule } from 'primeng/accordion';
-import { RequesterTicketsListComponent } from '../../components/tickets/requester-tickets-list/requester-tickets-list.component';
+import { PriorityTicketsAccordionSComponent } from '../../components/tickets/priority-tickets-accordion-s/priority-tickets-accordion-s.component';
 @Component({
   selector: 'app-home-s',
   standalone: true,
@@ -37,9 +36,8 @@ import { RequesterTicketsListComponent } from '../../components/tickets/requeste
     ModalTicketsHistoryComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
-    BadgeModule,
-    AccordionModule,
-    RequesterTicketsListComponent
+    FormsModule,
+    PriorityTicketsAccordionSComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-s.component.html',
@@ -52,7 +50,7 @@ export default class homeSComponent implements OnInit {
   showModalHistorial: boolean = false;
   showModal10x10: boolean = false;
   showModalHistorialMantenimientos: boolean = false;
-
+  public itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
@@ -60,13 +58,12 @@ export default class homeSComponent implements OnInit {
   formdepto: any;
   areas: Area[] = [];
   subscriptiontk: Subscription | undefined;
-  itemtk: Ticket | undefined;
   usuario: Usuario;
   selectedtk: Ticket | undefined;
   loading: boolean = false;
-
+  arr_ultimosmantenimientos:Mantenimiento10x10[] = []; 
   private unsubscribe!: () => void;
-
+  public ordenarxmantenimiento:boolean = false;  
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
@@ -80,6 +77,33 @@ export default class homeSComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.obtnerUltimosMantenimientos(); 
+  }
+
+  obtnerUltimosMantenimientos()
+  {
+    let sucursales:Sucursal[] = this.usuario.sucursales; 
+    let array_ids_Sucursales:string[] = [];  
+
+    for(let item of sucursales)
+      {
+        array_ids_Sucursales.push(item.id); 
+      }
+
+      this.loading = true;
+    this.subscriptiontk = this.mantenimientoService
+      .obtenerUltimosMantenimientos(array_ids_Sucursales)
+      .subscribe({
+        next: (data) => {
+          this.arr_ultimosmantenimientos = data.filter((elemento): elemento is Mantenimiento10x10 => elemento !== null);
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error al escuchar los tickets:', error);
+        },
+      });
   }
 
   ngOnDestroy() {
@@ -99,7 +123,6 @@ export default class homeSComponent implements OnInit {
       .getTicketsResponsable(userid)
       .subscribe({
         next: (data) => {
-          console.log(data);
           this.tickets = data;
           let arr_temp: Ticket[] = [];
           let temp1: Ticket[] = this.tickets.filter(
@@ -168,17 +191,6 @@ export default class homeSComponent implements OnInit {
     return str;
   }
 
-  abrirModalDetalleTicket(ticket: Ticket | any) {
-    this.itemtk = ticket;
-    this.showModalTicketDetail = true;
-
-    setTimeout(() => {
-      var accordionItems = document.querySelectorAll('.accordion-collapse');
-      accordionItems.forEach(function (item) {
-        item.classList.remove('show'); // Cierra todas las secciones del accordion
-      });
-    }, 50);
-  }
 
   obtenerNombreProveedor(idp: string): string {
     let nombre = '';
@@ -189,10 +201,7 @@ export default class homeSComponent implements OnInit {
     return nombre;
   }
 
-  obtenerTicketsPorSucursal(idSucursal: number | any) {
-    return this.tickets.filter((x) => x.idSucursal == idSucursal);
-  }
-
+ 
   async obtenerMantenimientoActivo() {
     this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
       this.sucursal?.id,
@@ -226,49 +235,19 @@ export default class homeSComponent implements OnInit {
     console.log('ok');
   }
 
+  abrirModalDetalleTicket(ticket: Ticket | any) {
+    this.itemtk = ticket;
+    this.showModalTicketDetail = true;
 
-  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
-    return catsucursales.sort((a, b) => {
-      const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
-      const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
-      return ticketsB - ticketsA; // Ordena de mayor a menor
-    });
+    setTimeout(() => {
+      var accordionItems = document.querySelectorAll('.accordion-collapse');
+      accordionItems.forEach(function (item) {
+        item.classList.remove('show'); // Cierra todas las secciones del accordion
+      });
+    }, 50);
   }
 
-  obtenerColorDeTexto(value: number): string {
-    let str = '';
+  
 
-    if (value >= 5) {
-      str = '#fff';
-    }
-
-    if (value > 0 && value <= 4) {
-      str = '#000';
-    }
-
-    if (value == 0) {
-      str = '#fff';
-    }
-
-    return str;
-  }
-
- obtenerColorDeFondoSucursal(value: number): string {
-    let str = '';
-
-    if (value >= 5) {
-      str = '#ff0000';
-    }
-
-    if (value > 0 && value <= 4) {
-      str = '#ffe800';
-    }
-
-    if (value == 0) {
-      str = '#00a312';
-    }
-
-    return str;
-  }
-
+ 
 }
