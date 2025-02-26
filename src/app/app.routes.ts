@@ -37,6 +37,11 @@ export const routes: Routes = [
             title:'Usuarios',
             loadComponent: () => import('./pages/users/users.component')
         },
+        {
+            path:'calendar-builder',
+            title:'Constructor de calendarios',
+            loadComponent: () => import('./pages/calendar-builder/calendar-builder.component')
+        },
     ]
 },
 {
