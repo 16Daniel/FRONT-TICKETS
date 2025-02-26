@@ -1,79 +1,37 @@
 <div class="m-0 pb-4" style="background-color: transparent">
-    <div>
-       
-      @if (ordenarxmantenimiento == false) 
-      {
-        <div class="mt-4">
-          <p-accordion class="w-full">
-            <p-accordionTab
-              *ngFor="let item of ordenarSucursalesUser(sucursales)"
-            >
-              <ng-template pTemplate="header">
-                <span
-                  class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center"
-                  [style]="{
+  <div>
+
+    @if (ordenarxmantenimiento == false)
+    {
+    <div class="mt-4">
+      <p-accordion class="w-full">
+        <p-accordionTab *ngFor="let item of ordenarSucursalesUser(sucursales)">
+          <ng-template pTemplate="header">
+            <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center" [style]="{
                     'background-color': obtenerColorDeFondoSucursal(obtenerTicketsPorSucursal(item.id).length)
-                  }"
-                >
-                  <p-badge
-                    [value]="obtenerTicketsPorSucursal(item.id).length"
-                    class="ml-auto mr-2"
-                    [size]="'large'"
-                    [style]="{ 'background-color': 'white', color: 'black' }"
-                  />
-                  <span
-                    class="fw-bold"
-                    [style]="{ color: obtenerColorDeTexto(obtenerTicketsPorSucursal(item.id).length) }"
-                  >
-                    {{ item.nombre }}
-                  </span>
-                </span>
-              </ng-template>
-      
-              <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)"
-                (clickEvent)="abrirModalDetalleTicket($event)"
-                [mostrarAccionFinalizar]="false"
-                [mostrarEstrellas] = "false"
-                ></app-requester-tickets-list>
+                  }">
+              <p-badge [value]="obtenerTicketsPorSucursal(item.id).length" class="ml-auto mr-2" [size]="'large'"
+                [style]="{ 'background-color': 'white', color: 'black' }" />
+              <span class="fw-bold" [style]="{ color: obtenerColorDeTexto(obtenerTicketsPorSucursal(item.id).length) }">
+                {{ item.nombre }}
+              </span>
+            </span>
+          </ng-template>
 
-            </p-accordionTab>
-          </p-accordion>
-        </div>
-      }@else 
-      {
-        <div class="mt-4">
-          <p-accordion class="w-full">
-            <p-accordionTab
-              *ngFor="let item of ordenarSucursalesUser(sucursales)"
-            >
-              <ng-template pTemplate="header">
-                <span
-                  class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center"
-                  [style]="{
-                    'background-color': obtenerColorDeFondoSucursal10x10(obtenerPorcentajedeUltimoMantenimiento(item.id))
-                  }"
-                >
-                  <p-badge
-                    [value]="obtenerPorcentajedeUltimoMantenimiento(item.id)+'%'"
-                    class="ml-auto mr-2"
-                    [size]="'large'"
-                    [style]="{ 'background-color': 'white', color: 'black' }"
-                  />
-                  <span
-                    class="fw-bold"
-                    [style]="{ color: obtenerColorDeTexto10x10(obtenerPorcentajedeUltimoMantenimiento(item.id)) }"
-                  >
-                    {{ item.nombre }}
-                  </span>
-                </span>
-              </ng-template>
-      
-              <app-branch-maintenance-table [mantenimientos]="obtenerMantenimientoPorSucursal(item.id)" [usuariosHelp]="usuariosHelp"S></app-branch-maintenance-table>
+          <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)"
+            (clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
+            [mostrarEstrellas]="false"></app-requester-tickets-list>
 
-            </p-accordionTab>
-          </p-accordion>
-        </div>
-      }
-        
+        </p-accordionTab>
+      </p-accordion>
     </div>
+    }@else
+    {
+    <div class="mt-4">
+      <app-accordion-branch-maintenance10x10
+        [mantenimientos]="arr_ultimosmantenimientos" [sucursales]="sucursales"></app-accordion-branch-maintenance10x10>
+    </div>
+    }
+
   </div>
+</div>
