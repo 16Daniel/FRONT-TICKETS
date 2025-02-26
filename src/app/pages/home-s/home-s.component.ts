@@ -22,6 +22,8 @@ import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../models/area';
 import { ModalTenXtenMaintenanceNewComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { PriorityTicketsAccordionSComponent } from '../../components/tickets/priority-tickets-accordion-s/priority-tickets-accordion-s.component';
+import { AccordionBranchMaintenance10x10Component } from '../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+
 @Component({
   selector: 'app-home-s',
   standalone: true,
@@ -39,19 +41,19 @@ import { PriorityTicketsAccordionSComponent } from '../../components/tickets/pri
     ModalTenXtenMaintenanceHistoryComponent,
     FormsModule,
     PriorityTicketsAccordionSComponent,
-    ModalTenXtenMaintenanceNewComponent
+    ModalTenXtenMaintenanceNewComponent,
+    AccordionBranchMaintenance10x10Component,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-s.component.html',
 })
 export default class homeSComponent implements OnInit {
-
   showModalGenerateTicket: boolean = false;
   showModalFilterTickets: boolean = false;
   showModalTicketDetail: boolean = false;
   showModalHistorial: boolean = false;
   showModal10x10: boolean = false;
-  ShowModal10x10New:boolean = false; 
+  ShowModal10x10New: boolean = false;
   showModalHistorialMantenimientos: boolean = false;
   public itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
@@ -64,9 +66,10 @@ export default class homeSComponent implements OnInit {
   usuario: Usuario;
   selectedtk: Ticket | undefined;
   loading: boolean = false;
-  arr_ultimosmantenimientos:Mantenimiento10x10[] = []; 
+  arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
   private unsubscribe!: () => void;
-  public ordenarxmantenimiento:boolean = false;  
+  public ordenarxmantenimiento: boolean = false;
+
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
@@ -80,25 +83,25 @@ export default class homeSComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtnerUltimosMantenimientos(); 
+    this.obtnerUltimosMantenimientos();
   }
 
-  obtnerUltimosMantenimientos()
-  {
-    let sucursales:Sucursal[] = this.usuario.sucursales; 
-    let array_ids_Sucursales:string[] = [];  
+  obtnerUltimosMantenimientos() {
+    let sucursales: Sucursal[] = this.usuario.sucursales;
+    let array_ids_Sucursales: string[] = [];
 
-    for(let item of sucursales)
-      {
-        array_ids_Sucursales.push(item.id); 
-      }
+    for (let item of sucursales) {
+      array_ids_Sucursales.push(item.id);
+    }
 
-      this.loading = true;
+    this.loading = true;
     this.subscriptiontk = this.mantenimientoService
       .obtenerUltimosMantenimientos(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
-          this.arr_ultimosmantenimientos = data.filter((elemento): elemento is Mantenimiento10x10 => elemento !== null);
+          this.arr_ultimosmantenimientos = data.filter(
+            (elemento): elemento is Mantenimiento10x10 => elemento !== null
+          );
           this.loading = false;
           this.cdr.detectChanges();
         },
@@ -118,7 +121,6 @@ export default class homeSComponent implements OnInit {
       this.unsubscribe();
     }
   }
-
 
   async getTicketsResponsable(userid: string): Promise<void> {
     this.loading = true;
@@ -194,7 +196,6 @@ export default class homeSComponent implements OnInit {
     return str;
   }
 
-
   obtenerNombreArea(idp: string): string {
     let nombre = '';
     let area = this.areas.filter((x) => x.id == idp);
@@ -204,7 +205,6 @@ export default class homeSComponent implements OnInit {
     return nombre;
   }
 
- 
   async obtenerMantenimientoActivo() {
     this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
       this.sucursal?.id,
@@ -214,8 +214,6 @@ export default class homeSComponent implements OnInit {
       }
     );
   }
-
-
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
@@ -229,10 +227,7 @@ export default class homeSComponent implements OnInit {
     }, 50);
   }
 
-  nuevoMantenimiento()
-  {
-      this.ShowModal10x10New = true; 
+  nuevoMantenimiento() {
+    this.ShowModal10x10New = true;
   }
-
- 
 }

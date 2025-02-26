@@ -7,7 +7,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 import { CommonModule } from '@angular/common';
 import { BranchMaintenanceTableComponent } from '../../maintenance/branch-maintenance-table/branch-maintenance-table.component';
-import { AccordionBranchMaintenance10x10Component } from '../../maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+// import { AccordionBranchMaintenance10x10Component } from '../../maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion-s',
@@ -18,7 +18,7 @@ import { AccordionBranchMaintenance10x10Component } from '../../maintenance/acco
     AccordionModule,
     RequesterTicketsListComponent,
     BranchMaintenanceTableComponent,
-    AccordionBranchMaintenance10x10Component,
+    // AccordionBranchMaintenance10x10Component,
   ],
   templateUrl: './priority-tickets-accordion-s.component.html',
 })
@@ -26,7 +26,7 @@ export class PriorityTicketsAccordionSComponent {
   @Input() arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
-  @Input() ordenarxmantenimiento: boolean = false;
+  // @Input() ordenarxmantenimiento: boolean = false;
   @Output() clickEvent = new EventEmitter<Ticket>();
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
