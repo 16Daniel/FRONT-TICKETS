@@ -1,30 +1,28 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ViewChild,
-  type OnInit,
-} from '@angular/core';
-import { Dialog } from 'primeng/dialog';
+import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { Sucursal } from '../../models/sucursal.model';
-import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { Subscription } from 'rxjs';
+
+import { Sucursal } from '../../models/sucursal.model';
 import { StatusTicket } from '../../models/status-ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
 import { Usuario } from '../../models/usuario.model';
 import { Ticket } from '../../models/ticket.model';
-import { CategoriesService } from '../../services/categories.service';
-import { StatusTicketService } from '../../services/status-ticket.service';
 import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { AdminTicketsListComponent } from '../../components/tickets/admin-tickets-list/admin-tickets-list.component';
 import { BranchesTicketsAccordionComponent } from '../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../components/tickets/user-tickets-accordion/user-tickets-accordion.component';
+import { AccordionBranchMaintenance10x10Component } from '../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { BranchesService } from '../../services/branches.service';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-home-a',
@@ -32,6 +30,7 @@ import { UserTicketsAccordionComponent } from '../../components/tickets/user-tic
   imports: [
     ToastModule,
     CommonModule,
+    FormsModule,
     ConfirmDialogModule,
     OverlayPanelModule,
     ModalFilterTicketsComponent,
@@ -40,59 +39,61 @@ import { UserTicketsAccordionComponent } from '../../components/tickets/user-tic
     AdminTicketsListComponent,
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
+    AccordionBranchMaintenance10x10Component,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './home-A.component.html',
 })
-export default class HomeAComponent implements OnInit {
-  public showModalGenerateTicket: boolean = false;
-  public formdepto: any;
-  public formprov: any;
-  public catcategorias: Sucursal[] = [];
-  public catStatusT: StatusTicket[] = [];
-  public arr_tickets: Ticket[] = [];
-  public subscriptiontk: Subscription | undefined;
-  public itemtk: Ticket | undefined;
-  public userdata: any;
-  public sucursal: Sucursal | undefined;
-  public catusuarioshelp: Usuario[] = [];
-  public all_arr_tickets: Ticket[] = [];
-  public showModalFilterTickets: boolean = false;
-  public filterarea: any | undefined;
-  public showModalHistorial: boolean = false;
-  public showagrupacion: boolean = false;
-  public usergroup: Usuario | undefined;
-
-  @ViewChild('dialogHtk') dialog!: Dialog;
+export default class HomeAComponent {
+  mostrarModalGenerateTicket: boolean = false;
+  mostrarMantenimientos: boolean = false;
+  mostrarModalFilterTickets: boolean = false;
+  mostrarModalHistorial: boolean = false;
+  mostrarAgrupacion: boolean = false;
+  sucursales: Sucursal[] = [];
+  mantenimientos: Mantenimiento10x10[] = [];
+  catStatusT: StatusTicket[] = [];
+  tickets: Ticket[] = [];
+  subscripcionTicket: Subscription | undefined;
+  ticket: Ticket | undefined;
+  usuario: Usuario;
+  sucursal: Sucursal | undefined;
+  usuariosHelp: Usuario[] = [];
+  todosLostickets: Ticket[] = [];
+  filterarea: any | undefined;
+  usergroup: Usuario | undefined;
 
   constructor(
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private ticketsService: TicketsService,
     private usersService: UsersService,
-    private categoriesService: CategoriesService,
-    private statusTicketService: StatusTicketService
+    private branchesService: BranchesService,
+    private maintenanceService: Maintenance10x10Service
   ) {
-    this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.sucursal = this.usuario.sucursales[0];
 
-    this.getcatStatust();
-
-    this.getusuarioshelp();
-    this.getCategorias();
-    this.getTicketsUser();
-    this.sucursal = this.userdata.sucursales[0];
-    this.formdepto = this.sucursal;
+    this.obtenerUsuariosHelp();
+    this.obtenerTickets();
+    this.obtenerSucursales();
   }
-  ngOnInit(): void {}
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  getcatStatust() {
-    this.statusTicketService.get().subscribe({
+  obtenerSucursales() {
+    this.branchesService.get().subscribe({
       next: (data) => {
-        this.catStatusT = data;
+        this.sucursales = data;
+        this.maintenanceService
+          .obtenerUltimosMantenimientos(
+            this.sucursales.map((sucursal) => sucursal.id)
+          )
+          .subscribe((result) => {
+            this.mantenimientos = result.filter((element) => element !== null);
+          });
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -102,64 +103,21 @@ export default class HomeAComponent implements OnInit {
     });
   }
 
-  getCategorias() {
-    this.categoriesService.get().subscribe({
+  async obtenerTickets(): Promise<void> {
+    this.subscripcionTicket = this.ticketsService.get().subscribe({
       next: (data) => {
-        this.catcategorias = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  changeprov() {
-    if (this.formprov != undefined) {
-      this.categoriesService.getCategoriasprov(this.formprov.id).subscribe({
-        next: (data) => {
-          this.catcategorias = data;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.log(error);
-          this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-        },
-      });
-    }
-  }
-
-  changeprovFilter() {
-    if (this.filterarea != undefined) {
-      this.categoriesService.getCategoriasprov(this.filterarea.id).subscribe({
-        next: (data) => {
-          this.catcategorias = data;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.log(error);
-          this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-        },
-      });
-    }
-  }
-
-  async getTicketsUser(): Promise<void> {
-    this.subscriptiontk = this.ticketsService.get().subscribe({
-      next: (data) => {
-        this.arr_tickets = data;
+        this.tickets = data;
         let arr_temp: Ticket[] = [];
-        let temp1: Ticket[] = this.arr_tickets.filter(
+        let temp1: Ticket[] = this.tickets.filter(
           (x) => x.prioridadSucursal == 'PÁNICO'
         );
-        let temp2: Ticket[] = this.arr_tickets.filter(
+        let temp2: Ticket[] = this.tickets.filter(
           (x) => x.prioridadSucursal == 'ALTA'
         );
-        let temp3: Ticket[] = this.arr_tickets.filter(
+        let temp3: Ticket[] = this.tickets.filter(
           (x) => x.prioridadSucursal == 'MEDIA'
         );
-        let temp4: Ticket[] = this.arr_tickets.filter(
+        let temp4: Ticket[] = this.tickets.filter(
           (x) => x.prioridadSucursal == 'BAJA'
         );
 
@@ -179,13 +137,13 @@ export default class HomeAComponent implements OnInit {
           (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
         );
         arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-        this.all_arr_tickets = [...arr_temp];
-        this.arr_tickets = arr_temp;
+        this.todosLostickets = [...arr_temp];
+        this.tickets = arr_temp;
 
-        if (this.itemtk != undefined) {
-          let temp = this.arr_tickets.filter((x) => x.id == this.itemtk!.id);
+        if (this.ticket != undefined) {
+          let temp = this.tickets.filter((x) => x.id == this.ticket!.id);
           if (temp.length > 0) {
-            this.itemtk = temp[0];
+            this.ticket = temp[0];
           }
         }
 
@@ -197,19 +155,11 @@ export default class HomeAComponent implements OnInit {
     });
   }
 
-  ngOnDestroy() {
-    if (this.subscriptiontk != undefined) {
-      this.subscriptiontk.unsubscribe();
-    }
-  }
-
-  getusuarioshelp() {
+  obtenerUsuariosHelp() {
     this.usersService.getusers().subscribe({
       next: (data) => {
-        this.catusuarioshelp = data;
-        this.catusuarioshelp = this.catusuarioshelp.filter(
-          (x) => x.idRol == '4'
-        );
+        this.usuariosHelp = data;
+        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -219,38 +169,20 @@ export default class HomeAComponent implements OnInit {
     });
   }
 
-  getResponsabletk(): string {
-    let idr = '';
-    for (let item of this.catusuarioshelp) {
-      const existeSucursal = item.sucursales.some(
-        (sucursal) => sucursal.id == sucursal.id
-      );
-      if (existeSucursal) {
-        idr = item.uid;
-      }
-    }
-
-    return idr;
-  }
-
-  getTicketsSuc(ids: number | any) {
-    return this.arr_tickets.filter((x) => x.idSucursal == ids);
-  }
-
   agrupar(user: Usuario) {
     this.usergroup = user;
-    this.showagrupacion = true;
+    this.mostrarAgrupacion = true;
   }
 
-  showalltk() {
+  quitarAgrupaciones() {
     this.usergroup = undefined;
-    this.showagrupacion = false;
+    this.mostrarAgrupacion = false;
     this.cdr.detectChanges();
   }
 
-  agruparSucs() {
+  agruparPorSucursal() {
     this.usergroup = undefined;
-    this.showagrupacion = true;
+    this.mostrarAgrupacion = true;
     this.cdr.detectChanges();
   }
 }
