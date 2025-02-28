@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { MessageService } from 'primeng/api';
-import { FormsModule } from '@angular/forms';
-import { ToastModule } from 'primeng/toast';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+
 import { UsersService } from '../../services/users.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -17,6 +18,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export default class LoginComponent {
   public email: string = '';
   public pass: string = '';
@@ -58,12 +60,11 @@ export default class LoginComponent {
 
             if (userd.idRol == '1') {
               this.router.navigate(['/main/home-a']);
-            } else if(userd.idRol == '2'){
+            } else if (userd.idRol == '2') {
               this.router.navigate(['/main/home']);
-            }else if(userd.idRol == '4')
-              {
-                this.router.navigate(['/main/home-s']);
-              }
+            } else if (userd.idRol == '4') {
+              this.router.navigate(['/main/home-s']);
+            }
           },
           error: (error) => {
             console.log(error);

@@ -8,6 +8,8 @@ export interface Ticket {
   idSucursal: string;
   idArea: string;
   idCategoria: string;
+  idTipoSoporte: string | null;
+  idEstatusTicket: string;
   fecha: Timestamp | any;
   fechaEstimacion: Timestamp | any;
   fechaFin: Timestamp | null;
@@ -15,13 +17,11 @@ export interface Ticket {
   prioridadSucursal: string;
   prioridadArea: string | null;
   responsable: string;
-  tipoSoporte: string | null;
   nombreCategoria: string | null;
   decripcion: string;
   comentarios: Comentario[];
   comentariosFinales?: string | null;
   estatusSucursal: string | any;
-  estatus: number;
   folio: string;
   calificacion: number;
   participantesChat: ParticipanteChat[];

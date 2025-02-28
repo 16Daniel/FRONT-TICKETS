@@ -1,37 +1,32 @@
 import { Component, Input, type OnInit } from '@angular/core';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { TableModule } from 'primeng/table';
-import { UsersService } from '../../../services/users.service';
-import { MessageService } from 'primeng/api';
-import { Usuario } from '../../../models/usuario.model';
-import { Timestamp } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
+import { Timestamp } from '@angular/fire/firestore';
+import { TableModule } from 'primeng/table';
+import { MessageService } from 'primeng/api';
+
+import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
+import { UsersService } from '../../../services/users.service';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-branch-maintenance-table',
   standalone: true,
-  imports: [
-    TableModule,
-    CommonModule
-
-  ],
+  imports: [TableModule, CommonModule],
   templateUrl: './branch-maintenance-table.component.html',
 })
-export class BranchMaintenanceTableComponent implements OnInit {
-@Input() mantenimientos: Mantenimiento10x10[] = [];
-@Input() usuariosHelp: Usuario[] = [];
-public mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
+export class BranchMaintenanceTableComponent {
+  @Input() mantenimientos: Mantenimiento10x10[] = [];
+  @Input() usuariosHelp: Usuario[] = [];
+  mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
 
- constructor(
+  constructor(
     private messageService: MessageService,
     private usersService: UsersService
-  ) {
+  ) {}
+
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
-  
-ngOnInit(): void { }
-showMessage(sev: string, summ: string, det: string) {
-  this.messageService.add({ severity: sev, summary: summ, detail: det });
-}
 
   calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
     let porcentaje = 0;
@@ -89,7 +84,5 @@ showMessage(sev: string, summ: string, det: string) {
     }
   }
 
-  
   onClick() {}
-
 }

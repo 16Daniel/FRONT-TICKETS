@@ -8,7 +8,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
 
 import { Sucursal } from '../../models/sucursal.model';
-import { StatusTicket } from '../../models/status-ticket.model';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../services/users.service';
 import { Usuario } from '../../models/usuario.model';
@@ -52,7 +52,7 @@ export default class HomeAComponent {
   mostrarAgrupacion: boolean = false;
   sucursales: Sucursal[] = [];
   mantenimientos: Mantenimiento10x10[] = [];
-  catStatusT: StatusTicket[] = [];
+  catStatusT: EstatusTicket[] = [];
   tickets: Ticket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;

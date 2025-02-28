@@ -59,8 +59,8 @@
         {{ obtenerNombreSucursal(tk.idSucursal) }}
     </td>
     <td class="text-center">
-        <p-dropdown [options]="areas" [(ngModel)]="tk.idArea" optionLabel="nombre" [showClear]="false"
-            optionValue="id" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+        <p-dropdown [options]="areas" [(ngModel)]="tk.idArea" optionLabel="nombre" [showClear]="false" optionValue="id"
+            (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -89,45 +89,8 @@
         </p-dropdown>
     </td>
     <td class="text-center">
-        <p-dropdown [options]="[
-                {
-                  id: 1,
-                  icon: 'bx bx-dots-horizontal-rounded',
-                  animation: 'bx-tada',
-                  color: '#ff0028'
-                },
-                {
-                  id: 2,
-                  icon: 'bx-loader',
-                  animation: 'bx-rotate-180 bx-spin bx-sm',
-                  color: '#ff7b00'
-                },
-                {
-                  id: 3,
-                  icon: 'bx bx-check',
-                  animation: 'bx-tada',
-                  color: '#008500'
-                },
-                {
-                  id: 4,
-                  icon: 'bx bx-pause',
-                  animation: 'bx-tada',
-                  color: '#a300ff'
-                },
-                {
-                  id: 5,
-                  icon: 'bx bxs-cart',
-                  animation: 'bx-tada',
-                  color: '#ff7b00'
-                },
-                {
-                  id: 6,
-                  icon: 'bx bxs-cart',
-                  animation: 'bx-tada',
-                  color: '#008500'
-                }
-              ]" [(ngModel)]="tk.estatus" optionLabel="nombre" [showClear]="false" optionValue="id"
-            (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+        <p-dropdown [options]="estatusTicket" [(ngModel)]="tk.idEstatusTicket" optionLabel="nombre" [showClear]="false"
+            optionValue="id" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <i class="bx {{ selectedOption.icon }} {{
@@ -147,7 +110,7 @@
         {{ obtenerNombreResponsable(tk.responsable) }}
     </td>
     <td class="text-center">
-        <p-dropdown [options]="tiposSoporte" [(ngModel)]="tk.tipoSoporte" optionLabel="nombre" optionValue="id"
+        <p-dropdown [options]="tiposSoporte" [(ngModel)]="tk.idTipoSoporte" optionLabel="nombre" optionValue="id"
             [showClear]="false" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">

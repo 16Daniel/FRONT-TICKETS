@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { StatusTicket } from '../../../models/status-ticket.model';
+import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { Categoria } from '../../../models/categoria.mdoel';
 import { Ticket } from '../../../models/ticket.model';
 import { MessageService } from 'primeng/api';
@@ -40,7 +40,7 @@ export class ModalFilterTicketsComponent implements OnInit {
   filtercategoria: any | undefined;
   filterarea: any | undefined;
 
-  statusTicket: StatusTicket[] = [];
+  statusTicket: EstatusTicket[] = [];
   categorias: Categoria[] = [];
   areas: Area[] = [];
 
@@ -118,7 +118,7 @@ export class ModalFilterTicketsComponent implements OnInit {
     }
     if (this.filterstatus != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.estatus == this.filterstatus.id
+        (x) => x.idEstatusTicket == this.filterstatus.id
       );
     }
 
