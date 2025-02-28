@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StatusTicket } from '../models/status-ticket.model';
+import { EstatusTicket } from '../models/estatus-ticket.model';
 import { collection, collectionData, doc, Firestore, setDoc } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 
@@ -14,8 +14,8 @@ export class StatusTicketService {
     // this.inicializarCatalogo()
   }
 
-  get(): Observable<StatusTicket[] | any> {
-    const sucursalesCollection = collection(this.firestore, 'cat_status');
+  get(): Observable<EstatusTicket[] | any> {
+    const sucursalesCollection = collection(this.firestore, this.pathName);
     return collectionData(sucursalesCollection, { idField: 'id' }); // Incluye el ID del documento
   }
 

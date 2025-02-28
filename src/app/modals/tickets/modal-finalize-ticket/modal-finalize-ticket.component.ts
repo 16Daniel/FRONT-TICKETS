@@ -1,19 +1,13 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Timestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
+import { MessageService } from 'primeng/api';
+
 import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
-import { Timestamp } from '@angular/fire/firestore';
-import { MessageService } from 'primeng/api';
 import { RatingStarsComponent } from '../../../components/common/rating-stars/rating-stars.component';
 
 @Component({
@@ -29,6 +23,7 @@ import { RatingStarsComponent } from '../../../components/common/rating-stars/ra
   templateUrl: './modal-finalize-ticket.component.html',
   styleUrl: './modal-finalize-ticket.component.scss',
 })
+
 export class ModalFinalizeTicketComponent {
   @Input() showModalFinalizeTicket: boolean = false;
   @Input() ticket: Ticket | any;
@@ -36,19 +31,14 @@ export class ModalFinalizeTicketComponent {
 
   evidencia: string = '';
   rating: number = 0; // Calificación inicial
-  // stars: boolean[] = [false, false, false, false, false]; // Estrellas desmarcadas
 
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService
   ) {}
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   this.updateStars();
-  // }
-
   finalizarTicket() {
-    this.ticket!.estatus = 3;
+    this.ticket!.idEstatusTicket = '3';
     this.ticket!.calificacion = this.rating;
     this.ticket.fechaFin = new Date();
 
