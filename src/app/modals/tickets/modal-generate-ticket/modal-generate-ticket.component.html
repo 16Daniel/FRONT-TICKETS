@@ -63,25 +63,25 @@
 
         <p></p>
 
-        <p-dropdown [options]="[{name:'PÁNICO'},{name:'ALTA'},{name:'MEDIA'},{name:'BAJA'}]" [(ngModel)]="formPrioridad"
-            name="formPrioridad" name="prioridad" optionLabel="name" [filter]="false" filterBy="nombre"
+        <p-dropdown [options]="prioridadesTicket" [(ngModel)]="formPrioridad"
+            name="formPrioridad" name="prioridad" optionLabel="id" [filter]="false" filterBy="nombre"
             [showClear]="true" placeholder="SELECCIONAR PRIORIDAD" [style]="{width:'100%'}"
             [ngClass]="{'p-invalid': formPrioridadCtrl.invalid && formPrioridadCtrl.touched}"
             #formPrioridadCtrl="ngModel" required>
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.name }}</div>
+                    <div>{{ selectedOption.nombre }}</div>
                 </div>
             </ng-template>
             <ng-template let-item pTemplate="item">
                 <div class="flex align-items-center gap-2">
                     <div class="d-flex justify-content-start align-items-center gap-3">
-                        <td *ngIf="item.name == 'PÁNICO'"><i class='bx bxs-hot bx-md rounded-3' style="color: red;"></i>
+                        <td *ngIf="item.id == '1'"><i class='bx bxs-hot bx-md rounded-3' style="color: red;"></i>
                         </td>
-                        <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%;" class="p-3"
-                            [style]="{'background-color':obtenerBackgroundColorPrioridad(item.name),'width':'30px','height':'30px'}">
+                        <div *ngIf="item.id != '1'" style="border-radius: 50%;" class="p-3"
+                            [style]="{'background-color':obtenerBackgroundColorPrioridad(item.nombre),'width':'30px','height':'30px'}">
                         </div>
-                        <div>{{ item.name }}</div>
+                        <div>{{ item.nombre }}</div>
                     </div>
                 </div>
             </ng-template>

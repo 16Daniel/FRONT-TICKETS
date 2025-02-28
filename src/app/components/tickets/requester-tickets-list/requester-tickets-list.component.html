@@ -19,12 +19,12 @@
   <!-- FF495F -->
   <ng-template pTemplate="body" let-ticket>
     <tr [pSelectableRow]="ticket">
-      <td class="text-center" *ngIf="ticket.prioridadSucursal == 'PÁNICO'">
+      <td class="text-center" *ngIf="ticket.idPrioridadTicket == '1'">
         <i class="bx bxs-hot bx-sm" style="color: red"></i>
       </td>
-      <td class="text-center" *ngIf="ticket.prioridadSucursal != 'PÁNICO'">
+      <td class="text-center" *ngIf="ticket.idPrioridadTicket != '1'">
         <i class="bx bxs-circle bx-sm" [style]="{
-                color: obtenerBackgroundColorPrioridad(ticket.prioridadSucursal)
+                color: obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket)
               }"></i>
       </td>
       <td class="text-center">{{ ticket.folio }}</td>
@@ -66,7 +66,7 @@
           [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
           <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
-        <button *ngIf="(ticket != undefined && ticket!.estatusSucursal != 'PÁNICO') && mostrarAccionPanico"
+        <button *ngIf="(ticket != undefined && ticket!.idPrioridadTicket != '1') && mostrarAccionPanico"
           class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
           <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
