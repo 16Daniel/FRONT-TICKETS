@@ -42,6 +42,11 @@ export const routes: Routes = [
             title:'Constructor de calendarios',
             loadComponent: () => import('./pages/calendar-builder/calendar-builder.component')
         },
+        {
+            path:'branch-visit-schedule',
+            title:'Visitas programadas',
+            loadComponent: () => import('./pages/branch-visit-schedule/branch-visit-schedule.component')
+        },
     ]
 },
 {

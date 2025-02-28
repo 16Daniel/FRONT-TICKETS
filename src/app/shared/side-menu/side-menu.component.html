@@ -71,6 +71,9 @@
         <li (click)="closemenu()"><a [routerLink]="'/main/home'"><i class='bx bxs-dashboard' ></i>Inicio</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/users'"><i class='bx bx-user' ></i>Usuarios</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/roles'"><i class='bx bx-objects-horizontal-left' ></i>Roles</a></li>
+        <li (click)="closemenu()" *ngIf="userdata.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i class='bx bx-calendar-plus'></i>Registrar visita</a></li>
+        <li (click)="closemenu()" *ngIf="userdata.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
+        
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{userdata.nombre +' ' + userdata.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">
