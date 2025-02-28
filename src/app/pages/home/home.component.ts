@@ -92,16 +92,16 @@ export default class HomeComponent {
           this.tickets = data;
           let arr_temp: Ticket[] = [];
           let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'PÁNICO'
+            (x) => x.idPrioridadTicket == '1'
           );
           let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'ALTA'
+            (x) => x.idPrioridadTicket == '2'
           );
           let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'MEDIA'
+            (x) => x.idPrioridadTicket == '3'
           );
           let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.prioridadSucursal == 'BAJA'
+            (x) => x.idPrioridadTicket == '4'
           );
 
           temp1 = temp1.sort(

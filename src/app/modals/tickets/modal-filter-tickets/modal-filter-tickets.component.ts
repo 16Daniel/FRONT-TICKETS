@@ -3,22 +3,24 @@ import {
   Component,
   EventEmitter,
   Input,
-  input,
   OnInit,
   Output,
 } from '@angular/core';
-import { EstatusTicket } from '../../../models/estatus-ticket.model';
-import { Categoria } from '../../../models/categoria.mdoel';
-import { Ticket } from '../../../models/ticket.model';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
+import { EstatusTicket } from '../../../models/estatus-ticket.model';
+import { Categoria } from '../../../models/categoria.mdoel';
+import { Ticket } from '../../../models/ticket.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { Area } from '../../../models/area';
 import { AreasService } from '../../../services/areas.service';
+import { TicketsPriorityService } from '../../../services/tickets-priority.service';
+import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 
 @Component({
   selector: 'app-modal-filter-tickets',
@@ -34,12 +36,11 @@ export class ModalFilterTicketsComponent implements OnInit {
   @Output() ticketsFiltradosEvent = new EventEmitter<Ticket[]>();
 
   ticketsFiltrados: Ticket[] = [];
-
   filterstatus: any | undefined;
   filterPrioridad: any | undefined;
   filtercategoria: any | undefined;
   filterarea: any | undefined;
-
+  prioridadesTicket: PrioridadTicket[] = [];
   statusTicket: EstatusTicket[] = [];
   categorias: Categoria[] = [];
   areas: Area[] = [];
@@ -50,7 +51,10 @@ export class ModalFilterTicketsComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private statusTicketService: StatusTicketService,
     private areasService: AreasService,
-  ) {}
+    private ticketsPriorityService: TicketsPriorityService
+  ) {
+    this.obtenerPrioridadesTicket();
+  }
 
   ngOnInit(): void {
     this.obtenerCategorias();
@@ -62,6 +66,19 @@ export class ModalFilterTicketsComponent implements OnInit {
     this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerPrioridadesTicket() {
+    this.ticketsPriorityService.get().subscribe({
+      next: (data) => {
+        this.prioridadesTicket = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -101,7 +118,7 @@ export class ModalFilterTicketsComponent implements OnInit {
     this.ticketsFiltrados = [...this.tickets];
     if (this.filterPrioridad != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.prioridadSucursal == this.filterPrioridad.name
+        (x) => x.idPrioridadTicket == this.filterPrioridad.id
       );
     }
 
