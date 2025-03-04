@@ -63,7 +63,7 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('idSucursal', '==', idSucursal),
-        where('estatus', 'in', [1, 2, 4, 5, 6])
+        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6'])
       );
 
       // Escucha en tiempo real
@@ -118,9 +118,9 @@ export class TicketsService {
     const q = query(
       collectionRef,
       where('idUsuario', '==', idUsuario),
-      where('estatus', '==', 3),
-      where('fechaFin', '>=', fechaInicio),
-      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
+      // where('idEstatusTicket', '==', '3'),
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
     );
 
     // Suscribirse a cambios en tiempo real
@@ -155,7 +155,7 @@ export class TicketsService {
     const q = query(
       collectionRef,
       where('responsable', '==', idUsuario),
-      where('estatus', '==', 3),
+      where('idEstatusTicket', '==', '3'),
       where('fechaFin', '>=', fechaInicio),
       where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
     );
@@ -188,7 +188,7 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('idUsuario', '==', userId),
-        where('estatus', 'in', [1, 2, 4, 5, 6])
+        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6'])
       );
 
       // Escucha en tiempo real
@@ -223,7 +223,7 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('responsable', '==', userId),
-        where('estatus', 'in', [1, 2, 4, 5, 6])
+        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6'])
       );
 
       // Escucha en tiempo real

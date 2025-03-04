@@ -8,25 +8,24 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Ticket } from '../../../models/ticket.model';
-import { TableModule } from 'primeng/table';
-import { CommonModule } from '@angular/common';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
+import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { AccordionModule } from 'primeng/accordion';
+import { BadgeModule } from 'primeng/badge';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
+import { Ticket } from '../../../models/ticket.model';
 import { UsersService } from '../../../services/users.service';
 import { NotificationsService } from '../../../services/notifications.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { ModalFinalizeTicketComponent } from '../../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
-import { AccordionModule } from 'primeng/accordion';
-import { BadgeModule } from 'primeng/badge';
 import { Usuario } from '../../../models/usuario.model';
 import { Notificacion } from '../../../models/notificacion.model';
 import { RatingStarsComponent } from '../../common/rating-stars/rating-stars.component';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
-
-// type Prioridad = 'PÁNICO' | 'ALTA' | 'MEDIA' | 'BAJA';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -44,6 +43,7 @@ import { Area } from '../../../models/area';
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
+
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() mostrarAcciones: boolean = true;
@@ -104,19 +104,19 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   obtenerBackgroundColorPrioridad(value: string): string {
     let str = '';
 
-    if (value == 'ALTA') {
+    if (value == '2') {
       str = '#ff0000';
     }
 
-    if (value == 'MEDIA') {
+    if (value == '3') {
       str = '#ffe800';
     }
 
-    if (value == 'BAJA') {
+    if (value == '4') {
       str = '#61ff00';
     }
 
-    if (value == 'PÁNICO') {
+    if (value == '1') {
       str = 'black';
     }
     return str;
@@ -197,8 +197,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     let temp = this.tickets.filter((x) => x.id == idTicket);
     if (temp.length > 0) {
       let ticket = temp[0];
-      ticket.estatusSucursal = 'PÁNICO';
-      ticket.prioridadSucursal = 'PÁNICO';
+      ticket.idPrioridadTicket = '1';
 
       this.ticketsService
         .update(ticket)
@@ -262,7 +261,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
       // Si el último comentario leído es menor que la longitud actual de los comentarios
       return comentarios.length > ultimoComentarioLeido;
-      // this.chatsSinLeer = comentarios.length - ultimoComentarioLeido;
     }
 
     return false;

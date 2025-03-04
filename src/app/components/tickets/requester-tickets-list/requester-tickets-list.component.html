@@ -19,12 +19,12 @@
   <!-- FF495F -->
   <ng-template pTemplate="body" let-ticket>
     <tr [pSelectableRow]="ticket">
-      <td class="text-center" *ngIf="ticket.prioridadSucursal == 'PÁNICO'">
+      <td class="text-center" *ngIf="ticket.idPrioridadTicket == '1'">
         <i class="bx bxs-hot bx-sm" style="color: red"></i>
       </td>
-      <td class="text-center" *ngIf="ticket.prioridadSucursal != 'PÁNICO'">
+      <td class="text-center" *ngIf="ticket.idPrioridadTicket != '1'">
         <i class="bx bxs-circle bx-sm" [style]="{
-                color: obtenerBackgroundColorPrioridad(ticket.prioridadSucursal)
+                color: obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket)
               }"></i>
       </td>
       <td class="text-center">{{ ticket.folio }}</td>
@@ -45,12 +45,12 @@
         {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
       </td>
       <td class="text-center">
-        <i *ngIf="ticket.estatus == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028"></i>
-        <i *ngIf="ticket.estatus == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00"></i>
-        <i *ngIf="ticket.estatus == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff"></i>
-        <i *ngIf="ticket.estatus == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500"></i>
-        <i *ngIf="ticket.estatus == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00"></i>
-        <i *ngIf="ticket.estatus == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500"></i>
+        <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028"></i>
+        <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00"></i>
+        <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff"></i>
+        <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500"></i>
+        <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00"></i>
+        <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500"></i>
       </td>
 
       <td *ngIf="mostrarEstrellas">
@@ -66,7 +66,7 @@
           [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
           <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>
-        <button *ngIf="(ticket != undefined && ticket!.estatusSucursal != 'PÁNICO') && mostrarAccionPanico"
+        <button *ngIf="(ticket != undefined && ticket!.idPrioridadTicket != '1') && mostrarAccionPanico"
           class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
           <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
         </button>

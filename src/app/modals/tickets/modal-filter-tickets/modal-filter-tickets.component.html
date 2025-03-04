@@ -29,30 +29,25 @@
         </ng-template>
     </p-dropdown>
     <P></P>
-    <p-dropdown [options]="[
-      { name: 'PÁNICO' },
-      { name: 'ALTA' },
-      { name: 'MEDIA' },
-      { name: 'BAJA' }
-    ]" [(ngModel)]="filterPrioridad" optionLabel="name" [filter]="false" filterBy="nombre" [showClear]="true"
+    <p-dropdown [options]="prioridadesTicket" [(ngModel)]="filterPrioridad" optionLabel="nombre" [filter]="false" filterBy="nombre" [showClear]="true"
         placeholder="SELECCIONAR PRIORIDAD" [style]="{ width: '100%' }">
         <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.name }}</div>
+                <div>{{ selectedOption.nombre }}</div>
             </div>
         </ng-template>
         <ng-template let-item pTemplate="item">
             <div class="flex align-items-center gap-2">
                 <div class="d-flex justify-content-start align-items-center gap-3">
-                    <td *ngIf="item.name == 'PÁNICO'">
+                    <td *ngIf="item.id == '1'">
                         <i class="bx bxs-hot bx-sm rounded-3" style="color: red"></i>
                     </td>
-                    <div *ngIf="item.name != 'PÁNICO'" style="border-radius: 50%" class="p-3" [style]="{
-              'background-color': obtenerBackgroundColorPrioridad(item.name),
+                    <div *ngIf="item.id != '1'" style="border-radius: 50%" class="p-3" [style]="{
+              'background-color': obtenerBackgroundColorPrioridad(item.nombre),
               width: '30px',
               height: '30px'
             }"></div>
-                    <div>{{ item.name }}</div>
+                    <div>{{ item.nombre }}</div>
                 </div>
             </div>
         </ng-template>

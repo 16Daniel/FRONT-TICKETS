@@ -25,6 +25,8 @@ import { BranchesService } from '../../../services/branches.service';
 import { CategoriesService } from '../../../services/categories.service';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
+import { TicketsPriorityService } from '../../../services/tickets-priority.service';
+import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -48,6 +50,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   usuarioActivo: Usuario = new Usuario();
   areas: Area[] = [];
   categorias: Categoria[] = [];
+  prioridadesTicket: PrioridadTicket[] = [];
 
   formDepartamento: any;
   formArea: any;
@@ -67,7 +70,8 @@ export class ModalGenerateTicketComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private areasService: AreasService
+    private areasService: AreasService,
+    private ticketsPriorityService: TicketsPriorityService
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +80,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.obtenerAreas();
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
-
+    this.obtenerPrioridadesTicket();
     this.sucursal = this.usuarioActivo.sucursales[0];
     this.formDepartamento = this.sucursal;
   }
@@ -100,6 +104,19 @@ export class ModalGenerateTicketComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (error) => {
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerPrioridadesTicket() {
+    this.ticketsPriorityService.get().subscribe({
+      next: (data) => {
+        this.prioridadesTicket = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
@@ -169,19 +186,17 @@ export class ModalGenerateTicketComponent implements OnInit {
       let tk: Ticket = {
         fecha: new Date(),
         idSucursal: this.sucursal.id,
-        estatusSucursal: this.formPrioridad.name === 'PÁNICO' ? 'PÁNICO' : null,
         idArea: this.formArea.id,
         idCategoria: this.formCategoria.id,
         decripcion: this.formDescripcion,
         solicitante: this.formNombreSolicitante,
-        prioridadSucursal: this.formPrioridad.name,
-        prioridadArea: null,
-        estatus: 1,
+        idPrioridadTicket: this.formPrioridad.id,
+        idEstatusTicket: '1',
         responsable: this.obtenerUidResponsableTicket(),
         comentarios: [],
         fechaFin: null,
         fechaEstimacion,
-        tipoSoporte: null,
+        idTipoSoporte: '1',
         idUsuario: this.usuarioActivo.uid,
         nombreCategoria: this.formCategoria.nombre,
         folio,

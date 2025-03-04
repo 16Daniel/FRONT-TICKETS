@@ -1,0 +1,15 @@
+.has-notification::after {
+  content: "";
+  position: absolute;
+  top: 12px; /* Ajusta la posición */
+  right: -20px; /* Ajusta la posición */
+  width: 10px; /* Tamaño del círculo */
+  height: 10px; /* Tamaño del círculo */
+  background-color: #4d65ff; /* Color del círculo */
+  border-radius: 50%; /* Hace que sea un círculo */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.has-notification {
+  position: relative; /* Asegura que el ::after se posicione con respecto a este elemento */
+}

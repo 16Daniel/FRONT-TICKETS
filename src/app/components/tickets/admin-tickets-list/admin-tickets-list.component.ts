@@ -1,26 +1,29 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { DropdownModule } from 'primeng/dropdown';
+import { Timestamp } from '@firebase/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
+import { MessageService } from 'primeng/api';
+
 import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Area } from '../../../models/area';
-import { Timestamp } from '@firebase/firestore';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { AreasService } from '../../../services/areas.service';
-import { MessageService } from 'primeng/api';
 import { Categoria } from '../../../models/categoria.mdoel';
 import { CategoriesService } from '../../../services/categories.service';
 import { SupportTypesService } from '../../../services/support-types.service';
 import { TipoSoporte } from '../../../models/tipo-soporte.model';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
+import { StatusTicketService } from '../../../services/status-ticket.service';
+import { EstatusTicket } from '../../../models/estatus-ticket.model';
 
 @Component({
   selector: 'app-admin-tickets-list',
@@ -36,10 +39,12 @@ import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
   templateUrl: './admin-tickets-list.component.html',
   styleUrl: './admin-tickets-list.component.scss',
 })
+
 export class AdminTicketsListComponent {
   @Input() tickets: Ticket[] = [];
   sucursales: Sucursal[] = [];
   tiposSoporte: TipoSoporte[] = [];
+  estatusTicket: EstatusTicket[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
   categorias: Categoria[] = [];
   areas: Area[] = [];
@@ -57,11 +62,13 @@ export class AdminTicketsListComponent {
     private categoriesService: CategoriesService,
     private supportTypesService: SupportTypesService,
     private ticketsPriorityService: TicketsPriorityService,
+    private statusTicketService: StatusTicketService,
   ) {
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerPrioridadesTicket();
     this.obtenerTiposSoporte();
+    this.obtenerEstatusTicketService();
     this.obtenerAreas();
     this.obtenerCategorias();
   }
@@ -83,6 +90,19 @@ export class AdminTicketsListComponent {
     this.supportTypesService.get().subscribe({
       next: (data) => {
         this.tiposSoporte = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+  
+  obtenerEstatusTicketService() {
+    this.statusTicketService.get().subscribe({
+      next: (data) => {
+        this.estatusTicket = data;
         this.cdr.detectChanges();
       },
       error: (error) => {

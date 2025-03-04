@@ -34,12 +34,12 @@ export class PriorityTicketsAccordionComponent implements OnInit {
 
   obtenerContadorTickets(prioridad: any): number {
     if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.prioridadSucursal === 'PÁNICO').length;
+      return this.tickets.filter((x) => x.idPrioridadTicket === '1').length;
     else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.prioridadSucursal === 'ALTA').length;
+      return this.tickets.filter((x) => x.idPrioridadTicket === '2').length;
     else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.prioridadSucursal === 'MEDIA').length;
-    else return this.tickets.filter((x) => x.prioridadSucursal === 'BAJA').length;
+      return this.tickets.filter((x) => x.idPrioridadTicket === '3').length;
+    else return this.tickets.filter((x) => x.idPrioridadTicket === '4').length;
   }
 
   obtenerBackgroundColorPrioridad(value: string): string {
@@ -63,17 +63,34 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     return str;
   }
 
-  obtenerTicketsFiltrados(prioridad: any): Ticket[] {
+  obtenerTicketsFiltrados(prioridad: string): Ticket[] {
     if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.prioridadSucursal === 'PÁNICO');
+      return this.tickets.filter((x) => x.idPrioridadTicket === '1');
     else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.prioridadSucursal === 'ALTA');
+      return this.tickets.filter((x) => x.idPrioridadTicket === '2');
     else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.prioridadSucursal === 'MEDIA');
-    else return this.tickets.filter((x) => x.prioridadSucursal === 'BAJA');
+      return this.tickets.filter((x) => x.idPrioridadTicket === '3');
+    else return this.tickets.filter((x) => x.idPrioridadTicket === '4');
   }
 
   toggleAccordion(index: number) {
     this.activeIndex = this.activeIndex === index ? null : index;
   }
+
+  verificarChatNoLeido(tickets: Ticket[]): boolean {
+    return tickets.some(ticket => {
+      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
+      const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
+  
+      if (participante) {
+        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
+        const comentarios = ticket.comentarios;
+  
+        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
+      }
+      
+      return false;
+    });
+  }
+  
 }
