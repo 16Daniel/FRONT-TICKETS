@@ -63,7 +63,7 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     return str;
   }
 
-  obtenerTicketsFiltrados(prioridad: any): Ticket[] {
+  obtenerTicketsFiltrados(prioridad: string): Ticket[] {
     if (prioridad === 'PÁNICO')
       return this.tickets.filter((x) => x.idPrioridadTicket === '1');
     else if (prioridad === 'ALTA')
@@ -76,4 +76,21 @@ export class PriorityTicketsAccordionComponent implements OnInit {
   toggleAccordion(index: number) {
     this.activeIndex = this.activeIndex === index ? null : index;
   }
+
+  verificarChatNoLeido(tickets: Ticket[]): boolean {
+    return tickets.some(ticket => {
+      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
+      const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
+  
+      if (participante) {
+        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
+        const comentarios = ticket.comentarios;
+  
+        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
+      }
+      
+      return false;
+    });
+  }
+  
 }

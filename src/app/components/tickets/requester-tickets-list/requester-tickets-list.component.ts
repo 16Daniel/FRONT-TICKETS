@@ -260,7 +260,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
       // Si el último comentario leído es menor que la longitud actual de los comentarios
       return comentarios.length > ultimoComentarioLeido;
-      // this.chatsSinLeer = comentarios.length - ultimoComentarioLeido;
     }
 
     return false;
