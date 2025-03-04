@@ -117,9 +117,9 @@ export class TicketsService {
     const q = query(
       collectionRef,
       where('idUsuario', '==', idUsuario),
-      where('idEstatusTicket', '==', '3'),
-      where('fechaFin', '>=', fechaInicio),
-      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
+      // where('idEstatusTicket', '==', '3'),
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
     );
 
     // Suscribirse a cambios en tiempo real
