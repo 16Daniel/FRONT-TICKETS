@@ -1,4 +1,16 @@
-<p-dialog header="Detalles" [(visible)]="showModalEventeDetail" [modal]="true" [maximizable]="true"
-    (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
+<p-dialog [header]="sucursal!.nombre" [(visible)]="showModalEventeDetail" [modal]="true" [maximizable]="true"
+    (onHide)="onHide()" [style]="{ width: '90vw' }" class="custom-dialog">
+<h4 class="text-center">{{ fecha | date:'fullDate':'':'es' | uppercase }}</h4>
+
+<h4 class="text-center">TICKETS</h4>
+
+<app-requester-tickets-list [tickets]="tickets"
+(clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
+[mostrarEstrellas]="false"></app-requester-tickets-list>
+
+<div class="mt-3">
+<h4 class="text-center">MANTENIMIENTO</h4>
+<app-branch-maintenance-table [mantenimientos]="mantenimientos" [usuariosHelp]="usuariosHelp"></app-branch-maintenance-table>
+</div>
 
 </p-dialog>

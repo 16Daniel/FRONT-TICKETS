@@ -2,6 +2,9 @@
     <full-calendar [options]="calendarOptions"></full-calendar>
 </div>
 
-<!-- <app-modal-event-detail  *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"
-(closeEvent)="showModalEventeDetail = false">
-</app-modal-event-detail> -->
+<app-modal-event-detail  *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"
+(closeEvent)="showModalEventeDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="FechaSeleccionada">
+</app-modal-event-detail>
+
+<app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>

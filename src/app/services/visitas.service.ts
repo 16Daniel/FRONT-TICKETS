@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Visita } from '../models/visita';
-import { addDoc, collection, collectionData, Firestore, onSnapshot, query, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, Firestore, getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -53,4 +53,22 @@ export class VisitasService {
         });
       }
     
+      async obtenerVisitas(fecha: Date) {
+        const coleccionRef = collection(this.firestore,'visitas_programadas');
+      
+        // Convertir las fechas a timestamps de Firestore
+        const fechatimestamp = new Date(fecha).getTime();
+      
+        const consulta = query(
+          coleccionRef,
+          where('fecha', '==', fechatimestamp)
+        );
+      
+        const querySnapshot = await getDocs(consulta);
+        const documentos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+        console.log(documentos);
+        return documentos;
+      }
+
 }

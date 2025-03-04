@@ -40,6 +40,7 @@ import { Area } from '../../../models/area';
     BadgeModule,
     RatingStarsComponent,
   ],
+  providers: [MessageService,ConfirmationService],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
