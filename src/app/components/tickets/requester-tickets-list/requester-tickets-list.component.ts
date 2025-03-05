@@ -14,6 +14,7 @@ import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { Ticket } from '../../../models/ticket.model';
 import { UsersService } from '../../../services/users.service';
@@ -26,6 +27,8 @@ import { Notificacion } from '../../../models/notificacion.model';
 import { RatingStarsComponent } from '../../common/rating-stars/rating-stars.component';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
+import { StatusTicketService } from '../../../services/status-ticket.service';
+import { EstatusTicket } from '../../../models/estatus-ticket.model';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -38,11 +41,11 @@ import { Area } from '../../../models/area';
     AccordionModule,
     BadgeModule,
     RatingStarsComponent,
+    TooltipModule,
   ],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
-
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() mostrarAcciones: boolean = true;
@@ -61,6 +64,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   usuariosHelp: Usuario[] = [];
   ticketAccion: Ticket | any;
   chatsSinLeer = 0;
+  estatusTickets: EstatusTicket[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -69,17 +73,25 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private notificationsService: NotificationsService,
     private ticketsService: TicketsService,
-    private areasService: AreasService
+    private areasService: AreasService,
+    private statusTicketsService: StatusTicketService
   ) {}
 
   ngOnInit(): void {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.obtenerAreas();
     this.obtenerUsuariosHelp();
+    this.obtenerCatalogoEstatusTickets();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.observaActualizacionesChatTicket(changes);
+  }
+
+  obtenerCatalogoEstatusTickets() {
+    this.statusTicketsService
+      .get()
+      .subscribe((result) => (this.estatusTickets = result));
   }
 
   observaActualizacionesChatTicket(changes: SimpleChanges) {
@@ -250,12 +262,17 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   verificarChatNoLeido(ticket: Ticket) {
-    
-    const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
-    const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
+    const participantes = ticket.participantesChat.sort(
+      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
+    );
+    const participante = participantes.find(
+      (p) => p.idUsuario === this.userdata.id
+    );
 
     if (participante) {
-      const ultimoComentarioLeido = this.showModalChatTicket ? ticket.comentarios.length : participante.ultimoComentarioLeido;
+      const ultimoComentarioLeido = this.showModalChatTicket
+        ? ticket.comentarios.length
+        : participante.ultimoComentarioLeido;
       const comentarios = ticket.comentarios;
 
       // Si el último comentario leído es menor que la longitud actual de los comentarios
@@ -263,5 +280,13 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     }
 
     return false;
+  }
+
+  obtenerNombreEstatusTicket(idEstatusTicket: string) {
+    let nombre: string = this.estatusTickets.filter(
+      (x) => x.id == idEstatusTicket
+    )[0].nombre;
+
+    return nombre;
   }
 }
