@@ -1,4 +1,4 @@
-import { Component, Input, type OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { TableModule } from 'primeng/table';
@@ -17,6 +17,7 @@ import { Usuario } from '../../../models/usuario.model';
 export class BranchMaintenanceTableComponent {
   @Input() mantenimientos: Mantenimiento10x10[] = [];
   @Input() usuariosHelp: Usuario[] = [];
+  @Output() clickEvent = new EventEmitter<Mantenimiento10x10>();
   mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
 
   constructor(
@@ -84,5 +85,7 @@ export class BranchMaintenanceTableComponent {
     }
   }
 
-  onClick() {}
+  onClick() {
+    this.clickEvent.emit(this.mantenimientoSeleccionado);
+  }
 }

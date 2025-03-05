@@ -23,5 +23,9 @@
         </div>
     </div>
 
-    <app-branch-maintenance-table [mantenimientos]="mantenimientos" [usuariosHelp]="usuariosHelp"></app-branch-maintenance-table>
+    <app-branch-maintenance-table [mantenimientos]="mantenimientos" [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table>
+
+    <app-modal-maintenance-detail *ngIf="mostrarModalDetalleMantenimeinto" [mantenimiento]="mantenimiento"
+  [mostrarModalDetalleMantenimeinto]="mostrarModalDetalleMantenimeinto"
+  (closeEvent)="mostrarModalDetalleMantenimeinto = false"></app-modal-maintenance-detail>
 </p-dialog>
