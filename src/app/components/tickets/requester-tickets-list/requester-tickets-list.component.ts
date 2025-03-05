@@ -75,13 +75,14 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private ticketsService: TicketsService,
     private areasService: AreasService,
     private statusTicketsService: StatusTicketService
-  ) {}
+  ) {
+    this.obtenerCatalogoEstatusTickets();
+  }
 
   ngOnInit(): void {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.obtenerAreas();
     this.obtenerUsuariosHelp();
-    this.obtenerCatalogoEstatusTickets();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -283,6 +284,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerNombreEstatusTicket(idEstatusTicket: string) {
+    if (this.estatusTickets.length == 0) return;
     let nombre: string = this.estatusTickets.filter(
       (x) => x.id == idEstatusTicket
     )[0].nombre;
