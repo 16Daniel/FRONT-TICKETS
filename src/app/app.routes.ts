@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { HomeGuard } from './guards/home.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { BranchGuard } from './guards/branch.guard';
+import { AnalystGuard } from './guards/analyst.guard';
 
 export const routes: Routes = [
   {
@@ -61,6 +63,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/version-control/version-control.component'),
         canActivate: [AdminGuard],
+      },
+      {
+        path: 'version-history',
+        title: 'Historial de versiones',
+        loadComponent: () =>
+          import('./pages/versions-history/versions-history.component'),
       },
     ],
   },
