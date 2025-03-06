@@ -1,15 +1,14 @@
-
 <nav>
   <div class="navbar-c">
     <div class="container-c nav-container">
-        <input class="checkbox" type="checkbox" name="" id="checkmenu" [(ngModel)]="showmenu" />
-        <div class="hamburger-lines">
-          <span class="line line1"></span>
-          <span class="line line2"></span>
-          <span class="line line3"></span>
-        </div> 
-        <div class="logo">
-          <!-- <div class="position-relative p-0" (onClick)="opn.toggle($event)">
+      <input class="checkbox" type="checkbox" name="" id="checkmenu" [(ngModel)]="showmenu" />
+      <div class="hamburger-lines">
+        <span class="line line1"></span>
+        <span class="line line2"></span>
+        <span class="line line3"></span>
+      </div>
+      <div class="logo">
+        <!-- <div class="position-relative p-0" (onClick)="opn.toggle($event)">
             <i class='bx bxs-bell bx-sm' ></i>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               {{ notificaciones.length == 0 ? '0': notificaciones.length}}
@@ -17,63 +16,65 @@
             </span>
           </div> -->
 
-          <!-- <p-button 
-    label="Notificaciones" 
-    size="small"
-    icon="pi pi-bell" 
-    badge="{{ notificaciones.length == 0 ? '0': getNotificacionesNuevas().length}}" 
-    badgeClass="p-badge-danger" 
-    outlined="true"
-    severity="secondary"
-    (onClick)="opn.toggle($event)" /> -->
+        <p-button label="Notificaciones" size="small" icon="pi pi-bell"
+          badge="{{ notificaciones.length == 0 ? '0': getNotificacionesNuevas().length}}" badgeClass="p-badge-danger"
+          outlined="true" severity="secondary" />
+        <!-- (onClick)="opn.toggle($event)" -->
 
-          <p-overlayPanel #opn>
-              <div style="width: 100%; max-width: 30rem; height: calc(100vh - 150px); overflow-y: auto;" class="p-3">
-                 <p class="">NUEVAS</p>
-                 <div class="d-flex justify-content-center flex-wrap gap-3 W-100">
+        <!-- <p-overlayPanel #opn>
+          <div style="width: 100%; max-width: 30rem; height: calc(100vh - 150px); overflow-y: auto;" class="p-3">
+            <p class="">NUEVAS</p>
+            <div class="d-flex justify-content-center flex-wrap gap-3 W-100">
 
-                  <div class="rounded-3 shadow p-3 text-light" [ngClass]="getBgNt(item.titulo)" *ngFor="let item of getNotificacionesNuevas()">
-                    <h5>{{item.titulo}}</h5>
-                    <p>{{item.mensaje}}</p>
-                    <div class="d-flex justify-content-end">
-                      <div>{{getdate(item.fecha) | date}} </div>
-                    </div>
-                    <button class="btn btn-light" (click)="showticket(item)">VER TICKET</button>
-                  </div>
-                  
-                 </div>
-
-                 <p>&nbsp;</p>
-                 <p class="">ANTERIORES</p>
-
-                 <div class="d-flex justify-content-center flex-wrap gap-3 W-100">
-                  <div class="rounded-3 shadow p-3 text-light" [ngClass]="getBgNt(item.titulo)" *ngFor="let item of getNotificacionesAbiertas()">
-                    <h5>{{item.titulo}}</h5>
-                    <p>{{item.mensaje}}</p>
-                    <div class="d-flex justify-content-end">
-                      <div>{{getdate(item.fecha) | date}} </div>
-                    </div>
-                    <button class="btn btn-light" (click)="showticket(item)">VER TICKET</button>
-                    <button class="ms-3 btn btn-dark p-2" (click)="borrarNt(item.id)"><i class='bx bx-trash bx-sm'></i></button>
-                  </div>
-                 </div>
-                
-
+              <div class="rounded-3 shadow p-3 text-light" [ngClass]="getBgNt(item.titulo)"
+                *ngFor="let item of getNotificacionesNuevas()">
+                <h5>{{item.titulo}}</h5>
+                <p>{{item.mensaje}}</p>
+                <div class="d-flex justify-content-end">
+                  <div>{{getdate(item.fecha) | date}} </div>
+                </div>
+                <button class="btn btn-light" (click)="showticket(item)">VER TICKET</button>
               </div>
-          </p-overlayPanel>
-      
 
-          
-        </div>
+            </div>
+
+            <p>&nbsp;</p>
+            <p class="">ANTERIORES</p>
+
+            <div class="d-flex justify-content-center flex-wrap gap-3 W-100">
+              <div class="rounded-3 shadow p-3 text-light" [ngClass]="getBgNt(item.titulo)"
+                *ngFor="let item of getNotificacionesAbiertas()">
+                <h5>{{item.titulo}}</h5>
+                <p>{{item.mensaje}}</p>
+                <div class="d-flex justify-content-end">
+                  <div>{{getdate(item.fecha) | date}} </div>
+                </div>
+                <button class="btn btn-light" (click)="showticket(item)">VER TICKET</button>
+                <button class="ms-3 btn btn-dark p-2" (click)="borrarNt(item.id)"><i
+                    class='bx bx-trash bx-sm'></i></button>
+              </div>
+            </div>
+
+
+          </div>
+        </p-overlayPanel> -->
+
+
+
+      </div>
       <div class="menu-items" style="overflow: auto;">
         <i class='bx bx-support bx-lg'></i>
         <div class="fw-bold fs-3 mb-4" style="color: rgb(0, 0, 0);">REBEL TICKETS</div>
-        <li (click)="closemenu()"><a [routerLink]="'/main/home'"><i class='bx bxs-dashboard' ></i>Inicio</a></li>
-        <li (click)="closemenu()"><a [routerLink]="'/main/users'"><i class='bx bx-user' ></i>Usuarios</a></li>
-        <li (click)="closemenu()"><a [routerLink]="'/main/roles'"><i class='bx bx-objects-horizontal-left' ></i>Roles</a></li>
-        <li (click)="closemenu()" *ngIf="userdata.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i class='bx bx-calendar-plus'></i>Registrar visita</a></li>
-        <li (click)="closemenu()" *ngIf="userdata.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
-        
+        <li (click)="closemenu()"><a [routerLink]="'/main/home'"><i class='bx bxs-dashboard'></i>Inicio</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/users'"><i class='bx bx-user'></i>Usuarios</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/roles'"><i class='bx bx-objects-horizontal-left'></i>Roles</a>
+        </li>
+        <li (click)="closemenu()" *ngIf="userdata.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
+              class='bx bx-calendar-plus'></i>Registrar visita</a></li>
+        <li (click)="closemenu()" *ngIf="userdata.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i
+              class='bx bx-calendar'></i>Calendario de visitas</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/version-control'"><i class='bx bxs-dashboard'></i>Control de versiones</a></li>
+
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{userdata.nombre +' ' + userdata.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">
@@ -83,4 +84,3 @@
     </div>
   </div>
 </nav>
-
