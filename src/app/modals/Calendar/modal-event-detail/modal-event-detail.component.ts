@@ -10,12 +10,18 @@ import { RequesterTicketsListComponent } from "../../../components/tickets/reque
 import { BranchMaintenanceTableComponent } from "../../../components/maintenance/branch-maintenance-table/branch-maintenance-table.component";
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
+import { EditorModule } from 'primeng/editor';
+
 @Component({
   selector: 'app-modal-event-detail',
   standalone: true,
   imports: [DialogModule,
     CommonModule,
-    FormsModule, RequesterTicketsListComponent, BranchMaintenanceTableComponent],
+    FormsModule,
+    RequesterTicketsListComponent,
+    BranchMaintenanceTableComponent,
+    EditorModule
+  ],
   templateUrl: './modal-event-detail.component.html',
 })
 export default class ModalEventDetailComponent implements OnInit {
@@ -23,12 +29,12 @@ export default class ModalEventDetailComponent implements OnInit {
 @Output() closeEvent = new EventEmitter<boolean>();
 @Input() sucursal:Sucursal | undefined; 
 @Input() fecha:Date = new Date(); 
-tickets:Ticket[] = []; 
+@Input() tickets:Ticket[] = []; 
 @Input() mantenimientos:Mantenimiento10x10[] = []; 
 @Input() usuariosHelp:Usuario[] = []; 
 @Output() clickEvent = new EventEmitter<Ticket>();
 @Input() Indicacion:string = ''; 
-
+@Input() comentario:string = ''; 
 ngOnInit(): void { }
 constructor()
 {

@@ -75,9 +75,11 @@
   </ng-template>
 </p-table>
 
-
 <app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
   [ticket]="ticketAccion" (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
 
 <app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
   (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>
+
+  
+<p-confirmDialog/>

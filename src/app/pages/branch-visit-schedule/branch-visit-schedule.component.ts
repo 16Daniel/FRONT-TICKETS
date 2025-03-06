@@ -112,7 +112,7 @@ public itemtk: Ticket | undefined;
             start:this.getDate(item.fecha),
             end:this.getDate(item.fecha),
             allDay:true,
-            color: '#e620b9', // Color personalizado (púrpura)
+            color: '#6100ff', // Color personalizado (púrpura)
             textColor: '#ffffff' // Color del texto
            });
           }

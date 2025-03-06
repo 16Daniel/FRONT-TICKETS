@@ -53,21 +53,40 @@ export class VisitasService {
         });
       }
     
-      async obtenerVisitas(fecha: Date) {
+      async obtenerVisitaUsuario(fecha:Date ,idUsuario:string) {
         const coleccionRef = collection(this.firestore,'visitas_programadas');
       
         // Convertir las fechas a timestamps de Firestore
-        const fechatimestamp = new Date(fecha).getTime();
-      
+        fecha.setHours(0,0,0,0);
         const consulta = query(
           coleccionRef,
-          where('fecha', '==', fechatimestamp)
+          where('fecha', '==', fecha),
+          where('idUsuario','==',idUsuario)
         );
       
         const querySnapshot = await getDocs(consulta);
-        const documentos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const documentos:Visita[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Visita));
+        
+        return documentos;
+      }
+
+      async obtenerVisitaFechas(fechaInicial:Date , fechaFinal:Date) {
+        const coleccionRef = collection(this.firestore,'visitas_programadas');
       
-        console.log(documentos);
+        // Convertir las fechas a timestamps de Firestore
+        fechaInicial.setHours(0,0,0,0);
+        fechaFinal.setHours(0,0,0,0); 
+
+        const consulta = query(
+          coleccionRef,
+          where('fecha', '>=', fechaInicial),
+          where('fecha', '<=', fechaFinal
+          )
+        );
+      
+        const querySnapshot = await getDocs(consulta);
+        const documentos:Visita[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Visita));
+        
         return documentos;
       }
 

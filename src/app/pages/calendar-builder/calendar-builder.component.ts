@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, type OnInit } from '@angular/core';
 import { TicketsService } from '../../services/tickets.service';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../services/users.service';
@@ -15,7 +15,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { Ticket } from '../../models/ticket.model';
 import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
-import { Subscription } from 'rxjs';
+import { Subscription, timeout } from 'rxjs';
 import { EditorModule } from 'primeng/editor';
 import { ComentarioVisita, Visita } from '../../models/visita';
 import { Timestamp } from '@angular/fire/firestore';
@@ -25,12 +25,8 @@ import { GuardiasService } from '../../services/guardias.service';
 import { Guardia } from '../../models/guardia';
 import { BranchStatusDetailsComponent } from "../../modals/Calendar/branch-status-details/branch-status-details.component";
 import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, EventClickArg } from '@fullcalendar/core'; // useful for typechecking
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import esLocale from '@fullcalendar/core/locales/es'; // Importar idioma español
+import { CalendarComponent } from "../../components/common/calendar/calendar.component";
+
 
 @Component({
   selector: 'app-calendar-builder',
@@ -45,7 +41,7 @@ import esLocale from '@fullcalendar/core/locales/es'; // Importar idioma españo
     EditorModule,
     BranchStatusDetailsComponent,
     ModalTicketDetailComponent,
-    FullCalendarModule
+    CalendarComponent
 ],
   providers: [MessageService],  
   templateUrl: './calendar-builder.component.html',
@@ -74,17 +70,6 @@ public registroDeGuardia:Guardia|undefined;
 
 public showModalTicketDetail:boolean = false; 
 
-calendarOptions: CalendarOptions = {
-  initialView: 'dayGridWeek',
-  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-  locale: esLocale,
-   // Botones de navegación y cambio de vista
-   headerToolbar: {
-    left: '', // Botones de navegación
-    center: '', // Título del calendario
-    right: '', // Botones para cambiar vista
-  },
-};
 
  constructor(
     private ticketsService: TicketsService,
@@ -104,11 +89,14 @@ calendarOptions: CalendarOptions = {
     this.obtenerSucursales(); 
    this.obtenerUsuariosHelp();
    //this.fecha.setDate(new Date().getDate() + 1); // Suma 1 día
+
    }
 
    showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
+
+
 async obtenerTodosLosTickets(): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
@@ -248,13 +236,18 @@ async obtenerTodosLosTickets(): Promise<void> {
     return porcentaje;
   }
 
-  consultarUsuario()
+  async consultarUsuario()
   {
-
+    this.sucursalesSeleccionadas = []; 
+    this.sucursalesOrdenadas = [];
     if(!this.vercalendario)
       {
-              this.sucursalesSeleccionadas = []; 
-          this.sucursalesOrdenadas = [];
+        let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha,this.usuarioseleccionado!.uid);
+        let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.uid);
+
+        this.registroDeVisita = visitas.length>0 ? visitas[0]: undefined; 
+        this.registroDeGuardia = guardias.length>0 ? guardias[0] : undefined; 
+      
           const sucursalesDisponibles = this.sucursales.filter(sucursal =>
             !this.usuarioseleccionado!.sucursales.some(sucursalUsuario => sucursalUsuario.id === sucursal.id)
           );
@@ -280,12 +273,37 @@ async obtenerTodosLosTickets(): Promise<void> {
           this.sucursalesOrdenadas.push(...sucursalesDelUsuarioOrdenadas); 
           this.sucursalesOrdenadas.push(...sucursalesDisponilesOrdenadas); 
 
-          this.sucursalesSeleccionadas.push(this.sucursalesOrdenadas[0]);
-          this.sucursalesOrdenadas.shift(); 
-          this.sucursalesOrdenadas.unshift({id:'-999',nombre:'GUARDIA'}); 
-          this.actualizarListasComentarios();
-          this.cdr.detectChanges();
+          if(this.registroDeVisita != undefined)
+            {
+             for(let suc of this.registroDeVisita.sucursales)
+              {
+                const temp = sucursalesDelUsuarioOrdenadas.filter(x =>x.id == suc.id);
+                let index = this.sucursalesOrdenadas.indexOf(temp[0]);
+                if (index !== -1) {
+                    this.sucursalesOrdenadas.splice(index, 1); // Elimina el elemento en la posición encontrada
+                }
+
+                this.sucursalesSeleccionadas.push(suc);
+              }
+            } else
+            {
+              this.sucursalesSeleccionadas.push(this.sucursalesOrdenadas[0]);
+              this.sucursalesOrdenadas.shift();
+            }
+
+            if(this.registroDeGuardia != undefined)
+              {
+                let guardia = {id:'-999',nombre:'GUARDIA'}
+                this.sucursalesSeleccionadas.unshift(guardia);
+              } else
+              {
+                let guardia = {id:'-999',nombre:'GUARDIA'}
+                this.sucursalesOrdenadas.unshift(guardia);
+              }
       }
+
+      this.actualizarListasComentarios();
+      this.cdr.detectChanges();
   }
 
   async guardarVisita()
@@ -296,6 +314,7 @@ async obtenerTodosLosTickets(): Promise<void> {
         this.registrarGuardia(); 
       }
     
+      this.fecha.setHours(0,0,0,0); 
     let visita:Visita =
     {
       idUsuario: this.usuarioseleccionado!.uid, 
@@ -362,6 +381,7 @@ async obtenerTodosLosTickets(): Promise<void> {
 
  async registrarGuardia()
   {
+    this.fecha.setHours(0,0,0,0); 
       const guardia:Guardia = 
       {
         idUsuario: this.usuarioseleccionado!.uid,
@@ -389,10 +409,16 @@ async obtenerTodosLosTickets(): Promise<void> {
         {
           if(item.id != '-999')
             {
+              let comentario = '';
+              if(this.registroDeVisita != undefined)
+                {
+                  let temp = this.registroDeVisita.comentarios.filter(x=>x.idSucursal == item.id);
+                  if(temp.length>0){ comentario = temp[0].comentario;}
+                }
               this.indicacionesVisitas.push(
                 {
                   idSucursal:item.id,
-                  comentario:''
+                  comentario:comentario
                 }
               );
             }
@@ -445,4 +471,16 @@ async obtenerTodosLosTickets(): Promise<void> {
   {
     return this.arr_ultimosmantenimientos.filter(x => x.idSucursal == idSucursal); 
   }
+
+  // validarcalendario()
+  // {
+  //   if(this.vercalendario && this.calendarComponent == undefined)
+  //     {
+  //       setTimeout(() => {
+  //         let calendarApi = this.calendarComponent!.getApi();
+  //         calendarApi.next();    
+  //       }, 1000);
+       
+  //     }
+  // }
 }

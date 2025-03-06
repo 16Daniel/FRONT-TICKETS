@@ -38,7 +38,7 @@ export class TicketsService {
 
   get(): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(ticketsCollection, where('estatus', 'in', [1, 2, 4, 5, 6]));
+    const q = query(ticketsCollection,  where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6']));
     return collectionData(q, { idField: 'id' });
   }
 
