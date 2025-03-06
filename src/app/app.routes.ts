@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeGuard } from './guards/home.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -53,6 +54,13 @@ export const routes: Routes = [
           import(
             './pages/branch-visit-schedule/branch-visit-schedule.component'
           ),
+      },
+      {
+        path: 'version-control',
+        title: 'Control de versiones',
+        loadComponent: () =>
+          import('./pages/version-control/version-control.component'),
+        canActivate: [AdminGuard],
       },
     ],
   },

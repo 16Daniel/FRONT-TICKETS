@@ -1,0 +1,17 @@
+<p-dialog header="DETALLES MANTENIMIENTO" [modal]="true" [(visible)]="mostrarModalDetalleMantenimeinto" [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+    <div class="accordion" id="accordionExample" *ngIf="mantenimiento != undefined">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    <i class="bx bx-info-circle bx-sm"></i>&nbsp;DESCRIPCIÓN
+                </button>
+            </h2>
+            <div class="accordion-body">
+                <label *ngIf="mantenimiento.observaciones" [innerHTML]="mantenimiento.observaciones"></label>
+                <label *ngIf="!mantenimiento.observaciones">No hay descripción</label>
+            </div>
+        </div>
+    </div>
+</p-dialog>

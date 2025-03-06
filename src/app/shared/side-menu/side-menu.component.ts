@@ -18,6 +18,7 @@ import { environment } from '../../../environments/enviroments';
 import { Notificacion } from '../../models/notificacion.model';
 import { NotificationsService } from '../../services/notifications.service';
 import { DocumentsService } from '../../services/documents.service';
+import { VersionButtonComponent } from '../version-button/version-button.component';
 @Component({
   selector: 'app-side-menu',
   standalone: true,
@@ -32,6 +33,7 @@ import { DocumentsService } from '../../services/documents.service';
     MessagesModule,
     DialogModule,
     MenubarModule,
+    VersionButtonComponent
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
