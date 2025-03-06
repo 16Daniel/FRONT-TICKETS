@@ -1,1 +1,38 @@
-<p>version-control works!</p>
+<div class="pt-5">
+    <div class="pt-3 container">
+
+        <div class="m-2 mt-3 bg-white p-3">
+            <form #form="ngForm" (ngSubmit)="enviar(form)">
+                <div class="col-12">
+                    <input class="form-control" style="height: 48px;" type="text"
+                        placeholder="NOMBRE DE VERSIÓN EJ. (1.0.0)" [(ngModel)]="controlVersion.version" name="version"
+                        [ngClass]="{'p-invalid': versionCtrl.invalid && versionCtrl.touched}" #versionCtrl="ngModel"
+                        name="version" required>
+                    <small *ngIf="versionCtrl.invalid && versionCtrl.touched" class="p-error">
+                        Campo requerido.
+                    </small>
+                </div>
+                <br>
+
+                <div class="col-12">
+                    <p-editor [(ngModel)]="controlVersion.descripcion" name="descripcion" [style]="{ height: '320px' }"
+                        [ngClass]="{'p-invalid': descripcionCtrl.invalid && descripcionCtrl.touched}" class="p-invalid"
+                        #descripcionCtrl="ngModel" name="controlVersion" required />
+                    <small *ngIf="descripcionCtrl.invalid && descripcionCtrl.touched" class="p-error">
+                        Campo requerido.
+                    </small>
+                </div>
+
+                <div class="col-12">
+                    <div class="d-flex justify-content-end mt-3">
+                        <button class="btn bg-p-b p-3"><i class='bx bx-send'></i>ENVIAR</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+    [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+    [showTransformOptions]="'translateX(100%)'"></p-toast>
