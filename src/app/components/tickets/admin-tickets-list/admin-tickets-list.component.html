@@ -21,8 +21,7 @@
         <tr [pSelectableRow]="tk">
             <td>
                 <p-dropdown [options]="prioridadesTicket" [(ngModel)]="tk.idPrioridadTicket" optionLabel="id"
-                    [showClear]="false" optionValue="id" (onChange)="actualizaTicket(tk)"
-                    [style]="{ border: 'none' }">
+                    [showClear]="false" optionValue="id" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <div class="flex align-items-center gap-2">
                             <div>
@@ -100,10 +99,16 @@
             </ng-template>
             <ng-template let-st pTemplate="item">
                 <div class="flex align-items-center gap-2">
-                    <i class="bx {{ st.icon }} {{ st.animation }} bx-sm" [style]="{ color: st.color }"></i>
-                </div>
-            </ng-template>
-        </p-dropdown>
+                    <div class="d-flex justify-content-start align-items-center gap-3">
+    <td>
+
+        <i class="bx {{ st.icon }} {{ st.animation }} bx-sm rounded-3" [style]="{ color: st.color }"></i>
+    </td>
+    <div>{{ st.nombre }}</div>
+    </div>
+    </div>
+    </ng-template>
+    </p-dropdown>
     </td>
     <td class="text-center">{{ tk.solicitante | uppercase }}</td>
     <td class="text-center">

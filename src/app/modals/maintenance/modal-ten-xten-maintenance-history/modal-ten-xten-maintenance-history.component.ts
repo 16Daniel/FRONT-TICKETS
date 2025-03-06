@@ -3,14 +3,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { MessageService } from 'primeng/api';
+
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
-import { TableModule } from 'primeng/table';
-import { Timestamp } from '@angular/fire/firestore';
-import { MessageService } from 'primeng/api';
 import { UsersService } from '../../../services/users.service';
-import { BranchMaintenanceTableComponent } from "../../../components/maintenance/branch-maintenance-table/branch-maintenance-table.component";
+import { BranchMaintenanceTableComponent } from '../../../components/maintenance/branch-maintenance-table/branch-maintenance-table.component';
+import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',
@@ -21,8 +22,9 @@ import { BranchMaintenanceTableComponent } from "../../../components/maintenance
     CalendarModule,
     FormsModule,
     TableModule,
-    BranchMaintenanceTableComponent
-],
+    BranchMaintenanceTableComponent,
+    ModalMaintenanceDetailComponent,
+  ],
   templateUrl: './modal-ten-xten-maintenance-history.component.html',
   styleUrl: './modal-ten-xten-maintenance-history.component.scss',
 })
@@ -36,6 +38,8 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   usuario: Usuario;
   idSucursal: string;
   usuariosHelp: Usuario[] = [];
+  mostrarModalDetalleMantenimeinto: boolean = false;
+  mantenimiento: Mantenimiento10x10 | any;
 
   constructor(
     private maintenance10x10Service: Maintenance10x10Service,
@@ -46,6 +50,11 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     this.idSucursal = this.usuario.sucursales[0].id;
     this.obtenerMantenimientosPorSucursal(this.idSucursal);
     this.obtenerUsuariosHelp();
+  }
+
+  abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento10x10 | any) {
+    this.mantenimiento = mantenimiento;
+    this.mostrarModalDetalleMantenimeinto = true;
   }
 
   onHide() {
@@ -77,11 +86,9 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     );
   }
 
-
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
-
 
   obtenerUsuariosHelp() {
     this.usersService.getusers().subscribe({
@@ -95,6 +102,4 @@ export class ModalTenXtenMaintenanceHistoryComponent {
       },
     });
   }
-
-
 }
