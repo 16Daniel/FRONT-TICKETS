@@ -117,14 +117,6 @@
 
 </div>
 
-<app-branch-status-details  *ngIf="showModalBranchDetail" [showModalBranchDetail]="showModalBranchDetail"
-(closeEvent)="showModalBranchDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="fecha" [tickets]="obtenerTicketsPorSucursal(sucursalSeleccionada!.id)"
-(clickEvent)="abrirModalDetalleTicket($event)" [mantenimientos]="obtenerMantenimientoSucursal(sucursalSeleccionada!.id)"
-[usuariosHelp]="usuariosHelp"
-> 
-</app-branch-status-details>
-
-
 <app-modal-colors *ngIf="showModalColors"  (closeEvent)="showModalColors = false" [showModalColors]="showModalColors" [usuariosHelp]="usuariosHelp"></app-modal-colors>
 
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"

@@ -23,7 +23,6 @@ import { VisitasService } from '../../services/visitas.service';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { GuardiasService } from '../../services/guardias.service';
 import { Guardia } from '../../models/guardia';
-import { BranchStatusDetailsComponent } from "../../modals/Calendar/branch-status-details/branch-status-details.component";
 import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { CalendarComponent } from "../../components/common/calendar/calendar.component";
 import { ModalColorsComponent } from "../../modals/Calendar/modal-colors/modal-colors.component";
@@ -41,7 +40,6 @@ import { DocumentsService } from '../../services/documents.service';
     ToastModule,
     CalendarModule,
     EditorModule,
-    BranchStatusDetailsComponent,
     ModalTicketDetailComponent,
     CalendarComponent,
     ModalColorsComponent
