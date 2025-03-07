@@ -29,7 +29,7 @@ import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @Component({
   selector: 'app-requester-tickets-list',
   standalone: true,
@@ -42,7 +42,9 @@ import { EstatusTicket } from '../../../models/estatus-ticket.model';
     BadgeModule,
     RatingStarsComponent,
     TooltipModule,
+    ConfirmDialogModule
   ],
+  providers: [MessageService,ConfirmationService],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
@@ -223,6 +225,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   onPanicoClick(idTicket: string) {
+    debugger
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',

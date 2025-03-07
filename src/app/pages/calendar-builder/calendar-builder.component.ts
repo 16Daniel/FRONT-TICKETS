@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, type OnInit } from '@angular/core';
 import { TicketsService } from '../../services/tickets.service';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../services/users.service';
@@ -15,11 +15,20 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { Ticket } from '../../models/ticket.model';
 import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
-import { Subscription } from 'rxjs';
+import { Subscription, timeout } from 'rxjs';
 import { EditorModule } from 'primeng/editor';
-import { Visita } from '../../models/visita';
+import { ComentarioVisita, Visita } from '../../models/visita';
 import { Timestamp } from '@angular/fire/firestore';
 import { VisitasService } from '../../services/visitas.service';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { GuardiasService } from '../../services/guardias.service';
+import { Guardia } from '../../models/guardia';
+import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
+import { CalendarComponent } from "../../components/common/calendar/calendar.component";
+import { ModalColorsComponent } from "../../modals/Calendar/modal-colors/modal-colors.component";
+import { DocumentsService } from '../../services/documents.service';
+
+
 @Component({
   selector: 'app-calendar-builder',
   standalone: true,
@@ -30,13 +39,17 @@ import { VisitasService } from '../../services/visitas.service';
     DropdownModule,
     ToastModule,
     CalendarModule,
-    EditorModule
-  ],
+    EditorModule,
+    ModalTicketDetailComponent,
+    CalendarComponent,
+    ModalColorsComponent
+],
   providers: [MessageService],  
   templateUrl: './calendar-builder.component.html',
 })
 export default class CalendarBuilderComponent implements OnInit {
 public sucursales:Sucursal[] = [];
+public sucursalesOrdenadas:Sucursal[] = [];
 public sucursalesSeleccionadas:Sucursal[] = [];  
 public usuariosHelp:Usuario[] = [];
 public usuarioseleccionado:Usuario|undefined; 
@@ -49,31 +62,47 @@ public itemtk: Ticket | undefined;
 subscriptiontk: Subscription | undefined;
 public loading:boolean = false; 
 public formComentarios:string=""; 
+public vercalendario:boolean = false;
+public showModalBranchDetail:boolean = false; 
+public sucursalSeleccionada:Sucursal|undefined; 
+public indicacionesVisitas:ComentarioVisita[] = []; 
+public registroDeVisita:Visita|undefined = undefined;
+public registroDeGuardia:Guardia|undefined = undefined; 
+
+public showModalTicketDetail:boolean = false; 
+public showModalColors:boolean = false; 
+
+
  constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private visitasService:VisitasService
+    private visitasService:VisitasService,
+    private mantenimientoService: Maintenance10x10Service,
+    private guardiaService:GuardiasService,
+    private documentService:DocumentsService
   ) 
   {
     registerLocaleData(localeEs);
   }
   ngOnInit(): void 
   {
-  // this.obtenerSucursales(); 
-   this.obtenerUsuariosHelp(); 
-   this.fecha.setDate(new Date().getDate() + 1); // Suma 1 día
+    this.obtenerSucursales(); 
+   this.obtenerUsuariosHelp();
+   //this.fecha.setDate(new Date().getDate() + 1); // Suma 1 día
+
    }
 
    showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
-async getTicketsResponsable(userid: string): Promise<void> {
+
+async obtenerTodosLosTickets(): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
-      .getTicketsResponsable(userid)
+      .get()
       .subscribe({
         next: (data) => {
           this.tickets = []; 
@@ -117,18 +146,8 @@ async getTicketsResponsable(userid: string): Promise<void> {
               this.itemtk = temp[0];
             }
           }
-
-          this.sucursales = [...this.usuarioseleccionado!.sucursales];
-          this.sucursalesSeleccionadas = []; 
-          let sucursalesordenadasticket = this.ordenarSucursalesUser(this.sucursales); 
-          if(this.obtenerTicketsPorSucursal(sucursalesordenadasticket[0]).length == 0)
-            {
-              this.ordenarxmantenimiento = true; 
-            } 
-          
-          this.sucursalesSeleccionadas.push(this.ordenarSucursalesUser(this.sucursales)[0]);
-          this.sucursales.shift(); 
-          this.loading = false;
+        
+          this.obtnerUltimosMantenimientos();  
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -156,6 +175,7 @@ async getTicketsResponsable(userid: string): Promise<void> {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+        this.obtenerTodosLosTickets();  
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -218,39 +238,286 @@ async getTicketsResponsable(userid: string): Promise<void> {
     return porcentaje;
   }
 
-  Consultarusuario()
+  async consultarUsuario()
   {
-    this.tickets = []; 
-    this.sucursales = []; 
     this.sucursalesSeleccionadas = []; 
-    if(this.usuarioseleccionado != undefined)
+    this.sucursalesOrdenadas = [];
+    this.indicacionesVisitas = []; 
+    if(!this.vercalendario && this.usuarioseleccionado != undefined)
       {
-          this.getTicketsResponsable(this.usuarioseleccionado!.uid); 
+        this.loading = true;
+        let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha,this.usuarioseleccionado!.uid);
+        let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.uid);
+        this.registroDeVisita = visitas.length>0 ? visitas[0]: undefined; 
+        this.registroDeGuardia = guardias.length>0 ? guardias[0] : undefined; 
+          const sucursalesDisponibles = this.sucursales.filter(sucursal =>
+            !this.usuarioseleccionado!.sucursales.some(sucursalUsuario => sucursalUsuario.id === sucursal.id)
+          );
+
+          let sucursalesDelUsuarioOrdenadas = this.ordenarSucursalesUser(this.usuarioseleccionado!.sucursales);
+
+          if(this.obtenerTicketsPorSucursal(sucursalesDelUsuarioOrdenadas[0].id).length==0)
+            {
+              this.ordenarxmantenimiento = true; 
+              sucursalesDelUsuarioOrdenadas = this.ordenarSucursalesUser(this.usuarioseleccionado!.sucursales);
+              this.ordenarxmantenimiento = false; 
+            }
+            
+          let sucursalesDisponilesOrdenadas = this.ordenarSucursalesUser(sucursalesDisponibles);
+
+          if(this.obtenerTicketsPorSucursal(sucursalesDisponilesOrdenadas[0].id).length==0)
+            {
+              this.ordenarxmantenimiento = true; 
+              sucursalesDisponilesOrdenadas = this.ordenarSucursalesUser(sucursalesDisponibles);
+              this.ordenarxmantenimiento = false; 
+            }
+
+          this.sucursalesOrdenadas.push(...sucursalesDelUsuarioOrdenadas); 
+          this.sucursalesOrdenadas.push(...sucursalesDisponilesOrdenadas); 
+
+          if(this.registroDeVisita != undefined)
+            {
+             for(let suc of this.registroDeVisita.sucursales)
+              {
+                const temp = sucursalesDelUsuarioOrdenadas.filter(x =>x.id == suc.id);
+                let index = this.sucursalesOrdenadas.indexOf(temp[0]);
+                if (index !== -1) {
+                    this.sucursalesOrdenadas.splice(index, 1); // Elimina el elemento en la posición encontrada
+                }
+
+                this.sucursalesSeleccionadas.push(suc);
+              }
+            } else
+            {
+              this.sucursalesSeleccionadas.push(this.sucursalesOrdenadas[0]);
+              this.sucursalesOrdenadas.shift();
+            }
+
+            if(this.registroDeGuardia != undefined)
+              {
+                let guardia = {id:'-999',nombre:'GUARDIA'}
+                this.sucursalesSeleccionadas.unshift(guardia);
+              } else
+              {
+                let guardia = {id:'-999',nombre:'GUARDIA'}
+                this.sucursalesOrdenadas.unshift(guardia);
+              }
+
+              this.actualizarListasComentarios();
       }
+      this.loading = false;  
+        this.cdr.detectChanges(); 
   }
 
   async guardarVisita()
   {
+    this.loading = true; 
+    if(this.sucursalesSeleccionadas.some(x=> x.id == '-999'))
+      {
+        this.registrarGuardia(); 
+      }
+    
+      this.fecha.setHours(0,0,0,0); 
     let visita:Visita =
     {
       idUsuario: this.usuarioseleccionado!.uid, 
       fecha: Timestamp.fromDate(this.fecha),
-      sucursales: this.sucursalesSeleccionadas,
-      comentarios: this.formComentarios
+      sucursales: this.sucursalesSeleccionadas.filter(x => x.id != '-999'),
+      comentarios: this.indicacionesVisitas
     }
     
     try {
-      await this.visitasService.create(visita); 
-      this.showMessage('success', 'Success', 'Enviado correctamente');
+      await this.visitasService.create(visita);
+      for(let sucursal of this.sucursalesSeleccionadas)
+        {
+          if(sucursal.id != '-999')
+            {
+              this.nuevoMantenimiento(sucursal.id,this.usuarioseleccionado!.uid,this.fecha);
+            }
+        } 
+      this.showMessage('success', 'Success', 'Guardado correctamente');
       this.formComentarios = ''; 
-      this.tickets = []; 
-      this.sucursales = []; 
+      this.sucursalesOrdenadas = []; 
       this.sucursalesSeleccionadas = []; 
       this.usuarioseleccionado = undefined; 
+      this.registroDeGuardia = undefined; 
+      this.registroDeVisita = undefined
+      this.indicacionesVisitas = []; 
     } catch (error) {
       this.showMessage('error','Error','Error al guardar');
       console.log(error);
     }
-     
+     this.loading = false; 
+     this.cdr.detectChanges(); 
   }
+
+  async nuevoMantenimiento(idSucursal:string,idUsuario:string,fecha:Date) {
+    fecha.setHours(0,0,0,0);
+    const mantenimiento: Mantenimiento10x10 = {
+      idSucursal: idSucursal,
+      idUsuarioSoporte: idUsuario,
+      fecha: fecha,
+      estatus: true,
+      mantenimientoCaja: false,
+      mantenimientoCCTV: false,
+      mantenimientoConcentradorApps: false,
+      mantenimientoContenidosSistemaCable: false,
+      mantenimientoImpresoras: false,
+      mantenimientoInternet: false,
+      mantenimientoNoBrakes: false,
+      mantenimientoPuntosVentaTabletas: false,
+      mantenimientoRack: false,
+      mantenimientoTiemposCocina: false,
+      observaciones: '',
+    };
+
+    await this.mantenimientoService.create(mantenimiento);
+  }
+
+  asignadaAlUsuario(idSucursal:string):boolean
+  {
+    if(this.usuarioseleccionado!.sucursales.some(sucursalUsuario => sucursalUsuario.id === idSucursal))
+      {
+        return true;
+      }else
+      {
+        return false; 
+      }
+  }
+
+ async registrarGuardia()
+  {
+    this.fecha.setHours(0,0,0,0); 
+      const guardia:Guardia = 
+      {
+        idUsuario: this.usuarioseleccionado!.uid,
+        fecha: Timestamp.fromDate(this.fecha)
+      }
+
+      try {
+        await this.guardiaService.create(guardia); 
+        this.showMessage('success','Success','Guardado correctamente')
+      } catch (error) {
+        
+      }
+  }
+
+  detalles(sucursal:Sucursal)
+  {
+    this.showModalBranchDetail = true; 
+    this.sucursalSeleccionada = sucursal; 
+  }
+
+  actualizarListasComentarios()
+  {
+      this.indicacionesVisitas = []; 
+      for(let item of this.sucursalesSeleccionadas)
+        {
+          if(item.id != '-999')
+            {
+              let comentario = '';
+              if(this.registroDeVisita != undefined)
+                {
+                  let temp = this.registroDeVisita.comentarios.filter(x=>x.idSucursal == item.id);
+                  if(temp.length>0){ comentario = temp[0].comentario;}
+                }
+              this.indicacionesVisitas.push(
+                {
+                  idSucursal:item.id,
+                  comentario:comentario
+                }
+              );
+            }
+        }
+  }
+
+  obtenerNombreSucursal(idSucursal:string):string
+  {
+      let nombre = '';
+      let data = this.sucursales.filter(x =>x.id == idSucursal); 
+      if(data.length>0)
+        {
+          nombre = data[0].nombre; 
+        } 
+      return nombre; 
+  }
+
+  abrirModalDetalleTicket(ticket: Ticket | any) {
+    this.itemtk = ticket;
+    this.showModalTicketDetail = true;
+  }
+
+  obtnerUltimosMantenimientos() {
+    let sucursales: Sucursal[] = [...this.sucursales];
+    let array_ids_Sucursales: string[] = [];
+
+    for (let item of sucursales) {
+      array_ids_Sucursales.push(item.id);
+    }
+
+    this.loading = true;
+    this.subscriptiontk = this.mantenimientoService
+      .obtenerUltimosMantenimientos(array_ids_Sucursales)
+      .subscribe({
+        next: (data) => {
+          this.arr_ultimosmantenimientos = data.filter(
+            (elemento): elemento is Mantenimiento10x10 => elemento !== null
+          );
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error al escuchar los mantenimientos:', error);
+        },
+      });
+  }
+ 
+  obtenerMantenimientoSucursal(idSucursal:string):Mantenimiento10x10[]
+  {
+    return this.arr_ultimosmantenimientos.filter(x => x.idSucursal == idSucursal); 
+  }
+
+ abrirmodalColores()
+ {
+  this.showModalColors = true; 
+  this.cdr.detectChanges();
+ }
+
+
+ async actualizar()
+ {
+    this.loading = true; 
+   if(this.registroDeGuardia != undefined)
+    {
+      await this.documentService.deleteDocument('guardias',this.registroDeGuardia.id);
+    }
+   
+    if(this.registroDeVisita != undefined)
+      {
+
+        for(let sucursal of this.registroDeVisita.sucursales)
+          {
+              let temp = await this.mantenimientoService.obtenerMantenimientoVisita(this.getDate(this.registroDeVisita.fecha),sucursal.id);
+              if(temp.length>0)
+                {
+                  await this.documentService.deleteDocument('mantenimientos-10x10',temp[0].id);
+                }
+          }
+
+        await this.documentService.deleteDocument('visitas_programadas',this.registroDeVisita.id);
+      }
+     
+      this.guardarVisita()
+
+ }
+
+ getDate(tsmp: Timestamp): Date {
+  // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+  const firestoreTimestamp = tsmp; // Ejemplo
+  const date = firestoreTimestamp.toDate(); // Convierte a Date
+  return date;
+}
+
+
 }

@@ -1,7 +1,23 @@
+
 <div style="margin-top: 80px;" class="p-3">
-    <full-calendar [options]="calendarOptions"></full-calendar>
+
+  <div class="d-flex justify-content-center" *ngIf="loading">
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+  </div>
+
+  <!-- <div *ngIf="colorUsuario != undefined" class="d-flex justify-content-center gap-3 align-items-center">
+    <div [style]="{'background-color':colorUsuario!.color}" style="border-radius: 50%; width: 40px; height: 40px;">&nbsp;</div>
+    <div class="fw-bold fs-5">{{obtenerNombreUsuario(colorUsuario.idUsuario)}}</div>
+  </div> -->
+  <p class="m-0">&nbsp;</p>
+  <app-calendar [usuariosHelp]="usuariosHelp"
+  [tickets]="tickets" 
+  [sucursales]="sucursales"
+  [mantenimientos]="arr_ultimosmantenimientos"
+  ></app-calendar>
 </div>
 
-<!-- <app-modal-event-detail  *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"
-(closeEvent)="showModalEventeDetail = false">
-</app-modal-event-detail> -->
+<app-modal-event-detail  *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"
+(closeEvent)="showModalEventeDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="FechaSeleccionada">
+</app-modal-event-detail>
+

@@ -12,7 +12,7 @@
                 </span>
             </span>
         </ng-template>
-        <app-requester-tickets-list *ngIf="userdata.idRol == '2'" [tickets]="obtenerTicketsFiltrados(item)"
+        <app-requester-tickets-list [tickets]="obtenerTicketsFiltrados(item)"
             (clickEvent)="abrirModalDetalleTicket($event)" [mostrarEstrellas]="false"></app-requester-tickets-list>
     </p-accordionTab>
 </p-accordion>

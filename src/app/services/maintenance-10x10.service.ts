@@ -165,4 +165,23 @@ export class Maintenance10x10Service {
     return forkJoin(consultas);
   }
 
+  
+        async obtenerMantenimientoVisita(fecha:Date ,idSucursal:string) {
+          const coleccionRef = collection(this.firestore,'mantenimientos-10x10');
+        
+          // Convertir las fechas a timestamps de Firestore
+          fecha.setHours(0,0,0,0);
+          const consulta = query(
+            coleccionRef,
+            where('fecha', '==', fecha),
+            where('idSucursal','==',idSucursal),
+            where('estatus', '==', false),
+          );
+        
+          const querySnapshot = await getDocs(consulta);
+          const documentos:Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento10x10));
+          
+          return documentos;
+        }
+
 }

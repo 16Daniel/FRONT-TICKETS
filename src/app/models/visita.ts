@@ -7,5 +7,10 @@ export interface Visita
     idUsuario:string; 
     fecha:Timestamp; 
     sucursales:Sucursal[];  
-    comentarios:string; 
+    comentarios:ComentarioVisita[]; 
  }
+ export interface ComentarioVisita
+ {
+    idSucursal:string;
+    comentario:string; 
+ } 

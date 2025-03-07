@@ -17,7 +17,6 @@ import { BranchMaintenanceTableComponent } from '../../maintenance/branch-mainte
     BadgeModule,
     AccordionModule,
     RequesterTicketsListComponent,
-    BranchMaintenanceTableComponent,
     // AccordionBranchMaintenance10x10Component,
   ],
   templateUrl: './priority-tickets-accordion-s.component.html',

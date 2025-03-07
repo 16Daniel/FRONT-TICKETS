@@ -1,0 +1,30 @@
+
+<div class="d-flex justify-content-center" *ngIf="loading">
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+  </div>
+
+<full-calendar #calendar [options]="calendarOptions">
+  <ng-template #eventContent let-arg>
+   <div class="p-1">
+    @if(arg.event.title == 'GUARDIA')
+    {
+      <b><i class='bx bx-shield bx-sm'></i> {{ arg.event.title }}</b>
+      <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+    }@else 
+    {
+      <b><i class='bx bx-store bx-sm'></i> {{ arg.event.title }}</b>
+      <p class="p-0">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+      <p class="p-0"><span class="p-1 bg-white text-dark rounded-3">Tickets: <span class="fw-bold">{{obtenerTicketsPorSucursal(arg.event.extendedProps.idSucursal).length}}</span> / 10X10</span></p>
+    }
+   </div>
+  </ng-template>
+</full-calendar>
+
+<app-modal-event-detail  *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"
+(closeEvent)="showModalEventeDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="FechaSeleccionada"
+[tickets]="obtenerTicketsPorSucursal(sucursalSeleccionada!.id)" 
+[mantenimientos]="obtenerMantenimientoSucursal(sucursalSeleccionada!.id)"
+[comentario]="comentario"
+[usuariosHelp]="usuariosHelp"
+>
+</app-modal-event-detail>
