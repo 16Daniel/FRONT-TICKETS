@@ -26,7 +26,7 @@ export class VersionControlService {
     const ref = collection(this.firestore, this.pathName);
     const q = query(ref, where('version', '==', version));
     const querySnapshot = await getDocs(q);
-    
+
     return !querySnapshot.empty; // Devuelve true si la versión ya existe
   }
 
@@ -46,14 +46,13 @@ export class VersionControlService {
     return collectionData(versionsCollection, { idField: 'id' });
   }
 
-  async getLastVersion(): Promise<ControlVersion | null> {
+  getLastVersion(): Observable<ControlVersion | any> {
     const ref = collection(this.firestore, this.pathName);
+
+    // Query: ordenar por fecha descendente y limitar a 1
     const q = query(ref, orderBy('fecha', 'desc'), limit(1));
-    const querySnapshot = await getDocsFromServer(q);
 
-    if (querySnapshot.empty) return null;
-
-    const doc = querySnapshot.docs[0];
-    return { id: doc.id, ...doc.data() } as ControlVersion;
+    // Convertir la consulta a un Observable
+    return collectionData(q, { idField: 'id' }) as Observable<ControlVersion[]>;
   }
 }
