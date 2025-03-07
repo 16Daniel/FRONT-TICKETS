@@ -26,6 +26,8 @@ import { Guardia } from '../../models/guardia';
 import { BranchStatusDetailsComponent } from "../../modals/Calendar/branch-status-details/branch-status-details.component";
 import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { CalendarComponent } from "../../components/common/calendar/calendar.component";
+import { ModalColorsComponent } from "../../modals/Calendar/modal-colors/modal-colors.component";
+import { DocumentsService } from '../../services/documents.service';
 
 
 @Component({
@@ -41,7 +43,8 @@ import { CalendarComponent } from "../../components/common/calendar/calendar.com
     EditorModule,
     BranchStatusDetailsComponent,
     ModalTicketDetailComponent,
-    CalendarComponent
+    CalendarComponent,
+    ModalColorsComponent
 ],
   providers: [MessageService],  
   templateUrl: './calendar-builder.component.html',
@@ -65,10 +68,11 @@ public vercalendario:boolean = false;
 public showModalBranchDetail:boolean = false; 
 public sucursalSeleccionada:Sucursal|undefined; 
 public indicacionesVisitas:ComentarioVisita[] = []; 
-public registroDeVisita:Visita|undefined;
-public registroDeGuardia:Guardia|undefined; 
+public registroDeVisita:Visita|undefined = undefined;
+public registroDeGuardia:Guardia|undefined = undefined; 
 
 public showModalTicketDetail:boolean = false; 
+public showModalColors:boolean = false; 
 
 
  constructor(
@@ -79,7 +83,8 @@ public showModalTicketDetail:boolean = false;
     private branchesService: BranchesService,
     private visitasService:VisitasService,
     private mantenimientoService: Maintenance10x10Service,
-    private guardiaService:GuardiasService
+    private guardiaService:GuardiasService,
+    private documentService:DocumentsService
   ) 
   {
     registerLocaleData(localeEs);
@@ -95,7 +100,6 @@ public showModalTicketDetail:boolean = false;
    showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
-
 
 async obtenerTodosLosTickets(): Promise<void> {
     this.loading = true;
@@ -240,14 +244,16 @@ async obtenerTodosLosTickets(): Promise<void> {
   {
     this.sucursalesSeleccionadas = []; 
     this.sucursalesOrdenadas = [];
-    if(!this.vercalendario)
+    this.indicacionesVisitas = []; 
+    if(!this.vercalendario && this.usuarioseleccionado != undefined)
       {
+        this.loading = true;
         let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha,this.usuarioseleccionado!.uid);
         let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.uid);
-
         this.registroDeVisita = visitas.length>0 ? visitas[0]: undefined; 
         this.registroDeGuardia = guardias.length>0 ? guardias[0] : undefined; 
       
+        console.log(this.registroDeGuardia,this.registroDeVisita);
           const sucursalesDisponibles = this.sucursales.filter(sucursal =>
             !this.usuarioseleccionado!.sucursales.some(sucursalUsuario => sucursalUsuario.id === sucursal.id)
           );
@@ -300,15 +306,16 @@ async obtenerTodosLosTickets(): Promise<void> {
                 let guardia = {id:'-999',nombre:'GUARDIA'}
                 this.sucursalesOrdenadas.unshift(guardia);
               }
-      }
 
-      this.actualizarListasComentarios();
-      this.cdr.detectChanges();
+              this.actualizarListasComentarios();
+      }
+      this.loading = false;  
+        this.cdr.detectChanges(); 
   }
 
   async guardarVisita()
   {
-
+    this.loading = true; 
     if(this.sucursalesSeleccionadas.some(x=> x.id == '-999'))
       {
         this.registrarGuardia(); 
@@ -337,13 +344,15 @@ async obtenerTodosLosTickets(): Promise<void> {
       this.sucursalesOrdenadas = []; 
       this.sucursalesSeleccionadas = []; 
       this.usuarioseleccionado = undefined; 
+      this.registroDeGuardia = undefined; 
+      this.registroDeVisita = undefined
       this.indicacionesVisitas = []; 
-      this.cdr.detectChanges(); 
     } catch (error) {
       this.showMessage('error','Error','Error al guardar');
       console.log(error);
     }
-     
+     this.loading = false; 
+     this.cdr.detectChanges(); 
   }
 
   async nuevoMantenimiento(idSucursal:string,idUsuario:string,fecha:Date) {
@@ -472,15 +481,29 @@ async obtenerTodosLosTickets(): Promise<void> {
     return this.arr_ultimosmantenimientos.filter(x => x.idSucursal == idSucursal); 
   }
 
-  // validarcalendario()
-  // {
-  //   if(this.vercalendario && this.calendarComponent == undefined)
-  //     {
-  //       setTimeout(() => {
-  //         let calendarApi = this.calendarComponent!.getApi();
-  //         calendarApi.next();    
-  //       }, 1000);
-       
-  //     }
-  // }
+ abrirmodalColores()
+ {
+  this.showModalColors = true; 
+  this.cdr.detectChanges();
+ }
+
+
+ async actualizar()
+ {
+    this.loading = true; 
+   if(this.registroDeGuardia != undefined)
+    {
+      await this.documentService.deleteDocument('guardias',this.registroDeGuardia.id);
+    }
+   
+    if(this.registroDeVisita != undefined)
+      {
+        await this.documentService.deleteDocument('visitas_programadas',this.registroDeVisita.id);
+      }
+     
+      this.guardarVisita()
+
+ }
+
+
 }

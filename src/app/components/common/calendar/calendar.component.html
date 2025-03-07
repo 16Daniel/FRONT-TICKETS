@@ -6,12 +6,13 @@
 <full-calendar #calendar [options]="calendarOptions" *ngIf="!loading">
   <ng-template #eventContent let-arg>
    <div class="p-1">
-    <b>{{ arg.event.title }}</b>
     @if(arg.event.title == 'GUARDIA')
     {
+      <b><i class='bx bx-shield bx-sm'></i> {{ arg.event.title }}</b>
       <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
     }@else 
     {
+      <b><i class='bx bx-store bx-sm'></i> {{ arg.event.title }}</b>
       <p class="p-0">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
       <p class="p-0"><span class="p-1 bg-white text-dark rounded-3">Tickets: <span class="fw-bold">{{obtenerTicketsPorSucursal(arg.event.extendedProps.idSucursal).length}}</span> / 10X10</span></p>
     }

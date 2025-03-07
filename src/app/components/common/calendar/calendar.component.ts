@@ -15,6 +15,8 @@ import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-deta
 import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { Sucursal } from '../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
+import { DocumentsService } from '../../../services/documents.service';
+import { ColorUsuario } from '../../../models/ColorUsuario';
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -32,9 +34,10 @@ public FechaSeleccionada:Date = new Date();
 showModalEventeDetail: boolean = false;
 public showModalTicketDetail:boolean = false; 
 public itemtk: Ticket | undefined;
+public colores:ColorUsuario[] = []; 
 
 @ViewChild('calendar') calendarComponent: FullCalendarComponent|undefined;
-public loading:boolean = false; 
+@Input() loading:boolean = false; 
 calendarOptions: CalendarOptions = {
   initialView: 'dayGridWeek',
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -47,10 +50,14 @@ calendarOptions: CalendarOptions = {
   },
   datesSet: this.obtenerFechas.bind(this), // Evento para obtener fechas
   eventClick: this.handleEventClick.bind(this),
+  eventOrder:'order'
 };
 
-constructor(private visitasService:VisitasService,private guardiasService:GuardiasService,private cdr: ChangeDetectorRef,){}
-  ngOnInit(): void { }
+constructor(private visitasService:VisitasService,private guardiasService:GuardiasService,private cdr: ChangeDetectorRef,private documentService:DocumentsService){}
+  ngOnInit(): void 
+  {
+    this.obtenerColores(); 
+   }
 
   obtenerFechas(info: any) {
     
@@ -80,20 +87,23 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
     let calendarApi = this.calendarComponent!.getApi();
     calendarApi.removeAllEvents(); 
 
+    let contador = 1; 
     for(let guardia of guardias)
       {
         calendarApi.addEvent({title:'GUARDIA', 
           start:this.getDate(guardia.fecha),
           end:this.getDate(guardia.fecha),
           allDay:true,
-          color: '#6100ff', // Color personalizado (púrpura)
-          textColor: '#ffffff', // Color del texto
+          color: this.obtenerColor(guardia.idUsuario),
+          textColor: this.getLuminance(this.obtenerColor(guardia.idUsuario)) > 0.6 ? '#000000' : '#FFFFFF', // Color del texto
           extendedProps: 
           {
             idUsuario: guardia.idUsuario
-          }
+          },
+          order:contador
          }
         );
+        contador++;
       }
     for(let visita of visitas)
       {
@@ -104,13 +114,17 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
             comentario = temp.length>0 ? temp[0].comentario : '';
             calendarApi.addEvent({title: sucursal.nombre, start:this.getDate(visita.fecha),
               end:this.getDate(visita.fecha),allDay:true,
+              color: this.obtenerColor(visita.idUsuario),
+              textColor: this.getLuminance(this.obtenerColor(visita.idUsuario)) > 0.6 ? '#000000' : '#FFFFFF', // Color del texto
               extendedProps:
               {
                 idSucursal:sucursal.id,
                 idUsuario:visita.idUsuario,
                 comentario:comentario
-              }
+              },
+              order:contador
             });
+            contador++; 
           }
       }
 
@@ -133,7 +147,6 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
    
     if(clickInfo.event.title != 'GUARDIA')
       {
-        debugger
         let sucursal = this.sucursales.filter(x => x.nombre == clickInfo.event._def.title); 
         this.FechaSeleccionada = clickInfo.event.start!; 
         this.comentario = clickInfo.event.extendedProps['comentario']; 
@@ -146,6 +159,42 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
   obtenerMantenimientoSucursal(idSucursal:string):Mantenimiento10x10[]
   {
     return this.mantenimientos.filter(x => x.idSucursal == idSucursal); 
+  }
+
+  obtenerColores()
+  {
+    this.documentService.get('colores-usuarios').subscribe({
+      next: (data) => {
+          this.colores = data;  
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+      },
+    });
+  }
+
+  obtenerColor(idUsuario:string):string
+  {
+    let color = ''; 
+    let temp = this.colores.filter(x=>x.idUsuario == idUsuario);
+    color = temp.length>0 ? temp[0].color : ''; 
+    return color; 
+  }
+
+  getLuminance(hexColor: string): number {
+    if(hexColor == '')
+      {
+        return 0; 
+      } else
+      {
+            // Convertir el color hexadecimal a RGB
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+
+    // Calcular la luminancia según la fórmula estándar
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      }
   }
 
 }

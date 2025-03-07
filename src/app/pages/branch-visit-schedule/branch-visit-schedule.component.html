@@ -1,5 +1,13 @@
 <div style="margin-top: 80px;" class="p-3">
-    <full-calendar [options]="calendarOptions"></full-calendar>
+  <p *ngIf="colorUsuario != undefined">
+    <span style="width: 30px; height: 30px;" [style]="{'background-color':colorUsuario!.color}"></span>
+  </p>
+  <app-calendar [usuariosHelp]="usuariosHelp"
+  [tickets]="tickets" 
+  [sucursales]="sucursales"
+  [mantenimientos]="arr_ultimosmantenimientos"
+  [loading]="loading"
+  ></app-calendar>
 </div>
 
 <app-modal-event-detail  *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"

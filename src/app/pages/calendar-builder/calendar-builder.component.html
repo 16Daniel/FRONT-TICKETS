@@ -1,7 +1,7 @@
 <div class="p-3" style="margin-top: 80px;">
 <h4 class="text-center">PROGRMAR VISITA <span class="fw-bold" style="color: #8B5CF6;">{{ fecha | date:'fullDate':'':'es' | uppercase }}</span></h4>
 <div class="row mt-3">
-<div class="col-md-6">
+<div class="col-md-4">
     <p-dropdown [options]="usuariosHelp" [(ngModel)]="usuarioseleccionado" 
     name="usuario" optionLabel="nombre" [filter]="true"
     filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ANALISTA"
@@ -35,6 +35,9 @@
           style="width: 3rem; height: 2rem;" [(ngModel)]="vercalendario">
         <label class="form-check-label fs-4" for="flexSwitchCheckChecked">CALENDARIO</label>
       </div>
+</div>
+<div class="col-md-2">
+    <p-button label="Colores" icon="pi pi-cog" (onClick)="abrirmodalColores()"/>
 </div>
 </div>
 
@@ -90,7 +93,7 @@
     </div>
 </div>
 
-<div *ngIf="vercalendario" class="mt-3" style="height: 600px; overflow: auto;">
+<div *ngIf="vercalendario" class="mt-3">
  <app-calendar [usuariosHelp]="usuariosHelp"
   [tickets]="tickets" 
   [sucursales]="sucursales"
@@ -101,8 +104,14 @@
 
 <div class="d-flex justify-content-end pt-3" *ngIf="!vercalendario">
     <p-button label="GUARDAR" icon="pi pi-save" styleClass="p-button-primary" (onClick)="guardarVisita()"
-    [disabled]="usuarioseleccionado == undefined && loading == false">
+    [disabled]="usuarioseleccionado == undefined && loading == false" *ngIf="registroDeVisita == undefined && registroDeGuardia == undefined">
   </p-button>
+
+  <p-button label="ACTULIZAR" icon="pi pi-save" styleClass="p-button-primary" (onClick)="actualizar()"
+  [disabled]="usuarioseleccionado == undefined && loading == false" *ngIf="registroDeVisita != undefined || registroDeGuardia != undefined">
+</p-button>
+
+
 </div>
 
 
@@ -115,6 +124,8 @@
 > 
 </app-branch-status-details>
 
+
+<app-modal-colors *ngIf="showModalColors"  (closeEvent)="showModalColors = false" [showModalColors]="showModalColors" [usuariosHelp]="usuariosHelp"></app-modal-colors>
 
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
   (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>

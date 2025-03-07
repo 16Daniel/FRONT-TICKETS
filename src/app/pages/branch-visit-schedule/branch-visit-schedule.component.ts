@@ -20,14 +20,22 @@ import { PriorityTicketsAccordionComponent } from '../../components/tickets/prio
 import { GuardiasService } from '../../services/guardias.service';
 import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { Ticket } from '../../models/ticket.model';
+import { CalendarComponent } from "../../components/common/calendar/calendar.component";
+import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
+import { ColorUsuario } from '../../models/ColorUsuario';
+import { DocumentsService } from '../../services/documents.service';
 @Component({
   selector: 'app-branch-visit-schedule',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, ModalTicketDetailComponent],
+  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, ModalTicketDetailComponent, CalendarComponent],
   providers:[MessageService],
   templateUrl: './branch-visit-schedule.component.html',
 })
 export default class BranchVisitScheduleComponent implements OnInit {
+public usuariosHelp:Usuario[] = [];
+public colorUsuario:ColorUsuario|undefined;  
+public tickets: Ticket[] = [];
+public arr_ultimosmantenimientos:Mantenimiento10x10[] = []; 
 public usuario: Usuario;
 public arr_data:Visita[] = []; 
 public sucursales:Sucursal[] = [];
@@ -36,6 +44,8 @@ public FechaSeleccionada:Date = new Date();
 showModalTicketDetail: boolean = false;
 showModalEventeDetail: boolean = false;
 public itemtk: Ticket | undefined;
+public colores:ColorUsuario[] = []; 
+public loading:boolean = false;  
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridWeek',
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -55,16 +65,52 @@ public itemtk: Ticket | undefined;
       private usersService: UsersService,
       private visitasService:VisitasService,
       private branchesService: BranchesService,
-      private guardiasService:GuardiasService
+      private guardiasService:GuardiasService,
+      private messageService:MessageService,
+      private documentService:DocumentsService
     )
     {
       this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
       let idu = this.usuario.uid;
     } 
+
+    showMessage(sev: string, summ: string, det: string) {
+      this.messageService.add({ severity: sev, summary: summ, detail: det });
+    }
+
   ngOnInit(): void 
   {
      this.obtenerVisitas();
      this.obtenerSucursales(); 
+     this.obtenerUsuariosHelp();
+  }
+
+  obtenerColores()
+  {
+    this.documentService.get('colores-usuarios').subscribe({
+      next: (data) => {
+          this.colores = data;  
+          let temp =  this.colores.filter(x => x.idUsuario == this.usuario.uid);
+          this.colorUsuario = temp.length>0 ? temp[0] : undefined; 
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+      },
+    });
+  }
+
+  obtenerUsuariosHelp() {
+    this.usersService.getusers().subscribe({
+      next: (data) => {
+        this.usuariosHelp = data;
+        this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4'); 
+         this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
   }
 
   obtenerSucursales() {
