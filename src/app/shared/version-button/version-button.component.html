@@ -1,12 +1,11 @@
 <a [routerLink]="['/main/version-history']">
-
-<p-button
-  [label]="'Versión ' + (versionActual != null ? versionActual?.version : '')"
-  size="small"
-  icon="pi pi-bell"
-  badge="0"
-  badgeClass="p-badge-danger"
-  outlined="true"
-  severity="secondary"
-/>
+  <p-button
+    [label]="'Versión ' + (versionActual != null ? versionActual?.version : '')"
+    size="small"
+    icon="pi pi-bell"
+    [badge]="mostrarNotificacion ? ' ' : ''"
+    badgeClass="p-badge-danger"
+    outlined="true"
+    severity="secondary"
+  />
 </a>
