@@ -10,7 +10,7 @@
 
 <div class="mt-3">
 <h5 class=" text-dark fw-bold text-center">MANTENIMIENTO</h5>
-<app-branch-maintenance-table [mantenimientos]="mantenimientos" [usuariosHelp]="usuariosHelp"></app-branch-maintenance-table>
+<app-branch-maintenance-table [mantenimientos]="mantenimientos" [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table>
 </div>
 
 <div *ngIf="comentario != ''">
@@ -23,5 +23,12 @@
 </p-editor>
 
 </div>
+
+<app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
+
+  <app-modal-maintenance-detail *ngIf="mostrarModalDetalleMantenimeinto" [mantenimiento]="mantenimiento"
+  [mostrarModalDetalleMantenimeinto]="mostrarModalDetalleMantenimeinto"
+  (closeEvent)="mostrarModalDetalleMantenimeinto = false"></app-modal-maintenance-detail>
 
 </p-dialog>

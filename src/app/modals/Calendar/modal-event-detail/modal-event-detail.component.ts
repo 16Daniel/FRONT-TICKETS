@@ -11,6 +11,8 @@ import { BranchMaintenanceTableComponent } from "../../../components/maintenance
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
 import { EditorModule } from 'primeng/editor';
+import { ModalTicketDetailComponent } from "../../tickets/modal-ticket-detail/modal-ticket-detail.component";
+import { ModalMaintenanceDetailComponent } from "../../maintenance/modal-maintenance-detail/modal-maintenance-detail.component";
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -20,8 +22,7 @@ import { EditorModule } from 'primeng/editor';
     FormsModule,
     RequesterTicketsListComponent,
     BranchMaintenanceTableComponent,
-    EditorModule
-  ],
+    EditorModule, ModalTicketDetailComponent, ModalMaintenanceDetailComponent],
   templateUrl: './modal-event-detail.component.html',
 })
 export default class ModalEventDetailComponent implements OnInit {
@@ -35,6 +36,12 @@ export default class ModalEventDetailComponent implements OnInit {
 @Output() clickEvent = new EventEmitter<Ticket>();
 @Input() Indicacion:string = ''; 
 @Input() comentario:string = ''; 
+public showModalTicketDetail:boolean = false; 
+public itemtk: Ticket | undefined;
+
+mostrarModalDetalleMantenimeinto: boolean = false;
+mantenimiento: Mantenimiento10x10 | any;
+
 ngOnInit(): void { }
 constructor()
 {
@@ -44,8 +51,14 @@ constructor()
     this.closeEvent.emit(); // Cerrar modal
   }
 
-  abrirModalDetalleTicket(ticket: Ticket | any) {
+  abrirModalDetalleTicket(ticket: Ticket | any) { 
+    this.itemtk = ticket;
     this.clickEvent.emit(ticket);
+    this.showModalTicketDetail = true;
   }
-
+  abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento10x10 | any) {
+    this.mantenimiento = mantenimiento;
+    this.mostrarModalDetalleMantenimeinto = true;
+  }
+  
 }

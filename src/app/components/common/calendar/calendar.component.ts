@@ -12,7 +12,6 @@ import { GuardiasService } from '../../../services/guardias.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Ticket } from '../../../models/ticket.model';
 import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-detail/modal-event-detail.component";
-import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { Sucursal } from '../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { DocumentsService } from '../../../services/documents.service';
@@ -20,7 +19,7 @@ import { ColorUsuario } from '../../../models/ColorUsuario';
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, ModalTicketDetailComponent],
+  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent],
   templateUrl: './calendar.component.html',
 })
 export class CalendarComponent implements OnInit {
@@ -32,12 +31,10 @@ public comentario:string = '';
 public sucursalSeleccionada:Sucursal|undefined; 
 public FechaSeleccionada:Date = new Date(); 
 showModalEventeDetail: boolean = false;
-public showModalTicketDetail:boolean = false; 
-public itemtk: Ticket | undefined;
 public colores:ColorUsuario[] = []; 
 
 @ViewChild('calendar') calendarComponent: FullCalendarComponent|undefined;
-@Input() loading:boolean = false; 
+loading:boolean = false; 
 calendarOptions: CalendarOptions = {
   initialView: 'dayGridWeek',
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -80,13 +77,12 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
   
 
   async mostrarEventos(fechaIni:Date,fechaFin:Date)
-  { 
-    this.loading= false; 
+  {   
+    this.loading= true; 
     let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni,fechaFin);  
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni,fechaFin);
     let calendarApi = this.calendarComponent!.getApi();
     calendarApi.removeAllEvents(); 
-
     let contador = 1; 
     for(let guardia of guardias)
       {
@@ -129,6 +125,7 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
       }
 
       this.loading= false;
+      this.cdr.detectChanges();
   }
 
   obtenerNombreUsuario(idUsuario:string):string

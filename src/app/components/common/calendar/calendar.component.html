@@ -3,7 +3,7 @@
     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
   </div>
 
-<full-calendar #calendar [options]="calendarOptions" *ngIf="!loading">
+<full-calendar #calendar [options]="calendarOptions">
   <ng-template #eventContent let-arg>
    <div class="p-1">
     @if(arg.event.title == 'GUARDIA')
@@ -25,8 +25,6 @@
 [tickets]="obtenerTicketsPorSucursal(sucursalSeleccionada!.id)" 
 [mantenimientos]="obtenerMantenimientoSucursal(sucursalSeleccionada!.id)"
 [comentario]="comentario"
+[usuariosHelp]="usuariosHelp"
 >
 </app-modal-event-detail>
-
-<app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
-  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>

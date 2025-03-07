@@ -24,10 +24,12 @@ import { CalendarComponent } from "../../components/common/calendar/calendar.com
 import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
 import { ColorUsuario } from '../../models/ColorUsuario';
 import { DocumentsService } from '../../services/documents.service';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-branch-visit-schedule',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, ModalTicketDetailComponent, CalendarComponent],
+  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarComponent],
   providers:[MessageService],
   templateUrl: './branch-visit-schedule.component.html',
 })
@@ -45,29 +47,17 @@ showModalTicketDetail: boolean = false;
 showModalEventeDetail: boolean = false;
 public itemtk: Ticket | undefined;
 public colores:ColorUsuario[] = []; 
-public loading:boolean = false;  
-  calendarOptions: CalendarOptions = {
-    initialView: 'dayGridWeek',
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-    locale: esLocale,
-     // Botones de navegación y cambio de vista
-     headerToolbar: {
-      left: 'prev,next today', // Botones de navegación
-      center: 'title', // Título del calendario
-      right: 'dayGridMonth,timeGridWeek,timeGridDay', // Botones para cambiar vista
-    },
-    eventClick: this.handleEventClick.bind(this),
-  };
+public loading:boolean = true;  
+subscriptiontk: Subscription | undefined;
 
    constructor(
       private ticketsService: TicketsService,
       private cdr: ChangeDetectorRef,
       private usersService: UsersService,
-      private visitasService:VisitasService,
       private branchesService: BranchesService,
-      private guardiasService:GuardiasService,
       private messageService:MessageService,
-      private documentService:DocumentsService
+      private documentService:DocumentsService,
+      private mantenimientoService: Maintenance10x10Service,
     )
     {
       this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -80,9 +70,10 @@ public loading:boolean = false;
 
   ngOnInit(): void 
   {
-     this.obtenerVisitas();
      this.obtenerSucursales(); 
      this.obtenerUsuariosHelp();
+     this.obtenerTodosLosTickets(); 
+     this.obtenerColores();
   }
 
   obtenerColores()
@@ -124,69 +115,97 @@ public loading:boolean = false;
       },
     });
   }
-
-  obtenerVisitas()
-  {
-    this.visitasService.get(this.usuario.uid).subscribe({
-      next: (data) => {
-        this.arr_data = data; 
-        let eventos:any[] = []; 
-        for(let item of this.arr_data)
-          {
-            for(let sucursal of item.sucursales)
-              {
-                eventos.push({title: sucursal.nombre, start:this.getDate(item.fecha),end:this.getDate(item.fecha),allDay:true});
-              }
-          } 
-        this.obtenerGuardias(eventos); 
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }
-
-  obtenerGuardias(eventos:any)
-  {
-    this.guardiasService.get(this.usuario.uid).subscribe({
-      next: (data) => {
-        this.arr_data = data;  
-        for(let item of this.arr_data)
-          {
-            eventos.push({title:'GUARDIA', 
-            start:this.getDate(item.fecha),
-            end:this.getDate(item.fecha),
-            allDay:true,
-            color: '#6100ff', // Color personalizado (púrpura)
-            textColor: '#ffffff' // Color del texto
-           });
-          }
-
-        this.calendarOptions = { ...this.calendarOptions, events: eventos}; 
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }
-
-   getDate(tsmp: Timestamp): Date {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    }
-
-    handleEventClick(clickInfo: EventClickArg) {
-      console.log(clickInfo.event);
-
-      let sucursal = this.sucursales.filter(x => x.nombre == clickInfo.event._def.title); 
-      this.FechaSeleccionada = clickInfo.event.start!; 
-      this.sucursalSeleccionada = sucursal[0]; 
-      this.showModalEventeDetail = true; 
-      this.cdr.detectChanges(); 
-    }
   
+  async obtenerTodosLosTickets(): Promise<void> {
+    this.loading = true;
+    this.subscriptiontk = this.ticketsService
+      .get()
+      .subscribe({
+        next: (data) => {
+          this.tickets = []; 
+          this.tickets = data;
+          let arr_temp: Ticket[] = [];
+          let temp1: Ticket[] = this.tickets.filter(
+            (x) => x.idPrioridadTicket == '1'
+          );
+          let temp2: Ticket[] = this.tickets.filter(
+            (x) => x.idPrioridadTicket == '2'
+          );
+          let temp3: Ticket[] = this.tickets.filter(
+            (x) => x.idPrioridadTicket == '3'
+          );
+          let temp4: Ticket[] = this.tickets.filter(
+            (x) => x.idPrioridadTicket == '4'
+          );
+
+          temp1 = temp1.sort(
+            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
+          );
+
+          temp2 = temp2.sort(
+            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
+          );
+
+          temp3 = temp3.sort(
+            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
+          );
+
+          temp4 = temp4.sort(
+            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
+          );
+          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
+          this.tickets = arr_temp;
+
+          if (this.itemtk != undefined) {
+            let temp = this.tickets.filter((x) => x.id == this.itemtk!.id);
+            if (temp.length > 0) {
+              this.itemtk = temp[0];
+            }
+          }
+        
+          this.obtnerUltimosMantenimientos();  
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error al escuchar los tickets:', error);
+        },
+      });
+  }
+
+
+  obtnerUltimosMantenimientos() {
+    let sucursales: Sucursal[] = [...this.sucursales];
+    let array_ids_Sucursales: string[] = [];
+
+    for (let item of sucursales) {
+      array_ids_Sucursales.push(item.id);
+    }
+
+    this.loading = true;
+    this.subscriptiontk = this.mantenimientoService
+      .obtenerUltimosMantenimientos(array_ids_Sucursales)
+      .subscribe({
+        next: (data) => {
+          this.arr_ultimosmantenimientos = data.filter(
+            (elemento): elemento is Mantenimiento10x10 => elemento !== null
+          );
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error al escuchar los mantenimientos:', error);
+        },
+      });
+  }
+
+  obtenerNombreUsuario(idUsuario:string):string
+  {
+    let nombre = '';
+    let temp = this.usuariosHelp.filter(x => x.uid == idUsuario);
+    if(temp.length>0){nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
+    return nombre
+  }
+
 }

@@ -252,8 +252,6 @@ async obtenerTodosLosTickets(): Promise<void> {
         let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.uid);
         this.registroDeVisita = visitas.length>0 ? visitas[0]: undefined; 
         this.registroDeGuardia = guardias.length>0 ? guardias[0] : undefined; 
-      
-        console.log(this.registroDeGuardia,this.registroDeVisita);
           const sucursalesDisponibles = this.sucursales.filter(sucursal =>
             !this.usuarioseleccionado!.sucursales.some(sucursalUsuario => sucursalUsuario.id === sucursal.id)
           );
@@ -356,6 +354,7 @@ async obtenerTodosLosTickets(): Promise<void> {
   }
 
   async nuevoMantenimiento(idSucursal:string,idUsuario:string,fecha:Date) {
+    fecha.setHours(0,0,0,0);
     const mantenimiento: Mantenimiento10x10 = {
       idSucursal: idSucursal,
       idUsuarioSoporte: idUsuario,
@@ -498,12 +497,29 @@ async obtenerTodosLosTickets(): Promise<void> {
    
     if(this.registroDeVisita != undefined)
       {
+
+        for(let sucursal of this.registroDeVisita.sucursales)
+          {
+              let temp = await this.mantenimientoService.obtenerMantenimientoVisita(this.getDate(this.registroDeVisita.fecha),sucursal.id);
+              if(temp.length>0)
+                {
+                  await this.documentService.deleteDocument('mantenimientos-10x10',temp[0].id);
+                }
+          }
+
         await this.documentService.deleteDocument('visitas_programadas',this.registroDeVisita.id);
       }
      
       this.guardarVisita()
 
  }
+
+ getDate(tsmp: Timestamp): Date {
+  // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+  const firestoreTimestamp = tsmp; // Ejemplo
+  const date = firestoreTimestamp.toDate(); // Convierte a Date
+  return date;
+}
 
 
 }
