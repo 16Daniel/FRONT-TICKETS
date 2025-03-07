@@ -13,13 +13,13 @@ import { RouterModule } from '@angular/router';
   styleUrl: './version-button.component.scss',
 })
 export class VersionButtonComponent implements OnInit {
-  public version: ControlVersion | any;
+  public versionActual: ControlVersion | any;
 
   constructor(private versionControlService: VersionControlService,     private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit(): void {
     this.versionControlService.getLastVersion().then((result) => {
-      this.version = { ...result };
+      this.versionActual = { ...result };
       this.cdr.detectChanges();
     });
   }
