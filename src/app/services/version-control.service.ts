@@ -43,7 +43,8 @@ export class VersionControlService {
 
   get(): Observable<ControlVersion[] | any> {
     const versionsCollection = collection(this.firestore, this.pathName);
-    return collectionData(versionsCollection, { idField: 'id' });
+    const q = query(versionsCollection, orderBy('fecha', 'desc'));
+    return collectionData(q, { idField: 'id' });
   }
 
   getLastVersion(): Observable<ControlVersion | any> {

@@ -7,11 +7,12 @@ import { VersionUsuario } from '../../models/version-usuario.model';
 import { Usuario } from '../../models/usuario.model';
 import { VersionUsuarioService } from '../../services/version-usuario.service';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-versions-history',
   standalone: true,
-  imports: [TableModule],
+  imports: [TableModule, CommonModule],
   templateUrl: './versions-history.component.html',
   styleUrl: './versions-history.component.scss',
 })
