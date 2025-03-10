@@ -27,6 +27,7 @@ import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-de
 import { CalendarComponent } from "../../components/common/calendar/calendar.component";
 import { ModalColorsComponent } from "../../modals/Calendar/modal-colors/modal-colors.component";
 import { DocumentsService } from '../../services/documents.service';
+import ModalEventDetailComponent from "../../modals/Calendar/modal-event-detail/modal-event-detail.component";
 
 
 @Component({
@@ -42,7 +43,8 @@ import { DocumentsService } from '../../services/documents.service';
     EditorModule,
     ModalTicketDetailComponent,
     CalendarComponent,
-    ModalColorsComponent
+    ModalColorsComponent,
+    ModalEventDetailComponent
 ],
   providers: [MessageService],  
   templateUrl: './calendar-builder.component.html',
