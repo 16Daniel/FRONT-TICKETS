@@ -2,19 +2,30 @@
   <p-accordionTab *ngFor="let item of ordenarSucursalesUser(sucursales)">
     <ng-template pTemplate="header">
       <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center" [style]="{
-            'background-color': obtenerColorDeFondoSucursal(
-              obtenerTicketsPorSucursal(item.id).length
-            )
-          }">
-        <p-badge [value]="obtenerTicketsPorSucursal(item.id).length" class="ml-auto mr-2" [size]="'large'"
+          'background-color': obtenerColorDeFondoSucursal(
+            obtenerTicketsPorSucursal(item.id).length
+          )
+        }">
+
+        <p-badge [value]="obtenerTicketsPorSucursal(item.id).length" class="mr-2" [size]="'large'"
           [style]="{ 'background-color': 'white', color: 'black' }" />
-        <span class="fw-bold" [style]="{
+
+        <span class="fw-bold flex-grow-1" [style]="{
               color: obtenerColorDeTexto(
                 obtenerTicketsPorSucursal(item.id).length
               )
             }">
           {{ item.nombre }}
         </span>
+
+        <span class="icon-circle" *ngIf="verificarTicketsNuevos(obtenerTicketsPorSucursal(item.id))">
+          <i class="pi pi-ticket"></i>
+        </span>
+
+        <span class="icon-circle" *ngIf="verificarChatNoLeido(obtenerTicketsPorSucursal(item.id))">
+          <i class="pi pi-comments"></i>
+        </span>
+
       </span>
     </ng-template>
 

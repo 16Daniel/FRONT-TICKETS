@@ -33,31 +33,23 @@ export class VersionButtonComponent implements OnInit {
       this.cdr.detectChanges();
 
       if (this.versionUsuario?.idVersion == this.versionActual.id) {
-        console.log('actualizado');
-        console.log(this.versionActual)
-        console.log(this.versionUsuario)
         this.mostrarNotificacion = false;
       } else {
         this.mostrarNotificacion = true;
-        console.log('no actualizado');
       }
       this.cdr.detectChanges();
-
     });
 
-    this.versionUsuarioService.getLastVersionByUser(this.usuario.id).subscribe(result => {
-      if (result.length > 0) this.versionUsuario = { ...result[0] };
-      if (this.versionUsuario?.idVersion == this.versionActual.id) {
-        console.log('actualizado');
-        console.log(this.versionActual)
-        console.log(this.versionUsuario)
-        this.mostrarNotificacion = false;
-      } else {
-        this.mostrarNotificacion = true;
-        console.log('no actualizado');
-      }
-      this.cdr.detectChanges();
-
-    });
+    this.versionUsuarioService
+      .getLastVersionByUser(this.usuario.id)
+      .subscribe((result) => {
+        if (result.length > 0) this.versionUsuario = { ...result[0] };
+        if (this.versionUsuario?.idVersion == this.versionActual.id) {
+          this.mostrarNotificacion = false;
+        } else {
+          this.mostrarNotificacion = true;
+        }
+        this.cdr.detectChanges();
+      });
   }
 }

@@ -22,8 +22,8 @@
       (click)="showModalHistorial = true">
     </p-button>
 
-    <p-button label="Nuevo Mantenimiento" icon="pi pi-plus" styleClass="p-button-info" (click)="nuevoMantenimiento()">
-    </p-button>
+    <!-- <p-button label="Nuevo Mantenimiento" icon="pi pi-plus" styleClass="p-button-info" (click)="nuevoMantenimiento()">
+    </p-button> -->
 
     <div class="form-check form-switch d-flex align-items-center gap-3">
       <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
@@ -43,7 +43,7 @@
   </div>
 
   <div *ngIf="tickets.length > 0 && !ordenarxmantenimiento" class="p-1 mt-4">
-    <app-priority-tickets-accordion-s [arr_ultimosmantenimientos]="arr_ultimosmantenimientos" [tickets]="tickets"
+    <app-priority-tickets-accordion-s [tickets]="tickets"
       [sucursales]="usuario.sucursales"
       (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion-s>
   </div>
