@@ -1,4 +1,34 @@
-<p-dialog header="Detalles" [(visible)]="showModalEventeDetail" [modal]="true" [maximizable]="true"
-    (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
+<p-dialog [header]="sucursal!.nombre" [(visible)]="showModalEventeDetail" [modal]="true" [maximizable]="true"
+    (onHide)="onHide()" [style]="{ width: '90vw' }" class="custom-dialog">
+<h4 class="text-dark fw-bold text-center">{{ fecha | date:'fullDate':'':'es' | uppercase }}</h4>
+
+<h5 class="text-dark fw-bold text-center">TICKETS</h5>
+
+<app-requester-tickets-list [tickets]="tickets"
+(clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
+[mostrarEstrellas]="false"></app-requester-tickets-list>
+
+<div class="mt-3">
+<h5 class=" text-dark fw-bold text-center">MANTENIMIENTO</h5>
+<app-branch-maintenance-table [mantenimientos]="mantenimientos" [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table>
+</div>
+
+<div *ngIf="comentario != ''">
+    <p class="text-dark fw-bold text-center mt-3">COMENTARIOS</p>
+    <p-editor [(ngModel)]="comentario" [style]="{ height: '300px' }">
+    <ng-template pTemplate="header">
+        <span class="ql-formats">
+        </span>
+    </ng-template>
+</p-editor>
+
+</div>
+
+<app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
+
+  <app-modal-maintenance-detail *ngIf="mostrarModalDetalleMantenimeinto" [mantenimiento]="mantenimiento"
+  [mostrarModalDetalleMantenimeinto]="mostrarModalDetalleMantenimeinto"
+  (closeEvent)="mostrarModalDetalleMantenimeinto = false"></app-modal-maintenance-detail>
 
 </p-dialog>

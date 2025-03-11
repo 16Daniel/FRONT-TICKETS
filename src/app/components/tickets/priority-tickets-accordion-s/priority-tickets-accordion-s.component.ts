@@ -17,7 +17,6 @@ import { Usuario } from '../../../models/usuario.model';
     BadgeModule,
     AccordionModule,
     RequesterTicketsListComponent,
-    BranchMaintenanceTableComponent,
   ],
   templateUrl: './priority-tickets-accordion-s.component.html',
   styleUrl: './priority-tickets-accordion-s.component.scss',
