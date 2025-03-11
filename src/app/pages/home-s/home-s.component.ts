@@ -57,7 +57,7 @@ export default class homeSComponent implements OnInit {
   showModalHistorialMantenimientos: boolean = false;
   itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
-  tickets: Ticket[] | any = [];
+  tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
   mantenimientoActivo: Mantenimiento10x10 | null = null;
   formdepto: any;
@@ -139,8 +139,6 @@ export default class homeSComponent implements OnInit {
             this.todosLosTickets = data;
 
             this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
-            this.tickets[this.tickets.length - 1].nuevo = true;
-            console.log(this.tickets);
             this.showMessage('success', 'Nuevo ticket asignado', 'Folio: ' + this.ultimoNuevoTicket?.folio);
           }
           else {

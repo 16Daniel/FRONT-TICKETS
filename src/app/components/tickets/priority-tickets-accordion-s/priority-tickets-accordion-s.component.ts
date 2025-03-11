@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
@@ -7,6 +7,7 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 import { BranchMaintenanceTableComponent } from '../../maintenance/branch-maintenance-table/branch-maintenance-table.component';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-priority-tickets-accordion-s',
@@ -21,12 +22,17 @@ import { BranchMaintenanceTableComponent } from '../../maintenance/branch-mainte
   templateUrl: './priority-tickets-accordion-s.component.html',
   styleUrl: './priority-tickets-accordion-s.component.scss',
 })
-export class PriorityTicketsAccordionSComponent {
+export class PriorityTicketsAccordionSComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Output() clickEvent = new EventEmitter<Ticket>();
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
+  usuario: Usuario | any;
+  
+  ngOnInit(): void {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   obtenerColorDeFondoSucursal(value: number): string {
     let str = '';
@@ -80,8 +86,24 @@ export class PriorityTicketsAccordionSComponent {
     this.clickEvent.emit(ticket);
   }
 
-  verificarTicketsNuevos(tickets: any[]){
-    let nuevosTickets = tickets.filter(x => x.nuevo);
+  verificarTicketsNuevos(tickets: Ticket[]){
+    let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
     return nuevosTickets.length > 0;
+  }
+  
+  verificarChatNoLeido(tickets: Ticket[]): boolean {
+    return tickets.some(ticket => {
+      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
+      const participante = participantes.find((p) => p.idUsuario === this.usuario.id);
+  
+      if (participante) {
+        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
+        const comentarios = ticket.comentarios;
+  
+        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
+      }
+      
+      return false;
+    });
   }
 }
