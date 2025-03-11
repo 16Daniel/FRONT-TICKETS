@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Ticket } from '../../../models/ticket.model';
-import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
-import { CommonModule } from '@angular/common';
+
+import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion',

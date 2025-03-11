@@ -55,9 +55,9 @@ export default class homeSComponent implements OnInit {
   showModal10x10: boolean = false;
   ShowModal10x10New: boolean = false;
   showModalHistorialMantenimientos: boolean = false;
-  public itemtk: Ticket | undefined;
+  itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
-  tickets: Ticket[] = [];
+  tickets: Ticket[] | any = [];
   todosLosTickets: Ticket[] = [];
   mantenimientoActivo: Mantenimiento10x10 | null = null;
   formdepto: any;
@@ -68,12 +68,15 @@ export default class homeSComponent implements OnInit {
   loading: boolean = false;
   arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
   private unsubscribe!: () => void;
-  public ordenarxmantenimiento: boolean = false;
+  ordenarxmantenimiento: boolean = false;
+  paginaCargaPrimeraVez: boolean = true;
+  ultimoNuevoTicket: Ticket | null = null;
 
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
-    private mantenimientoService: Maintenance10x10Service
+    private mantenimientoService: Maintenance10x10Service,
+    private messageService: MessageService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.usuario.uid;
@@ -128,47 +131,24 @@ export default class homeSComponent implements OnInit {
       .getTicketsResponsable(userid)
       .subscribe({
         next: (data) => {
-          this.tickets = data;
-          let arr_temp: Ticket[] = [];
-          let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '1'
-          );
-          let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '2'
-          );
-          let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '3'
-          );
-          let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '4'
-          );
+          if (
+            data.length > this.todosLosTickets.length &&
+            !this.paginaCargaPrimeraVez
+          ) {
+            this.tickets = data;
+            this.todosLosTickets = data;
 
-          temp1 = temp1.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp2 = temp2.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp3 = temp3.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp4 = temp4.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.todosLosTickets = [...arr_temp];
-          this.tickets = arr_temp;
-
-          if (this.itemtk != undefined) {
-            let temp = this.tickets.filter((x) => x.id == this.itemtk!.id);
-            if (temp.length > 0) {
-              this.itemtk = temp[0];
-            }
+            this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
+            this.tickets[this.tickets.length - 1].nuevo = true;
+            console.log(this.tickets);
+            this.showMessage('success', 'Nuevo ticket asignado', 'Folio: ' + this.ultimoNuevoTicket?.folio);
+          }
+          else {
+            this.tickets = data;
+            this.todosLosTickets = data;
           }
 
+          this.paginaCargaPrimeraVez = false;
           this.loading = false;
           this.cdr.detectChanges();
         },
@@ -227,7 +207,11 @@ export default class homeSComponent implements OnInit {
     }, 50);
   }
 
-  nuevoMantenimiento() {
-    this.ShowModal10x10New = true;
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
+
+  // nuevoMantenimiento() {
+  //   this.ShowModal10x10New = true;
+  // }
 }

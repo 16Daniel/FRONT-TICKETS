@@ -9,6 +9,7 @@ import {
   Firestore,
   getDocs,
   onSnapshot,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -222,7 +223,8 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('responsable', '==', userId),
-        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6'])
+        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6']),
+        orderBy('fecha', 'desc')
       );
 
       // Escucha en tiempo real
