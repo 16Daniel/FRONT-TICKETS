@@ -23,7 +23,7 @@
         <tr [pSelectableRow]="mantenimiento">
             <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
             </td>
-            <td class="text-center">{{ getDate(mantenimiento.fecha) | date: 'short' }}</td>
+            <td class="text-center">{{ getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
             <td class="text-center"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoCaja, 'bg-danger': !mantenimiento.mantenimientoCaja}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoCaja ? 'Si' : 'No' }}</label>

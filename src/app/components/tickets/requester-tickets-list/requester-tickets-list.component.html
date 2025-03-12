@@ -29,10 +29,10 @@
       </td>
       <td class="text-center">{{ ticket.folio }}</td>
       <td class="text-center">
-        {{ getDate(ticket!.fecha) | date: 'short' }}
+        {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
       </td>
       <td class="text-center" *ngIf="mostrarFedchaEstimacion">
-        {{ getDate(ticket!.fechaEstimacion) | date: 'short' }}
+        {{ getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}
       </td>
       <td class="text-center">
         {{ obtenerNombreArea(ticket.idArea) }}
