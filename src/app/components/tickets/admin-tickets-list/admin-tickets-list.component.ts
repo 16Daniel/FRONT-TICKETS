@@ -68,7 +68,7 @@ export class AdminTicketsListComponent {
     this.obtenerSucursales();
     this.obtenerPrioridadesTicket();
     this.obtenerTiposSoporte();
-    this.obtenerEstatusTicketService();
+    this.obtenerEstatusTicket();
     this.obtenerAreas();
     this.obtenerCategorias();
   }
@@ -99,7 +99,7 @@ export class AdminTicketsListComponent {
     });
   }
   
-  obtenerEstatusTicketService() {
+  obtenerEstatusTicket() {
     this.statusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTicket = data;
