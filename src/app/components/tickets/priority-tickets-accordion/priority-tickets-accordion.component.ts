@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Ticket } from '../../../models/ticket.model';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 
@@ -14,6 +15,7 @@ import { RequesterTicketsListComponent } from '../requester-tickets-list/request
     AccordionModule,
     BadgeModule,
     CommonModule,
+    TooltipModule
   ],
   templateUrl: './priority-tickets-accordion.component.html',
   styleUrl: './priority-tickets-accordion.component.scss',
