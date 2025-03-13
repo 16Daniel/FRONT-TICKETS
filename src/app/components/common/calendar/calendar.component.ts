@@ -43,7 +43,7 @@ calendarOptions: CalendarOptions = {
    headerToolbar: {
     left: 'prev,next today', // Botones de navegación
     center: 'title', // Título del calendario
-    right: 'dayGridMonth,timeGridWeek', // Botones para cambiar vista
+    right: '', // Botones para cambiar vista
   },
   datesSet: this.obtenerFechas.bind(this), // Evento para obtener fechas
   eventClick: this.handleEventClick.bind(this),
