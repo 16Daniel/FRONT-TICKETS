@@ -60,7 +60,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() mostrarAccionFinalizar: boolean = true;
   @Input() mostrarEstrellas: boolean = true;
   @Input() mostrarFedchaEstimacion: boolean = true;
-  @Input() puedeActualizarEstado: boolean = false;
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;
