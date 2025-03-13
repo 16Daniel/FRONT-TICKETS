@@ -45,36 +45,12 @@
         {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
       </td>
       <td class="text-center">
-        <p-dropdown *ngIf="puedeActualizarEstado" [options]="filrarEstatusTickets()" [(ngModel)]="ticket.idEstatusTicket" optionLabel="nombre" [showClear]="false"
-          optionValue="id" (onChange)="actualizaTicket(ticket)" [style]="{ border: 'none' }">
-          <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-              <i class="bx {{ selectedOption.icon }} {{
-                      selectedOption.animation
-                    }} bx-sm" [style]="{ color: selectedOption.color }"></i>
-            </div>
-          </ng-template>
-          <ng-template let-st pTemplate="item">
-            <div class="flex align-items-center gap-2">
-              <div class="d-flex justify-content-start align-items-center gap-3">
-                <td>
-
-                  <i class="bx {{ st.icon }} {{ st.animation }} bx-sm rounded-3" [style]="{ color: st.color }"></i>
-                </td>
-                <div>{{ st.nombre }}</div>
-              </div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-
-        <div *ngIf="!puedeActualizarEstado">
-          <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-          <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-          <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-          <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-          <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-          <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        </div>
+        <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
   </td>
 
   <td *ngIf="mostrarEstrellas">
