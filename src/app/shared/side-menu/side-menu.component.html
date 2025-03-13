@@ -2,6 +2,11 @@
   <div class="navbar-c">
     <div class="container-c nav-container">
       <input class="checkbox" type="checkbox" name="" id="checkmenu" [(ngModel)]="showmenu" />
+      <div style="text-align: center;">
+        <h3 class="m-3 text-center">
+          <span class="text-center text-danger">{{ sucursal?.nombre }}</span>
+        </h3>
+      </div>
       <div class="hamburger-lines">
         <span class="line line1"></span>
         <span class="line line2"></span>
@@ -17,14 +22,14 @@
         <li (click)="closemenu()"><a [routerLink]="'/main/users'"><i class='bx bx-user'></i>Usuarios</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/roles'"><i class='bx bx-objects-horizontal-left'></i>Roles</a>
         </li>
-        <li (click)="closemenu()" *ngIf="userdata.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
+        <li (click)="closemenu()" *ngIf="usuario.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
               class='bx bx-calendar-plus'></i>Registrar visita</a></li>
-        <li (click)="closemenu()" *ngIf="userdata.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i
+        <li (click)="closemenu()" *ngIf="usuario.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i
               class='bx bx-calendar'></i>Calendario de visitas</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/version-control'"><i class='bx bxs-dashboard'></i>Control de versiones</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
-        <div class="">{{userdata.nombre +' ' + userdata.apellidoP}}</div>
+        <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">
           <button class="btn bg-p-b p-3" (click)="logout()"> <i class='bx bx-log-out'></i>&nbsp;CERRAR SESIÓN</button>
         </div>
