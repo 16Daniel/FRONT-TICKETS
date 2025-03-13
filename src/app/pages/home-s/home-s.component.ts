@@ -139,7 +139,7 @@ export default class homeSComponent implements OnInit {
             this.todosLosTickets = data;
 
             this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
-            this.showMessage('success', 'Nuevo ticket asignado', 'Folio: ' + this.ultimoNuevoTicket?.folio);
+            this.showMessage('info', 'Nuevo ticket asignado', 'Sucursal: ' + this.usuario.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
           }
           else {
             this.tickets = data;
@@ -205,8 +205,8 @@ export default class homeSComponent implements OnInit {
     }, 50);
   }
 
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  showMessage(sev: string, summ: string, det: string, timeout : number = 3000) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det, life: timeout  });
   }
 
   // nuevoMantenimiento() {

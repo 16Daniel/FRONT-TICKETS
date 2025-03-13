@@ -1,7 +1,6 @@
 <a [routerLink]="['/main/version-history']">
   <p-button
     [label]="'Versión ' + (versionActual != null ? versionActual?.version : '')"
-    size="small"
     icon="pi pi-bell"
     [badge]="mostrarNotificacion ? ' ' : ''"
     badgeClass="p-badge-danger"

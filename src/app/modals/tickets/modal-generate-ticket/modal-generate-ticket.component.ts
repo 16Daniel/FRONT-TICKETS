@@ -216,26 +216,6 @@ export class ModalGenerateTicketComponent implements OnInit {
       const docid = await this.ticketsService.create(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       this.closeEvent.emit(false); // Cerrar modal
-
-      let dataNot: Notificacion = {
-        titulo: 'NUEVO TICKET',
-        mensaje:
-          'SE GENERÓ UN NUEVO TICKET PARA LA SUCURSAL: ' + this.sucursal.nombre,
-        uid: this.obtenerUidResponsableTicket(),
-        fecha: new Date(),
-        abierta: false,
-        idTicket: docid,
-        notificado: false,
-      };
-
-      this.notificationsService.addNotifiacion(dataNot);
-
-      this.formDescripcion = '';
-      this.formNombreSolicitante = '';
-      this.formCategoria = undefined;
-      this.formStatusSucursal = undefined;
-      this.formArea = undefined;
-      this.formPrioridad = undefined;
     });
   }
 

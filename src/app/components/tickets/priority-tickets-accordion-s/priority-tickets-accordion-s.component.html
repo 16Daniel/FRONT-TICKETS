@@ -18,12 +18,12 @@
           {{ item.nombre }}
         </span>
 
-        <span class="icon-circle" *ngIf="verificarTicketsNuevos(obtenerTicketsPorSucursal(item.id))">
-          <i class="pi pi-ticket"></i>
+        <span class="icon-circle bx-tada" *ngIf="verificarTicketsNuevos(obtenerTicketsPorSucursal(item.id))">
+          <i class="pi pi-ticket" pTooltip="Nuevo ticket" tooltipPosition="top"></i>
         </span>
 
-        <span class="icon-circle" *ngIf="verificarChatNoLeido(obtenerTicketsPorSucursal(item.id))">
-          <i class="pi pi-comments"></i>
+        <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(obtenerTicketsPorSucursal(item.id))">
+          <i class="pi pi-comments" pTooltip="Nuevo chat" tooltipPosition="top"></i>
         </span>
 
       </span>
@@ -31,6 +31,6 @@
 
     <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)"
       (clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
-      [mostrarEstrellas]="false"></app-requester-tickets-list>
+      [mostrarEstrellas]="false" [puedeActualizarEstado]="true"></app-requester-tickets-list>
   </p-accordionTab>
 </p-accordion>

@@ -30,6 +30,8 @@ import { Area } from '../../../models/area';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-requester-tickets-list',
   standalone: true,
@@ -42,9 +44,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     BadgeModule,
     RatingStarsComponent,
     TooltipModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DropdownModule,
+    FormsModule
   ],
-  providers: [MessageService,ConfirmationService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
@@ -56,6 +60,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() mostrarAccionFinalizar: boolean = true;
   @Input() mostrarEstrellas: boolean = true;
   @Input() mostrarFedchaEstimacion: boolean = true;
+  @Input() puedeActualizarEstado: boolean = false;
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;
@@ -76,7 +81,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private notificationsService: NotificationsService,
     private ticketsService: TicketsService,
     private areasService: AreasService,
-    private statusTicketsService: StatusTicketService
+    private statusTicketsService: StatusTicketService,
   ) {
     this.obtenerCatalogoEstatusTickets();
   }
@@ -225,7 +230,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   onPanicoClick(idTicket: string) {
-    debugger
+    debugger;
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
@@ -293,5 +298,16 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     )[0].nombre;
 
     return nombre;
+  }
+
+  actualizaTicket(ticket: Ticket) {
+    this.ticketsService
+      .update(ticket)
+      .then(() => {})
+      .catch((error) => console.error(error));
+  }
+
+  filrarEstatusTickets() {
+    return this.estatusTickets.filter(x => x.id == '1' || x.id == '2')
   }
 }

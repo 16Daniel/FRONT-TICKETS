@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
-import { BranchMaintenanceTableComponent } from '../../maintenance/branch-maintenance-table/branch-maintenance-table.component';
 import { Usuario } from '../../../models/usuario.model';
 
 @Component({
@@ -17,6 +17,7 @@ import { Usuario } from '../../../models/usuario.model';
     BadgeModule,
     AccordionModule,
     RequesterTicketsListComponent,
+    TooltipModule
   ],
   templateUrl: './priority-tickets-accordion-s.component.html',
   styleUrl: './priority-tickets-accordion-s.component.scss',

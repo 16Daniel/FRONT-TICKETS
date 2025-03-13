@@ -7,8 +7,12 @@
                 <p-badge [value]="obtenerContadorTickets(item)" class="ml-auto mr-2" size="large"
                     [style]="{'background-color':'white','color':'black'}" />
                 <span class="fw-bold" [style]="{ 'color': (item === 'MEDIA' || item === 'BAJA') ? 'black' : 'white' }"
-                style="padding-top: 7px;" [ngClass]="{'has-notification': verificarChatNoLeido(obtenerTicketsFiltrados(item))}">
+                    style="padding-top: 7px;">
                     {{ item }}
+                </span>
+
+                <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(obtenerTicketsFiltrados(item))">
+                    <i class="pi pi-comments" pTooltip="Nuevo chat" tooltipPosition="top"></i>
                 </span>
             </span>
         </ng-template>

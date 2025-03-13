@@ -29,10 +29,10 @@
       </td>
       <td class="text-center">{{ ticket.folio }}</td>
       <td class="text-center">
-        {{ getDate(ticket!.fecha) | date: 'short' }}
+        {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
       </td>
       <td class="text-center" *ngIf="mostrarFedchaEstimacion">
-        {{ getDate(ticket!.fechaEstimacion) | date: 'short' }}
+        {{ getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}
       </td>
       <td class="text-center">
         {{ obtenerNombreArea(ticket.idArea) }}
@@ -45,33 +45,57 @@
         {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
       </td>
       <td class="text-center">
-        <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-      </td>
+        <p-dropdown *ngIf="puedeActualizarEstado" [options]="filrarEstatusTickets()" [(ngModel)]="ticket.idEstatusTicket" optionLabel="nombre" [showClear]="false"
+          optionValue="id" (onChange)="actualizaTicket(ticket)" [style]="{ border: 'none' }">
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              <i class="bx {{ selectedOption.icon }} {{
+                      selectedOption.animation
+                    }} bx-sm" [style]="{ color: selectedOption.color }"></i>
+            </div>
+          </ng-template>
+          <ng-template let-st pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div class="d-flex justify-content-start align-items-center gap-3">
+                <td>
 
-      <td *ngIf="mostrarEstrellas">
-        <app-rating-stars [rating]="ticket.calificacion" [editable]="true"></app-rating-stars>
-      </td>
+                  <i class="bx {{ st.icon }} {{ st.animation }} bx-sm rounded-3" [style]="{ color: st.color }"></i>
+                </td>
+                <div>{{ st.nombre }}</div>
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
 
-      <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
-        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
-          *ngIf="mostrarAccionFinalizar">
-          <i class="bx bx-check-circle bx-sm"></i>
-        </button>
-        <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px" *ngIf="mostrarAccionChat"
-          [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
-          <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"></i>
-        </button>
-        <button *ngIf="(ticket != undefined && ticket!.idPrioridadTicket != '1') && mostrarAccionPanico"
-          class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
-          <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)"></i>
-        </button>
-      </td>
-    </tr>
+        <div *ngIf="!puedeActualizarEstado">
+          <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm" style="color: #ff0028" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+          <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+          <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+          <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+          <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+          <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        </div>
+  </td>
+
+  <td *ngIf="mostrarEstrellas">
+    <app-rating-stars [rating]="ticket.calificacion" [editable]="true"></app-rating-stars>
+  </td>
+
+  <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
+    <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
+      *ngIf="mostrarAccionFinalizar">
+      <i class="bx bx-check-circle bx-sm" pTooltip="Finalizar ticket" tooltipPosition="top"></i>
+    </button>
+    <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px"
+      *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
+      <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="Chat" tooltipPosition="top"></i>
+    </button>
+    <button *ngIf="(ticket != undefined && ticket!.idPrioridadTicket != '1') && mostrarAccionPanico"
+      class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px">
+      <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)" pTooltip="Pánico" tooltipPosition="top"></i>
+    </button>
+  </td>
+  </tr>
   </ng-template>
 </p-table>
 
@@ -81,5 +105,5 @@
 <app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
   (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>
 
-  
-<p-confirmDialog/>
+
+<p-confirmDialog />
