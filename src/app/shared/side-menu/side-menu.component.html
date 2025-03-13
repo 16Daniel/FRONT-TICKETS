@@ -22,9 +22,9 @@
         <li (click)="closemenu()"><a [routerLink]="'/main/users'"><i class='bx bx-user'></i>Usuarios</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/roles'"><i class='bx bx-objects-horizontal-left'></i>Roles</a>
         </li>
-        <li (click)="closemenu()" *ngIf="usuario.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
+        <li (click)="closemenu()" *ngIf="usuario?.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
               class='bx bx-calendar-plus'></i>Registrar visita</a></li>
-        <li (click)="closemenu()" *ngIf="usuario.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i
+        <li (click)="closemenu()" *ngIf="usuario?.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i
               class='bx bx-calendar'></i>Calendario de visitas</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/version-control'"><i class='bx bxs-dashboard'></i>Control de versiones</a></li>
 
