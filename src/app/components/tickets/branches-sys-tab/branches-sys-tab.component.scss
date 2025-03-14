@@ -1,0 +1,24 @@
+/* 🔹 Tabs inactivos (gris claro) */
+::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    color: #999 !important; /* Texto gris para tabs inactivos */
+    font-weight: normal;
+    text-decoration: none !important;
+    transition: color 0.3s ease;
+}
+
+/* 🔹 Tab activo (negro) */
+::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    color: black !important; /* 🔥 Ahora sí, negro para la pestaña activa */
+    font-weight: bold;
+    border-bottom: 3px solid #007bff !important; /* Línea azul para resaltar */
+}
+
+/* 🔹 Hover en tabs inactivos */
+::ng-deep .p-tabview .p-tabview-nav li:not(.p-highlight) .p-tabview-nav-link:hover {
+    color: #666 !important; /* Gris más oscuro en hover */
+}
+
+/* 🔹 Línea separadora entre los tabs y el contenido */
+::ng-deep .p-tabview .p-tabview-nav {
+    border-bottom: 2px solid #ddd !important;
+}
