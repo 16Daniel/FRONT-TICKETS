@@ -10,28 +10,27 @@ import {
 } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { Ticket } from '../../../models/ticket.model';
 import { UsersService } from '../../../services/users.service';
-import { NotificationsService } from '../../../services/notifications.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { ModalFinalizeTicketComponent } from '../../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
 import { Usuario } from '../../../models/usuario.model';
-import { Notificacion } from '../../../models/notificacion.model';
 import { RatingStarsComponent } from '../../common/rating-stars/rating-stars.component';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-requester-tickets-list',
   standalone: true,
@@ -52,6 +51,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
+
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() mostrarAcciones: boolean = true;
@@ -77,7 +77,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private messageService: MessageService,
     private usersService: UsersService,
     private confirmationService: ConfirmationService,
-    private notificationsService: NotificationsService,
     private ticketsService: TicketsService,
     private areasService: AreasService,
     private statusTicketsService: StatusTicketService,
@@ -229,7 +228,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   onPanicoClick(idTicket: string) {
-    debugger;
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
@@ -239,21 +237,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
         this.actualizaTicketEstatusSucursal(idTicket);
-
-        let dataNot: Notificacion = {
-          titulo: 'ALERTA DE PÁNICO',
-          mensaje:
-            'EL TICKET CON EL ID: ' +
-            idTicket +
-            ' HA CAMBIADO AL ESTATUS DE PÁNICO',
-          uid: this.obtenerIdResponsableTicket(),
-          fecha: new Date(),
-          abierta: false,
-          idTicket: idTicket,
-          notificado: false,
-        };
-
-        let idn = this.notificationsService.addNotifiacion(dataNot);
       },
       reject: () => {},
     });

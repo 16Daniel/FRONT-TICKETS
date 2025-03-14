@@ -13,7 +13,7 @@
                     <p-checkbox [binary]="true" [formControlName]="opcion.controlName"
                         (onChange)="onCheckboxChange($event)">
                         ></p-checkbox>
-                    <label class="check-text ml-2">{{ i + 1 }}.- {{ opcion.label }}</label>
+                    <label class="check-text ml-2" [pTooltip]="opcion.tooltip" tooltipPosition="top">{{ i + 1 }}.- {{ opcion.label }}</label>
                 </div>
             </div>
         </div>
