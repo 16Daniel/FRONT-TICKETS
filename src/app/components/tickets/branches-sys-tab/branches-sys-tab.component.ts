@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
@@ -37,7 +37,7 @@ import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
     BranchesTabsComponent,
-    PriorityTicketsAccordionComponent
+    PriorityTicketsAccordionComponent,
   ],
   templateUrl: './branches-sys-tab.component.html',
   styleUrl: './branches-sys-tab.component.scss',
@@ -65,7 +65,8 @@ export class BranchesSysTabComponent {
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
-    private mantenimientoService: Maintenance10x10Service
+    private mantenimientoService: Maintenance10x10Service,
+    private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -176,5 +177,24 @@ export class BranchesSysTabComponent {
         // console.log('Mantenimiento activo:', this.mantenimientoActivo);
       }
     );
+  }
+
+  mostrarAlerta10x10() {
+    this.confirmationService.confirm({
+      header: 'IMPORTANTE',
+      message: `TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
+ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
+CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
+      acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
+      rejectLabel: 'Cancelar', // 🔥 Cambia "No" por "Cancelar"
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      accept: () => {
+        this.mostrarModal10x10 = true;
+      },
+      reject: () => {},
+    });
   }
 }

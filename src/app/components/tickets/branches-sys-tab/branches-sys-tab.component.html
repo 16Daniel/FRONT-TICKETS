@@ -28,11 +28,11 @@
   </p-button>
 
   <p-button
-    label="10 de 10"
+    label="Check 10 X 10"
     icon="pi pi-wrench"
     styleClass="p-button-danger"
     *ngIf="mantenimientoActivo?.id"
-    (click)="mostrarModal10x10 = true"
+    (click)="mostrarAlerta10x10()"
   >
   </p-button>
 </div>
