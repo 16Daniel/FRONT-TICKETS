@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-side-menu',
   standalone: true,
-  imports: [FormsModule, MenubarModule, VersionButtonComponent, CommonModule],
+  imports: [CommonModule,FormsModule, MenubarModule, VersionButtonComponent],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
