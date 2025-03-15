@@ -16,7 +16,7 @@
                     <i class="pi pi-comments" pTooltip="NUEVO CHAT" tooltipPosition="top"></i>
                 </span>
 
-                <span class="icon-circle bx-tada">
+                <span class="icon-circle bx-tada" *ngIf="verificarTicketsPorValidar(obtenerTicketsFiltrados(item))">
                     <i class="pi pi-bell" pTooltip="TICKET LISTO" tooltipPosition="top"></i>
                 </span>
             </span>

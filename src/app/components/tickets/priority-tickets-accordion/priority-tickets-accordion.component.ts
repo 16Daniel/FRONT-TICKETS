@@ -95,5 +95,10 @@ export class PriorityTicketsAccordionComponent implements OnInit {
       return false;
     });
   }
+
+  verificarTicketsPorValidar(tickets: Ticket[]){
+    let result = tickets.filter(x => x.idEstatusTicket == '7');
+    return result.length > 0;
+  }
   
 }
