@@ -214,7 +214,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       };
 
       const docid = await this.ticketsService.create(tk);
-      this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+      // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       this.closeEvent.emit(false); // Cerrar modal
     });
   }

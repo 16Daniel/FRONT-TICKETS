@@ -39,7 +39,7 @@ export class TicketsService {
 
   get(): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(ticketsCollection,  where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6']));
+    const q = query(ticketsCollection,  where('idEstatusTicket', 'not-in', ['1']));
     return collectionData(q, { idField: 'id' });
   }
 
@@ -64,7 +64,7 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('idSucursal', '==', idSucursal),
-        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6'])
+        where('idEstatusTicket', 'not-in', ['3'])
       );
 
       // Escucha en tiempo real
@@ -189,7 +189,7 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('idUsuario', '==', userId),
-        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6'])
+        where('idEstatusTicket', 'not-in', ['3'])
       );
 
       // Escucha en tiempo real
@@ -224,7 +224,7 @@ export class TicketsService {
       const q = query(
         collectionRef,
         where('responsable', '==', userId),
-        where('idEstatusTicket', 'in', ['1', '2', '4', '5', '6']),
+        where('idEstatusTicket', 'not-in', ['3']),
         orderBy('fecha', 'desc')
       );
 

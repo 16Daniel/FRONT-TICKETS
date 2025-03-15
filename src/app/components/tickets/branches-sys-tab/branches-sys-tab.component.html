@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-start gap-3 p-3 pb-0">
   <p-button
-    label="Crear ticket"
+    label="CREAR TICKET"
     icon="pi pi-plus"
     styleClass="p-button-primary"
     (click)="mostrarModalGenerateTicket = true"
@@ -12,7 +12,7 @@
 </p-button> -->
 
   <p-button
-    label="Historial tickets"
+    label="HISTORIAL TICKETS"
     icon="pi pi-history"
     styleClass="p-button-warning"
     (click)="mostrarModalHistorial = true"
@@ -20,7 +20,7 @@
   </p-button>
 
   <p-button
-    label="Historial 10 de 10"
+    label="HISTORIAL 10 DE 10"
     icon="pi pi-history"
     styleClass="p-button-secondary"
     (click)="mostrarModalHistorialMantenimientos = true"
@@ -28,7 +28,7 @@
   </p-button>
 
   <p-button
-    label="Check 10 X 10"
+    label="CHECK 10 X 10"
     icon="pi pi-wrench"
     styleClass="p-button-danger"
     *ngIf="mantenimientoActivo?.id"
