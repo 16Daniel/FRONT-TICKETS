@@ -45,13 +45,12 @@ import { EstatusTicket } from '../../../models/estatus-ticket.model';
     TooltipModule,
     ConfirmDialogModule,
     DropdownModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './requester-tickets-list.component.html',
   styleUrl: './requester-tickets-list.component.scss',
 })
-
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() mostrarAcciones: boolean = true;
@@ -80,7 +79,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
     private areasService: AreasService,
-    private statusTicketsService: StatusTicketService,
+    private statusTicketsService: StatusTicketService
   ) {
     this.obtenerCatalogoEstatusTickets();
   }
@@ -291,10 +290,50 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   filrarEstatusTickets() {
-    return this.estatusTickets.filter(x => x.id == '1' || x.id == '2')
+    return this.estatusTickets.filter((x) => x.id == '1' || x.id == '2');
   }
 
   onClickValidar(ticket: Ticket) {
+    this.confirmationService.confirm({
+      header: 'Confirmación',
+      message:
+        'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      accept: () => {
+        ticket.idEstatusTicket = '7';
+        this.ticketsService
+          .update(ticket)
+          .then(() => {
+            this.showMessage('success', 'Success', 'Enviado correctamente');
+          })
+          .catch((error) => console.error(error));
+      },
+      reject: () => {},
+    });
+  }
 
+  onClickRechazar(ticket: Ticket) {
+    this.confirmationService.confirm({
+      header: 'Confirmación',
+      message:
+        'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?',
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      accept: () => {
+        ticket.idEstatusTicket = '1';
+        this.ticketsService
+          .update(ticket)
+          .then(() => {
+            this.showMessage('success', 'Success', 'Enviado correctamente');
+          })
+          .catch((error) => console.error(error));
+      },
+      reject: () => {},
+    });
   }
 }

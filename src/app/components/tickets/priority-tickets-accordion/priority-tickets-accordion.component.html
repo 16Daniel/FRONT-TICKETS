@@ -6,17 +6,23 @@
                 [style]="{'background-color': obtenerBackgroundColorPrioridad(item)}">
                 <p-badge [value]="obtenerContadorTickets(item)" class="ml-auto mr-2" size="large"
                     [style]="{'background-color':'white','color':'black'}" />
+
                 <span class="fw-bold" [style]="{ 'color': (item === 'MEDIA' || item === 'BAJA') ? 'black' : 'white' }"
                     style="padding-top: 7px;">
                     {{ item }}
                 </span>
 
                 <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(obtenerTicketsFiltrados(item))">
-                    <i class="pi pi-comments" pTooltip="Nuevo chat" tooltipPosition="top"></i>
+                    <i class="pi pi-comments" pTooltip="NUEVO CHAT" tooltipPosition="top"></i>
+                </span>
+
+                <span class="icon-circle bx-tada">
+                    <i class="pi pi-bell" pTooltip="TICKET LISTO" tooltipPosition="top"></i>
                 </span>
             </span>
         </ng-template>
         <app-requester-tickets-list [tickets]="obtenerTicketsFiltrados(item)"
-            (clickEvent)="abrirModalDetalleTicket($event)" [mostrarEstrellas]="false" [mostrarAccionValidar]="false"></app-requester-tickets-list>
+            (clickEvent)="abrirModalDetalleTicket($event)" [mostrarEstrellas]="false"
+            [mostrarAccionValidar]="false"></app-requester-tickets-list>
     </p-accordionTab>
 </p-accordion>
