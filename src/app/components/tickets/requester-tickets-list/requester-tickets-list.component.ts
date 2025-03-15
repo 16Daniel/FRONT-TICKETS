@@ -60,6 +60,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() mostrarAccionFinalizar: boolean = true;
   @Input() mostrarEstrellas: boolean = true;
   @Input() mostrarFedchaEstimacion: boolean = true;
+  @Input() mostrarAccionValidar: boolean = true;
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;
@@ -291,5 +292,9 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
   filrarEstatusTickets() {
     return this.estatusTickets.filter(x => x.id == '1' || x.id == '2')
+  }
+
+  onClickValidar(ticket: Ticket) {
+
   }
 }

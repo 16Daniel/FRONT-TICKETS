@@ -62,6 +62,10 @@
       *ngIf="mostrarAccionFinalizar">
       <i class="bx bx-check-circle bx-sm" pTooltip="Finalizar ticket" tooltipPosition="top"></i>
     </button>
+    <button class="btn btn-success" (click)="onClickValidar(ticket)" style="margin: 2px"
+      *ngIf="mostrarAccionValidar">
+      <i class="bx bx-check-circle bx-sm" pTooltip="Validar ticket" tooltipPosition="top"></i>
+    </button>
     <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px"
       *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
       <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="Chat" tooltipPosition="top"></i>
