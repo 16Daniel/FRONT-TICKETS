@@ -19,7 +19,6 @@ import { Categoria } from '../../../models/categoria.mdoel';
 import { EditorModule } from 'primeng/editor';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
-import { Notificacion } from '../../../models/notificacion.model';
 import { Ticket } from '../../../models/ticket.model';
 import { BranchesService } from '../../../services/branches.service';
 import { CategoriesService } from '../../../services/categories.service';
@@ -214,7 +213,8 @@ export class ModalGenerateTicketComponent implements OnInit {
       };
 
       const docid = await this.ticketsService.create(tk);
-      // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+      this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+      console.log('Success', 'ENVIADO CORRECTAMENTE')
       this.closeEvent.emit(false); // Cerrar modal
     });
   }

@@ -15,7 +15,9 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-end mt-3" *ngIf="usuario?.idRol == '4' && (ticket?.idEstatusTicket != '2' && ticket?.idEstatusTicket != '5')" (click)="onClick()">
+    <div class="d-flex justify-content-end mt-3"
+        *ngIf="usuario?.idRol == '4' && (ticket?.idEstatusTicket != '2' && ticket?.idEstatusTicket != '5' && ticket?.idEstatusTicket != '7')"
+        (click)="onClick()">
         <button class="btn bg-p-b p-3">TRABAJAR</button>
     </div>
 </p-dialog>
