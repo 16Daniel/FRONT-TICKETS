@@ -33,18 +33,18 @@ import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-
   templateUrl: './modal-tickets-history.component.html',
   styleUrl: './modal-tickets-history.component.scss',
 })
-export class ModalTicketsHistoryComponent {
+export class ModalTicketsHistoryComponent implements OnDestroy {
   @Input() showModalHistorial: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   showModalFilterTickets: boolean = false;
-  // subscriptiontk: Subscription | undefined;
   private unsubscribe!: () => void;
   userdata: any;
   fechaInicio: Date = new Date();
   fechaFin: Date = new Date();
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
+  paginaCargaPrimeraVez: boolean = true;
 
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
@@ -58,6 +58,12 @@ export class ModalTicketsHistoryComponent {
     let idUsuario = this.userdata.uid;
 
     this.obtenerTicketsPorUsuario(idUsuario);
+  }
+
+  ngOnDestroy() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   onHide() {
@@ -76,7 +82,8 @@ export class ModalTicketsHistoryComponent {
         let arr_temp: Ticket[] = [];
 
         if (tickets) {
-          this.showMessage('success', 'Success', 'Información localizada');
+          if (!this.paginaCargaPrimeraVez) { this.showMessage('success', 'Success', 'Información localizada'); }
+          this.paginaCargaPrimeraVez = false;
 
           let temp1: Ticket[] = this.tickets.filter(
             (x) => x.idPrioridadTicket == '1'
@@ -90,7 +97,7 @@ export class ModalTicketsHistoryComponent {
           let temp4: Ticket[] = this.tickets.filter(
             (x) => x.idPrioridadTicket == '4'
           );
-          
+
           temp1 = temp1.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
 
           temp2 = temp2.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());

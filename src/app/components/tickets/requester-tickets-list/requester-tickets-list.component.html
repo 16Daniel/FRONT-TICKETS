@@ -18,7 +18,7 @@
   </ng-template>
   <!-- FF495F -->
   <ng-template pTemplate="body" let-ticket>
-    <tr [pSelectableRow]="ticket">
+    <tr [pSelectableRow]="ticket" [ngClass]="{'row-highlight': ticket.idEstatusTicket == '7'}">
       <td class="text-center" *ngIf="ticket.idPrioridadTicket == '1'">
         <i class="bx bxs-hot bx-sm" style="color: red"></i>
       </td>
@@ -60,7 +60,7 @@
 
   <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
     <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
-      *ngIf="mostrarAccionFinalizar && ticket.idEstatusTicket != '7'">
+      *ngIf="mostrarAccionFinalizar">
       <i class="bx bx-check-circle bx-sm" pTooltip="FINALIZAR TICKET" tooltipPosition="top"></i>
     </button>
     <button class="btn btn-warning" (click)="onClickRechazar(ticket)" style="margin: 2px"
