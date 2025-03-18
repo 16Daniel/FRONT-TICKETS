@@ -52,7 +52,7 @@ export class BranchMaintenanceTableComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         // this.cdr.detectChanges();

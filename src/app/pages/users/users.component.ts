@@ -76,7 +76,7 @@ export default class UsersComponent {
   }
 
   getusuarios() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         console.log(data);
         this.catusuarios = data;
@@ -152,7 +152,7 @@ export default class UsersComponent {
   async adduser() {
     try {
       debugger;
-      const uid = await this.usersService.registerUser(
+      const uid = await this.usersService.registerAuthFirebaseUser(
         this.formemail!,
         this.formpass!
       );
@@ -174,10 +174,11 @@ export default class UsersComponent {
       password: this.formpass!,
       uid: uid,
       sucursales: this.sucursalessel,
+      esGuardia: false
     };
 
     try {
-      await this.usersService.addUser(data);
+      await this.usersService.create(data);
       console.log('Usuario agregado a Firestore');
     } catch (error) {
       console.error('Error al agregar usuario:', error);
@@ -207,6 +208,7 @@ export default class UsersComponent {
       password: this.formpass!,
       uid: this.usuariosel?.uid!,
       sucursales: this.sucursalessel,
+      esGuardia: false
     };
 
     this.documentsService

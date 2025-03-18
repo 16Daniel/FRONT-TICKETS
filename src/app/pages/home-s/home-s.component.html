@@ -1,5 +1,9 @@
 <div class="pt-5">
+  <div *ngIf="usuario.esGuardia" class="alert alert-warning text-center fw-bold" style="margin-top: 15px;">
+    🚨 MODO GUARDIA ACTIVADO 🚨
+  </div>
   <div class="mt-5"></div>
+
 
   @if(ordenarxmantenimiento==false)
   {
@@ -8,29 +12,31 @@
   {
   <h3 class="m-3 text-center">MANTENIMIENTOS</h3>
   }
-  <div class="d-flex justify-content-start gap-3 p-3 pb-0 flex-wrap">
 
+  <div class="d-flex justify-content-start gap-3 p-3 pb-0 flex-wrap">
     <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary"
       (click)="showModalGenerateTicket = true">
     </p-button>
-
-    <!-- <p-button label="Filtrar tickets" icon="pi pi-filter" styleClass="p-button-success"
-      (click)="showModalFilterTickets = true">
-    </p-button> -->
 
     <p-button label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
       (click)="showModalHistorial = true">
     </p-button>
 
-    <!-- <p-button label="Nuevo Mantenimiento" icon="pi pi-plus" styleClass="p-button-info" (click)="nuevoMantenimiento()">
-    </p-button> -->
-
     <div class="form-check form-switch d-flex align-items-center gap-3">
       <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
         style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarxmantenimiento">
-      <label class="form-check-label fs-4" for="flexSwitchCheckChecked">10X10</label>
+      <label class="form-check-label fs-4" for="flexSwitchCheckDefault">10X10</label>
+    </div>
+
+    <div class="ms-auto d-flex align-items-center gap-3">
+      <label class="form-check-label fs-4" for="activarGuardia">Activar guardia</label>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
+          style="width: 3rem; height: 2rem;" [(ngModel)]="usuario.esGuardia" (change)="onToggleGuardia(usuario)">
+      </div>
     </div>
   </div>
+
 
   <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
     *ngIf="tickets.length == 0">
@@ -43,8 +49,7 @@
   </div>
 
   <div *ngIf="tickets.length > 0 && !ordenarxmantenimiento" class="p-1 mt-4">
-    <app-priority-tickets-accordion-s [tickets]="tickets"
-      [sucursales]="usuario.sucursales"
+    <app-priority-tickets-accordion-s [tickets]="tickets" [sucursales]="usuario.sucursales"
       (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion-s>
   </div>
 

@@ -256,7 +256,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.catUsuariosHelp = data;
         this.cdr.detectChanges();

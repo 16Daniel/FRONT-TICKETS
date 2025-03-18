@@ -23,6 +23,7 @@ import { Area } from '../../models/area';
 import { ModalTenXtenMaintenanceNewComponent } from '../../modals/maintenance/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { PriorityTicketsAccordionSComponent } from '../../components/tickets/priority-tickets-accordion-s/priority-tickets-accordion-s.component';
 import { AccordionBranchMaintenance10x10Component } from '../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-home-s',
@@ -76,7 +77,8 @@ export default class homeSComponent implements OnInit {
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
     private mantenimientoService: Maintenance10x10Service,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private usersService: UsersService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     let idu = this.usuario.uid;
@@ -209,7 +211,15 @@ export default class homeSComponent implements OnInit {
     this.messageService.add({ severity: sev, summary: summ, detail: det, life: timeout  });
   }
 
-  // nuevoMantenimiento() {
-  //   this.ShowModal10x10New = true;
-  // }
+  async onToggleGuardia(usuario: any): Promise<void> {
+    if (!usuario || !usuario.id) return; // Evita errores si el usuario no tiene ID
+  
+    try {
+      await this.usersService.updateUserGuardStatus(usuario.id, usuario.esGuardia);
+      localStorage.setItem('rwuserdatatk', JSON.stringify(usuario));
+      console.log(`Modo guardia actualizado: ${usuario.esGuardia}`);
+    } catch (error) {
+      console.error('Error actualizando modo guardia:', error);
+    }
+  }
 }

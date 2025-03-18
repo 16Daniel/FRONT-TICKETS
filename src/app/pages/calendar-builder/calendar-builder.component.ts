@@ -160,7 +160,7 @@ async obtenerTodosLosTickets(): Promise<void> {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4'); 

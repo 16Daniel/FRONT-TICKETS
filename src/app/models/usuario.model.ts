@@ -10,4 +10,5 @@ export class Usuario {
   password: string = '';
   uid: string = '';
   sucursales: Sucursal[] = [];
+  esGuardia: boolean = false;
 }

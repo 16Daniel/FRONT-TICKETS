@@ -91,7 +91,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         // this.cdr.detectChanges();
