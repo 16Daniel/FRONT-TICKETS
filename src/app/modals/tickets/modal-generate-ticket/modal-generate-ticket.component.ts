@@ -190,12 +190,12 @@ export class ModalGenerateTicketComponent implements OnInit {
         solicitante: this.formNombreSolicitante,
         idPrioridadTicket: this.formPrioridad.id,
         idEstatusTicket: '1',
-        responsable: this.obtenerUidResponsableTicket(),
+        idResponsableFinaliza: this.obtenerIdResponsableTicket(),
         comentarios: [],
         fechaFin: null,
         fechaEstimacion,
         idTipoSoporte: '1',
-        idUsuario: this.usuarioActivo.uid,
+        idUsuario: this.usuarioActivo.id,
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
@@ -216,22 +216,6 @@ export class ModalGenerateTicketComponent implements OnInit {
       console.log('Success', 'ENVIADO CORRECTAMENTE')
       this.closeEvent.emit(false); // Cerrar modal
     });
-  }
-
-  obtenerUidResponsableTicket(): string {
-    let idr = '';
-    for (let item of this.catUsuariosHelp) {
-      if (item.idRol == '4') {
-        const existeSucursal = item.sucursales.some(
-          (x) => x.id == this.sucursal.id
-        );
-        if (existeSucursal) {
-          idr = item.uid;
-        }
-      }
-    }
-
-    return idr;
   }
 
   obtenerIdResponsableTicket(): string {

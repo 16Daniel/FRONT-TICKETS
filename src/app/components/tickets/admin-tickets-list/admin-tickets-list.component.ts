@@ -161,7 +161,7 @@ export class AdminTicketsListComponent {
   obtenerNombreResponsable(id: string): string {
     let name = '';
 
-    let temp = this.usuariosHelp.filter((x) => x.uid == id);
+    let temp = this.usuariosHelp.filter((x) => x.id == id);
     if (temp.length > 0) {
       name = temp[0].nombre + ' ' + temp[0].apellidoP;
     }

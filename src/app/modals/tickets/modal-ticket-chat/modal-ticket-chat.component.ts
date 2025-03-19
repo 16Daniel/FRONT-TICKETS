@@ -61,10 +61,10 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
     );
   }
 
-  esmiuid(id: string): boolean {
+  esmiId(id: string): boolean {
     let st = false;
     let userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idu = this.userdata.uid;
+    let idu = this.userdata.id;
     if (id == idu) {
       st = true;
     }
@@ -80,11 +80,11 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
       return;
     }
 
-    let idu = this.userdata.uid;
+    let idu = this.userdata.id;
 
     let data = {
       nombre: this.userdata.nombre + ' ' + this.userdata.apellidoP,
-      uid: idu,
+      idUsuario: idu,
       comentario: this.comentario,
       fecha: new Date(),
     };

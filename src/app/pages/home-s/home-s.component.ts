@@ -87,7 +87,6 @@ export default class homeSComponent implements OnInit {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 
-    // let idu = this.usuario.uid;
     this.getTicketsResponsable(this.usuario.id);
     this.sucursal = this.usuario.sucursales[0];
     this.formdepto = this.sucursal;
@@ -140,6 +139,7 @@ export default class homeSComponent implements OnInit {
       .getTicketsResponsable(idUsuario)
       .subscribe({
         next: (data) => {
+          console.log(data)
           if (
             data.length > this.todosLosTickets.length &&
             !this.paginaCargaPrimeraVez

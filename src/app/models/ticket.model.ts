@@ -16,7 +16,7 @@ export interface Ticket {
   fechaEstimacion: Timestamp | any;
   fechaFin: Timestamp | null;
   solicitante: string;
-  responsable: string;
+  idResponsableFinaliza: string;
   nombreCategoria: string | null;
   decripcion: string;
   comentarios: Comentario[];
