@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { Sucursal } from '../../models/sucursal.model';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
+import { Sucursal } from '../../models/sucursal.model';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
@@ -24,6 +25,7 @@ import { ModalTenXtenMaintenanceNewComponent } from '../../modals/maintenance/mo
 import { PriorityTicketsAccordionSComponent } from '../../components/tickets/priority-tickets-accordion-s/priority-tickets-accordion-s.component';
 import { AccordionBranchMaintenance10x10Component } from '../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { UsersService } from '../../services/users.service';
+import { BranchesService } from '../../services/branches.service';
 
 @Component({
   selector: 'app-home-s',
@@ -72,23 +74,28 @@ export default class homeSComponent implements OnInit {
   ordenarxmantenimiento: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
   ultimoNuevoTicket: Ticket | null = null;
+  sucursales: Sucursal[] = [];
+  todasSucursales: Sucursal[] = [];
 
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
     private mantenimientoService: Maintenance10x10Service,
     private messageService: MessageService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private branchesService: BranchesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idu = this.usuario.uid;
-    this.getTicketsResponsable(idu);
+
+    // let idu = this.usuario.uid;
+    this.getTicketsResponsable(this.usuario.id);
     this.sucursal = this.usuario.sucursales[0];
     this.formdepto = this.sucursal;
   }
 
   ngOnInit(): void {
     this.obtnerUltimosMantenimientos();
+    this.obtenerSucursales();
   }
 
   obtnerUltimosMantenimientos() {
@@ -127,10 +134,10 @@ export default class homeSComponent implements OnInit {
     }
   }
 
-  async getTicketsResponsable(userid: string): Promise<void> {
+  async getTicketsResponsable(idUsuario: string): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
-      .getTicketsResponsable(userid)
+      .getTicketsResponsable(idUsuario)
       .subscribe({
         next: (data) => {
           if (
@@ -141,7 +148,9 @@ export default class homeSComponent implements OnInit {
             this.todosLosTickets = data;
 
             this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
-            this.showMessage('info', 'Nuevo ticket asignado', 'Sucursal: ' + this.usuario.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
+            console.log(this.usuario);
+            console.log(this.ultimoNuevoTicket);
+            this.showMessage('info', 'Nuevo ticket asignado', 'Sucursal: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
           }
           else {
             this.tickets = data;
@@ -212,14 +221,23 @@ export default class homeSComponent implements OnInit {
   }
 
   async onToggleGuardia(usuario: any): Promise<void> {
-    if (!usuario || !usuario.id) return; // Evita errores si el usuario no tiene ID
+    if (!usuario || !usuario.id) return;
   
     try {
       await this.usersService.updateUserGuardStatus(usuario.id, usuario.esGuardia);
       localStorage.setItem('rwuserdatatk', JSON.stringify(usuario));
-      console.log(`Modo guardia actualizado: ${usuario.esGuardia}`);
+      this.sucursales = usuario.esGuardia ? this.todasSucursales : this.usuario.sucursales;
+      this.cdr.detectChanges();
+
     } catch (error) {
       console.error('Error actualizando modo guardia:', error);
     }
+  }
+
+  obtenerSucursales() {
+    this.branchesService.get().subscribe(result => {
+      this.todasSucursales = result;
+      this.sucursales = this.usuario.esGuardia ? result : this.usuario.sucursales;
+    });
   }
 }

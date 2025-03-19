@@ -217,17 +217,17 @@ export class TicketsService {
 
   getTicketsResponsable(userId: string): Observable<any[]> {
     return new Observable((observer) => {
-      // Referencia a la colección
+      // Referencia a la colección de tickets
       const collectionRef = collection(this.firestore, 'tickets');
-
-      // Consulta filtrada por el ID del usuario
+  
+      // Consulta filtrada por el ID del usuario dentro del array de responsables
       const q = query(
         collectionRef,
-        where('responsable', '==', userId),
+        where('idResponsables', 'array-contains', userId), // Cambio aquí
         where('idEstatusTicket', 'not-in', ['3']),
         orderBy('fecha', 'desc')
       );
-
+  
       // Escucha en tiempo real
       const unsubscribe = onSnapshot(
         q,
@@ -236,7 +236,7 @@ export class TicketsService {
             id: doc.id,
             ...doc.data(),
           }));
-
+  
           // Emitir los tickets actualizados
           observer.next(tickets);
         },
@@ -245,11 +245,12 @@ export class TicketsService {
           observer.error(error);
         }
       );
-
+  
       // Manejo de limpieza
       return { unsubscribe };
     });
   }
+  
 
   async obtenerSecuencialTickets(): Promise<number> {
     try {

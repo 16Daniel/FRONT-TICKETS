@@ -151,7 +151,6 @@ export default class UsersComponent {
 
   async adduser() {
     try {
-      debugger;
       const uid = await this.usersService.registerAuthFirebaseUser(
         this.formemail!,
         this.formpass!

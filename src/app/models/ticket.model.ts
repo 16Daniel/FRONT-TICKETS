@@ -5,6 +5,7 @@ import { ParticipanteChat } from './participante-chat.model';
 export interface Ticket {
   id?: string | any;
   idUsuario: string;
+  idResponsables: string[]; // Usuarios responsables del ticket
   idSucursal: string;
   idArea: string;
   idCategoria: string;

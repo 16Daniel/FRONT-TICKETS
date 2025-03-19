@@ -49,7 +49,7 @@
   </div>
 
   <div *ngIf="tickets.length > 0 && !ordenarxmantenimiento" class="p-1 mt-4">
-    <app-priority-tickets-accordion-s [tickets]="tickets" [sucursales]="usuario.sucursales"
+    <app-priority-tickets-accordion-s [tickets]="tickets" [sucursales]="sucursales"
       (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion-s>
   </div>
 

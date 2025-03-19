@@ -9,7 +9,6 @@ import {
 import { TicketsService } from '../../../services/tickets.service';
 import { FolioGeneratorService } from '../../../services/folio-generator.service';
 import { MessageService } from 'primeng/api';
-import { NotificationsService } from '../../../services/notifications.service';
 import { DialogModule } from 'primeng/dialog';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
@@ -64,7 +63,6 @@ export class ModalGenerateTicketComponent implements OnInit {
     private ticketsService: TicketsService,
     private folioGeneratorService: FolioGeneratorService,
     private messageService: MessageService,
-    private notificationsService: NotificationsService,
     private categoriesService: CategoriesService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
@@ -184,6 +182,7 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       let tk: Ticket = {
         fecha: new Date(),
+        idResponsables: this.obtenerResponsablesTicket(this.sucursal.id),
         idSucursal: this.sucursal.id,
         idArea: this.formArea.id,
         idCategoria: this.formCategoria.id,
@@ -269,5 +268,22 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   onHide() {
     this.closeEvent.emit(false); // Cerrar modal
+  }
+
+  obtenerResponsablesTicket(idSucursal: string): string[] {
+    let idsResponsables: string[] = [];
+
+    for (let usuario of this.catUsuariosHelp) {
+      const existeSucursal = usuario.sucursales.some(
+        (sucursal) => sucursal.id == idSucursal
+      );
+
+      if ((existeSucursal || usuario.esGuardia) && usuario.idRol !== '2') {
+        idsResponsables.push(usuario.id);
+      }
+    }
+
+    console.log(idsResponsables)
+    return idsResponsables;
   }
 }

@@ -26,10 +26,11 @@ export class PriorityTicketsAccordionSComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Output() clickEvent = new EventEmitter<Ticket>();
+
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
   usuario: Usuario | any;
-  
+
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -86,23 +87,23 @@ export class PriorityTicketsAccordionSComponent implements OnInit {
     this.clickEvent.emit(ticket);
   }
 
-  verificarTicketsNuevos(tickets: Ticket[]){
+  verificarTicketsNuevos(tickets: Ticket[]) {
     let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
     return nuevosTickets.length > 0;
   }
-  
+
   verificarChatNoLeido(tickets: Ticket[]): boolean {
     return tickets.some(ticket => {
       const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
       const participante = participantes.find((p) => p.idUsuario === this.usuario.id);
-  
+
       if (participante) {
         const ultimoComentarioLeido = participante.ultimoComentarioLeido;
         const comentarios = ticket.comentarios;
-  
+
         return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
       }
-      
+
       return false;
     });
   }
