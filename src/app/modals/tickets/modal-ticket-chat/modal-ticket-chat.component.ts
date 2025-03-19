@@ -4,23 +4,20 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Timestamp } from '@angular/fire/firestore';
+import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
-import { Ticket } from '../../../models/ticket.model';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+
+import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
-import { MessageService } from 'primeng/api';
-import { NotificationsService } from '../../../services/notifications.service';
-import { Timestamp } from '@angular/fire/firestore';
-import { Notificacion } from '../../../models/notificacion.model';
 
 @Component({
   selector: 'app-modal-ticket-chat',
@@ -48,7 +45,6 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
-    private notificationsService: NotificationsService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -94,21 +90,8 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
       .update(this.ticket)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
-
-        let dataNot: Notificacion = {
-          titulo: 'NUEVO COMENTARIO',
-          mensaje: 'HAY UN NUEVO COMENTARIO PARA EL TICKET: ' + this.ticket!.id,
-          uid: 'jBWVcuCQlRh3EKgSkWCz6JMYA9C2',
-          fecha: new Date(),
-          abierta: false,
-          idTicket: this.ticket!.id,
-          notificado: false,
-        };
-        
-
-        let idn = this.notificationsService.addNotifiacion(dataNot);
         this.comentario = '';
-        
+
         this.ticketsService.updateLastCommentRead(
           this.ticket.id,
           this.userdata.id,

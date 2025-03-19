@@ -248,8 +248,8 @@ async obtenerTodosLosTickets(): Promise<void> {
     if(!this.vercalendario && this.usuarioseleccionado != undefined)
       {
         this.loading = true;
-        let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha,this.usuarioseleccionado!.uid);
-        let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.uid);
+        let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha,this.usuarioseleccionado!.id);
+        let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.id);
         this.registroDeVisita = visitas.length>0 ? visitas[0]: undefined; 
         this.registroDeGuardia = guardias.length>0 ? guardias[0] : undefined; 
           const sucursalesDisponibles = this.sucursales.filter(sucursal =>
@@ -322,7 +322,7 @@ async obtenerTodosLosTickets(): Promise<void> {
       this.fecha.setHours(0,0,0,0); 
     let visita:Visita =
     {
-      idUsuario: this.usuarioseleccionado!.uid, 
+      idUsuario: this.usuarioseleccionado!.id, 
       fecha: Timestamp.fromDate(this.fecha),
       sucursales: this.sucursalesSeleccionadas.filter(x => x.id != '-999'),
       comentarios: this.indicacionesVisitas
@@ -334,7 +334,7 @@ async obtenerTodosLosTickets(): Promise<void> {
         {
           if(sucursal.id != '-999')
             {
-              this.nuevoMantenimiento(sucursal.id,this.usuarioseleccionado!.uid,this.fecha);
+              this.nuevoMantenimiento(sucursal.id,this.usuarioseleccionado!.id,this.fecha);
             }
         } 
       this.showMessage('success', 'Success', 'Guardado correctamente');
@@ -392,7 +392,7 @@ async obtenerTodosLosTickets(): Promise<void> {
     this.fecha.setHours(0,0,0,0); 
       const guardia:Guardia = 
       {
-        idUsuario: this.usuarioseleccionado!.uid,
+        idUsuario: this.usuarioseleccionado!.id,
         fecha: Timestamp.fromDate(this.fecha)
       }
 

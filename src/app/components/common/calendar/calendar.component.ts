@@ -131,7 +131,7 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
   obtenerNombreUsuario(idUsuario:string):string
   {
     let nombre = '';
-    let temp = this.usuariosHelp.filter(x => x.uid == idUsuario);
+    let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
     if(temp.length>0){nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
     return nombre
   }
