@@ -61,7 +61,6 @@ subscriptiontk: Subscription | undefined;
     )
     {
       this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-      let idu = this.usuario.uid;
     } 
 
     showMessage(sev: string, summ: string, det: string) {
@@ -81,7 +80,7 @@ subscriptiontk: Subscription | undefined;
     this.documentService.get('colores-usuarios').subscribe({
       next: (data) => {
           this.colores = data;  
-          let temp =  this.colores.filter(x => x.idUsuario == this.usuario.uid);
+          let temp =  this.colores.filter(x => x.idUsuario == this.usuario.id);
           this.colorUsuario = temp.length>0 ? temp[0] : undefined; 
         this.cdr.detectChanges();
       },
@@ -91,7 +90,7 @@ subscriptiontk: Subscription | undefined;
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4'); 
@@ -203,7 +202,7 @@ subscriptiontk: Subscription | undefined;
   obtenerNombreUsuario(idUsuario:string):string
   {
     let nombre = '';
-    let temp = this.usuariosHelp.filter(x => x.uid == idUsuario);
+    let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
     if(temp.length>0){nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
     return nombre
   }

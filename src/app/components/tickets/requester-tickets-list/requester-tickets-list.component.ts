@@ -66,7 +66,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   showModalChatTicket: boolean = false;
   areas: Area[] = [];
   ticketSeleccionado: Ticket | undefined;
-  userdata: any;
+  usuario: any;
   usuariosHelp: Usuario[] = [];
   ticketAccion: Ticket | any;
   chatsSinLeer = 0;
@@ -85,7 +85,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.obtenerAreas();
     this.obtenerUsuariosHelp();
   }
@@ -174,31 +174,15 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   obtenerNombreResponsable(id: string): string {
     let nombre = '';
 
-    let temp = this.usuariosHelp.filter((x) => x.uid == id);
+    let temp = this.usuariosHelp.filter((x) => x.id == id);
     if (temp.length > 0) {
       nombre = temp[0].nombre + ' ' + temp[0].apellidoP;
     }
     return nombre;
   }
 
-  obtenerIdResponsableTicket(): string {
-    let idr = '';
-    for (let item of this.usuariosHelp) {
-      if (item.idRol == '4') {
-        const existeSucursal = item.sucursales.some(
-          (x) => x.id == this.userdata.sucursales[0]
-        );
-        if (existeSucursal) {
-          idr = item.uid;
-        }
-      }
-    }
-
-    return idr;
-  }
-
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         this.cdr.detectChanges();
@@ -257,7 +241,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
     );
     const participante = participantes.find(
-      (p) => p.idUsuario === this.userdata.id
+      (p) => p.idUsuario === this.usuario.id
     );
 
     if (participante) {
@@ -304,6 +288,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
         ticket.idEstatusTicket = '7';
+        ticket.idResponsableFinaliza = this.usuario.id;
         this.ticketsService
           .update(ticket)
           .then(() => {

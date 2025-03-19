@@ -26,7 +26,7 @@ export class AccordionBranchMaintenance10x10Component {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
       },

@@ -52,7 +52,7 @@ constructor(private documentService:DocumentsService,private cdr: ChangeDetector
     {
       let color:ColorUsuario = 
       {
-        idUsuario: this.usuarioSeleccionado!.uid,
+        idUsuario: this.usuarioSeleccionado!.id,
         color: this.formcolor
       }
 
@@ -68,7 +68,7 @@ constructor(private documentService:DocumentsService,private cdr: ChangeDetector
     obtenerNombreUsuario(idUsuario:string):string
     {
       let nombre = '';
-      let temp = this.usuariosHelp.filter(x => x.uid == idUsuario);
+      let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
       if(temp.length>0){nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
       return nombre
     }

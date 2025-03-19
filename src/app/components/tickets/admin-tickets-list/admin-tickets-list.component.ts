@@ -161,7 +161,7 @@ export class AdminTicketsListComponent {
   obtenerNombreResponsable(id: string): string {
     let name = '';
 
-    let temp = this.usuariosHelp.filter((x) => x.uid == id);
+    let temp = this.usuariosHelp.filter((x) => x.id == id);
     if (temp.length > 0) {
       name = temp[0].nombre + ' ' + temp[0].apellidoP;
     }
@@ -185,7 +185,7 @@ export class AdminTicketsListComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');

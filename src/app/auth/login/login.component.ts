@@ -53,7 +53,7 @@ export default class LoginComponent {
     try {
       const user = await this.authService.login(this.email, this.pass);
       if (user.user.uid != null || user.user.uid != null) {
-        (await this.usersService.getuserdata(user.user.uid)).subscribe({
+        (await this.usersService.getByUId(user.user.uid)).subscribe({
           next: (data) => {
             let userd: any = data[0];
             localStorage.setItem('rwuserdatatk', JSON.stringify(data[0]));

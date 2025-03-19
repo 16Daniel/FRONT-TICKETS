@@ -4,9 +4,11 @@ import {
   addDoc,
   collection,
   collectionData,
+  doc,
   Firestore,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from '@angular/fire/firestore';
 import { Usuario } from '../models/usuario.model';
@@ -16,7 +18,26 @@ import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class UsersService {
-  constructor(private firestore: Firestore, private auth: Auth) {}
+  constructor(private firestore: Firestore, private auth: Auth) { }
+
+  async create(user: Usuario) {
+    const ref = collection(this.firestore, 'usuarios');
+    const docRef = await addDoc(ref, user);
+    return docRef.id; // Devolver el ID del documento creado
+  }
+
+  get(): Observable<any[]> {
+    const usersCollection = collection(this.firestore, 'usuarios');
+    return collectionData(usersCollection, { idField: 'id' });
+  }
+
+  async getByUId(idu: string) {
+    const usersCollection = collection(this.firestore, 'usuarios');
+    const userQuery = query(usersCollection, where('uid', '==', idu));
+
+    let user = await collectionData(userQuery, { idField: 'id' });
+    return user;
+  }
 
   getUsersHelp(): Observable<any[]> {
     return new Observable((observer) => {
@@ -49,26 +70,7 @@ export class UsersService {
     });
   }
 
-  async addUser(user: Usuario) {
-    const ref = collection(this.firestore, 'usuarios');
-    const docRef = await addDoc(ref, user);
-    return docRef.id; // Devolver el ID del documento creado
-  }
-
-  async getuserdata(idu: string) {
-    const usersCollection = collection(this.firestore, 'usuarios');
-    const userQuery = query(usersCollection, where('uid', '==', idu));
-
-    let user = await collectionData(userQuery, { idField: 'id' });
-    return user;
-  }
-
-  getusers(): Observable<any[]> {
-    const usersCollection = collection(this.firestore, 'usuarios');
-    return collectionData(usersCollection, { idField: 'id' });
-  }
-
-  async registerUser(email: string, password: string): Promise<string | null> {
+  async registerAuthFirebaseUser(email: string, password: string): Promise<string | null> {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         this.auth,
@@ -80,5 +82,10 @@ export class UsersService {
       console.error('Error al registrar el usuario:', error);
       throw error;
     }
+  }
+
+  async updateUserGuardStatus(userId: string, esGuardia: boolean): Promise<void> {
+    const userRef = doc(this.firestore, `usuarios/${userId}`);
+    return updateDoc(userRef, { esGuardia });
   }
 }

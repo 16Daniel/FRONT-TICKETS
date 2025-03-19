@@ -3,17 +3,17 @@
 
     <div *ngIf="ticket != undefined" #chatContainer style="overflow: auto; max-height: 500px; padding-right: 10px;">
         <div class="d-flex w-100" *ngFor="let item of ticket!.comentarios" [ngClass]="{
-            'justify-content-start': esmiuid(item.uid) == false,
-            'justify-content-end': esmiuid(item.uid)
+            'justify-content-start': esmiId(item.idUsuario) == false,
+            'justify-content-end': esmiId(item.idUsuario)
         }">
             <div class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: rgb(163 180 201)"
-                *ngIf="esmiuid(item.uid) == false">
+                *ngIf="esmiId(item.idUsuario) == false">
                 <p class="p-1" style="color: black">{{ item.nombre }}</p>
                 <label [innerHTML]="item.comentario"></label>
                 <p class="align-right"><label style="font-size: 10px;">{{ getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>
             </div>
 
-            <div *ngIf="esmiuid(item.uid)" class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: #F3F3F3">
+            <div *ngIf="esmiId(item.idUsuario)" class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: #F3F3F3">
                 <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
                 <label [innerHTML]="item.comentario"></label>
                 <p class="align-right"><label style="font-size: 10px;">{{ getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>

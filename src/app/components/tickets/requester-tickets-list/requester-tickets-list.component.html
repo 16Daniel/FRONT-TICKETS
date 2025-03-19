@@ -39,7 +39,7 @@
       </td>
       <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
       <td class="text-center">
-        {{ obtenerNombreResponsable(ticket!.responsable) }}
+        {{ obtenerNombreResponsable(ticket!.idResponsableFinaliza) }}
       </td>
       <td class="text-center">
         {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}

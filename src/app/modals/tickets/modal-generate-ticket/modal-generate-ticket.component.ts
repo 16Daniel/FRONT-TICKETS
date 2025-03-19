@@ -9,7 +9,6 @@ import {
 import { TicketsService } from '../../../services/tickets.service';
 import { FolioGeneratorService } from '../../../services/folio-generator.service';
 import { MessageService } from 'primeng/api';
-import { NotificationsService } from '../../../services/notifications.service';
 import { DialogModule } from 'primeng/dialog';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
@@ -64,7 +63,6 @@ export class ModalGenerateTicketComponent implements OnInit {
     private ticketsService: TicketsService,
     private folioGeneratorService: FolioGeneratorService,
     private messageService: MessageService,
-    private notificationsService: NotificationsService,
     private categoriesService: CategoriesService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
@@ -184,6 +182,7 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       let tk: Ticket = {
         fecha: new Date(),
+        idResponsables: this.obtenerResponsablesTicket(this.sucursal.id),
         idSucursal: this.sucursal.id,
         idArea: this.formArea.id,
         idCategoria: this.formCategoria.id,
@@ -191,12 +190,12 @@ export class ModalGenerateTicketComponent implements OnInit {
         solicitante: this.formNombreSolicitante,
         idPrioridadTicket: this.formPrioridad.id,
         idEstatusTicket: '1',
-        responsable: this.obtenerUidResponsableTicket(),
+        idResponsableFinaliza: this.obtenerIdResponsableTicket(),
         comentarios: [],
         fechaFin: null,
         fechaEstimacion,
         idTipoSoporte: '1',
-        idUsuario: this.usuarioActivo.uid,
+        idUsuario: this.usuarioActivo.id,
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
@@ -217,22 +216,6 @@ export class ModalGenerateTicketComponent implements OnInit {
       console.log('Success', 'ENVIADO CORRECTAMENTE')
       this.closeEvent.emit(false); // Cerrar modal
     });
-  }
-
-  obtenerUidResponsableTicket(): string {
-    let idr = '';
-    for (let item of this.catUsuariosHelp) {
-      if (item.idRol == '4') {
-        const existeSucursal = item.sucursales.some(
-          (x) => x.id == this.sucursal.id
-        );
-        if (existeSucursal) {
-          idr = item.uid;
-        }
-      }
-    }
-
-    return idr;
   }
 
   obtenerIdResponsableTicket(): string {
@@ -256,7 +239,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.catUsuariosHelp = data;
         this.cdr.detectChanges();
@@ -269,5 +252,22 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   onHide() {
     this.closeEvent.emit(false); // Cerrar modal
+  }
+
+  obtenerResponsablesTicket(idSucursal: string): string[] {
+    let idsResponsables: string[] = [];
+
+    for (let usuario of this.catUsuariosHelp) {
+      const existeSucursal = usuario.sucursales.some(
+        (sucursal) => sucursal.id == idSucursal
+      );
+
+      if ((existeSucursal || usuario.esGuardia) && usuario.idRol !== '2') {
+        idsResponsables.push(usuario.id);
+      }
+    }
+
+    console.log(idsResponsables)
+    return idsResponsables;
   }
 }

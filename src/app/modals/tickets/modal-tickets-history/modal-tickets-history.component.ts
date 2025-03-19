@@ -55,7 +55,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
     private messageService: MessageService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idUsuario = this.userdata.uid;
+    let idUsuario = this.userdata.id;
 
     this.obtenerTicketsPorUsuario(idUsuario);
   }
@@ -128,7 +128,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   }
 
   buscar() {
-    this.obtenerTicketsPorUsuario(this.userdata.uid);
+    this.obtenerTicketsPorUsuario(this.userdata.id);
   }
 
   showMessage(sev: string, summ: string, det: string) {

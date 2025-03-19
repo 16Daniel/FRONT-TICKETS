@@ -5,6 +5,7 @@ import { ParticipanteChat } from './participante-chat.model';
 export interface Ticket {
   id?: string | any;
   idUsuario: string;
+  idResponsables: string[]; // Usuarios responsables del ticket
   idSucursal: string;
   idArea: string;
   idCategoria: string;
@@ -15,7 +16,7 @@ export interface Ticket {
   fechaEstimacion: Timestamp | any;
   fechaFin: Timestamp | null;
   solicitante: string;
-  responsable: string;
+  idResponsableFinaliza: string;
   nombreCategoria: string | null;
   decripcion: string;
   comentarios: Comentario[];
