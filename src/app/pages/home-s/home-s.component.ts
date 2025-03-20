@@ -63,7 +63,7 @@ export default class homeSComponent implements OnInit {
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
   mantenimientoActivo: Mantenimiento10x10 | null = null;
-  formdepto: any;
+  // formSucursal: any;
   areas: Area[] = [];
   subscriptiontk: Subscription | undefined;
   usuario: Usuario;
@@ -86,13 +86,12 @@ export default class homeSComponent implements OnInit {
     private branchesService: BranchesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-
-    this.getTicketsResponsable(this.usuario.id);
     this.sucursal = this.usuario.sucursales[0];
-    this.formdepto = this.sucursal;
+    // this.formSucursal = this.sucursal;
   }
 
   ngOnInit(): void {
+    this.getTicketsResponsable();
     this.obtnerUltimosMantenimientos();
     this.obtenerSucursales();
   }
@@ -133,23 +132,20 @@ export default class homeSComponent implements OnInit {
     }
   }
 
-  async getTicketsResponsable(idUsuario: string): Promise<void> {
+  async getTicketsResponsable(): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
-      .getTicketsResponsable(idUsuario)
+      .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia)
       .subscribe({
         next: (data) => {
-          console.log(data)
+          // console.log(data)
           if (
             data.length > this.todosLosTickets.length &&
             !this.paginaCargaPrimeraVez
           ) {
             this.tickets = data;
             this.todosLosTickets = data;
-
             this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
-            console.log(this.usuario);
-            console.log(this.ultimoNuevoTicket);
             this.showMessage('info', 'Nuevo ticket asignado', 'Sucursal: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
           }
           else {

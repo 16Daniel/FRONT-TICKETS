@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Output,
 } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
@@ -17,6 +18,7 @@ import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filte
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-modal-tickets-history',
@@ -33,19 +35,18 @@ import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-
   templateUrl: './modal-tickets-history.component.html',
   styleUrl: './modal-tickets-history.component.scss',
 })
-export class ModalTicketsHistoryComponent implements OnDestroy {
+export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
   @Input() showModalHistorial: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   showModalFilterTickets: boolean = false;
   private unsubscribe!: () => void;
-  userdata: any;
+  usuario: Usuario;
   fechaInicio: Date = new Date();
   fechaFin: Date = new Date();
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
   paginaCargaPrimeraVez: boolean = true;
-
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
 
@@ -54,10 +55,17 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private messageService: MessageService
   ) {
-    this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    let idUsuario = this.userdata.id;
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
-    this.obtenerTicketsPorUsuario(idUsuario);
+  ngOnInit(): void {
+    if (this.usuario.idRol == '2') {
+
+      this.obtenerTicketsPorUsuario(this.usuario.id);
+    }
+    else {
+      this.obtenerHistorialticketsPorResponsable(this.usuario.id);
+    }
   }
 
   ngOnDestroy() {
@@ -71,42 +79,14 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   }
 
   async obtenerTicketsPorUsuario(userid: string): Promise<void> {
-    this.unsubscribe = this.ticketsService.getHistorialticketsPorUsuario(
+    this.unsubscribe = this.ticketsService.getHistorialTicketsPorUsuario(
       this.fechaInicio,
       this.fechaFin,
       userid,
       (tickets: any) => {
-        // console.log(tickets);
-
-        this.tickets = tickets;
-        let arr_temp: Ticket[] = [];
-
         if (tickets) {
-          if (!this.paginaCargaPrimeraVez) { this.showMessage('success', 'Success', 'Información localizada'); }
-          this.paginaCargaPrimeraVez = false;
-
-          let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '1'
-          );
-          let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '2'
-          );
-          let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '3'
-          );
-          let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '4'
-          );
-
-          temp1 = temp1.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-
-          temp2 = temp2.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-
-          temp3 = temp3.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-
-          temp4 = temp4.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
+          this.tickets = tickets;
+          this.tickets = this.ordenar(this.tickets);
         } else {
           this.showMessage(
             'warning',
@@ -114,12 +94,64 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
             'No se encontró información'
           );
         }
-        this.todosLosTickets = [...arr_temp];
-        this.tickets = arr_temp;
-
+        this.todosLosTickets = [...this.tickets];
         this.cdr.detectChanges();
       }
     );
+  }
+
+  async obtenerHistorialticketsPorResponsable(userid: string): Promise<void> {
+    this.unsubscribe = this.ticketsService.getHistorialticketsPorResponsable(
+      this.fechaInicio,
+      this.fechaFin,
+      userid,
+      (tickets: any) => {
+        if (tickets) {
+          this.tickets = tickets;
+          this.tickets = this.ordenar(this.tickets);
+        } else {
+          this.showMessage(
+            'warning',
+            'Atención!',
+            'No se encontró información'
+          );
+        }
+        this.todosLosTickets = [...this.tickets];
+        this.cdr.detectChanges();
+      }
+    );
+  }
+
+  ordenar(tickets: Ticket[]) {
+    let arr_temp: Ticket[] = [];
+
+    if (!this.paginaCargaPrimeraVez) { this.showMessage('success', 'Success', 'Información localizada'); }
+    this.paginaCargaPrimeraVez = false;
+
+    let temp1: Ticket[] = tickets.filter(
+      (x) => x.idPrioridadTicket == '1'
+    );
+    let temp2: Ticket[] = tickets.filter(
+      (x) => x.idPrioridadTicket == '2'
+    );
+    let temp3: Ticket[] = tickets.filter(
+      (x) => x.idPrioridadTicket == '3'
+    );
+    let temp4: Ticket[] = tickets.filter(
+      (x) => x.idPrioridadTicket == '4'
+    );
+
+    temp1 = temp1.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+
+    temp2 = temp2.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+
+    temp3 = temp3.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+
+    temp4 = temp4.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+
+    arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
+
+    return arr_temp;
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
@@ -128,7 +160,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy {
   }
 
   buscar() {
-    this.obtenerTicketsPorUsuario(this.userdata.id);
+    this.obtenerTicketsPorUsuario(this.usuario.id);
   }
 
   showMessage(sev: string, summ: string, det: string) {

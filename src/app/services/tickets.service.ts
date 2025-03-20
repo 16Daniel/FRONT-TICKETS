@@ -106,7 +106,7 @@ export class TicketsService {
     });
   }
 
-  getHistorialticketsPorUsuario(
+  getHistorialTicketsPorUsuario(
     fechaInicio: Date,
     fechaFin: Date,
     idUsuario: string,
@@ -155,7 +155,7 @@ export class TicketsService {
 
     const q = query(
       collectionRef,
-      where('responsable', '==', idUsuario),
+      where('idResponsableFinaliza', '==', idUsuario),
       where('idEstatusTicket', '==', '3'),
       where('fechaFin', '>=', fechaInicio),
       where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
@@ -215,18 +215,20 @@ export class TicketsService {
     });
   }
 
-  getTicketsResponsable(userId: string): Observable<any[]> {
+  getTicketsResponsable(userId: string, esGuardia: boolean): Observable<any[]> {
     return new Observable((observer) => {
-      // Referencia a la colección de tickets
       const collectionRef = collection(this.firestore, 'tickets');
   
-      // Consulta filtrada por el ID del usuario dentro del array de responsables
-      const q = query(
-        collectionRef,
-        where('idResponsables', 'array-contains', userId), // Cambio aquí
-        where('idEstatusTicket', 'not-in', ['3']),
-        orderBy('fecha', 'desc')
-      );
+      const filtros = [
+        where('idEstatusTicket', 'not-in', ['3']), // Siempre se aplica este filtro
+        orderBy('fecha', 'desc'), // Siempre ordenamos por fecha
+      ];
+      
+      if (!esGuardia) {
+        filtros.push(where('idResponsables', 'array-contains', userId));
+      }
+      
+      const q = query(collectionRef, ...filtros);
   
       // Escucha en tiempo real
       const unsubscribe = onSnapshot(
@@ -251,7 +253,6 @@ export class TicketsService {
     });
   }
   
-
   async obtenerSecuencialTickets(): Promise<number> {
     try {
       const sucursalesRef = collection(this.firestore, 'tickets');

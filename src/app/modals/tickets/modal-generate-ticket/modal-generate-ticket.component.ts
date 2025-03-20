@@ -25,6 +25,7 @@ import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
+import { ParticipanteChat } from '../../../models/participante-chat.model';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -69,7 +70,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.usuarioActivo = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -180,6 +181,20 @@ export class ModalGenerateTicketComponent implements OnInit {
       const fechaEstimacion = new Date(); // Obtiene la fecha actual
       fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
 
+      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.sucursal.id);
+      let participantesChat: ParticipanteChat[] = [];
+      participantesChat.push({
+        idUsuario: this.usuarioActivo.id,
+        ultimoComentarioLeido: 0,
+      });
+
+      idsResponsablesTicket.forEach(id => {
+        participantesChat.push({
+          idUsuario: id,
+          ultimoComentarioLeido: 0,
+        });
+      })
+
       let tk: Ticket = {
         fecha: new Date(),
         idResponsables: this.obtenerResponsablesTicket(this.sucursal.id),
@@ -199,19 +214,10 @@ export class ModalGenerateTicketComponent implements OnInit {
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
-        participantesChat: [
-          {
-            idUsuario: this.usuarioActivo.id,
-            ultimoComentarioLeido: 0,
-          },
-          {
-            idUsuario: this.obtenerIdResponsableTicket(),
-            ultimoComentarioLeido: 0,
-          },
-        ],
+        participantesChat,
       };
 
-      const docid = await this.ticketsService.create(tk);
+      await this.ticketsService.create(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       console.log('Success', 'ENVIADO CORRECTAMENTE')
       this.closeEvent.emit(false); // Cerrar modal
