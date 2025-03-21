@@ -29,7 +29,7 @@ export class ModalFinalizeTicketComponent {
   @Input() ticket: Ticket | any;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  evidencia: string = '';
+  // evidencia: string = '';
   rating: number = 0; // Calificación inicial
 
   constructor(
@@ -41,9 +41,7 @@ export class ModalFinalizeTicketComponent {
     this.ticket!.idEstatusTicket = '3';
     this.ticket!.calificacion = this.rating;
     this.ticket.fechaFin = new Date();
-
-    const ticket = this.ticket;
-
+console.log(this.ticket.comentariosFinales)
     this.ticketsService
       .update(this.ticket)
       .then(() => {
@@ -68,6 +66,6 @@ export class ModalFinalizeTicketComponent {
 
   onHide() {
     this.closeEvent.emit(false); // Cerrar modal
-    this.evidencia = '';
+    // this.evidencia = '';
   }
 }

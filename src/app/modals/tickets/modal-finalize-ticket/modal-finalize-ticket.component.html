@@ -1,7 +1,7 @@
 <p-dialog header="FINALIZAR TICKET" [modal]="true" [(visible)]="showModalFinalizeTicket" [style]="{ width: '50rem' }"
     [maximizable]="true" (onHide)="onHide()">
     <p class="text-center fw-bold" style="color: black;">INGRESA EVIDENCIA Y COMENTARIOS FINALES</p>
-    <p-editor [(ngModel)]="evidencia" [style]="{ height: '320px' }" *ngIf="showModalFinalizeTicket" />
+    <p-editor [(ngModel)]="ticket.comentariosFinales" [style]="{ height: '320px' }" *ngIf="showModalFinalizeTicket" />
 
     <br>
     <br>
@@ -9,7 +9,7 @@
 
     <div class="d-flex justify-content-end mt-3">
         <button class="btn btn-success p-2 text-center" (click)="finalizarTicket()"
-            [disabled]="evidencia == '' || rating == 0">
+            [disabled]="ticket.comentariosFinales == '' || rating == 0">
             <i class="bx bx-check-circle bx-md"></i>
         </button>
     </div>

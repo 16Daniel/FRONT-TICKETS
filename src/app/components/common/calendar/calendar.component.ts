@@ -15,7 +15,7 @@ import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-deta
 import { Sucursal } from '../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { DocumentsService } from '../../../services/documents.service';
-import { ColorUsuario } from '../../../models/ColorUsuario';
+import { ColorUsuario } from '../../../models/color-usuario';
 @Component({
   selector: 'app-calendar',
   standalone: true,

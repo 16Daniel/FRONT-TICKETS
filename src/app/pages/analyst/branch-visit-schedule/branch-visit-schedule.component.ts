@@ -22,7 +22,7 @@ import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket
 import { Ticket } from '../../../models/ticket.model';
 import { CalendarComponent } from "../../../components/common/calendar/calendar.component";
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { ColorUsuario } from '../../../models/ColorUsuario';
+import { ColorUsuario } from '../../../models/color-usuario';
 import { DocumentsService } from '../../../services/documents.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { Subscription } from 'rxjs';

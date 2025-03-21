@@ -201,7 +201,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         idSucursal: this.sucursal.id,
         idArea: this.formArea.id,
         idCategoria: this.formCategoria.id,
-        decripcion: this.formDescripcion,
+        descripcion: this.formDescripcion,
         solicitante: this.formNombreSolicitante,
         idPrioridadTicket: this.formPrioridad.id,
         idEstatusTicket: '1',

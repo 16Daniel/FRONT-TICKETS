@@ -1,22 +1,24 @@
 <p-dialog header="DETALLES TICKET" [modal]="true" [(visible)]="showModalTicketDetail" [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
-    <div class="accordion" id="accordionExample" *ngIf="ticket != undefined">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
-                    <i class="bx bx-info-circle bx-sm"></i>&nbsp;DESCRIPCIÓN
-                </button>
-            </h2>
-            <div class="accordion-body">
-                <label *ngIf="ticket.decripcion" [innerHTML]="ticket.decripcion"></label>
-                <label *ngIf="!ticket.decripcion">No hay descripción</label>
-            </div>
-        </div>
-    </div>
+    
+    <p-accordion *ngIf="ticket">
+        <p-accordionTab header="DESCRIPCIÓN" [selected]="true">
+            <!-- <i class="bx bx-info-circle bx-sm"></i>&nbsp; -->
+            <p *ngIf="ticket.descripcion; else noDescripcion" [innerHTML]="ticket.descripcion"></p>
+            <ng-template #noDescripcion>
+                <p>No hay descripción</p>
+            </ng-template>
+        </p-accordionTab>
+    
+        <p-accordionTab header="COMENTARIOS FINALES" *ngIf="ticket.idEstatusTicket == '3'">
+            <p [innerHTML]="ticket.comentariosFinales"></p>
+        </p-accordionTab>
+    </p-accordion>
+    
+    
 
     <div class="d-flex justify-content-end mt-3"
-        *ngIf="usuario?.idRol == '4' && (ticket?.idEstatusTicket != '2' && ticket?.idEstatusTicket != '5' && ticket?.idEstatusTicket != '7')"
+        *ngIf="usuario?.idRol == '4' && (ticket?.idEstatusTicket != '2' && ticket?.idEstatusTicket != '5' && ticket?.idEstatusTicket != '7' && ticket?.idEstatusTicket != '3')"
         (click)="onClick()">
         <button class="btn bg-p-b p-3">TRABAJAR</button>
     </div>

@@ -16,7 +16,6 @@ import {
 } from '@angular/fire/firestore';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/enviroments';
 import { Ticket } from '../models/ticket.model';
 
 @Injectable({
@@ -157,7 +156,8 @@ export class TicketsService {
       where('idResponsableFinaliza', '==', idUsuario),
       where('idEstatusTicket', '==', '3'),
       where('fechaFin', '>=', fechaInicio),
-      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
+      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc'),
     );
 
     // Suscribirse a cambios en tiempo real

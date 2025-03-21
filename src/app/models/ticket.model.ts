@@ -18,7 +18,7 @@ export interface Ticket {
   solicitante: string;
   idResponsableFinaliza: string;
   nombreCategoria: string | null;
-  decripcion: string;
+  descripcion: string;
   comentarios: Comentario[];
   comentariosFinales?: string | null;
   folio: string;

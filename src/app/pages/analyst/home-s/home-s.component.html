@@ -49,8 +49,8 @@
   </div>
 
   <div *ngIf="tickets.length > 0 && !ordenarxmantenimiento" class="p-1 mt-4">
-    <app-priority-tickets-accordion-s [tickets]="tickets" [sucursales]="sucursales"
-      (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion-s>
+    <app-priority-tickets-accordion-analyst [tickets]="tickets" [sucursales]="sucursales"
+      (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion-analyst>
   </div>
 
   <div class="p-1 mt-4" *ngIf="ordenarxmantenimiento">

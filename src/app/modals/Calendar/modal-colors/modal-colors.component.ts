@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, input, Output, type OnInit } from '@angular/core';
-import { ColorUsuario } from '../../../models/ColorUsuario';
+import { ColorUsuario } from '../../../models/color-usuario';
 import { DocumentsService } from '../../../services/documents.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';

@@ -10,7 +10,7 @@ import { RequesterTicketsListComponent } from '../requester-tickets-list/request
 import { Usuario } from '../../../models/usuario.model';
 
 @Component({
-  selector: 'app-priority-tickets-accordion-s',
+  selector: 'app-priority-tickets-accordion-analyst',
   standalone: true,
   imports: [
     CommonModule,
@@ -19,10 +19,10 @@ import { Usuario } from '../../../models/usuario.model';
     RequesterTicketsListComponent,
     TooltipModule
   ],
-  templateUrl: './priority-tickets-accordion-s.component.html',
-  styleUrl: './priority-tickets-accordion-s.component.scss',
+  templateUrl: './priority-tickets-accordion-analyst.component.html',
+  styleUrl: './priority-tickets-accordion-analyst.component.scss',
 })
-export class PriorityTicketsAccordionSComponent implements OnInit {
+export class PriorityTicketsAccordionAnalystComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Output() clickEvent = new EventEmitter<Ticket>();

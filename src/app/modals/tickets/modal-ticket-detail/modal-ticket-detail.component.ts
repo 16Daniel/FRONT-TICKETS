@@ -6,11 +6,12 @@ import { Usuario } from '../../../models/usuario.model';
 import { FormsModule } from '@angular/forms';
 import { TicketsService } from '../../../services/tickets.service';
 import { MessageService } from 'primeng/api';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-modal-ticket-detail',
   standalone: true,
-  imports: [CommonModule, DialogModule, CommonModule, FormsModule],
+  imports: [CommonModule, DialogModule, CommonModule, FormsModule, AccordionModule],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
 })

@@ -5,10 +5,10 @@ import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
 import { Sucursal } from '../../../models/sucursal.model';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
@@ -22,10 +22,10 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/mainten
 import { Usuario } from '../../../models/usuario.model';
 import { Area } from '../../../models/area';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
-import { PriorityTicketsAccordionSComponent } from '../../../components/tickets/priority-tickets-accordion-s/priority-tickets-accordion-s.component';
 import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
+import { PriorityTicketsAccordionAnalystComponent } from '../../../components/tickets/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 
 @Component({
   selector: 'app-home-s',
@@ -43,7 +43,7 @@ import { BranchesService } from '../../../services/branches.service';
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
     FormsModule,
-    PriorityTicketsAccordionSComponent,
+    PriorityTicketsAccordionAnalystComponent,
     ModalTenXtenMaintenanceNewComponent,
     AccordionBranchMaintenance10x10Component,
   ],
