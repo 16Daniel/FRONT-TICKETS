@@ -63,7 +63,6 @@ export default class homeSComponent implements OnInit {
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
   mantenimientoActivo: Mantenimiento10x10 | null = null;
-  // formSucursal: any;
   areas: Area[] = [];
   subscriptiontk: Subscription | undefined;
   usuario: Usuario;
@@ -87,7 +86,6 @@ export default class homeSComponent implements OnInit {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-    // this.formSucursal = this.sucursal;
   }
 
   ngOnInit(): void {

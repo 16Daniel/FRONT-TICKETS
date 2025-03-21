@@ -23,7 +23,6 @@ import { Ticket } from '../models/ticket.model';
   providedIn: 'root',
 })
 export class TicketsService {
-  private url: string = environment.apiURL;
   private headers = new HttpHeaders();
 
   constructor(private firestore: Firestore, private http: HttpClient) {
