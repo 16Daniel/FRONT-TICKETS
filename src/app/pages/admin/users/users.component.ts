@@ -9,14 +9,14 @@ import { FormsModule } from '@angular/forms';
 import { PrimeNGConfig } from 'primeng/api';
 import { ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Rol } from '../../models/rol.model';
+import { Rol } from '../../../models/rol.model';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { Usuario } from '../../models/usuario.model';
-import { Sucursal } from '../../models/sucursal.model';
-import { UsersService } from '../../services/users.service';
-import { DocumentsService } from '../../services/documents.service';
-import { BranchesService } from '../../services/branches.service';
-import { RolesService } from '../../services/roles.service';
+import { Usuario } from '../../../models/usuario.model';
+import { Sucursal } from '../../../models/sucursal.model';
+import { UsersService } from '../../../services/users.service';
+import { DocumentsService } from '../../../services/documents.service';
+import { BranchesService } from '../../../services/branches.service';
+import { RolesService } from '../../../services/roles.service';
 
 @Component({
   selector: 'app-users',

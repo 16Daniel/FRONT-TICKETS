@@ -7,22 +7,22 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
 
-import { Sucursal } from '../../models/sucursal.model';
-import { EstatusTicket } from '../../models/estatus-ticket.model';
-import { TicketsService } from '../../services/tickets.service';
-import { UsersService } from '../../services/users.service';
-import { Usuario } from '../../models/usuario.model';
-import { Ticket } from '../../models/ticket.model';
-import { ModalFilterTicketsComponent } from '../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalGenerateTicketComponent } from '../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { ModalTicketsHistoryComponent } from '../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { AdminTicketsListComponent } from '../../components/tickets/admin-tickets-list/admin-tickets-list.component';
-import { BranchesTicketsAccordionComponent } from '../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
-import { UserTicketsAccordionComponent } from '../../components/tickets/user-tickets-accordion/user-tickets-accordion.component';
-import { AccordionBranchMaintenance10x10Component } from '../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
-import { BranchesService } from '../../services/branches.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
+import { Sucursal } from '../../../models/sucursal.model';
+import { EstatusTicket } from '../../../models/estatus-ticket.model';
+import { TicketsService } from '../../../services/tickets.service';
+import { UsersService } from '../../../services/users.service';
+import { Usuario } from '../../../models/usuario.model';
+import { Ticket } from '../../../models/ticket.model';
+import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
+import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
+import { AdminTicketsListComponent } from '../../../components/tickets/admin-tickets-list/admin-tickets-list.component';
+import { BranchesTicketsAccordionComponent } from '../../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
+import { UserTicketsAccordionComponent } from '../../../components/tickets/user-tickets-accordion/user-tickets-accordion.component';
+import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { BranchesService } from '../../../services/branches.service';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-home-a',

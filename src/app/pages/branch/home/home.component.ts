@@ -4,9 +4,10 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { BranchesTabsComponent } from '../../components/tickets/branches-tabs/branches-tabs.component';
-import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+
+import { BranchesTabsComponent } from '../../../components/tickets/branches-tabs/branches-tabs.component';
+import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-home',

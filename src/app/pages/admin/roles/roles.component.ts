@@ -9,10 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { PrimeNGConfig } from 'primeng/api';
 import { ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Rol } from '../../models/rol.model';
-import { Ruta } from '../../models/ruta.model';
+import { Rol } from '../../../models/rol.model';
+import { Ruta } from '../../../models/ruta.model';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { RolesService } from '../../services/roles.service';
+import { RolesService } from '../../../services/roles.service';
 
 @Component({
   selector: 'app-roles',
