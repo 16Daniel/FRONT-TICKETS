@@ -29,7 +29,7 @@ export default class HomeComponent {
 
   async nuevoMantenimiento() {
     const mantenimiento: Mantenimiento10x10 = {
-      idSucursal: '41',
+      idSucursal: '10',
       idUsuarioSoporte: "JhPZN7fQD1REyldGXop17qR8Now1",
       fecha: new Date(),
       estatus: true,

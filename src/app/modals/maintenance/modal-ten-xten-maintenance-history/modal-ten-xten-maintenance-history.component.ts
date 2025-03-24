@@ -40,6 +40,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   usuariosHelp: Usuario[] = [];
   mostrarModalDetalleMantenimeinto: boolean = false;
   mantenimiento: Mantenimiento10x10 | any;
+  paginaCargaPrimeraVez: boolean = true;
 
   constructor(
     private maintenance10x10Service: Maintenance10x10Service,
@@ -48,7 +49,8 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursal = this.usuario.sucursales[0].id;
-    this.obtenerMantenimientosPorSucursal(this.idSucursal);
+    // this.obtenerMantenimientosPorSucursal(this.idSucursal);
+    this.obtenerUltimoMantenimiento();
     this.obtenerUsuariosHelp();
   }
 
@@ -62,6 +64,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   buscar() {
+    this.paginaCargaPrimeraVez = false;
     this.obtenerMantenimientosPorSucursal(this.idSucursal);
   }
 
@@ -72,15 +75,22 @@ export class ModalTenXtenMaintenanceHistoryComponent {
       idSucursal,
       (mantenimientos: any) => {
         if (mantenimientos) {
-          this.showMessage('success', 'Success', 'Información localizada');
+
           this.mantenimientos = mantenimientos;
+          // if (!this.paginaCargaPrimeraVez) {
+          //   this.showMessage('success', 'Success', 'Información localizada');
+          // }
+
           // this.cdr.detectChanges();
         } else {
-          this.showMessage(
-            'warning',
-            'Atención!',
-            'No se encontró información'
-          );
+          if (!this.paginaCargaPrimeraVez) {
+            this.showMessage(
+              'warn',
+              'Atención!',
+              'No se encontró información'
+            );
+          }
+
         }
       }
     );
@@ -101,5 +111,11 @@ export class ModalTenXtenMaintenanceHistoryComponent {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
+  }
+
+  obtenerUltimoMantenimiento() {
+    this.maintenance10x10Service.getLastMaintenanceByBranch(this.idSucursal).subscribe(result => {
+      this.mantenimientos = result;
+    })
   }
 }

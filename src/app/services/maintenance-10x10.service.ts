@@ -25,7 +25,7 @@ import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
 export class Maintenance10x10Service {
   pathName: string = 'mantenimientos-10x10';
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   async create(mantenimiento: Mantenimiento10x10): Promise<void> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -136,7 +136,7 @@ export class Maintenance10x10Service {
     const fechaActual = new Date();
     const fechaHaceUnMes = new Date(fechaActual);
     fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
-    fechaHaceUnMes.setHours(0,0,0,0); 
+    fechaHaceUnMes.setHours(0, 0, 0, 0);
     // Mapea cada sucursal a una consulta independiente
     const consultas = idsSucursales.map(idSucursal => {
       const mantenimientosRef = collection(this.firestore, 'mantenimientos-10x10');
@@ -165,23 +165,34 @@ export class Maintenance10x10Service {
     return forkJoin(consultas);
   }
 
-  
-        async obtenerMantenimientoVisita(fecha:Date ,idSucursal:string) {
-          const coleccionRef = collection(this.firestore,'mantenimientos-10x10');
-        
-          // Convertir las fechas a timestamps de Firestore
-          fecha.setHours(0,0,0,0);
-          const consulta = query(
-            coleccionRef,
-            where('fecha', '==', fecha),
-            where('idSucursal','==',idSucursal),
-            where('estatus', '==', false),
-          );
-        
-          const querySnapshot = await getDocs(consulta);
-          const documentos:Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento10x10));
-          
-          return documentos;
-        }
 
+  async obtenerMantenimientoVisita(fecha: Date, idSucursal: string) {
+    const coleccionRef = collection(this.firestore, 'mantenimientos-10x10');
+
+    // Convertir las fechas a timestamps de Firestore
+    fecha.setHours(0, 0, 0, 0);
+    const consulta = query(
+      coleccionRef,
+      where('fecha', '==', fecha),
+      where('idSucursal', '==', idSucursal),
+      where('estatus', '==', false),
+    );
+
+    const querySnapshot = await getDocs(consulta);
+    const documentos: Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento10x10));
+
+    return documentos;
+  }
+
+  getLastMaintenanceByBranch(idSucursal: string): Observable<Mantenimiento10x10[]> {
+    const mantenimientoRef = collection(this.firestore, this.pathName);
+    const q = query(
+      mantenimientoRef,
+      where('estatus', '==', false),
+      where('idSucursal', '==', idSucursal),
+      orderBy('fecha', 'desc'),
+      limit(1)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento10x10[]>;
+  }
 }

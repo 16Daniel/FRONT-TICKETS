@@ -119,7 +119,8 @@ export class TicketsService {
       where('idUsuario', '==', idUsuario),
       // where('idEstatusTicket', '==', '3'),
       where('fecha', '>=', fechaInicio),
-      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc'),
     );
 
     // Suscribirse a cambios en tiempo real
@@ -141,7 +142,7 @@ export class TicketsService {
     return unsubscribe;
   }
 
-  getHistorialticketsPorResponsable(
+  getHistorialTicketsPorResponsable(
     fechaInicio: Date,
     fechaFin: Date,
     idUsuario: string,
