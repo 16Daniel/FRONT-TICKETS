@@ -15,7 +15,7 @@ import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-deta
 import { Sucursal } from '../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { DocumentsService } from '../../../services/documents.service';
-import { ColorUsuario } from '../../../models/ColorUsuario';
+import { ColorUsuario } from '../../../models/color-usuario';
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -131,7 +131,7 @@ constructor(private visitasService:VisitasService,private guardiasService:Guardi
   obtenerNombreUsuario(idUsuario:string):string
   {
     let nombre = '';
-    let temp = this.usuariosHelp.filter(x => x.uid == idUsuario);
+    let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
     if(temp.length>0){nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
     return nombre
   }

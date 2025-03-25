@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, ViewChild, type OnInit } from '@angular/core';
-import { TicketsService } from '../../services/tickets.service';
+import { TicketsService } from '../../../services/tickets.service';
 import { MessageService } from 'primeng/api';
-import { UsersService } from '../../services/users.service';
-import { BranchesService } from '../../services/branches.service';
-import { Sucursal } from '../../models/sucursal.model';
-import { Usuario } from '../../models/usuario.model';
+import { UsersService } from '../../../services/users.service';
+import { BranchesService } from '../../../services/branches.service';
+import { Sucursal } from '../../../models/sucursal.model';
+import { Usuario } from '../../../models/usuario.model';
 import { PickListModule } from 'primeng/picklist';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,21 +13,21 @@ import { ToastModule } from 'primeng/toast';
 import { CalendarModule } from 'primeng/calendar';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-import { Ticket } from '../../models/ticket.model';
-import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
+import { Ticket } from '../../../models/ticket.model';
+import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Subscription, timeout } from 'rxjs';
 import { EditorModule } from 'primeng/editor';
-import { ComentarioVisita, Visita } from '../../models/visita';
+import { ComentarioVisita, Visita } from '../../../models/visita';
 import { Timestamp } from '@angular/fire/firestore';
-import { VisitasService } from '../../services/visitas.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
-import { GuardiasService } from '../../services/guardias.service';
-import { Guardia } from '../../models/guardia';
-import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { CalendarComponent } from "../../components/common/calendar/calendar.component";
-import { ModalColorsComponent } from "../../modals/Calendar/modal-colors/modal-colors.component";
-import { DocumentsService } from '../../services/documents.service';
-import ModalEventDetailComponent from "../../modals/Calendar/modal-event-detail/modal-event-detail.component";
+import { VisitasService } from '../../../services/visitas.service';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { GuardiasService } from '../../../services/guardias.service';
+import { Guardia } from '../../../models/guardia';
+import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
+import { CalendarComponent } from "../../../components/common/calendar/calendar.component";
+import { ModalColorsComponent } from "../../../modals/Calendar/modal-colors/modal-colors.component";
+import { DocumentsService } from '../../../services/documents.service';
+import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-detail/modal-event-detail.component";
 
 
 @Component({
@@ -160,7 +160,7 @@ async obtenerTodosLosTickets(): Promise<void> {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4'); 
@@ -248,8 +248,8 @@ async obtenerTodosLosTickets(): Promise<void> {
     if(!this.vercalendario && this.usuarioseleccionado != undefined)
       {
         this.loading = true;
-        let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha,this.usuarioseleccionado!.uid);
-        let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.uid);
+        let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha,this.usuarioseleccionado!.id);
+        let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha,this.usuarioseleccionado!.id);
         this.registroDeVisita = visitas.length>0 ? visitas[0]: undefined; 
         this.registroDeGuardia = guardias.length>0 ? guardias[0] : undefined; 
           const sucursalesDisponibles = this.sucursales.filter(sucursal =>
@@ -322,7 +322,7 @@ async obtenerTodosLosTickets(): Promise<void> {
       this.fecha.setHours(0,0,0,0); 
     let visita:Visita =
     {
-      idUsuario: this.usuarioseleccionado!.uid, 
+      idUsuario: this.usuarioseleccionado!.id, 
       fecha: Timestamp.fromDate(this.fecha),
       sucursales: this.sucursalesSeleccionadas.filter(x => x.id != '-999'),
       comentarios: this.indicacionesVisitas
@@ -334,7 +334,7 @@ async obtenerTodosLosTickets(): Promise<void> {
         {
           if(sucursal.id != '-999')
             {
-              this.nuevoMantenimiento(sucursal.id,this.usuarioseleccionado!.uid,this.fecha);
+              this.nuevoMantenimiento(sucursal.id,this.usuarioseleccionado!.id,this.fecha);
             }
         } 
       this.showMessage('success', 'Success', 'Guardado correctamente');
@@ -392,7 +392,7 @@ async obtenerTodosLosTickets(): Promise<void> {
     this.fecha.setHours(0,0,0,0); 
       const guardia:Guardia = 
       {
-        idUsuario: this.usuarioseleccionado!.uid,
+        idUsuario: this.usuarioseleccionado!.id,
         fecha: Timestamp.fromDate(this.fecha)
       }
 

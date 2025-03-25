@@ -9,14 +9,14 @@ import { FormsModule } from '@angular/forms';
 import { PrimeNGConfig } from 'primeng/api';
 import { ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Rol } from '../../models/rol.model';
+import { Rol } from '../../../models/rol.model';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { Usuario } from '../../models/usuario.model';
-import { Sucursal } from '../../models/sucursal.model';
-import { UsersService } from '../../services/users.service';
-import { DocumentsService } from '../../services/documents.service';
-import { BranchesService } from '../../services/branches.service';
-import { RolesService } from '../../services/roles.service';
+import { Usuario } from '../../../models/usuario.model';
+import { Sucursal } from '../../../models/sucursal.model';
+import { UsersService } from '../../../services/users.service';
+import { DocumentsService } from '../../../services/documents.service';
+import { BranchesService } from '../../../services/branches.service';
+import { RolesService } from '../../../services/roles.service';
 
 @Component({
   selector: 'app-users',
@@ -76,7 +76,7 @@ export default class UsersComponent {
   }
 
   getusuarios() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         console.log(data);
         this.catusuarios = data;
@@ -151,8 +151,7 @@ export default class UsersComponent {
 
   async adduser() {
     try {
-      debugger;
-      const uid = await this.usersService.registerUser(
+      const uid = await this.usersService.registerAuthFirebaseUser(
         this.formemail!,
         this.formpass!
       );
@@ -174,10 +173,11 @@ export default class UsersComponent {
       password: this.formpass!,
       uid: uid,
       sucursales: this.sucursalessel,
+      esGuardia: false
     };
 
     try {
-      await this.usersService.addUser(data);
+      await this.usersService.create(data);
       console.log('Usuario agregado a Firestore');
     } catch (error) {
       console.error('Error al agregar usuario:', error);
@@ -207,6 +207,7 @@ export default class UsersComponent {
       password: this.formpass!,
       uid: this.usuariosel?.uid!,
       sucursales: this.sucursalessel,
+      esGuardia: false
     };
 
     this.documentsService

@@ -6,7 +6,7 @@
       <th><span class="fs-1">🚥</span></th>
       <th>FOLIO</th>
       <th>FECHA</th>
-      <th *ngIf="mostrarFedchaEstimacion">FECHA ESTIMADA</th>
+      <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
       <th>AREA</th>
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
@@ -39,7 +39,7 @@
       </td>
       <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
       <td class="text-center">
-        {{ obtenerNombreResponsable(ticket!.responsable) }}
+        {{ obtenerNombreResponsable(ticket!.idResponsableFinaliza) }}
       </td>
       <td class="text-center">
         {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
@@ -55,7 +55,7 @@
   </td>
 
   <td *ngIf="mostrarEstrellas">
-    <app-rating-stars [rating]="ticket.calificacion" [editable]="true"></app-rating-stars>
+    <app-rating-stars [rating]="ticket.calificacion" [editable]="false"></app-rating-stars>
   </td>
 
   <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">

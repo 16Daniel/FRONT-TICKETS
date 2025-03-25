@@ -6,25 +6,25 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es'; // Importar idioma español
-import { TicketsService } from '../../services/tickets.service';
+import { TicketsService } from '../../../services/tickets.service';
 import { MessageService } from 'primeng/api';
-import { UsersService } from '../../services/users.service';
-import { VisitasService } from '../../services/visitas.service';
-import { Usuario } from '../../models/usuario.model';
+import { UsersService } from '../../../services/users.service';
+import { VisitasService } from '../../../services/visitas.service';
+import { Usuario } from '../../../models/usuario.model';
 import { Timestamp } from '@angular/fire/firestore';
-import { Visita } from '../../models/visita';
-import ModalEventDetailComponent from "../../modals/Calendar/modal-event-detail/modal-event-detail.component";
-import { BranchesService } from '../../services/branches.service';
-import { Sucursal } from '../../models/sucursal.model';
-import { PriorityTicketsAccordionComponent } from '../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
-import { GuardiasService } from '../../services/guardias.service';
-import { ModalTicketDetailComponent } from "../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { Ticket } from '../../models/ticket.model';
-import { CalendarComponent } from "../../components/common/calendar/calendar.component";
-import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
-import { ColorUsuario } from '../../models/ColorUsuario';
-import { DocumentsService } from '../../services/documents.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { Visita } from '../../../models/visita';
+import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-detail/modal-event-detail.component";
+import { BranchesService } from '../../../services/branches.service';
+import { Sucursal } from '../../../models/sucursal.model';
+import { PriorityTicketsAccordionComponent } from '../../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';
+import { GuardiasService } from '../../../services/guardias.service';
+import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
+import { Ticket } from '../../../models/ticket.model';
+import { CalendarComponent } from "../../../components/common/calendar/calendar.component";
+import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
+import { ColorUsuario } from '../../../models/color-usuario';
+import { DocumentsService } from '../../../services/documents.service';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-branch-visit-schedule',
@@ -61,7 +61,6 @@ subscriptiontk: Subscription | undefined;
     )
     {
       this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-      let idu = this.usuario.uid;
     } 
 
     showMessage(sev: string, summ: string, det: string) {
@@ -81,7 +80,7 @@ subscriptiontk: Subscription | undefined;
     this.documentService.get('colores-usuarios').subscribe({
       next: (data) => {
           this.colores = data;  
-          let temp =  this.colores.filter(x => x.idUsuario == this.usuario.uid);
+          let temp =  this.colores.filter(x => x.idUsuario == this.usuario.id);
           this.colorUsuario = temp.length>0 ? temp[0] : undefined; 
         this.cdr.detectChanges();
       },
@@ -91,7 +90,7 @@ subscriptiontk: Subscription | undefined;
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getusers().subscribe({
+    this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4'); 
@@ -203,7 +202,7 @@ subscriptiontk: Subscription | undefined;
   obtenerNombreUsuario(idUsuario:string):string
   {
     let nombre = '';
-    let temp = this.usuariosHelp.filter(x => x.uid == idUsuario);
+    let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
     if(temp.length>0){nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
     return nombre
   }

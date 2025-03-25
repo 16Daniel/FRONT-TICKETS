@@ -13,6 +13,7 @@
         <span class="line line3"></span>
       </div>
       <div class="logo">
+        <p-button *ngIf="usuario.idRol == '2'" label="⭐" styleClass="p-button-rounded p-button-text" (click)="mostrarModalRating = true"></p-button>
         <app-version-button></app-version-button>
       </div>
       <div class="menu-items" style="overflow: auto;">
@@ -37,3 +38,5 @@
     </div>
   </div>
 </nav>
+
+<app-modal-branch-rating *ngIf="usuario.idRol == '2'" [mostrarModalRating]="mostrarModalRating" (closeEvent)="mostrarModalRating = false"></app-modal-branch-rating>

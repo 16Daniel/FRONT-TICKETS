@@ -1,16 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Ticket } from '../../../models/ticket.model';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { Usuario } from '../../../models/usuario.model';
-import { FormsModule } from '@angular/forms';
-import { TicketsService } from '../../../services/tickets.service';
 import { MessageService } from 'primeng/api';
+import { AccordionModule } from 'primeng/accordion';
+
+import { Usuario } from '../../../models/usuario.model';
+import { TicketsService } from '../../../services/tickets.service';
+import { Ticket } from '../../../models/ticket.model';
 
 @Component({
   selector: 'app-modal-ticket-detail',
   standalone: true,
-  imports: [CommonModule, DialogModule, CommonModule, FormsModule],
+  imports: [CommonModule, DialogModule, FormsModule, AccordionModule],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
 })

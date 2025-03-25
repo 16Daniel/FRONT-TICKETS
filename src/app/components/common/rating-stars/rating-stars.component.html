@@ -1,4 +1,4 @@
-<div class="rating-container" *ngIf="editable">
+<div class="rating-container" *ngIf="!editable">
     <div class="star-rating">
         <span *ngFor="let star of stars; let i = index" class="star">
             <ng-container *ngIf="star">★</ng-container>
@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div class="rating-container" *ngIf="!editable">
+<div class="rating-container" *ngIf="editable">
     <p style="color: black;">Califica tu experiencia con nuestro soporte:</p>
     <div class="star-rating">
         <span *ngFor="let star of stars; let i = index" (click)="setRating(i)" class="star">

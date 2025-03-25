@@ -13,19 +13,19 @@ export const routes: Routes = [
       {
         path: 'home',
         title: 'Inicio',
-        loadComponent: () => import('./pages/home/home.component'),
+        loadComponent: () => import('./pages/branch/home/home.component'),
         canActivate: [HomeGuard],
       },
       {
         path: 'home-s',
         title: 'Inicio',
-        loadComponent: () => import('./pages/home-s/home-s.component'),
+        loadComponent: () => import('./pages/analyst/home-s/home-s.component'),
         canActivate: [HomeGuard],
       },
       {
         path: 'home-a',
         title: 'Inicio',
-        loadComponent: () => import('./pages/home-A/home-A.component'),
+        loadComponent: () => import('./pages/admin/home-A/home-A.component'),
         canActivate: [HomeGuard],
       },
       {
@@ -36,32 +36,32 @@ export const routes: Routes = [
       {
         path: 'roles',
         title: 'Roles de usuarios',
-        loadComponent: () => import('./pages/roles/roles.component'),
+        loadComponent: () => import('./pages/admin/roles/roles.component'),
       },
       {
         path: 'users',
         title: 'Usuarios',
-        loadComponent: () => import('./pages/users/users.component'),
+        loadComponent: () => import('./pages/admin/users/users.component'),
       },
       {
         path: 'calendar-builder',
         title: 'Constructor de calendarios',
         loadComponent: () =>
-          import('./pages/calendar-builder/calendar-builder.component'),
+          import('./pages/admin/calendar-builder/calendar-builder.component'),
       },
       {
         path: 'branch-visit-schedule',
         title: 'Visitas programadas',
         loadComponent: () =>
           import(
-            './pages/branch-visit-schedule/branch-visit-schedule.component'
+            './pages/analyst/branch-visit-schedule/branch-visit-schedule.component'
           ),
       },
       {
         path: 'version-control',
         title: 'Control de versiones',
         loadComponent: () =>
-          import('./pages/version-control/version-control.component'),
+          import('./pages/admin/version-control/version-control.component'),
         canActivate: [AdminGuard],
       },
       {

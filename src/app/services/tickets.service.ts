@@ -8,6 +8,7 @@ import {
   docData,
   Firestore,
   getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -16,14 +17,12 @@ import {
 } from '@angular/fire/firestore';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/enviroments';
 import { Ticket } from '../models/ticket.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TicketsService {
-  private url: string = environment.apiURL;
   private headers = new HttpHeaders();
 
   constructor(private firestore: Firestore, private http: HttpClient) {
@@ -39,7 +38,7 @@ export class TicketsService {
 
   get(): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(ticketsCollection,  where('idEstatusTicket', 'not-in', ['1']));
+    const q = query(ticketsCollection, where('idEstatusTicket', 'not-in', ['1']));
     return collectionData(q, { idField: 'id' });
   }
 
@@ -106,7 +105,7 @@ export class TicketsService {
     });
   }
 
-  getHistorialticketsPorUsuario(
+  getHistorialTicketsPorUsuario(
     fechaInicio: Date,
     fechaFin: Date,
     idUsuario: string,
@@ -121,7 +120,8 @@ export class TicketsService {
       where('idUsuario', '==', idUsuario),
       // where('idEstatusTicket', '==', '3'),
       where('fecha', '>=', fechaInicio),
-      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc'),
     );
 
     // Suscribirse a cambios en tiempo real
@@ -131,10 +131,10 @@ export class TicketsService {
       } else {
         const tickets = querySnapshot.docs.map(
           (doc) =>
-            ({
-              id: doc.id,
-              ...doc.data(),
-            } as Ticket)
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Ticket)
         ); // Tipar cada objeto como Ticket
         callback(tickets); // Devuelve el primer registro
       }
@@ -143,7 +143,7 @@ export class TicketsService {
     return unsubscribe;
   }
 
-  getHistorialticketsPorResponsable(
+  getHistorialTicketsPorResponsable(
     fechaInicio: Date,
     fechaFin: Date,
     idUsuario: string,
@@ -155,10 +155,11 @@ export class TicketsService {
 
     const q = query(
       collectionRef,
-      where('responsable', '==', idUsuario),
+      where('idResponsableFinaliza', '==', idUsuario),
       where('idEstatusTicket', '==', '3'),
       where('fechaFin', '>=', fechaInicio),
-      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000))
+      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc'),
     );
 
     // Suscribirse a cambios en tiempo real
@@ -168,10 +169,10 @@ export class TicketsService {
       } else {
         const tickets = querySnapshot.docs.map(
           (doc) =>
-            ({
-              id: doc.id,
-              ...doc.data(),
-            } as Ticket)
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Ticket)
         ); // Tipar cada objeto como Ticket
         callback(tickets); // Devuelve el primer registro
       }
@@ -215,18 +216,20 @@ export class TicketsService {
     });
   }
 
-  getTicketsResponsable(userId: string): Observable<any[]> {
+  getTicketsResponsable(userId: string, esGuardia: boolean): Observable<any[]> {
     return new Observable((observer) => {
-      // Referencia a la colección
       const collectionRef = collection(this.firestore, 'tickets');
 
-      // Consulta filtrada por el ID del usuario
-      const q = query(
-        collectionRef,
-        where('responsable', '==', userId),
-        where('idEstatusTicket', 'not-in', ['3']),
-        orderBy('fecha', 'desc')
-      );
+      const filtros = [
+        where('idEstatusTicket', 'not-in', ['3']), // Siempre se aplica este filtro
+        orderBy('fecha', 'desc'), // Siempre ordenamos por fecha
+      ];
+
+      if (!esGuardia) {
+        filtros.push(where('idResponsables', 'array-contains', userId));
+      }
+
+      const q = query(collectionRef, ...filtros);
 
       // Escucha en tiempo real
       const unsubscribe = onSnapshot(
@@ -261,5 +264,15 @@ export class TicketsService {
       console.error('Error al obtener el count de tickets:', error);
       throw error;
     }
+  }
+
+  get30LastTickets(): Observable<any[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const q = query(
+      ticketsCollection,
+      where('idEstatusTicket', '==', '3'),
+      limit(30)
+    );
+    return collectionData(q, { idField: 'id' });
   }
 }

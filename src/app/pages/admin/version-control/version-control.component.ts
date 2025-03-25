@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
 import { MessageService } from 'primeng/api';
-
-import { ControlVersion } from '../../models/control-version.model';
-import { VersionControlService } from '../../services/version-control.service';
 import { ToastModule } from 'primeng/toast';
+
+import { ControlVersion } from '../../../models/control-version.model';
+import { VersionControlService } from '../../../services/version-control.service';
 
 @Component({
   selector: 'app-version-control',
