@@ -112,7 +112,7 @@
     </td>
     <td class="text-center">{{ tk.solicitante | uppercase }}</td>
     <td class="text-center">
-        {{ obtenerNombreResponsable(tk.responsable) }}
+        {{ obtenerNombreResponsable(tk.idResponsableFinaliza) }}
     </td>
     <td class="text-center">
         <p-dropdown [options]="tiposSoporte" [(ngModel)]="tk.idTipoSoporte" optionLabel="nombre" optionValue="id"
