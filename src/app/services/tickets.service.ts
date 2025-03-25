@@ -8,6 +8,7 @@ import {
   docData,
   Firestore,
   getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -37,7 +38,7 @@ export class TicketsService {
 
   get(): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(ticketsCollection,  where('idEstatusTicket', 'not-in', ['1']));
+    const q = query(ticketsCollection, where('idEstatusTicket', 'not-in', ['1']));
     return collectionData(q, { idField: 'id' });
   }
 
@@ -130,10 +131,10 @@ export class TicketsService {
       } else {
         const tickets = querySnapshot.docs.map(
           (doc) =>
-            ({
-              id: doc.id,
-              ...doc.data(),
-            } as Ticket)
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Ticket)
         ); // Tipar cada objeto como Ticket
         callback(tickets); // Devuelve el primer registro
       }
@@ -168,10 +169,10 @@ export class TicketsService {
       } else {
         const tickets = querySnapshot.docs.map(
           (doc) =>
-            ({
-              id: doc.id,
-              ...doc.data(),
-            } as Ticket)
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Ticket)
         ); // Tipar cada objeto como Ticket
         callback(tickets); // Devuelve el primer registro
       }
@@ -218,18 +219,18 @@ export class TicketsService {
   getTicketsResponsable(userId: string, esGuardia: boolean): Observable<any[]> {
     return new Observable((observer) => {
       const collectionRef = collection(this.firestore, 'tickets');
-  
+
       const filtros = [
         where('idEstatusTicket', 'not-in', ['3']), // Siempre se aplica este filtro
         orderBy('fecha', 'desc'), // Siempre ordenamos por fecha
       ];
-      
+
       if (!esGuardia) {
         filtros.push(where('idResponsables', 'array-contains', userId));
       }
-      
+
       const q = query(collectionRef, ...filtros);
-  
+
       // Escucha en tiempo real
       const unsubscribe = onSnapshot(
         q,
@@ -238,7 +239,7 @@ export class TicketsService {
             id: doc.id,
             ...doc.data(),
           }));
-  
+
           // Emitir los tickets actualizados
           observer.next(tickets);
         },
@@ -247,12 +248,12 @@ export class TicketsService {
           observer.error(error);
         }
       );
-  
+
       // Manejo de limpieza
       return { unsubscribe };
     });
   }
-  
+
   async obtenerSecuencialTickets(): Promise<number> {
     try {
       const sucursalesRef = collection(this.firestore, 'tickets');
@@ -263,5 +264,15 @@ export class TicketsService {
       console.error('Error al obtener el count de tickets:', error);
       throw error;
     }
+  }
+
+  get30LastTickets(): Observable<any[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const q = query(
+      ticketsCollection,
+      where('idEstatusTicket', '==', '3'),
+      limit(30)
+    );
+    return collectionData(q, { idField: 'id' });
   }
 }

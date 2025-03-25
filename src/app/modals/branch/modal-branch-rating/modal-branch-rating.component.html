@@ -1,4 +1,24 @@
 <p-dialog header="EVALUACION GENERAL" [modal]="true" [(visible)]="mostrarModalRating" [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+    <table class="rating-table">
+        <tr>
+            <th colspan="3">{{ sucursal.nombre }}</th>
+        </tr>
+        <tr>
+            <td>SUCURSAL</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>IT: MTTO 10 X 10</td>
+            <td><app-rating-stars [rating]="calificacionMantenimiento" [editable]="false"></app-rating-stars></td>
+            <td>{{ calificacionMantenimiento }}</td>
+        </tr>
+        <tr>
+            <td>IT: ANALISTA</td>
+            <td><app-rating-stars [rating]="calificacion30Tickets" [editable]="false"></app-rating-stars></td>
+            <td>{{ calificacion30Tickets }}</td>
+        </tr>
+    </table>
 
 </p-dialog>

@@ -50,8 +50,9 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursal = this.usuario.sucursales[0].id;
     // this.obtenerMantenimientosPorSucursal(this.idSucursal);
-    this.obtenerUltimoMantenimiento();
-    this.obtenerUsuariosHelp();
+    if (this.idSucursal) {
+      this.obtenerUltimoMantenimiento();
+    }    this.obtenerUsuariosHelp();
   }
 
   abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento10x10 | any) {

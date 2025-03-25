@@ -3,25 +3,25 @@
         "id": 1,
         "idArea": 1,
         "nombre": "AJUSTE DE TICKET",
-        "estimacion": 3
+        "estimacion": 0
     },
     {
         "id": 2,
         "idArea": 1,
         "nombre": "REPORTES",
-        "estimacion": 5
+        "estimacion": 3
     },
     {
         "id": 3,
         "idArea": 1,
         "nombre": "IMPRESORAS",
-        "estimacion": 2
+        "estimacion": 0
     },
     {
         "id": 4,
         "idArea": 1,
         "nombre": "ALTA DE PERSONAL",
-        "estimacion": 4
+        "estimacion": 0
     },
     {
         "id": 5,
@@ -33,25 +33,25 @@
         "id": 6,
         "idArea": 1,
         "nombre": "ALBARANES",
-        "estimacion": 3
+        "estimacion": 1
     },
     {
         "id": 7,
         "idArea": 1,
         "nombre": "PAGINA WEB",
-        "estimacion": 5
+        "estimacion": 3
     },
     {
         "id": 8,
         "idArea": 1,
         "nombre": "BIOSTAR",
-        "estimacion": 2
+        "estimacion": 0
     },
     {
         "id": 9,
         "idArea": 1,
         "nombre": "FORTIA",
-        "estimacion": 4
+        "estimacion": 0
     },
     {
         "id": 10,
@@ -63,25 +63,25 @@
         "id": 11,
         "idArea": 1,
         "nombre": "FRONT REST",
-        "estimacion": 3
+        "estimacion": 0
     },
     {
         "id": 12,
         "idArea": 1,
         "nombre": "TIEMPOS EN COCINA",
-        "estimacion": 5
+        "estimacion": 0
     },
     {
         "id": 13,
         "idArea": 1,
         "nombre": "INVENTARIOS",
-        "estimacion": 2
+        "estimacion": 1
     },
     {
         "id": 14,
         "idArea": 1,
         "nombre": "ALTA DE ARTICULOS",
-        "estimacion": 4
+        "estimacion": 1
     },
     {
         "id": 15,
@@ -93,31 +93,31 @@
         "id": 16,
         "idArea": 1,
         "nombre": "APP MONDAY",
-        "estimacion": 3
+        "estimacion": 0
     },
     {
         "id": 17,
         "idArea": 1,
         "nombre": "APP DELIVERY",
-        "estimacion": 5
+        "estimacion": 0
     },
     {
         "id": 18,
         "idArea": 1,
         "nombre": "MANTENIMIENTO",
-        "estimacion": 2
+        "estimacion": 1
     },
     {
         "id": 19,
         "idArea": 1,
         "nombre": "SERVIDOR",
-        "estimacion": 4
+        "estimacion": 1
     },
     {
         "id": 20,
         "idArea": 1,
         "nombre": "MAIL",
-        "estimacion": 1
+        "estimacion": 0
     },
     {
         "id": 21,
@@ -129,7 +129,7 @@
         "id": 22,
         "idArea": 1,
         "nombre": "FACTURACIÓN",
-        "estimacion": 5
+        "estimacion": 0
     },
     {
         "id": 23,
@@ -141,7 +141,7 @@
         "id": 24,
         "idArea": 1,
         "nombre": "OTROS",
-        "estimacion": 4
+        "estimacion": 2
     },
     {
         "id": 25,
@@ -153,13 +153,13 @@
         "id": 26,
         "idArea": 2,
         "nombre": "FALLA EN AUDIO",
-        "estimacion": 3
+        "estimacion": 1
     },
     {
         "id": 27,
         "idArea": 2,
         "nombre": "FALLA EN VIDEO",
-        "estimacion": 5
+        "estimacion": 1
     },
     {
         "id": 28,
@@ -183,25 +183,25 @@
         "id": 31,
         "idArea": 2,
         "nombre": "SISTEMA DE CABLE",
-        "estimacion": 3
+        "estimacion": 1
     },
     {
         "id": 32,
         "idArea": 2,
         "nombre": "OTROS",
-        "estimacion": 5
+        "estimacion": 3
     },
     {
         "id": 33,
         "idArea": 3,
         "nombre": "FALLA EN CAMARAS",
-        "estimacion": 2
+        "estimacion": 1
     },
     {
         "id": 34,
         "idArea": 3,
         "nombre": "FALLA EN DVR",
-        "estimacion": 4
+        "estimacion": 1
     },
     {
         "id": 35,
@@ -213,13 +213,13 @@
         "id": 36,
         "idArea": 3,
         "nombre": "CAMARAS OFFLINE",
-        "estimacion": 3
+        "estimacion": 2
     },
     {
         "id": 37,
         "idArea": 3,
         "nombre": "LIMPIEZA DE CAMARAS",
-        "estimacion": 5
+        "estimacion": 1
     },
     {
         "id": 38,
@@ -231,6 +231,6 @@
         "id": 39,
         "idArea": 3,
         "nombre": "OTROS",
-        "estimacion": 4
+        "estimacion": 3
     }
 ]
