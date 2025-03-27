@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { RatingStarsComponent } from '../../../components/common/rating-stars/rating-stars.component';
 import { Usuario } from '../../../models/usuario.model';
@@ -15,7 +16,7 @@ import { Ticket } from '../../../models/ticket.model';
 @Component({
   selector: 'app-modal-branch-rating',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, TableModule, RatingStarsComponent],
+  imports: [CommonModule, DialogModule, FormsModule, TableModule, RatingStarsComponent, TooltipModule],
   templateUrl: './modal-branch-rating.component.html',
   styleUrl: './modal-branch-rating.component.scss'
 })

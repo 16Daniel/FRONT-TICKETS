@@ -41,7 +41,7 @@ export class ModalFinalizeTicketComponent {
     this.ticket!.idEstatusTicket = '3';
     this.ticket!.calificacion = this.rating;
     this.ticket.fechaFin = new Date();
-console.log(this.ticket.comentariosFinales)
+
     this.ticketsService
       .update(this.ticket)
       .then(() => {

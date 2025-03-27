@@ -214,6 +214,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
+        calificacionAnalista: 0,
         participantesChat,
       };
 

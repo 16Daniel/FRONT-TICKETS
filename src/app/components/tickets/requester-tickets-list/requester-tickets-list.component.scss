@@ -5,15 +5,22 @@
 .has-notification::after {
   content: "";
   position: absolute;
-  top: -3px; /* Ajusta la posición */
-  right: 0px; /* Ajusta la posición */
-  width: 10px; /* Tamaño del círculo */
-  height: 10px; /* Tamaño del círculo */
-  background-color: #ff0000; /* Color del círculo */
-  border-radius: 50%; /* Hace que sea un círculo */
+  top: -3px;
+  /* Ajusta la posición */
+  right: 0px;
+  /* Ajusta la posición */
+  width: 10px;
+  /* Tamaño del círculo */
+  height: 10px;
+  /* Tamaño del círculo */
+  background-color: #ff0000;
+  /* Color del círculo */
+  border-radius: 50%;
+  /* Hace que sea un círculo */
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }
 
 .row-highlight {
-  background-color: #fef9cb !important; /* Amarillo fef9cb */
+  background-color: #fef9cb !important;
+  /* Amarillo fef9cb */
 }

@@ -11,6 +11,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 export class RatingStarsComponent implements OnChanges {
   @Input() rating: number = 0; // Calificación inicial
   @Input() editable: boolean = false;
+  @Input() calificaAnalista: boolean = false;
   stars: boolean[] = [false, false, false, false, false]; // Estrellas desmarcadas
   @Output() ratingChange = new EventEmitter<number>(); // Emite el cambio de la calificación
 

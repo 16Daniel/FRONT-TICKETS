@@ -12,12 +12,11 @@ import { DocumentsService } from '../../services/documents.service';
 import { VersionButtonComponent } from '../version-button/version-button.component';
 import { Sucursal } from '../../models/sucursal.model';
 import { Usuario } from '../../models/usuario.model';
-import { ModalBranchRatingComponent } from '../../modals/branch/modal-branch-rating/modal-branch-rating.component';
 
 @Component({
   selector: 'app-side-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, MenubarModule, VersionButtonComponent, ButtonModule, ModalBranchRatingComponent],
+  imports: [CommonModule, FormsModule, MenubarModule, VersionButtonComponent, ButtonModule],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +27,6 @@ export class SideMenuComponent implements OnInit {
   usuario: Usuario;
   urlbase: string = '';
   sucursal: Sucursal | undefined;
-  mostrarModalRating: boolean = false;
   
   constructor(
     public cdr: ChangeDetectorRef,

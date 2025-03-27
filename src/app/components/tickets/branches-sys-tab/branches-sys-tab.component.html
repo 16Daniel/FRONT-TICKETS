@@ -1,46 +1,33 @@
 <div class="d-flex justify-content-start gap-3 p-3 pb-0">
-  <p-button
-    label="CREAR TICKET"
-    icon="pi pi-plus"
-    styleClass="p-button-primary"
-    (click)="onClickGenerarTicket()"
-  >
+  <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary" (click)="onClickGenerarTicket()">
   </p-button>
 
   <!-- <p-button label="Filtrar tickets" icon="pi pi-filter" styleClass="p-button-success"
   (click)="mostrarModalFilterTickets = true">
 </p-button> -->
 
-  <p-button
-    label="HISTORIAL TICKETS"
-    icon="pi pi-history"
-    styleClass="p-button-warning"
-    (click)="mostrarModalHistorial = true"
-  >
+  <p-button label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
+    (click)="mostrarModalHistorial = true">
   </p-button>
 
-  <p-button
-    label="HISTORIAL 10 X 10"
-    icon="pi pi-history"
-    styleClass="p-button-secondary"
-    (click)="mostrarModalHistorialMantenimientos = true"
-  >
+  <p-button label="HISTORIAL 10 X 10" icon="pi pi-history" styleClass="p-button-secondary"
+    (click)="mostrarModalHistorialMantenimientos = true">
   </p-button>
 
-  <p-button
-    label="CHECK 10 X 10"
-    icon="pi pi-wrench"
-    styleClass="p-button-danger"
-    *ngIf="mantenimientoActivo?.id"
-    (click)="mostrarAlerta10x10()"
-  >
+  <p-button label="CHECK 10 X 10" icon="pi pi-wrench" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
+    (click)="mostrarAlerta10x10()">
   </p-button>
+
+  <p-button label="EVALUACION GENERAL" icon="pi pi-star" 
+    styleClass="p-button-yellow"
+    (click)="mostrarModalRating = true">
+</p-button>
+
+
 </div>
 
-<div
-  class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
-  *ngIf="tickets.length == 0"
->
+<div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+  *ngIf="tickets.length == 0">
   @if (loading) {
   <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
   }@else {
@@ -51,68 +38,45 @@
 
 <div *ngIf="tickets.length > 0" class="p-1 mt-3">
   <div class="m-0 pb-4" style="background-color: transparent">
-    <app-priority-tickets-accordion
-      *ngIf="usuario.idRol == '2'"
-      [tickets]="tickets"
-      (clickEvent)="abrirModalDetalleTicket($event)"
-    ></app-priority-tickets-accordion>
+    <app-priority-tickets-accordion *ngIf="usuario.idRol == '2'" [tickets]="tickets"
+      (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion>
   </div>
 </div>
 
-<app-modal-generate-ticket
-  *ngIf="mostrarModalGenerateTicket"
-  [showModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false"
-></app-modal-generate-ticket>
+<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [showModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
 
-<app-modal-ticket-detail
-  *ngIf="mostrarModalTicketDetail"
-  [ticket]="ticket"
+<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
   [showModalTicketDetail]="mostrarModalTicketDetail"
-  (closeEvent)="mostrarModalTicketDetail = false"
-></app-modal-ticket-detail>
+  (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-modal-filter-tickets
-  [showModalFilterTickets]="mostrarModalFilterTickets"
-  [tickets]="todosLosTickets"
+<app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLosTickets"
   (closeEvent)="mostrarModalFilterTickets = false"
-  (ticketsFiltradosEvent)="tickets = $event"
-></app-modal-filter-tickets>
+  (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
-<app-modal-tickets-history
-  *ngIf="mostrarModalHistorial"
-  [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false"
-></app-modal-tickets-history>
+<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false"></app-modal-tickets-history>
 
-<app-modal-ten-xten-maintenance-history
-  *ngIf="mostrarModalHistorialMantenimientos"
+<app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
-  (closeEvent)="mostrarModalHistorialMantenimientos = false"
-></app-modal-ten-xten-maintenance-history>
+  (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
 
-<app-modal-ten-xten-maintenance-check
-  *ngIf="mostrarModal10x10"
-  [showModal10x10]="mostrarModal10x10"
+<app-modal-ten-xten-maintenance-check *ngIf="mostrarModal10x10" [showModal10x10]="mostrarModal10x10"
   (closeEvent)="mostrarModal10x10 = false"
-  [mantenimientoActivo]="mantenimientoActivo"
-></app-modal-ten-xten-maintenance-check>
+  [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
 
-<p-toast
-  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
-  [showTransformOptions]="'translateY(100%)'"
-  [showTransitionOptions]="'500ms'"
-  [hideTransitionOptions]="'500ms'"
-  [showTransformOptions]="'translateX(100%)'"
-></p-toast>
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
 
 <p-confirmDialog>
   <ng-template pTemplate="message" let-message>
-    <div
-      class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border"
-    >
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
       <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
       <p [innerHTML]="message.message"></p>
     </div>
   </ng-template>
 </p-confirmDialog>
+
+<app-modal-branch-rating *ngIf="usuario.idRol == '2'" [mostrarModalRating]="mostrarModalRating"
+  (closeEvent)="mostrarModalRating = false"></app-modal-branch-rating>
