@@ -301,8 +301,8 @@ export default class CalendarBuilderComponent implements OnInit {
       this.registrarGuardia();
     }
 
-    const fechaActual = new Date();
-    this.fecha.setHours(fechaActual.getHours(), fechaActual.getMinutes(), fechaActual.getSeconds(), fechaActual.getMilliseconds());
+    // const fechaActual = new Date();
+    // this.fecha.setHours(fechaActual.getHours(), fechaActual.getMinutes(), fechaActual.getSeconds(), fechaActual.getMilliseconds());
 
     let visita: Visita =
     {

@@ -122,6 +122,7 @@ export class ModalTenXtenMaintenanceCheckComponent {
       idSucursal: this.mantenimientoActivo?.idSucursal,
       idUsuarioSoporte: this.mantenimientoActivo?.idUsuarioSoporte,
       fecha: this.mantenimientoActivo?.fecha,
+      fechaFin: new Date,
       estatus: false,
     };
 

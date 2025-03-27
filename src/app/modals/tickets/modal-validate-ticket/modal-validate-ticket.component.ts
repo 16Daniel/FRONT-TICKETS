@@ -37,6 +37,7 @@ export class ModalValidateTicketComponent {
   validarTicket() {
     this.ticket.idEstatusTicket = '7';
     this.ticket.idResponsableFinaliza = this.usuario.id;
+    this.ticket!.calificacionAnalista = this.rating;
 
     this.ticketsService
       .update(this.ticket)
