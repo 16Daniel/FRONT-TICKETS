@@ -232,5 +232,17 @@
         "idArea": 3,
         "nombre": "OTROS",
         "estimacion": 3
+    },
+    {
+        "id": 40,
+        "idArea": 1,
+        "nombre": "CCTV",
+        "estimacion": 3
+    },
+    {
+        "id": 41,
+        "idArea": 1,
+        "nombre": "MANTENIMIENTO SISTEMAS",
+        "estimacion": 3
     }
 ]

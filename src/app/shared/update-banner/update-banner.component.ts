@@ -1,35 +1,36 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 
-import { VersionControlService } from '../../services/version-control.service';
-import { ControlVersion } from '../../models/control-version.model';
 import { VersionUsuarioService } from '../../services/version-usuario.service';
 import { Usuario } from '../../models/usuario.model';
+import { ControlVersion } from '../../models/control-version.model';
+import { VersionControlService } from '../../services/version-control.service';
 
 @Component({
-  selector: 'app-version-button',
+  selector: 'app-update-banner',
   standalone: true,
-  imports: [ButtonModule, CommonModule, RouterModule],
-  templateUrl: './version-button.component.html',
-  styleUrl: './version-button.component.scss',
+  imports: [CommonModule],
+  templateUrl: './update-banner.component.html',
+  styleUrl: './update-banner.component.scss'
 })
 
-export class VersionButtonComponent implements OnInit {
+export class UpdateBannerComponent implements OnInit {
+  paginaCargaPrimeraVez1: boolean = true;
+  paginaCargaPrimeraVez2: boolean = true;
+  usuario: Usuario;
   versionActual: ControlVersion | any;
   versionUsuario: ControlVersion | any;
-  usuario: Usuario | any = null;
   mostrarNotificacion: boolean = false;
 
   constructor(
+    private versionUsuarioService: VersionUsuarioService,
     private versionControlService: VersionControlService,
     private cdr: ChangeDetectorRef,
-    private versionUsuarioService: VersionUsuarioService
-  ) {}
-  async ngOnInit(): Promise<void> {
+  ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
+  async ngOnInit(): Promise<void> {
     this.versionControlService.getLastVersion().subscribe((result) => {
       if (result.length > 0) this.versionActual = { ...result[0] };
       this.cdr.detectChanges();
@@ -37,7 +38,8 @@ export class VersionButtonComponent implements OnInit {
       if (this.versionUsuario?.idVersion == this.versionActual.id) {
         this.mostrarNotificacion = false;
       } else {
-        this.mostrarNotificacion = true;
+        this.mostrarNotificacion = this.paginaCargaPrimeraVez1 ? false : true;
+        this.paginaCargaPrimeraVez1 = false;
       }
       this.cdr.detectChanges();
     });
@@ -49,8 +51,8 @@ export class VersionButtonComponent implements OnInit {
         if (this.versionUsuario?.idVersion == this.versionActual.id) {
           this.mostrarNotificacion = false;
         } else {
-          this.mostrarNotificacion = true;
-        }
+          this.mostrarNotificacion = this.paginaCargaPrimeraVez2 ? false : true;
+          this.paginaCargaPrimeraVez2 = false;        }
         this.cdr.detectChanges();
       });
   }

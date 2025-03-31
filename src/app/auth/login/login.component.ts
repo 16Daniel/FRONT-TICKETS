@@ -55,6 +55,7 @@ export default class LoginComponent {
       if (user.user.uid != null || user.user.uid != null) {
         (await this.usersService.getByUId(user.user.uid)).subscribe({
           next: (data) => {
+            debugger
             let userd: any = data[0];
             localStorage.setItem('rwuserdatatk', JSON.stringify(data[0]));
 
@@ -67,17 +68,24 @@ export default class LoginComponent {
             }
           },
           error: (error) => {
+            debugger
             console.log(error);
             this.showMessage(
               'error',
               'Error',
-              'Error al procesar la solicitud'
+              'Error al autenticar'
             );
           },
         });
       }
     } catch (error) {
+      debugger
       console.error('Error al iniciar sesión:', error);
+      this.showMessage(
+        'error',
+        'Error',
+        'Error al autenticar'
+      );
     }
   }
 }

@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { SideMenuComponent } from '../../shared/side-menu/side-menu.component';
 import { UsuarioLogin } from '../../models/usuario-login.model';
+import { UpdateBannerComponent } from '../../shared/update-banner/update-banner.component';
 
 @Component({
   selector: 'app-main',
@@ -12,7 +13,8 @@ import { UsuarioLogin } from '../../models/usuario-login.model';
   imports: [
     CommonModule,
     RouterOutlet,
-    SideMenuComponent
+    SideMenuComponent,
+    UpdateBannerComponent
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css',
