@@ -55,20 +55,18 @@ export default class LoginComponent {
       if (user.user.uid != null || user.user.uid != null) {
         (await this.usersService.getByUId(user.user.uid)).subscribe({
           next: (data) => {
-            debugger
             let userd: any = data[0];
             localStorage.setItem('rwuserdatatk', JSON.stringify(data[0]));
 
             if (userd.idRol == '1') {
               this.router.navigate(['/main/home-a']);
-            } else if (userd.idRol == '2') {
+            } else if ((userd.idRol == '2') || userd.idRol == '3') {
               this.router.navigate(['/main/home']);
             } else if (userd.idRol == '4') {
               this.router.navigate(['/main/home-s']);
             }
           },
           error: (error) => {
-            debugger
             console.log(error);
             this.showMessage(
               'error',

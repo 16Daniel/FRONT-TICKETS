@@ -6,19 +6,19 @@
   (click)="mostrarModalFilterTickets = true">
 </p-button> -->
 
-  <p-button label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
+  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
     (click)="mostrarModalHistorial = true">
   </p-button>
 
-  <p-button label="HISTORIAL 10 X 10" icon="pi pi-history" styleClass="p-button-secondary"
+  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 10 X 10" icon="pi pi-history" styleClass="p-button-secondary"
     (click)="mostrarModalHistorialMantenimientos = true">
   </p-button>
 
-  <p-button label="CHECK 10 X 10" icon="pi pi-wrench" styleClass="p-button-danger" *ngIf="mantenimientoActivo?.id"
+  <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="CHECK 10 X 10" icon="pi pi-wrench" styleClass="p-button-danger"
     (click)="mostrarAlerta10x10()">
   </p-button>
 
-  <p-button label="EVALUACION GENERAL" icon="pi pi-star" 
+  <p-button *ngIf="usuario.idRol == '2'" label="EVALUACION GENERAL" icon="pi pi-star" 
     styleClass="p-button-yellow"
     (click)="mostrarModalRating = true">
 </p-button>
@@ -38,7 +38,7 @@
 
 <div *ngIf="tickets.length > 0" class="p-1 mt-3">
   <div class="m-0 pb-4" style="background-color: transparent">
-    <app-priority-tickets-accordion *ngIf="usuario.idRol == '2'" [tickets]="tickets"
+    <app-priority-tickets-accordion [tickets]="tickets"
       (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion>
   </div>
 </div>

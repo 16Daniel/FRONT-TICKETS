@@ -17,6 +17,8 @@ import { UsersService } from '../../../services/users.service';
 import { DocumentsService } from '../../../services/documents.service';
 import { BranchesService } from '../../../services/branches.service';
 import { RolesService } from '../../../services/roles.service';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-users',
@@ -30,6 +32,8 @@ import { RolesService } from '../../../services/roles.service';
     FormsModule,
     ConfirmDialogModule,
     MultiSelectModule,
+    TableModule,
+    TooltipModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './users.component.html',

@@ -50,6 +50,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
+  isLoading = false;
 
   formDepartamento: any;
   formArea: any;
@@ -171,6 +172,8 @@ export class ModalGenerateTicketComponent implements OnInit {
       this.showMessage('error', 'Error', 'Campos requeridos incompletos');
       return;
     }
+
+    this.isLoading = true;
 
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
       let folio = this.folioGeneratorService.generarFolio(
