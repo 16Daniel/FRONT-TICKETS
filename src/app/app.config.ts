@@ -7,7 +7,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 import { routes } from './app.routes';
-import { environment } from '../environments/enviroments';
+import { environment } from '../environments/environments';
 
 export const appConfig: ApplicationConfig = {
   providers: [

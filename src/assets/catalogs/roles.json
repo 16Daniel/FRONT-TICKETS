@@ -5,14 +5,18 @@
     },
     {
         "id": 2,
-        "nombre": "SOLICITANTE"
+        "nombre": "SUCURSAL"
     },
     {
         "id": 3,
-        "nombre": "ADMINISTRADOR DE AREA"
+        "nombre": "CORPORATIVO"
     },
     {
         "id": 4,
         "nombre": "SOPORTE"
+    },
+    {
+        "id": 5,
+        "nombre": "ADMINISTRADOR DE ÁREA"
     }
 ]

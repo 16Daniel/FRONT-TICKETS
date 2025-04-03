@@ -21,6 +21,7 @@ export class HomeGuard implements CanActivate {
     const roleRoutes: { [key: string]: string } = {
       '1': '/main/home-a',
       '2': '/main/home',
+      '3': '/main/home',
       '4': '/main/home-s',
     };
 

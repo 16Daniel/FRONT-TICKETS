@@ -19,8 +19,8 @@ import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenan
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
-import { BranchesTabsComponent } from '../../../components/tickets/branches-tabs/branches-tabs.component';
 import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
+import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-rating/modal-branch-rating.component';
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -36,8 +36,8 @@ import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion
     ModalTicketsHistoryComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
-    BranchesTabsComponent,
     PriorityTicketsAccordionComponent,
+    ModalBranchRatingComponent
   ],
   templateUrl: './branches-sys-tab.component.html',
   styleUrl: './branches-sys-tab.component.scss',
@@ -49,6 +49,7 @@ export class BranchesSysTabComponent {
   mostrarModalHistorial: boolean = false;
   mostrarModal10x10: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
+  mostrarModalRating: boolean = false;
 
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
@@ -194,11 +195,34 @@ export class BranchesSysTabComponent {
       rejectIcon: 'pi pi-times mr-2',
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      
+
       accept: () => {
         this.mostrarModal10x10 = true;
       },
-      reject: () => {},
+      reject: () => { },
     });
+  }
+
+  verificarTicketsPorValidar(tickets: Ticket[]) {
+    let result = tickets.filter(x => x.idEstatusTicket == '7');
+    return result.length > 0;
+  }
+
+  onClickGenerarTicket() {
+    if (this.verificarTicketsPorValidar(this.todosLosTickets)) {
+      this.confirmationService.confirm({
+        header: 'IMPORTANTE',
+        message: `TIENES TICKETS PENDIENTES POR VALIDAR`,
+        acceptLabel: 'Aceptar',
+        acceptButtonStyleClass: 'btn bg-p-b p-3',
+        rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+        rejectVisible: false,
+        accept: () => {
+        },
+      });
+    }
+    else {
+      this.mostrarModalGenerateTicket = true;
+    }
   }
 }

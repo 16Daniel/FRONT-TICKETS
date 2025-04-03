@@ -28,7 +28,7 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
-  activeIndex: number | null = null;
+  // activeIndex: number | null = null;
   userdata: any;
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
@@ -76,9 +76,9 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     else return this.tickets.filter((x) => x.idPrioridadTicket === '4');
   }
 
-  toggleAccordion(index: number) {
-    this.activeIndex = this.activeIndex === index ? null : index;
-  }
+  // toggleAccordion(index: number) {
+  //   this.activeIndex = this.activeIndex === index ? null : index;
+  // }
 
   verificarChatNoLeido(tickets: Ticket[]): boolean {
     return tickets.some(ticket => {

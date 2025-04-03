@@ -50,6 +50,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
+  isLoading = false;
 
   formDepartamento: any;
   formArea: any;
@@ -172,6 +173,8 @@ export class ModalGenerateTicketComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
+
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
       let folio = this.folioGeneratorService.generarFolio(
         parseInt(this.sucursal?.id),
@@ -214,6 +217,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         nombreCategoria: this.formCategoria.nombre,
         folio,
         calificacion: 0,
+        calificacionAnalista: 0,
         participantesChat,
       };
 

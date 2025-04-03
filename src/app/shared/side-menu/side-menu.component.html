@@ -13,21 +13,24 @@
         <span class="line line3"></span>
       </div>
       <div class="logo">
-        <p-button *ngIf="usuario.idRol == '2'" label="⭐" styleClass="p-button-rounded p-button-text" (click)="mostrarModalRating = true"></p-button>
+        
         <app-version-button></app-version-button>
       </div>
       <div class="menu-items" style="overflow: auto;">
         <i class='bx bx-support bx-lg'></i>
         <div class="fw-bold fs-3 mb-4" style="color: rgb(0, 0, 0);">REBEL TICKETS</div>
         <li (click)="closemenu()"><a [routerLink]="'/main/home'"><i class='bx bxs-dashboard'></i>Inicio</a></li>
-        <li (click)="closemenu()"><a [routerLink]="'/main/users'" *ngIf="usuario.idRol == '1'"><i class='bx bx-user'></i>Usuarios</a></li>
-        <li (click)="closemenu()"><a [routerLink]="'/main/roles'" *ngIf="usuario.idRol == '1'"><i class='bx bx-objects-horizontal-left'></i>Roles</a>
+        <li (click)="closemenu()"><a [routerLink]="'/main/users'" *ngIf="usuario.idRol == '1'"><i
+              class='bx bx-user'></i>Usuarios</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/roles'" *ngIf="usuario.idRol == '1'"><i
+              class='bx bx-objects-horizontal-left'></i>Roles</a>
         </li>
         <li (click)="closemenu()" *ngIf="usuario?.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
               class='bx bx-calendar-plus'></i>Registrar visita</a></li>
-        <li (click)="closemenu()" *ngIf="usuario?.idRol == '4'"><a [routerLink]="'/main/branch-visit-schedule'"><i
+        <li (click)="closemenu()" *ngIf="usuario?.idRol == '4' || usuario?.idRol == '2'"><a [routerLink]="'/main/branch-visit-schedule'"><i
               class='bx bx-calendar'></i>Calendario de visitas</a></li>
-        <li (click)="closemenu()"><a [routerLink]="'/main/version-control'" *ngIf="usuario.idRol == '1'"><i class='bx bxs-dashboard'></i>Control de versiones</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/version-control'" *ngIf="usuario.idRol == '1'"><i
+              class='bx bxs-dashboard'></i>Control de versiones</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
@@ -39,4 +42,3 @@
   </div>
 </nav>
 
-<app-modal-branch-rating *ngIf="usuario.idRol == '2'" [mostrarModalRating]="mostrarModalRating" (closeEvent)="mostrarModalRating = false"></app-modal-branch-rating>

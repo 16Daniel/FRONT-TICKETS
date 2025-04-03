@@ -8,7 +8,8 @@
 </div>
 
 <div class="rating-container" *ngIf="editable">
-    <p style="color: black;">Califica tu experiencia con nuestro soporte:</p>
+    <p style="color: black;" *ngIf="!calificaAnalista">Califica tu experiencia con nuestro soporte:</p>
+    <p style="color: black;" *ngIf="calificaAnalista">Califica tu experiencia con la sucursal:</p>
     <div class="star-rating">
         <span *ngFor="let star of stars; let i = index" (click)="setRating(i)" class="star">
             <ng-container *ngIf="star">★</ng-container>

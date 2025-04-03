@@ -8,7 +8,6 @@ export class BranchGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    debugger
     const userData = localStorage.getItem('rwuserdatatk');
     if (!userData) {
       this.router.navigate(['/auth/login']);

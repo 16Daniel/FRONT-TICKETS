@@ -1,0 +1,12 @@
+<p-dialog header="VALIDAR TICKET" [modal]="true" [(visible)]="mostrarModalValidarTicket" [style]="{ width: '50rem' }"
+    [maximizable]="true" (onHide)="onHide()">
+    <br>
+    <br>
+    <app-rating-stars [rating]="rating" (ratingChange)="rating = $event" [editable]="true" [calificaAnalista]="true"></app-rating-stars>
+
+    <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-success p-2 text-center" (click)="validarTicket()" [disabled]="rating == 0">
+            <i class="bx bx-check-circle bx-md"></i>
+        </button>
+    </div>
+</p-dialog>

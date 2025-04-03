@@ -30,6 +30,7 @@ import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
+import { ModalValidateTicketComponent } from '../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -39,6 +40,7 @@ import { EstatusTicket } from '../../../models/estatus-ticket.model';
     CommonModule,
     ModalFinalizeTicketComponent,
     ModalTicketChatComponent,
+    ModalValidateTicketComponent,
     AccordionModule,
     BadgeModule,
     RatingStarsComponent,
@@ -63,6 +65,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;
+  mostrarModalValidarTicket: boolean = false;
   showModalChatTicket: boolean = false;
   areas: Area[] = [];
   ticketSeleccionado: Ticket | undefined;
@@ -287,14 +290,8 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
-        ticket.idEstatusTicket = '7';
-        ticket.idResponsableFinaliza = this.usuario.id;
-        this.ticketsService
-          .update(ticket)
-          .then(() => {
-            this.showMessage('success', 'Success', 'Enviado correctamente');
-          })
-          .catch((error) => console.error(error));
+        this.ticketAccion = ticket;
+        this.mostrarModalValidarTicket = true;
       },
       reject: () => {},
     });

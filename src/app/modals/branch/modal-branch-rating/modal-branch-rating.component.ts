@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { RatingStarsComponent } from '../../../components/common/rating-stars/rating-stars.component';
 import { Usuario } from '../../../models/usuario.model';
@@ -15,7 +16,7 @@ import { Ticket } from '../../../models/ticket.model';
 @Component({
   selector: 'app-modal-branch-rating',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, TableModule, RatingStarsComponent],
+  imports: [CommonModule, DialogModule, FormsModule, TableModule, RatingStarsComponent, TooltipModule],
   templateUrl: './modal-branch-rating.component.html',
   styleUrl: './modal-branch-rating.component.scss'
 })
@@ -27,7 +28,8 @@ export class ModalBranchRatingComponent {
   sucursal: Sucursal;
 
   calificacionMantenimiento: number = 0;
-  calificacion30Tickets: number = 0;
+  calificacion30TicketsAnalista: number = 0;
+  calificacion30TicketsSupervisor: number = 0;
 
   constructor(private maintenance10x10Service: Maintenance10x10Service, private ticketsService: TicketsService) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -53,8 +55,8 @@ export class ModalBranchRatingComponent {
 
   obtenerUltimos30tickets() {
     this.ticketsService.get30LastTickets().subscribe(result => {
-      console.log(result)
-      this.calcularPorcentajeTickets(result);
+      this.calcularPorcentajeTicketsAnalista(result);
+      this.calcularPorcentajeTicketsSupervisor(result);
     });
   }
 
@@ -80,13 +82,23 @@ export class ModalBranchRatingComponent {
     this.calificacionMantenimiento = Math.round((porcentaje / 100) * 5);
   }
 
-  private calcularPorcentajeTickets(tickets: Ticket[]) {
+  private calcularPorcentajeTicketsAnalista(tickets: Ticket[]) {
     let total = 0;
 
     tickets.forEach(ticket => {
       total += ticket.calificacion;
     });
 
-    this.calificacion30Tickets = Math.round(total / tickets.length);
+    this.calificacion30TicketsAnalista = Math.round(total / tickets.length);
+  }
+
+  private calcularPorcentajeTicketsSupervisor(tickets: Ticket[]) {
+    let total = 0;
+    tickets = tickets.filter(X => X.calificacionAnalista)
+    tickets.forEach(ticket => {
+      total += ticket.calificacionAnalista;
+    });
+
+    this.calificacion30TicketsSupervisor = Math.round(total / tickets.length);
   }
 }

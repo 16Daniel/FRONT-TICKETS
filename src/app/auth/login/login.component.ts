@@ -60,7 +60,7 @@ export default class LoginComponent {
 
             if (userd.idRol == '1') {
               this.router.navigate(['/main/home-a']);
-            } else if (userd.idRol == '2') {
+            } else if ((userd.idRol == '2') || userd.idRol == '3') {
               this.router.navigate(['/main/home']);
             } else if (userd.idRol == '4') {
               this.router.navigate(['/main/home-s']);
@@ -71,13 +71,19 @@ export default class LoginComponent {
             this.showMessage(
               'error',
               'Error',
-              'Error al procesar la solicitud'
+              'Error al autenticar'
             );
           },
         });
       }
     } catch (error) {
+      debugger
       console.error('Error al iniciar sesión:', error);
+      this.showMessage(
+        'error',
+        'Error',
+        'Error al autenticar'
+      );
     }
   }
 }

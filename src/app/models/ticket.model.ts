@@ -23,5 +23,6 @@ export interface Ticket {
   comentariosFinales?: string | null;
   folio: string;
   calificacion: number;
+  calificacionAnalista: number;
   participantesChat: ParticipanteChat[];
 }

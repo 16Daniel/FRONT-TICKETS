@@ -5,19 +5,22 @@
             <th colspan="3">{{ sucursal.nombre }}</th>
         </tr>
         <tr>
-            <td>SUCURSAL</td>
-            <td></td>
-            <td></td>
+            <th colspan="3">CALIFICACIONES</th>
         </tr>
         <tr>
-            <td>IT: MTTO 10 X 10</td>
+            <td pTooltip="CALIFICACION ANALISTA A SUPERVISOR" tooltipPosition="top">SUPERVISOR</td>
+            <td><app-rating-stars [rating]="calificacion30TicketsSupervisor" [editable]="false"></app-rating-stars></td>
+            <td pTooltip="ES LA CALIFICACION DE LOS ULTIMOS 30 TICKETS QUE DA EL ANALISTA A LA SUCURSAL">{{ calificacion30TicketsSupervisor }}</td>
+        </tr>
+        <tr>
+            <td pTooltip="CALIFICACION DE ULTIMO MANTENIMIENTO">IT: MTTO 10 X 10</td>
             <td><app-rating-stars [rating]="calificacionMantenimiento" [editable]="false"></app-rating-stars></td>
-            <td>{{ calificacionMantenimiento }}</td>
+            <td pTooltip="ES LA CALIFICACION DEL ULTIMO MANTENIMIENTO EN UNA ESCALA DE 5 ESTRELLAS">{{ calificacionMantenimiento }}</td>
         </tr>
         <tr>
-            <td>IT: ANALISTA</td>
-            <td><app-rating-stars [rating]="calificacion30Tickets" [editable]="false"></app-rating-stars></td>
-            <td>{{ calificacion30Tickets }}</td>
+            <td pTooltip="CALIFICACION SUPERVISOR A ANALISTA">IT: ANALISTA</td>
+            <td><app-rating-stars [rating]="calificacion30TicketsAnalista" [editable]="false"></app-rating-stars></td>
+            <td pTooltip="ES LA CALIFICACION DE LOS ULTIMOS 30 TICKETS EN UNA ESCALA DE 5 ESTRELLAS">{{ calificacion30TicketsAnalista }}</td>
         </tr>
     </table>
 
