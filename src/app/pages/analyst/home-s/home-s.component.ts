@@ -26,6 +26,7 @@ import { AccordionBranchMaintenance10x10Component } from '../../../components/ma
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../../components/tickets/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
+import { NotificacionService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-home-s',
@@ -82,7 +83,8 @@ export default class homeSComponent implements OnInit {
     private mantenimientoService: Maintenance10x10Service,
     private messageService: MessageService,
     private usersService: UsersService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private notificacionService: NotificacionService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -92,6 +94,7 @@ export default class homeSComponent implements OnInit {
     this.getTicketsResponsable();
     this.obtnerUltimosMantenimientos();
     this.obtenerSucursales();
+    this.notificacionService.solicitarPermiso();
   }
 
   obtnerUltimosMantenimientos() {
@@ -144,7 +147,9 @@ export default class homeSComponent implements OnInit {
             this.tickets = data;
             this.todosLosTickets = data;
             this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
-            this.showMessage('info', 'Nuevo ticket asignado', 'Sucursal: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
+
+            this.notificacionService.enviarNotificacion('NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre);
+            this.showMessage('info', 'NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
           }
           else {
             this.tickets = data;
@@ -210,13 +215,13 @@ export default class homeSComponent implements OnInit {
     }, 50);
   }
 
-  showMessage(sev: string, summ: string, det: string, timeout : number = 3000) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det, life: timeout  });
+  showMessage(sev: string, summ: string, det: string, timeout: number = 3000) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det, life: timeout });
   }
 
   async onToggleGuardia(usuario: any): Promise<void> {
     if (!usuario || !usuario.id) return;
-  
+
     try {
       await this.usersService.updateUserGuardStatus(usuario.id, usuario.esGuardia);
       localStorage.setItem('rwuserdatatk', JSON.stringify(usuario));

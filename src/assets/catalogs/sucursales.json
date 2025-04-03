@@ -190,5 +190,57 @@
     {
         "id": 48,
         "nombre": "RW PEDREGAL"
+    },
+    {
+        "id": 49,
+        "nombre": "CONTABILIDAD"
+    },
+    {
+        "id": 50,
+        "nombre": "ADMINISTRACIÓN"
+    },
+    {
+        "id": 51,
+        "nombre": "COMPRAS"
+    },
+    {
+        "id": 52,
+        "nombre": "CALIDAD"
+    },
+    {
+        "id": 53,
+        "nombre": "SERVICIO"
+    },
+    {
+        "id": 54,
+        "nombre": "MARKETING"
+    },
+    {
+        "id": 55,
+        "nombre": "MONITOREO"
+    },
+    {
+        "id": 56,
+        "nombre": "CAPACITACIÓN"
+    },
+    {
+        "id": 57,
+        "nombre": "AUDITORIA"
+    },
+    {
+        "id": 58,
+        "nombre": "RECURSOS HUMANOS"
+    },
+    {
+        "id": 59,
+        "nombre": "CULTURA CORPORATIVA"
+    },
+    {
+        "id": 60,
+        "nombre": "SISTEMAS"
+    },
+    {
+        "id": 61,
+        "nombre": "DIRECCIÓN"
     }
 ]
