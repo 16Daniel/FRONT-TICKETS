@@ -13,7 +13,7 @@ import { VisitasService } from '../../../services/visitas.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Timestamp } from '@angular/fire/firestore';
 import { Visita } from '../../../models/visita';
-import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-detail/modal-event-detail.component";
+import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';
 import { PriorityTicketsAccordionComponent } from '../../../components/tickets/priority-tickets-accordion/priority-tickets-accordion.component';

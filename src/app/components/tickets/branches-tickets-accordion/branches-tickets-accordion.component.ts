@@ -1,15 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { Sucursal } from '../../../models/sucursal.model';
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { DropdownModule } from 'primeng/dropdown';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../../models/usuario.model';
-import { Area } from '../../../models/area';
+import { CommonModule } from '@angular/common';
+import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
+
+import { Usuario } from '../../../models/usuario.model';
+import { Sucursal } from '../../../models/sucursal.model';
+import { Ticket } from '../../../models/ticket.model';
+import { Area } from '../../../models/area';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 
 @Component({

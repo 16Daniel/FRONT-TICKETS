@@ -26,9 +26,9 @@ import { GuardiasService } from '../../../services/guardias.service';
 import { Guardia } from '../../../models/guardia';
 import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { CalendarComponent } from "../../../components/common/calendar/calendar.component";
-import { ModalColorsComponent } from "../../../modals/Calendar/modal-colors/modal-colors.component";
+import { ModalColorsComponent } from "../../../modals/calendar/modal-colors/modal-colors.component";
 import { DocumentsService } from '../../../services/documents.service';
-import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-detail/modal-event-detail.component";
+import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 
 
 @Component({
@@ -92,7 +92,7 @@ export default class CalendarBuilderComponent implements OnInit {
     this.obtenerUsuariosHelp();
     //this.fecha.setDate(new Date().getDate() + 1); // Suma 1 día
 
-  }
+  } 
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
@@ -104,6 +104,7 @@ export default class CalendarBuilderComponent implements OnInit {
       .get()
       .subscribe({
         next: (data) => {
+          console.log(data)
           this.tickets = [];
           this.tickets = data;
           let arr_temp: Ticket[] = [];
