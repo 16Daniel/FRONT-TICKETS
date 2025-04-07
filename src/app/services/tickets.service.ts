@@ -36,9 +36,14 @@ export class TicketsService {
     return docRef.id;
   }
 
+  /**
+   * Consulta tickets que esten en los estatus enviados
+   * @param estatus lista de idEstatusTicket
+   * @returns 
+   */
   get(): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(ticketsCollection, where('idEstatusTicket', 'not-in', ['1']));
+    const q = query(ticketsCollection, where('idEstatusTicket', 'not-in', ['3']));
     return collectionData(q, { idField: 'id' });
   }
 

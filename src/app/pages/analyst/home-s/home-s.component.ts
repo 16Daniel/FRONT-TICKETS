@@ -26,7 +26,7 @@ import { AccordionBranchMaintenance10x10Component } from '../../../components/ma
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../../components/tickets/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
-import { NotificacionService } from '../../../services/notification.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-home-s',
@@ -84,7 +84,7 @@ export default class homeSComponent implements OnInit {
     private messageService: MessageService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private notificacionService: NotificacionService
+    private notificationService: NotificationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -94,7 +94,7 @@ export default class homeSComponent implements OnInit {
     this.getTicketsResponsable();
     this.obtnerUltimosMantenimientos();
     this.obtenerSucursales();
-    this.notificacionService.solicitarPermiso();
+    this.notificationService.solicitarPermiso();
   }
 
   obtnerUltimosMantenimientos() {
@@ -148,7 +148,7 @@ export default class homeSComponent implements OnInit {
             this.todosLosTickets = data;
             this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
 
-            this.notificacionService.enviarNotificacion('NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre);
+            this.notificationService.enviarNotificacion('NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre);
             this.showMessage('info', 'NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
           }
           else {

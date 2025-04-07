@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { GuardiasService } from '../../../services/guardias.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Ticket } from '../../../models/ticket.model';
-import ModalEventDetailComponent from "../../../modals/Calendar/modal-event-detail/modal-event-detail.component";
+import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 import { Sucursal } from '../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { DocumentsService } from '../../../services/documents.service';
