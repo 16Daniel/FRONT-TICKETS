@@ -77,7 +77,6 @@ export default class LoginComponent {
         });
       }
     } catch (error) {
-      debugger
       console.error('Error al iniciar sesión:', error);
       this.showMessage(
         'error',
