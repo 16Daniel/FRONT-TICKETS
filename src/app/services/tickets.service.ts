@@ -6,12 +6,14 @@ import {
   collectionData,
   doc,
   docData,
+  documentId,
   Firestore,
   getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
+  Timestamp,
   updateDoc,
   where,
 } from '@angular/fire/firestore';
@@ -280,4 +282,55 @@ export class TicketsService {
     );
     return collectionData(q, { idField: 'id' });
   }
+
+  async getByIds(idsTickets: string[]): Promise<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+
+    // Dividir en bloques de 30
+    const chunks = [];
+    for (let i = 0; i < idsTickets.length; i += 30) {
+      chunks.push(idsTickets.slice(i, i + 30));
+    }
+
+    const results = await Promise.all(
+      chunks.map(async (chunk) => {
+        const q = query(ticketsCollection, where(documentId(), 'in', chunk));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }) as Ticket);
+      })
+    );
+
+    return results.flat();
+  }
+
+  async getFinalizedTicketsByEndDate(
+    idSucursal: string,
+    fecha: Date
+  ): Promise<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+
+    // Rango de día
+    const startOfDay = Timestamp.fromDate(new Date(fecha.setHours(0, 0, 0, 0)));
+    const endOfDay = Timestamp.fromDate(new Date(fecha.setHours(24, 0, 0, 0))); // siguiente día a las 00:00
+
+    const q = query(
+      ticketsCollection,
+      where('idEstatusTicket', '==', '3'),
+      where('idSucursal', '==', idSucursal),
+      where('fechaFin', '>=', startOfDay),
+      where('fechaFin', '<', endOfDay)
+    );
+
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }) as Ticket);
+  }
+
+
 }

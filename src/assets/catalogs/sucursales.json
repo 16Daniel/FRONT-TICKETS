@@ -193,54 +193,74 @@
     },
     {
         "id": 49,
-        "nombre": "CONTABILIDAD"
+        "nombre": "RW VALLEJO"
     },
     {
         "id": 50,
-        "nombre": "ADMINISTRACIÓN"
+        "nombre": "CEDIS QRO"
     },
     {
         "id": 51,
-        "nombre": "COMPRAS"
+        "nombre": "GAD"
     },
     {
         "id": 52,
-        "nombre": "CALIDAD"
+        "nombre": "CONTABILIDAD"
     },
     {
         "id": 53,
-        "nombre": "SERVICIO"
+        "nombre": "ADMINISTRACIÓN"
     },
     {
         "id": 54,
-        "nombre": "MARKETING"
+        "nombre": "COMPRAS"
     },
     {
         "id": 55,
-        "nombre": "MONITOREO"
+        "nombre": "CALIDAD"
     },
     {
         "id": 56,
-        "nombre": "CAPACITACIÓN"
+        "nombre": "RW MOCHIS"
     },
     {
         "id": 57,
-        "nombre": "AUDITORIA"
+        "nombre": "RW THE PARK"
     },
     {
         "id": 58,
-        "nombre": "RECURSOS HUMANOS"
+        "nombre": "SERVICIO"
     },
     {
         "id": 59,
-        "nombre": "CULTURA CORPORATIVA"
+        "nombre": "MARKETING"
     },
     {
         "id": 60,
-        "nombre": "SISTEMAS"
+        "nombre": "MONITOREO"
     },
     {
         "id": 61,
+        "nombre": "CAPACITACIÓN"
+    },
+    {
+        "id": 62,
+        "nombre": "AUDITORIA"
+    },
+    {
+        "id": 63,
+        "nombre": "RECURSOS HUMANOS"
+    },
+    {
+        "id": 64,
+        "nombre": "CULTURA CORPORATIVA"
+    },
+    {
+        "id": 65,
+        "nombre": "SISTEMAS"
+    },
+    {
+        "id": 66,
         "nombre": "DIRECCIÓN"
     }
 ]

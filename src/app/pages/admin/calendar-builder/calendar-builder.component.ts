@@ -103,7 +103,6 @@ export default class CalendarBuilderComponent implements OnInit {
       .get()
       .subscribe({
         next: (data) => {
-          console.log(data)
           this.tickets = [];
           this.tickets = data;
           let arr_temp: Ticket[] = [];

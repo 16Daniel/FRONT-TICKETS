@@ -17,6 +17,8 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { DocumentsService } from '../../../services/documents.service';
 import { ColorUsuario } from '../../../models/color-usuario';
+import { TicketsService } from '../../../services/tickets.service';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -28,10 +30,9 @@ export class CalendarComponent implements OnInit {
   @Input() usuariosHelp: Usuario[] = [];
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
-  @Input() mantenimientos: Mantenimiento10x10[] = [];
 
   comentario: string = '';
-  sucursalSeleccionada: Sucursal | undefined;
+  sucursalSeleccionada: Sucursal | any;
   FechaSeleccionada: Date = new Date();
   showModalEventeDetail: boolean = false;
   colores: ColorUsuario[] = [];
@@ -52,15 +53,16 @@ export class CalendarComponent implements OnInit {
     eventOrder: 'order'
   };
 
-  constructor(private visitasService: VisitasService,
+  constructor(
+    private visitasService: VisitasService,
     private guardiasService: GuardiasService,
     private cdr: ChangeDetectorRef,
-    private documentService: DocumentsService) { }
+    private documentService: DocumentsService,
+    private ticketsService: TicketsService,
+    private mantenimientoService: Maintenance10x10Service) { }
 
   ngOnInit(): void {
     this.obtenerColores();
-    console.log(this.tickets);
-    console.log(this.sucursales);
   }
 
   obtenerFechas(info: any) {
@@ -85,7 +87,6 @@ export class CalendarComponent implements OnInit {
   async mostrarEventos(fechaIni: Date, fechaFin: Date) {
     this.loading = true;
     let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin);
-    console.log(visitas);
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin);
     let calendarApi = this.calendarComponent!.getApi();
     calendarApi.removeAllEvents();
@@ -109,7 +110,15 @@ export class CalendarComponent implements OnInit {
     }
     for (let visita of visitas) {
       let comentario = '';
+
       for (let sucursal of visita.sucursales) {
+
+        let fechaFin = this.getDate(visita.fecha);
+        const ticketsFinalizados = await this.ticketsService.getFinalizedTicketsByEndDate(sucursal.id, fechaFin);
+        let mantenimientos = await this.mantenimientoService
+          .obtenerMantenimientoVisita(this.getDate(visita.fecha), sucursal.id);
+
+
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
         comentario = temp.length > 0 ? temp[0].comentario : '';
         calendarApi.addEvent({
@@ -122,7 +131,11 @@ export class CalendarComponent implements OnInit {
             idSucursal: sucursal.id,
             idUsuario: visita.idUsuario,
             comentario: comentario,
-            tickets: sucursal.idsTickets.length
+            ticketsCount: sucursal.idsTickets.length,
+            idsTickets: sucursal.idsTickets,
+            ticketsFinalizados: ticketsFinalizados.length,
+            fechaVisita: visita.fecha,
+            mantenimientosDelDia: mantenimientos
           },
           order: contador
         });
@@ -145,20 +158,21 @@ export class CalendarComponent implements OnInit {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
-  handleEventClick(clickInfo: EventClickArg) {
-
+  async handleEventClick(clickInfo: EventClickArg) {
     if (clickInfo.event.title != 'GUARDIA') {
       let sucursal = this.sucursales.filter(x => x.nombre == clickInfo.event._def.title);
       this.FechaSeleccionada = clickInfo.event.start!;
       this.comentario = clickInfo.event.extendedProps['comentario'];
-      this.sucursalSeleccionada = sucursal[0];
+      this.sucursalSeleccionada = {
+        ...sucursal[0],
+        idsTickets: clickInfo.event.extendedProps['idsTickets'],
+        ticketsFinalizados: clickInfo.event.extendedProps['ticketsFinalizados'],
+        fechaVisita: clickInfo.event.extendedProps['fechaVisita'],
+        mantenimientosDelDia: clickInfo.event.extendedProps['mantenimientosDelDia'],
+      };
       this.showModalEventeDetail = true;
       this.cdr.detectChanges();
     }
-  }
-
-  obtenerMantenimientoSucursal(idSucursal: string): Mantenimiento10x10[] {
-    return this.mantenimientos.filter(x => x.idSucursal == idSucursal);
   }
 
   obtenerColores() {
@@ -193,4 +207,29 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
+    if(mantenimiento == undefined) {
+      return 0;
+    }
+
+    let porcentaje = 0;
+    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoPuntosVentaTabletas
+      ? (porcentaje += 10)
+      : porcentaje;
+    mantenimiento.mantenimientoContenidosSistemaCable
+      ? (porcentaje += 10)
+      : porcentaje;
+    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoConcentradorApps
+      ? (porcentaje += 10)
+      : porcentaje;
+
+    return porcentaje;
+  }
 }

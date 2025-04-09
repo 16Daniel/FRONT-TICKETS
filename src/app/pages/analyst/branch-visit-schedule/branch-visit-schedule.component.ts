@@ -37,7 +37,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
 public usuariosHelp:Usuario[] = [];
 public colorUsuario:ColorUsuario|undefined;  
 public tickets: Ticket[] = [];
-public arr_ultimosmantenimientos:Mantenimiento10x10[] = []; 
+public arr_ultimosmantenimientos:Mantenimiento10x10[] = []; // <--- revisar
 public usuario: Usuario;
 public arr_data:Visita[] = []; 
 public sucursales:Sucursal[] = [];
