@@ -20,18 +20,13 @@
       <p class="p-0">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
       <p class="p-0">
         <span class="p-1 bg-white text-dark rounded-3">
-          Tickets:
-          <span class="fw-bold">
-            {{arg.event.extendedProps.ticketsFinalizados}} / {{arg.event.extendedProps.ticketsCount}}
-          </span>
+          {{arg.event.extendedProps.ticketsCount}} TICKETS:
+          {{arg.event.extendedProps.ticketsFinalizados}} RESUELTOS
         </span>
       </p>
       <p class="p-0">
         <span class="p-1 bg-white text-dark rounded-3">
-          10 de 10:
-          <span class="fw-bold">
-            {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0])}}% / 100%
-          </span>
+          10 DE 10: {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0])}}%
         </span>
       </p>
       }

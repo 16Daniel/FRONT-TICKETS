@@ -19,6 +19,7 @@ import { DocumentsService } from '../../../services/documents.service';
 import { ColorUsuario } from '../../../models/color-usuario';
 import { TicketsService } from '../../../services/tickets.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -32,7 +33,7 @@ export class CalendarComponent implements OnInit {
   @Input() sucursales: Sucursal[] = [];
 
   comentario: string = '';
-  sucursalSeleccionada: Sucursal | any;
+  sucursalSeleccionada: SucursalProgramada | any;
   FechaSeleccionada: Date = new Date();
   showModalEventeDetail: boolean = false;
   colores: ColorUsuario[] = [];
@@ -111,7 +112,7 @@ export class CalendarComponent implements OnInit {
     for (let visita of visitas) {
       let comentario = '';
 
-      for (let sucursal of visita.sucursales) {
+      for (let sucursal of visita.sucursalesProgramadas) {
 
         let fechaFin = this.getDate(visita.fecha);
         const ticketsFinalizados = await this.ticketsService.getFinalizedTicketsByEndDate(sucursal.id, fechaFin);

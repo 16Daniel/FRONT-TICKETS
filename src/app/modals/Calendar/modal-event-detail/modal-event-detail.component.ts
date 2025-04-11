@@ -14,6 +14,7 @@ import { Usuario } from '../../../models/usuario.model';
 import { ModalTicketDetailComponent } from "../../tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { ModalMaintenanceDetailComponent } from "../../maintenance/modal-maintenance-detail/modal-maintenance-detail.component";
 import { TicketsService } from '../../../services/tickets.service';
+import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -29,7 +30,7 @@ import { TicketsService } from '../../../services/tickets.service';
 
 export default class ModalEventDetailComponent {
   @Input() showModalEventeDetail: boolean = false;
-  @Input() sucursal: Sucursal | any;
+  @Input() sucursal: SucursalProgramada | any;
   @Input() fecha: Date = new Date();
   @Input() usuariosHelp: Usuario[] = [];
   @Input() Indicacion: string = '';
@@ -45,9 +46,7 @@ export default class ModalEventDetailComponent {
   mantenimiento: Mantenimiento10x10 | any;
   loading: boolean = true;
 
-  constructor(
-    private ticketsService: TicketsService,
-  ) {
+  constructor(private ticketsService: TicketsService,) {
     registerLocaleData(localeEs);
   }
 

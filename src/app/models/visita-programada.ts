@@ -6,6 +6,6 @@ export interface Visita {
    id?: string | any;
    idUsuario: string;
    fecha: Timestamp;
-   sucursales: Sucursal[] | any[];
+   sucursalesProgramadas: Sucursal[] | any[];
    comentarios: ComentarioVisita[];
 }

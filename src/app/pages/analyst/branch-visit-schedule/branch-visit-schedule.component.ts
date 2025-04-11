@@ -12,7 +12,7 @@ import { UsersService } from '../../../services/users.service';
 import { VisitasService } from '../../../services/visitas.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Timestamp } from '@angular/fire/firestore';
-import { Visita } from '../../../models/visita';
+import { Visita } from '../../../models/visita-programada';
 import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';

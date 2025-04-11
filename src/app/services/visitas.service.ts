@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Visita } from '../models/visita';
+import { Visita } from '../models/visita-programada';
 import { addDoc, collection, Firestore, getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
