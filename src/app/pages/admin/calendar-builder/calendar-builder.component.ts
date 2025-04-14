@@ -183,17 +183,38 @@ export default class CalendarBuilderComponent implements OnInit {
     });
   }
 
-  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+  // ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
 
-    return catsucursales.sort((a, b) => {
+  //   return sucursales.sort((a, b) => {
+  //     if (this.ordenarxmantenimiento) {
+  //       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
+  //       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
+  //       return mantenimientoA - mantenimientoB; // Ordena de menor a menor
+  //     } else {
+  //       const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
+  //       const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
+  //       return ticketsB - ticketsA; // Ordena de mayor a menor
+  //     }
+  //   });
+  // }
+
+  ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
+    return sucursales.sort((a, b) => {
       if (this.ordenarxmantenimiento) {
-        const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
-        const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
-        return mantenimientoA - mantenimientoB; // Ordena de mayor a menor
+        const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id) ?? Infinity;
+        const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id) ?? Infinity;
+        return mantenimientoA - mantenimientoB; // Ordena de menor a mayor
       } else {
         const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
         const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
-        return ticketsB - ticketsA; // Ordena de mayor a menor
+
+        if (ticketsA === ticketsB) {
+          const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id) ?? Infinity;
+          const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id) ?? Infinity;
+          return mantenimientoA - mantenimientoB; // En empate de tickets, ordena por menor porcentaje
+        }
+
+        return ticketsB - ticketsA; // Ordena por cantidad de tickets de mayor a menor
       }
     });
   }
@@ -241,6 +262,7 @@ export default class CalendarBuilderComponent implements OnInit {
       this.loading = true;
       let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha, this.usuarioseleccionado!.id);
       let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha, this.usuarioseleccionado!.id);
+      debugger
       this.registroDeVisita = visitas.length > 0 ? visitas[0] : undefined;
       this.registroDeGuardia = guardias.length > 0 ? guardias[0] : undefined;
       const sucursalesDisponibles = this.sucursales.filter(sucursal =>
@@ -248,6 +270,7 @@ export default class CalendarBuilderComponent implements OnInit {
       );
 
       let sucursalesDelUsuarioOrdenadas = this.ordenarSucursalesUser(this.usuarioseleccionado!.sucursales);
+      console.log(sucursalesDelUsuarioOrdenadas);
 
       if (this.obtenerTicketsPorSucursal(sucursalesDelUsuarioOrdenadas[0].id).length == 0) {
         this.ordenarxmantenimiento = true;
@@ -265,8 +288,9 @@ export default class CalendarBuilderComponent implements OnInit {
 
       this.sucursalesOrdenadas.push(...sucursalesDelUsuarioOrdenadas);
       this.sucursalesOrdenadas.push(...sucursalesDisponilesOrdenadas);
-
+      
       if (this.registroDeVisita != undefined) {
+        debugger
         for (let suc of this.registroDeVisita.sucursalesProgramadas) {
           const temp = sucursalesDelUsuarioOrdenadas.filter(x => x.id == suc.id);
           let index = this.sucursalesOrdenadas.indexOf(temp[0]);
@@ -287,6 +311,7 @@ export default class CalendarBuilderComponent implements OnInit {
       } else {
         let guardia = { id: '-999', nombre: 'GUARDIA' }
         this.sucursalesOrdenadas.unshift(guardia);
+        debugger
       }
 
       this.actualizarListasComentarios();
