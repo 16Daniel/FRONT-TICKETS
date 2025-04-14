@@ -331,6 +331,4 @@ export class TicketsService {
       ...doc.data()
     }) as Ticket);
   }
-  
-
 }

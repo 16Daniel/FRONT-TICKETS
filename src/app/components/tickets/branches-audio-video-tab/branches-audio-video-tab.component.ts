@@ -4,6 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { Subscription } from 'rxjs';
 
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
@@ -11,17 +12,12 @@ import { Usuario } from '../../../models/usuario.model';
 import { Area } from '../../../models/area';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-rating/modal-branch-rating.component';
 
 @Component({
-  selector: 'app-branches-sys-tab',
+  selector: 'app-branches-audio-video-tab',
   standalone: true,
   imports: [
     DialogModule,
@@ -30,49 +26,48 @@ import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-
     CommonModule,
     ModalGenerateTicketComponent,
     ModalTicketDetailComponent,
-    ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
-    ModalTenXtenMaintenanceCheckComponent,
-    ModalTenXtenMaintenanceHistoryComponent,
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent
   ],
-  templateUrl: './branches-sys-tab.component.html',
-  styleUrl: './branches-sys-tab.component.scss',
+  templateUrl: './branches-audio-video-tab.component.html',
+  styleUrl: './branches-audio-video-tab.component.scss'
 })
-
-export class BranchesSysTabComponent {
+export class BranchesAudioVideoTabComponent {
   @Input() tickets: Ticket[] = [];
 
   mostrarModalGenerateTicket: boolean = false;
-  mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarModal10x10: boolean = false;
-  mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalRating: boolean = false;
 
   sucursal: Sucursal | undefined;
   todosLosTickets: Ticket[] = [];
-  mantenimientoActivo: Mantenimiento10x10 | null = null;
   areas: Area[] = [];
   usuario: Usuario;
+  loading: boolean = false;
+  subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
 
   private unsubscribe!: () => void;
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientoService: Maintenance10x10Service,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-
-    this.obtenerMantenimientoActivo();
   }
 
+  ngOnDestroy() {
+    if (this.subscripcionTicket != undefined) {
+      this.subscripcionTicket.unsubscribe();
+    }
 
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.ticket = ticket;
@@ -84,53 +79,6 @@ export class BranchesSysTabComponent {
         item.classList.remove('show'); // Cierra todas las secciones del accordion
       });
     }, 50);
-  }
-
-  obtenerNombreArea(idp: string): string {
-    let nombre = '';
-    let area = this.areas.filter((x) => x.id == idp);
-    if (area.length > 0) {
-      nombre = area[0].nombre;
-    }
-    return nombre;
-  }
-
-  filtrarTicketsPorSucursal(idSucursal: number | any) {
-    return this.tickets.filter((x) => x.idSucursal == idSucursal);
-  }
-
-  async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
-      this.sucursal?.id,
-      (mantenimiento) => {
-        this.mantenimientoActivo = mantenimiento;
-        this.cdr.detectChanges();
-        // console.log('Mantenimiento activo:', this.mantenimientoActivo);
-      }
-    );
-  }
-
-  mostrarAlerta10x10() {
-    this.confirmationService.confirm({
-      header: 'IMPORTANTE',
-      message: `
-      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
-      <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
-      <br><br>
-      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
-      acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
-      rejectLabel: 'Cancelar', // 🔥 Cambia "No" por "Cancelar"
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-
-      accept: () => {
-        this.mostrarModal10x10 = true;
-      },
-      reject: () => { },
-    });
   }
 
   verificarTicketsPorValidar(tickets: Ticket[]) {
