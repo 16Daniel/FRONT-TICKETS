@@ -4,9 +4,9 @@ import { Timestamp } from '@angular/fire/firestore';
 import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { UsersService } from '../../../services/users.service';
-import { Usuario } from '../../../models/usuario.model';
+import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
+import { UsersService } from '../../../../services/users.service';
+import { Usuario } from '../../../../models/usuario.model';
 
 @Component({
   selector: 'app-branch-maintenance-table',

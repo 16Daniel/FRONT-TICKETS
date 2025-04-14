@@ -15,18 +15,18 @@ import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-gene
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { Usuario } from '../../../models/usuario.model';
 import { Area } from '../../../models/area';
-import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
-import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../../components/tickets/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { NotificationService } from '../../../services/notification.service';
+import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
+import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
+import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 
 @Component({
   selector: 'app-home-s',

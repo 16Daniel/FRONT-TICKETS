@@ -8,13 +8,13 @@ import { EditorModule } from 'primeng/editor';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { RequesterTicketsListComponent } from "../../../components/tickets/requester-tickets-list/requester-tickets-list.component";
-import { BranchMaintenanceTableComponent } from "../../../components/maintenance/branch-maintenance-table/branch-maintenance-table.component";
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
 import { ModalTicketDetailComponent } from "../../tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { ModalMaintenanceDetailComponent } from "../../maintenance/modal-maintenance-detail/modal-maintenance-detail.component";
 import { TicketsService } from '../../../services/tickets.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
+import { BranchMaintenanceTableComponent } from '../../../components/maintenance/systems/branch-maintenance-table/branch-maintenance-table.component';
+import { ModalMaintenanceDetailComponent } from '../../maintenance/systems/modal-maintenance-detail/modal-maintenance-detail.component';
 
 @Component({
   selector: 'app-modal-event-detail',

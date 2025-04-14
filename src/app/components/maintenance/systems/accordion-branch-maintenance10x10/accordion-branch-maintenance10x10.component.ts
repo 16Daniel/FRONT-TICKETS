@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Sucursal } from '../../../models/sucursal.model';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { Usuario } from '../../../models/usuario.model';
-import { UsersService } from '../../../services/users.service';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
+import { Usuario } from '../../../../models/usuario.model';
+import { UsersService } from '../../../../services/users.service';
 import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
 import { BadgeModule } from 'primeng/badge';
 import { CommonModule } from '@angular/common';

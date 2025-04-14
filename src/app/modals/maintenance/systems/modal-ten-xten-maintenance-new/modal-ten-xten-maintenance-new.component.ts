@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
+import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { DialogModule } from 'primeng/dialog';
-import { BranchesService } from '../../../services/branches.service';
-import { Sucursal } from '../../../models/sucursal.model';
+import { BranchesService } from '../../../../services/branches.service';
+import { Sucursal } from '../../../../models/sucursal.model';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-new',

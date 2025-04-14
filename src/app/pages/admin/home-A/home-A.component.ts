@@ -19,10 +19,10 @@ import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tick
 import { AdminTicketsListComponent } from '../../../components/tickets/admin-tickets-list/admin-tickets-list.component';
 import { BranchesTicketsAccordionComponent } from '../../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../components/tickets/user-tickets-accordion/user-tickets-accordion.component';
-import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { BranchesService } from '../../../services/branches.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
+import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 
 @Component({
   selector: 'app-home-a',
