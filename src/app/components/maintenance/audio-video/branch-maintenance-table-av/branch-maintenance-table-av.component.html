@@ -1,0 +1,53 @@
+<p-table [value]="mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+    styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+    [(selection)]="mantenimientoSeleccionado" (onRowSelect)="onClick()">
+    <ng-template pTemplate="header">
+        <tr class="text-center">
+            <th>NOMBRE</th>
+            <th>FECHA</th>
+            <th>CONEXIONES</th>
+            <th>CABLEADO</th>
+            <th>RACK</th>
+            <th>CONTROLES</th>
+            <th>NIVEL DE AUDIO</th>
+            <th>CANALES</th>
+            <th>% DE PROGRESO</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-mantenimiento>
+        <tr [pSelectableRow]="mantenimiento">
+            <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
+            </td>
+            <td class="text-center">{{ datesHelper.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoConexiones, 'bg-danger': !mantenimiento.mantenimientoConexiones}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoConexiones ? 'Si' : 'No' }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoCableado, 'bg-danger': !mantenimiento.mantenimientoCableado}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoCableado ? 'Si' : 'No' }}</label>
+
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoRack, 'bg-danger': !mantenimiento.mantenimientoRack}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoRack ? 'Si' : 'No' }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoControles, 'bg-danger': !mantenimiento.mantenimientoControles}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoControles ? 'Si' : 'No'
+                    }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoNivelAudio, 'bg-danger': !mantenimiento.mantenimientoNivelAudio}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoNivelAudio ? 'Si' : 'No'
+                    }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoCanales, 'bg-danger': !mantenimiento.mantenimientoCanales}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoCanales ? 'Si' : 'No' }}</label>
+            </td>            
+            <td class="text-center">{{ maintenancesHelper.calcularPorcentajeAV(mantenimiento) }}%</td>
+        </tr>
+    </ng-template>
+</p-table>

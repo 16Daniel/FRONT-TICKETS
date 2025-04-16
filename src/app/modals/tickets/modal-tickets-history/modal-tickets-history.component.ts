@@ -37,6 +37,7 @@ import { Usuario } from '../../../models/usuario.model';
 })
 export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
   @Input() showModalHistorial: boolean = false;
+  @Input() idArea: string = '1';
   @Output() closeEvent = new EventEmitter<boolean>();
 
   showModalFilterTickets: boolean = false;
@@ -77,6 +78,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
       this.fechaInicio,
       this.fechaFin,
       userid,
+      this.idArea,
       (tickets: any) => {
         if (tickets) {
           this.tickets = tickets;

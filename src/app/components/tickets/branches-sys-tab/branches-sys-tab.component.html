@@ -55,7 +55,7 @@
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
 <app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false"></app-modal-tickets-history>
+  (closeEvent)="mostrarModalHistorial = false" idArea="1"></app-modal-tickets-history>
 
 <app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"

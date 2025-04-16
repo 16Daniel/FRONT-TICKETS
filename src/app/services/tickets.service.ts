@@ -116,6 +116,7 @@ export class TicketsService {
     fechaInicio: Date,
     fechaFin: Date,
     idUsuario: string,
+    idArea: string,
     callback: (result: Ticket[] | null) => void
   ): () => void {
     fechaInicio.setHours(0, 0, 0, 0);
@@ -125,7 +126,7 @@ export class TicketsService {
     const q = query(
       collectionRef,
       where('idUsuario', '==', idUsuario),
-      // where('idEstatusTicket', '==', '3'),
+      where('idArea', '==', idArea),
       where('fecha', '>=', fechaInicio),
       where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
       orderBy('fecha', 'desc'),

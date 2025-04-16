@@ -165,7 +165,6 @@ export class Maintenance10x10Service {
     return forkJoin(consultas);
   }
 
-
   async obtenerMantenimientoVisita(fecha: Date, idSucursal: string) {
     const coleccionRef = collection(this.firestore, 'mantenimientos-10x10');
 

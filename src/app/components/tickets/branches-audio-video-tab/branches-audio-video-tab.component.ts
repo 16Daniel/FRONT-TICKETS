@@ -15,6 +15,10 @@ import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-rating/modal-branch-rating.component';
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
+import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { ModalMaintenanceAvHistoryComponent } from '../../../modals/maintenance/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
+import { ModalMaintenanceAvCheckComponent } from '../../../modals/maintenance/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
 
 @Component({
   selector: 'app-branches-audio-video-tab',
@@ -28,7 +32,9 @@ import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-
     ModalTicketDetailComponent,
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,
-    ModalBranchRatingComponent
+    ModalBranchRatingComponent,
+    ModalMaintenanceAvHistoryComponent,
+    ModalMaintenanceAvCheckComponent
   ],
   templateUrl: './branches-audio-video-tab.component.html',
   styleUrl: './branches-audio-video-tab.component.scss'
@@ -40,6 +46,9 @@ export class BranchesAudioVideoTabComponent {
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
   mostrarModalRating: boolean = false;
+  mostrarModalHistorialMantenimientos: boolean = false;
+  mostrarModalMantenimiento: boolean = false;
+  mantenimientoActivo: Mantenimiento6x6AV | null = null;
 
   sucursal: Sucursal | undefined;
   todosLosTickets: Ticket[] = [];
@@ -53,10 +62,14 @@ export class BranchesAudioVideoTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private mantenimientoService: Maintenance6x6AvService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
+        // this.nuevoMantenimiento()
+        this.obtenerMantenimientoActivo();
+
   }
 
   ngOnDestroy() {
@@ -102,5 +115,59 @@ export class BranchesAudioVideoTabComponent {
     else {
       this.mostrarModalGenerateTicket = true;
     }
+  }
+
+  mostrarAlertaMantenimiento() {
+    this.confirmationService.confirm({
+      header: 'IMPORTANTE',
+      message: `
+      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
+      <br><br>
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
+      <br><br>
+      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
+      acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
+      rejectLabel: 'Cancelar', // 🔥 Cambia "No" por "Cancelar"
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+
+      accept: () => {
+        this.mostrarModalMantenimiento = true;
+      },
+      reject: () => { },
+    });
+  }
+
+  async obtenerMantenimientoActivo() {
+    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+      this.sucursal?.id,
+      (mantenimiento) => {
+        this.mantenimientoActivo = mantenimiento;
+        this.cdr.detectChanges();
+      }
+    );
+  }
+
+  async nuevoMantenimiento() {
+    const mantenimiento: Mantenimiento6x6AV = {
+      idSucursal: '1',
+      idUsuarioSoporte: "1MTT0kVdYJtruQ6V73x3",
+      fecha: new Date(),
+      estatus: true,
+
+      mantenimientoConexiones: true,
+      mantenimientoCableado: true,
+      mantenimientoRack: true,
+      mantenimientoControles: true,
+      mantenimientoNivelAudio: true,
+      mantenimientoCanales: true,
+
+      observaciones: '',
+    };
+
+    await this.mantenimientoService.create(mantenimiento);
+    console.log('ok');
   }
 }

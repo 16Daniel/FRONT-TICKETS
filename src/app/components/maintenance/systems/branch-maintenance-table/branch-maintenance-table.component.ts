@@ -2,10 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { TableModule } from 'primeng/table';
-import { MessageService } from 'primeng/api';
+// import { MessageService } from 'primeng/api';
 
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
-import { UsersService } from '../../../../services/users.service';
+// import { UsersService } from '../../../../services/users.service';
 import { Usuario } from '../../../../models/usuario.model';
 
 @Component({
@@ -21,13 +21,13 @@ export class BranchMaintenanceTableComponent {
   mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
 
   constructor(
-    private messageService: MessageService,
-    private usersService: UsersService
+    // private messageService: MessageService,
+    // private usersService: UsersService
   ) {}
 
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
+  // showMessage(sev: string, summ: string, det: string) {
+  //   this.messageService.add({ severity: sev, summary: summ, detail: det });
+  // }
 
   calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
     let porcentaje = 0;
@@ -51,18 +51,18 @@ export class BranchMaintenanceTableComponent {
     return porcentaje;
   }
 
-  obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        // this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
+  // obtenerUsuariosHelp() {
+  //   this.usersService.get().subscribe({
+  //     next: (data) => {
+  //       this.usuariosHelp = data;
+  //       // this.cdr.detectChanges();
+  //     },
+  //     error: (error) => {
+  //       console.log(error);
+  //       this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+  //     },
+  //   });
+  // }
 
   obtenerNombreResponsable(idUsuario: string): string {
     let nombre = '';

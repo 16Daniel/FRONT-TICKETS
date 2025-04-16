@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -45,14 +45,16 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   constructor(
     private maintenance10x10Service: Maintenance10x10Service,
     private messageService: MessageService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursal = this.usuario.sucursales[0].id;
     // this.obtenerMantenimientosPorSucursal(this.idSucursal);
     if (this.idSucursal) {
       this.obtenerUltimoMantenimiento();
-    }    this.obtenerUsuariosHelp();
+    }
+    this.obtenerUsuariosHelp();
   }
 
   abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento10x10 | any) {
@@ -82,7 +84,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
           //   this.showMessage('success', 'Success', 'Información localizada');
           // }
 
-          // this.cdr.detectChanges();
+          this.cdr.detectChanges();
         } else {
           if (!this.paginaCargaPrimeraVez) {
             this.showMessage(
