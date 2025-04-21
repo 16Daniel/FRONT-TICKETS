@@ -26,7 +26,8 @@ export class SideMenuComponent implements OnInit {
   showmenu: boolean = false;
   usuario: Usuario;
   urlbase: string = '';
-  sucursal: Sucursal | undefined;
+  // sucursal: Sucursal | undefined;
+  tituloBanner: string;
   
   constructor(
     public cdr: ChangeDetectorRef,
@@ -34,7 +35,13 @@ export class SideMenuComponent implements OnInit {
     public documentsService: DocumentsService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario.sucursales[0];
+
+    if(this.usuario.idRol == '2') {
+      this.tituloBanner = this.usuario.sucursales[0].nombre;
+    }
+    else {
+      this.tituloBanner = `${ this.usuario.nombre } ${ this.usuario.apellidoP }`;
+    }
 
   }
 

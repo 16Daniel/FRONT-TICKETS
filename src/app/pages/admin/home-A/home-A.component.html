@@ -73,7 +73,7 @@
   }
 </div>
 
-<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [showModalGenerateTicket]="mostrarModalGenerateTicket"
+<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
   (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
 
 <app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets"

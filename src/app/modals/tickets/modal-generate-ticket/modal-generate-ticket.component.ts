@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  input,
   Input,
   OnInit,
   Output,
@@ -40,8 +41,10 @@ import { ParticipanteChat } from '../../../models/participante-chat.model';
   templateUrl: './modal-generate-ticket.component.html',
   styleUrl: './modal-generate-ticket.component.scss',
 })
+
 export class ModalGenerateTicketComponent implements OnInit {
-  @Input() showModalGenerateTicket: boolean = false;
+  @Input() mostrarModalGenerateTicket: boolean = false;
+  @Input() idArea: string = '0';
   @Output() closeEvent = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
@@ -52,7 +55,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   prioridadesTicket: PrioridadTicket[] = [];
   isLoading = false;
 
-  formDepartamento: any;
+  // formDepartamento: any;
   formArea: any;
   formCategoria: any;
   formDescripcion: string = '';
@@ -81,7 +84,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
     this.sucursal = this.usuarioActivo.sucursales[0];
-    this.formDepartamento = this.sucursal;
+    // this.formDepartamento = this.sucursal;
   }
 
   obtenerSucursales() {
@@ -100,6 +103,9 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.areasService.get().subscribe({
       next: (data) => {
         this.areas = data;
+
+        this.formArea = this.areas.find(x => x.id == this.idArea);
+
         this.cdr.detectChanges();
       },
       error: (error) => {

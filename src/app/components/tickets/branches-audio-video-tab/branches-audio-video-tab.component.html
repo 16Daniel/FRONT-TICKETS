@@ -39,8 +39,8 @@
   </div>
 </div>
 
-<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [showModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
+<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="mostrarModalGenerateTicket = false" idArea="2"></app-modal-generate-ticket>
 
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
   [showModalTicketDetail]="mostrarModalTicketDetail"
