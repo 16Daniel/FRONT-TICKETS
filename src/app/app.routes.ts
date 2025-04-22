@@ -25,7 +25,7 @@ export const routes: Routes = [
       {
         path: 'home-a',
         title: 'Inicio',
-        loadComponent: () => import('./pages/admin/home-A/home-A.component'),
+        loadComponent: () => import('./pages/admin/admin-home/admin-home.component'),
         canActivate: [HomeGuard],
       },
       {

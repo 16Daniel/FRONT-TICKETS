@@ -51,7 +51,7 @@ import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance
   providers: [MessageService, ConfirmationService],
   templateUrl: './analyst-home.component.html',
 })
-export default class homeSComponent implements OnInit {
+export default class AnalystHomeComponent implements OnInit {
   showModalGenerateTicket: boolean = false;
   showModalFilterTickets: boolean = false;
   showModalTicketDetail: boolean = false;

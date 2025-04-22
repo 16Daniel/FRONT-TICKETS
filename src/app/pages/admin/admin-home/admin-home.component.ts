@@ -25,7 +25,7 @@ import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 
 @Component({
-  selector: 'app-home-a',
+  selector: 'app-admin-home',
   standalone: true,
   imports: [
     ToastModule,
@@ -42,9 +42,10 @@ import { AccordionBranchMaintenance10x10Component } from '../../../components/ma
     AccordionBranchMaintenance10x10Component,
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './home-A.component.html',
+  templateUrl: './admin-home.component.html',
 })
-export default class HomeAComponent {
+
+export default class AdminHomeComponent {
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
   mostrarModalFilterTickets: boolean = false;
