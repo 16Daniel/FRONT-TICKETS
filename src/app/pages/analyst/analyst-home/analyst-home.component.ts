@@ -51,14 +51,15 @@ import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance
   providers: [MessageService, ConfirmationService],
   templateUrl: './analyst-home.component.html',
 })
+
 export default class AnalystHomeComponent implements OnInit {
-  showModalGenerateTicket: boolean = false;
-  showModalFilterTickets: boolean = false;
-  showModalTicketDetail: boolean = false;
-  showModalHistorial: boolean = false;
-  showModal10x10: boolean = false;
-  ShowModal10x10New: boolean = false;
-  showModalHistorialMantenimientos: boolean = false;
+  mostrarModalGenerateTicket: boolean = false;
+  mostrarModalFilterTickets: boolean = false;
+  mostrarModalTicketDetail: boolean = false;
+  mostrarModalHistorial: boolean = false;
+  mostrarModal10x10: boolean = false;
+  mostrarModal10x10New: boolean = false;
+  mostrarModalHistorialMantenimientos: boolean = false;
   itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
@@ -206,7 +207,7 @@ export default class AnalystHomeComponent implements OnInit {
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
-    this.showModalTicketDetail = true;
+    this.mostrarModalTicketDetail = true;
 
     setTimeout(() => {
       var accordionItems = document.querySelectorAll('.accordion-collapse');

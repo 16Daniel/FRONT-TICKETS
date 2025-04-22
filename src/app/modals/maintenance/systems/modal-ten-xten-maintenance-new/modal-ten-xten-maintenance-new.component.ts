@@ -14,7 +14,7 @@ import { Sucursal } from '../../../../models/sucursal.model';
   templateUrl: './modal-ten-xten-maintenance-new.component.html',
 })
 export class ModalTenXtenMaintenanceNewComponent implements OnInit {
-@Input() ShowModal10x10New:boolean = false; 
+@Input() mostrarModal10x10New:boolean = false; 
 sucursales: Sucursal[] = [];
 @Output() closeEvent = new EventEmitter<boolean>();
   ngOnInit(): void { 
