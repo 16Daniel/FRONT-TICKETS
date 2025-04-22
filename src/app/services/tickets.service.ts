@@ -224,17 +224,18 @@ export class TicketsService {
     });
   }
 
-  getTicketsResponsable(userId: string, esGuardia: boolean): Observable<any[]> {
+  getTicketsResponsable(idUsuario: string, esGuardia: boolean, idArea: string): Observable<any[]> {
     return new Observable((observer) => {
       const collectionRef = collection(this.firestore, 'tickets');
 
       const filtros = [
         where('idEstatusTicket', 'not-in', ['3']), // Siempre se aplica este filtro
+        where('idArea', '==', idArea),
         orderBy('fecha', 'desc'), // Siempre ordenamos por fecha
       ];
 
       if (!esGuardia) {
-        filtros.push(where('idResponsables', 'array-contains', userId));
+        filtros.push(where('idResponsables', 'array-contains', idUsuario));
       }
 
       const q = query(collectionRef, ...filtros);

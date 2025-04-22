@@ -72,7 +72,11 @@ export class BranchesSysTabComponent {
     this.obtenerMantenimientoActivo();
   }
 
-
+  ngOnDestroy(): void {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.ticket = ticket;

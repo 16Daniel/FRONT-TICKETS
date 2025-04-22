@@ -72,6 +72,26 @@
         </small>
         <p></p>
 
+        <p class="fw-bold">ÁREA</p>
+        <p-dropdown [options]="areas" [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ÁREA" [style]="{width:'100%'}"
+            #formAreaCtrl="ngModel" [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-area pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ area.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <small *ngIf="formAreaCtrl.invalid && formAreaCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
         <p class="fw-bold">SUCURSALES</p>
         <p-multiSelect [style]="{'width':'100%'}" [options]="sucursales" name="sucursales"
             [(ngModel)]="usuario.sucursales" optionLabel="nombre" #formsucursalesCtrl="ngModel"

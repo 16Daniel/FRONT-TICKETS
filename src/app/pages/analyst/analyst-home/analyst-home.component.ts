@@ -29,7 +29,7 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/mainten
 import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 
 @Component({
-  selector: 'app-home-s',
+  selector: 'app-analyst-home',
   standalone: true,
   imports: [
     TableModule,
@@ -49,7 +49,7 @@ import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance
     AccordionBranchMaintenance10x10Component,
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './home-s.component.html',
+  templateUrl: './analyst-home.component.html',
 })
 export default class homeSComponent implements OnInit {
   showModalGenerateTicket: boolean = false;
@@ -135,8 +135,9 @@ export default class homeSComponent implements OnInit {
 
   async getTicketsResponsable(): Promise<void> {
     this.loading = true;
+    
     this.subscriptiontk = this.ticketsService
-      .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia)
+      .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia, this.usuario.idArea)
       .subscribe({
         next: (data) => {
           // console.log(data)
