@@ -153,7 +153,7 @@ export class BranchesAudioVideoTabComponent {
   async nuevoMantenimiento() {
     const mantenimiento: Mantenimiento6x6AV = {
       idSucursal: '1',
-      idUsuarioSoporte: "1MTT0kVdYJtruQ6V73x3",
+    idUsuarioSoporte: "1MTT0kVdYJtruQ6V73x3",
       fecha: new Date(),
       estatus: true,
 

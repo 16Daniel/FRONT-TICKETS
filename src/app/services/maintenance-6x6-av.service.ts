@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Mantenimiento6x6AV } from '../models/mantenimiento-6x6-av.model';
-import { Observable } from 'rxjs';
+import { forkJoin, from, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -107,5 +107,38 @@ export class Maintenance6x6AvService {
     });
 
     return unsubscribe;
+  }
+
+  getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
+    const fechaActual = new Date();
+    const fechaHaceUnMes = new Date(fechaActual);
+    fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
+    fechaHaceUnMes.setHours(0, 0, 0, 0);
+    // Mapea cada sucursal a una consulta independiente
+    const consultas = idsSucursales.map(idSucursal => {
+      const mantenimientosRef = collection(this.firestore, this.pathName);
+      const q = query(
+        mantenimientosRef,
+        where('idSucursal', '==', idSucursal),
+        where('fecha', '>=', fechaHaceUnMes),
+        where('estatus', '==', false),
+        orderBy('fecha', 'desc'), // Ordena por fecha descendente
+        limit(1) // Solo el más reciente
+      );
+
+      // Ejecutar la consulta y obtener los datos
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            return { id: doc.id, ...doc.data() };
+          }
+          return null; // Si no hay mantenimientos para la sucursal
+        })
+      );
+    });
+
+    // Ejecutar todas las consultas en paralelo y combinar los resultados
+    return forkJoin(consultas);
   }
 }

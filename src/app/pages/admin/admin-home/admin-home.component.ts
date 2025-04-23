@@ -89,7 +89,7 @@ export default class AdminHomeComponent {
       next: (data) => {
         this.sucursales = data;
         this.maintenanceService
-          .obtenerUltimosMantenimientos(
+          .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {

@@ -462,7 +462,7 @@ export default class CalendarBuilderComponent implements OnInit {
 
     this.loading = true;
     this.subscriptiontk = this.mantenimientoService
-      .obtenerUltimosMantenimientos(array_ids_Sucursales)
+      .getUltimosMantenimientos(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
           this.arr_ultimosmantenimientos = data.filter(

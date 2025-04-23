@@ -27,6 +27,9 @@ import { AccordionBranchMaintenance10x10Component } from '../../../components/ma
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
+import { AccordionBranchMaintenanceAvComponent } from '../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
+import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
 
 @Component({
   selector: 'app-analyst-home',
@@ -47,6 +50,7 @@ import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance
     PriorityTicketsAccordionAnalystComponent,
     ModalTenXtenMaintenanceNewComponent,
     AccordionBranchMaintenance10x10Component,
+    AccordionBranchMaintenanceAvComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './analyst-home.component.html',
@@ -70,7 +74,7 @@ export default class AnalystHomeComponent implements OnInit {
   usuario: Usuario;
   selectedtk: Ticket | undefined;
   loading: boolean = false;
-  arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
+  ultimosmantenimientos: any[] = [];
   private unsubscribe!: () => void;
   ordenarxmantenimiento: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
@@ -78,10 +82,13 @@ export default class AnalystHomeComponent implements OnInit {
   sucursales: Sucursal[] = [];
   todasSucursales: Sucursal[] = [];
 
+  tituloMantenimiento: string = '';
+
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoSysService: Maintenance10x10Service,
+    private maintenanceAvService: Maintenance6x6AvService,
     private messageService: MessageService,
     private usersService: UsersService,
     private branchesService: BranchesService,
@@ -89,6 +96,16 @@ export default class AnalystHomeComponent implements OnInit {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
+
+    switch (this.usuario.idArea) {
+      case '1':
+        this.tituloMantenimiento = '10X10';
+        break;
+
+      case '2':
+        this.tituloMantenimiento = '6X6';
+        break;
+    }
   }
 
   ngOnInit(): void {
@@ -96,32 +113,6 @@ export default class AnalystHomeComponent implements OnInit {
     this.obtnerUltimosMantenimientos();
     this.obtenerSucursales();
     this.notificationService.solicitarPermiso();
-  }
-
-  obtnerUltimosMantenimientos() {
-    let sucursales: Sucursal[] = this.usuario.sucursales;
-    let array_ids_Sucursales: string[] = [];
-
-    for (let item of sucursales) {
-      array_ids_Sucursales.push(item.id);
-    }
-
-    this.loading = true;
-    this.subscriptiontk = this.mantenimientoService
-      .obtenerUltimosMantenimientos(array_ids_Sucursales)
-      .subscribe({
-        next: (data) => {
-          this.arr_ultimosmantenimientos = data.filter(
-            (elemento): elemento is Mantenimiento10x10 => elemento !== null
-          );
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error al escuchar los tickets:', error);
-        },
-      });
   }
 
   ngOnDestroy() {
@@ -134,9 +125,66 @@ export default class AnalystHomeComponent implements OnInit {
     }
   }
 
+  obtnerUltimosMantenimientos() {
+    let sucursales: Sucursal[] = this.usuario.sucursales;
+    let idsSucursales: string[] = [];
+
+    for (let item of sucursales) {
+      idsSucursales.push(item.id);
+    }
+
+    this.loading = true;
+
+    switch (this.usuario.idArea) {
+      case '1':
+        this.obtenerMantenimientosSistemas(idsSucursales);
+        break;
+
+      case '2':
+        this.obtenerMantenimientosAudioVideo(idsSucursales);
+        break;
+    }
+  }
+
+  obtenerMantenimientosAudioVideo(idsSucursales: string[]) {
+    this.subscriptiontk = this.maintenanceAvService
+      .getUltimosMantenimientos(idsSucursales)
+      .subscribe({
+        next: (data) => {
+          this.ultimosmantenimientos = data.filter(
+            (elemento): elemento is Mantenimiento10x10 => elemento !== null
+          );
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error al escuchar los tickets:', error);
+        },
+      });
+  }
+
+  obtenerMantenimientosSistemas(idsSucursales: string[]) {
+    this.subscriptiontk = this.mantenimientoSysService
+      .getUltimosMantenimientos(idsSucursales)
+      .subscribe({
+        next: (data) => {
+          this.ultimosmantenimientos = data.filter(
+            (elemento): elemento is Mantenimiento10x10 => elemento !== null
+          );
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error al escuchar los tickets:', error);
+        },
+      });
+  }
+
   async getTicketsResponsable(): Promise<void> {
     this.loading = true;
-    
+
     this.subscriptiontk = this.ticketsService
       .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia, this.usuario.idArea)
       .subscribe({
@@ -196,7 +244,7 @@ export default class AnalystHomeComponent implements OnInit {
   }
 
   async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+    this.unsubscribe = this.mantenimientoSysService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
