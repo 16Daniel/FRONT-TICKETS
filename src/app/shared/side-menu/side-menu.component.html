@@ -13,9 +13,11 @@
         <span class="line line3"></span>
       </div>
       <div class="logo">
-        
+
         <app-version-button></app-version-button>
       </div>
+
+
       <div class="menu-items" style="overflow: auto;">
         <i class='bx bx-support bx-lg'></i>
         <div class="fw-bold fs-3 mb-4" style="color: rgb(0, 0, 0);">REBEL TICKETS</div>
@@ -24,11 +26,14 @@
               class='bx bx-user'></i>Usuarios</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/roles'" *ngIf="usuario.idRol == '1'"><i
               class='bx bx-objects-horizontal-left'></i>Roles</a>
+        <li (click)="closemenu()"><a [routerLink]="'/main/branches'" *ngIf="usuario.idRol == '1'"><i
+              class='bx bx-objects-horizontal-left'></i>Sucursales</a>
+
         </li>
         <li (click)="closemenu()" *ngIf="usuario?.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
               class='bx bx-calendar-plus'></i>Registrar visita</a></li>
-        <li (click)="closemenu()" *ngIf="usuario?.idRol == '4' || usuario?.idRol == '2'"><a [routerLink]="'/main/branch-visit-schedule'"><i
-              class='bx bx-calendar'></i>Calendario de visitas</a></li>
+        <li (click)="closemenu()" *ngIf="usuario?.idRol == '4' || usuario?.idRol == '2'"><a
+            [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/version-control'" *ngIf="usuario.idRol == '1'"><i
               class='bx bxs-dashboard'></i>Control de versiones</a></li>
 
@@ -38,7 +43,8 @@
           <button class="btn bg-p-b p-3" (click)="logout()"> <i class='bx bx-log-out'></i>&nbsp;CERRAR SESIÓN</button>
         </div>
       </div>
+
+
     </div>
   </div>
 </nav>
-

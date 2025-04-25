@@ -189,15 +189,13 @@ export default class AnalystHomeComponent implements OnInit {
       .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia, this.usuario.idArea)
       .subscribe({
         next: (data) => {
-          // console.log(data)
           if (
             data.length > this.todosLosTickets.length &&
             !this.paginaCargaPrimeraVez
           ) {
             this.tickets = data;
             this.todosLosTickets = data;
-            this.ultimoNuevoTicket = this.tickets[this.tickets.length - 1];
-
+            this.ultimoNuevoTicket = this.tickets[0];
             this.notificationService.enviarNotificacion('NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre);
             this.showMessage('info', 'NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
           }

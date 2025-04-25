@@ -4,6 +4,8 @@ import {
   collectionData,
   doc,
   Firestore,
+  orderBy,
+  query,
   setDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -22,7 +24,8 @@ export class BranchesService {
 
   get(): Observable<Sucursal[] | any[]> {
     const sucursalesCollection = collection(this.firestore, this.pathName);
-    return collectionData(sucursalesCollection, { idField: 'id' });
+    const q = query(sucursalesCollection, orderBy('id'));
+    return collectionData(q, { idField: 'id' });
   }
 
   private inicializarCatalogo() {

@@ -262,7 +262,6 @@ export default class CalendarBuilderComponent implements OnInit {
       this.loading = true;
       let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha, this.usuarioseleccionado!.id);
       let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha, this.usuarioseleccionado!.id);
-      debugger
       this.registroDeVisita = visitas.length > 0 ? visitas[0] : undefined;
       this.registroDeGuardia = guardias.length > 0 ? guardias[0] : undefined;
       const sucursalesDisponibles = this.sucursales.filter(sucursal =>
@@ -290,7 +289,6 @@ export default class CalendarBuilderComponent implements OnInit {
       this.sucursalesOrdenadas.push(...sucursalesDisponilesOrdenadas);
       
       if (this.registroDeVisita != undefined) {
-        debugger
         for (let suc of this.registroDeVisita.sucursalesProgramadas) {
           const temp = sucursalesDelUsuarioOrdenadas.filter(x => x.id == suc.id);
           let index = this.sucursalesOrdenadas.indexOf(temp[0]);
@@ -311,7 +309,6 @@ export default class CalendarBuilderComponent implements OnInit {
       } else {
         let guardia = { id: '-999', nombre: 'GUARDIA' }
         this.sucursalesOrdenadas.unshift(guardia);
-        debugger
       }
 
       this.actualizarListasComentarios();
