@@ -33,7 +33,7 @@ export default class BranchesComponent implements OnInit {
   esNuevaSucursal: boolean = false;
   mostrarModalSucursal: boolean = false;
   sucursales: Sucursal[] = [];
-  sucursalSeleccionada: Sucursal | any;
+  sucursalSeleccionada: Sucursal = new Sucursal;
   subscripcion: Subscription | undefined;
 
   constructor(
@@ -46,7 +46,7 @@ export default class BranchesComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerSucursales();
   }
-  
+
   ngOnDestroy() {
     if (this.subscripcion != undefined) {
       this.subscripcion.unsubscribe();
@@ -72,7 +72,7 @@ export default class BranchesComponent implements OnInit {
   }
 
   abrirModalEditarSucursal(sucursal: Sucursal) {
-    this.esNuevaSucursal = true;
+    this.esNuevaSucursal = false;
     this.mostrarModalSucursal = true;
     this.sucursalSeleccionada = sucursal;
   }
@@ -86,18 +86,19 @@ export default class BranchesComponent implements OnInit {
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
-        // this.eliminarUsuario(id);
+        this.eliminarSucursal(id);
       },
       reject: () => { },
     });
   }
 
-  async eliminarSucursal(idu: string) {
-    // await this.documentsService.deleteDocument('usuarios', idu);
-    // this.showMessage('success', 'Success', 'Eliminado correctamente');
+  async eliminarSucursal(idSucursal: string) {
+    await this.branchesServicce.delete(idSucursal);
+    this.showMessage('success', 'Success', 'Eliminada correctamente');
   }
 
   cerrarModalSucursal() {
-    
+    this.mostrarModalSucursal = false;
+    this.sucursalSeleccionada = new Sucursal;;
   }
 }

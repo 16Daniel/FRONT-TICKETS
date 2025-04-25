@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 import {
+  addDoc,
   collection,
   collectionData,
+  deleteDoc,
   doc,
   Firestore,
+  getDoc,
   orderBy,
   query,
   setDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Sucursal } from '../models/sucursal.model';
 import { HttpClient } from '@angular/common/http';
+import { Sucursal } from '../models/sucursal.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,10 +26,42 @@ export class BranchesService {
     // this.inicializarCatalogo();
   }
 
+  // async create(sucursal: Sucursal) {
+  //   const ref = doc(this.firestore, `${this.pathName}/${sucursal.id}`); // 👈 tú defines el id
+  //   await setDoc(ref, sucursal);
+  //   return sucursal.id; // Ya sabes cuál es el ID
+  // }
+
+  async create(sucursal: Sucursal): Promise<void> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${sucursal.id}`);
+
+    const snapshot = await getDoc(documentRef);
+
+    if (snapshot.exists()) {
+      throw new Error(`La sucursal con id ${sucursal.id} ya existe.`);
+    }
+
+    await setDoc(documentRef, sucursal);
+  }
+
   get(): Observable<Sucursal[] | any[]> {
     const sucursalesCollection = collection(this.firestore, this.pathName);
     const q = query(sucursalesCollection, orderBy('id'));
     return collectionData(q, { idField: 'id' });
+  }
+
+  async update(sucursal: Sucursal | any, idSucursal: string): Promise<void> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
+    return updateDoc(documentRef, sucursal);
+  }
+
+  async delete(idSucursal: string): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
+      await deleteDoc(docRef);
+    } catch (error) {
+      console.error('Error al eliminar el documento:', error);
+    }
   }
 
   private inicializarCatalogo() {

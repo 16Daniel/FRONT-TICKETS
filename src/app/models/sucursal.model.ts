@@ -1,4 +1,4 @@
-export interface Sucursal {
-  id: string;
-  nombre: string;
+export class Sucursal {
+  id?: string | any;
+  nombre: string = '';
 }
