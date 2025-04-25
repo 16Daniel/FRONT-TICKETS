@@ -1,26 +1,24 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { Subscription } from 'rxjs';
 
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { Usuario } from '../../../models/usuario.model';
 import { Area } from '../../../models/area';
-import { TicketsService } from '../../../services/tickets.service';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-rating/modal-branch-rating.component';
+import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
+import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -42,7 +40,10 @@ import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-
   templateUrl: './branches-sys-tab.component.html',
   styleUrl: './branches-sys-tab.component.scss',
 })
+
 export class BranchesSysTabComponent {
+  @Input() tickets: Ticket[] = [];
+
   mostrarModalGenerateTicket: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
@@ -52,96 +53,29 @@ export class BranchesSysTabComponent {
   mostrarModalRating: boolean = false;
 
   sucursal: Sucursal | undefined;
-  tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
   mantenimientoActivo: Mantenimiento10x10 | null = null;
   areas: Area[] = [];
   usuario: Usuario;
-  loading: boolean = false;
-  subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
 
   private unsubscribe!: () => void;
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private ticketsService: TicketsService,
     private mantenimientoService: Maintenance10x10Service,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
 
-    this.obtenerTicketsPorSucursal(this.sucursal?.id);
     this.obtenerMantenimientoActivo();
   }
 
-  ngOnDestroy() {
-    if (this.subscripcionTicket != undefined) {
-      this.subscripcionTicket.unsubscribe();
-    }
-
+  ngOnDestroy(): void {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
-  }
-
-  async obtenerTicketsPorSucursal(idSucursal: string | any): Promise<void> {
-    this.loading = true;
-    this.subscripcionTicket = this.ticketsService
-      .getByBranchId(idSucursal)
-      .subscribe({
-        next: (data) => {
-          // console.log(data);
-          this.tickets = data;
-          let arr_temp: Ticket[] = [];
-          let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '1'
-          );
-          let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '2'
-          );
-          let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '3'
-          );
-          let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '4'
-          );
-
-          temp1 = temp1.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp2 = temp2.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp3 = temp3.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp4 = temp4.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.todosLosTickets = [...arr_temp];
-          this.tickets = arr_temp;
-
-          if (this.ticket != undefined) {
-            let temp = this.tickets.filter((x) => x.id == this.ticket!.id);
-            if (temp.length > 0) {
-              this.ticket = temp[0];
-            }
-          }
-
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error al escuchar los tickets:', error);
-        },
-      });
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {

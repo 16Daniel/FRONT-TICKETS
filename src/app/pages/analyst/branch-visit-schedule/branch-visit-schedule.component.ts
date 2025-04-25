@@ -12,7 +12,7 @@ import { UsersService } from '../../../services/users.service';
 import { VisitasService } from '../../../services/visitas.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Timestamp } from '@angular/fire/firestore';
-import { Visita } from '../../../models/visita';
+import { Visita } from '../../../models/visita-programada';
 import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';
@@ -37,7 +37,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
 public usuariosHelp:Usuario[] = [];
 public colorUsuario:ColorUsuario|undefined;  
 public tickets: Ticket[] = [];
-public arr_ultimosmantenimientos:Mantenimiento10x10[] = []; 
+public arr_ultimosmantenimientos:Mantenimiento10x10[] = []; // <--- revisar
 public usuario: Usuario;
 public arr_data:Visita[] = []; 
 public sucursales:Sucursal[] = [];
@@ -183,7 +183,7 @@ subscriptiontk: Subscription | undefined;
 
     this.loading = true;
     this.subscriptiontk = this.mantenimientoService
-      .obtenerUltimosMantenimientos(array_ids_Sucursales)
+      .getUltimosMantenimientos(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
           this.arr_ultimosmantenimientos = data.filter(

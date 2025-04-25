@@ -11,4 +11,5 @@ export class Usuario {
   uid: string = '';
   sucursales: Sucursal[] = [];
   esGuardia: boolean = false;
+  idArea: string | any;
 }

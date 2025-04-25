@@ -19,13 +19,13 @@ export const routes: Routes = [
       {
         path: 'home-s',
         title: 'Inicio',
-        loadComponent: () => import('./pages/analyst/home-s/home-s.component'),
+        loadComponent: () => import('./pages/analyst/analyst-home/analyst-home.component'),
         canActivate: [HomeGuard],
       },
       {
         path: 'home-a',
         title: 'Inicio',
-        loadComponent: () => import('./pages/admin/home-A/home-A.component'),
+        loadComponent: () => import('./pages/admin/admin-home/admin-home.component'),
         canActivate: [HomeGuard],
       },
       {
@@ -62,6 +62,13 @@ export const routes: Routes = [
         title: 'Control de versiones',
         loadComponent: () =>
           import('./pages/admin/version-control/version-control.component'),
+        canActivate: [AdminGuard],
+      },
+      {
+        path: 'branches',
+        title: 'Sucursales',
+        loadComponent: () =>
+          import('./pages/admin/branches/branches.component'),
         canActivate: [AdminGuard],
       },
       {

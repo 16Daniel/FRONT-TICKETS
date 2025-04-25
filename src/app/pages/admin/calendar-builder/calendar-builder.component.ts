@@ -19,7 +19,7 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
 import { Ticket } from '../../../models/ticket.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { ComentarioVisita, Visita } from '../../../models/visita';
+import { Visita } from '../../../models/visita-programada';
 import { VisitasService } from '../../../services/visitas.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { GuardiasService } from '../../../services/guardias.service';
@@ -29,6 +29,8 @@ import { CalendarComponent } from "../../../components/common/calendar/calendar.
 import { ModalColorsComponent } from "../../../modals/calendar/modal-colors/modal-colors.component";
 import { DocumentsService } from '../../../services/documents.service';
 import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
+import { ComentarioVisita } from '../../../models/comentario-visita.model';
+import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 
 
 @Component({
@@ -51,28 +53,28 @@ import ModalEventDetailComponent from "../../../modals/calendar/modal-event-deta
   templateUrl: './calendar-builder.component.html',
 })
 export default class CalendarBuilderComponent implements OnInit {
-  public sucursales: Sucursal[] = [];
-  public sucursalesOrdenadas: Sucursal[] = [];
-  public sucursalesSeleccionadas: Sucursal[] = [];
-  public usuariosHelp: Usuario[] = [];
-  public usuarioseleccionado: Usuario | undefined;
-  public fecha = new Date();
-  public ordenarxmantenimiento: boolean = false;
-  public arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
-  public tickets: Ticket[] = [];
-  public todosLosTickets: Ticket[] = [];
-  public itemtk: Ticket | undefined;
+  sucursales: Sucursal[] = [];
+  sucursalesOrdenadas: Sucursal[] = [];
+  sucursalesSeleccionadas: Sucursal[] = [];
+  usuariosHelp: Usuario[] = [];
+  usuarioseleccionado: Usuario | undefined;
+  fecha = new Date();
+  ordenarxmantenimiento: boolean = false;
+  arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
+  tickets: Ticket[] = [];
+  todosLosTickets: Ticket[] = [];
+  itemtk: Ticket | undefined;
   subscriptiontk: Subscription | undefined;
-  public loading: boolean = false;
-  public formComentarios: string = "";
-  public vercalendario: boolean = false;
-  public showModalBranchDetail: boolean = false;
-  public sucursalSeleccionada: Sucursal | undefined;
-  public indicacionesVisitas: ComentarioVisita[] = [];
-  public registroDeVisita: Visita | undefined = undefined;
-  public registroDeGuardia: Guardia | undefined = undefined;
-  public showModalTicketDetail: boolean = false;
-  public showModalColors: boolean = false;
+  loading: boolean = false;
+  formComentarios: string = "";
+  vercalendario: boolean = false;
+  showModalBranchDetail: boolean = false;
+  sucursalSeleccionada: SucursalProgramada | undefined;
+  indicacionesVisitas: ComentarioVisita[] = [];
+  registroDeVisita: Visita | undefined = undefined;
+  registroDeGuardia: Guardia | undefined = undefined;
+  showModalTicketDetail: boolean = false;
+  showModalColors: boolean = false;
 
   constructor(
     private ticketsService: TicketsService,
@@ -90,9 +92,7 @@ export default class CalendarBuilderComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerUsuariosHelp();
-    //this.fecha.setDate(new Date().getDate() + 1); // Suma 1 día
-
-  } 
+  }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
@@ -104,7 +104,6 @@ export default class CalendarBuilderComponent implements OnInit {
       .get()
       .subscribe({
         next: (data) => {
-          console.log(data)
           this.tickets = [];
           this.tickets = data;
           let arr_temp: Ticket[] = [];
@@ -184,17 +183,38 @@ export default class CalendarBuilderComponent implements OnInit {
     });
   }
 
-  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+  // ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
 
-    return catsucursales.sort((a, b) => {
+  //   return sucursales.sort((a, b) => {
+  //     if (this.ordenarxmantenimiento) {
+  //       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
+  //       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
+  //       return mantenimientoA - mantenimientoB; // Ordena de menor a menor
+  //     } else {
+  //       const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
+  //       const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
+  //       return ticketsB - ticketsA; // Ordena de mayor a menor
+  //     }
+  //   });
+  // }
+
+  ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
+    return sucursales.sort((a, b) => {
       if (this.ordenarxmantenimiento) {
-        const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
-        const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
-        return mantenimientoA - mantenimientoB; // Ordena de mayor a menor
+        const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id) ?? Infinity;
+        const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id) ?? Infinity;
+        return mantenimientoA - mantenimientoB; // Ordena de menor a mayor
       } else {
         const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
         const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
-        return ticketsB - ticketsA; // Ordena de mayor a menor
+
+        if (ticketsA === ticketsB) {
+          const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id) ?? Infinity;
+          const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id) ?? Infinity;
+          return mantenimientoA - mantenimientoB; // En empate de tickets, ordena por menor porcentaje
+        }
+
+        return ticketsB - ticketsA; // Ordena por cantidad de tickets de mayor a menor
       }
     });
   }
@@ -249,6 +269,7 @@ export default class CalendarBuilderComponent implements OnInit {
       );
 
       let sucursalesDelUsuarioOrdenadas = this.ordenarSucursalesUser(this.usuarioseleccionado!.sucursales);
+      console.log(sucursalesDelUsuarioOrdenadas);
 
       if (this.obtenerTicketsPorSucursal(sucursalesDelUsuarioOrdenadas[0].id).length == 0) {
         this.ordenarxmantenimiento = true;
@@ -266,9 +287,9 @@ export default class CalendarBuilderComponent implements OnInit {
 
       this.sucursalesOrdenadas.push(...sucursalesDelUsuarioOrdenadas);
       this.sucursalesOrdenadas.push(...sucursalesDisponilesOrdenadas);
-
+      
       if (this.registroDeVisita != undefined) {
-        for (let suc of this.registroDeVisita.sucursales) {
+        for (let suc of this.registroDeVisita.sucursalesProgramadas) {
           const temp = sucursalesDelUsuarioOrdenadas.filter(x => x.id == suc.id);
           let index = this.sucursalesOrdenadas.indexOf(temp[0]);
           if (index !== -1) {
@@ -302,15 +323,19 @@ export default class CalendarBuilderComponent implements OnInit {
       this.registrarGuardia();
     }
 
-    // const fechaActual = new Date();
-    // this.fecha.setHours(fechaActual.getHours(), fechaActual.getMinutes(), fechaActual.getSeconds(), fechaActual.getMilliseconds());
+    let sucursalesProgramadas = this.sucursalesSeleccionadas.filter(x => x.id != '-999').map(sucursal => {
+      return {
+        ...sucursal,
+        idsTickets: this.obtenerTicketsPorSucursal(sucursal.id).map(ticket => ticket.id)
+      }
+    })
 
     let visita: Visita =
     {
       idUsuario: this.usuarioseleccionado!.id,
       fecha: Timestamp.fromDate(this.fecha),
-      sucursales: this.sucursalesSeleccionadas.filter(x => x.id != '-999'),
-      comentarios: this.indicacionesVisitas
+      sucursalesProgramadas,
+      comentarios: this.indicacionesVisitas,
     }
 
     try {
@@ -385,7 +410,10 @@ export default class CalendarBuilderComponent implements OnInit {
 
   detalles(sucursal: Sucursal) {
     this.showModalBranchDetail = true;
-    this.sucursalSeleccionada = sucursal;
+    this.sucursalSeleccionada = {
+      ...sucursal,
+      idsTickets: this.obtenerTicketsPorSucursal(sucursal.id).map(ticket => ticket.id)
+    };
   }
 
   actualizarListasComentarios() {
@@ -431,7 +459,7 @@ export default class CalendarBuilderComponent implements OnInit {
 
     this.loading = true;
     this.subscriptiontk = this.mantenimientoService
-      .obtenerUltimosMantenimientos(array_ids_Sucursales)
+      .getUltimosMantenimientos(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
           this.arr_ultimosmantenimientos = data.filter(
@@ -464,7 +492,7 @@ export default class CalendarBuilderComponent implements OnInit {
 
     if (this.registroDeVisita != undefined) {
 
-      for (let sucursal of this.registroDeVisita.sucursales) {
+      for (let sucursal of this.registroDeVisita.sucursalesProgramadas) {
         let temp = await this.mantenimientoService.obtenerMantenimientoVisita(this.getDate(this.registroDeVisita.fecha), sucursal.id);
         if (temp.length > 0) {
           await this.documentService.deleteDocument('mantenimientos-10x10', temp[0].id);

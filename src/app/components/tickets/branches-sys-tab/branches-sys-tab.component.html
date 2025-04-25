@@ -26,7 +26,7 @@
 
 </div>
 
-<div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+<!-- <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
   *ngIf="tickets.length == 0">
   @if (loading) {
   <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
@@ -34,7 +34,7 @@
   <i class="bx bx-file-blank bx-md" style="color: rgb(43, 92, 226)"></i>
   <p>SIN TICKETS PENDIENTES</p>
   }
-</div>
+</div> -->
 
 <div *ngIf="tickets.length > 0" class="p-1 mt-3">
   <div class="m-0 pb-4" style="background-color: transparent">
@@ -43,8 +43,8 @@
   </div>
 </div>
 
-<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [showModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
+<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="mostrarModalGenerateTicket = false" idArea="1"></app-modal-generate-ticket>
 
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
   [showModalTicketDetail]="mostrarModalTicketDetail"
@@ -55,7 +55,7 @@
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
 <app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false"></app-modal-tickets-history>
+  (closeEvent)="mostrarModalHistorial = false" idArea="1"></app-modal-tickets-history>
 
 <app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
@@ -78,5 +78,5 @@
   </ng-template>
 </p-confirmDialog>
 
-<app-modal-branch-rating *ngIf="usuario.idRol == '2'" [mostrarModalRating]="mostrarModalRating"
+<app-modal-branch-rating [mostrarModalRating]="mostrarModalRating"
   (closeEvent)="mostrarModalRating = false"></app-modal-branch-rating>

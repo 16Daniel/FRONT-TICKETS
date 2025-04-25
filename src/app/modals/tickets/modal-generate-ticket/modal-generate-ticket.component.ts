@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  input,
   Input,
   OnInit,
   Output,
@@ -40,8 +41,10 @@ import { ParticipanteChat } from '../../../models/participante-chat.model';
   templateUrl: './modal-generate-ticket.component.html',
   styleUrl: './modal-generate-ticket.component.scss',
 })
+
 export class ModalGenerateTicketComponent implements OnInit {
-  @Input() showModalGenerateTicket: boolean = false;
+  @Input() mostrarModalGenerateTicket: boolean = false;
+  @Input() idArea: string = '0';
   @Output() closeEvent = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
@@ -52,7 +55,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   prioridadesTicket: PrioridadTicket[] = [];
   isLoading = false;
 
-  formDepartamento: any;
+  // formDepartamento: any;
   formArea: any;
   formCategoria: any;
   formDescripcion: string = '';
@@ -81,7 +84,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
     this.sucursal = this.usuarioActivo.sucursales[0];
-    this.formDepartamento = this.sucursal;
+    // this.formDepartamento = this.sucursal;
   }
 
   obtenerSucursales() {
@@ -100,6 +103,9 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.areasService.get().subscribe({
       next: (data) => {
         this.areas = data;
+
+        this.formArea = this.areas.find(x => x.id == this.idArea);
+
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -184,7 +190,14 @@ export class ModalGenerateTicketComponent implements OnInit {
       const fechaEstimacion = new Date(); // Obtiene la fecha actual
       fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
 
-      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.sucursal.id);
+      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.sucursal.id, this.formArea.id);
+      if (idsResponsablesTicket.length == 0) {
+        this.showMessage('error', 'Error', 'No hay analistas disponibles para el área seleccionada');
+        return;
+      }
+
+
+
       let participantesChat: ParticipanteChat[] = [];
       participantesChat.push({
         idUsuario: this.usuarioActivo.id,
@@ -200,7 +213,7 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       let tk: Ticket = {
         fecha: new Date(),
-        idResponsables: this.obtenerResponsablesTicket(this.sucursal.id),
+        idResponsables: idsResponsablesTicket,
         idSucursal: this.sucursal.id,
         idArea: this.formArea.id,
         idCategoria: this.formCategoria.id,
@@ -264,7 +277,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.closeEvent.emit(false); // Cerrar modal
   }
 
-  obtenerResponsablesTicket(idSucursal: string): string[] {
+  obtenerResponsablesTicket(idSucursal: string, idArea: string): string[] {
     let idsResponsables: string[] = [];
 
     for (let usuario of this.catUsuariosHelp) {
@@ -272,12 +285,12 @@ export class ModalGenerateTicketComponent implements OnInit {
         (sucursal) => sucursal.id == idSucursal
       );
 
-      if ((existeSucursal || usuario.esGuardia) && usuario.idRol !== '2') {
+      if (
+        ((existeSucursal && usuario.idArea == idArea) || usuario.esGuardia) && usuario.idRol !== '2') {
         idsResponsables.push(usuario.id);
       }
     }
 
-    console.log(idsResponsables)
     return idsResponsables;
   }
 }

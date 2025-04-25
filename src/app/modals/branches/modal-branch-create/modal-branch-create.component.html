@@ -1,0 +1,34 @@
+<p-dialog [header]="!esNuevaSucursal ? 'ACTUALIZAR SUCURSAL' :'CREAR SUCURSAL'" [(visible)]="mostrarModalCrearSucursal"
+    [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+    <form #form="ngForm" (ngSubmit)="enviar(form)">
+
+        <p class="fw-bold">ID</p>
+        <input [disabled]="!esNuevaSucursal" class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL ID"
+            [(ngModel)]="sucursal.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
+            #formidCtrl="ngModel" required>
+        <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
+        <p class="fw-bold">NOMBRE</p>
+        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
+            [(ngModel)]="sucursal.nombre" name="nombre"
+            [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
+            required>
+        <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3">
+                <i class='bx bx-send'></i>
+                <label *ngIf="esNuevaSucursal">ENVIAR</label>
+                <label *ngIf="!esNuevaSucursal">ACTUALIZAR</label>
+            </button>
+        </div>
+
+    </form>
+
+</p-dialog>

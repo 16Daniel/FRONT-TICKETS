@@ -10,7 +10,6 @@ import { ButtonModule } from 'primeng/button';
 import { environment } from '../../../environments/environments';
 import { DocumentsService } from '../../services/documents.service';
 import { VersionButtonComponent } from '../version-button/version-button.component';
-import { Sucursal } from '../../models/sucursal.model';
 import { Usuario } from '../../models/usuario.model';
 
 @Component({
@@ -21,12 +20,13 @@ import { Usuario } from '../../models/usuario.model';
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class SideMenuComponent implements OnInit {
   items: MenuItem[] = [];
   showmenu: boolean = false;
   usuario: Usuario;
   urlbase: string = '';
-  sucursal: Sucursal | undefined;
+  tituloBanner: string;
   
   constructor(
     public cdr: ChangeDetectorRef,
@@ -34,7 +34,13 @@ export class SideMenuComponent implements OnInit {
     public documentsService: DocumentsService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario.sucursales[0];
+
+    if(this.usuario.idRol == '2') {
+      this.tituloBanner = this.usuario.sucursales[0].nombre;
+    }
+    else {
+      this.tituloBanner = `${ this.usuario.nombre } ${ this.usuario.apellidoP }`;
+    }
 
   }
 

@@ -52,9 +52,7 @@ export default class UsersComponent implements OnDestroy, OnInit {
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
     private rolesService: RolesService
-  ) {
-  }
-
+  ) { }
 
   ngOnInit(): void {
     this.obtenerUsuarios();
@@ -83,7 +81,6 @@ export default class UsersComponent implements OnDestroy, OnInit {
   obtenerUsuarios() {
     this.subscripcionUsuarios = this.usersService.get().subscribe({
       next: (data) => {
-        console.log(data);
         this.catusuarios = data;
         this.loading = false;
         if (data.length == 0) {
@@ -126,40 +123,6 @@ export default class UsersComponent implements OnDestroy, OnInit {
     this.esNuevoUsuario = false;
     this.usuarioSeleccionado = usuario;
     this.mostrarModalUsuario = true;
-  }
-
-  updateData() {
-    // const data: Usuario = {
-    //   id: this.usuariosel!.id,
-    //   nombre: this.formnombre!,
-    //   apellidoP: this.formapellidop!,
-    //   apellidoM: this.formapellidom!,
-    //   idRol: this.formrolsel!,
-    //   email: this.formemail!,
-    //   password: this.formpass!,
-    //   uid: this.usuariosel?.uid!,
-    //   sucursales: this.sucursalessel,
-    //   esGuardia: false
-    // };
-
-    // this.documentsService
-    //   .updateDoc('usuarios', data)
-    //   .then(() => {
-    //     this.showMessage('success', 'Success', 'Enviado correctamente');
-    //     this.modalAgregar = false;
-    //     this.actualizar = false;
-    //     this.usuariosel = undefined;
-
-    //     this.formapellidom = '';
-    //     this.formapellidop = '';
-    //     this.formemail = '';
-    //     this.formnombre = '';
-    //     this.formpass = '';
-    //     this.formrolsel = undefined;
-    //   })
-    //   .catch((error) =>
-    //     console.error('Error al actualizar los comentarios:', error)
-    //   );
   }
 
   async eliminarUsuario(idu: string) {

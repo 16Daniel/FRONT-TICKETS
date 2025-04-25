@@ -13,6 +13,8 @@ import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { RolesService } from '../../../services/roles.service';
 import { DocumentsService } from '../../../services/documents.service';
+import { Area } from '../../../models/area';
+import { AreasService } from '../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-user-create',
@@ -30,6 +32,7 @@ export class ModalUserCreateComponent implements OnInit {
 
   sucursales: Sucursal[] = [];
   roles: Rol[] = [];
+  areas: Area[] = [];
 
   constructor(
     private messageService: MessageService,
@@ -37,6 +40,7 @@ export class ModalUserCreateComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private rolesService: RolesService,
+    private areasService: AreasService,
     private documentsService: DocumentsService,
   ) {
     this.usuario = this.usuario.idRol ? this.usuario : new Usuario;
@@ -45,7 +49,7 @@ export class ModalUserCreateComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerRoles();
-
+    this.obtenerAreas();
   }
 
   async enviar(form: NgForm) {
@@ -135,6 +139,19 @@ export class ModalUserCreateComponent implements OnInit {
     this.rolesService.get().subscribe({
       next: (data) => {
         this.roles = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerAreas() {
+    this.areasService.get().subscribe({
+      next: (data) => {
+        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {

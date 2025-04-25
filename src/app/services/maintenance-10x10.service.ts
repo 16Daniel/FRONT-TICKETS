@@ -132,14 +132,14 @@ export class Maintenance10x10Service {
     return unsubscribe;
   }
 
-  obtenerUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
+  getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
     const fechaActual = new Date();
     const fechaHaceUnMes = new Date(fechaActual);
     fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
     fechaHaceUnMes.setHours(0, 0, 0, 0);
     // Mapea cada sucursal a una consulta independiente
     const consultas = idsSucursales.map(idSucursal => {
-      const mantenimientosRef = collection(this.firestore, 'mantenimientos-10x10');
+      const mantenimientosRef = collection(this.firestore, this.pathName);
       const q = query(
         mantenimientosRef,
         where('idSucursal', '==', idSucursal),
@@ -164,7 +164,6 @@ export class Maintenance10x10Service {
     // Ejecutar todas las consultas en paralelo y combinar los resultados
     return forkJoin(consultas);
   }
-
 
   async obtenerMantenimientoVisita(fecha: Date, idSucursal: string) {
     const coleccionRef = collection(this.firestore, 'mantenimientos-10x10');

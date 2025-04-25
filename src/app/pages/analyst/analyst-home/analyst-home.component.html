@@ -1,0 +1,119 @@
+<div class="">
+  <div *ngIf="usuario.esGuardia" class="alert alert-warning text-center fw-bold" style="margin-top: 15px;">
+    🚨 GUARDIA ACTIVA 🚨
+  </div>
+  <div class="mt-5"></div>
+
+
+  @if(ordenarxmantenimiento==false)
+  {
+  <h3 class="m-3 text-center">MIS TICKETS</h3>
+  }@else
+  {
+  <h3 class="m-3 text-center">MANTENIMIENTOS</h3>
+  }
+
+  <div class="d-flex justify-content-start gap-3 p-3 pb-0 flex-wrap">
+    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary"
+      (click)="mostrarModalGenerateTicket = true">
+    </p-button>
+
+    <p-button label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
+      (click)="mostrarModalHistorial = true">
+    </p-button>
+
+
+
+
+    <div class="form-check form-switch d-flex align-items-center gap-3">
+      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+        style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarxmantenimiento">
+      <label class="form-check-label fs-4" for="flexSwitchCheckDefault">{{tituloMantenimiento}}</label>
+    </div>
+
+
+
+
+    <div class="ms-auto d-flex align-items-center gap-3">
+      <label class="form-check-label fs-4" for="activarGuardia">ACTIVAR GUARDIA</label>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
+          style="width: 3rem; height: 2rem;" [(ngModel)]="usuario.esGuardia" (change)="onToggleGuardia(usuario)">
+      </div>
+    </div>
+  </div>
+
+
+  <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+    *ngIf="tickets.length == 0">
+    @if (loading) {
+    <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+    }@else {
+    <i class="bx bx-file-blank bx-md" style="color: rgb(43, 92, 226)"></i>
+    <p>SIN TICKETS PENDIENTES</p>
+    }
+  </div>
+
+
+
+
+  <div *ngIf="tickets.length > 0 && !ordenarxmantenimiento" class="p-1 mt-4">
+    <app-priority-tickets-accordion-analyst [tickets]="tickets" [sucursales]="sucursales"
+      (clickEvent)="abrirModalDetalleTicket($event)"></app-priority-tickets-accordion-analyst>
+  </div>
+
+  <div class="p-1 mt-4" *ngIf="ordenarxmantenimiento">
+
+    <app-accordion-branch-maintenance10x10 *ngIf="usuario.idArea == '1'" [mantenimientos]="ultimosmantenimientos"
+      [sucursales]="usuario.sucursales">
+    </app-accordion-branch-maintenance10x10>
+
+    <app-accordion-branch-maintenance-av *ngIf="usuario.idArea == '2'" [mantenimientos]="ultimosmantenimientos"
+      [sucursales]="usuario.sucursales">
+    </app-accordion-branch-maintenance-av>
+
+  </div>
+
+
+</div>
+
+
+
+
+<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
+
+<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="itemtk"
+  [showModalTicketDetail]="mostrarModalTicketDetail"
+  (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+
+<app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLosTickets"
+  (closeEvent)="mostrarModalFilterTickets = false"
+  (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
+
+<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false"></app-modal-tickets-history>
+
+<app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
+  (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
+
+<app-modal-ten-xten-maintenance-check *ngIf="mostrarModal10x10" [showModal10x10]="mostrarModal10x10"
+  (closeEvent)="mostrarModal10x10 = false"
+  [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
+
+<app-modal-ten-xten-maintenance-new *ngIf="mostrarModal10x10New" [mostrarModal10x10New]="mostrarModal10x10New"
+  (closeEvent)="mostrarModal10x10New = false"></app-modal-ten-xten-maintenance-new>
+
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p>{{ message.message }}</p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
