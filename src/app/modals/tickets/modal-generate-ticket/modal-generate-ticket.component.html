@@ -4,7 +4,7 @@
 
         <p-dropdown [options]="sucursales" [(ngModel)]="sucursal" name="sucursal" optionLabel="nombre" [filter]="true"
             filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO"
-            [style]="{width:'100%'}" [disabled]="usuarioActivo.idRol == '2'">
+            [style]="{width:'100%'}" [disabled]="usuarioActivo.idRol == '2' || usuarioActivo.idRol == '3'">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>

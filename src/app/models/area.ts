@@ -1,4 +1,4 @@
-export interface Area {
-  id: string;
-  nombre: string;
+export class Area {
+  id?: string | any;
+  nombre: string = '';
 }
