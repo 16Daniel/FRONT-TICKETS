@@ -49,6 +49,14 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' });
   }
 
+  getAdminSys(): Observable<any[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const q = query(ticketsCollection,
+    where('idArea', '==', '1')
+  );
+    return collectionData(q, { idField: 'id' });
+  }
+
   getById(idTicket: string): Observable<Ticket> {
     const ticketDoc = doc(this.firestore, `tickets/${idTicket}`);
     return docData(ticketDoc, { idField: 'id' }) as Observable<Ticket>;

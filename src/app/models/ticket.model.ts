@@ -25,4 +25,5 @@ export interface Ticket {
   calificacion: number;
   calificacionAnalista: number;
   participantesChat: ParticipanteChat[];
+  validacionAdmin:boolean | any; 
 }

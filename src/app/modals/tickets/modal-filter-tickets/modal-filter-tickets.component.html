@@ -1,5 +1,20 @@
 <p-dialog header="FILTRAR TICKETS" [modal]="true" [(visible)]="showModalFilterTickets" [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+
+    <p-dropdown *ngIf="sucursales.length>0" [options]="sucursales" [(ngModel)]="filterSucursal" optionLabel="nombre" [filter]="true"
+        filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL" [style]="{ width: '100%' }">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+                <div>{{ selectedOption.nombre }}</div>
+            </div>
+        </ng-template>
+        <ng-template let-categoria pTemplate="item">
+            <div class="flex align-items-center gap-2">
+                <div>{{ categoria.nombre }}</div>
+            </div>
+        </ng-template>
+    </p-dropdown>
+    <p></p>
     <p-dropdown [options]="areas" [(ngModel)]="filterarea" optionLabel="nombre" [filter]="true"
         filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{ width: '100%' }"
         (onChange)="onChangeArea()">
