@@ -232,6 +232,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         calificacion: 0,
         calificacionAnalista: 0,
         participantesChat,
+        validacionAdmin: false
       };
 
       await this.ticketsService.create(tk);

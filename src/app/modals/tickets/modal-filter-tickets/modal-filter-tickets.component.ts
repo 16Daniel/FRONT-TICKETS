@@ -21,6 +21,7 @@ import { Area } from '../../../models/area';
 import { AreasService } from '../../../services/areas.service';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
+import { Sucursal } from '../../../models/sucursal.model';
 
 @Component({
   selector: 'app-modal-filter-tickets',
@@ -34,12 +35,14 @@ export class ModalFilterTicketsComponent implements OnInit {
   @Input() showModalFilterTickets: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Output() ticketsFiltradosEvent = new EventEmitter<Ticket[]>();
+  @Input() sucursales:Sucursal[] = [];
 
   ticketsFiltrados: Ticket[] = [];
   filterstatus: any | undefined;
   filterPrioridad: any | undefined;
   filtercategoria: any | undefined;
   filterarea: any | undefined;
+  filterSucursal: any | undefined;
   prioridadesTicket: PrioridadTicket[] = [];
   statusTicket: EstatusTicket[] = [];
   categorias: Categoria[] = [];
@@ -138,7 +141,11 @@ export class ModalFilterTicketsComponent implements OnInit {
         (x) => x.idEstatusTicket == this.filterstatus.id
       );
     }
-
+    if (this.filterSucursal != undefined) {
+      this.ticketsFiltrados = this.ticketsFiltrados.filter(
+        (x) => x.idSucursal == this.filterSucursal.id
+      );
+    }
     this.ticketsFiltradosEvent.emit(this.ticketsFiltrados); // Cerrar modal
     this.closeEvent.emit(false); // Cerrar modal
   }

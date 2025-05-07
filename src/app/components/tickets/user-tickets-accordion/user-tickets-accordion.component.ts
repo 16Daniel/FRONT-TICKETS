@@ -7,24 +7,25 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { Usuario } from '../../../models/usuario.model';
+import { RequesterTicketsListComponent } from "../requester-tickets-list/requester-tickets-list.component";
 
 @Component({
   selector: 'app-user-tickets-accordion',
   standalone: true,
   imports: [
-    AdminTicketsListComponent,
     BadgeModule,
     CommonModule,
     FormsModule,
     AccordionModule,
-  ],
+    AdminTicketsListComponent,
+],
   templateUrl: './user-tickets-accordion.component.html',
   styleUrl: './user-tickets-accordion.component.scss',
 })
 export class UserTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
-  sucursales: Sucursal[] = [];
+  @Input() sucursales: Sucursal[] = [];
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
