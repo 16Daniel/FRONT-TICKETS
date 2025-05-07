@@ -28,6 +28,8 @@
               class='bx bx-objects-horizontal-left'></i>Roles</a>
         <li (click)="closemenu()"><a [routerLink]="'/main/branches'" *ngIf="usuario.idRol == '1'"><i
               class='bx bx-objects-horizontal-left'></i>Sucursales</a>
+        <li (click)="closemenu()"><a [routerLink]="'/main/areas'" *ngIf="usuario.idRol == '1'"><i
+              class='bx bx-objects-horizontal-left'></i>Áreas</a>
 
         </li>
         <li (click)="closemenu()" *ngIf="usuario?.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
