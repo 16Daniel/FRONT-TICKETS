@@ -20,7 +20,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-tk>
-        <tr [pSelectableRow]="tk">
+        <tr [pSelectableRow]="tk" class="bg-opacity-25" [ngClass]="{'bg-warning':tk.idEstatusTicket == '7'}">
             <td>
                 <p-dropdown [options]="prioridadesTicket" [(ngModel)]="tk.idPrioridadTicket" optionLabel="id"
                     [showClear]="false" optionValue="id" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
@@ -60,7 +60,7 @@
     </td>
     <td class="text-center" *ngIf="mostrarFedchaEstimacion">
         <p-calendar  
-        [showTime]="true" 
+        [showTime]="false" 
         [touchUI]="true" 
         [hourFormat]="'12'" 
         (onSelect)="ManejadorDeFecha($event,tk)"

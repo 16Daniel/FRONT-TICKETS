@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-
+import { Timestamp } from "@angular/fire/firestore";
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../../models/usuario.model';
@@ -50,13 +50,46 @@ export class AccordionBranchMaintenance10x10Component {
 
   obtenerPorcentajedeUltimoMantenimiento(idSucursal: string): number {
     let porcentaje = 0;
+    debugger
     let registro = this.mantenimientos.filter(
       (x) => x.idSucursal == idSucursal
     );
     if (registro.length > 0) {
-      porcentaje = this.maintenanceHelper.calcularPorcentajeSys(registro[0]);
+      let fechaM:Date;
+
+      const valorIncierto: Date | Timestamp = registro[0].timestamp!; 
+      fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
+
+      let diaspasados = this.obtenerDiasPasados(idSucursal); 
+      if(diaspasados<=30)
+        {
+          porcentaje = this.maintenanceHelper.calcularPorcentajeSys(registro[0]);
+        }
     }
     return porcentaje;
+  }
+
+  obtenerDiasPasados(idSucursal: string):number
+  {
+    let dias = 0; 
+    let registro = this.mantenimientos.filter(
+      (x) => x.idSucursal == idSucursal
+    );
+    if (registro.length > 0) {
+      let fechaM:Date;
+
+      const valorIncierto: Date | Timestamp = registro[0].timestamp!; 
+      fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
+
+      const hoy = new Date();
+      // Ajustar ambas fechas a UTC para evitar problemas con horario de verano
+      const utc1 = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+      const utc2 = Date.UTC(fechaM.getFullYear(), fechaM.getMonth(), fechaM.getDate());
+      
+      dias = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24));
+
+    }
+    return dias;
   }
 
   obtenerColorDeFondoSucursal10x10(value: number): string {
