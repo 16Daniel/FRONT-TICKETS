@@ -19,7 +19,7 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
 import { Ticket } from '../../../models/ticket.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { Visita } from '../../../models/visita-programada';
+import { VisitaProgramada } from '../../../models/visita-programada';
 import { VisitasService } from '../../../services/visitas.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { GuardiasService } from '../../../services/guardias.service';
@@ -71,7 +71,7 @@ export default class CalendarBuilderComponent implements OnInit {
   showModalBranchDetail: boolean = false;
   sucursalSeleccionada: SucursalProgramada | undefined;
   indicacionesVisitas: ComentarioVisita[] = [];
-  registroDeVisita: Visita | undefined = undefined;
+  registroDeVisita: VisitaProgramada | undefined = undefined;
   registroDeGuardia: Guardia | undefined = undefined;
   showModalTicketDetail: boolean = false;
   showModalColors: boolean = false;
@@ -330,7 +330,7 @@ export default class CalendarBuilderComponent implements OnInit {
       }
     })
 
-    let visita: Visita =
+    let visita: VisitaProgramada =
     {
       idUsuario: this.usuarioseleccionado!.id,
       fecha: Timestamp.fromDate(this.fecha),

@@ -86,10 +86,14 @@ export class CalendarComponent implements OnInit {
   }
 
   async mostrarEventos(fechaIni: Date, fechaFin: Date) {
+    // Aquí
+
     this.loading = true;
     let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin);
+
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin);
     let calendarApi = this.calendarComponent!.getApi();
+    
     calendarApi.removeAllEvents();
     let contador = 1;
     for (let guardia of guardias) {
@@ -118,7 +122,6 @@ export class CalendarComponent implements OnInit {
         const ticketsFinalizados = await this.ticketsService.getFinalizedTicketsByEndDate(sucursal.id, fechaFin);
         let mantenimientos = await this.mantenimientoService
           .obtenerMantenimientoVisita(this.getDate(visita.fecha), sucursal.id);
-
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
         comentario = temp.length > 0 ? temp[0].comentario : '';
@@ -209,7 +212,7 @@ export class CalendarComponent implements OnInit {
   }
 
   calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
-    if(mantenimiento == undefined) {
+    if (mantenimiento == undefined) {
       return 0;
     }
 
