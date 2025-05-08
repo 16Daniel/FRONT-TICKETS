@@ -11,7 +11,6 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { Area } from '../../../models/area';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
-import { RequesterTicketsListComponent } from "../requester-tickets-list/requester-tickets-list.component";
 
 @Component({
   selector: 'app-branches-tickets-accordion',

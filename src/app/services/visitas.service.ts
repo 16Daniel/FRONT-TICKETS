@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Visita } from '../models/visita-programada';
+import { VisitaProgramada } from '../models/visita-programada';
 import { addDoc, collection, Firestore, getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -10,7 +10,7 @@ export class VisitasService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(itemVisita: Visita) {
+  async create(itemVisita: VisitaProgramada) {
     const ref = collection(this.firestore, 'visitas_programadas');
     const docRef = await addDoc(ref, itemVisita);
     return docRef.id;
@@ -62,7 +62,7 @@ export class VisitasService {
     );
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Visita[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Visita));
+    const documentos: VisitaProgramada[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VisitaProgramada));
 
     return documentos;
   }
@@ -82,7 +82,7 @@ export class VisitasService {
     );
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Visita[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Visita));
+    const documentos: VisitaProgramada[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VisitaProgramada));
 
     return documentos;
   }
