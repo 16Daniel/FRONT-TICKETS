@@ -147,8 +147,15 @@ export class AdminSysTabComponent {
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {
-            debugger
-            this.mantenimientos = result.filter((element) => element !== null);
+            let data =  result.filter((element) => element.length>0);
+            this.mantenimientos = [];
+            for(let itemdata of data)
+              {
+                for(let item of itemdata)
+                  {
+                    this.mantenimientos.push(item); 
+                  }
+              }
           });
         this.cdr.detectChanges();
       },

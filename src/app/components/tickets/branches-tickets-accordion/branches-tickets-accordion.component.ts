@@ -49,6 +49,11 @@ export class BranchesTicketsAccordionComponent {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
+  contarTickets(idSucursal: number | any):number
+  {
+    return this.tickets.filter((x) => x.idSucursal == idSucursal && x.idEstatusTicket != '3').length;
+  }
+
   obtenerResponsablesUC(idSucursal: string): string {
     let idr = '';
     for (let item of this.usuariosHelp) {

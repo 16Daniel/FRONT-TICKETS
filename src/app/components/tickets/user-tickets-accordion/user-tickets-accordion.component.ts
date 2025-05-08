@@ -31,6 +31,11 @@ export class UserTicketsAccordionComponent {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
+  contarTickets(idSucursal: number | any):number
+  {
+    return this.tickets.filter((x) => x.idSucursal == idSucursal && x.idEstatusTicket != '3').length;
+  }
+
   obtenerColorTexto(value: number): string {
     let str = '';
 
