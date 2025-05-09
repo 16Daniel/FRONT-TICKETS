@@ -33,7 +33,7 @@ import { ComentarioVisita } from '../../../models/comentario-visita.model';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
-
+import { MantenimientoFactoryService } from './maintenance-factory.service';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -90,7 +90,8 @@ export default class CalendarBuilderComponent implements OnInit {
     private mantenimientoSysService: Maintenance10x10Service,
     private mantenimientoAVService: Maintenance6x6AvService,
     private guardiaService: GuardiasService,
-    private documentService: DocumentsService
+    private documentService: DocumentsService,
+    private mantenimientoFactory: MantenimientoFactoryService
   ) {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -336,7 +337,10 @@ export default class CalendarBuilderComponent implements OnInit {
       await this.visitasService.create(visita);
       for (let sucursal of this.sucursalesSeleccionadas) {
         if (sucursal.id != '-999') {
-          this.nuevoMantenimientoSistemas(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+          const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+          await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+
+          // this.nuevoMantenimientoSistemas(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
         }
       }
       this.showMessage('success', 'Success', 'Guardado correctamente');
@@ -353,48 +357,6 @@ export default class CalendarBuilderComponent implements OnInit {
     }
     this.loading = false;
     this.cdr.detectChanges();
-  }
-
-  async nuevoMantenimientoSistemas(idSucursal: string, idUsuario: string, fecha: Date) {
-    // fecha.setHours(0, 0, 0, 0);
-    const mantenimiento: Mantenimiento10x10 = {
-      idSucursal: idSucursal,
-      idUsuarioSoporte: idUsuario,
-      fecha: fecha,
-      estatus: true,
-      mantenimientoCaja: false,
-      mantenimientoCCTV: false,
-      mantenimientoConcentradorApps: false,
-      mantenimientoContenidosSistemaCable: false,
-      mantenimientoImpresoras: false,
-      mantenimientoInternet: false,
-      mantenimientoNoBrakes: false,
-      mantenimientoPuntosVentaTabletas: false,
-      mantenimientoRack: false,
-      mantenimientoTiemposCocina: false,
-      observaciones: '',
-    };
-
-    await this.mantenimientoSysService.create(mantenimiento);
-  }
-
-  async nuevoMantenimientoAudioVideo(idSucursal: string, idUsuario: string, fecha: Date) {
-    const mantenimiento: Mantenimiento6x6AV = {
-      idSucursal: idSucursal,
-      idUsuarioSoporte: idUsuario,
-      fecha: fecha,
-      estatus: true,
-      mantenimientoConexiones: true,
-      mantenimientoCableado: true,
-      mantenimientoRack: true,
-      mantenimientoControles: true,
-      mantenimientoNivelAudio: true,
-      mantenimientoCanales: true,
-
-      observaciones: '',
-    };
-
-    await this.mantenimientoAVService.create(mantenimiento);
   }
 
   asignadaAlUsuario(idSucursal: string): boolean {
