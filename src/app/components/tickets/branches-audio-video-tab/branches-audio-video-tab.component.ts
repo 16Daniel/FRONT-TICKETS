@@ -67,9 +67,7 @@ export class BranchesAudioVideoTabComponent {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-        // this.nuevoMantenimiento()
-        this.obtenerMantenimientoActivo();
-
+    this.obtenerMantenimientoActivo();
   }
 
   ngOnDestroy() {
@@ -148,26 +146,5 @@ export class BranchesAudioVideoTabComponent {
         this.cdr.detectChanges();
       }
     );
-  }
-
-  async nuevoMantenimiento() {
-    const mantenimiento: Mantenimiento6x6AV = {
-      idSucursal: '1',
-    idUsuarioSoporte: "1MTT0kVdYJtruQ6V73x3",
-      fecha: new Date(),
-      estatus: true,
-
-      mantenimientoConexiones: true,
-      mantenimientoCableado: true,
-      mantenimientoRack: true,
-      mantenimientoControles: true,
-      mantenimientoNivelAudio: true,
-      mantenimientoCanales: true,
-
-      observaciones: '',
-    };
-
-    await this.mantenimientoService.create(mantenimiento);
-    console.log('ok');
   }
 }
