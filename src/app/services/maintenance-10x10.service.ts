@@ -18,7 +18,7 @@ import {
 import { Timestamp } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
-import { IMantenimientoService } from './manteinance.interface';
+import { IMantenimientoService } from '../interfaces/manteinance.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -217,7 +217,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
 
   async obtenerMantenimientoVisita(fecha: Date, idSucursal: string) {
-    const coleccionRef = collection(this.firestore, 'mantenimientos-10x10');
+    const coleccionRef = collection(this.firestore, this.pathName);
 
     // Convertir las fechas a timestamps de Firestore
     fecha.setHours(0, 0, 0, 0);
