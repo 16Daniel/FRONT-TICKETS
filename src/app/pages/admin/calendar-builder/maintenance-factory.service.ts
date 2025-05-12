@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Maintenance10x10Service } from "../../../services/maintenance-10x10.service";
 import { Maintenance6x6AvService } from "../../../services/maintenance-6x6-av.service";
-import { IMantenimientoService } from "../../../services/manteinance.interface";
+import { IMantenimientoService } from "../../../interfaces/manteinance.interface";
 
 @Injectable({ providedIn: 'root' })
 export class MantenimientoFactoryService {

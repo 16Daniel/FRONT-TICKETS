@@ -20,6 +20,7 @@ import { ColorUsuario } from '../../../models/color-usuario';
 import { TicketsService } from '../../../services/tickets.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
+
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -37,6 +38,7 @@ export class CalendarComponent implements OnInit {
   FechaSeleccionada: Date = new Date();
   showModalEventeDetail: boolean = false;
   colores: ColorUsuario[] = [];
+  usuario: Usuario;
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
   loading: boolean = false;
@@ -60,7 +62,9 @@ export class CalendarComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private documentService: DocumentsService,
     private ticketsService: TicketsService,
-    private mantenimientoService: Maintenance10x10Service) { }
+    private mantenimientoService: Maintenance10x10Service) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
     this.obtenerColores();
@@ -89,11 +93,11 @@ export class CalendarComponent implements OnInit {
     // Aquí
 
     this.loading = true;
-    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin);
+    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.usuario.idArea);
 
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin);
     let calendarApi = this.calendarComponent!.getApi();
-    
+
     calendarApi.removeAllEvents();
     let contador = 1;
     for (let guardia of guardias) {
