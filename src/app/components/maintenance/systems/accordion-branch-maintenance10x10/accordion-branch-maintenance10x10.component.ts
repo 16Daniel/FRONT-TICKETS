@@ -50,7 +50,6 @@ export class AccordionBranchMaintenance10x10Component {
 
   obtenerPorcentajedeUltimoMantenimiento(idSucursal: string): number {
     let porcentaje = 0;
-    debugger
     let registro = this.mantenimientos.filter(
       (x) => x.idSucursal == idSucursal
     );

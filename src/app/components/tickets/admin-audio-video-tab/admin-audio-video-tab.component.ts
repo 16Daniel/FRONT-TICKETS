@@ -1,51 +1,51 @@
-import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Subscription, timeInterval } from 'rxjs';
+import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { Ticket } from '../../../models/ticket.model';
 import { Sucursal } from '../../../models/sucursal.model';
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
+import { Subscription } from 'rxjs';
+import { Usuario } from '../../../models/usuario.model';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TicketsService } from '../../../services/tickets.service';
 import { UsersService } from '../../../services/users.service';
-import { Usuario } from '../../../models/usuario.model';
-import { Ticket } from '../../../models/ticket.model';
+import { BranchesService } from '../../../services/branches.service';
+import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { ToastModule } from 'primeng/toast';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { BranchesTicketsAccordionComponent } from '../../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
-import { UserTicketsAccordionComponent } from '../../../components/tickets/user-tickets-accordion/user-tickets-accordion.component';
-import { BranchesService } from '../../../services/branches.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
-import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
+import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
+import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
+import { AccordionBranchMaintenanceAvComponent } from '../../maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 
 @Component({
-  selector: 'app-admin-sys-tab',
+  selector: 'app-admin-audio-video-tab',
   standalone: true,
-    imports: [
-      ToastModule,
-      CommonModule,
-      FormsModule,
-      ConfirmDialogModule,
-      OverlayPanelModule,
-      ModalFilterTicketsComponent,
-      ModalGenerateTicketComponent,
-      ModalTicketsHistoryComponent,
-      BranchesTicketsAccordionComponent,
-      UserTicketsAccordionComponent,
-      AccordionBranchMaintenance10x10Component,
-      ModalTicketDetailComponent,
-  ],
-    providers: [MessageService, ConfirmationService],
-  templateUrl: './admin-sys-tab.component.html',
-  styleUrl: './admin-sys-tab.component.scss',
+   imports: [
+    ToastModule,
+    CommonModule,
+    FormsModule,
+    ConfirmDialogModule,
+    OverlayPanelModule,
+    ModalFilterTicketsComponent,
+    ModalGenerateTicketComponent,
+    ModalTicketsHistoryComponent,
+    BranchesTicketsAccordionComponent,
+    UserTicketsAccordionComponent,
+    ModalTicketDetailComponent,
+    AccordionBranchMaintenanceAvComponent
+],
+      providers: [MessageService, ConfirmationService],
+  templateUrl: './admin-audio-video-tab.component.html',
+   styleUrl: './admin-audio-video-tab.component.scss',
 })
-export class AdminSysTabComponent {
-  tickets: Ticket[] = [];
+export class AdminAudioVideoTabComponent {
+ tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
   mostrarModalFilterTickets: boolean = false;
@@ -53,7 +53,7 @@ export class AdminSysTabComponent {
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: Mantenimiento10x10[] = [];
+  mantenimientos: Mantenimiento6x6AV[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -70,7 +70,7 @@ export class AdminSysTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance10x10Service
+    private maintenanceService: Maintenance6x6AvService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -196,5 +196,6 @@ export class AdminSysTabComponent {
     this.mostrarModalTicketDetail = true; 
     this.ticket = itemticket; 
   }
+
 
 }

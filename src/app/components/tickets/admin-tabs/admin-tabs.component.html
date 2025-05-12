@@ -1,17 +1,14 @@
 <p-tabView>
+  @if (usuario.idArea == '1' || usuario.idRol == '1') 
+  {
     <p-tabPanel header="SISTEMAS">
       <app-admin-sys-tab></app-admin-sys-tab>
     </p-tabPanel>
-    <p-tabPanel header="AUDIO Y VIDEO">
-        <p>Contenido de la segunda pestaña.</p>
+  }
+     @if (usuario.idArea == '2' || usuario.idRol == '1') 
+  {
+    <p-tabPanel header="AUDIO Y VIDEO" (click)="refrescar()">
+      <app-admin-audio-video-tab></app-admin-audio-video-tab>
     </p-tabPanel>
-    <p-tabPanel header="MANTENIMIENTO">
-      <p>Contenido de la tercera pestaña.</p>
-    </p-tabPanel>
-    <p-tabPanel header="ADMINISTRACIÓN ">
-      <p>Contenido de la tercera pestaña.</p>
-    </p-tabPanel>
-    <p-tabPanel header="COMPRAS">
-      <p>Contenido de la tercera pestaña.</p>
-    </p-tabPanel>
+  }
   </p-tabView>

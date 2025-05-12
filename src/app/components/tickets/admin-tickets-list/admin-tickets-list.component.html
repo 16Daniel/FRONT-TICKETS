@@ -1,4 +1,4 @@
-<p-table [value]="tickets" [tableStyle]="{
+<p-table *ngIf="usuariosHelp.length>0" [value]="tickets" [tableStyle]="{
     'min-width': '10rem',
     padding: '10px',
     'min-height': '500px'
@@ -20,7 +20,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-tk>
-        <tr [pSelectableRow]="tk" class="bg-opacity-25" [ngClass]="{'bg-warning':tk.idEstatusTicket == '7'}">
+        <tr [pSelectableRow]="tk" class="bg-opacity-25" [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
             <td>
                 <p-dropdown [options]="prioridadesTicket" [(ngModel)]="tk.idPrioridadTicket" optionLabel="id"
                     [showClear]="false" optionValue="id" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">

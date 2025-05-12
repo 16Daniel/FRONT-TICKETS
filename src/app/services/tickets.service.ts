@@ -49,10 +49,10 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' });
   }
 
-  getAdminSys(): Observable<any[]> {
+  getByArea(idArea:string): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
     const q = query(ticketsCollection,
-    where('idArea', '==', '1')
+    where('idArea', '==', idArea)
   );
     return collectionData(q, { idField: 'id' });
   }

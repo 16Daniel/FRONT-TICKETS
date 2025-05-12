@@ -11,7 +11,13 @@
                 </span>
             </span>
         </ng-template>
+ <!-- <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(obtenerTicketsFiltrados(item))">
+                    <i class="pi pi-comments" pTooltip="NUEVO CHAT" tooltipPosition="top"></i>
+                </span>
 
+                <span class="icon-circle bx-tada" *ngIf="verificarTicketsPorValidar(obtenerTicketsFiltrados(item))">
+                    <i class="pi pi-bell" pTooltip="TICKET LISTO" tooltipPosition="top"></i>
+                </span> -->
         <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)"></app-admin-tickets-list>
     </p-accordionTab>
 </p-accordion>
