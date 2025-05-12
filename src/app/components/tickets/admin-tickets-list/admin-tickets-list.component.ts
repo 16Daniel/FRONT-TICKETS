@@ -173,7 +173,7 @@ export class AdminTicketsListComponent {
     this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data;
-        this.categorias = this.categorias.filter(x=>x.idArea == "1"); 
+        this.categorias = this.categorias.filter(x=>x.idArea == this.usuario.idArea); 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -185,7 +185,6 @@ export class AdminTicketsListComponent {
   
   obtenerNombreResponsable(id: string): string {
     let name = '';
-
     let temp = this.usuariosHelp.filter((x) => x.id == id);
     if (temp.length > 0) {
       name = temp[0].nombre + ' ' + temp[0].apellidoP;
@@ -203,9 +202,8 @@ export class AdminTicketsListComponent {
   }
 
   getDate(tsmp: Timestamp): Date {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
+    const firestoreTimestamp = tsmp; 
+    const date = firestoreTimestamp.toDate();
     return date;
   }
 

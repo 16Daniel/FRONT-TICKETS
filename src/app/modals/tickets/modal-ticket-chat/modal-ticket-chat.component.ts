@@ -122,10 +122,14 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
     }
   }
 
-  getDate(tsmp: Timestamp): Date {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
+  getDate(tsmp: Timestamp | Date): Date {
+     if (tsmp instanceof Date) {
+        return tsmp;
+    } else
+    {
+         const firestoreTimestamp = tsmp; // Ejemplo
     const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date;
+    return date; 
+    }
   }
 }

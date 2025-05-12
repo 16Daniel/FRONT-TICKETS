@@ -74,8 +74,8 @@ export class UserTicketsAccordionComponent {
 
   ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
     return sucursales.sort((a, b) => {
-      const ticketsA = this.filtrarTicketsPorSucursal(a.id).length;
-      const ticketsB = this.filtrarTicketsPorSucursal(b.id).length;
+      const ticketsA = this.contarTickets(a.id);
+      const ticketsB = this.contarTickets(b.id);
       return ticketsB - ticketsA; // Ordena de mayor a menor
     });
   }
