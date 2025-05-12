@@ -31,7 +31,9 @@ import { DocumentsService } from '../../../services/documents.service';
 import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 import { ComentarioVisita } from '../../../models/comentario-visita.model';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
-
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
+import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { MantenimientoFactoryService } from './maintenance-factory.service';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -52,6 +54,7 @@ import { SucursalProgramada } from '../../../models/sucursal-programada.model';
   providers: [MessageService],
   templateUrl: './calendar-builder.component.html',
 })
+
 export default class CalendarBuilderComponent implements OnInit {
   sucursales: Sucursal[] = [];
   sucursalesOrdenadas: Sucursal[] = [];
@@ -75,6 +78,7 @@ export default class CalendarBuilderComponent implements OnInit {
   registroDeGuardia: Guardia | undefined = undefined;
   showModalTicketDetail: boolean = false;
   showModalColors: boolean = false;
+  usuario: Usuario;
 
   constructor(
     private ticketsService: TicketsService,
@@ -83,12 +87,16 @@ export default class CalendarBuilderComponent implements OnInit {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private visitasService: VisitasService,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoSysService: Maintenance10x10Service,
+    private mantenimientoAVService: Maintenance6x6AvService,
     private guardiaService: GuardiasService,
-    private documentService: DocumentsService
+    private documentService: DocumentsService,
+    private mantenimientoFactory: MantenimientoFactoryService
   ) {
     registerLocaleData(localeEs);
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
+
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerUsuariosHelp();
@@ -157,10 +165,11 @@ export default class CalendarBuilderComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
+    this.usersService.getUsersHelp(this.usuario.idArea).subscribe({
       next: (data) => {
+        console.log(data)
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4');
+        // this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4');
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -182,21 +191,6 @@ export default class CalendarBuilderComponent implements OnInit {
       },
     });
   }
-
-  // ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
-
-  //   return sucursales.sort((a, b) => {
-  //     if (this.ordenarxmantenimiento) {
-  //       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
-  //       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
-  //       return mantenimientoA - mantenimientoB; // Ordena de menor a menor
-  //     } else {
-  //       const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
-  //       const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
-  //       return ticketsB - ticketsA; // Ordena de mayor a menor
-  //     }
-  //   });
-  // }
 
   ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
     return sucursales.sort((a, b) => {
@@ -287,7 +281,7 @@ export default class CalendarBuilderComponent implements OnInit {
 
       this.sucursalesOrdenadas.push(...sucursalesDelUsuarioOrdenadas);
       this.sucursalesOrdenadas.push(...sucursalesDisponilesOrdenadas);
-      
+
       if (this.registroDeVisita != undefined) {
         for (let suc of this.registroDeVisita.sucursalesProgramadas) {
           const temp = sucursalesDelUsuarioOrdenadas.filter(x => x.id == suc.id);
@@ -336,13 +330,17 @@ export default class CalendarBuilderComponent implements OnInit {
       fecha: Timestamp.fromDate(this.fecha),
       sucursalesProgramadas,
       comentarios: this.indicacionesVisitas,
+      idArea: this.usuario.idArea
     }
 
     try {
       await this.visitasService.create(visita);
       for (let sucursal of this.sucursalesSeleccionadas) {
         if (sucursal.id != '-999') {
-          this.nuevoMantenimiento(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+          const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+          await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+
+          // this.nuevoMantenimientoSistemas(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
         }
       }
       this.showMessage('success', 'Success', 'Guardado correctamente');
@@ -359,29 +357,6 @@ export default class CalendarBuilderComponent implements OnInit {
     }
     this.loading = false;
     this.cdr.detectChanges();
-  }
-
-  async nuevoMantenimiento(idSucursal: string, idUsuario: string, fecha: Date) {
-    // fecha.setHours(0, 0, 0, 0);
-    const mantenimiento: Mantenimiento10x10 = {
-      idSucursal: idSucursal,
-      idUsuarioSoporte: idUsuario,
-      fecha: fecha,
-      estatus: true,
-      mantenimientoCaja: false,
-      mantenimientoCCTV: false,
-      mantenimientoConcentradorApps: false,
-      mantenimientoContenidosSistemaCable: false,
-      mantenimientoImpresoras: false,
-      mantenimientoInternet: false,
-      mantenimientoNoBrakes: false,
-      mantenimientoPuntosVentaTabletas: false,
-      mantenimientoRack: false,
-      mantenimientoTiemposCocina: false,
-      observaciones: '',
-    };
-
-    await this.mantenimientoService.create(mantenimiento);
   }
 
   asignadaAlUsuario(idSucursal: string): boolean {
@@ -458,7 +433,7 @@ export default class CalendarBuilderComponent implements OnInit {
     }
 
     this.loading = true;
-    this.subscriptiontk = this.mantenimientoService
+    this.subscriptiontk = this.mantenimientoSysService
       .getUltimosMantenimientos(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
@@ -493,7 +468,7 @@ export default class CalendarBuilderComponent implements OnInit {
     if (this.registroDeVisita != undefined) {
 
       for (let sucursal of this.registroDeVisita.sucursalesProgramadas) {
-        let temp = await this.mantenimientoService.obtenerMantenimientoVisita(this.getDate(this.registroDeVisita.fecha), sucursal.id);
+        let temp = await this.mantenimientoSysService.obtenerMantenimientoVisita(this.getDate(this.registroDeVisita.fecha), sucursal.id);
         if (temp.length > 0) {
           await this.documentService.deleteDocument('mantenimientos-10x10', temp[0].id);
         }

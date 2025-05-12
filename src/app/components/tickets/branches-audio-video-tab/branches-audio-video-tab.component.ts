@@ -67,9 +67,7 @@ export class BranchesAudioVideoTabComponent {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-        // this.nuevoMantenimiento()
-        this.obtenerMantenimientoActivo();
-
+    this.obtenerMantenimientoActivo();
   }
 
   ngOnDestroy() {
@@ -123,7 +121,7 @@ export class BranchesAudioVideoTabComponent {
       message: `
       TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
       <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 6 PUNTOS
       <br><br>
       CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
       acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
@@ -148,26 +146,5 @@ export class BranchesAudioVideoTabComponent {
         this.cdr.detectChanges();
       }
     );
-  }
-
-  async nuevoMantenimiento() {
-    const mantenimiento: Mantenimiento6x6AV = {
-      idSucursal: '1',
-    idUsuarioSoporte: "1MTT0kVdYJtruQ6V73x3",
-      fecha: new Date(),
-      estatus: true,
-
-      mantenimientoConexiones: true,
-      mantenimientoCableado: true,
-      mantenimientoRack: true,
-      mantenimientoControles: true,
-      mantenimientoNivelAudio: true,
-      mantenimientoCanales: true,
-
-      observaciones: '',
-    };
-
-    await this.mantenimientoService.create(mantenimiento);
-    console.log('ok');
   }
 }

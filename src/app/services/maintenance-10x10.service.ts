@@ -18,16 +18,35 @@ import {
 import { Timestamp } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
+import { IMantenimientoService } from './manteinance.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Maintenance10x10Service {
+export class Maintenance10x10Service implements IMantenimientoService {
   pathName: string = 'mantenimientos-10x10';
 
   constructor(private firestore: Firestore) { }
 
-  async create(mantenimiento: Mantenimiento10x10): Promise<void> {
+  async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
+    const mantenimiento: Mantenimiento10x10 = {
+      idSucursal: idSucursal,
+      idUsuarioSoporte: idUsuario,
+      fecha: fecha,
+      estatus: true,
+      mantenimientoCaja: false,
+      mantenimientoCCTV: false,
+      mantenimientoConcentradorApps: false,
+      mantenimientoContenidosSistemaCable: false,
+      mantenimientoImpresoras: false,
+      mantenimientoInternet: false,
+      mantenimientoNoBrakes: false,
+      mantenimientoPuntosVentaTabletas: false,
+      mantenimientoRack: false,
+      mantenimientoTiemposCocina: false,
+      observaciones: '',
+    };
+
     const mantenimientoRef = collection(this.firestore, this.pathName);
     await addDoc(mantenimientoRef, {
       ...mantenimiento,
