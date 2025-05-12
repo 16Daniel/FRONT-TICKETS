@@ -43,6 +43,7 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/mainten
 
 export class BranchesSysTabComponent {
   @Input() tickets: Ticket[] = [];
+  @Input() todosLosTickets: Ticket[] = [];
 
   mostrarModalGenerateTicket: boolean = false;
   mostrarModalFilterTickets: boolean = false;
@@ -53,7 +54,6 @@ export class BranchesSysTabComponent {
   mostrarModalRating: boolean = false;
 
   sucursal: Sucursal | undefined;
-  todosLosTickets: Ticket[] = [];
   mantenimientoActivo: Mantenimiento10x10 | null = null;
   areas: Area[] = [];
   usuario: Usuario;

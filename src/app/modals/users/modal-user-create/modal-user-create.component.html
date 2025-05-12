@@ -75,7 +75,7 @@
         <p class="fw-bold">ÁREA</p>
         <p-dropdown [options]="areas" [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre" [filter]="true"
             filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ÁREA" [style]="{width:'100%'}"
-            #formAreaCtrl="ngModel" [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
+            #formAreaCtrl="ngModel" [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" [required]="usuario.idRol == '4'">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>

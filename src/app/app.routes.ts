@@ -72,6 +72,13 @@ export const routes: Routes = [
         canActivate: [AdminGuard],
       },
       {
+        path: 'areas',
+        title: 'Areas',
+        loadComponent: () =>
+          import('./pages/admin/areas/areas.component'),
+        canActivate: [AdminGuard],
+      },
+      {
         path: 'version-history',
         title: 'Historial de versiones',
         loadComponent: () =>

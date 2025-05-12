@@ -182,9 +182,7 @@ export class AdminTicketsListComponent {
       },
     });
   }
-
- 
-
+  
   obtenerNombreResponsable(id: string): string {
     let name = '';
     let temp = this.usuariosHelp.filter((x) => x.id == id);

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -7,13 +7,12 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
-
-import { Sucursal } from '../../../models/sucursal.model';
-import { BranchesService } from '../../../services/branches.service';
-import { ModalBranchCreateComponent } from '../../../modals/branch/modal-branch-create/modal-branch-create.component';
+import { Area } from '../../../models/area';
+import { AreasService } from '../../../services/areas.service';
+import { ModalAreaCreateComponent } from '../../../modals/areas/modal-area-create/modal-area-create.component';
 
 @Component({
-  selector: 'app-branches',
+  selector: 'app-areas',
   standalone: true,
   imports: [
     FormsModule,
@@ -22,29 +21,31 @@ import { ModalBranchCreateComponent } from '../../../modals/branch/modal-branch-
     TableModule,
     ToastModule,
     ConfirmDialogModule,
-    ModalBranchCreateComponent
+    ModalAreaCreateComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './branches.component.html',
-  styleUrl: './branches.component.scss'
+  templateUrl: './areas.component.html',
+  styleUrl: './areas.component.scss'
 })
 
-export default class BranchesComponent implements OnInit {
-  esNuevaSucursal: boolean = false;
-  mostrarModalSucursal: boolean = false;
-  sucursales: Sucursal[] = [];
-  sucursalSeleccionada: Sucursal = new Sucursal;
+export default class AreasComponent implements OnInit, OnDestroy {
+
+  esNuevaArea: boolean = false;
+  mostrarModalArea: boolean = false;
+  areas: Area[] = [];
+  areaSeleccionada: Area = new Area;
   subscripcion: Subscription | undefined;
+
 
   constructor(
     private confirmationService: ConfirmationService,
-    private branchesServicce: BranchesService,
+    private areasServicce: AreasService,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
-    this.obtenerSucursales();
+    this.obtenerAreas();
   }
 
   ngOnDestroy() {
@@ -53,31 +54,28 @@ export default class BranchesComponent implements OnInit {
     }
   }
 
-  obtenerSucursales = () =>
-    this.subscripcion = this.branchesServicce.get().subscribe(result => {
-      this.sucursales = result;
+  obtenerAreas() {
+    this.subscripcion = this.areasServicce.get().subscribe(result => {
+      this.areas = result;
       this.cdr.detectChanges();
     }, (error) => {
       console.log(error);
       this.showMessage('error', 'Error', 'Error al procesar la solicitud');
     });
-
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  abrirModalCrearSucursal() {
-    this.esNuevaSucursal = true;
-    this.mostrarModalSucursal = true;
+  abrirModalCrearArea() {
+    this.esNuevaArea = true;
+    this.mostrarModalArea = true;
   }
 
-  abrirModalEditarSucursal(sucursal: Sucursal) {
-    this.esNuevaSucursal = false;
-    this.mostrarModalSucursal = true;
-    this.sucursalSeleccionada = sucursal;
+  abrirModalEditarArea(area: Area) { 
+    this.esNuevaArea = false;
+    this.mostrarModalArea = true;
+    this.areaSeleccionada = area;
   }
-
-  confirmaEliminacion(id: string | any) {
+  
+  confirmaEliminacion(id: string) { 
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: '¿Está seguro que desea eliminar?',
@@ -86,19 +84,23 @@ export default class BranchesComponent implements OnInit {
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
-        this.eliminarSucursal(id);
+        this.eliminarArea(id);
       },
       reject: () => { },
     });
   }
 
-  async eliminarSucursal(idSucursal: string) {
-    await this.branchesServicce.delete(idSucursal);
+  async eliminarArea(idSucursal: string) {
+    await this.areasServicce.delete(idSucursal);
     this.showMessage('success', 'Success', 'Eliminada correctamente');
   }
 
-  cerrarModalSucursal() {
-    this.mostrarModalSucursal = false;
-    this.sucursalSeleccionada = new Sucursal;
+  cerrarModalArea() {
+    this.mostrarModalArea = false;
+    this.areaSeleccionada = new Area;;
+  }
+
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 }

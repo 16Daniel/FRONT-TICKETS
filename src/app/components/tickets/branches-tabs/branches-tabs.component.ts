@@ -29,7 +29,6 @@ export class BranchesTabsComponent implements OnDestroy {
   private unsubscribe!: () => void;
 
   constructor(private ticketsService: TicketsService, private cdr: ChangeDetectorRef,
-
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];

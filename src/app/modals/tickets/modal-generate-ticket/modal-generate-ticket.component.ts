@@ -2,28 +2,28 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  input,
   Input,
   OnInit,
   Output,
 } from '@angular/core';
-import { TicketsService } from '../../../services/tickets.service';
-import { FolioGeneratorService } from '../../../services/folio-generator.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { EditorModule } from 'primeng/editor';
+
 import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
-import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule, NgForm } from '@angular/forms';
 import { Categoria } from '../../../models/categoria.mdoel';
-import { EditorModule } from 'primeng/editor';
-import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
 import { Ticket } from '../../../models/ticket.model';
 import { BranchesService } from '../../../services/branches.service';
 import { CategoriesService } from '../../../services/categories.service';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
+import { TicketsService } from '../../../services/tickets.service';
+import { FolioGeneratorService } from '../../../services/folio-generator.service';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 import { ParticipanteChat } from '../../../models/participante-chat.model';
@@ -55,7 +55,6 @@ export class ModalGenerateTicketComponent implements OnInit {
   prioridadesTicket: PrioridadTicket[] = [];
   isLoading = false;
 
-  // formDepartamento: any;
   formArea: any;
   formCategoria: any;
   formDescripcion: string = '';

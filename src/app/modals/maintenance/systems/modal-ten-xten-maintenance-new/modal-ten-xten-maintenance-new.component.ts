@@ -60,8 +60,8 @@ sucursales: Sucursal[] = [];
       observaciones: '',
     };
 
-    await this.mantenimientoService.create(mantenimiento);
-    console.log('ok');
+    // await this.mantenimientoService.create(mantenimiento);
+    // console.log('ok');
   }
 
   onHide() {

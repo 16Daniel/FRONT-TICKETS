@@ -2,16 +2,31 @@ import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Mantenimiento6x6AV } from '../models/mantenimiento-6x6-av.model';
 import { forkJoin, from, map, Observable } from 'rxjs';
+import { IMantenimientoService } from './manteinance.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class Maintenance6x6AvService {
+export class Maintenance6x6AvService implements IMantenimientoService {
   pathName: string = 'mantenimientos-6x6-av';
 
   constructor(private firestore: Firestore) { }
 
-  async create(mantenimiento: Mantenimiento6x6AV): Promise<void> {
+  async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
+    const mantenimiento: Mantenimiento6x6AV = {
+      idSucursal,
+      idUsuarioSoporte: idUsuario,
+      fecha,
+      estatus: true,
+      mantenimientoConexiones: true,
+      mantenimientoCableado: true,
+      mantenimientoRack: true,
+      mantenimientoControles: true,
+      mantenimientoNivelAudio: true,
+      mantenimientoCanales: true,
+      observaciones: '',
+    };
+
     const mantenimientoRef = collection(this.firestore, this.pathName);
     await addDoc(mantenimientoRef, {
       ...mantenimiento,
