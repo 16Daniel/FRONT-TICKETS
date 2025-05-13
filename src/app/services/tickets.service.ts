@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   addDoc,
+  and,
   arrayUnion,
   collection,
   collectionData,
@@ -11,6 +12,7 @@ import {
   getDocs,
   limit,
   onSnapshot,
+  or,
   orderBy,
   query,
   Timestamp,
@@ -18,7 +20,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { Ticket } from '../models/ticket.model';
 
 @Injectable({
@@ -51,10 +53,30 @@ export class TicketsService {
 
   getByArea(idArea:string): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(ticketsCollection,
-    where('idArea', '==', idArea)
+    const q1 = query(ticketsCollection,
+      where('idEstatusTicket', 'not-in', ['3']), where('idArea', '==', idArea));
+
+  const q2 = query(ticketsCollection,
+        where('idEstatusTicket', '==', '3'),
+        where('validacionAdmin', '==', false),
+      where('idArea', '==', idArea)
   );
-    return collectionData(q, { idField: 'id' });
+  
+    // Convertir ambas consultas a Observables
+  const query1$ = collectionData(q1, { idField: 'id' });
+  const query2$ = collectionData(q2, { idField: 'id' });
+
+    // Combinar y eliminar duplicados
+  return combineLatest([query1$, query2$]).pipe(
+    map(([results1, results2]) => {
+      // Combinar resultados y eliminar duplicados por ID
+      const combined = [...results1, ...results2];
+      return combined.filter((ticket, index, self) => 
+        index === self.findIndex(t => t['id'] === ticket['id'])
+      );
+    })
+  );
+
   }
 
   getById(idTicket: string): Observable<Ticket> {
