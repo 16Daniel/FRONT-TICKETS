@@ -34,6 +34,22 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     });
   }
 
+  calcularPorcentaje(mantenimiento: Mantenimiento6x6AV) {
+    let porcentaje = 0;
+    mantenimiento.mantenimientoConexiones ? (porcentaje += 16.67) : porcentaje;
+    mantenimiento.mantenimientoCableado ? (porcentaje += 16.67) : porcentaje;
+    mantenimiento.mantenimientoRack ? (porcentaje += 16.67) : porcentaje;
+    mantenimiento.mantenimientoControles
+      ? (porcentaje += 16.67)
+      : porcentaje;
+    mantenimiento.mantenimientoNivelAudio
+      ? (porcentaje += 16.67)
+      : porcentaje;
+    mantenimiento.mantenimientoCanales ? (porcentaje += 16.67) : porcentaje;
+
+    return Math.round(porcentaje);
+  }
+
   async update(id: string, mantenimiento: Mantenimiento6x6AV): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await updateDoc(mantenimientoRef, {
@@ -157,7 +173,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return forkJoin(consultas);
   }
 
-    getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
+  getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
     // Mapea cada sucursal a una consulta independiente
     const consultas = idsSucursales.map(idSucursal => {
       const mantenimientosRef = collection(this.firestore, this.pathName);
