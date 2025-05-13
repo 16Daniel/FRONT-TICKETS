@@ -31,16 +31,11 @@ export class UserTicketsAccordionComponent {
 
    constructor(private cdr: ChangeDetectorRef){}
 
-   activeIndex: number|null = null;
+   activeIndex: number = -1;
      ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
  
-  ngAfterViewInit() {
-    // Cierra todos los paneles después de la inicialización
-    this.activeIndex = null; 
-    this.cdr.detectChanges(); 
-  }
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);

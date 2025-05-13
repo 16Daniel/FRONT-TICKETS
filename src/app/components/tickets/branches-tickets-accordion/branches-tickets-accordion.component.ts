@@ -39,19 +39,16 @@ export class BranchesTicketsAccordionComponent {
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
    @Input() IdArea:string = '';
-  activeIndex: number|null = null;
+  activeIndex: number = -1;
 
   constructor(private cdr: ChangeDetectorRef){}
 
    ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.activeIndex = -1;
   }
-
-  ngAfterViewInit() {
-    // Cierra todos los paneles después de la inicialización
-    this.activeIndex = null; 
-    this.cdr.detectChanges(); 
-  }
+  
+  
   ordenarSucursales(): Sucursal[] {
     return this.sucursales.sort((a, b) => {
       const ticketsA = this.contarTickets(a.id);

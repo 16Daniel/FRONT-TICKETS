@@ -81,6 +81,17 @@ export class AdminAudioVideoTabComponent {
     this.obtenerSucursales();
     this.todosLostickets = this.tickets;
   }
+   
+   ngAfterViewInit() {
+
+     setTimeout(() => {
+      this.mostrarMantenimientos = true;
+      this.cdr.detectChanges();
+      this.mostrarMantenimientos = false; 
+    }, 1500); 
+
+
+  }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
