@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
@@ -11,6 +11,7 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { Area } from '../../../models/area';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-branches-tickets-accordion',
@@ -22,7 +23,8 @@ import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-l
     TableModule,
     BadgeModule,
     AccordionModule,
-    AdminTicketsListComponent
+    AdminTicketsListComponent,
+    TooltipModule
 ],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
@@ -34,8 +36,22 @@ export class BranchesTicketsAccordionComponent {
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
+  usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
+   @Input() IdArea:string = '';
+  activeIndex: number|null = null;
 
+  constructor(private cdr: ChangeDetectorRef){}
+
+   ngOnInit(): void {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
+
+  ngAfterViewInit() {
+    // Cierra todos los paneles después de la inicialización
+    this.activeIndex = null; 
+    this.cdr.detectChanges(); 
+  }
   ordenarSucursales(): Sucursal[] {
     return this.sucursales.sort((a, b) => {
       const ticketsA = this.contarTickets(a.id);
@@ -102,4 +118,26 @@ export class BranchesTicketsAccordionComponent {
 
     return str;
   }
+
+ verificarTicketsNuevos(tickets: Ticket[]) {
+    let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
+    return nuevosTickets.length > 0;
+  }
+
+  verificarChatNoLeido(tickets: Ticket[]): boolean {
+    return tickets.some(ticket => {
+      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
+      const participante = participantes.find((p) => p.idUsuario === this.usuario.id);
+
+      if (participante) {
+        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
+        const comentarios = ticket.comentarios;
+
+        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
+      }
+
+      return false;
+    });
+  }
+
 }

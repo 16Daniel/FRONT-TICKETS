@@ -63,6 +63,7 @@ export class AdminAudioVideoTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
+  IdArea:string = '2'; 
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -86,7 +87,7 @@ export class AdminAudioVideoTabComponent {
   }
 
     async obtenerTickets(): Promise<void> {
-    this.subscripcionTicket = this.ticketsService.getByArea(this.usuario.idArea).subscribe({
+    this.subscripcionTicket = this.ticketsService.getByArea(this.IdArea).subscribe({
       next: (data) => {
         this.tickets = data;
         let arr_temp: Ticket[] = [];
@@ -171,7 +172,7 @@ export class AdminAudioVideoTabComponent {
     this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.usuario.idArea);
+        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
         this.cdr.detectChanges();
       },
       error: (error) => {

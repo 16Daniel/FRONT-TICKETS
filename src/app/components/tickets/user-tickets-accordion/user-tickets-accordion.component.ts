@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Ticket } from '../../../models/ticket.model';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { Sucursal } from '../../../models/sucursal.model';
@@ -26,6 +26,21 @@ export class UserTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
+   @Input() IdArea:string = '';
+   usuario: Usuario | any;
+
+   constructor(private cdr: ChangeDetectorRef){}
+
+   activeIndex: number|null = null;
+     ngOnInit(): void {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
+ 
+  ngAfterViewInit() {
+    // Cierra todos los paneles después de la inicialización
+    this.activeIndex = null; 
+    this.cdr.detectChanges(); 
+  }
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
@@ -79,4 +94,26 @@ export class UserTicketsAccordionComponent {
       return ticketsB - ticketsA; // Ordena de mayor a menor
     });
   }
+
+   verificarTicketsNuevos(tickets: Ticket[]) {
+    let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
+    return nuevosTickets.length > 0;
+  }
+
+  verificarChatNoLeido(tickets: Ticket[]): boolean {
+    return tickets.some(ticket => {
+      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
+      const participante = participantes.find((p) => p.idUsuario === this.usuario.id);
+
+      if (participante) {
+        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
+        const comentarios = ticket.comentarios;
+
+        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
+      }
+
+      return false;
+    });
+  }
+
 }

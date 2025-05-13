@@ -1,4 +1,5 @@
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     @if(mostrarMantenimientos==false)
     {
     <h3 class="m-3 text-center">TICKETS</h3>
@@ -47,11 +48,11 @@
     </div>
     }@else {
     <div *ngIf="usergroup == undefined" class="mt-4">
-      <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales"></app-branches-tickets-accordion>
+      <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales" [IdArea]="IdArea"></app-branches-tickets-accordion>
     </div>
   
     <div *ngIf="usergroup != undefined" class="mt-4">
-      <app-user-tickets-accordion [tickets]="tickets" [usuarioAgrupacion]="usergroup" [sucursales]="sucursales"></app-user-tickets-accordion>
+      <app-user-tickets-accordion [tickets]="tickets" [usuarioAgrupacion]="usergroup" [sucursales]="sucursales" [IdArea]="IdArea"></app-user-tickets-accordion>
     </div>
   
     <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
