@@ -30,6 +30,7 @@ import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance
 import { AccordionBranchMaintenanceAvComponent } from '../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-analyst-home',
@@ -92,7 +93,9 @@ export default class AnalystHomeComponent implements OnInit {
     private messageService: MessageService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private mantenimientoFactory: MantenimientoFactoryService
+
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -165,8 +168,10 @@ export default class AnalystHomeComponent implements OnInit {
   }
 
   obtenerMantenimientosSistemas(idsSucursales: string[]) {
-    this.subscriptiontk = this.mantenimientoSysService
-      .getUltimosMantenimientos(idsSucursales)
+    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+
+    this.subscriptiontk = servicio
+      .getUltimoMantenimiento(idsSucursales)
       .subscribe({
         next: (data) => {
           this.ultimosmantenimientos = data.filter(

@@ -82,7 +82,7 @@ export default class CalendarBuilderComponent implements OnInit {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private visitasService: VisitasService,
-    private mantenimientoSysService: Maintenance10x10Service,
+    // private mantenimientoSysService: Maintenance10x10Service,
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService
@@ -103,7 +103,7 @@ export default class CalendarBuilderComponent implements OnInit {
   async obtenerTodosLosTickets(): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
-      .get()
+      .get(this.usuario.idArea)
       .subscribe({
         next: (data) => {
           this.tickets = [];
@@ -399,7 +399,7 @@ export default class CalendarBuilderComponent implements OnInit {
     this.showModalTicketDetail = true;
   }
 
-  obtnerUltimosMantenimientos() {
+  async obtnerUltimosMantenimientos() {
     let sucursales: Sucursal[] = [...this.sucursales];
     let array_ids_Sucursales: string[] = [];
 
@@ -408,8 +408,9 @@ export default class CalendarBuilderComponent implements OnInit {
     }
 
     this.loading = true;
-    this.subscriptiontk = this.mantenimientoSysService
-      .getUltimosMantenimientos(array_ids_Sucursales)
+    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+    this.subscriptiontk = servicio
+      .getUltimoMantenimiento(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
           this.arr_ultimosmantenimientos = data.filter(
@@ -443,7 +444,10 @@ export default class CalendarBuilderComponent implements OnInit {
     if (this.registroDeVisita != undefined) {
 
       for (let sucursal of this.registroDeVisita.sucursalesProgramadas) {
-        let temp = await this.mantenimientoSysService.obtenerMantenimientoVisita(this.getDate(this.registroDeVisita.fecha), sucursal.id);
+
+        const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+        let temp = await servicio.obtenerMantenimientoVisitaPorFecha(this.getDate(this.registroDeVisita.fecha), sucursal.id);
+        
         if (temp.length > 0) {
           await this.documentService.deleteDocument('mantenimientos-10x10', temp[0].id);
         }

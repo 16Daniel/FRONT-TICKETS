@@ -45,37 +45,48 @@ export class TicketsService {
    * @param estatus lista de idEstatusTicket
    * @returns 
    */
-  get(): Observable<any[]> {
+  get(idArea?: string): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(ticketsCollection, where('idEstatusTicket', 'not-in', ['3']));
+
+    const filtros: any[] = [
+      where('idEstatusTicket', 'not-in', ['3'])
+    ];
+
+    if (idArea) {
+      filtros.push(where('idArea', '==', idArea));
+    }
+
+    const q = query(ticketsCollection, ...filtros);
+
     return collectionData(q, { idField: 'id' });
   }
 
-  getByArea(idArea:string): Observable<any[]> {
+
+  getByArea(idArea: string): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
     const q1 = query(ticketsCollection,
       where('idEstatusTicket', 'not-in', ['3']), where('idArea', '==', idArea));
 
-  const q2 = query(ticketsCollection,
-        where('idEstatusTicket', '==', '3'),
-        where('validacionAdmin', '==', false),
+    const q2 = query(ticketsCollection,
+      where('idEstatusTicket', '==', '3'),
+      where('validacionAdmin', '==', false),
       where('idArea', '==', idArea)
-  );
-  
+    );
+
     // Convertir ambas consultas a Observables
-  const query1$ = collectionData(q1, { idField: 'id' });
-  const query2$ = collectionData(q2, { idField: 'id' });
+    const query1$ = collectionData(q1, { idField: 'id' });
+    const query2$ = collectionData(q2, { idField: 'id' });
 
     // Combinar y eliminar duplicados
-  return combineLatest([query1$, query2$]).pipe(
-    map(([results1, results2]) => {
-      // Combinar resultados y eliminar duplicados por ID
-      const combined = [...results1, ...results2];
-      return combined.filter((ticket, index, self) => 
-        index === self.findIndex(t => t['id'] === ticket['id'])
-      );
-    })
-  );
+    return combineLatest([query1$, query2$]).pipe(
+      map(([results1, results2]) => {
+        // Combinar resultados y eliminar duplicados por ID
+        const combined = [...results1, ...results2];
+        return combined.filter((ticket, index, self) =>
+          index === self.findIndex(t => t['id'] === ticket['id'])
+        );
+      })
+    );
 
   }
 
@@ -343,11 +354,11 @@ export class TicketsService {
     fecha: Date
   ): Promise<Ticket[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-  
+
     // Rango de día
     const startOfDay = Timestamp.fromDate(new Date(fecha.setHours(0, 0, 0, 0)));
     const endOfDay = Timestamp.fromDate(new Date(fecha.setHours(24, 0, 0, 0))); // siguiente día a las 00:00
-  
+
     const q = query(
       ticketsCollection,
       where('idEstatusTicket', '==', '3'),
@@ -355,9 +366,9 @@ export class TicketsService {
       where('fechaFin', '>=', startOfDay),
       where('fechaFin', '<', endOfDay)
     );
-  
+
     const snapshot = await getDocs(q);
-  
+
     return snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()

@@ -17,6 +17,7 @@ import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { ColorUsuario } from '../../../models/color-usuario';
 import { DocumentsService } from '../../../services/documents.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-branch-visit-schedule',
@@ -27,20 +28,20 @@ import { Maintenance10x10Service } from '../../../services/maintenance-10x10.ser
 })
 
 export default class BranchVisitScheduleComponent implements OnInit {
-  public usuariosHelp: Usuario[] = [];
-  public colorUsuario: ColorUsuario | undefined;
-  public tickets: Ticket[] = [];
-  public arr_ultimosmantenimientos: Mantenimiento10x10[] = []; // <--- revisar
-  public usuario: Usuario;
-  public arr_data: VisitaProgramada[] = [];
-  public sucursales: Sucursal[] = [];
-  public sucursalSeleccionada: Sucursal | undefined;
-  public FechaSeleccionada: Date = new Date();
+  usuariosHelp: Usuario[] = [];
+  colorUsuario: ColorUsuario | undefined;
+  tickets: Ticket[] = [];
+  arr_ultimosmantenimientos: Mantenimiento10x10[] = []; // <--- revisar
+  usuario: Usuario;
+  arr_data: VisitaProgramada[] = [];
+  sucursales: Sucursal[] = [];
+  sucursalSeleccionada: Sucursal | undefined;
+  FechaSeleccionada: Date = new Date();
   showModalTicketDetail: boolean = false;
   showModalEventeDetail: boolean = false;
-  public itemtk: Ticket | undefined;
-  public colores: ColorUsuario[] = [];
-  public loading: boolean = true;
+  itemtk: Ticket | undefined;
+  colores: ColorUsuario[] = [];
+  loading: boolean = true;
   subscriptiontk: Subscription | undefined;
 
   constructor(
@@ -50,7 +51,8 @@ export default class BranchVisitScheduleComponent implements OnInit {
     private branchesService: BranchesService,
     private messageService: MessageService,
     private documentService: DocumentsService,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoFactory: MantenimientoFactoryService
+
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -152,7 +154,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
             }
           }
 
-          this.obtnerUltimosMantenimientos();
+          this.obtnerUltimoMantenimiento();
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -162,8 +164,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
       });
   }
 
-
-  obtnerUltimosMantenimientos() {
+  obtnerUltimoMantenimiento() {
     let sucursales: Sucursal[] = [...this.sucursales];
     let array_ids_Sucursales: string[] = [];
 
@@ -172,8 +173,9 @@ export default class BranchVisitScheduleComponent implements OnInit {
     }
 
     this.loading = true;
-    this.subscriptiontk = this.mantenimientoService
-      .getUltimosMantenimientos(array_ids_Sucursales)
+    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+    this.subscriptiontk = servicio
+      .getUltimoMantenimiento(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
           this.arr_ultimosmantenimientos = data.filter(

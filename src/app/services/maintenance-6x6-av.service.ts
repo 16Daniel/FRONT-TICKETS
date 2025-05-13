@@ -50,6 +50,57 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return Math.round(porcentaje);
   }
 
+  async obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string) {
+    const coleccionRef = collection(this.firestore, this.pathName);
+
+    // Convertir las fechas a timestamps de Firestore
+    fecha.setHours(0, 0, 0, 0);
+    const consulta = query(
+      coleccionRef,
+      where('fecha', '==', fecha),
+      where('idSucursal', '==', idSucursal),
+      where('estatus', '==', false),
+    );
+
+    const querySnapshot = await getDocs(consulta);
+    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento6x6AV));
+
+    return documentos;
+  }
+
+  getUltimoMantenimiento(idsSucursales: string[]): Observable<any[]> {
+    const fechaActual = new Date();
+    const fechaHaceUnMes = new Date(fechaActual);
+    fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
+    fechaHaceUnMes.setHours(0, 0, 0, 0);
+    // Mapea cada sucursal a una consulta independiente
+    const consultas = idsSucursales.map(idSucursal => {
+      const mantenimientosRef = collection(this.firestore, this.pathName);
+      const q = query(
+        mantenimientosRef,
+        where('idSucursal', '==', idSucursal),
+        where('fecha', '>=', fechaHaceUnMes),
+        where('estatus', '==', false),
+        orderBy('fecha', 'desc'), // Ordena por fecha descendente
+        limit(1) // Solo el más reciente
+      );
+
+      // Ejecutar la consulta y obtener los datos
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            return { id: doc.id, ...doc.data() };
+          }
+          return null; // Si no hay mantenimientos para la sucursal
+        })
+      );
+    });
+
+    // Ejecutar todas las consultas en paralelo y combinar los resultados
+    return forkJoin(consultas);
+  }
+
   async update(id: string, mantenimiento: Mantenimiento6x6AV): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await updateDoc(mantenimientoRef, {
