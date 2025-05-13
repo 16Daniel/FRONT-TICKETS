@@ -180,13 +180,11 @@ export class CalendarComponent implements OnInit {
   }
 
   async handleEventClick(clickInfo: EventClickArg) {
-    console.log(clickInfo.event.extendedProps)
     if (clickInfo.event.title != 'GUARDIA') {
       let sucursal = this.sucursales.filter(x => x.nombre == clickInfo.event._def.title);
       this.FechaSeleccionada = clickInfo.event.start!;
       this.comentario = clickInfo.event.extendedProps['comentario'];
       this.usuarioSeleccionado = { ...this.obtenerUsuario(clickInfo.event.extendedProps['idUsuario']) };
-      console.log(this.usuarioSeleccionado)
       this.sucursalSeleccionada = {
         ...sucursal[0],
         idsTickets: clickInfo.event.extendedProps['idsTickets'],
@@ -232,8 +230,13 @@ export class CalendarComponent implements OnInit {
   }
 
   calcularPorcentaje(mantenimiento: any, idArea: string) {
-    const servicio = this.mantenimientoFactory.getService(idArea);
-    return servicio.calcularPorcentaje(mantenimiento);
+    if (mantenimiento) {
+
+      const servicio = this.mantenimientoFactory.getService(idArea);
+      return servicio.calcularPorcentaje(mantenimiento);
+    }
+    else
+      return 0
   }
 
   obtenerAreaPorUsuario(idUsuario: String) {
