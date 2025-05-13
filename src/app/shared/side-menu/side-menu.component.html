@@ -32,7 +32,7 @@
               class='bx bx-objects-horizontal-left'></i>Áreas</a>
 
         </li>
-        <li (click)="closemenu()" *ngIf="usuario?.idRol == '1'"><a [routerLink]="'/main/calendar-builder'"><i
+        <li (click)="closemenu()" *ngIf="usuario?.idRol == '1' || usuario?.idRol == '5' "><a [routerLink]="'/main/calendar-builder'"><i
               class='bx bx-calendar-plus'></i>Registrar visita</a></li>
         <li (click)="closemenu()" *ngIf="usuario?.idRol == '4' || usuario?.idRol == '2'"><a
             [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>

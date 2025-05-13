@@ -58,7 +58,7 @@ export default class LoginComponent {
             let userd: any = data[0];
             localStorage.setItem('rwuserdatatk', JSON.stringify(data[0]));
 
-            if (userd.idRol == '1') {
+            if (userd.idRol == '1' || userd.idRol == '5') {
               this.router.navigate(['/main/home-a']);
             } else if ((userd.idRol == '2') || userd.idRol == '3') {
               this.router.navigate(['/main/home']);

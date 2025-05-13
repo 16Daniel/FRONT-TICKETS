@@ -3,6 +3,7 @@ import { HomeGuard } from './guards/home.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { BranchGuard } from './guards/branch.guard';
 import { AnalystGuard } from './guards/analyst.guard';
+import { AdminAreaGuard } from './guards/admin-area.guard';
 
 export const routes: Routes = [
   {
@@ -69,7 +70,7 @@ export const routes: Routes = [
         title: 'Sucursales',
         loadComponent: () =>
           import('./pages/admin/branches/branches.component'),
-        canActivate: [AdminGuard],
+        canActivate: [AdminGuard, AdminAreaGuard],
       },
       {
         path: 'areas',

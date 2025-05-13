@@ -23,6 +23,7 @@ export class HomeGuard implements CanActivate {
       '2': '/main/home',
       '3': '/main/home',
       '4': '/main/home-s',
+      '5': '/main/home-a',
     };
 
     const allowedRoute = roleRoutes[userRole];
