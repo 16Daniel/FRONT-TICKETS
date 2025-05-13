@@ -40,7 +40,8 @@ export default class ModalEventDetailComponent {
   @Input() sucursal: SucursalProgramada | any;
   @Input() fecha: Date | any;
   @Input() usuariosHelp: Usuario[] = [];
-  @Input() Indicacion: string = '';
+  @Input() usuarioSeleccionado: Usuario | any;
+  // @Input() Indicacion: string = '';
   @Input() comentario: string = '';
   @Input() idsTickets: string[] = [];
   @Output() clickEvent = new EventEmitter<Ticket>();
@@ -54,6 +55,7 @@ export default class ModalEventDetailComponent {
   loading: boolean = true;
   usuario: Usuario;
   mantenimientosDelDia: any[] = [];
+  // usuarioSoporte: Usuario;
 
   constructor(
     private ticketsService: TicketsService,
@@ -63,11 +65,13 @@ export default class ModalEventDetailComponent {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 
+    // this.usuarioSoporte = this.usuariosHelp.filter(x => x.id == '')[0];
+
   }
 
   async ngOnInit() {
     this.obtenerTickets();
-    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+    const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
     this.mantenimientosDelDia = await servicio.obtenerMantenimientoVisitaPorFecha(this.fecha, this.sucursal.id);
     this.cdr.detectChanges();
   }

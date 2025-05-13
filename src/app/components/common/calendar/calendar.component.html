@@ -26,7 +26,7 @@
       </p>
       <p class="p-0">
         <span class="p-1 bg-white text-dark rounded-3">
-          10 DE 10: {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0])}}%
+          <!-- {{textoMantenimiento(arg.event.extendedProps.idUsuario)}}: {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0])}}% -->
         </span>
       </p>
       }
@@ -36,5 +36,5 @@
 
 <app-modal-event-detail *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"
   (closeEvent)="showModalEventeDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="FechaSeleccionada"
-  [comentario]="comentario" [usuariosHelp]="usuariosHelp">
+  [comentario]="comentario" [usuariosHelp]="usuariosHelp" [usuarioSeleccionado]="usuarioSeleccionado">
 </app-modal-event-detail>

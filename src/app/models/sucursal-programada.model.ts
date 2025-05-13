@@ -6,5 +6,5 @@ export interface SucursalProgramada extends Sucursal {
     idsTickets: String[];
     ticketsFinalizados?: Ticket[];
     fechaVisita?: Date;
-    mantenimientosDelDia?: Mantenimiento10x10[];
+    mantenimientosDelDia?: any[];
 }

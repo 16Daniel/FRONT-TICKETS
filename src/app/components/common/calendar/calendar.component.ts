@@ -39,6 +39,7 @@ export class CalendarComponent implements OnInit {
   showModalEventeDetail: boolean = false;
   colores: ColorUsuario[] = [];
   usuario: Usuario;
+  usuarioSeleccionado: Usuario | any;
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
   loading: boolean = false;
@@ -62,7 +63,8 @@ export class CalendarComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private documentService: DocumentsService,
     private ticketsService: TicketsService,
-    private mantenimientoService: Maintenance10x10Service) {
+    private mantenimientoService: Maintenance10x10Service
+  ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
@@ -124,6 +126,7 @@ export class CalendarComponent implements OnInit {
 
         let fechaFin = this.getDate(visita.fecha);
         const ticketsFinalizados = await this.ticketsService.getFinalizedTicketsByEndDate(sucursal.id, fechaFin);
+
         let mantenimientos = await this.mantenimientoService
           .obtenerMantenimientoVisitaPorFecha(this.getDate(visita.fecha), sucursal.id);
 
@@ -138,6 +141,7 @@ export class CalendarComponent implements OnInit {
           {
             idSucursal: sucursal.id,
             idUsuario: visita.idUsuario,
+            idArea: visita.idArea,
             comentario: comentario,
             ticketsCount: sucursal.idsTickets.length,
             idsTickets: sucursal.idsTickets,
@@ -162,15 +166,22 @@ export class CalendarComponent implements OnInit {
     return nombre
   }
 
+  obtenerUsuario(idUsuario: string) {
+    return this.usuariosHelp.filter(x => x.id == idUsuario)[0];
+  }
+
   obtenerTicketsPorSucursal(idSucursal: string) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
   async handleEventClick(clickInfo: EventClickArg) {
+    console.log(clickInfo.event.extendedProps)
     if (clickInfo.event.title != 'GUARDIA') {
       let sucursal = this.sucursales.filter(x => x.nombre == clickInfo.event._def.title);
       this.FechaSeleccionada = clickInfo.event.start!;
       this.comentario = clickInfo.event.extendedProps['comentario'];
+      this.usuarioSeleccionado = { ...this.obtenerUsuario(clickInfo.event.extendedProps['idUsuario']) };
+      console.log(this.usuarioSeleccionado)
       this.sucursalSeleccionada = {
         ...sucursal[0],
         idsTickets: clickInfo.event.extendedProps['idsTickets'],
@@ -215,29 +226,22 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
-    if (mantenimiento == undefined) {
-      return 0;
+  calcularPorcentaje() {
+    
+  }
+
+  obtenerAreaPorUsuario(idUsuario: String) {
+    return this.usuariosHelp.filter(x => x.id == idUsuario)[0].idArea
+  }
+
+  textoMantenimiento(idUsuario: string) {
+    switch (this.usuariosHelp.filter(x => x.id == idUsuario)[0].idArea) {
+      case '1':
+        return '10X10';
+      case '2':
+        return '6X6';
+      default:
+        return 'XXX';
     }
-
-    let porcentaje = 0;
-    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoPuntosVentaTabletas
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoContenidosSistemaCable
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoConcentradorApps
-      ? (porcentaje += 10)
-      : porcentaje;
-
-    return porcentaje;
   }
 }

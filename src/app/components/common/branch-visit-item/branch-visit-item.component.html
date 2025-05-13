@@ -4,9 +4,10 @@
     <p class="m-1">Tickets: {{tickets.length}}&nbsp;&nbsp; {{textoMantenimiento}}:
         {{ porcentaje$ | async }}%
     </p>
+    <p>{{usuarioSeleccionado?.nombre}} {{usuarioSeleccionado?.apellidoP}} {{usuarioSeleccionado?.apellidoM}}</p>
 </div>
 
 <app-modal-event-detail *ngIf="showModalBranchDetail" [showModalEventeDetail]="showModalBranchDetail"
     (closeEvent)="showModalBranchDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="fecha" [comentario]="''"
-    [usuariosHelp]="usuariosHelp">
+    [usuariosHelp]="usuariosHelp" [usuarioSeleccionado]="usuarioSeleccionado">
 </app-modal-event-detail>
