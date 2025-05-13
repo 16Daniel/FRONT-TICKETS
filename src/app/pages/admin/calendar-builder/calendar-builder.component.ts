@@ -28,12 +28,9 @@ import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket
 import { CalendarComponent } from "../../../components/common/calendar/calendar.component";
 import { ModalColorsComponent } from "../../../modals/calendar/modal-colors/modal-colors.component";
 import { DocumentsService } from '../../../services/documents.service';
-import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 import { ComentarioVisita } from '../../../models/comentario-visita.model';
-import { SucursalProgramada } from '../../../models/sucursal-programada.model';
-import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
-import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
 import { MantenimientoFactoryService } from './maintenance-factory.service';
+import { BranchVisitItemComponent } from '../../../components/common/branch-visit-item/branch-visit-item.component';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -49,7 +46,7 @@ import { MantenimientoFactoryService } from './maintenance-factory.service';
     ModalTicketDetailComponent,
     CalendarComponent,
     ModalColorsComponent,
-    ModalEventDetailComponent
+    BranchVisitItemComponent
   ],
   providers: [MessageService],
   templateUrl: './calendar-builder.component.html',
@@ -71,8 +68,6 @@ export default class CalendarBuilderComponent implements OnInit {
   loading: boolean = false;
   formComentarios: string = "";
   vercalendario: boolean = false;
-  showModalBranchDetail: boolean = false;
-  sucursalSeleccionada: SucursalProgramada | undefined;
   indicacionesVisitas: ComentarioVisita[] = [];
   registroDeVisita: VisitaProgramada | undefined = undefined;
   registroDeGuardia: Guardia | undefined = undefined;
@@ -88,7 +83,6 @@ export default class CalendarBuilderComponent implements OnInit {
     private branchesService: BranchesService,
     private visitasService: VisitasService,
     private mantenimientoSysService: Maintenance10x10Service,
-    private mantenimientoAVService: Maintenance6x6AvService,
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService
@@ -167,9 +161,7 @@ export default class CalendarBuilderComponent implements OnInit {
   obtenerUsuariosHelp() {
     this.usersService.getUsersHelp(this.usuario.idArea).subscribe({
       next: (data) => {
-        console.log(data)
         this.usuariosHelp = data;
-        // this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4');
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -263,7 +255,6 @@ export default class CalendarBuilderComponent implements OnInit {
       );
 
       let sucursalesDelUsuarioOrdenadas = this.ordenarSucursalesUser(this.usuarioseleccionado!.sucursales);
-      console.log(sucursalesDelUsuarioOrdenadas);
 
       if (this.obtenerTicketsPorSucursal(sucursalesDelUsuarioOrdenadas[0].id).length == 0) {
         this.ordenarxmantenimiento = true;
@@ -359,14 +350,6 @@ export default class CalendarBuilderComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  asignadaAlUsuario(idSucursal: string): boolean {
-    if (this.usuarioseleccionado!.sucursales.some(sucursalUsuario => sucursalUsuario.id === idSucursal)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   async registrarGuardia() {
     // this.fecha.setHours(0, 0, 0, 0);
     const guardia: Guardia =
@@ -381,14 +364,6 @@ export default class CalendarBuilderComponent implements OnInit {
     } catch (error) {
 
     }
-  }
-
-  detalles(sucursal: Sucursal) {
-    this.showModalBranchDetail = true;
-    this.sucursalSeleccionada = {
-      ...sucursal,
-      idsTickets: this.obtenerTicketsPorSucursal(sucursal.id).map(ticket => ticket.id)
-    };
   }
 
   actualizarListasComentarios() {

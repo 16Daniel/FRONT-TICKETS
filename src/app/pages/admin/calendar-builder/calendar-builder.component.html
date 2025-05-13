@@ -60,12 +60,13 @@
                     </div>
                     } @else
                     {
-                    <div class="card p-3 bg-opacity-25" (click)="detalles(item)"
-                        [ngClass]="{'bg-success':asignadaAlUsuario(item.id),'bg-danger':!asignadaAlUsuario(item.id)}">
-                        <p class="m-1">{{item.nombre}}</p>
-                        <p class="m-1">Tickets: {{obtenerTicketsPorSucursal(item.id).length}}&nbsp;&nbsp; 10X10:
-                            {{obtenerPorcentajedeUltimoMantenimiento(item.id)+'%'}}</p>
-                    </div>
+                    <app-branch-visit-item 
+                        [sucursal]="item" 
+                        [usuariosHelp]="usuariosHelp"
+                        [fecha]="fecha"
+                        [usuarioSeleccionado]="usuarioseleccionado"
+                        [tickets]="obtenerTicketsPorSucursal(item.id)">
+                    </app-branch-visit-item>
                     }
                 </ng-template>
             </p-pickList>
@@ -112,10 +113,10 @@
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
     (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-modal-event-detail *ngIf="showModalBranchDetail" [showModalEventeDetail]="showModalBranchDetail"
+<!-- <app-modal-event-detail *ngIf="showModalBranchDetail" [showModalEventeDetail]="showModalBranchDetail"
     (closeEvent)="showModalBranchDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="fecha" [comentario]="''"
     [usuariosHelp]="usuariosHelp">
-</app-modal-event-detail>
+</app-modal-event-detail> -->
 
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"

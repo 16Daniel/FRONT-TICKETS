@@ -1,0 +1,13 @@
+<p>branch-visit-item works!</p>
+<div class="card p-3 bg-opacity-25" (click)="detalles(sucursal)"
+    [ngClass]="{'bg-success':asignadaAlUsuario(sucursal.id),'bg-danger':!asignadaAlUsuario(sucursal.id)}">
+    <p class="m-1">{{sucursal.nombre}}</p>
+    <p class="m-1">Tickets: {{tickets.length}}&nbsp;&nbsp; {{textoMantenimiento}}:
+        {{ porcentaje$ | async }}%
+    </p>
+</div>
+
+<app-modal-event-detail *ngIf="showModalBranchDetail" [showModalEventeDetail]="showModalBranchDetail"
+    (closeEvent)="showModalBranchDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="fecha" [comentario]="''"
+    [usuariosHelp]="usuariosHelp">
+</app-modal-event-detail>
