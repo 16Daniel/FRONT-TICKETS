@@ -20,6 +20,7 @@ import { ColorUsuario } from '../../../models/color-usuario';
 import { TicketsService } from '../../../services/tickets.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
+import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-calendar',
@@ -63,7 +64,8 @@ export class CalendarComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private documentService: DocumentsService,
     private ticketsService: TicketsService,
-    private mantenimientoService: Maintenance10x10Service
+    private mantenimientoFactory: MantenimientoFactoryService
+    // private mantenimientoService: Maintenance10x10Service
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -127,7 +129,10 @@ export class CalendarComponent implements OnInit {
         let fechaFin = this.getDate(visita.fecha);
         const ticketsFinalizados = await this.ticketsService.getFinalizedTicketsByEndDate(sucursal.id, fechaFin);
 
-        let mantenimientos = await this.mantenimientoService
+        const servicio = this.mantenimientoFactory.getService(visita.idArea);
+
+
+        let mantenimientos = await servicio
           .obtenerMantenimientoVisitaPorFecha(this.getDate(visita.fecha), sucursal.id);
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
@@ -226,16 +231,17 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  calcularPorcentaje() {
-    
+  calcularPorcentaje(mantenimiento: any, idArea: string) {
+    const servicio = this.mantenimientoFactory.getService(idArea);
+    return servicio.calcularPorcentaje(mantenimiento);
   }
 
   obtenerAreaPorUsuario(idUsuario: String) {
     return this.usuariosHelp.filter(x => x.id == idUsuario)[0].idArea
   }
 
-  textoMantenimiento(idUsuario: string) {
-    switch (this.usuariosHelp.filter(x => x.id == idUsuario)[0].idArea) {
+  textoMantenimiento(idArea: string) {
+    switch (idArea) {
       case '1':
         return '10X10';
       case '2':

@@ -26,7 +26,8 @@
       </p>
       <p class="p-0">
         <span class="p-1 bg-white text-dark rounded-3">
-          <!-- {{textoMantenimiento(arg.event.extendedProps.idUsuario)}}: {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0])}}% -->
+          {{textoMantenimiento(arg.event.extendedProps.idArea)}}:
+          {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0], arg.event.extendedProps.idArea)}}%
         </span>
       </p>
       }
