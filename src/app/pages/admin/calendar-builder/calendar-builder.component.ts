@@ -103,7 +103,7 @@ export default class CalendarBuilderComponent implements OnInit {
   async obtenerTodosLosTickets(): Promise<void> {
     this.loading = true;
     this.subscriptiontk = this.ticketsService
-      .get()
+      .get(this.usuario.idArea)
       .subscribe({
         next: (data) => {
           this.tickets = [];
@@ -443,7 +443,7 @@ export default class CalendarBuilderComponent implements OnInit {
     if (this.registroDeVisita != undefined) {
 
       for (let sucursal of this.registroDeVisita.sucursalesProgramadas) {
-        let temp = await this.mantenimientoSysService.obtenerMantenimientoVisita(this.getDate(this.registroDeVisita.fecha), sucursal.id);
+        let temp = await this.mantenimientoSysService.obtenerMantenimientoVisitaPorFecha(this.getDate(this.registroDeVisita.fecha), sucursal.id);
         if (temp.length > 0) {
           await this.documentService.deleteDocument('mantenimientos-10x10', temp[0].id);
         }

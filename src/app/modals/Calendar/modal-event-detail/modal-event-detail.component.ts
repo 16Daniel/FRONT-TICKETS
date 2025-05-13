@@ -1,11 +1,11 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
-import { Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
+import { Timestamp } from '@angular/fire/firestore';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 
-import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { RequesterTicketsListComponent } from "../../../components/tickets/requester-tickets-list/requester-tickets-list.component";
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
@@ -15,23 +15,30 @@ import { TicketsService } from '../../../services/tickets.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 import { BranchMaintenanceTableComponent } from '../../../components/maintenance/systems/branch-maintenance-table/branch-maintenance-table.component';
 import { ModalMaintenanceDetailComponent } from '../../maintenance/systems/modal-maintenance-detail/modal-maintenance-detail.component';
+import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
+import { BranchMaintenanceTableAvComponent } from '../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
 
 @Component({
   selector: 'app-modal-event-detail',
   standalone: true,
-  imports: [DialogModule,
+  imports: [
+    DialogModule,
     CommonModule,
     FormsModule,
     RequesterTicketsListComponent,
     BranchMaintenanceTableComponent,
-    EditorModule, ModalTicketDetailComponent, ModalMaintenanceDetailComponent],
+    EditorModule,
+    ModalTicketDetailComponent,
+    ModalMaintenanceDetailComponent,
+    BranchMaintenanceTableAvComponent
+  ],
   templateUrl: './modal-event-detail.component.html',
 })
 
 export default class ModalEventDetailComponent {
   @Input() showModalEventeDetail: boolean = false;
   @Input() sucursal: SucursalProgramada | any;
-  @Input() fecha: Date = new Date();
+  @Input() fecha: Date | any;
   @Input() usuariosHelp: Usuario[] = [];
   @Input() Indicacion: string = '';
   @Input() comentario: string = '';
@@ -43,15 +50,33 @@ export default class ModalEventDetailComponent {
   showModalTicketDetail: boolean = false;
   itemtk: Ticket | undefined;
   mostrarModalDetalleMantenimeinto: boolean = false;
-  mantenimiento: Mantenimiento10x10 | any;
+  mantenimiento: any;
   loading: boolean = true;
+  usuario: Usuario;
+  mantenimientosDelDia: any[] = [];
 
-  constructor(private ticketsService: TicketsService,) {
+  constructor(
+    private ticketsService: TicketsService,
+    private mantenimientoFactory: MantenimientoFactoryService,
+    private cdr: ChangeDetectorRef,
+  ) {
     registerLocaleData(localeEs);
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.obtenerTickets();
+    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+    this.mantenimientosDelDia = await servicio.obtenerMantenimientoVisitaPorFecha(this.fecha, this.sucursal.id);
+    this.cdr.detectChanges();
+  }
+
+  getDate(tsmp: Timestamp): Date {
+    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+    const firestoreTimestamp = tsmp; // Ejemplo
+    const date = firestoreTimestamp.toDate(); // Convierte a Date
+    return date;
   }
 
   onHide() {

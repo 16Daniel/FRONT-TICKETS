@@ -125,7 +125,7 @@ export class CalendarComponent implements OnInit {
         let fechaFin = this.getDate(visita.fecha);
         const ticketsFinalizados = await this.ticketsService.getFinalizedTicketsByEndDate(sucursal.id, fechaFin);
         let mantenimientos = await this.mantenimientoService
-          .obtenerMantenimientoVisita(this.getDate(visita.fecha), sucursal.id);
+          .obtenerMantenimientoVisitaPorFecha(this.getDate(visita.fecha), sucursal.id);
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
         comentario = temp.length > 0 ? temp[0].comentario : '';

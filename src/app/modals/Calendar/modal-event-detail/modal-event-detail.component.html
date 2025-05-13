@@ -20,8 +20,12 @@
 
     <div class="mt-3">
         <h5 class=" text-dark fw-bold text-center">MANTENIMIENTO</h5>
-        <app-branch-maintenance-table [mantenimientos]="sucursal.mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
+
+        <app-branch-maintenance-table *ngIf="usuario.idArea == '1'" [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
             (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table>
+
+        <app-branch-maintenance-table-av *ngIf="usuario.idArea == '2'" [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
+            (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table-av>
     </div>
 
     <div *ngIf="comentario != ''">

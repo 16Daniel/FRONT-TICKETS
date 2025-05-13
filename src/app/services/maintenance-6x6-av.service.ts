@@ -50,6 +50,24 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return Math.round(porcentaje);
   }
 
+  async obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string) {
+    const coleccionRef = collection(this.firestore, this.pathName);
+
+    // Convertir las fechas a timestamps de Firestore
+    fecha.setHours(0, 0, 0, 0);
+    const consulta = query(
+      coleccionRef,
+      where('fecha', '==', fecha),
+      where('idSucursal', '==', idSucursal),
+      where('estatus', '==', false),
+    );
+
+    const querySnapshot = await getDocs(consulta);
+    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento6x6AV));
+
+    return documentos;
+  }
+
   async update(id: string, mantenimiento: Mantenimiento6x6AV): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await updateDoc(mantenimientoRef, {

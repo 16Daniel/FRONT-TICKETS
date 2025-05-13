@@ -55,26 +55,26 @@ export class Maintenance10x10Service implements IMantenimientoService {
   }
 
   calcularPorcentaje(mantenimiento: Mantenimiento10x10): number {
-      let porcentaje = 0;
-      mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
-      mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
-      mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
-      mantenimiento.mantenimientoPuntosVentaTabletas
-        ? (porcentaje += 10)
-        : porcentaje;
-      mantenimiento.mantenimientoContenidosSistemaCable
-        ? (porcentaje += 10)
-        : porcentaje;
-      mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
-      mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
-      mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
-      mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
-      mantenimiento.mantenimientoConcentradorApps
-        ? (porcentaje += 10)
-        : porcentaje;
-  
-      return porcentaje;
-    }
+    let porcentaje = 0;
+    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoPuntosVentaTabletas
+      ? (porcentaje += 10)
+      : porcentaje;
+    mantenimiento.mantenimientoContenidosSistemaCable
+      ? (porcentaje += 10)
+      : porcentaje;
+    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
+    mantenimiento.mantenimientoConcentradorApps
+      ? (porcentaje += 10)
+      : porcentaje;
+
+    return porcentaje;
+  }
 
   get(): Observable<Mantenimiento10x10[]> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -237,7 +237,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return forkJoin(consultas);
   }
 
-  async obtenerMantenimientoVisita(fecha: Date, idSucursal: string) {
+  async obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string) {
     const coleccionRef = collection(this.firestore, this.pathName);
 
     // Convertir las fechas a timestamps de Firestore
