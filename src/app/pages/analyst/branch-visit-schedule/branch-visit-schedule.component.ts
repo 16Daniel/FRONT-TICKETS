@@ -175,7 +175,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
     this.loading = true;
     const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
     this.subscriptiontk = servicio
-      .getUltimoMantenimiento(array_ids_Sucursales)
+      .getUltimosMantenimientos(array_ids_Sucursales)
       .subscribe({
         next: (data) => {
           this.arr_ultimosmantenimientos = data.filter(

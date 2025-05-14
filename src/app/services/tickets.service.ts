@@ -351,7 +351,8 @@ export class TicketsService {
 
   async getFinalizedTicketsByEndDate(
     idSucursal: string,
-    fecha: Date
+    fecha: Date,
+    idArea: string
   ): Promise<Ticket[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
 
@@ -363,6 +364,7 @@ export class TicketsService {
       ticketsCollection,
       where('idEstatusTicket', '==', '3'),
       where('idSucursal', '==', idSucursal),
+      where('idArea', '==', idArea),
       where('fechaFin', '>=', startOfDay),
       where('fechaFin', '<', endOfDay)
     );

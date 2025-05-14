@@ -173,7 +173,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return unsubscribe;
   }
 
-  getUltimoMantenimiento(idsSucursales: string[]): Observable<any[]> {
+  getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
     const fechaActual = new Date();
     const fechaHaceUnMes = new Date(fechaActual);
     fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);

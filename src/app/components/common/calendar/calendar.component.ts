@@ -14,11 +14,9 @@ import { Usuario } from '../../../models/usuario.model';
 import { Ticket } from '../../../models/ticket.model';
 import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
 import { Sucursal } from '../../../models/sucursal.model';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { DocumentsService } from '../../../services/documents.service';
 import { ColorUsuario } from '../../../models/color-usuario';
 import { TicketsService } from '../../../services/tickets.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
 
@@ -127,7 +125,12 @@ export class CalendarComponent implements OnInit {
       for (let sucursal of visita.sucursalesProgramadas) {
 
         let fechaFin = this.getDate(visita.fecha);
-        const ticketsFinalizados = await this.ticketsService.getFinalizedTicketsByEndDate(sucursal.id, fechaFin);
+        const ticketsFinalizados = await this.ticketsService
+          .getFinalizedTicketsByEndDate(
+            sucursal.id, 
+            fechaFin, 
+            visita.idArea
+          );
 
         const servicio = this.mantenimientoFactory.getService(visita.idArea);
 

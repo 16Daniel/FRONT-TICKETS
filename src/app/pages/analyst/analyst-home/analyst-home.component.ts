@@ -171,7 +171,7 @@ export default class AnalystHomeComponent implements OnInit {
     const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
     this.subscriptiontk = servicio
-      .getUltimoMantenimiento(idsSucursales)
+      .getUltimosMantenimientos(idsSucursales)
       .subscribe({
         next: (data) => {
           this.ultimosmantenimientos = data.filter(
