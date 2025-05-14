@@ -286,7 +286,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       );
 
       if (
-        ((existeSucursal && usuario.idArea == idArea) || usuario.esGuardia) && usuario.idRol !== '2') {
+        ((existeSucursal && usuario.idArea == idArea) || (usuario.esGuardia && usuario.idArea == this.formArea.id)) && usuario.idRol !== '2') {
         idsResponsables.push(usuario.id);
       }
     }
