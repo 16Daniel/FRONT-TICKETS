@@ -278,9 +278,10 @@ export default class AnalystHomeComponent implements OnInit {
     try {
       await this.usersService.updateUserGuardStatus(usuario.id, usuario.esGuardia);
       localStorage.setItem('rwuserdatatk', JSON.stringify(usuario));
-      this.sucursales = usuario.esGuardia ? this.todasSucursales : this.usuario.sucursales;
-      this.cdr.detectChanges();
-
+      // this.sucursales = usuario.esGuardia ? this.todasSucursales : this.usuario.sucursales;
+      // this.cdr.detectChanges();
+      // this.getTicketsResponsable();
+      window.location.reload();
     } catch (error) {
       console.error('Error actualizando modo guardia:', error);
     }
