@@ -97,7 +97,7 @@ export class CalendarComponent implements OnInit {
     this.loading = true;
     let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.usuario.idArea);
 
-    let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin);
+    let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, this.usuario.idArea);
     let calendarApi = this.calendarComponent!.getApi();
 
     calendarApi.removeAllEvents();

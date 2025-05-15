@@ -21,7 +21,6 @@ import { Ticket } from '../../../models/ticket.model';
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { VisitaProgramada } from '../../../models/visita-programada';
 import { VisitasService } from '../../../services/visitas.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { GuardiasService } from '../../../services/guardias.service';
 import { Guardia } from '../../../models/guardia';
 import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
@@ -82,7 +81,6 @@ export default class CalendarBuilderComponent implements OnInit {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private visitasService: VisitasService,
-    // private mantenimientoSysService: Maintenance10x10Service,
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService
@@ -247,7 +245,7 @@ export default class CalendarBuilderComponent implements OnInit {
     if (!this.vercalendario && this.usuarioseleccionado != undefined) {
       this.loading = true;
       let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha, this.usuarioseleccionado!.id);
-      let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha, this.usuarioseleccionado!.id);
+      let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha, this.usuarioseleccionado!.id, this.usuarioseleccionado.idArea);
       this.registroDeVisita = visitas.length > 0 ? visitas[0] : undefined;
       this.registroDeGuardia = guardias.length > 0 ? guardias[0] : undefined;
       const sucursalesDisponibles = this.sucursales.filter(sucursal =>
@@ -355,6 +353,7 @@ export default class CalendarBuilderComponent implements OnInit {
     const guardia: Guardia =
     {
       idUsuario: this.usuarioseleccionado!.id,
+      idArea: this.usuarioseleccionado!.idArea,
       fecha: Timestamp.fromDate(this.fecha)
     }
 
