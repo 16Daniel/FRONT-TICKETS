@@ -19,6 +19,7 @@ import { ColorUsuario } from '../../../models/color-usuario';
 import { TicketsService } from '../../../services/tickets.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
+import { BranchesService } from '../../../services/branches.service';
 
 @Component({
   selector: 'app-calendar',
@@ -30,7 +31,7 @@ import { MantenimientoFactoryService } from '../../../pages/admin/calendar-build
 export class CalendarComponent implements OnInit {
   @Input() usuariosHelp: Usuario[] = [];
   @Input() tickets: Ticket[] = [];
-  @Input() sucursales: Sucursal[] = [];
+  sucursales: Sucursal[] = [];
 
   comentario: string = '';
   sucursalSeleccionada: SucursalProgramada | any;
@@ -62,14 +63,27 @@ export class CalendarComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private documentService: DocumentsService,
     private ticketsService: TicketsService,
-    private mantenimientoFactory: MantenimientoFactoryService
-    // private mantenimientoService: Maintenance10x10Service
+    private mantenimientoFactory: MantenimientoFactoryService,
+    private branchesService: BranchesService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   ngOnInit(): void {
     this.obtenerColores();
+    this.obtenerSucursales();
+  }
+
+  obtenerSucursales() {
+    this.branchesService.get().subscribe({
+      next: (data) => {
+        this.sucursales = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   obtenerFechas(info: any) {
@@ -127,8 +141,8 @@ export class CalendarComponent implements OnInit {
         let fechaFin = this.getDate(visita.fecha);
         const ticketsFinalizados = await this.ticketsService
           .getFinalizedTicketsByEndDate(
-            sucursal.id, 
-            fechaFin, 
+            sucursal.id,
+            fechaFin,
             visita.idArea
           );
 

@@ -69,18 +69,24 @@ export class GuardiasService {
     return documentos;
   }
 
-  async obtenerGuardiasFechas(fechaInicial: Date, fechaFinal: Date, idArea: string) {
+  async obtenerGuardiasFechas(fechaInicial: Date, fechaFinal: Date, idArea?: string) {
     const coleccionRef = collection(this.firestore, 'guardias');
 
     // Convertir las fechas a timestamps de Firestore
     fechaInicial.setHours(0, 0, 0, 0);
     fechaFinal.setHours(0, 0, 0, 0);
 
-    const consulta = query(
-      coleccionRef,
+    const filtros: any[] = [
       where('fecha', '>=', fechaInicial),
       where('fecha', '<=', fechaFinal),
-      where('idArea', '==', idArea)
+    ];
+
+    if (idArea) {
+      filtros.push(where('idArea', '==', idArea));
+    }
+
+    const consulta = query(
+      coleccionRef, ...filtros
     );
 
     const querySnapshot = await getDocs(consulta);

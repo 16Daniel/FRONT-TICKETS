@@ -34,7 +34,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
   arr_ultimosmantenimientos: Mantenimiento10x10[] = []; // <--- revisar
   usuario: Usuario;
   arr_data: VisitaProgramada[] = [];
-  sucursales: Sucursal[] = [];
+  // sucursales: Sucursal[] = [];
   sucursalSeleccionada: Sucursal | undefined;
   FechaSeleccionada: Date = new Date();
   showModalTicketDetail: boolean = false;
@@ -48,7 +48,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
-    private branchesService: BranchesService,
+    
     private messageService: MessageService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService
@@ -62,7 +62,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerSucursales();
     this.obtenerUsuariosHelp();
     this.obtenerTodosLosTickets();
     this.obtenerColores();
@@ -91,18 +90,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
       error: (error) => {
         console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerSucursales() {
-    this.branchesService.get().subscribe({
-      next: (data) => {
-        this.sucursales = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
       },
     });
   }

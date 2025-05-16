@@ -14,7 +14,8 @@
       {
       <b><i class='bx bx-shield bx-sm'></i> {{ arg.event.title }}</b>
       <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
-      }@else
+      }
+      @else
       {
       <b><i class='bx bx-store bx-sm'></i> {{ arg.event.title }}</b>
       <p class="p-0">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
