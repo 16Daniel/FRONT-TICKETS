@@ -154,7 +154,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
             }
           }
 
-          this.obtnerUltimoMantenimiento();
+          // this.obtnerUltimoMantenimiento();
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -164,32 +164,32 @@ export default class BranchVisitScheduleComponent implements OnInit {
       });
   }
 
-  obtnerUltimoMantenimiento() {
-    let sucursales: Sucursal[] = [...this.sucursales];
-    let array_ids_Sucursales: string[] = [];
+  // obtnerUltimoMantenimiento() {
+  //   let sucursales: Sucursal[] = [...this.sucursales];
+  //   let array_ids_Sucursales: string[] = [];
 
-    for (let item of sucursales) {
-      array_ids_Sucursales.push(item.id);
-    }
+  //   for (let item of sucursales) {
+  //     array_ids_Sucursales.push(item.id);
+  //   }
 
-    this.loading = true;
-    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-    this.subscriptiontk = servicio
-      .getUltimosMantenimientos(array_ids_Sucursales)
-      .subscribe({
-        next: (data) => {
-          this.arr_ultimosmantenimientos = data.filter(
-            (elemento): elemento is Mantenimiento10x10 => elemento !== null
-          );
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error al escuchar los mantenimientos:', error);
-        },
-      });
-  }
+  //   this.loading = true;
+  //   const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+  //   this.subscriptiontk = servicio
+  //     .getUltimosMantenimientos(array_ids_Sucursales)
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.arr_ultimosmantenimientos = data.filter(
+  //           (elemento): elemento is Mantenimiento10x10 => elemento !== null
+  //         );
+  //         this.loading = false;
+  //         this.cdr.detectChanges();
+  //       },
+  //       error: (error) => {
+  //         this.loading = false;
+  //         console.error('Error al escuchar los mantenimientos:', error);
+  //       },
+  //     });
+  // }
 
   obtenerNombreUsuario(idUsuario: string): string {
     let nombre = '';
