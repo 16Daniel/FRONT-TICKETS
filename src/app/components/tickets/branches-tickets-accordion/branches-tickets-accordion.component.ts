@@ -25,7 +25,7 @@ import { TooltipModule } from 'primeng/tooltip';
     AccordionModule,
     AdminTicketsListComponent,
     TooltipModule
-],
+  ],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
 })
@@ -33,22 +33,21 @@ import { TooltipModule } from 'primeng/tooltip';
 export class BranchesTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
+  @Input() IdArea: string = '';
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
-   @Input() IdArea:string = '';
   activeIndex: number = -1;
 
-  constructor(private cdr: ChangeDetectorRef){}
+  constructor(private cdr: ChangeDetectorRef) { }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.activeIndex = -1;
   }
-  
-  
+
   ordenarSucursales(): Sucursal[] {
     return this.sucursales.sort((a, b) => {
       const ticketsA = this.contarTickets(a.id);
@@ -61,8 +60,7 @@ export class BranchesTicketsAccordionComponent {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
-  contarTickets(idSucursal: number | any):number
-  {
+  contarTickets(idSucursal: number | any): number {
     return this.tickets.filter((x) => x.idSucursal == idSucursal && x.idEstatusTicket != '3').length;
   }
 
@@ -116,7 +114,7 @@ export class BranchesTicketsAccordionComponent {
     return str;
   }
 
- verificarTicketsNuevos(tickets: Ticket[]) {
+  verificarTicketsNuevos(tickets: Ticket[]): boolean {
     let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
     return nuevosTickets.length > 0;
   }
@@ -136,5 +134,8 @@ export class BranchesTicketsAccordionComponent {
       return false;
     });
   }
+
+  verificarTicketsPendientesValidar = (tickets: Ticket[]) =>
+    tickets.filter(x => x.validacionAdmin == false).length > 0;
 
 }
