@@ -70,7 +70,7 @@ export const routes: Routes = [
         title: 'Sucursales',
         loadComponent: () =>
           import('./pages/admin/branches/branches.component'),
-        canActivate: [AdminGuard, AdminAreaGuard],
+        canActivate: [AdminGuard],
       },
       {
         path: 'areas',

@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, Component, input, Input, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Subscription, timeInterval } from 'rxjs';
+import { Subscription } from 'rxjs';
+
 import { Sucursal } from '../../../models/sucursal.model';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
@@ -22,29 +23,33 @@ import { Maintenance10x10Service } from '../../../services/maintenance-10x10.ser
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-admin-sys-tab',
   standalone: true,
-    imports: [
-      ToastModule,
-      CommonModule,
-      FormsModule,
-      ConfirmDialogModule,
-      OverlayPanelModule,
-      ModalFilterTicketsComponent,
-      ModalGenerateTicketComponent,
-      ModalTicketsHistoryComponent,
-      BranchesTicketsAccordionComponent,
-      UserTicketsAccordionComponent,
-      AccordionBranchMaintenance10x10Component,
-      ModalTicketDetailComponent,
+  imports: [
+    ToastModule,
+    CommonModule,
+    FormsModule,
+    ConfirmDialogModule,
+    OverlayPanelModule,
+    ModalFilterTicketsComponent,
+    ModalGenerateTicketComponent,
+    ModalTicketsHistoryComponent,
+    BranchesTicketsAccordionComponent,
+    UserTicketsAccordionComponent,
+    AccordionBranchMaintenance10x10Component,
+    ModalTicketDetailComponent,
   ],
-    providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './admin-sys-tab.component.html',
   styleUrl: './admin-sys-tab.component.scss',
 })
+
 export class AdminSysTabComponent {
+  @ViewChild(AccordionBranchMaintenance10x10Component) hijo!: AccordionBranchMaintenance10x10Component;
+
   tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
@@ -63,7 +68,10 @@ export class AdminSysTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea:string = '1';  
+  IdArea: string = '1';
+
+  textoMantenimiento: string = '';
+  ordenarMantenimientosFecha: boolean = false;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -80,24 +88,27 @@ export class AdminSysTabComponent {
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.todosLostickets = this.tickets;
+
+    if (this.usuario.idArea == '1') this.textoMantenimiento = '10X10';
+    if (this.usuario.idArea == '2') this.textoMantenimiento = '6X6';
   }
 
-     ngAfterViewInit() {
+  ngAfterViewInit() {
 
-     setTimeout(() => {
+    setTimeout(() => {
       this.mostrarMantenimientos = true;
       this.cdr.detectChanges();
-      this.mostrarMantenimientos = false; 
-    }, 1500); 
+      this.mostrarMantenimientos = false;
+    }, 1500);
 
 
   }
-  
+
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-    async obtenerTickets(): Promise<void> {
+  async obtenerTickets(): Promise<void> {
     this.subscripcionTicket = this.ticketsService.getByArea(this.IdArea).subscribe({
       next: (data) => {
         this.tickets = data;
@@ -141,7 +152,7 @@ export class AdminSysTabComponent {
           }
         }
 
-        this.tickets = this.tickets.filter(x=> x.validacionAdmin != true); 
+        this.tickets = this.tickets.filter(x => x.validacionAdmin != true);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -149,7 +160,7 @@ export class AdminSysTabComponent {
       },
     });
   }
-  
+
   obtenerSucursales() {
     this.branchesService.get().subscribe({
       next: (data) => {
@@ -159,16 +170,21 @@ export class AdminSysTabComponent {
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {
-            let data =  result.filter((element) => element.length>0);
+            let data = result.filter((element) => element.length > 0);
             this.mantenimientos = [];
-            for(let itemdata of data)
-              {
-                for(let item of itemdata)
-                  {
-                    this.mantenimientos.push(item); 
-                  }
+            for (let itemdata of data) {
+              for (let item of itemdata) {
+                this.mantenimientos.push(item);
               }
+            }
+
+            this.mantenimientos = this.mantenimientos.map(x => {
+              x.fecha = this.getDate(x.fecha);
+              return x;
+            });
           });
+
+
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -177,7 +193,6 @@ export class AdminSysTabComponent {
       },
     });
   }
-
 
   obtenerUsuariosHelp() {
     this.usersService.get().subscribe({
@@ -205,8 +220,19 @@ export class AdminSysTabComponent {
   }
 
   abrirModalDetalleTicket(itemticket: Ticket | any) {
-    this.mostrarModalTicketDetail = true; 
-    this.ticket = itemticket; 
+    this.mostrarModalTicketDetail = true;
+    this.ticket = itemticket;
+  }
+
+  getDate(tsmp: Timestamp | any): Date {
+    try {
+      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+      const firestoreTimestamp = tsmp; // Ejemplo
+      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      return date;
+    } catch {
+      return tsmp;
+    }
   }
 
 }

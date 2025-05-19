@@ -1,87 +1,95 @@
+@if(mostrarMantenimientos==false)
+{
+<h3 class="m-3 text-center">TICKETS</h3>
+}@else
+{
+<h3 class="m-3 text-center">MANTENIMIENTOS</h3>
+}
 
-    @if(mostrarMantenimientos==false)
-    {
-    <h3 class="m-3 text-center">TICKETS</h3>
-    }@else
-    {
-    <h3 class="m-3 text-center">MANTENIMIENTOS</h3>
-    }
-  
-    <div class="d-flex justify-content-start gap-3 p-3 pb-0">
-      <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary"
-        (click)="mostrarModalGenerateTicket = true">
-      </p-button>
-      <p-button label="FILTRAR TICKETS" icon="pi pi-filter" styleClass="p-button-success"
-        (click)="mostrarModalFilterTickets = true">
-      </p-button>
-      <p-button (onClick)="opg.toggle($event)" icon="pi pi-users" label="AGRUPAR" styleClass="p-button-danger" />
-      <div class="form-check form-switch d-flex align-items-center gap-3">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-          style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientos">
-        <label class="form-check-label fs-4" for="flexSwitchCheckChecked">10X10</label>
-      </div>
-    </div>
-  
-    <p-overlayPanel #opg>
-      <div class="d-flex flex-column justify-content-center p-3 gap-2">
-        <button class="btn p-2 btn-light" (click)="agruparPorSucursal()">
-          <i class="bx bx-buildings"></i>&nbsp;SUCURSALES
-        </button>
-  
-        <button *ngFor="let item of usuariosHelp" class="btn p-2 btn-light" (click)="agrupar(item)">
-          <i class="bx bxs-user"></i>&nbsp;{{
-          item.nombre + " " + item.apellidoP | uppercase
-          }}
-        </button>
-      </div>
-    </p-overlayPanel>
-  
-    <H4 class="text-center text-primary fw-bold" *ngIf="usergroup !=undefined">{{
-      usergroup.nombre + " " + usergroup.apellidoP
-      }}</H4>
+<div class="d-flex justify-content-start gap-3 p-3 pb-0">
+  <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary"
+    (click)="mostrarModalGenerateTicket = true">
+  </p-button>
+  <p-button label="FILTRAR TICKETS" icon="pi pi-filter" styleClass="p-button-success"
+    (click)="mostrarModalFilterTickets = true">
+  </p-button>
+  <p-button (onClick)="opg.toggle($event)" icon="pi pi-users" label="AGRUPAR" styleClass="p-button-danger" />
+  <div class="form-check form-switch d-flex align-items-center gap-3">
+    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+      style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientos">
+    <label class="form-check-label fs-4" for="flexSwitchCheckChecked">{{textoMantenimiento}}</label>
+  </div>
+  <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="mostrarMantenimientos">
+    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+      style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarMantenimientosFecha" (change)="ordenarMantenimientosFecha = !ordenarMantenimientosFecha">
+    <label class="form-check-label fs-4" for="flexSwitchCheckChecked">ORDENAR POR FECHA</label>
+  </div>
+</div>
 
-    @if(mostrarMantenimientos) {
-    <div class="mt-4">
-      <app-accordion-branch-maintenance10x10 [mantenimientos]="mantenimientos"
-        [sucursales]="usergroup != undefined ? usergroup.sucursales : sucursales"></app-accordion-branch-maintenance10x10>
+<p-overlayPanel #opg>
+  <div class="d-flex flex-column justify-content-center p-3 gap-2">
+    <button class="btn p-2 btn-light" (click)="agruparPorSucursal()">
+      <i class="bx bx-buildings"></i>&nbsp;SUCURSALES
+    </button>
+
+    <button *ngFor="let item of usuariosHelp" class="btn p-2 btn-light" (click)="agrupar(item)">
+      <i class="bx bxs-user"></i>&nbsp;{{
+      item.nombre + " " + item.apellidoP | uppercase
+      }}
+    </button>
+  </div>
+</p-overlayPanel>
+
+<H4 class="text-center text-primary fw-bold" *ngIf="usergroup !=undefined">{{
+  usergroup.nombre + " " + usergroup.apellidoP
+  }}</H4>
+
+@if(mostrarMantenimientos) {
+<div class="mt-4">
+  <app-accordion-branch-maintenance10x10 [mantenimientos]="mantenimientos"
+    [sucursales]="usergroup != undefined ? usergroup.sucursales : sucursales"
+    [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"></app-accordion-branch-maintenance10x10>
+</div>
+}@else {
+<div *ngIf="usergroup == undefined" class="mt-4">
+  <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales"
+    [IdArea]="IdArea"></app-branches-tickets-accordion>
+</div>
+
+<div *ngIf="usergroup != undefined" class="mt-4">
+  <app-user-tickets-accordion [tickets]="tickets" [usuarioAgrupacion]="usergroup" [sucursales]="sucursales"
+    [IdArea]="IdArea"></app-user-tickets-accordion>
+</div>
+
+<div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+  *ngIf="tickets.length == 0">
+  <i class="bx bx-file-blank bx-md" style="color: rgb(107, 107, 107)"></i>
+  <p>SIN TICKETS PENDIENTES</p>
+</div>
+}
+
+<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
+  [showModalTicketDetail]="mostrarModalTicketDetail"
+  (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+
+<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
+
+<app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets"
+  [sucursales]="sucursales" (closeEvent)="mostrarModalFilterTickets = false"
+  (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
+
+<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false"></app-modal-tickets-history>
+
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p>{{ message.message }}</p>
     </div>
-    }@else {
-    <div *ngIf="usergroup == undefined" class="mt-4">
-      <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales" [IdArea]="IdArea"></app-branches-tickets-accordion>
-    </div>
-  
-    <div *ngIf="usergroup != undefined" class="mt-4">
-      <app-user-tickets-accordion [tickets]="tickets" [usuarioAgrupacion]="usergroup" [sucursales]="sucursales" [IdArea]="IdArea"></app-user-tickets-accordion>
-    </div>
-  
-    <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
-      *ngIf="tickets.length == 0">
-      <i class="bx bx-file-blank bx-md" style="color: rgb(107, 107, 107)"></i>
-      <p>SIN TICKETS PENDIENTES</p>
-    </div>
-    }
-  
-  <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
-    [showModalTicketDetail]="mostrarModalTicketDetail"
-    (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
-  
-  <app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-    (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
-  
-  <app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets" [sucursales]="sucursales"
-    (closeEvent)="mostrarModalFilterTickets = false" (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
-  
-  <app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-    (closeEvent)="mostrarModalHistorial = false"></app-modal-tickets-history>
-  
-  <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
-    [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-    [showTransformOptions]="'translateX(100%)'"></p-toast>
-  <p-confirmDialog>
-    <ng-template pTemplate="message" let-message>
-      <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
-        <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
-        <p>{{ message.message }}</p>
-      </div>
-    </ng-template>
-  </p-confirmDialog> 
+  </ng-template>
+</p-confirmDialog>
