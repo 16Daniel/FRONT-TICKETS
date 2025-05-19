@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
@@ -21,12 +21,17 @@ import { MaintenancesHelperService } from '../../../../helpers/maintenances-help
 export class AccordionBranchMaintenance10x10Component {
   @Input() mantenimientos: Mantenimiento10x10[] = [];
   @Input() sucursales: Sucursal[] = [];
+  @Input() ordenarMantenimientosFecha: boolean = true;
+
+  mantenimientosOriginal: Mantenimiento10x10[] = [];
+  mantenimientosOrdenados: Mantenimiento10x10[] = [];
 
   usuariosHelp: Usuario[] = [];
 
   constructor(
     private usersService: UsersService,
-    private maintenanceHelper: MaintenancesHelperService
+    private maintenanceHelper: MaintenancesHelperService,
+
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
@@ -40,12 +45,39 @@ export class AccordionBranchMaintenance10x10Component {
     });
   }
 
+  ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {
+    return [...catsucursales].sort((a, b) => {
+      const fechaA = this.obtenerFechaUltimoMantenimiento(a.id);
+      const fechaB = this.obtenerFechaUltimoMantenimiento(b.id);
+
+      return fechaA.getTime() - fechaB.getTime();
+    });
+  }
+
   ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+
     return catsucursales.sort((a, b) => {
       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
-      return mantenimientoA - mantenimientoB; // Ordena de mayor a menor
+
+      return mantenimientoA - mantenimientoB;
     });
+  }
+
+  obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
+    const mantenimientosSucursal = this.mantenimientos
+      .filter(m => m.idSucursal === idSucursal && m.fecha);
+
+    if (mantenimientosSucursal.length === 0) {
+      // Si no hay mantenimientos, regresamos una fecha muy antigua
+      return new Date(0);
+    }
+
+    // Retornar la fecha más reciente
+    return mantenimientosSucursal
+      .reduce((ultimo, actual) =>
+        actual.fecha! > ultimo.fecha! ? actual : ultimo
+      ).fecha!;
   }
 
   obtenerPorcentajedeUltimoMantenimiento(idSucursal: string): number {
@@ -54,40 +86,47 @@ export class AccordionBranchMaintenance10x10Component {
       (x) => x.idSucursal == idSucursal
     );
     if (registro.length > 0) {
-      let fechaM:Date;
+      let fechaM: Date;
 
-      const valorIncierto: Date | Timestamp = registro[0].timestamp!; 
+      const valorIncierto: Date | Timestamp = registro[0].timestamp!;
       fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
 
-      let diaspasados = this.obtenerDiasPasados(idSucursal); 
-      if(diaspasados<=30)
-        {
-          porcentaje = this.maintenanceHelper.calcularPorcentajeSys(registro[0]);
-        }
+      let diaspasados = this.obtenerDiasPasados(idSucursal);
+      if (diaspasados <= 30) {
+        porcentaje = this.maintenanceHelper.calcularPorcentajeSys(registro[0]);
+      }
     }
     return porcentaje;
   }
 
-  obtenerDiasPasados(idSucursal: string):number
-  {
-    let dias = 0; 
-    let registro = this.mantenimientos.filter(
-      (x) => x.idSucursal == idSucursal
-    );
-    if (registro.length > 0) {
-      let fechaM:Date;
+  obtenerDiasPasados(idSucursal: string): number {
+    let dias = 0;
+    const registro = this.mantenimientos.filter(x => x.idSucursal === idSucursal);
 
-      const valorIncierto: Date | Timestamp = registro[0].timestamp!; 
-      fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
+    if (registro.length > 0 && registro[0].fecha) {
+
+      let fechaM: Date;
+
+      const rawFecha = registro[0].fecha;
+
+      if (rawFecha instanceof Date) {
+        fechaM = rawFecha;
+      }
+      else if ('seconds' in rawFecha) {
+        const ts = rawFecha as { seconds: number; nanoseconds: number };
+        fechaM = new Date(ts.seconds * 1000);
+      } else {
+        console.warn('Formato de fecha desconocido:', rawFecha);
+        return 0;
+      }
 
       const hoy = new Date();
-      // Ajustar ambas fechas a UTC para evitar problemas con horario de verano
       const utc1 = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
       const utc2 = Date.UTC(fechaM.getFullYear(), fechaM.getMonth(), fechaM.getDate());
-      
-      dias = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24));
 
+      dias = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24));
     }
+
     return dias;
   }
 

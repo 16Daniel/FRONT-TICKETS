@@ -69,9 +69,10 @@ export class AdminSysTabComponent {
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
   IdArea: string = '1';
-
   textoMantenimiento: string = '';
   ordenarMantenimientosFecha: boolean = false;
+
+  auxMostrarMantenimientos = true;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -235,4 +236,11 @@ export class AdminSysTabComponent {
     }
   }
 
+  filtrarMantenimientos() {
+    this.auxMostrarMantenimientos = false;
+    setTimeout(() => {
+      this.auxMostrarMantenimientos = true;
+      this.cdr.detectChanges();
+    }, 400);
+  }
 }
