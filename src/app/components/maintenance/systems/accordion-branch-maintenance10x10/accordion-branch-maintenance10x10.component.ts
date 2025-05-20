@@ -47,11 +47,18 @@ export class AccordionBranchMaintenance10x10Component {
 
   ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {
     return [...catsucursales].sort((a, b) => {
-      const fechaA = this.obtenerFechaUltimoMantenimiento(a.id);
-      const fechaB = this.obtenerFechaUltimoMantenimiento(b.id);
+      const fechaA: any = this.obtenerFechaUltimoMantenimiento(a.id);
+      const fechaB: any = this.obtenerFechaUltimoMantenimiento(b.id);
 
-      return fechaA.getTime() - fechaB.getTime();
+      return this.firebaseTimestampToDate(fechaA).getTime() - this.firebaseTimestampToDate(fechaB).getTime();
     });
+  }
+
+  firebaseTimestampToDate(timestamp: any): Date {
+    if (!timestamp) return new Date(); // o null, según lo que prefieras
+    if (timestamp.toDate) return timestamp.toDate(); // Timestamp de Firebase
+    if (timestamp.seconds) return new Date(timestamp.seconds * 1000); // Formato de objeto timestamp
+    return new Date(timestamp); // Por si acaso es un número o string de fecha
   }
 
   ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {

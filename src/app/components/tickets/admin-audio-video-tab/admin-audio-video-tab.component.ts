@@ -22,11 +22,12 @@ import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
   standalone: true,
-   imports: [
+  imports: [
     ToastModule,
     CommonModule,
     FormsModule,
@@ -39,13 +40,14 @@ import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
     AccordionBranchMaintenanceAvComponent
-],
-      providers: [MessageService, ConfirmationService],
+  ],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './admin-audio-video-tab.component.html',
-   styleUrl: './admin-audio-video-tab.component.scss',
+  styleUrl: './admin-audio-video-tab.component.scss',
 })
+
 export class AdminAudioVideoTabComponent {
- tickets: Ticket[] = [];
+  tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
   mostrarModalFilterTickets: boolean = false;
@@ -63,7 +65,9 @@ export class AdminAudioVideoTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea:string = '2'; 
+  IdArea: string = '2';
+  ordenarMantenimientosFecha: boolean = false;
+  auxMostrarMantenimientos = true;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -81,14 +85,14 @@ export class AdminAudioVideoTabComponent {
     this.obtenerSucursales();
     this.todosLostickets = this.tickets;
   }
-   
-   ngAfterViewInit() {
 
-     setTimeout(() => {
+  ngAfterViewInit() {
+
+    setTimeout(() => {
       this.mostrarMantenimientos = true;
       this.cdr.detectChanges();
-      this.mostrarMantenimientos = false; 
-    }, 1500); 
+      this.mostrarMantenimientos = false;
+    }, 1500);
 
 
   }
@@ -97,7 +101,7 @@ export class AdminAudioVideoTabComponent {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-    async obtenerTickets(): Promise<void> {
+  async obtenerTickets(): Promise<void> {
     this.subscripcionTicket = this.ticketsService.getByArea(this.IdArea).subscribe({
       next: (data) => {
         this.tickets = data;
@@ -141,7 +145,7 @@ export class AdminAudioVideoTabComponent {
           }
         }
 
-        this.tickets = this.tickets.filter(x=> x.validacionAdmin != true); 
+        this.tickets = this.tickets.filter(x => x.validacionAdmin != true);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -149,7 +153,7 @@ export class AdminAudioVideoTabComponent {
       },
     });
   }
-  
+
   obtenerSucursales() {
     this.branchesService.get().subscribe({
       next: (data) => {
@@ -159,15 +163,18 @@ export class AdminAudioVideoTabComponent {
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {
-            let data =  result.filter((element) => element.length>0);
+            let data = result.filter((element) => element.length > 0);
             this.mantenimientos = [];
-            for(let itemdata of data)
-              {
-                for(let item of itemdata)
-                  {
-                    this.mantenimientos.push(item); 
-                  }
+            for (let itemdata of data) {
+              for (let item of itemdata) {
+                this.mantenimientos.push(item);
               }
+            }
+
+            this.mantenimientos = this.mantenimientos.map(x => {
+              x.fecha = this.getDate(x.fecha);
+              return x;
+            });
           });
         this.cdr.detectChanges();
       },
@@ -178,6 +185,16 @@ export class AdminAudioVideoTabComponent {
     });
   }
 
+  getDate(tsmp: Timestamp | any): Date {
+    try {
+      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+      const firestoreTimestamp = tsmp; // Ejemplo
+      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      return date;
+    } catch {
+      return tsmp;
+    }
+  }
 
   obtenerUsuariosHelp() {
     this.usersService.get().subscribe({
@@ -205,9 +222,16 @@ export class AdminAudioVideoTabComponent {
   }
 
   abrirModalDetalleTicket(itemticket: Ticket | any) {
-    this.mostrarModalTicketDetail = true; 
-    this.ticket = itemticket; 
+    this.mostrarModalTicketDetail = true;
+    this.ticket = itemticket;
   }
 
+  filtrarMantenimientos() {
+    this.auxMostrarMantenimientos = false;
+    setTimeout(() => {
+      this.auxMostrarMantenimientos = true;
+      this.cdr.detectChanges();
+    }, 400);
+  }
 
 }
