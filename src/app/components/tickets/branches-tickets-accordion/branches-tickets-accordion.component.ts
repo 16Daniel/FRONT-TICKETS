@@ -136,6 +136,6 @@ export class BranchesTicketsAccordionComponent {
   }
 
   verificarTicketsPendientesValidar = (tickets: Ticket[]) =>
-    tickets.filter(x => x.validacionAdmin == false).length > 0;
+    tickets.filter(x => x.validacionAdmin == false && x.idEstatusTicket == '3').length > 0;
 
 }

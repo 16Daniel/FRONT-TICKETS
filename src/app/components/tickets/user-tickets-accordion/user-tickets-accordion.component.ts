@@ -18,7 +18,7 @@ import { RequesterTicketsListComponent } from "../requester-tickets-list/request
     FormsModule,
     AccordionModule,
     AdminTicketsListComponent,
-],
+  ],
   templateUrl: './user-tickets-accordion.component.html',
   styleUrl: './user-tickets-accordion.component.scss',
 })
@@ -26,23 +26,22 @@ export class UserTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
-   @Input() IdArea:string = '';
-   usuario: Usuario | any;
+  @Input() IdArea: string = '';
+  usuario: Usuario | any;
 
-   constructor(private cdr: ChangeDetectorRef){}
+  constructor(private cdr: ChangeDetectorRef) { }
 
-   activeIndex: number = -1;
-     ngOnInit(): void {
+  activeIndex: number = -1;
+  ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
- 
+
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
-  contarTickets(idSucursal: number | any):number
-  {
+  contarTickets(idSucursal: number | any): number {
     return this.tickets.filter((x) => x.idSucursal == idSucursal && x.idEstatusTicket != '3').length;
   }
 
@@ -90,7 +89,7 @@ export class UserTicketsAccordionComponent {
     });
   }
 
-   verificarTicketsNuevos(tickets: Ticket[]) {
+  verificarTicketsNuevos(tickets: Ticket[]) {
     let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
     return nuevosTickets.length > 0;
   }
@@ -110,5 +109,8 @@ export class UserTicketsAccordionComponent {
       return false;
     });
   }
+
+  verificarTicketsPendientesValidar = (tickets: Ticket[]) =>
+    tickets.filter(x => x.validacionAdmin == false && x.idEstatusTicket == '3').length > 0;
 
 }
