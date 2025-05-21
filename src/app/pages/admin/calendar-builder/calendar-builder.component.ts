@@ -30,6 +30,8 @@ import { DocumentsService } from '../../../services/documents.service';
 import { ComentarioVisita } from '../../../models/comentario-visita.model';
 import { MantenimientoFactoryService } from './maintenance-factory.service';
 import { BranchVisitItemComponent } from '../../../components/common/branch-visit-item/branch-visit-item.component';
+import { AreasService } from '../../../services/areas.service';
+import { Area } from '../../../models/area';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -73,6 +75,8 @@ export default class CalendarBuilderComponent implements OnInit {
   showModalTicketDetail: boolean = false;
   showModalColors: boolean = false;
   usuario: Usuario;
+  areas: Area[] = [];
+  area: Area| any;
 
   constructor(
     private ticketsService: TicketsService,
@@ -83,15 +87,25 @@ export default class CalendarBuilderComponent implements OnInit {
     private visitasService: VisitasService,
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,
-    private mantenimientoFactory: MantenimientoFactoryService
+    private mantenimientoFactory: MantenimientoFactoryService,
+    private areasService: AreasService
   ) {
     registerLocaleData(localeEs);
+    this.obtenerAreas();
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerUsuariosHelp();
+  }
+
+  obtenerAreas() {
+    this.areasService.get().subscribe(result => {
+      this.areas = result;
+
+      this.area = this.areas.find(x => x.id ==  this.usuario.idArea)
+    });
   }
 
   showMessage(sev: string, summ: string, det: string) {

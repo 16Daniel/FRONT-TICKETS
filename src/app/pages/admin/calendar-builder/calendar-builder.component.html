@@ -1,5 +1,5 @@
 <div class="p-3" style="margin-top: 80px;">
-    <h4 class="text-center">PROGRMAR VISITA <span class="fw-bold" style="color: #8B5CF6;">{{ fecha |
+    <h4 class="text-center">PROGRAMAR VISITA {{ area.nombre }} <span class="fw-bold" style="color: #8B5CF6;">{{ fecha |
             date:'fullDate':'':'es' | uppercase }}</span></h4>
     <div class="row mt-3">
         <div class="col-md-4">
@@ -60,12 +60,8 @@
                     </div>
                     } @else
                     {
-                    <app-branch-visit-item 
-                        [sucursal]="item" 
-                        [usuariosHelp]="usuariosHelp"
-                        [fecha]="fecha"
-                        [usuarioSeleccionado]="usuarioseleccionado"
-                        [tickets]="obtenerTicketsPorSucursal(item.id)">
+                    <app-branch-visit-item [sucursal]="item" [usuariosHelp]="usuariosHelp" [fecha]="fecha"
+                        [usuarioSeleccionado]="usuarioseleccionado" [tickets]="obtenerTicketsPorSucursal(item.id)">
                     </app-branch-visit-item>
                     }
                 </ng-template>
