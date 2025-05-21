@@ -225,31 +225,10 @@ export default class CalendarBuilderComponent implements OnInit {
     let porcentaje = 0;
     let registro = this.arr_ultimosmantenimientos.filter(x => x.idSucursal == idSucursal);
     if (registro.length > 0) {
-      porcentaje = this.calcularPorcentaje(registro[0]);
+      const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+      porcentaje = servicio.calcularPorcentaje(registro[0]);
     }
     return porcentaje
-  }
-
-  calcularPorcentaje(mantenimiento: Mantenimiento10x10): number {
-    let porcentaje = 0;
-    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoPuntosVentaTabletas
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoContenidosSistemaCable
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoConcentradorApps
-      ? (porcentaje += 10)
-      : porcentaje;
-
-    return porcentaje;
   }
 
   async consultarUsuario() {
@@ -300,6 +279,7 @@ export default class CalendarBuilderComponent implements OnInit {
         this.sucursalesOrdenadas.shift();
       }
 
+      debugger
       if (this.registroDeGuardia != undefined) {
         let guardia = { id: '-999', nombre: 'GUARDIA' }
         this.sucursalesSeleccionadas.unshift(guardia);

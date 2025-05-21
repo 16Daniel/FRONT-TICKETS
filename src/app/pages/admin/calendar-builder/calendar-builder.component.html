@@ -109,11 +109,6 @@
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
     (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
 
-<!-- <app-modal-event-detail *ngIf="showModalBranchDetail" [showModalEventeDetail]="showModalBranchDetail"
-    (closeEvent)="showModalBranchDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="fecha" [comentario]="''"
-    [usuariosHelp]="usuariosHelp">
-</app-modal-event-detail> -->
-
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
     [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
