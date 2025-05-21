@@ -82,8 +82,9 @@ export default class AnalystHomeComponent implements OnInit {
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];
   todasSucursales: Sucursal[] = [];
-
   tituloMantenimiento: string = '';
+  ordenarMantenimientosFecha: boolean = false;
+  auxMostrarMantenimientos = true;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -292,5 +293,13 @@ export default class AnalystHomeComponent implements OnInit {
       this.todasSucursales = result;
       this.sucursales = this.usuario.esGuardia ? result : this.usuario.sucursales;
     });
+  }
+
+  filtrarMantenimientos() {
+    this.auxMostrarMantenimientos = false;
+    setTimeout(() => {
+      this.auxMostrarMantenimientos = true;
+      this.cdr.detectChanges();
+    }, 400);
   }
 }
