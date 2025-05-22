@@ -15,6 +15,11 @@
       <b><i class='bx bx-shield bx-sm'></i> {{ arg.event.title }}</b>
       <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
       }
+      @else if(arg.event.title.indexOf('ACTIVIDAD:') >= 0)
+      {
+      <b><i class='bx bx-task bx-sm'></i> {{ arg.event.title }}</b>
+      <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+      }
       @else
       {
       <b><i class='bx bx-store bx-sm'></i> {{ arg.event.title }}</b>

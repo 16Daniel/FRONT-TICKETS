@@ -32,6 +32,7 @@ import { MantenimientoFactoryService } from './maintenance-factory.service';
 import { BranchVisitItemComponent } from '../../../components/common/branch-visit-item/branch-visit-item.component';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area';
+import { ModalActivityComponent } from '../../../modals/calendar/modal-activity/modal-activity.component';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -47,7 +48,8 @@ import { Area } from '../../../models/area';
     ModalTicketDetailComponent,
     CalendarComponent,
     ModalColorsComponent,
-    BranchVisitItemComponent
+    BranchVisitItemComponent,
+    ModalActivityComponent
   ],
   providers: [MessageService],
   templateUrl: './calendar-builder.component.html',
@@ -76,7 +78,8 @@ export default class CalendarBuilderComponent implements OnInit {
   showModalColors: boolean = false;
   usuario: Usuario;
   areas: Area[] = [];
-  area: Area| any;
+  area: Area | any;
+  mostrarModalActividades: boolean = false;
 
   constructor(
     private ticketsService: TicketsService,
@@ -88,7 +91,8 @@ export default class CalendarBuilderComponent implements OnInit {
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService,
-    private areasService: AreasService
+    private areasService: AreasService,
+    // private actividadesService: ActivitiesService
   ) {
     registerLocaleData(localeEs);
     this.obtenerAreas();
@@ -104,7 +108,7 @@ export default class CalendarBuilderComponent implements OnInit {
     this.areasService.get().subscribe(result => {
       this.areas = result;
 
-      this.area = this.areas.find(x => x.id ==  this.usuario.idArea)
+      this.area = this.areas.find(x => x.id == this.usuario.idArea)
     });
   }
 
@@ -279,7 +283,6 @@ export default class CalendarBuilderComponent implements OnInit {
         this.sucursalesOrdenadas.shift();
       }
 
-      debugger
       if (this.registroDeGuardia != undefined) {
         let guardia = { id: '-999', nombre: 'GUARDIA' }
         this.sucursalesSeleccionadas.unshift(guardia);
@@ -300,12 +303,23 @@ export default class CalendarBuilderComponent implements OnInit {
       this.registrarGuardia();
     }
 
-    let sucursalesProgramadas = this.sucursalesSeleccionadas.filter(x => x.id != '-999').map(sucursal => {
-      return {
-        ...sucursal,
-        idsTickets: this.obtenerTicketsPorSucursal(sucursal.id).map(ticket => ticket.id)
-      }
-    })
+    // if (this.sucursalesSeleccionadas.some(x => x.id == '-998')) {
+    //   this.sucursalesSeleccionadas.filter(x => x.id == '-998').forEach(element => {
+    //     // this.registrarActividad();
+    //     console.log(element);
+    //   });
+    // }
+
+
+
+    let sucursalesProgramadas = this.sucursalesSeleccionadas
+      .filter(x => x.id != '-999')
+      .map(sucursal => {
+        return {
+          ...sucursal,
+          idsTickets: this.obtenerTicketsPorSucursal(sucursal.id).map(ticket => ticket.id)
+        }
+      })
 
     let visita: VisitaProgramada =
     {
@@ -319,13 +333,14 @@ export default class CalendarBuilderComponent implements OnInit {
     try {
       await this.visitasService.create(visita);
       for (let sucursal of this.sucursalesSeleccionadas) {
-        if (sucursal.id != '-999') {
+        if (sucursal.id != '-999' && sucursal.id != '-998') {
           const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
           await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
 
           // this.nuevoMantenimientoSistemas(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
         }
       }
+
       this.showMessage('success', 'Success', 'Guardado correctamente');
       this.formComentarios = '';
       this.sucursalesOrdenadas = [];
@@ -440,7 +455,7 @@ export default class CalendarBuilderComponent implements OnInit {
 
         const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
         let temp = await servicio.obtenerMantenimientoVisitaPorFecha(this.getDate(this.registroDeVisita.fecha), sucursal.id);
-        
+
         if (temp.length > 0) {
           await this.documentService.deleteDocument('mantenimientos-10x10', temp[0].id);
         }
@@ -458,5 +473,12 @@ export default class CalendarBuilderComponent implements OnInit {
     const firestoreTimestamp = tsmp; // Ejemplo
     const date = firestoreTimestamp.toDate(); // Convierte a Date
     return date;
+  }
+
+  async agregarActividad(texto: string) {
+    this.mostrarModalActividades = false;
+    texto = `ACTIVIDAD: ${texto}`;
+    let actividad = { id: '-998', nombre: texto }
+    this.sucursalesSeleccionadas = [actividad, ...this.sucursalesSeleccionadas];
   }
 }

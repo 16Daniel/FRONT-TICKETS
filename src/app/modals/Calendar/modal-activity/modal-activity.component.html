@@ -1,0 +1,18 @@
+<p-dialog header="AGREGAR ACTIVIDAD" [(visible)]="mostrarModal" [modal]="true" [maximizable]="true" (onHide)="onHide()"
+    [style]="{ width: '50vw' }" class="custom-dialog">
+
+    <form #form="ngForm" (ngSubmit)="enviar(form)">
+        <input class="form-control" style="height: 48px;" type="text" placeholder="ACTIVIDAD" [(ngModel)]="actividad"
+            name="actividad" [ngClass]="{'p-invalid': formActividadCtrl.invalid && formActividadCtrl.touched}"
+            #formActividadCtrl="ngModel" name="actividad" required>
+        <small *ngIf="formActividadCtrl.invalid && formActividadCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+
+        <p></p>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3"><i class='bx bx-send'></i>ENVIAR</button>
+        </div>
+    </form>
+</p-dialog>

@@ -236,7 +236,6 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       await this.ticketsService.create(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-      console.log('Success', 'ENVIADO CORRECTAMENTE')
       this.closeEvent.emit(false); // Cerrar modal
     });
   }

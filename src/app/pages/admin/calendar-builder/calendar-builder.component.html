@@ -1,5 +1,5 @@
 <div class="p-3" style="margin-top: 80px;">
-    <h4 class="text-center">PROGRAMAR VISITA {{ area.nombre }} <span class="fw-bold" style="color: #8B5CF6;">{{ fecha |
+    <h4 class="text-center">PROGRAMAR VISITA {{ area?.nombre }} <span class="fw-bold" style="color: #8B5CF6;">{{ fecha |
             date:'fullDate':'':'es' | uppercase }}</span></h4>
     <div class="row mt-3">
         <div class="col-md-4">
@@ -35,6 +35,12 @@
         </div>
     </div>
 
+    <div class="row mt-3" *ngIf="usuarioseleccionado">
+        <div class="col-md-12">
+            <p-button label="NUEVA ACTIVIDAD" icon="pi pi-plus" (onClick)="mostrarModalActividades = true" />
+        </div>
+    </div>
+
     <div class="d-flex justify-content-center" *ngIf="loading">
         <div class="lds-ring">
             <div></div>
@@ -58,7 +64,14 @@
                     <div class="card p-3 bg-opacity-25" style="background-color: #8B5CF6; color: white;">
                         <p class="m-1">{{item.nombre}}</p>
                     </div>
-                    } @else
+                    } 
+                    @else if(item.id == '-998')
+                    {
+                    <div class="card p-3 bg-opacity-25" style="background-color: #293fa3; color: white;">
+                        <p class="m-1">{{item.nombre}}</p>
+                    </div>
+                    }
+                    @else
                     {
                     <app-branch-visit-item [sucursal]="item" [usuariosHelp]="usuariosHelp" [fecha]="fecha"
                         [usuarioSeleccionado]="usuarioseleccionado" [tickets]="obtenerTicketsPorSucursal(item.id)">
@@ -113,3 +126,6 @@
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
     [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
     [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+<app-modal-activity [mostrarModal]="mostrarModalActividades"
+    (closeEvent)="mostrarModalActividades = false" (activityEvent)="agregarActividad($event)"></app-modal-activity>
