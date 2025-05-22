@@ -72,7 +72,9 @@ export default class ModalEventDetailComponent {
   async ngOnInit() {
     this.obtenerTickets();
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
-    this.mantenimientosDelDia = await servicio.obtenerMantenimientoVisitaPorFecha(this.fecha, this.sucursal.id);
+    await servicio.getUltimosMantenimientos([this.sucursal.id]).subscribe(result => {
+      this.mantenimientosDelDia = result;
+    });
     this.cdr.detectChanges();
   }
 

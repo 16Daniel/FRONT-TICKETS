@@ -239,10 +239,13 @@ export default class CalendarBuilderComponent implements OnInit {
     this.sucursalesSeleccionadas = [];
     this.sucursalesOrdenadas = [];
     this.indicacionesVisitas = [];
+
     if (!this.vercalendario && this.usuarioseleccionado != undefined) {
+      
       this.loading = true;
       let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha, this.usuarioseleccionado!.id);
       let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha, this.usuarioseleccionado!.id, this.usuarioseleccionado.idArea);
+      
       this.registroDeVisita = visitas.length > 0 ? visitas[0] : undefined;
       this.registroDeGuardia = guardias.length > 0 ? guardias[0] : undefined;
       const sucursalesDisponibles = this.sucursales.filter(sucursal =>
@@ -293,6 +296,7 @@ export default class CalendarBuilderComponent implements OnInit {
 
       this.actualizarListasComentarios();
     }
+
     this.loading = false;
     this.cdr.detectChanges();
   }

@@ -37,7 +37,7 @@ export class BranchVisitItemComponent {
   }
 
   ngOnInit() {
-    this.porcentaje$ = this.obtenerPorcentajedeUltimoMantenimiento('idSucursal');
+    this.porcentaje$ = this.obtenerPorcentajeDeUltimoMantenimiento(this.sucursal.id);
 
     switch (this.usuario.idArea) {
       case '1':
@@ -65,13 +65,14 @@ export class BranchVisitItemComponent {
     }
   }
 
-  async obtenerPorcentajedeUltimoMantenimiento(idSucursal: string) {
+  async obtenerPorcentajeDeUltimoMantenimiento(idSucursal: string) {
+    
     let porcentaje = 0;
     let registro = this.ultimosMantenimientos.filter(x => x.idSucursal == idSucursal);
     if (registro.length > 0) {
 
       const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-      await servicio.calcularPorcentaje(registro[0]);
+      porcentaje = await servicio.calcularPorcentaje(registro[0]);
 
     }
     return porcentaje
