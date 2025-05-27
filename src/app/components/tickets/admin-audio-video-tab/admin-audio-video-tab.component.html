@@ -49,7 +49,7 @@
 @if(mostrarMantenimientos) {
 <div class="mt-4">
   <app-accordion-branch-maintenance-av *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
-    [sucursales]="usergroup != undefined ? usergroup.sucursales : sucursales"
+    [sucursales]="sucursalesMantenimeintosActivos()"
     [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"></app-accordion-branch-maintenance-av>
 </div>
 }@else {

@@ -234,4 +234,8 @@ export class AdminAudioVideoTabComponent {
     }, 400);
   }
 
+  sucursalesMantenimeintosActivos = () =>
+    this.usergroup != undefined ?
+      this.usergroup.sucursales :
+      this.sucursales.filter(x => x.activoMantenimientos);
 }
