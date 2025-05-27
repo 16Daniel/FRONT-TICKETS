@@ -10,7 +10,6 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { Rol } from '../../../models/rol.model';
 import { Usuario } from '../../../models/usuario.model';
-import { Sucursal } from '../../../models/sucursal.model';
 import { UsersService } from '../../../services/users.service';
 import { DocumentsService } from '../../../services/documents.service';
 import { ModalUserCreateComponent } from '../../../modals/users/modal-user-create/modal-user-create.component';

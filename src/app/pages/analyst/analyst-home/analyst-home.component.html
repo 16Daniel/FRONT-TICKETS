@@ -69,11 +69,11 @@
   <div class="p-1 mt-4" *ngIf="ordenarxmantenimiento">
 
     <app-accordion-branch-maintenance10x10 *ngIf="usuario.idArea == '1' && auxMostrarMantenimientos" [mantenimientos]="ultimosmantenimientos"
-      [sucursales]="usuario.sucursales" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
+      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
     </app-accordion-branch-maintenance10x10>
 
     <app-accordion-branch-maintenance-av *ngIf="usuario.idArea == '2' && auxMostrarMantenimientos" [mantenimientos]="ultimosmantenimientos"
-      [sucursales]="usuario.sucursales" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
+      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
     </app-accordion-branch-maintenance-av>
 
   </div>

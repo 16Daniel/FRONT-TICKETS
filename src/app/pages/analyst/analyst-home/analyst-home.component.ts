@@ -302,4 +302,13 @@ export default class AnalystHomeComponent implements OnInit {
       this.cdr.detectChanges();
     }, 400);
   }
+
+  sucursalesMantenimeintosActivos = () => {
+    const idsSucursalesUsuario = this.usuario.sucursales.map(s => String(s.id));
+    return this.todasSucursales.filter(sucursal =>
+      idsSucursalesUsuario?.includes(String(sucursal.id)) &&
+      Array.isArray(sucursal.activoMantenimientos) &&
+      sucursal.activoMantenimientos.includes(this.usuario.idArea)
+    );
+  }
 }

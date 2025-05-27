@@ -234,8 +234,20 @@ export class AdminAudioVideoTabComponent {
     }, 400);
   }
 
-  sucursalesMantenimeintosActivos = () =>
-    this.usergroup != undefined ?
-      this.usergroup.sucursales :
-      this.sucursales.filter(x => x.activoMantenimientos);
+  sucursalesMantenimeintosActivos = () => {
+    if (this.usergroup !== undefined) {
+      const idsSucursalesUsuario = this.usergroup?.sucursales.map(s => String(s.id));
+      return this.sucursales.filter(sucursal =>
+        idsSucursalesUsuario?.includes(String(sucursal.id)) &&
+        Array.isArray(sucursal.activoMantenimientos) &&
+        sucursal.activoMantenimientos.includes(this.usuario.idArea)
+      );
+    }
+    else {
+      return this.sucursales.filter(sucursal =>
+        Array.isArray(sucursal.activoMantenimientos) &&
+        sucursal.activoMantenimientos.includes(this.usuario.idArea)
+      );
+    }
+  }
 }

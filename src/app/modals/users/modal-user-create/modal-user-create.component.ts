@@ -62,6 +62,10 @@ export class ModalUserCreateComponent implements OnInit {
       return;
     }
 
+    this.usuario.sucursales.forEach(sucursal => {
+      delete sucursal.activoMantenimientos;
+    });
+
     this.esNuevoUsuario ? this.guardarAutenticacionFb() : this.actualizarUsuario();
   }
 
@@ -126,6 +130,11 @@ export class ModalUserCreateComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+
+        this.sucursales.forEach(sucursal => {
+          delete sucursal.activoMantenimientos;
+        });
+
         this.cdr.detectChanges();
       },
       error: (error) => {
