@@ -241,11 +241,11 @@ export default class CalendarBuilderComponent implements OnInit {
     this.indicacionesVisitas = [];
 
     if (!this.vercalendario && this.usuarioseleccionado != undefined) {
-      
+
       this.loading = true;
       let visitas = await this.visitasService.obtenerVisitaUsuario(this.fecha, this.usuarioseleccionado!.id);
       let guardias = await this.guardiaService.obtenerGuardiaUsuario(this.fecha, this.usuarioseleccionado!.id, this.usuarioseleccionado.idArea);
-      
+
       this.registroDeVisita = visitas.length > 0 ? visitas[0] : undefined;
       this.registroDeGuardia = guardias.length > 0 ? guardias[0] : undefined;
       const sucursalesDisponibles = this.sucursales.filter(sucursal =>
@@ -307,15 +307,6 @@ export default class CalendarBuilderComponent implements OnInit {
       this.registrarGuardia();
     }
 
-    // if (this.sucursalesSeleccionadas.some(x => x.id == '-998')) {
-    //   this.sucursalesSeleccionadas.filter(x => x.id == '-998').forEach(element => {
-    //     // this.registrarActividad();
-    //     console.log(element);
-    //   });
-    // }
-
-
-
     let sucursalesProgramadas = this.sucursalesSeleccionadas
       .filter(x => x.id != '-999')
       .map(sucursal => {
@@ -336,12 +327,15 @@ export default class CalendarBuilderComponent implements OnInit {
 
     try {
       await this.visitasService.create(visita);
+
       for (let sucursal of this.sucursalesSeleccionadas) {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
-          const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-          await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
 
-          // this.nuevoMantenimientoSistemas(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+          if(this.tieneMantenimientosActivos(sucursal.id)){
+            const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+            await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+          }
+
         }
       }
 
@@ -360,6 +354,17 @@ export default class CalendarBuilderComponent implements OnInit {
     this.loading = false;
     this.cdr.detectChanges();
   }
+
+  tieneMantenimientosActivos(idSucursal: string | number): boolean {
+    const sucursal = this.sucursales.find(s => String(s.id) === String(idSucursal));
+
+    if (!sucursal || !Array.isArray(sucursal.activoMantenimientos)) {
+      return false;
+    }
+
+    return sucursal.activoMantenimientos.includes(String(this.usuario.idArea));
+  }
+
 
   async registrarGuardia() {
     // this.fecha.setHours(0, 0, 0, 0);
