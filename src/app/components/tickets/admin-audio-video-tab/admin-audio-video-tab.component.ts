@@ -240,13 +240,13 @@ export class AdminAudioVideoTabComponent {
       return this.sucursales.filter(sucursal =>
         idsSucursalesUsuario?.includes(String(sucursal.id)) &&
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes(this.usuario.idArea)
+        sucursal.activoMantenimientos.includes('2')
       );
     }
     else {
       return this.sucursales.filter(sucursal =>
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes(this.usuario.idArea)
+        sucursal.activoMantenimientos.includes('2')
       );
     }
   }

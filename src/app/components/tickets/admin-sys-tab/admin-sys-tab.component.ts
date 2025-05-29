@@ -244,27 +244,19 @@ export class AdminSysTabComponent {
     }, 400);
   }
 
-  // sucursalesMantenimeintosActivos = () =>
-  //   this.usergroup !== undefined
-  //     ? this.usergroup.sucursales
-  //     : this.sucursales.filter(sucursal =>
-  //       Array.isArray(sucursal.activoMantenimientos) &&
-  //       sucursal.activoMantenimientos.includes(this.usuario.idArea)
-  //     );
-
   sucursalesMantenimeintosActivos = () => {
     if (this.usergroup !== undefined) {
       const idsSucursalesUsuario = this.usergroup?.sucursales.map(s => String(s.id));
       return this.sucursales.filter(sucursal =>
         idsSucursalesUsuario?.includes(String(sucursal.id)) &&
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes(this.usuario.idArea)
+        sucursal.activoMantenimientos.includes('1')
       );
     }
     else {
       return this.sucursales.filter(sucursal =>
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes(this.usuario.idArea)
+        sucursal.activoMantenimientos.includes('1')
       );
     }
   }
