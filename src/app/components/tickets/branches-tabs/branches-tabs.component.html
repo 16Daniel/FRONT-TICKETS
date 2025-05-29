@@ -1,9 +1,19 @@
+<div class="d-flex" style="margin-right: 10px;">
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <label class="form-check-label fs-4 mb-0" for="activarGuardia">MODO ESPECTADOR</label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
+              style="width: 3rem; height: 2rem;" [(ngModel)]="esEspectadorActivo" (change)="onToggleGuardia()">
+          </div>
+        </div>
+      </div>
+
 <p-tabView>
   <p-tabPanel header="SISTEMAS">
-    <app-branches-sys-tab [tickets]="filtrarTicketsPorArea('1')" [todosLosTickets]="todosLosTickets"></app-branches-sys-tab>
+    <app-branches-sys-tab [esEspectadorActivo]="esEspectadorActivo" [tickets]="filtrarTicketsPorArea('1')" [todosLosTickets]="todosLosTickets"></app-branches-sys-tab>
   </p-tabPanel>
   <p-tabPanel header="AUDIO Y VIDEO">
-    <app-branches-audio-video-tab [tickets]="filtrarTicketsPorArea('2')"></app-branches-audio-video-tab>
+    <app-branches-audio-video-tab [esEspectadorActivo]="esEspectadorActivo" [tickets]="filtrarTicketsPorArea('2')"></app-branches-audio-video-tab>
   </p-tabPanel>
   <p-tabPanel header="MANTENIMIENTO">
     <p>Contenido de la tercera pestaña.</p>

@@ -32,7 +32,7 @@
       </span>
     </ng-template>
 
-    <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)"
+    <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)" [esEspectadorActivo]="esEspectadorActivo"
       (clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
       [mostrarEstrellas]="false"></app-requester-tickets-list>
   </p-accordionTab>

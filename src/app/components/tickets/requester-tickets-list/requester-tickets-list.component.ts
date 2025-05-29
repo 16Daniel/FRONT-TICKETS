@@ -62,6 +62,8 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() mostrarEstrellas: boolean = true;
   @Input() mostrarFedchaEstimacion: boolean = true;
   @Input() mostrarAccionValidar: boolean = true;
+  @Input() esEspectadorActivo: boolean = false;
+
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   showModalFinalizeTicket: boolean = false;
@@ -225,7 +227,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       accept: () => {
         this.actualizaTicketEstatusSucursal(idTicket);
       },
-      reject: () => {},
+      reject: () => { },
     });
   }
 
@@ -272,7 +274,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   actualizaTicket(ticket: Ticket) {
     this.ticketsService
       .update(ticket)
-      .then(() => {})
+      .then(() => { })
       .catch((error) => console.error(error));
   }
 
@@ -293,7 +295,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
         this.ticketAccion = ticket;
         this.mostrarModalValidarTicket = true;
       },
-      reject: () => {},
+      reject: () => { },
     });
   }
 
@@ -315,7 +317,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
           })
           .catch((error) => console.error(error));
       },
-      reject: () => {},
+      reject: () => { },
     });
   }
 }

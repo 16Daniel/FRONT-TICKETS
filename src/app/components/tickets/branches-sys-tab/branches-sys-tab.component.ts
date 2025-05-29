@@ -44,6 +44,7 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/mainten
 export class BranchesSysTabComponent {
   @Input() tickets: Ticket[] = [];
   @Input() todosLosTickets: Ticket[] = [];
+  @Input() esEspectadorActivo: boolean = false;
 
   mostrarModalGenerateTicket: boolean = false;
   mostrarModalFilterTickets: boolean = false;

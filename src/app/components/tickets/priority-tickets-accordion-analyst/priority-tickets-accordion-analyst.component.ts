@@ -25,6 +25,8 @@ import { Usuario } from '../../../models/usuario.model';
 export class PriorityTicketsAccordionAnalystComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
+  @Input() esEspectadorActivo: boolean = false;
+  
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   itemtk: Ticket | undefined;

@@ -41,6 +41,7 @@ import { ModalMaintenanceAvCheckComponent } from '../../../modals/maintenance/au
 })
 export class BranchesAudioVideoTabComponent {
   @Input() tickets: Ticket[] = [];
+  @Input() esEspectadorActivo: boolean = false;
 
   mostrarModalGenerateTicket: boolean = false;
   mostrarModalTicketDetail: boolean = false;

@@ -22,6 +22,8 @@ import { RequesterTicketsListComponent } from '../requester-tickets-list/request
 })
 export class PriorityTicketsAccordionComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
+  @Input() esEspectadorActivo: boolean = false;
+  
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   ngOnInit(): void {
@@ -84,21 +86,21 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     return tickets.some(ticket => {
       const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
       const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
-  
+
       if (participante) {
         const ultimoComentarioLeido = participante.ultimoComentarioLeido;
         const comentarios = ticket.comentarios;
-  
+
         return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
       }
-      
+
       return false;
     });
   }
 
-  verificarTicketsPorValidar(tickets: Ticket[]){
+  verificarTicketsPorValidar(tickets: Ticket[]) {
     let result = tickets.filter(x => x.idEstatusTicket == '7');
     return result.length > 0;
   }
-  
+
 }
