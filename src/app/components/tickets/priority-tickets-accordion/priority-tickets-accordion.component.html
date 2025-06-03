@@ -25,6 +25,6 @@
         </ng-template>
         <app-requester-tickets-list [tickets]="obtenerTicketsFiltrados(item)"
             (clickEvent)="abrirModalDetalleTicket($event)" [mostrarEstrellas]="false"
-            [mostrarAccionValidar]="false"></app-requester-tickets-list>
+            [mostrarAccionValidar]="false" [esEspectadorActivo]="esEspectadorActivo"></app-requester-tickets-list>
     </p-accordionTab>
 </p-accordion>

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabViewModule } from 'primeng/tabview';
@@ -10,6 +10,8 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { BranchesService } from '../../../services/branches.service';
 
 @Component({
   selector: 'app-branches-tabs',
@@ -19,13 +21,17 @@ import { Ticket } from '../../../models/ticket.model';
     TabViewModule,
     BranchesSysTabComponent,
     BranchesAudioVideoTabComponent,
-    FormsModule
+    FormsModule,
+    MultiSelectModule
   ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',
 })
 
 export class BranchesTabsComponent implements OnDestroy {
+  @Output() espectadorEmitter = new EventEmitter<boolean>();
+
+  sucursales: Sucursal[] = [];
   sucursal: Sucursal;
   usuario: Usuario;
   subscripcionTicket: Subscription | undefined;
@@ -35,16 +41,20 @@ export class BranchesTabsComponent implements OnDestroy {
   ticket: Ticket | undefined;
 
   esEspectadorActivo: boolean = false;
+  sucursalesSeleccionadas: Sucursal[] = [];
 
   private unsubscribe!: () => void;
 
-  constructor(private ticketsService: TicketsService, private cdr: ChangeDetectorRef,
+  constructor(
+    private ticketsService: TicketsService,
+    private cdr: ChangeDetectorRef,
+    private sucursalesService: BranchesService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
 
     this.obtenerTicketsPorSucursal(this.sucursal?.id);
-
+    this.obtenerSucursales();
   }
 
   ngOnDestroy() {
@@ -55,6 +65,14 @@ export class BranchesTabsComponent implements OnDestroy {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+  }
+
+  obtenerSucursales() {
+    this.sucursalesService.get().subscribe(result => {
+      this.sucursales = result;
+      this.cdr.detectChanges();
+
+    });
   }
 
   async obtenerTicketsPorSucursal(idSucursal: string | any): Promise<void> {
@@ -173,14 +191,34 @@ export class BranchesTabsComponent implements OnDestroy {
       });
   }
 
-  filtrarTicketsPorArea = (idArea: string) => this.tickets.filter(x => x.idArea == idArea);
+  filtrarTicketsPorArea = (idArea: string) => {
+    let result = this.tickets.filter(x => x.idArea == idArea);
+    let idSucursales = this.sucursalesSeleccionadas.map(x => x.id);
 
-  onToggleGuardia() {
+    if (!idSucursales || idSucursales.length === 0) return result;
+
+    return result.filter(ticket => idSucursales.includes(ticket.idSucursal));
+  };
+
+  onToggleEspectador() {
     if (this.esEspectadorActivo) {
       this.obtenerTodosLosTickets();
     }
     else {
       this.obtenerTicketsPorSucursal(this.sucursal?.id);
     }
+
+    this.espectadorEmitter.emit(this.esEspectadorActivo);
+
   }
+
+  // onSucursalesChange() {
+  //   console.log('Sucursales seleccionadas:', this.sucursalesSeleccionadas.map(x => x.id));
+  // }
+
+  // filtrarTicketsPorSucursales(tickets: Ticket[], idSucursales: string[]): Ticket[] {
+  //   if (!idSucursales || idSucursales.length === 0) return [];
+
+  //   return tickets.filter(ticket => idSucursales.includes(ticket.idSucursal));
+  // }
 }

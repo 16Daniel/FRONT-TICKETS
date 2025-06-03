@@ -31,6 +31,8 @@ import { Area } from '../../../models/area';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { ModalValidateTicketComponent } from '../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
+import { Sucursal } from '../../../models/sucursal.model';
+import { BranchesService } from '../../../services/branches.service';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -76,6 +78,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   ticketAccion: Ticket | any;
   chatsSinLeer = 0;
   estatusTickets: EstatusTicket[] = [];
+  sucursales: Sucursal[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -84,9 +87,11 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
     private areasService: AreasService,
-    private statusTicketsService: StatusTicketService
+    private statusTicketsService: StatusTicketService,
+    private branchesService: BranchesService,
   ) {
     this.obtenerCatalogoEstatusTickets();
+    this.obtenerSucursales();
   }
 
   ngOnInit(): void {
@@ -121,6 +126,15 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       nombre = area[0].nombre;
     }
     return nombre;
+  }
+
+  obtenerNombreSucursal(idSucursal: string): string {
+    let str = '';
+    let temp = this.sucursales.filter((x) => x.id == idSucursal);
+    if (temp.length > 0) {
+      str = temp[0].nombre;
+    }
+    return str;
   }
 
   obtenerBackgroundColorPrioridad(value: string): string {
@@ -318,6 +332,19 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
           .catch((error) => console.error(error));
       },
       reject: () => { },
+    });
+  }
+
+  obtenerSucursales() {
+    this.branchesService.get().subscribe({
+      next: (data) => {
+        this.sucursales = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
     });
   }
 }

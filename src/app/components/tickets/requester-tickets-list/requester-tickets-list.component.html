@@ -8,6 +8,7 @@
       <th>FECHA</th>
       <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
       <th>AREA</th>
+      <th *ngIf="esEspectadorActivo">SUCURSAL</th>
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
       <th>CATEGORÍA</th>
@@ -37,6 +38,9 @@
       </td>
       <td class="text-center">
         {{ obtenerNombreArea(ticket.idArea) }}
+      </td>
+      <td class="text-center" *ngIf="esEspectadorActivo">
+        {{obtenerNombreSucursal(ticket.idSucursal)}}
       </td>
       <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
       <td class="text-center">
@@ -68,16 +72,16 @@
       </td>
 
       <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
-        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px" [disabled]="!esEspectadorActivo"
-          *ngIf="mostrarAccionFinalizar">
+        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
+          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar">
           <i class="bx bx-check-circle bx-sm" pTooltip="FINALIZAR TICKET" tooltipPosition="top"></i>
         </button>
-        <button class="btn btn-warning" (click)="onClickRechazar(ticket)" style="margin: 2px" [disabled]="!esEspectadorActivo"
-          *ngIf="mostrarAccionFinalizar && ticket.idEstatusTicket == '7'">
+        <button class="btn btn-warning" (click)="onClickRechazar(ticket)" style="margin: 2px"
+          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar && ticket.idEstatusTicket == '7'">
           <i class="bx bx-undo bx-sm" pTooltip="RECHAZAR SPORTE" tooltipPosition="top"></i>
         </button>
-        <button class="btn btn-warning" (click)="onClickValidar(ticket)" style="margin: 2px" [disabled]="!esEspectadorActivo"
-          *ngIf="mostrarAccionValidar && ticket.idEstatusTicket != '7'">
+        <button class="btn btn-warning" (click)="onClickValidar(ticket)" style="margin: 2px"
+          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionValidar && ticket.idEstatusTicket != '7'">
           <i class="bx bx-check-circle bx-sm" pTooltip="VALIDAR TICKET" tooltipPosition="top"></i>
         </button>
         <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px"
@@ -86,7 +90,7 @@
             tooltipPosition="top"></i>
         </button>
         <button *ngIf="(ticket != undefined && ticket!.idPrioridadTicket != '1') && mostrarAccionPanico"
-          class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px" [disabled]="!esEspectadorActivo">
+          class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px" [disabled]="esEspectadorActivo">
           <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)" pTooltip="PÁNICO" tooltipPosition="top"></i>
         </button>
       </td>

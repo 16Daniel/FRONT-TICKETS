@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -77,6 +77,23 @@ export class BranchesSysTabComponent {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['esEspectadorActivo']) {
+      const prev = changes['esEspectadorActivo'].previousValue;
+      const curr = changes['esEspectadorActivo'].currentValue;
+      console.log(`esEspectadorActivo cambió de ${prev} a ${curr}`);
+
+      // Aquí pones la lógica que quieres que se ejecute cuando cambie
+      this.onEspectadorActivoChanged(curr);
+      this.cdr.detectChanges();
+    }
+  }
+
+  onEspectadorActivoChanged(nuevoValor: boolean) {
+    // Tu lógica cuando cambia el valor
+    console.log('Nuevo valor de esEspectadorActivo:', nuevoValor);
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {

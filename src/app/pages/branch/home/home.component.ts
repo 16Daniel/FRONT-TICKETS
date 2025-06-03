@@ -21,5 +21,11 @@ import { BranchesTabsComponent } from '../../../components/tickets/branches-tabs
   templateUrl: './home.component.html',
 })
 export default class HomeComponent {
+  esEspectadorActivo: boolean = false;
+
   constructor() { }
+
+  activarEspectador(activar: boolean) {
+    this.esEspectadorActivo = activar;
+  }
 }
