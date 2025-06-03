@@ -18,6 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
 
 import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-modal-ticket-chat',
@@ -39,7 +40,7 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
   @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 
-  userdata: any;
+  userdata: Usuario;
   comentario: string = '';
 
   constructor(
@@ -69,6 +70,11 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
 
   onHide() {
     this.closeEvent.emit(false); // Cerrar modal
+  }
+
+  respuestaRapida() {
+    this.comentario = "ESTE TICKET YA ESTA TERMINADO. A ESPERA QUE LA SUCURSAL VALIDE Y FINALIZE EL TICKET MIENTRAS TANTO, NO SE PODRA LEVANTAR NINGUN OTRO TICKET HASTA TENER LA VALIDACION O SE CONFIRME QUE EL TICKET NO ESTA LISTO SALUDOS..."
+    this.enviarComentarioChat();
   }
 
   enviarComentarioChat() {
@@ -123,13 +129,12 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
   }
 
   getDate(tsmp: Timestamp | Date): Date {
-     if (tsmp instanceof Date) {
-        return tsmp;
-    } else
-    {
-         const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date; 
+    if (tsmp instanceof Date) {
+      return tsmp;
+    } else {
+      const firestoreTimestamp = tsmp; // Ejemplo
+      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      return date;
     }
   }
 }
