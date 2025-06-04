@@ -16,17 +16,22 @@
 </div>
 
 <p-tabView>
+
   <p-tabPanel header="SISTEMAS">
     <app-branches-sys-tab [esEspectadorActivo]="esEspectadorActivo" [tickets]="filtrarTicketsPorArea('1')"
       [todosLosTickets]="todosLosTickets"></app-branches-sys-tab>
   </p-tabPanel>
+
   <p-tabPanel header="AUDIO Y VIDEO">
     <app-branches-audio-video-tab [esEspectadorActivo]="esEspectadorActivo"
       [tickets]="filtrarTicketsPorArea('2')"></app-branches-audio-video-tab>
   </p-tabPanel>
+
   <p-tabPanel header="MANTENIMIENTO">
-    <p>Contenido de la tercera pestaña.</p>
+    <app-branches-maintenance-tab [esEspectadorActivo]="esEspectadorActivo"
+      [tickets]="filtrarTicketsPorArea('4')"></app-branches-maintenance-tab>
   </p-tabPanel>
+
   <p-tabPanel header="ADMINISTRACIÓN ">
     <p>Contenido de la tercera pestaña.</p>
   </p-tabPanel>

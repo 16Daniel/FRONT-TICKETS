@@ -224,7 +224,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         comentarios: [],
         fechaFin: null,
         fechaEstimacion,
-        idTipoSoporte: '1',
+        idTipoSoporte: this.obtenerTipoSoporte(this.formArea.id),
         idUsuario: this.usuarioActivo.id,
         nombreCategoria: this.formCategoria.nombre,
         folio,
@@ -238,6 +238,13 @@ export class ModalGenerateTicketComponent implements OnInit {
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       this.closeEvent.emit(false); // Cerrar modal
     });
+  }
+
+  obtenerTipoSoporte(idArea: string) {
+
+    if (idArea == '1') return '2';
+    else if (idArea == '2') return '1';
+    else return '1';
   }
 
   obtenerIdResponsableTicket(): string {
