@@ -21,16 +21,15 @@ import { Usuario } from '../../../models/usuario.model';
 import { Area } from '../../../models/area';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
-import { PriorityTicketsAccordionAnalystComponent } from '../../../components/tickets/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { NotificationService } from '../../../services/notification.service';
 import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
 import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
+import { PriorityTicketsAccordionAnalystComponent } from '../../../components/analyst/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 
 @Component({
   selector: 'app-analyst-home',

@@ -5,13 +5,13 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { Usuario } from '../../../models/usuario.model';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { Area } from '../../../models/area';
-import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
-import { TooltipModule } from 'primeng/tooltip';
+import { AdminTicketsListComponent } from '../../admin/admin-tickets-list/admin-tickets-list.component';
 
 @Component({
   selector: 'app-branches-tickets-accordion',

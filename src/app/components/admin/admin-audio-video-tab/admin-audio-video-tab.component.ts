@@ -1,32 +1,31 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Subscription } from 'rxjs';
-
+import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { Ticket } from '../../../models/ticket.model';
 import { Sucursal } from '../../../models/sucursal.model';
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
+import { Subscription } from 'rxjs';
+import { Usuario } from '../../../models/usuario.model';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TicketsService } from '../../../services/tickets.service';
 import { UsersService } from '../../../services/users.service';
-import { Usuario } from '../../../models/usuario.model';
-import { Ticket } from '../../../models/ticket.model';
+import { BranchesService } from '../../../services/branches.service';
+import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { ToastModule } from 'primeng/toast';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { BranchesTicketsAccordionComponent } from '../../../components/tickets/branches-tickets-accordion/branches-tickets-accordion.component';
-import { UserTicketsAccordionComponent } from '../../../components/tickets/user-tickets-accordion/user-tickets-accordion.component';
-import { BranchesService } from '../../../services/branches.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
-import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
+import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
+import { AccordionBranchMaintenanceAvComponent } from '../../maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { Timestamp } from '@angular/fire/firestore';
+import { BranchesTicketsAccordionComponent } from '../../branch/branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
-  selector: 'app-admin-sys-tab',
+  selector: 'app-admin-audio-video-tab',
   standalone: true,
   imports: [
     ToastModule,
@@ -39,17 +38,15 @@ import { Timestamp } from '@angular/fire/firestore';
     ModalTicketsHistoryComponent,
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
-    AccordionBranchMaintenance10x10Component,
     ModalTicketDetailComponent,
+    AccordionBranchMaintenanceAvComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './admin-sys-tab.component.html',
-  styleUrl: './admin-sys-tab.component.scss',
+  templateUrl: './admin-audio-video-tab.component.html',
+  styleUrl: './admin-audio-video-tab.component.scss',
 })
 
-export class AdminSysTabComponent {
-  @ViewChild(AccordionBranchMaintenance10x10Component) hijo!: AccordionBranchMaintenance10x10Component;
-
+export class AdminAudioVideoTabComponent {
   tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
@@ -58,7 +55,7 @@ export class AdminSysTabComponent {
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: Mantenimiento10x10[] = [];
+  mantenimientos: Mantenimiento6x6AV[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -68,10 +65,8 @@ export class AdminSysTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea: string = '1';
-  textoMantenimiento: string = '';
+  IdArea: string = '2';
   ordenarMantenimientosFecha: boolean = false;
-
   auxMostrarMantenimientos = true;
 
   constructor(
@@ -80,7 +75,7 @@ export class AdminSysTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance10x10Service
+    private maintenanceService: Maintenance6x6AvService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -89,9 +84,6 @@ export class AdminSysTabComponent {
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.todosLostickets = this.tickets;
-
-    if (this.usuario.idArea == '1') this.textoMantenimiento = '10X10';
-    if (this.usuario.idArea == '2') this.textoMantenimiento = '6X6';
   }
 
   ngAfterViewInit() {
@@ -184,8 +176,6 @@ export class AdminSysTabComponent {
               return x;
             });
           });
-
-
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -193,6 +183,17 @@ export class AdminSysTabComponent {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
+  }
+
+  getDate(tsmp: Timestamp | any): Date {
+    try {
+      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+      const firestoreTimestamp = tsmp; // Ejemplo
+      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      return date;
+    } catch {
+      return tsmp;
+    }
   }
 
   obtenerUsuariosHelp() {
@@ -225,17 +226,6 @@ export class AdminSysTabComponent {
     this.ticket = itemticket;
   }
 
-  getDate(tsmp: Timestamp | any): Date {
-    try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    } catch {
-      return tsmp;
-    }
-  }
-
   filtrarMantenimientos() {
     this.auxMostrarMantenimientos = false;
     setTimeout(() => {
@@ -250,13 +240,13 @@ export class AdminSysTabComponent {
       return this.sucursales.filter(sucursal =>
         idsSucursalesUsuario?.includes(String(sucursal.id)) &&
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes('1')
+        sucursal.activoMantenimientos.includes('2')
       );
     }
     else {
       return this.sucursales.filter(sucursal =>
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes('1')
+        sucursal.activoMantenimientos.includes('2')
       );
     }
   }

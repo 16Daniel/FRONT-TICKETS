@@ -1,7 +1,17 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ToastModule } from 'primeng/toast';
+import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
+import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
+import { BranchesTicketsAccordionComponent } from '../../branch/branches-tickets-accordion/branches-tickets-accordion.component';
+import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
+import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { Ticket } from '../../../models/ticket.model';
 import { Sucursal } from '../../../models/sucursal.model';
-import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { Subscription } from 'rxjs';
 import { Usuario } from '../../../models/usuario.model';
@@ -9,23 +19,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TicketsService } from '../../../services/tickets.service';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
-import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
-import { ToastModule } from 'primeng/toast';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
-import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
-import { AccordionBranchMaintenanceAvComponent } from '../../maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
-  selector: 'app-admin-audio-video-tab',
+  selector: 'app-admin-maintenance-tab',
   standalone: true,
   imports: [
     ToastModule,
@@ -39,14 +36,14 @@ import { Timestamp } from '@angular/fire/firestore';
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    AccordionBranchMaintenanceAvComponent
+    // AccordionBranchMaintenanceAvComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './admin-audio-video-tab.component.html',
-  styleUrl: './admin-audio-video-tab.component.scss',
+  templateUrl: './admin-maintenance-tab.component.html',
+  styleUrl: './admin-maintenance-tab.component.scss'
 })
 
-export class AdminAudioVideoTabComponent {
+export class AdminMaintenanceTabComponent {
   tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
@@ -55,7 +52,7 @@ export class AdminAudioVideoTabComponent {
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: Mantenimiento6x6AV[] = [];
+  // mantenimientos: Mantenimiento6x6AV[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -65,7 +62,7 @@ export class AdminAudioVideoTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea: string = '2';
+  IdArea: string = '4';
   ordenarMantenimientosFecha: boolean = false;
   auxMostrarMantenimientos = true;
 
@@ -75,7 +72,7 @@ export class AdminAudioVideoTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance6x6AvService
+    // private maintenanceService: Maintenance6x6AvService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -158,24 +155,24 @@ export class AdminAudioVideoTabComponent {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.maintenanceService
-          .getUltimos3Mantenimientos(
-            this.sucursales.map((sucursal) => sucursal.id)
-          )
-          .subscribe((result) => {
-            let data = result.filter((element) => element.length > 0);
-            this.mantenimientos = [];
-            for (let itemdata of data) {
-              for (let item of itemdata) {
-                this.mantenimientos.push(item);
-              }
-            }
+        // this.maintenanceService
+        //   .getUltimos3Mantenimientos(
+        //     this.sucursales.map((sucursal) => sucursal.id)
+        //   )
+        //   .subscribe((result) => {
+        //     let data = result.filter((element) => element.length > 0);
+        //     this.mantenimientos = [];
+        //     for (let itemdata of data) {
+        //       for (let item of itemdata) {
+        //         this.mantenimientos.push(item);
+        //       }
+        //     }
 
-            this.mantenimientos = this.mantenimientos.map(x => {
-              x.fecha = this.getDate(x.fecha);
-              return x;
-            });
-          });
+        //     this.mantenimientos = this.mantenimientos.map(x => {
+        //       x.fecha = this.getDate(x.fecha);
+        //       return x;
+        //     });
+        //   });
         this.cdr.detectChanges();
       },
       error: (error) => {

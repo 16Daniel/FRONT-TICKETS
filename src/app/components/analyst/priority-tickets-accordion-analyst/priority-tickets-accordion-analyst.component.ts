@@ -6,8 +6,8 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
-import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 import { Usuario } from '../../../models/usuario.model';
+import { RequesterTicketsListComponent } from '../../common/requester-tickets-list/requester-tickets-list.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',

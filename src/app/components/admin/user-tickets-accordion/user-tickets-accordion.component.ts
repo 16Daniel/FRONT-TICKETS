@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { Usuario } from '../../../models/usuario.model';
-import { RequesterTicketsListComponent } from "../requester-tickets-list/requester-tickets-list.component";
 
 @Component({
   selector: 'app-user-tickets-accordion',
