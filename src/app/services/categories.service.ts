@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 import {
   collection,
   collectionData,
-  deleteDoc,
   doc,
   Firestore,
   getDoc,
+  onSnapshot,
   orderBy,
   query,
   setDoc,
+  updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Categoria } from '../models/categoria.mdoel';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -20,22 +21,68 @@ import { HttpClient } from '@angular/common/http';
 export class CategoriesService {
   pathName: string = 'cat_categorias';
 
-  constructor(private firestore: Firestore, private http: HttpClient) {
-    // this.inicializarCatalogo();
+  constructor(private firestore: Firestore) {
   }
 
-  get(): Observable<Categoria[] | any[]> {
-    const vcollection = collection(this.firestore, this.pathName);
-    const q = query(vcollection, orderBy('id'));
-    return collectionData(vcollection, { idField: 'id' });
+  async create(categoria: Categoria): Promise<void> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${categoria.id}`);
+
+    const snapshot = await getDoc(documentRef);
+
+    if (snapshot.exists()) {
+      throw new Error(`La categoria con id ${categoria.id} ya existe.`);
+    }
+
+    await setDoc(documentRef, categoria);
+  }
+
+  get(idArea?: string): Observable<Categoria[]> {
+    return new Observable<Categoria[]>((observer) => {
+      const collectionRef = collection(this.firestore, this.pathName);
+
+      // Arreglo para los filtros
+      const constraints = [where('eliminado', '==', false)];
+      if (idArea) {
+        constraints.push(where('idArea', '==', parseInt(idArea)));
+      }
+
+      const q = query(collectionRef, ...constraints);
+
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          const categorias: Categoria[] = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<Categoria, 'id'>),
+          }));
+
+          categorias.sort((a, b) => Number(a.id) - Number(b.id));
+
+          observer.next(categorias);
+        },
+        (error) => {
+          console.error('Error en la suscripción:', error);
+          observer.error(error);
+        }
+      );
+
+      return { unsubscribe };
+    });
+  }
+
+  async update(categoria: Categoria | any, idCategoria: string): Promise<void> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${idCategoria}`);
+    return updateDoc(documentRef, categoria);
   }
 
   async delete(idSucursal: string): Promise<void> {
     try {
       const docRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
-      await deleteDoc(docRef);
+      await updateDoc(docRef, {
+        eliminado: true,
+      });
     } catch (error) {
-      console.error('Error al eliminar el documento:', error);
+      console.error('Error al marcar como eliminado:', error);
     }
   }
 
@@ -58,35 +105,5 @@ export class CategoriesService {
     } else {
       throw new Error('Documento no encontrado');
     }
-  }
-
-  private inicializarCatalogo() {
-    this.loadJson().subscribe((response) => {
-      console.log('JSON cargado:', response);
-      this.postMasivo(response);
-    });
-  }
-
-  // Método para hacer un POST masivo conservando los IDs
-  async postMasivo(data: any[]): Promise<void> {
-    try {
-      const sucursalesCollection = collection(this.firestore, this.pathName);
-
-      // Recorre el array de datos y guarda cada objeto en Firestore
-      for (const item of data) {
-        // Usa setDoc para especificar el ID del documento
-        await setDoc(doc(sucursalesCollection, item.id.toString()), item);
-        console.log(`Documento guardado con ID ${item.id}:`, item);
-      }
-
-      console.log('Todos los documentos han sido guardados correctamente.');
-    } catch (error) {
-      console.error('Error al guardar los documentos:', error);
-      throw error; // Propaga el error para manejarlo en el componente
-    }
-  }
-
-  private loadJson(): Observable<any> {
-    return this.http.get('/assets/catalogs/categorias.json'); // Ruta al archivo JSON
   }
 }

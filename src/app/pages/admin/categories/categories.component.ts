@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 
 import { Categoria } from '../../../models/categoria.mdoel';
 import { CategoriesService } from '../../../services/categories.service';
+import { Usuario } from '../../../models/usuario.model';
+import { ModalCategoryCreateComponent } from '../../../modals/categories/modal-category-create/modal-category-create.component';
 
 @Component({
   selector: 'app-categories',
@@ -21,7 +23,7 @@ import { CategoriesService } from '../../../services/categories.service';
     TableModule,
     ToastModule,
     ConfirmDialogModule,
-    // ModalBranchCreateComponent
+    ModalCategoryCreateComponent
   ],
   providers: [ConfirmationService, MessageService], templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss'
@@ -32,13 +34,16 @@ export default class CategoriesComponent {
   categorias: Categoria[] = [];
   categoriaSeleccionada: Categoria = new Categoria;
   subscripcion: Subscription | undefined;
+  usuario: Usuario;
 
   constructor(
     private confirmationService: ConfirmationService,
     private categoriesServicce: CategoriesService,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
-  ) { }
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
     this.obtenerCategorias();
@@ -51,7 +56,7 @@ export default class CategoriesComponent {
   }
 
   obtenerCategorias = () =>
-    this.subscripcion = this.categoriesServicce.get().subscribe(result => {
+    this.subscripcion = this.categoriesServicce.get(this.usuario.idArea).subscribe(result => {
       this.categorias = result;
       this.cdr.detectChanges();
     }, (error) => {

@@ -3,4 +3,5 @@ export class Categoria {
   idArea: string = '';
   nombre: string = '';
   estimacion: number | undefined;
+  elimiando: boolean = false;
 }

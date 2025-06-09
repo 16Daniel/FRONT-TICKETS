@@ -4,34 +4,37 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
-import { Area } from '../../../models/area';
-import { AreasService } from '../../../services/areas.service';
+import { Categoria } from '../../../models/categoria.mdoel';
+import { CategoriesService } from '../../../services/categories.service';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
-  selector: 'app-modal-area-create',
+  selector: 'app-modal-category-create',
   standalone: true,
   imports: [CommonModule, FormsModule, DialogModule],
-  templateUrl: './modal-area-create.component.html',
-  styleUrl: './modal-area-create.component.scss'
+  templateUrl: './modal-category-create.component.html',
+  styleUrl: './modal-category-create.component.scss'
 })
 
-export class ModalAreaCreateComponent {
-
-  @Input() mostrarModalCrearArea: boolean = false;
+export class ModalCategoryCreateComponent {
+  @Input() mostrarModalCrearCategoria: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
-  @Input() area: Area | any;
-  @Input() esNuevaArea: boolean = true;
-  idAreaEditar: string = '';
+  @Input() categoria: Categoria | any;
+  @Input() esNuevaCategoria: boolean = true;
+  idCategoriaEditar: string = '';
+  usuario: Usuario;
 
   constructor(
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private areasService: AreasService
-  ) { }
+    private categoriesService: CategoriesService
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
-    if (!this.esNuevaArea) {
-      this.idAreaEditar = this.area.id;
+    if (!this.esNuevaCategoria) {
+      this.idCategoriaEditar = this.categoria.id;
     }
   }
 
@@ -49,7 +52,7 @@ export class ModalAreaCreateComponent {
       return;
     }
 
-    this.esNuevaArea ? this.crear() : this.actualizar();
+    this.esNuevaCategoria ? this.crear() : this.actualizar();
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -57,9 +60,14 @@ export class ModalAreaCreateComponent {
   }
 
   async crear() {
-    this.area = { ...this.area, id: parseInt(this.area.id) }
+    this.categoria =
+    {
+      ...this.categoria,
+      id: parseInt(this.categoria.id),
+      idArea: this.usuario.idArea
+    }
     try {
-      await this.areasService.create({ ...this.area });
+      await this.categoriesService.create({ ...this.categoria });
       this.cdr.detectChanges();
       this.closeEvent.emit(false); // Cerrar modal
       this.showMessage('success', 'Success', 'Guardado correctamente');
@@ -70,9 +78,9 @@ export class ModalAreaCreateComponent {
   }
 
   actualizar() {
-    this.area = { ...this.area, id: parseInt(this.area.id) }
-    this.areasService
-      .update(this.area, this.idAreaEditar)
+    this.categoria = { ...this.categoria, id: parseInt(this.categoria.id) }
+    this.categoriesService
+      .update(this.categoria, this.idCategoriaEditar)
       .then(() => {
         this.cdr.detectChanges();
         this.closeEvent.emit(false); // Cerrar modal

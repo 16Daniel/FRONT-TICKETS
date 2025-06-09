@@ -1,0 +1,44 @@
+<p-dialog [header]="!esNuevaCategoria ? 'ACTUALIZAR AREA' :'CREAR AREA'" [(visible)]="mostrarModalCrearCategoria"
+    [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+    <form #form="ngForm" (ngSubmit)="enviar(form)">
+
+        <p class="fw-bold">ID</p>
+        <input [disabled]="!esNuevaCategoria" class="form-control" style="height: 48px;" type="text"
+            placeholder="ESCRIBE EL ID" [(ngModel)]="categoria.id" name="id"
+            [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}" #formidCtrl="ngModel" required>
+        <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
+        <p class="fw-bold">NOMBRE</p>
+        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
+            [(ngModel)]="categoria.nombre" name="nombre"
+            [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
+            required>
+        <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
+        <p class="fw-bold">ESTIMACIÓN</p>
+        <input class="form-control" style="height: 48px;" type="number" placeholder="ESCRIBE EL TIEMPO DE ESTIMACIÓN"
+            [(ngModel)]="categoria.estimacion" name="estimacion"
+            [ngClass]="{'p-invalid': formEstimacionCtrl.invalid && formEstimacionCtrl.touched}"
+            #formEstimacionCtrl="ngModel" required>
+        <small *ngIf="formEstimacionCtrl.invalid && formEstimacionCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3">
+                <i class='bx bx-send'></i>
+                <label *ngIf="esNuevaCategoria">ENVIAR</label>
+                <label *ngIf="!esNuevaCategoria">ACTUALIZAR</label>
+            </button>
+        </div>
+
+    </form>
+
+</p-dialog>
