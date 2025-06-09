@@ -73,6 +73,13 @@ export const routes: Routes = [
         canActivate: [],
       },
       {
+        path: 'categories',
+        title: 'Categorias',
+        loadComponent: () =>
+          import('./pages/admin/categories/categories.component'),
+        canActivate: [],
+      },
+      {
         path: 'areas',
         title: 'Areas',
         loadComponent: () =>

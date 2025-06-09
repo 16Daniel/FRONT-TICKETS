@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import {
   collection,
   collectionData,
+  deleteDoc,
   doc,
   Firestore,
   getDoc,
+  orderBy,
+  query,
   setDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -23,7 +26,17 @@ export class CategoriesService {
 
   get(): Observable<Categoria[] | any[]> {
     const vcollection = collection(this.firestore, this.pathName);
+    const q = query(vcollection, orderBy('id'));
     return collectionData(vcollection, { idField: 'id' });
+  }
+
+  async delete(idSucursal: string): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
+      await deleteDoc(docRef);
+    } catch (error) {
+      console.error('Error al eliminar el documento:', error);
+    }
   }
 
   getCategoriasprov(idprov: string): Observable<any[]> {

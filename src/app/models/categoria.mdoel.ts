@@ -1,6 +1,6 @@
-export interface Categoria {
-  id: string;
-  idArea: string;
-  nombre: string;
-  estimacion: number;
+export class Categoria {
+  id: string | any;
+  idArea: string = '';
+  nombre: string = '';
+  estimacion: number | undefined;
 }
