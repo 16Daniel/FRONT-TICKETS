@@ -12,7 +12,7 @@ import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Sucursal } from '../../../models/sucursal.model';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { AreasService } from '../../../services/areas.service';

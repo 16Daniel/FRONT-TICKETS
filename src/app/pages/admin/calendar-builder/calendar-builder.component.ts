@@ -31,7 +31,7 @@ import { ComentarioVisita } from '../../../models/comentario-visita.model';
 import { MantenimientoFactoryService } from './maintenance-factory.service';
 import { BranchVisitItemComponent } from '../../../components/common/branch-visit-item/branch-visit-item.component';
 import { AreasService } from '../../../services/areas.service';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { ModalActivityComponent } from '../../../modals/calendar/modal-activity/modal-activity.component';
 
 @Component({

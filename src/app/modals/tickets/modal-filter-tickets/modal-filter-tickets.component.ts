@@ -17,7 +17,7 @@ import { Categoria } from '../../../models/categoria.mdoel';
 import { Ticket } from '../../../models/ticket.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { StatusTicketService } from '../../../services/status-ticket.service';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { AreasService } from '../../../services/areas.service';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';

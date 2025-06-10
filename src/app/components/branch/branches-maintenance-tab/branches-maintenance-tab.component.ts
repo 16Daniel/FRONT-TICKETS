@@ -11,7 +11,7 @@ import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tick
 import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-rating/modal-branch-rating.component';
 import { Sucursal } from '../../../models/sucursal.model';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { Usuario } from '../../../models/usuario.model';
 import { ConfirmationService } from 'primeng/api';
 

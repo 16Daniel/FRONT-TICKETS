@@ -27,7 +27,7 @@ import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-c
 import { Usuario } from '../../../models/usuario.model';
 import { RatingStarsComponent } from '../../common/rating-stars/rating-stars.component';
 import { AreasService } from '../../../services/areas.service';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { ModalValidateTicketComponent } from '../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';

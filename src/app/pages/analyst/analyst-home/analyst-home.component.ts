@@ -18,7 +18,7 @@ import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tick
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { Usuario } from '../../../models/usuario.model';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { NotificationService } from '../../../services/notification.service';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Area } from '../models/area';
+import { Area } from '../models/area.model';
 import {
   collection,
   collectionData,

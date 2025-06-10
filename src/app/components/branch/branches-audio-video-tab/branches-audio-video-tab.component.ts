@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { Usuario } from '../../../models/usuario.model';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';

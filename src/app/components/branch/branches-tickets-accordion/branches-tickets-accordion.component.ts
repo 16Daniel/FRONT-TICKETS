@@ -10,7 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Usuario } from '../../../models/usuario.model';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { AdminTicketsListComponent } from '../../admin/admin-tickets-list/admin-tickets-list.component';
 
 @Component({

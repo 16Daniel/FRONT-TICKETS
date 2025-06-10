@@ -13,7 +13,7 @@ import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
 import { RolesService } from '../../../services/roles.service';
 import { DocumentsService } from '../../../services/documents.service';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { AreasService } from '../../../services/areas.service';
 
 @Component({

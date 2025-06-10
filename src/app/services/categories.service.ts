@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
+  addDoc,
   collection,
   collectionData,
   doc,
   Firestore,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -14,6 +16,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Categoria } from '../models/categoria.mdoel';
+import { Subcategoria } from '../models/subcategoria.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +46,7 @@ export class CategoriesService {
       // Arreglo para los filtros
       const constraints = [where('eliminado', '==', false)];
       if (idArea) {
-        constraints.push(where('idArea', '==', parseInt(idArea)));
+        // constraints.push(where('idArea', '==', parseInt(idArea)));
       }
 
       const q = query(collectionRef, ...constraints);
@@ -104,6 +107,23 @@ export class CategoriesService {
       return documentSnapshot.data(); // Retorna los datos del documento
     } else {
       throw new Error('Documento no encontrado');
+    }
+  }
+
+  addSubcategoria(idCategoria: string, sub: Subcategoria) {
+    const ref = collection(this.firestore, `${this.pathName}/${idCategoria}/subcategorias`);
+    return addDoc(ref, sub);
+  }
+
+  async obtenerSecuencial(): Promise<number> {
+    try {
+      const collectionRef = collection(this.firestore, this.pathName);
+      const snapshot = await getDocs(collectionRef);
+      const count = snapshot.size;
+      return count + 1;
+    } catch (error) {
+      console.error('Error al obtener el count de tickets:', error);
+      throw error;
     }
   }
 }

@@ -21,7 +21,7 @@ import { Ticket } from '../../../models/ticket.model';
 import { BranchesService } from '../../../services/branches.service';
 import { CategoriesService } from '../../../services/categories.service';
 import { AreasService } from '../../../services/areas.service';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { FolioGeneratorService } from '../../../services/folio-generator.service';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
