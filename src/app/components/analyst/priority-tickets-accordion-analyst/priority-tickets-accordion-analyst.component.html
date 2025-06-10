@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<p-accordion class="w-full">
+  <p-accordionTab *ngFor="let item of ordenarSucursalesUser(sucursales)">
+    <ng-template pTemplate="header">
+      <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center" [style]="{
+          'background-color': obtenerColorDeFondoSucursal(
+            obtenerTicketsPorSucursal(item.id).length
+          )
+        }">
+
+        <p-badge [value]="obtenerTicketsPorSucursal(item.id).length" class="mr-2" [size]="'large'"
+          [style]="{ 'background-color': 'white', color: 'black' }" />
+
+        <span class="fw-bold flex-grow-1" [style]="{
+              color: obtenerColorDeTexto(
+                obtenerTicketsPorSucursal(item.id).length
+              )
+            }">
+          {{ item.nombre }}
+        </span>
+
+        <span class="icon-circle bx-tada" *ngIf="verificarTicketsNuevos(obtenerTicketsPorSucursal(item.id))">
+          <!-- <i class="pi pi-headphones" pTooltip="NUEVO TICKET" tooltipPosition="top"></i> -->
+          <i class="fas fa-headset" style="font-size: 1.5rem; color: #FF0000;" pTooltip="NUEVO TICKET" tooltipPosition="top"></i>
+        </span>
+
+        <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(obtenerTicketsPorSucursal(item.id))">
+          <i class="pi pi-comments" style="font-size: 1.5rem; color: #0F99E4;" pTooltip="NUEVO CHAT" tooltipPosition="top"></i>
+        </span>
+
+      </span>
+    </ng-template>
+
+    <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)" [esEspectadorActivo]="esEspectadorActivo"
+      (clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
+      [mostrarEstrellas]="false"></app-requester-tickets-list>
+  </p-accordionTab>
+</p-accordion>

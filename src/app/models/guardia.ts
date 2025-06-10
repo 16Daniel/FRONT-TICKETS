@@ -4,5 +4,6 @@ export interface Guardia
 { 
     id?:string|any;
     idUsuario:string; 
-    fecha:Timestamp;  
+    idArea: string;
+    fecha:Timestamp;
 }

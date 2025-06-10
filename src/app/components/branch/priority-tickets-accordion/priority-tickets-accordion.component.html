@@ -1,0 +1,30 @@
+<p-accordion class="w-full">
+    <!-- <p-accordionTab *ngFor="let item of ['PÁNICO', 'ALTA', 'MEDIA', 'BAJA']; let i = index"
+        (click)="toggleAccordion(i)"> -->
+    <p-accordionTab *ngFor="let item of ['PÁNICO', 'ALTA', 'MEDIA', 'BAJA']">
+        <ng-template pTemplate="header">
+            <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100"
+                [style]="{'background-color': obtenerBackgroundColorPrioridad(item)}">
+                <p-badge [value]="obtenerContadorTickets(item)" class="ml-auto mr-2" size="large"
+                    [style]="{'background-color':'white','color':'black'}" />
+
+                <span class="fw-bold flex-grow-1"
+                    [style]="{ 'color': (item === 'MEDIA' || item === 'BAJA') ? 'black' : 'white' }"
+                    style="padding-top: 7px;">
+                    {{ item }}
+                </span>
+
+                <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(obtenerTicketsFiltrados(item))">
+                    <i class="pi pi-comments" style="font-size: 1.5rem; color: #0F99E4;" pTooltip="NUEVO CHAT" tooltipPosition="top"></i>
+                </span>
+
+                <span class="icon-circle bx-tada" *ngIf="verificarTicketsPorValidar(obtenerTicketsFiltrados(item))">
+                    <i class="pi pi-bell" style="font-size: 1.5rem; color: #FF0000;" pTooltip="TICKET LISTO" tooltipPosition="top"></i>
+                </span>
+            </span>
+        </ng-template>
+        <app-requester-tickets-list [tickets]="obtenerTicketsFiltrados(item)"
+            (clickEvent)="abrirModalDetalleTicket($event)" [mostrarEstrellas]="false"
+            [mostrarAccionValidar]="false" [esEspectadorActivo]="esEspectadorActivo"></app-requester-tickets-list>
+    </p-accordionTab>
+</p-accordion>

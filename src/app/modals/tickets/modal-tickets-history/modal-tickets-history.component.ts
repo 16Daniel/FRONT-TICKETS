@@ -15,10 +15,10 @@ import { CalendarModule } from 'primeng/calendar';
 
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
-import { RequesterTicketsListComponent } from '../../../components/tickets/requester-tickets-list/requester-tickets-list.component';
 import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
 import { Usuario } from '../../../models/usuario.model';
+import { RequesterTicketsListComponent } from '../../../components/common/requester-tickets-list/requester-tickets-list.component';
 
 @Component({
   selector: 'app-modal-tickets-history',

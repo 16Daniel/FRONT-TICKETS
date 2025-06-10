@@ -18,19 +18,18 @@ import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tick
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { Usuario } from '../../../models/usuario.model';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
-import { PriorityTicketsAccordionAnalystComponent } from '../../../components/tickets/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { NotificationService } from '../../../services/notification.service';
 import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
 import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
+import { PriorityTicketsAccordionAnalystComponent } from '../../../components/analyst/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 
 @Component({
   selector: 'app-analyst-home',
@@ -82,8 +81,9 @@ export default class AnalystHomeComponent implements OnInit {
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];
   todasSucursales: Sucursal[] = [];
-
   tituloMantenimiento: string = '';
+  ordenarMantenimientosFecha: boolean = false;
+  auxMostrarMantenimientos = true;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -278,9 +278,10 @@ export default class AnalystHomeComponent implements OnInit {
     try {
       await this.usersService.updateUserGuardStatus(usuario.id, usuario.esGuardia);
       localStorage.setItem('rwuserdatatk', JSON.stringify(usuario));
-      this.sucursales = usuario.esGuardia ? this.todasSucursales : this.usuario.sucursales;
-      this.cdr.detectChanges();
-
+      // this.sucursales = usuario.esGuardia ? this.todasSucursales : this.usuario.sucursales;
+      // this.cdr.detectChanges();
+      // this.getTicketsResponsable();
+      window.location.reload();
     } catch (error) {
       console.error('Error actualizando modo guardia:', error);
     }
@@ -291,5 +292,22 @@ export default class AnalystHomeComponent implements OnInit {
       this.todasSucursales = result;
       this.sucursales = this.usuario.esGuardia ? result : this.usuario.sucursales;
     });
+  }
+
+  filtrarMantenimientos() {
+    this.auxMostrarMantenimientos = false;
+    setTimeout(() => {
+      this.auxMostrarMantenimientos = true;
+      this.cdr.detectChanges();
+    }, 400);
+  }
+
+  sucursalesMantenimeintosActivos = () => {
+    const idsSucursalesUsuario = this.usuario.sucursales.map(s => String(s.id));
+    return this.todasSucursales.filter(sucursal =>
+      idsSucursalesUsuario?.includes(String(sucursal.id)) &&
+      Array.isArray(sucursal.activoMantenimientos) &&
+      sucursal.activoMantenimientos.includes(this.usuario.idArea)
+    );
   }
 }

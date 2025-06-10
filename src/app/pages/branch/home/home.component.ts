@@ -5,7 +5,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { BranchesTabsComponent } from '../../../components/tickets/branches-tabs/branches-tabs.component';
+import { BranchesTabsComponent } from '../../../components/branch/branches-tabs/branches-tabs.component';
 
 @Component({
   selector: 'app-home',
@@ -21,5 +21,11 @@ import { BranchesTabsComponent } from '../../../components/tickets/branches-tabs
   templateUrl: './home.component.html',
 })
 export default class HomeComponent {
+  esEspectadorActivo: boolean = false;
+
   constructor() { }
+
+  activarEspectador(activar: boolean) {
+    this.esEspectadorActivo = activar;
+  }
 }

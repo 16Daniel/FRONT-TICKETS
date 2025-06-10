@@ -1,0 +1,111 @@
+<p-table [value]="tickets" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+  styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+  [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
+  <ng-template pTemplate="header">
+    <tr class="text-center">
+      <th><span class="fs-1">🚥</span></th>
+      <th>FOLIO</th>
+      <th>FECHA</th>
+      <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
+      <th>AREA</th>
+      <th *ngIf="esEspectadorActivo">SUCURSAL</th>
+      <th>SOLICITANTE</th>
+      <th>RESPONSABLE</th>
+      <th>CATEGORÍA</th>
+      <th>ESTATUS</th>
+      <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
+      <th *ngIf="mostrarAcciones">ACCIONES</th>
+    </tr>
+  </ng-template>
+  <!-- FF495F -->
+  <ng-template pTemplate="body" let-ticket>
+    <tr [pSelectableRow]="ticket"
+      [ngClass]="{'row-highlight': ticket.idEstatusTicket == '7' && ticketSeleccionado !== ticket}">
+      <td class="text-center" *ngIf="ticket.idPrioridadTicket == '1'">
+        <i class="bx bxs-hot bx-sm" style="color: red"></i>
+      </td>
+      <td class="text-center" *ngIf="ticket.idPrioridadTicket != '1'">
+        <i class="bx bxs-circle bx-sm" [style]="{
+                color: obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket)
+              }"></i>
+      </td>
+      <td class="text-center">{{ ticket.folio }}</td>
+      <td class="text-center">
+        {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
+      </td>
+      <td class="text-center" *ngIf="mostrarFedchaEstimacion">
+        {{ getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}
+      </td>
+      <td class="text-center">
+        {{ obtenerNombreArea(ticket.idArea) }}
+      </td>
+      <td class="text-center" *ngIf="esEspectadorActivo">
+        {{obtenerNombreSucursal(ticket.idSucursal)}}
+      </td>
+      <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
+      <td class="text-center">
+        {{ obtenerNombreResponsable(ticket!.idResponsableFinaliza) }}
+      </td>
+      <td class="text-center">
+        {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
+      </td>
+      <td class="text-center">
+        <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm"
+          style="color: #ff0028" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+          tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00"
+          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff"
+          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500"
+          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00"
+          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500"
+          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <i *ngIf="ticket.idEstatusTicket == '7'" class="bx bx-check bx-tada bx-sm" style="color: #a300ff"
+          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+      </td>
+
+      <td *ngIf="mostrarEstrellas">
+        <app-rating-stars [rating]="ticket.calificacion" [editable]="false"></app-rating-stars>
+      </td>
+
+      <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
+        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
+          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar">
+          <i class="bx bx-check-circle bx-sm" pTooltip="FINALIZAR TICKET" tooltipPosition="top"></i>
+        </button>
+        <button class="btn btn-warning" (click)="onClickRechazar(ticket)" style="margin: 2px"
+          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar && ticket.idEstatusTicket == '7'">
+          <i class="bx bx-undo bx-sm" pTooltip="RECHAZAR SPORTE" tooltipPosition="top"></i>
+        </button>
+        <button class="btn btn-warning" (click)="onClickValidar(ticket)" style="margin: 2px"
+          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionValidar && ticket.idEstatusTicket != '7'">
+          <i class="bx bx-check-circle bx-sm" pTooltip="VALIDAR TICKET" tooltipPosition="top"></i>
+        </button>
+        <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px"
+          *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
+          <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
+            tooltipPosition="top"></i>
+        </button>
+        <button *ngIf="(ticket != undefined && ticket!.idPrioridadTicket != '1') && mostrarAccionPanico"
+          class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px" [disabled]="esEspectadorActivo">
+          <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)" pTooltip="PÁNICO" tooltipPosition="top"></i>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
+  [ticket]="ticketAccion" (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
+
+<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
+  [ticket]="ticketAccion" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
+
+<app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
+  (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>
+
+
+<p-confirmDialog />

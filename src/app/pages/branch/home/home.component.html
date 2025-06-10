@@ -1,8 +1,11 @@
+<div *ngIf="esEspectadorActivo" class="alert alert-warning text-center fw-bold" style="margin-top: 15px;">
+  🚨 ESPECTADOR ACTIVO 🚨
+</div>
+
 <div class="pt-5">
   <div class="pt-3">
     <div class="m-2 mt-3 bg-white p-3">
-      <app-branches-tabs></app-branches-tabs>
+      <app-branches-tabs (espectadorEmitter)="activarEspectador($event)"></app-branches-tabs>
     </div>
   </div>
 </div>
-

@@ -7,7 +7,6 @@ import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 
 import { Ticket } from '../../../models/ticket.model';
-import { RequesterTicketsListComponent } from "../../../components/tickets/requester-tickets-list/requester-tickets-list.component";
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
 import { ModalTicketDetailComponent } from "../../tickets/modal-ticket-detail/modal-ticket-detail.component";
@@ -17,6 +16,7 @@ import { BranchMaintenanceTableComponent } from '../../../components/maintenance
 import { ModalMaintenanceDetailComponent } from '../../maintenance/systems/modal-maintenance-detail/modal-maintenance-detail.component';
 import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
 import { BranchMaintenanceTableAvComponent } from '../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
+import { RequesterTicketsListComponent } from '../../../components/common/requester-tickets-list/requester-tickets-list.component';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -72,7 +72,9 @@ export default class ModalEventDetailComponent {
   async ngOnInit() {
     this.obtenerTickets();
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
-    this.mantenimientosDelDia = await servicio.obtenerMantenimientoVisitaPorFecha(this.fecha, this.sucursal.id);
+    await servicio.getUltimosMantenimientos([this.sucursal.id]).subscribe(result => {
+      this.mantenimientosDelDia = result;
+    });
     this.cdr.detectChanges();
   }
 

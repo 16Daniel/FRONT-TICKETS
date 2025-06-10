@@ -21,7 +21,7 @@ import { Ticket } from '../../../models/ticket.model';
 import { BranchesService } from '../../../services/branches.service';
 import { CategoriesService } from '../../../services/categories.service';
 import { AreasService } from '../../../services/areas.service';
-import { Area } from '../../../models/area';
+import { Area } from '../../../models/area.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { FolioGeneratorService } from '../../../services/folio-generator.service';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
@@ -224,7 +224,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         comentarios: [],
         fechaFin: null,
         fechaEstimacion,
-        idTipoSoporte: '1',
+        idTipoSoporte: this.obtenerTipoSoporte(this.formArea.id),
         idUsuario: this.usuarioActivo.id,
         nombreCategoria: this.formCategoria.nombre,
         folio,
@@ -236,9 +236,15 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       await this.ticketsService.create(tk);
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-      console.log('Success', 'ENVIADO CORRECTAMENTE')
       this.closeEvent.emit(false); // Cerrar modal
     });
+  }
+
+  obtenerTipoSoporte(idArea: string) {
+
+    if (idArea == '1') return '2';
+    else if (idArea == '2') return '1';
+    else return '1';
   }
 
   obtenerIdResponsableTicket(): string {

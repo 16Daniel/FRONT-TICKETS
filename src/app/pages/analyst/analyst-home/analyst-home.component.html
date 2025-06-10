@@ -31,7 +31,11 @@
       <label class="form-check-label fs-4" for="flexSwitchCheckDefault">{{tituloMantenimiento}}</label>
     </div>
 
-
+    <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="ordenarxmantenimiento">
+      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+        style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarMantenimientosFecha" (change)="filtrarMantenimientos()">
+      <label class="form-check-label fs-4" for="flexSwitchCheckChecked">ORDENAR POR FECHA</label>
+    </div>
 
 
     <div class="ms-auto d-flex align-items-center gap-3">
@@ -64,12 +68,12 @@
 
   <div class="p-1 mt-4" *ngIf="ordenarxmantenimiento">
 
-    <app-accordion-branch-maintenance10x10 *ngIf="usuario.idArea == '1'" [mantenimientos]="ultimosmantenimientos"
-      [sucursales]="usuario.sucursales">
+    <app-accordion-branch-maintenance10x10 *ngIf="usuario.idArea == '1' && auxMostrarMantenimientos" [mantenimientos]="ultimosmantenimientos"
+      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
     </app-accordion-branch-maintenance10x10>
 
-    <app-accordion-branch-maintenance-av *ngIf="usuario.idArea == '2'" [mantenimientos]="ultimosmantenimientos"
-      [sucursales]="usuario.sucursales">
+    <app-accordion-branch-maintenance-av *ngIf="usuario.idArea == '2' && auxMostrarMantenimientos" [mantenimientos]="ultimosmantenimientos"
+      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
     </app-accordion-branch-maintenance-av>
 
   </div>

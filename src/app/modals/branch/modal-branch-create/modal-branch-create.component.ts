@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 
 import { Sucursal } from '../../../models/sucursal.model';
 import { BranchesService } from '../../../services/branches.service';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-modal-branch-create',
@@ -21,12 +22,15 @@ export class ModalBranchCreateComponent implements OnInit {
   @Input() sucursal: Sucursal | any;
   @Input() esNuevaSucursal: boolean = true;
   idSucursalEditar: string = '';
+  usuario: Usuario;
 
   constructor(
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService
-  ) { }
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
     if (!this.esNuevaSucursal) {
@@ -48,6 +52,7 @@ export class ModalBranchCreateComponent implements OnInit {
       return;
     }
 
+    // console.log(this.sucursal)
     this.esNuevaSucursal ? this.crear() : this.actualizar();
   }
 
@@ -81,4 +86,28 @@ export class ModalBranchCreateComponent implements OnInit {
         console.error('Error al actualizar los comentarios:', error)
       );
   }
+
+  esMantenimientoActivo(sucursal: Sucursal): boolean {
+    const activo = Array.isArray(sucursal.activoMantenimientos)
+      ? sucursal.activoMantenimientos
+      : [];
+
+    return activo.includes(this.usuario.idArea);
+  }
+
+
+  toggleMantenimiento(sucursal: Sucursal): void {
+    if (!Array.isArray(sucursal.activoMantenimientos)) {
+      sucursal.activoMantenimientos = [];
+    }
+
+    const index = sucursal.activoMantenimientos.indexOf(this.usuario.idArea);
+
+    if (index > -1) {
+      sucursal.activoMantenimientos.splice(index, 1);
+    } else {
+      sucursal.activoMantenimientos.push(this.usuario.idArea);
+    }
+  }
+
 }

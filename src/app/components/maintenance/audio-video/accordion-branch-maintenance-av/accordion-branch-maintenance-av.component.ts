@@ -22,6 +22,7 @@ import { Timestamp } from '@angular/fire/firestore';
 export class AccordionBranchMaintenanceAvComponent {
   @Input() mantenimientos: Mantenimiento6x6AV[] = [];
   @Input() sucursales: Sucursal[] = [];
+  @Input() ordenarMantenimientosFecha: boolean = true;
 
   usuariosHelp: Usuario[] = [];
 
@@ -41,11 +42,42 @@ export class AccordionBranchMaintenanceAvComponent {
     });
   }
 
+  ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {
+    return [...catsucursales].sort((a, b) => {
+      const fechaA = this.obtenerFechaUltimoMantenimiento(a.id);
+      const fechaB = this.obtenerFechaUltimoMantenimiento(b.id);
+
+      return this.firebaseTimestampToDate(fechaA).getTime() - this.firebaseTimestampToDate(fechaB).getTime();
+    });
+  }
+
+  firebaseTimestampToDate(timestamp: any): Date {
+    if (!timestamp) return new Date(); // o null, según lo que prefieras
+    if (timestamp.toDate) return timestamp.toDate(); // Timestamp de Firebase
+    if (timestamp.seconds) return new Date(timestamp.seconds * 1000); // Formato de objeto timestamp
+    return new Date(timestamp); // Por si acaso es un número o string de fecha
+  }
+
+  obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
+    const mantenimientosSucursal = this.mantenimientos
+      .filter(m => m.idSucursal === idSucursal && m.fecha);
+
+    if (mantenimientosSucursal.length === 0) {
+      return new Date(0);
+    }
+
+    return mantenimientosSucursal
+      .reduce((ultimo, actual) =>
+        actual.fecha! > ultimo.fecha! ? actual : ultimo
+      ).fecha!;
+  }
+
   ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
     return catsucursales.sort((a, b) => {
       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
-      return mantenimientoA - mantenimientoB; // Ordena de mayor a menor
+
+      return mantenimientoA - mantenimientoB;
     });
   }
 
@@ -63,16 +95,15 @@ export class AccordionBranchMaintenanceAvComponent {
       (x) => x.idSucursal == idSucursal
     );
     if (registro.length > 0) {
-      let fechaM:Date;
+      let fechaM: Date;
 
-      const valorIncierto: Date | Timestamp = registro[0].timestamp!; 
+      const valorIncierto: Date | Timestamp = registro[0].timestamp!;
       fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
 
-      let diaspasados = this.obtenerDiasPasados(idSucursal); 
-      if(diaspasados<=30)
-        {
-          porcentaje = this.maintenanceHelper.calcularPorcentajeAV(registro[0]);
-        }
+      let diaspasados = this.obtenerDiasPasados(idSucursal);
+      if (diaspasados <= 30) {
+        porcentaje = this.maintenanceHelper.calcularPorcentajeAV(registro[0]);
+      }
     }
     return porcentaje;
   }
@@ -117,27 +148,26 @@ export class AccordionBranchMaintenanceAvComponent {
     return str;
   }
 
-    obtenerDiasPasados(idSucursal: string):number
-    {
-      let dias = 0; 
-      let registro = this.mantenimientos.filter(
-        (x) => x.idSucursal == idSucursal
-      );
-      if (registro.length > 0) {
-        let fechaM:Date;
-  
-        const valorIncierto: Date | Timestamp = registro[0].timestamp!; 
-        fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
-  
-        const hoy = new Date();
-        // Ajustar ambas fechas a UTC para evitar problemas con horario de verano
-        const utc1 = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-        const utc2 = Date.UTC(fechaM.getFullYear(), fechaM.getMonth(), fechaM.getDate());
-        
-        dias = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24));
-  
-      }
-      return dias;
+  obtenerDiasPasados(idSucursal: string): number {
+    let dias = 0;
+    let registro = this.mantenimientos.filter(
+      (x) => x.idSucursal == idSucursal
+    );
+    if (registro.length > 0) {
+      let fechaM: Date;
+
+      const valorIncierto: Date | Timestamp = registro[0].timestamp!;
+      fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
+
+      const hoy = new Date();
+      // Ajustar ambas fechas a UTC para evitar problemas con horario de verano
+      const utc1 = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+      const utc2 = Date.UTC(fechaM.getFullYear(), fechaM.getMonth(), fechaM.getDate());
+
+      dias = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24));
+
     }
+    return dias;
+  }
 
 }

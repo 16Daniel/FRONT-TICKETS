@@ -250,6 +250,4 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     // Ejecutar todas las consultas en paralelo y combinar los resultados
     return forkJoin(consultas);
   }
-
-
 }

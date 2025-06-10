@@ -1,0 +1,25 @@
+<p-dialog [header]="!esNuevaSubcategoria ? 'ACTUALIZAR SUBCATEGORIA' :'CREAR SUBCATEGORIA'"
+    [(visible)]="mostrarModalSubcrearCategoria" [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true"
+    (onHide)="onHide()">
+    <form #form="ngForm" (ngSubmit)="enviar(form)">
+
+        <p class="fw-bold">SUBCATEGORIA</p>
+        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE DE LA SUBCATEGORIA"
+            [(ngModel)]="subcategoria.nombre" name="subcategoria"
+            [ngClass]="{'p-invalid': formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched}"
+            #formSubcategoriaCtrl="ngModel" required>
+        <small *ngIf="formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3 d-flex align-items-center gap-2">
+                <i class='bx bx-send fs-4'></i>
+                <label class="m-0" *ngIf="esNuevaSubcategoria">ENVIAR</label>
+                <label class="m-0" *ngIf="!esNuevaSubcategoria">ACTUALIZAR</label>
+            </button>
+        </div>
+    </form>
+
+</p-dialog>

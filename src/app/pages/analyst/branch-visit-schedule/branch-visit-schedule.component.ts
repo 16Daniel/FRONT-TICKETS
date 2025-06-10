@@ -34,7 +34,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
   arr_ultimosmantenimientos: Mantenimiento10x10[] = []; // <--- revisar
   usuario: Usuario;
   arr_data: VisitaProgramada[] = [];
-  sucursales: Sucursal[] = [];
+  // sucursales: Sucursal[] = [];
   sucursalSeleccionada: Sucursal | undefined;
   FechaSeleccionada: Date = new Date();
   showModalTicketDetail: boolean = false;
@@ -48,7 +48,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
-    private branchesService: BranchesService,
+    
     private messageService: MessageService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService
@@ -62,7 +62,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerSucursales();
     this.obtenerUsuariosHelp();
     this.obtenerTodosLosTickets();
     this.obtenerColores();
@@ -91,18 +90,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
       error: (error) => {
         console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerSucursales() {
-    this.branchesService.get().subscribe({
-      next: (data) => {
-        this.sucursales = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
       },
     });
   }
@@ -154,7 +141,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
             }
           }
 
-          this.obtnerUltimoMantenimiento();
+          // this.obtnerUltimoMantenimiento();
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -164,32 +151,32 @@ export default class BranchVisitScheduleComponent implements OnInit {
       });
   }
 
-  obtnerUltimoMantenimiento() {
-    let sucursales: Sucursal[] = [...this.sucursales];
-    let array_ids_Sucursales: string[] = [];
+  // obtnerUltimoMantenimiento() {
+  //   let sucursales: Sucursal[] = [...this.sucursales];
+  //   let array_ids_Sucursales: string[] = [];
 
-    for (let item of sucursales) {
-      array_ids_Sucursales.push(item.id);
-    }
+  //   for (let item of sucursales) {
+  //     array_ids_Sucursales.push(item.id);
+  //   }
 
-    this.loading = true;
-    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-    this.subscriptiontk = servicio
-      .getUltimosMantenimientos(array_ids_Sucursales)
-      .subscribe({
-        next: (data) => {
-          this.arr_ultimosmantenimientos = data.filter(
-            (elemento): elemento is Mantenimiento10x10 => elemento !== null
-          );
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error al escuchar los mantenimientos:', error);
-        },
-      });
-  }
+  //   this.loading = true;
+  //   const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+  //   this.subscriptiontk = servicio
+  //     .getUltimosMantenimientos(array_ids_Sucursales)
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.arr_ultimosmantenimientos = data.filter(
+  //           (elemento): elemento is Mantenimiento10x10 => elemento !== null
+  //         );
+  //         this.loading = false;
+  //         this.cdr.detectChanges();
+  //       },
+  //       error: (error) => {
+  //         this.loading = false;
+  //         console.error('Error al escuchar los mantenimientos:', error);
+  //       },
+  //     });
+  // }
 
   obtenerNombreUsuario(idUsuario: string): string {
     let nombre = '';
