@@ -46,7 +46,7 @@ export class CategoriesService {
       // Arreglo para los filtros
       const constraints = [where('eliminado', '==', false)];
       if (idArea) {
-        // constraints.push(where('idArea', '==', parseInt(idArea)));
+        constraints.push(where('idArea', '==', parseInt(idArea)));
       }
 
       const q = query(collectionRef, ...constraints);

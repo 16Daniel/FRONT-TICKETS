@@ -27,6 +27,7 @@ import { FolioGeneratorService } from '../../../services/folio-generator.service
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 import { ParticipanteChat } from '../../../models/participante-chat.model';
+import { Subcategoria } from '../../../models/subcategoria.model';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -47,6 +48,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   @Input() idArea: string = '0';
   @Output() closeEvent = new EventEmitter<boolean>();
 
+  ticket: Ticket = new Ticket
   sucursales: Sucursal[] = [];
   sucursal: Sucursal | any;
   usuarioActivo: Usuario = new Usuario();
@@ -54,13 +56,13 @@ export class ModalGenerateTicketComponent implements OnInit {
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
   isLoading = false;
-
-  formArea: any;
+  mostrarCampoSubcategoria = false;
+  // formArea: any;
   formCategoria: any;
-  formDescripcion: string = '';
-  formNombreSolicitante: any;
-  formPrioridad: any;
-  formStatusSucursal: any;
+  // formDescripcion: string = '';
+  // formNombreSolicitante: any;
+  // formPrioridad: any;
+  // formStatusSucursal: any;
   catUsuariosHelp: Usuario[] = [];
 
   constructor(
@@ -103,7 +105,8 @@ export class ModalGenerateTicketComponent implements OnInit {
       next: (data) => {
         this.areas = data;
 
-        this.formArea = this.areas.find(x => x.id == this.idArea);
+        // this.formArea = this.areas.find(x => x.id == this.idArea);
+        this.ticket.idArea = this.areas.find(x => x.id == this.idArea)!.id;
 
         this.cdr.detectChanges();
       },
@@ -127,7 +130,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   }
 
   onChangeArea() {
-    this.formCategoria = undefined;
+    this.ticket.idCategoria = '';
     this.cdr.detectChanges();
   }
 
@@ -145,8 +148,8 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   obtenerCategoriasPorArea(): Categoria[] {
     let arr: Categoria[] = [];
-    if (this.formArea != undefined) {
-      arr = this.categorias.filter((x) => x.idArea == this.formArea.id);
+    if (this.ticket.idArea) {
+      arr = this.categorias.filter((x) => x.idArea == this.ticket.idArea);
     }
     return arr;
   }
@@ -189,7 +192,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       const fechaEstimacion = new Date(); // Obtiene la fecha actual
       fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
 
-      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.sucursal.id, this.formArea.id);
+      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.sucursal.id, this.ticket.idArea);
       if (idsResponsablesTicket.length == 0) {
         this.showMessage('error', 'Error', 'No hay analistas disponibles para el área seleccionada');
         return;
@@ -208,35 +211,25 @@ export class ModalGenerateTicketComponent implements OnInit {
           idUsuario: id,
           ultimoComentarioLeido: 0,
         });
-      })
+      });
 
-      let tk: Ticket = {
-        fecha: new Date(),
-        idResponsables: idsResponsablesTicket,
-        idSucursal: this.sucursal.id,
-        idArea: this.formArea.id,
-        idCategoria: this.formCategoria.id,
-        descripcion: this.formDescripcion,
-        solicitante: this.formNombreSolicitante,
-        idPrioridadTicket: this.formPrioridad.id,
-        idEstatusTicket: '1',
-        idResponsableFinaliza: this.obtenerIdResponsableTicket(),
-        comentarios: [],
-        fechaFin: null,
-        fechaEstimacion,
-        idTipoSoporte: this.obtenerTipoSoporte(this.formArea.id),
-        idUsuario: this.usuarioActivo.id,
-        nombreCategoria: this.formCategoria.nombre,
-        folio,
-        calificacion: 0,
-        calificacionAnalista: 0,
-        participantesChat,
-        validacionAdmin: false
-      };
+      this.ticket.idResponsables = idsResponsablesTicket;
+      this.ticket.idSucursal = this.sucursal.id;
+      this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
+      this.ticket.fechaEstimacion = fechaEstimacion;
+      this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
+      this.ticket.idUsuario = this.usuarioActivo.id;
+      this.ticket.nombreCategoria = this.formCategoria.nombre;
 
-      await this.ticketsService.create(tk);
+      if (this.formCategoria.activarSubcategorias)
+        this.ticket.nombreSubcategoria = this.formCategoria.subcategorias.find((x: Subcategoria) => x.id == this.ticket.idSubcategoria).nombre
+
+      this.ticket.folio = folio;
+      this.ticket.participantesChat = participantesChat;
+
+      await this.ticketsService.create({ ...this.ticket });
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-      this.closeEvent.emit(false); // Cerrar modal
+      this.closeEvent.emit(false);
     });
   }
 
@@ -292,11 +285,21 @@ export class ModalGenerateTicketComponent implements OnInit {
       );
 
       if (
-        ((existeSucursal && usuario.idArea == idArea) || (usuario.esGuardia && usuario.idArea == this.formArea.id)) && usuario.idRol !== '2') {
+        ((existeSucursal && usuario.idArea == idArea) || (usuario.esGuardia && usuario.idArea == this.ticket.idArea)) && usuario.idRol !== '2') {
         idsResponsables.push(usuario.id);
       }
     }
 
     return idsResponsables;
   }
+
+  onCategoriaChange(categoria: Categoria) {
+    this.ticket.idCategoria = categoria.id;
+    this.ticket.idSubcategoria = null;
+    this.mostrarCampoSubcategoria = categoria.activarSubcategorias;
+  }
+
+  obtenerSubcategoriasFiltradas = (): Subcategoria[] =>
+    this.formCategoria.subcategorias.filter((x: Subcategoria) => x.eliminado == false)
+
 }

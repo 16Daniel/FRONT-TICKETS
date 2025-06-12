@@ -12,6 +12,7 @@
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
       <th>CATEGORÍA</th>
+      <th>SUBCATEGORÍA</th>
       <th>ESTATUS</th>
       <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
       <th *ngIf="mostrarAcciones">ACCIONES</th>
@@ -48,6 +49,9 @@
       </td>
       <td class="text-center">
         {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
+      </td>
+      <td class="text-center">
+        {{ ticket.idSubcategoria == null ? "N/A" : ticket.nombreSubcategoria }}
       </td>
       <td class="text-center">
         <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm"
