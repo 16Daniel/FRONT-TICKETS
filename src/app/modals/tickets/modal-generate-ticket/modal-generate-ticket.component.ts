@@ -50,7 +50,7 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   ticket: Ticket = new Ticket
   sucursales: Sucursal[] = [];
-  sucursal: Sucursal | any;
+  // sucursal: Sucursal | any;
   usuarioActivo: Usuario = new Usuario();
   areas: Area[] = [];
   categorias: Categoria[] = [];
@@ -84,7 +84,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
-    this.sucursal = this.usuarioActivo.sucursales[0];
+    // this.ticket.idSucursal = this.usuarioActivo.sucursales[0].id;
     // this.formDepartamento = this.sucursal;
   }
 
@@ -92,6 +92,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+        this.ticket.idSucursal = parseInt(this.usuarioActivo.sucursales[0].id);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -185,14 +186,14 @@ export class ModalGenerateTicketComponent implements OnInit {
 
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
       let folio = this.folioGeneratorService.generarFolio(
-        parseInt(this.sucursal?.id),
+        parseInt(this.ticket.idSucursal),
         count
       );
 
       const fechaEstimacion = new Date(); // Obtiene la fecha actual
       fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
 
-      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.sucursal.id, this.ticket.idArea);
+      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.ticket.idSucursal, this.ticket.idArea);
       if (idsResponsablesTicket.length == 0) {
         this.showMessage('error', 'Error', 'No hay analistas disponibles para el área seleccionada');
         return;
@@ -214,7 +215,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       });
 
       this.ticket.idResponsables = idsResponsablesTicket;
-      this.ticket.idSucursal = this.sucursal.id;
+      this.ticket.idSucursal = this.ticket.idSucursal.toString();
       this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
       this.ticket.fechaEstimacion = fechaEstimacion;
       this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
@@ -245,7 +246,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     for (let item of this.catUsuariosHelp) {
       if (item.idRol == '4') {
         const existeSucursal = item.sucursales.some(
-          (x) => x.id == this.sucursal.id
+          (x) => x.id == this.ticket.idSucursal
         );
         if (existeSucursal) {
           id = item.id;

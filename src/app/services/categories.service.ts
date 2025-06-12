@@ -8,7 +8,6 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
-  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -21,6 +20,7 @@ import { Subcategoria } from '../models/subcategoria.model';
 @Injectable({
   providedIn: 'root',
 })
+
 export class CategoriesService {
   pathName: string = 'cat_categorias';
 
@@ -78,9 +78,9 @@ export class CategoriesService {
     return updateDoc(documentRef, categoria);
   }
 
-  async delete(idSucursal: string): Promise<void> {
+  async delete(idCategoria: string): Promise<void> {
     try {
-      const docRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
+      const docRef = doc(this.firestore, `${this.pathName}/${idCategoria}`);
       await updateDoc(docRef, {
         eliminado: true,
       });
@@ -122,7 +122,7 @@ export class CategoriesService {
       const count = snapshot.size;
       return count + 1;
     } catch (error) {
-      console.error('Error al obtener el count de tickets:', error);
+      console.error('Error al obtener el count de categorias:', error);
       throw error;
     }
   }

@@ -6,7 +6,7 @@ export class Ticket {
   id?: string | any;
   idUsuario: string = '';
   idResponsables: string[] = [];
-  idSucursal: string = '';
+  idSucursal: any = '';
   idArea: string = '';
   idCategoria: string = '';
   idSubcategoria: string | null = null;
