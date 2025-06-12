@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
-import { Mantenimiento6x6AV } from '../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../models/mantenimiento-av.model';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 

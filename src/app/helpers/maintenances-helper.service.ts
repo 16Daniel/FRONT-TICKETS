@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Mantenimiento6x6AV } from '../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../models/mantenimiento-av.model';
 import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
 
 @Injectable({

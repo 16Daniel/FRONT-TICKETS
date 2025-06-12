@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Usuario } from '../../../../models/usuario.model';
 // import { MessageService } from 'primeng/api';
 // import { UsersService } from '../../../../services/users.service';

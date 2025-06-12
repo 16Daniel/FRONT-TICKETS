@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { UsersService } from '../../../../services/users.service';
 import { MaintenancesHelperService } from '../../../../helpers/maintenances-helper.service';

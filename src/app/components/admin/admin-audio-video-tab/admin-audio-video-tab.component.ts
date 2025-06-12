@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { Ticket } from '../../../models/ticket.model';
 import { Sucursal } from '../../../models/sucursal.model';
-import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-av.model';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { Subscription } from 'rxjs';
 import { Usuario } from '../../../models/usuario.model';
