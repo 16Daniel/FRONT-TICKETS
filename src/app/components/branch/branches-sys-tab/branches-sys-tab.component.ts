@@ -83,7 +83,6 @@ export class BranchesSysTabComponent {
     if (changes['esEspectadorActivo']) {
       const prev = changes['esEspectadorActivo'].previousValue;
       const curr = changes['esEspectadorActivo'].currentValue;
-      console.log(`esEspectadorActivo cambió de ${prev} a ${curr}`);
 
       // Aquí pones la lógica que quieres que se ejecute cuando cambie
       this.onEspectadorActivoChanged(curr);
@@ -92,7 +91,7 @@ export class BranchesSysTabComponent {
   }
 
   onEspectadorActivoChanged(nuevoValor: boolean) {
-    console.log('Nuevo valor de esEspectadorActivo:', nuevoValor);
+
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
@@ -124,7 +123,6 @@ export class BranchesSysTabComponent {
     this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
-        console.log(mantenimiento)
         this.mantenimientoActivo = mantenimiento;
         this.cdr.detectChanges();
         // console.log('Mantenimiento activo:', this.mantenimientoActivo);

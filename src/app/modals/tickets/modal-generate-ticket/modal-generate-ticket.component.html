@@ -2,7 +2,7 @@
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
     <form #form="ngForm" (ngSubmit)="enviarTicket(form)">
 
-        <p-dropdown [options]="sucursales" [(ngModel)]="sucursal" name="sucursal" optionLabel="nombre" [filter]="true"
+        <p-dropdown [options]="sucursales" [(ngModel)]="ticket.idSucursal" name="sucursal" [optionValue]="'id'" optionLabel="nombre" [filter]="true"
             filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO"
             [style]="{width:'100%'}" [disabled]="usuarioActivo.idRol == '2' || usuarioActivo.idRol == '3'">
             <ng-template pTemplate="selectedItem" let-selectedOption>
@@ -17,9 +17,9 @@
             </ng-template>
         </p-dropdown>
         <p></p>
-        <p-dropdown [options]="areas" [(ngModel)]="formArea" name="area" optionLabel="nombre"
-            [filter]="true" filterBy="nombre" [disabled]="idArea != '0'" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
-            (onChange)="onChangeArea()" #formAreaCtrl="ngModel"
+        <p-dropdown [options]="areas" [(ngModel)]="ticket.idArea" [optionValue]="'id'" name="area" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [disabled]="idArea != '0'" [showClear]="true" placeholder="SELECCIONAR ÁREA"
+            [style]="{width:'100%'}" (onChange)="onChangeArea()" #formAreaCtrl="ngModel"
             [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
@@ -38,12 +38,15 @@
         <p-dropdown [options]="obtenerCategoriasPorArea()" [(ngModel)]="formCategoria" name="categoria"
             optionLabel="name" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA"
             [style]="{width:'100%'}" #formCategoriaCtrl="ngModel"
-            [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
+            [ngClass]="{'p-invalid': formCategoriaCtrl.invalid && formCategoriaCtrl.touched}" required
+            (onChange)="onCategoriaChange($event.value)">
+
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre }}</div>
+                    <div>{{ selectedOption?.nombre }}</div>
                 </div>
             </ng-template>
+
             <ng-template let-categoria pTemplate="item">
                 <div class="flex align-items-center gap-2">
                     <div>{{ categoria.nombre }}</div>
@@ -53,8 +56,32 @@
         <small *ngIf="formCategoriaCtrl.invalid && formCategoriaCtrl.touched" class="p-error">Campo requerido.</small>
         <P></P>
 
+        <div *ngIf="mostrarCampoSubcategoria">
+            <p></p>
+            <p-dropdown [options]="obtenerSubcategoriasFiltradas()" [(ngModel)]="ticket.idSubcategoria" [optionValue]="'id'"
+                name="subcategoria" optionLabel="name" [filter]="true" filterBy="nombre" [showClear]="true"
+                placeholder="SELECCIONAR SUBCATEGORIA" [style]="{width:'100%'}" #formSubcategoriaCtrl="ngModel"
+                [ngClass]="{'p-invalid': formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched}" required>
+
+                <ng-template pTemplate="selectedItem" let-selectedOption>
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ selectedOption?.nombre }}</div>
+                    </div>
+                </ng-template>
+
+                <ng-template let-categoria pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ categoria.nombre }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+            <small *ngIf="formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched" class="p-error">Campo
+                requerido.</small>
+            <P></P>
+        </div>
+
         <input class="form-control" style="height: 48px;" type="text" placeholder="NOMBRE DEL SOLICITANTE"
-            [(ngModel)]="formNombreSolicitante" name="nombreSolicitante"
+            [(ngModel)]="ticket.solicitante" name="nombreSolicitante"
             [ngClass]="{'p-invalid': formNombreSolicitanteCtrl.invalid && formNombreSolicitanteCtrl.touched}"
             #formNombreSolicitanteCtrl="ngModel" name="nombreSolicitante" required>
         <small *ngIf="formNombreSolicitanteCtrl.invalid && formNombreSolicitanteCtrl.touched" class="p-error">
@@ -63,9 +90,9 @@
 
         <p></p>
 
-        <p-dropdown [options]="prioridadesTicket" [(ngModel)]="formPrioridad"
-            name="formPrioridad" name="prioridad" optionLabel="id" [filter]="false" filterBy="nombre"
-            [showClear]="true" placeholder="SELECCIONAR PRIORIDAD" [style]="{width:'100%'}"
+        <p-dropdown [options]="prioridadesTicket" [(ngModel)]="ticket.idPrioridadTicket" [optionValue]="'id'"
+            name="formPrioridad" name="prioridad" optionLabel="id" [filter]="false" filterBy="nombre" [showClear]="true"
+            placeholder="SELECCIONAR PRIORIDAD" [style]="{width:'100%'}"
             [ngClass]="{'p-invalid': formPrioridadCtrl.invalid && formPrioridadCtrl.touched}"
             #formPrioridadCtrl="ngModel" required>
             <ng-template pTemplate="selectedItem" let-selectedOption>
@@ -90,7 +117,7 @@
 
         <p></p>
         <P>FAVOR DE INGRESAR UNA DESCRIPCIÓN DEL PROBLEMA, SI ES NECESARIO PUEDE ADJUNTAR IMÁGENES</P>
-        <p-editor [(ngModel)]="formDescripcion" name="descripcion" [style]="{ height: '320px' }"
+        <p-editor [(ngModel)]="ticket.descripcion" name="descripcion" [style]="{ height: '320px' }"
             [ngClass]="{'p-invalid': formDescripcionCtrl.invalid && formDescripcionCtrl.touched}"
             #formDescripcionCtrl="ngModel" name="formDescripcion" required />
         <small *ngIf="formDescripcionCtrl.invalid && formDescripcionCtrl.touched" class="p-error">

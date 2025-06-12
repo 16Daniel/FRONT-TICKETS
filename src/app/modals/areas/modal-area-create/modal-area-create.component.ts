@@ -29,9 +29,14 @@ export class ModalAreaCreateComponent {
     private areasService: AreasService
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (!this.esNuevaArea) {
       this.idAreaEditar = this.area.id;
+    }
+
+    if (this.esNuevaArea) {
+      this.area.id = await this.areasService.obtenerSecuencial();
+      this.cdr.detectChanges();
     }
   }
 
