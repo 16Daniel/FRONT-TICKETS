@@ -1,18 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
-
+import { CheckboxModule } from 'primeng/checkbox';
+import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
+
+import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { ProgressBar60Component } from '../../../../components/common/progress-bar-60/progress-bar-60.component';
+import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
 
 @Component({
-  selector: 'app-modal-maintenance-av-check',
+  selector: 'app-modal-mateinance-mtto-check',
   standalone: true,
   imports: [
     DialogModule,
@@ -20,57 +19,66 @@ import { ProgressBar60Component } from '../../../../components/common/progress-b
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    ProgressBar60Component,
+    // ProgressBar60Component,
     TooltipModule
-  ],
-  templateUrl: './modal-maintenance-av-check.component.html',
-  styleUrl: './modal-maintenance-av-check.component.scss'
+  ], templateUrl: './modal-mateinance-mtto-check.component.html',
+  styleUrl: './modal-mateinance-mtto-check.component.scss'
 })
 
-export class ModalMaintenanceAvCheckComponent {
-  @Input() showModal10x10: boolean = false;
-  @Input() mantenimientoActivo: Mantenimiento6x6AV | null = null;
+export class ModalMateinanceMttoCheckComponent {
+  @Input() showModal: boolean = false;
+  @Input() mantenimientoActivo: MantenimientoMtto | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   progreso: number = 0;
-  mantenimientos: Mantenimiento6x6AV[] = [];
+  mantenimientos: MantenimientoMtto[] = [];
   formularioDeMantenimiento: FormGroup | any;
   opcionesDeMantenimiento = [
     {
-      label: 'MANTENIMIENTO CONEXIONES',
-      controlName: 'mantenimientoConexiones',
-      tooltip: 'REVISIÓN DE CONEXIONES EN CADA TELEVISIÓN',
+      label: 'MANTENIMIENTO TERMOSTATO',
+      controlName: 'mantenimientoTermostato',
+      tooltip: '¿TERMOSTATO HACE SU FUNCION CORRECTA?',
+    },
+    {
+      label: 'MANTENIMIENTO PERILLAS',
+      controlName: 'mantenimientoPerillas',
+      tooltip: '¿LAS PERILLAS SE ENCUENTRAN EN BUENAS CONDICIONES?',
+    },
+    {
+      label: 'MANTENIMIENTO TORNILLERIA',
+      controlName: 'mantenimientoTornilleria',
+      tooltip: 'LA TORNILLERIA ESTA COMPLETA Y BIEN FIRME TODO EL ARMAZON',
+    },    
+    {
+      label: 'MANTENIMIENTO RUEDAS',
+      controlName: 'mantenimientoRuedas',
+      tooltip: '¿CUENTA CON RUEDITAS Y FUNCIONAN CORRECTAMENTE?',
     },
     {
       label: 'MANTENIMIENTO CABLEADO',
       controlName: 'mantenimientoCableado',
-      tooltip: 'ORDEN Y LIMPIEZA EN TODO EL CABLEADO Y TELEVISIONES',
+      tooltip: '¿EL CABLEADO, TERMOPILA, TERMOSTATO, HI LIMIT PILOTO, Y VAVULA MINIVOLTICA ESTAN BIEN SUJETOS, LIMPIOS Y EN BUENAS CONDICIONES?',
     },
     {
-      label: 'MANTENIMIENTO DE RACK',
-      controlName: 'mantenimientoRack',
-      tooltip: 'ORDEN EN RACK Y SU CABLEADO',
+      label: 'MANTENIMIENTO TINA',
+      controlName: 'mantenimientoTina',
+      tooltip: '¿LA TINA DE LA FREIDORA Y VALVULA DE DRENADO ESTA EN BUEN ESTADO Y SIN FUGAS?',
     },
     {
-      label: 'MANTENIMIENTO CONTROLES',
-      controlName: 'mantenimientoControles',
-      tooltip: 'REVISIÓN DE CONTROLES REMOTOS Y PILAS',
+      label: 'MANTENIMIENTO MANGUERAS',
+      controlName: 'mantenimientoMangueras',
+      tooltip: '¿LAS MANGUERAS Y CONEXIONES FUNCIONAN CORRECTAMENTE Y SIN FUGAS?',
     },
     {
-      label: 'MANTENIMIENTO NIVEL DE AUDIO',
-      controlName: 'mantenimientoNivelAudio',
-      tooltip: 'NIVELES DE AUDIO CORRECTOS',
-    },
-    {
-      label: 'MANTENIMIENTO DE CANALES',
-      controlName: 'mantenimientoCanales',
-      tooltip: 'CANALES ALTERNADOS',
+      label: 'MANTENIMIENTO LLAVES DE PASO',
+      controlName: 'mantenimientoLlavesDePaso',
+      tooltip: '¿LAS LLAVES DE PASO DE GAS FUNCIONAN?',
     },
   ];
 
   constructor(
     private fb: FormBuilder,
-    private mantenimientoService: Maintenance6x6AvService,
+    private mantenimientoService: MaintenanceMtooService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService
   ) {
@@ -84,7 +92,7 @@ export class ModalMaintenanceAvCheckComponent {
       return;
     }
 
-    const mantenimiento: Mantenimiento6x6AV = {
+    const mantenimiento: MantenimientoMtto = {
       ...this.formularioDeMantenimiento.value,
       id: this.mantenimientoActivo?.id,
       idSucursal: this.mantenimientoActivo?.idSucursal,

@@ -9,7 +9,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TicketsService } from '../../../services/tickets.service';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
-import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

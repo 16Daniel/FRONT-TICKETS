@@ -62,7 +62,7 @@ export class AdminMaintenanceTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea: string = '4';
+  idArea: string = '4';
   ordenarMantenimientosFecha: boolean = false;
   auxMostrarMantenimientos = true;
 
@@ -99,7 +99,7 @@ export class AdminMaintenanceTabComponent {
   }
 
   async obtenerTickets(): Promise<void> {
-    this.subscripcionTicket = this.ticketsService.getByArea(this.IdArea).subscribe({
+    this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
         let arr_temp: Ticket[] = [];
@@ -197,7 +197,7 @@ export class AdminMaintenanceTabComponent {
     this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
+        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.idArea);
         this.cdr.detectChanges();
       },
       error: (error) => {

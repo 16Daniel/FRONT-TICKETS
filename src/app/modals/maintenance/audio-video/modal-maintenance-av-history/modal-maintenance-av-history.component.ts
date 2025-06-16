@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-6x6-av.service';
+import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../../../services/users.service';
 import { CommonModule } from '@angular/common';

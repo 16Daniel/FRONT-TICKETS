@@ -1,0 +1,41 @@
+<p-dialog header="REGISTRO DE MANTENIMIENTO 8 DE 8" [(visible)]="showModal" [modal]="true" [maximizable]="true"
+    (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
+
+    <div class="sticky-header">
+        <h2>{{ datesHelper.getDate(mantenimientoActivo?.fecha) | date }}</h2>
+        <!-- <app-progress-bar-60 [progreso]="progreso"></app-progress-bar-60> -->
+    </div>
+
+    <form [formGroup]="formularioDeMantenimiento" class="p-fluid">
+        <div class="p-grid p-ai-center">
+            <div *ngFor="let opcion of opcionesDeMantenimiento; let i = index" class="p-col-12 p-md-6 p-lg-2">
+                <div class="p-field-checkbox flex align-items-center">
+                    <p-checkbox [binary]="true" [formControlName]="opcion.controlName"
+                        (onChange)="onCheckboxChange($event)">
+                        ></p-checkbox>
+                    <label class="check-text ml-2" [pTooltip]="opcion.tooltip" tooltipPosition="top">{{ i + 1 }}.- {{
+                        opcion.label }}</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-field p-col-12 mt-3">
+            <label for="observaciones" class="block mb-2">Observaciones</label>
+            <textarea id="observaciones" formControlName="observaciones" pInputTextarea rows="5" class="w-full"
+                [ngClass]="{'p-invalid': formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched}"></textarea>
+            <small
+                *ngIf="formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched"
+                class="p-error">
+                Campo requerido.
+            </small>
+        </div>
+    </form>
+
+
+    <p-footer class="footer-buttons">
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3" (click)="enviar()"><i class='bx bx-send'></i> ENVIAR</button>
+        </div>
+    </p-footer>
+
+</p-dialog>

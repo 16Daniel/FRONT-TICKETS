@@ -365,7 +365,6 @@ export default class CalendarBuilderComponent implements OnInit {
     return sucursal.activoMantenimientos.includes(String(this.usuario.idArea));
   }
 
-
   async registrarGuardia() {
     // this.fecha.setHours(0, 0, 0, 0);
     const guardia: Guardia =

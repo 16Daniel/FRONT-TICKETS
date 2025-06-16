@@ -1,17 +1,19 @@
 import { Timestamp } from "@angular/fire/firestore";
 
-export interface Mantenimiento6x6AV {
+export interface MantenimientoMtto {
   id?: string | any;
   idSucursal: string | undefined;
   idUsuarioSoporte: string | undefined;
   fecha: Date | undefined;
 
-  mantenimientoConexiones: boolean;
+  mantenimientoTermostato: boolean;
+  mantenimientoPerillas: boolean;
+  mantenimientoTornilleria: boolean;
+  mantenimientoRuedas: boolean;
   mantenimientoCableado: boolean;
-  mantenimientoRack: boolean;
-  mantenimientoControles: boolean;
-  mantenimientoNivelAudio: boolean;
-  mantenimientoCanales: boolean;
+  mantenimientoTina: boolean;
+  mantenimientoMangueras: boolean;
+  mantenimientoLlavesDePaso: boolean;
 
   observaciones: string | undefined;
   estatus: boolean;
