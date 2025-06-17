@@ -1,0 +1,8 @@
+<div class="progress-bar-container">
+    <div class="progress-bar" [style.width.%]="progreso" [ngClass]="{
+        'progress-bar-red': progreso < 60,
+        'progress-bar-yellow': progreso >= 60 && progreso < 90,
+        'progress-bar-green': progreso >= 90
+    }"></div>
+</div>
+<p>Calificación: {{ (progreso / 100 * 8) | number:'1.0-0' }} de 8</p>

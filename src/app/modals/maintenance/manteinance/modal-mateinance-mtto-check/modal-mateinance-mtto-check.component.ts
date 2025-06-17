@@ -9,6 +9,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
+import { ProgressBar80Component } from '../../../../components/common/progress-bar-80/progress-bar-80.component';
 
 @Component({
   selector: 'app-modal-mateinance-mtto-check',
@@ -19,7 +20,7 @@ import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.se
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    // ProgressBar60Component,
+    ProgressBar80Component,
     TooltipModule
   ], templateUrl: './modal-mateinance-mtto-check.component.html',
   styleUrl: './modal-mateinance-mtto-check.component.scss'
@@ -30,6 +31,8 @@ export class ModalMateinanceMttoCheckComponent {
   @Input() mantenimientoActivo: MantenimientoMtto | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 
+  hayFreidorasComprobadas: boolean = false;
+  cantidadFreidoras: number | null = null;
   progreso: number = 0;
   mantenimientos: MantenimientoMtto[] = [];
   formularioDeMantenimiento: FormGroup | any;
@@ -48,7 +51,7 @@ export class ModalMateinanceMttoCheckComponent {
       label: 'MANTENIMIENTO TORNILLERIA',
       controlName: 'mantenimientoTornilleria',
       tooltip: 'LA TORNILLERIA ESTA COMPLETA Y BIEN FIRME TODO EL ARMAZON',
-    },    
+    },
     {
       label: 'MANTENIMIENTO RUEDAS',
       controlName: 'mantenimientoRuedas',
@@ -125,6 +128,14 @@ export class ModalMateinanceMttoCheckComponent {
 
   onHide = () => this.closeEvent.emit(); // Cerrar modal}
 
-  onCheckboxChange = (event: any) => this.progreso = event.checked ? this.progreso + 16.6667 : this.progreso - 16.6667;
+  onCheckboxChange = (event: any) => this.progreso = event.checked ? this.progreso + 12.5 : this.progreso - 12.5;
 
+  comprobarFreidoras() {
+    if (this.cantidadFreidoras! > 0) {
+      this.hayFreidorasComprobadas = true;
+    }
+    else {
+      this.showMessage('warn', 'Advertencia', 'La cantidad de freidoras debe ser mayor a 0');
+    }
+  }
 }
