@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Timestamp } from '@angular/fire/firestore';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ToastModule } from 'primeng/toast';
+import { Subscription } from 'rxjs';
+
 import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
@@ -13,13 +16,14 @@ import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket
 import { Ticket } from '../../../models/ticket.model';
 import { Sucursal } from '../../../models/sucursal.model';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
-import { Subscription } from 'rxjs';
 import { Usuario } from '../../../models/usuario.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TicketsService } from '../../../services/tickets.service';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
-import { Timestamp } from '@angular/fire/firestore';
+import { AccordionBranchMaintenanceMttoComponent } from '../../maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
+import { MantenimientoMtto } from '../../../models/mantenimiento-mtto.model';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -36,7 +40,7 @@ import { Timestamp } from '@angular/fire/firestore';
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    // AccordionBranchMaintenanceAvComponent
+    AccordionBranchMaintenanceMttoComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-maintenance-tab.component.html',
@@ -52,7 +56,7 @@ export class AdminMaintenanceTabComponent {
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   sucursales: Sucursal[] = [];
-  // mantenimientos: Mantenimiento6x6AV[] = [];
+  mantenimientos: MantenimientoMtto[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -72,7 +76,7 @@ export class AdminMaintenanceTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    // private maintenanceService: Maintenance6x6AvService
+    private maintenanceService: MaintenanceMtooService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -155,24 +159,24 @@ export class AdminMaintenanceTabComponent {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        // this.maintenanceService
-        //   .getUltimos3Mantenimientos(
-        //     this.sucursales.map((sucursal) => sucursal.id)
-        //   )
-        //   .subscribe((result) => {
-        //     let data = result.filter((element) => element.length > 0);
-        //     this.mantenimientos = [];
-        //     for (let itemdata of data) {
-        //       for (let item of itemdata) {
-        //         this.mantenimientos.push(item);
-        //       }
-        //     }
+        this.maintenanceService
+          .getUltimos3Mantenimientos(
+            this.sucursales.map((sucursal) => sucursal.id)
+          )
+          .subscribe((result) => {
+            let data = result.filter((element) => element.length > 0);
+            this.mantenimientos = [];
+            for (let itemdata of data) {
+              for (let item of itemdata) {
+                this.mantenimientos.push(item);
+              }
+            }
 
-        //     this.mantenimientos = this.mantenimientos.map(x => {
-        //       x.fecha = this.getDate(x.fecha);
-        //       return x;
-        //     });
-        //   });
+            this.mantenimientos = this.mantenimientos.map(x => {
+              x.fecha = this.getDate(x.fecha);
+              return x;
+            });
+          });
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -237,13 +241,13 @@ export class AdminMaintenanceTabComponent {
       return this.sucursales.filter(sucursal =>
         idsSucursalesUsuario?.includes(String(sucursal.id)) &&
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes('2')
+        sucursal.activoMantenimientos.includes('4')
       );
     }
     else {
       return this.sucursales.filter(sucursal =>
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes('2')
+        sucursal.activoMantenimientos.includes('4')
       );
     }
   }

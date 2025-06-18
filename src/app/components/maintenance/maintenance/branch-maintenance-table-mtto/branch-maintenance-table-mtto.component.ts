@@ -2,28 +2,27 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
+import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
+import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 
 @Component({
-  selector: 'app-branch-maintenance-table-av',
+  selector: 'app-branch-maintenance-table-mtto',
   standalone: true,
   imports: [TableModule, CommonModule],
-  templateUrl: './branch-maintenance-table-av.component.html',
-  styleUrl: './branch-maintenance-table-av.component.scss'
+  templateUrl: './branch-maintenance-table-mtto.component.html',
+  styleUrl: './branch-maintenance-table-mtto.component.scss'
 })
-
-export class BranchMaintenanceTableAvComponent {
-  @Input() mantenimientos: Mantenimiento6x6AV[] = [];
+export class BranchMaintenanceTableMttoComponent {
+  @Input() mantenimientos: MantenimientoMtto[] = [];
   @Input() usuariosHelp: Usuario[] = [];
-  @Output() clickEvent = new EventEmitter<Mantenimiento6x6AV>();
-  mantenimientoSeleccionado: Mantenimiento6x6AV | undefined;
+  @Output() clickEvent = new EventEmitter<MantenimientoMtto>();
+  mantenimientoSeleccionado: MantenimientoMtto | undefined;
 
   constructor(
     public datesHelper: DatesHelperService,
-    public maintenance6x6AvService: Maintenance6x6AvService
+    public maintenanceMtooService: MaintenanceMtooService
   ) { }
 
   obtenerNombreResponsable(idUsuario: string): string {

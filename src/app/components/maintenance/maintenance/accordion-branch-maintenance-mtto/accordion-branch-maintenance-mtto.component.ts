@@ -5,33 +5,33 @@ import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
 import { Sucursal } from '../../../../models/sucursal.model';
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { UsersService } from '../../../../services/users.service';
-import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
+import { BranchMaintenanceTableMttoComponent } from '../branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
+import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
 
 @Component({
-  selector: 'app-accordion-branch-maintenance10x10',
+  selector: 'app-accordion-branch-maintenance-mtto',
   standalone: true,
-  imports: [BranchMaintenanceTableComponent, BadgeModule, CommonModule, AccordionModule],
-  templateUrl: './accordion-branch-maintenance10x10.component.html',
-  styleUrl: './accordion-branch-maintenance10x10.component.scss',
+  imports: [BranchMaintenanceTableMttoComponent, BadgeModule, CommonModule, AccordionModule],
+  templateUrl: './accordion-branch-maintenance-mtto.component.html',
+  styleUrl: './accordion-branch-maintenance-mtto.component.scss'
 })
 
-export class AccordionBranchMaintenance10x10Component {
-  @Input() mantenimientos: Mantenimiento10x10[] = [];
+export class AccordionBranchMaintenanceMttoComponent {
+  @Input() mantenimientos: MantenimientoMtto[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
 
-  mantenimientosOriginal: Mantenimiento10x10[] = [];
-  mantenimientosOrdenados: Mantenimiento10x10[] = [];
+  mantenimientosOriginal: MantenimientoMtto[] = [];
+  mantenimientosOrdenados: MantenimientoMtto[] = [];
 
   usuariosHelp: Usuario[] = [];
 
   constructor(
     private usersService: UsersService,
-    private maintenance10x10Service: Maintenance10x10Service,
+    private maintenanceMtooService: MaintenanceMtooService,
 
   ) { this.obtenerUsuariosHelp(); }
 
@@ -101,7 +101,7 @@ export class AccordionBranchMaintenance10x10Component {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenance10x10Service.calcularPorcentaje(registro[0]);
+        porcentaje = this.maintenanceMtooService.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;
@@ -138,7 +138,7 @@ export class AccordionBranchMaintenance10x10Component {
     return dias;
   }
 
-  obtenerColorDeFondoSucursal10x10(value: number): string {
+  obtenerColorDeFondoSucursal(value: number): string {
     let str = '';
 
     if (value <= 50) {
@@ -156,11 +156,11 @@ export class AccordionBranchMaintenance10x10Component {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): Mantenimiento10x10[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoMtto[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 
-  obtenerColorDeTexto10x10(value: number): string {
+  obtenerColorDeTexto(value: number): string {
     let str = '';
 
     if (value <= 50) {

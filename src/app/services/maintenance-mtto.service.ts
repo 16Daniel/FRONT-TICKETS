@@ -48,20 +48,21 @@ export class MaintenanceMtooService implements IMantenimientoService {
   }
 
   calcularPorcentaje(mantenimiento: MantenimientoMtto) {
-    // let porcentaje = 0;
-    // mantenimiento.mantenimientoConexiones ? (porcentaje += 16.67) : porcentaje;
-    // mantenimiento.mantenimientoCableado ? (porcentaje += 16.67) : porcentaje;
-    // mantenimiento.mantenimientoRack ? (porcentaje += 16.67) : porcentaje;
-    // mantenimiento.mantenimientoControles
-    //   ? (porcentaje += 16.67)
-    //   : porcentaje;
-    // mantenimiento.mantenimientoNivelAudio
-    //   ? (porcentaje += 16.67)
-    //   : porcentaje;
-    // mantenimiento.mantenimientoCanales ? (porcentaje += 16.67) : porcentaje;
+    let porcentaje = 0;
+    mantenimiento.mantenimientoTermostato ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoPerillas ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoTornilleria ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoRuedas
+      ? (porcentaje += 12.5)
+      : porcentaje;
+    mantenimiento.mantenimientoCableado
+      ? (porcentaje += 12.5)
+      : porcentaje;
+    mantenimiento.mantenimientoTina ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoMangueras ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoLlavesDePaso ? (porcentaje += 12.5) : porcentaje;
 
-    // return Math.round(porcentaje);
-    return 0;
+    return Math.round(porcentaje);
   }
 
   async obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string) {
@@ -210,12 +211,13 @@ export class MaintenanceMtooService implements IMantenimientoService {
     const fechaHaceUnMes = new Date(fechaActual);
     fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
     fechaHaceUnMes.setHours(0, 0, 0, 0);
+    debugger
     // Mapea cada sucursal a una consulta independiente
     const consultas = idsSucursales.map(idSucursal => {
       const mantenimientosRef = collection(this.firestore, this.pathName);
       const q = query(
         mantenimientosRef,
-        where('idSucursal', '==', idSucursal),
+        where('idSucursal', '==', idSucursal.toString()),
         where('fecha', '>=', fechaHaceUnMes),
         where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
@@ -244,7 +246,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
       const mantenimientosRef = collection(this.firestore, this.pathName);
       const q = query(
         mantenimientosRef,
-        where('idSucursal', '==', idSucursal),
+        where('idSucursal', '==', idSucursal.toString()),
         where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
         limit(3)

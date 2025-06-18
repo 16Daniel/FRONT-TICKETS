@@ -1,18 +1,19 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
-import { MessageService } from 'primeng/api';
-import { UsersService } from '../../../../services/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
-import { BranchMaintenanceTableAvComponent } from '../../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
+import { MessageService } from 'primeng/api';
+
+import { Usuario } from '../../../../models/usuario.model';
+import { UsersService } from '../../../../services/users.service';
+import { BranchMaintenanceTableMttoComponent } from '../../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
+import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
 
 @Component({
-  selector: 'app-modal-maintenance-av-history',
+  selector: 'app-modal-maintenance-mtto-history',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,27 +21,25 @@ import { BranchMaintenanceTableAvComponent } from '../../../../components/mainte
     DialogModule,
     CalendarModule,
     TableModule,
-    BranchMaintenanceTableAvComponent
-  ],
-  templateUrl: './modal-maintenance-av-history.component.html',
-  styleUrl: './modal-maintenance-av-history.component.scss'
+    BranchMaintenanceTableMttoComponent
+  ],  templateUrl: './modal-maintenance-mtto-history.component.html',
+  styleUrl: './modal-maintenance-mtto-history.component.scss'
 })
-
-export class ModalMaintenanceAvHistoryComponent {
-  @Input() showModalHistorialMantenimientos: boolean = false;
+export class ModalMaintenanceMttoHistoryComponent {
+@Input() showModalHistorialMantenimientos: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   fechaInicio: Date = new Date();
   fechaFin: Date = new Date();
-  mantenimientos: Mantenimiento6x6AV[] = [];
+  mantenimientos: MantenimientoMtto[] = [];
   usuario: Usuario;
   idSucursal: string;
   usuariosHelp: Usuario[] = [];
   mostrarModalDetalleMantenimeinto: boolean = false;
-  mantenimiento: Mantenimiento6x6AV | any;
+  mantenimiento: MantenimientoMtto | any;
   paginaCargaPrimeraVez: boolean = true;
 
-  constructor(private maintenanceService: Maintenance6x6AvService,
+  constructor(private maintenanceService: MaintenanceMtooService,
     private messageService: MessageService,
     private usersService: UsersService,
     private cdr: ChangeDetectorRef,
@@ -100,7 +99,7 @@ export class ModalMaintenanceAvHistoryComponent {
     );
   }
 
-  abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento6x6AV | any) {
+  abrirModalDetalleMantenimiento(mantenimiento: MantenimientoMtto | any) {
     this.mantenimiento = mantenimiento;
     this.mostrarModalDetalleMantenimeinto = true;
   }

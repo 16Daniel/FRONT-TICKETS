@@ -15,9 +15,10 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { Area } from '../../../models/area.model';
 import { Usuario } from '../../../models/usuario.model';
 import { ModalMateinanceMttoCheckComponent } from '../../../modals/maintenance/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
-import { ModalMateinanceMttoHistoryComponent } from '../../../modals/maintenance/manteinance/modal-mateinance-mtto-history/modal-mateinance-mtto-history.component';
 import { MantenimientoMtto } from '../../../models/mantenimiento-mtto.model';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { BranchMaintenanceTableMttoComponent } from '../../maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { ModalMaintenanceMttoHistoryComponent } from '../../../modals/maintenance/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
 
 @Component({
   selector: 'app-branches-maintenance-tab',
@@ -33,7 +34,8 @@ import { MaintenanceMtooService } from '../../../services/maintenance-mtto.servi
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
     ModalMateinanceMttoCheckComponent,
-    ModalMateinanceMttoHistoryComponent
+    // BranchMaintenanceTableMttoComponent
+    ModalMaintenanceMttoHistoryComponent
   ],
   templateUrl: './branches-maintenance-tab.component.html',
   styleUrl: './branches-maintenance-tab.component.scss'
