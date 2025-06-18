@@ -1,5 +1,5 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
 import { Timestamp } from '@angular/fire/firestore';
@@ -17,6 +17,7 @@ import { ModalMaintenanceDetailComponent } from '../../maintenance/systems/modal
 import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
 import { BranchMaintenanceTableAvComponent } from '../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { RequesterTicketsListComponent } from '../../../components/common/requester-tickets-list/requester-tickets-list.component';
+import { BranchMaintenanceTableMttoComponent } from '../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -30,12 +31,13 @@ import { RequesterTicketsListComponent } from '../../../components/common/reques
     EditorModule,
     ModalTicketDetailComponent,
     ModalMaintenanceDetailComponent,
-    BranchMaintenanceTableAvComponent
+    BranchMaintenanceTableAvComponent,
+    BranchMaintenanceTableMttoComponent
   ],
   templateUrl: './modal-event-detail.component.html',
 })
 
-export default class ModalEventDetailComponent {
+export default class ModalEventDetailComponent implements OnInit {
   @Input() showModalEventeDetail: boolean = false;
   @Input() sucursal: SucursalProgramada | any;
   @Input() fecha: Date | any;
@@ -74,8 +76,8 @@ export default class ModalEventDetailComponent {
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
     await servicio.getUltimosMantenimientos([this.sucursal.id]).subscribe(result => {
       this.mantenimientosDelDia = result;
+      this.cdr.detectChanges();
     });
-    this.cdr.detectChanges();
   }
 
   getDate(tsmp: Timestamp): Date {
@@ -104,5 +106,6 @@ export default class ModalEventDetailComponent {
     this.loading = true;
     this.tickets = await this.ticketsService.getByIds(this.sucursal.idsTickets);
     this.loading = false;
+    this.cdr.detectChanges();
   }
 }

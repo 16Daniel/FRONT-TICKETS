@@ -267,6 +267,8 @@ export class CalendarComponent implements OnInit {
         return '10X10';
       case '2':
         return '6X6';
+      case '4':
+        return '8X8';
       default:
         return 'XXX';
     }
