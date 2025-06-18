@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
@@ -34,6 +34,17 @@ export class MaintenanceMtooService implements IMantenimientoService {
       ...mantenimiento,
       timestamp: Timestamp.now(), // Usa el timestamp de Firestore
     });
+  }
+
+  async create2(mantenimiento: MantenimientoMtto): Promise<void> {
+    const mantenimientoRef = collection(this.firestore, this.pathName);
+    const docRef = await addDoc(mantenimientoRef, {
+      ...mantenimiento,
+      timestamp: Timestamp.now(), // Usa el timestamp de Firestore
+    });
+
+    // Agregar el ID generado al documento
+    await setDoc(docRef, { id: docRef.id }, { merge: true });
   }
 
   calcularPorcentaje(mantenimiento: MantenimientoMtto) {
