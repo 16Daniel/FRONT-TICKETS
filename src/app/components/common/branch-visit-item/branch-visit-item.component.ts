@@ -46,6 +46,9 @@ export class BranchVisitItemComponent {
       case '2':
         this.textoMantenimiento = '6X6';
         break;
+      case '4':
+        this.textoMantenimiento = '8X8';
+        break;
     }
   }
 
@@ -66,7 +69,7 @@ export class BranchVisitItemComponent {
   }
 
   async obtenerPorcentajeDeUltimoMantenimiento(idSucursal: string) {
-    
+
     let porcentaje = 0;
     let registro = this.ultimosMantenimientos.filter(x => x.idSucursal == idSucursal);
     if (registro.length > 0) {

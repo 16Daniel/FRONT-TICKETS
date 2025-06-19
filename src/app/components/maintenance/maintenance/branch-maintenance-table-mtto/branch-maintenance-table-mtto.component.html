@@ -1,0 +1,63 @@
+<p-table [value]="mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+    styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+    [(selection)]="mantenimientoSeleccionado" (onRowSelect)="onClick()">
+    <ng-template pTemplate="header">
+        <tr class="text-center">
+            <th>NOMBRE</th>
+            <th>FECHA</th>
+            <th>TERMOSTATO</th>
+            <th>PERILLAS</th>
+            <th>TORNILLERIA</th>
+            <th>RUEDAS</th>
+            <th>CABLEADO</th>
+            <th>TINAS</th>
+            <th>MANGUERAS</th>
+            <th>LLAVES DE PASO</th>
+            <th>% DE PROGRESO</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-mantenimiento>
+        <tr [pSelectableRow]="mantenimiento">
+            <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
+            </td>
+            <td class="text-center">{{ datesHelper.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoTermostato, 'bg-danger': !mantenimiento.mantenimientoTermostato}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoTermostato ? 'Si' : 'No' }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoPerillas, 'bg-danger': !mantenimiento.mantenimientoPerillas}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoPerillas ? 'Si' : 'No' }}</label>
+
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoTornilleria, 'bg-danger': !mantenimiento.mantenimientoTornilleria}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoTornilleria ? 'Si' : 'No' }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoRuedas, 'bg-danger': !mantenimiento.mantenimientoRuedas}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoRuedas ? 'Si' : 'No'
+                    }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoCableado, 'bg-danger': !mantenimiento.mantenimientoCableado}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoCableado ? 'Si' : 'No'
+                    }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoTina, 'bg-danger': !mantenimiento.mantenimientoTina}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoTina ? 'Si' : 'No' }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoMangueras, 'bg-danger': !mantenimiento.mantenimientoMangueras}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoMangueras ? 'Si' : 'No' }}</label>
+            </td>
+            <td class="text-center"
+                [ngClass]="{'bg-success': mantenimiento.mantenimientoLlavesDePaso, 'bg-danger': !mantenimiento.mantenimientoLlavesDePaso}">
+                <label style="color: white;">{{ mantenimiento.mantenimientoLlavesDePaso ? 'Si' : 'No' }}</label>
+            </td>
+            <td class="text-center">{{ maintenanceMtooService.calcularPorcentaje(mantenimiento) }}%</td>
+        </tr>
+    </ng-template>
+</p-table>

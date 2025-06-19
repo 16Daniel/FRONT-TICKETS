@@ -47,7 +47,7 @@
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoCanales, 'bg-danger': !mantenimiento.mantenimientoCanales}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoCanales ? 'Si' : 'No' }}</label>
             </td>            
-            <td class="text-center">{{ maintenancesHelper.calcularPorcentajeAV(mantenimiento) }}%</td>
+            <td class="text-center">{{ maintenance6x6AvService.calcularPorcentaje(mantenimiento) }}%</td>
         </tr>
     </ng-template>
 </p-table>

@@ -15,8 +15,8 @@ import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-rating/modal-branch-rating.component';
-import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
-import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-av.model';
+import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { ModalMaintenanceAvHistoryComponent } from '../../../modals/maintenance/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
 import { ModalMaintenanceAvCheckComponent } from '../../../modals/maintenance/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
 

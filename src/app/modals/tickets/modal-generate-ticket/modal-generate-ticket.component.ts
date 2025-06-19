@@ -216,6 +216,8 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       this.ticket.idResponsables = idsResponsablesTicket;
       this.ticket.idSucursal = this.ticket.idSucursal.toString();
+      this.ticket.idArea = this.ticket.idArea.toString();
+      this.ticket.idCategoria = this.ticket.idCategoria.toString();
       this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
       this.ticket.fechaEstimacion = fechaEstimacion;
       this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
@@ -248,7 +250,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         const existeSucursal = item.sucursales.some(
           (x) => x.id == this.ticket.idSucursal
         );
-        if (existeSucursal) {
+        if (existeSucursal && item.idArea == this.ticket.idArea) {
           id = item.id;
         }
       }

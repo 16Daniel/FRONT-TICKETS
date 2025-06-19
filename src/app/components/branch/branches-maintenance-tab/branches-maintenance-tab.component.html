@@ -6,13 +6,13 @@
     (click)="mostrarModalHistorial = true">
   </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 10 X 10" icon="pi pi-history" styleClass="p-button-secondary"
+  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8" icon="pi pi-history" styleClass="p-button-secondary"
     (click)="mostrarModalHistorialMantenimientos = true">
   </p-button>
 
-  <!-- <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="CHECK 10 X 10" icon="pi pi-wrench"
-    styleClass="p-button-danger" (click)="mostrarAlerta10x10()">
-  </p-button> -->
+  <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="CHECK 8 X 8" icon="pi pi-wrench"
+    styleClass="p-button-danger" (click)="mostrarAlerta()">
+  </p-button>
 
 </div>
 
@@ -36,14 +36,14 @@
 
 <app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
   (closeEvent)="mostrarModalHistorial = false" idArea="4"></app-modal-tickets-history>
-<!-- 
-<app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
-  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
-  (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history> -->
 
-<!-- <app-modal-ten-xten-maintenance-check *ngIf="mostrarModal10x10" [showModal10x10]="mostrarModal10x10"
-  (closeEvent)="mostrarModal10x10 = false"
-  [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check> -->
+<app-modal-maintenance-mtto-history *ngIf="mostrarModalHistorialMantenimientos"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
+  (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-maintenance-mtto-history>
+
+<app-modal-mateinance-mtto-check *ngIf="mostrarModalManteinance" [showModal]="mostrarModalManteinance"
+  (closeEvent)="mostrarModalManteinance = false"
+  [mantenimientoActivo]="mantenimientoActivo"></app-modal-mateinance-mtto-check>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

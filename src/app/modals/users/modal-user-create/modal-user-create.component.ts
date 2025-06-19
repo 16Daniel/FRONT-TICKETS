@@ -93,6 +93,7 @@ export class ModalUserCreateComponent implements OnInit {
    */
   async guardarUsuario(uid: string) {
     this.usuario.uid = uid;
+    this.usuario.idArea = this.usuario.idArea.toString();
 
     try {
       await this.usersService.create({ ...this.usuario });
@@ -106,6 +107,8 @@ export class ModalUserCreateComponent implements OnInit {
   }
 
   actualizarUsuario() {
+    this.usuario.idArea = this.usuario.idArea.toString();
+
     this.documentsService
       .updateDoc('usuarios', this.usuario)
       .then(() => {

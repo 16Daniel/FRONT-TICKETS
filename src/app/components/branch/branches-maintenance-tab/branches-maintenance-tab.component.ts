@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 import { Ticket } from '../../../models/ticket.model';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
@@ -13,7 +14,11 @@ import { ModalBranchRatingComponent } from '../../../modals/branch/modal-branch-
 import { Sucursal } from '../../../models/sucursal.model';
 import { Area } from '../../../models/area.model';
 import { Usuario } from '../../../models/usuario.model';
-import { ConfirmationService } from 'primeng/api';
+import { ModalMateinanceMttoCheckComponent } from '../../../modals/maintenance/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
+import { MantenimientoMtto } from '../../../models/mantenimiento-mtto.model';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { BranchMaintenanceTableMttoComponent } from '../../maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { ModalMaintenanceMttoHistoryComponent } from '../../../modals/maintenance/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
 
 @Component({
   selector: 'app-branches-maintenance-tab',
@@ -27,7 +32,10 @@ import { ConfirmationService } from 'primeng/api';
     ModalTicketDetailComponent,
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,
-    ModalBranchRatingComponent
+    ModalBranchRatingComponent,
+    ModalMateinanceMttoCheckComponent,
+    // BranchMaintenanceTableMttoComponent
+    ModalMaintenanceMttoHistoryComponent
   ],
   templateUrl: './branches-maintenance-tab.component.html',
   styleUrl: './branches-maintenance-tab.component.scss'
@@ -42,12 +50,12 @@ export class BranchesMaintenanceTabComponent {
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarModal10x10: boolean = false;
+  mostrarModalManteinance: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalRating: boolean = false;
 
   sucursal: Sucursal | undefined;
-  // mantenimientoActivo: Mantenimiento10x10 | null = null;
+  mantenimientoActivo: MantenimientoMtto | null = null;
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;
@@ -56,13 +64,13 @@ export class BranchesMaintenanceTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    // private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoService: MaintenanceMtooService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
 
-    // this.obtenerMantenimientoActivo();
+    this.obtenerMantenimientoActivo();
   }
 
   ngOnDestroy(): void {
@@ -112,25 +120,24 @@ export class BranchesMaintenanceTabComponent {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
-  // async obtenerMantenimientoActivo() {
-  //   this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
-  //     this.sucursal?.id,
-  //     (mantenimiento) => {
-  //       console.log(mantenimiento)
-  //       this.mantenimientoActivo = mantenimiento;
-  //       this.cdr.detectChanges();
-  //       // console.log('Mantenimiento activo:', this.mantenimientoActivo);
-  //     }
-  //   );
-  // }
+  async obtenerMantenimientoActivo() {
+    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+      this.sucursal?.id,
+      (mantenimiento) => {
+        this.mantenimientoActivo = mantenimiento;
+        this.cdr.detectChanges();
+        // console.log('Mantenimiento activo:', this.mantenimientoActivo);
+      }
+    );
+  }
 
-  mostrarAlerta10x10() {
+  mostrarAlerta() {
     this.confirmationService.confirm({
       header: 'IMPORTANTE',
       message: `
         TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
         <br><br>
-        ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
+        ES UNA EVALUACIÓN DE MANTENIMIENTO DE FREIDORAS EN 8 PUNTOS
         <br><br>
         CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
       acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
@@ -141,7 +148,7 @@ export class BranchesMaintenanceTabComponent {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-        this.mostrarModal10x10 = true;
+        this.mostrarModalManteinance = true;
       },
       reject: () => { },
     });

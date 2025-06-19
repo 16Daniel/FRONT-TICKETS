@@ -29,9 +29,13 @@
         <li (click)="closemenu()"><a [routerLink]="'/main/branches'"
             *ngIf="usuario.idRol == '1' || usuario.idRol == '5'"><i
               class='bx bx-objects-horizontal-left'></i>Sucursales</a>
+        </li>
         <li (click)="closemenu()"><a [routerLink]="'/main/areas'" *ngIf="usuario.idRol == '1'"><i
               class='bx bx-objects-horizontal-left'></i>Áreas</a>
-
+        </li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/categories'"
+            *ngIf="usuario.idRol == '1' || usuario.idRol == '5'"><i
+              class='bx bx-objects-horizontal-left'></i>Categorias</a>
         </li>
         <li (click)="closemenu()" *ngIf="usuario?.idRol == '1' || usuario?.idRol == '5' "><a
             [routerLink]="'/main/calendar-builder'"><i class='bx bx-calendar-plus'></i>Registrar visita</a></li>
@@ -39,6 +43,8 @@
             [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/version-control'" *ngIf="usuario.idRol == '1'"><i
               class='bx bxs-dashboard'></i>Control de versiones</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/fixed-assets'" *ngIf="usuario.idRol == '5'"><i
+              class='bx bxs-dashboard'></i>Activos fijos</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
