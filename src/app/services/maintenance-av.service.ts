@@ -201,7 +201,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
       const mantenimientosRef = collection(this.firestore, this.pathName);
       const q = query(
         mantenimientosRef,
-        where('idSucursal', '==', idSucursal),
+        where('idSucursal', '==', idSucursal.toString()),
         where('fecha', '>=', fechaHaceUnMes),
         where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
@@ -230,7 +230,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
       const mantenimientosRef = collection(this.firestore, this.pathName);
       const q = query(
         mantenimientosRef,
-        where('idSucursal', '==', idSucursal),
+        where('idSucursal', '==', idSucursal.toString()),
         where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
         limit(3)
