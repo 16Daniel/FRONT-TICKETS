@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Timestamp } from '@angular/fire/firestore';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -21,7 +22,6 @@ import { Maintenance10x10Service } from '../../../services/maintenance-10x10.ser
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { Timestamp } from '@angular/fire/firestore';
 import { BranchesTicketsAccordionComponent } from '../../branch/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
 
@@ -154,6 +154,11 @@ export class AdminSysTabComponent {
         }
 
         this.tickets = this.tickets.filter(x => x.validacionAdmin != true);
+        this.tickets = this.tickets.map((item: any) => ({
+          ...item,
+          idCategoria: item.idCategoria.toString()
+        }));
+
         this.cdr.detectChanges();
       },
       error: (error) => {
