@@ -1,0 +1,76 @@
+<p-dialog header="TURNOS" [modal]="true" [(visible)]="mostrarModalTurnos" [style]="{ width: '70rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+    <div class="p-3" style="min-height: 400px;">
+           
+        <div class="row m-0">
+            <div class="col-md-6">
+                  <p-dropdown 
+            [options]="turnos"
+            [(ngModel)]="turnoSel"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre" 
+            [showClear]="false"
+            placeholder="SELECCIONAR UN TURNO"
+            [style]="{'width':'100%'}"
+            (onChange)="cambiarTurno()"
+            >
+                <ng-template pTemplate="selectedItem" let-selectedOption>
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ selectedOption.nombre }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ item.nombre }}</div>
+                    </div>
+                </ng-template>
+        </p-dropdown>
+            </div>  
+
+            <div class="col-md-6">
+                <input type="text" class="form-control" [(ngModel)]="formnombre" style="height: 48PX;" [disabled]="turnoSel == undefined"> 
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end p-3"> 
+            <button class="btn bg-p-b p-3" (click)="agregarTurno()"><i class='bx bx-plus-circle' ></i>&nbsp;AGREGAR</button>
+        </div>
+
+        <div class="mt-3">
+         <p-table [value]="turnosdb" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>CLA_TURNO</th>
+            <th>DESCRIPCION</th>
+            <th>ALIAS</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+        <tr>
+            <td>{{ item.idTurno }}</td>
+            <td>{{ item.nombre }}</td>
+             <td>{{ item.alias }}</td>
+            <td><button class="btn btn-danger" (click)="borrarTurno(item.idTurno)"><i class='bx bx-trash' ></i>&nbsp;ELIMINAR</button></td>
+        </tr>
+    </ng-template>
+</p-table>
+
+</div>
+   
+    </div>
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+  <p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p [innerHTML]="message.message"></p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
