@@ -49,7 +49,7 @@ import { CalendarModule } from 'primeng/calendar';
     ModalTicketDetailComponent,
     TooltipModule,
     CalendarModule
-],
+  ],
   templateUrl: './admin-tickets-list.component.html',
   styleUrl: './admin-tickets-list.component.scss',
 })
@@ -78,7 +78,7 @@ export class AdminTicketsListComponent {
   usuario: any;
   ticketSeleccionado: Ticket | undefined;
 
-  @Input() IdArea:string = '';
+  @Input() IdArea: string = '';
 
   constructor(
     private ticketsService: TicketsService,
@@ -131,7 +131,7 @@ export class AdminTicketsListComponent {
       },
     });
   }
-  
+
   obtenerEstatusTicket() {
     this.statusTicketService.get().subscribe({
       next: (data) => {
@@ -161,7 +161,10 @@ export class AdminTicketsListComponent {
   obtenerAreas() {
     this.areasService.get().subscribe({
       next: (data) => {
-        this.areas = data;
+        this.areas = data.map((item: any) => ({
+          ...item,
+          id: item.id.toString()
+        }));;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -174,8 +177,11 @@ export class AdminTicketsListComponent {
   obtenerCategorias() {
     this.categoriesService.get().subscribe({
       next: (data) => {
-        this.categorias = data;
-        this.categorias = this.categorias.filter(x=>x.idArea == this.IdArea); 
+        this.categorias = data.map((item: any) => ({
+          ...item,
+          id: item.id.toString()
+        }));;
+        this.categorias = this.categorias.filter(x => x.idArea == this.IdArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -184,7 +190,7 @@ export class AdminTicketsListComponent {
       },
     });
   }
-  
+
   obtenerNombreResponsable(id: string): string {
     let name = '';
     let temp = this.usuariosHelp.filter((x) => x.id == id);
@@ -204,7 +210,7 @@ export class AdminTicketsListComponent {
   }
 
   getDate(tsmp: Timestamp): Date {
-    const firestoreTimestamp = tsmp; 
+    const firestoreTimestamp = tsmp;
     const date = firestoreTimestamp.toDate();
     return date;
   }
@@ -227,14 +233,12 @@ export class AdminTicketsListComponent {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-
   actualizaTicket(ticket: Ticket) {
     this.ticketsService
       .update(ticket)
-      .then(() => {})
+      .then(() => { })
       .catch((error) => console.error(error));
   }
-
 
   onClickChat(ticket: Ticket) {
     this.ticketAccion = ticket;
@@ -280,7 +284,7 @@ export class AdminTicketsListComponent {
           })
           .catch((error) => console.error(error));
       },
-      reject: () => {},
+      reject: () => { },
     });
   }
 
@@ -297,7 +301,7 @@ export class AdminTicketsListComponent {
         this.ticketAccion = ticket;
         this.mostrarModalValidarTicket = true;
       },
-      reject: () => {},
+      reject: () => { },
     });
   }
 
@@ -311,19 +315,19 @@ export class AdminTicketsListComponent {
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
-        ticket.validacionAdmin = true; 
+        ticket.validacionAdmin = true;
         this.actualizaTicket(ticket);
       },
-      reject: () => {},
+      reject: () => { },
     });
   }
 
   abrirModalDetalleTicket(itemticket: Ticket | any) {
-    this.mostrarModalTicketDetail = true; 
-    this.ticket = itemticket; 
+    this.mostrarModalTicketDetail = true;
+    this.ticket = itemticket;
   }
 
-  ManejadorDeFecha(date: Date,tk:Ticket) {
+  ManejadorDeFecha(date: Date, tk: Ticket) {
     tk!.fechaEstimacion = Timestamp.fromDate(date);
     this.actualizaTicket(tk);
   }

@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { Area } from '../models/area.model';
 import {
   collection,
-  deleteDoc,
   doc,
   Firestore,
   getDoc,
