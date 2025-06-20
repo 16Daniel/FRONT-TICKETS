@@ -32,9 +32,14 @@ export class ModalBranchCreateComponent implements OnInit {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (!this.esNuevaSucursal) {
       this.idSucursalEditar = this.sucursal.id;
+    }
+
+    if (this.esNuevaSucursal) {
+      this.sucursal.id = await this.branchesService.obtenerSecuencial();
+      this.cdr.detectChanges();
     }
   }
 
@@ -94,7 +99,6 @@ export class ModalBranchCreateComponent implements OnInit {
 
     return activo.includes(this.usuario.idArea);
   }
-
 
   toggleMantenimiento(sucursal: Sucursal): void {
     if (!Array.isArray(sucursal.activoMantenimientos)) {

@@ -92,6 +92,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/versions-history/versions-history.component'),
       },
+      {
+        path: 'fixed-assets',
+        title: 'Activos fijos',
+        loadComponent: () =>
+          import('./pages/admin/fixed-assets/fixed-assets.component'),
+      },
     ],
   },
   {

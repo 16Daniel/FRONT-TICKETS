@@ -27,7 +27,7 @@ import { ModalTenXtenMaintenanceCheckComponent } from '../../../modals/maintenan
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../../components/analyst/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 

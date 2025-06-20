@@ -3,7 +3,7 @@
     <form #form="ngForm" (ngSubmit)="enviar(form)">
 
         <p class="fw-bold">ID</p>
-        <input [disabled]="!esNuevaArea" class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL ID"
+        <input [disabled]="true" class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL ID"
             [(ngModel)]="area.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
             #formidCtrl="ngModel" required>
         <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error">

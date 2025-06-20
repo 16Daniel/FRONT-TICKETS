@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-import { Timestamp } from "@angular/fire/firestore";
+
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { UsersService } from '../../../../services/users.service';
 import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
-import { MaintenancesHelperService } from '../../../../helpers/maintenances-helper.service';
+import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance10x10',
@@ -30,7 +31,7 @@ export class AccordionBranchMaintenance10x10Component {
 
   constructor(
     private usersService: UsersService,
-    private maintenanceHelper: MaintenancesHelperService,
+    private maintenance10x10Service: Maintenance10x10Service,
 
   ) { this.obtenerUsuariosHelp(); }
 
@@ -100,7 +101,7 @@ export class AccordionBranchMaintenance10x10Component {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenanceHelper.calcularPorcentajeSys(registro[0]);
+        porcentaje = this.maintenance10x10Service.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;

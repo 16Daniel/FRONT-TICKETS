@@ -1,29 +1,31 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
-import { Mantenimiento6x6AV } from '../models/mantenimiento-6x6-av.model';
+import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
+import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class Maintenance6x6AvService implements IMantenimientoService {
-  pathName: string = 'mantenimientos-av';
+export class MaintenanceMtooService implements IMantenimientoService {
+  pathName: string = 'mantenimientos-mtto';
 
   constructor(private firestore: Firestore) { }
 
   async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
-    const mantenimiento: Mantenimiento6x6AV = {
+    const mantenimiento: MantenimientoMtto = {
       idSucursal,
       idUsuarioSoporte: idUsuario,
       fecha,
       estatus: true,
-      mantenimientoConexiones: true,
+      mantenimientoTermostato: true,
+      mantenimientoPerillas: true,
+      mantenimientoTornilleria: true,
       mantenimientoCableado: true,
-      mantenimientoRack: true,
-      mantenimientoControles: true,
-      mantenimientoNivelAudio: true,
-      mantenimientoCanales: true,
+      mantenimientoRuedas: true,
+      mantenimientoTina: true,
+      mantenimientoMangueras: true,
+      mantenimientoLlavesDePaso: true,
       observaciones: '',
     };
 
@@ -34,18 +36,31 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     });
   }
 
-  calcularPorcentaje(mantenimiento: Mantenimiento6x6AV) {
+  async create2(mantenimiento: MantenimientoMtto): Promise<void> {
+    const mantenimientoRef = collection(this.firestore, this.pathName);
+    const docRef = await addDoc(mantenimientoRef, {
+      ...mantenimiento,
+      timestamp: Timestamp.now(), // Usa el timestamp de Firestore
+    });
+
+    // Agregar el ID generado al documento
+    await setDoc(docRef, { id: docRef.id }, { merge: true });
+  }
+
+  calcularPorcentaje(mantenimiento: MantenimientoMtto) {
     let porcentaje = 0;
-    mantenimiento.mantenimientoConexiones ? (porcentaje += 16.67) : porcentaje;
-    mantenimiento.mantenimientoCableado ? (porcentaje += 16.67) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 16.67) : porcentaje;
-    mantenimiento.mantenimientoControles
-      ? (porcentaje += 16.67)
+    mantenimiento.mantenimientoTermostato ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoPerillas ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoTornilleria ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoRuedas
+      ? (porcentaje += 12.5)
       : porcentaje;
-    mantenimiento.mantenimientoNivelAudio
-      ? (porcentaje += 16.67)
+    mantenimiento.mantenimientoCableado
+      ? (porcentaje += 12.5)
       : porcentaje;
-    mantenimiento.mantenimientoCanales ? (porcentaje += 16.67) : porcentaje;
+    mantenimiento.mantenimientoTina ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoMangueras ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoLlavesDePaso ? (porcentaje += 12.5) : porcentaje;
 
     return Math.round(porcentaje);
   }
@@ -63,7 +78,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     );
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento6x6AV));
+    const documentos: MantenimientoMtto[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MantenimientoMtto));
 
     return documentos;
   }
@@ -101,7 +116,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return forkJoin(consultas);
   }
 
-  async update(id: string, mantenimiento: Mantenimiento6x6AV): Promise<void> {
+  async update(id: string, mantenimiento: MantenimientoMtto): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await updateDoc(mantenimientoRef, {
       ...mantenimiento,
@@ -111,7 +126,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
 
   getMantenimientoActivo(
     idSucursal: string | undefined,
-    callback: (mantenimiento: Mantenimiento6x6AV | null) => void
+    callback: (mantenimiento: MantenimientoMtto | null) => void
   ): () => void {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
@@ -135,7 +150,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
         const mantenimiento = {
           id: primerDoc.id,
           ...primerDoc.data(),
-        } as Mantenimiento6x6AV;
+        } as MantenimientoMtto;
         callback(mantenimiento); // Devuelve el primer registro
       }
     });
@@ -144,7 +159,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return unsubscribe;
   }
 
-  getLastMaintenanceByBranch(idSucursal: string): Observable<Mantenimiento6x6AV[]> {
+  getLastMaintenanceByBranch(idSucursal: string): Observable<MantenimientoMtto[]> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
     const q = query(
       mantenimientoRef,
@@ -153,14 +168,14 @@ export class Maintenance6x6AvService implements IMantenimientoService {
       orderBy('fecha', 'desc'),
       limit(1)
     );
-    return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento6x6AV[]>;
+    return collectionData(q, { idField: 'id' }) as Observable<MantenimientoMtto[]>;
   }
 
   getHistorialMantenimeintos(
     fechaInicio: Date,
     fechaFin: Date,
     idSucursal: string,
-    callback: (mantenimientos: Mantenimiento6x6AV[] | null) => void
+    callback: (mantenimientos: MantenimientoMtto[] | null) => void
   ): () => void {
     fechaInicio.setHours(0, 0, 0, 0);
 
@@ -183,7 +198,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
         const mantenimientos = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        })) as Mantenimiento6x6AV[];
+        })) as MantenimientoMtto[];
         callback(mantenimientos);
       }
     });
@@ -196,12 +211,13 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     const fechaHaceUnMes = new Date(fechaActual);
     fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
     fechaHaceUnMes.setHours(0, 0, 0, 0);
+    debugger
     // Mapea cada sucursal a una consulta independiente
     const consultas = idsSucursales.map(idSucursal => {
       const mantenimientosRef = collection(this.firestore, this.pathName);
       const q = query(
         mantenimientosRef,
-        where('idSucursal', '==', idSucursal),
+        where('idSucursal', '==', idSucursal.toString()),
         where('fecha', '>=', fechaHaceUnMes),
         where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
@@ -230,7 +246,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
       const mantenimientosRef = collection(this.firestore, this.pathName);
       const q = query(
         mantenimientosRef,
-        where('idSucursal', '==', idSucursal),
+        where('idSucursal', '==', idSucursal.toString()),
         where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
         limit(3)

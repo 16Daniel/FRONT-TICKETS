@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { Ticket } from '../../../models/ticket.model';
 import { Sucursal } from '../../../models/sucursal.model';
-import { Mantenimiento6x6AV } from '../../../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../../../models/mantenimiento-av.model';
 import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { Subscription } from 'rxjs';
 import { Usuario } from '../../../models/usuario.model';
@@ -9,7 +9,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TicketsService } from '../../../services/tickets.service';
 import { UsersService } from '../../../services/users.service';
 import { BranchesService } from '../../../services/branches.service';
-import { Maintenance6x6AvService } from '../../../services/maintenance-6x6-av.service';
+import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

@@ -1,0 +1,58 @@
+<div class="pt-5">
+    <div class="pt-3 container">
+        <div class="m-2 mt-3 bg-white p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>LISTA DE ACTIVOS FIJOS</h2>
+                <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-info" (click)="abrirModalCrearActivoFijo()">
+                </p-button>
+            </div>
+            <br>
+
+            <p-table [value]="activosFijos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>ID</th>
+                        <th>DESCRIPCION</th>
+                        <th>REFERENCIA</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-activo>
+                    <tr [pSelectableRow]="activo">
+                        <td>{{ activo.id }}</td>
+                        <td>{{ activo.descripcion }}</td>
+                        <td>
+                            <button class="btn btn-primary me-3" (click)="abrirModalEditarActivoFijo(activo)"><i
+                                    class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
+
+                            <button class="btn btn-danger" (click)="confirmaEliminacion(activo.id)"><i
+                                    class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+    [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+    [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog>
+    <ng-template pTemplate="message" let-message>
+        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+            <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+            <p>{{ message.message }}</p>
+        </div>
+    </ng-template>
+</p-confirmDialog>
+<!-- 
+<app-modal-area-create *ngIf="mostrarModalArea" [mostrarModalCrearArea]="mostrarModalArea"
+    (closeEvent)="cerrarModalActivoFijo()" [area]="areaSeleccionada" [esNuevaArea]="esNuevaArea"></app-modal-area-create> -->

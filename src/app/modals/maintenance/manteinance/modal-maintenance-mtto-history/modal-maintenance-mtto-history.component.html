@@ -1,0 +1,32 @@
+<p-dialog header="HISTORIAL DE MANTENIMIENTOS 10 DE 10" [modal]="true" [(visible)]="showModalHistorialMantenimientos"
+    [style]="{ width: '100vw', height: '100vh' }" [maximizable]="true" (onHide)="onHide()">
+
+    <input class="invisible">
+    <div class="bg-white rounded-3 p-3">
+        <div class="row align-items-center gap-3">
+            <div class="col-auto">
+                <p class="fw-bold">FECHA INICIAL</p>
+            </div>
+            <div class="col-auto">
+                <p-calendar [(ngModel)]="fechaInicio" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+            </div>
+            <div class="col-auto">
+                <p class="fw-bold">FECHA FINAL</p>
+            </div>
+            <div class="col-auto">
+                <p-calendar [(ngModel)]="fechaFin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+            </div>
+
+            <div class="col-auto">
+                <button class="btn bg-p-b p-2" (click)="buscar();">BUSCAR</button>
+            </div>
+        </div>
+    </div>
+
+    <app-branch-maintenance-table-mtto [mantenimientos]="mantenimientos" [usuariosHelp]="usuariosHelp"
+        (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table-mtto>
+
+    <!-- <app-modal-maintenance-detail *ngIf="mostrarModalDetalleMantenimeinto" [mantenimiento]="mantenimiento"
+        [mostrarModalDetalleMantenimeinto]="mostrarModalDetalleMantenimeinto"
+        (closeEvent)="mostrarModalDetalleMantenimeinto = false"></app-modal-maintenance-detail> -->
+</p-dialog>

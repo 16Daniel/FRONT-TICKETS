@@ -1,0 +1,30 @@
+<p-accordion class="w-full">
+    <p-accordionTab
+        *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales))">
+        <ng-template pTemplate="header">
+            <div class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center justify-content-between" [style]="{
+            'background-color': obtenerColorDeFondoSucursal(obtenerPorcentajedeUltimoMantenimiento(item.id))
+          }">
+                <div class=" d-flex gap-3 align-items-center">
+                    <p-badge [value]="obtenerPorcentajedeUltimoMantenimiento(item.id)+'%'" class="ml-auto mr-2"
+                        [size]="'large'" [style]="{ 'background-color': 'white', color: 'black' }" />
+                    <span class="fw-bold"
+                        [style]="{ color: obtenerColorDeTexto(obtenerPorcentajedeUltimoMantenimiento(item.id)) }">
+                        {{item.nombre }}
+                    </span>
+
+                </div>
+
+                <p-badge [value]="obtenerDiasPasados(item.id)+' DÍAS'" class="ml-auto mr-2" [size]="'large'"
+                    [style]="{ 'background-color': 'white', color: 'black' }" />
+
+            </div>
+
+
+        </ng-template>
+
+        <app-branch-maintenance-table-mtto [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"
+            [usuariosHelp]="usuariosHelp" S></app-branch-maintenance-table-mtto>
+
+    </p-accordionTab>
+</p-accordion>

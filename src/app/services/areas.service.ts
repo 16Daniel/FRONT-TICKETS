@@ -3,17 +3,16 @@ import { Observable } from 'rxjs';
 import { Area } from '../models/area.model';
 import {
   collection,
-  collectionData,
-  deleteDoc,
   doc,
   Firestore,
   getDoc,
-  orderBy,
+  getDocs,
+  onSnapshot,
   query,
   setDoc,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +20,7 @@ import { HttpClient } from '@angular/common/http';
 export class AreasService {
   pathName: string = 'cat_areas';
 
-  constructor(private firestore: Firestore, private http: HttpClient) {
-    // this.inicializarCatalogo()
-  }
+  constructor(private firestore: Firestore) { }
 
   async create(area: Area): Promise<void> {
     const documentRef = doc(this.firestore, `${this.pathName}/${area.id}`);
@@ -37,13 +34,35 @@ export class AreasService {
     await setDoc(documentRef, area);
   }
 
-  get(): Observable<Area[] | any> {
-    // const vcollection = collection(this.firestore, this.pathName);
-    // return collectionData(vcollection, { idField: 'id' }); // Incluye el ID del documento
+  get(): Observable<Area[]> {
+    return new Observable<Area[]>((observer) => {
+      const collectionRef = collection(this.firestore, this.pathName);
 
-    const areasCollection = collection(this.firestore, this.pathName);
-    const q = query(areasCollection, orderBy('id'));
-    return collectionData(q, { idField: 'id' });
+      // Arreglo para los filtros
+      const constraints = [where('eliminado', '==', false)];
+
+      const q = query(collectionRef, ...constraints);
+
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          const areas: Area[] = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<Area, 'id'>),
+          }));
+
+          areas.sort((a, b) => Number(a.id) - Number(b.id));
+
+          observer.next(areas);
+        },
+        (error) => {
+          console.error('Error en la suscripción:', error);
+          observer.error(error);
+        }
+      );
+
+      return { unsubscribe };
+    });
   }
 
   async update(area: Area | any, idArea: string): Promise<void> {
@@ -51,42 +70,26 @@ export class AreasService {
     return updateDoc(documentRef, area);
   }
 
-  async delete(idSucursal: string): Promise<void> {
+  async delete(idArea: string): Promise<void> {
     try {
-      const docRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
-      await deleteDoc(docRef);
+      const docRef = doc(this.firestore, `${this.pathName}/${idArea}`);
+      await updateDoc(docRef, {
+        eliminado: true,
+      });
     } catch (error) {
-      console.error('Error al eliminar el documento:', error);
+      console.error('Error al marcar como eliminado:', error);
     }
   }
 
-  private inicializarCatalogo() {
-    this.loadJson().subscribe((response) => {
-      console.log('JSON cargado:', response);
-      this.postMasivo(response);
-    });
-  }
-
-  // Método para hacer un POST masivo conservando los IDs
-  async postMasivo(data: any[]): Promise<void> {
+  async obtenerSecuencial(): Promise<number> {
     try {
-      const areasCollection = collection(this.firestore, this.pathName);
-
-      // Recorre el array de datos y guarda cada objeto en Firestore
-      for (const item of data) {
-        // Usa setDoc para especificar el ID del documento
-        await setDoc(doc(areasCollection, item.id.toString()), item);
-        console.log(`Documento guardado con ID ${item.id}:`, item);
-      }
-
-      console.log('Todos los documentos han sido guardados correctamente.');
+      const collectionRef = collection(this.firestore, this.pathName);
+      const snapshot = await getDocs(collectionRef);
+      const count = snapshot.size;
+      return count + 1;
     } catch (error) {
-      console.error('Error al guardar los documentos:', error);
-      throw error; // Propaga el error para manejarlo en el componente
+      console.error('Error al obtener el count de areas:', error);
+      throw error;
     }
-  }
-
-  private loadJson(): Observable<any> {
-    return this.http.get('/assets/catalogs/areas.json'); // Ruta al archivo JSON
   }
 }

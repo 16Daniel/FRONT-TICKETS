@@ -287,10 +287,10 @@ export default class CalendarBuilderComponent implements OnInit {
       }
 
       if (this.registroDeGuardia != undefined) {
-        let guardia = { id: '-999', nombre: 'GUARDIA' }
+        let guardia: any = { id: '-999', nombre: 'GUARDIA' }
         this.sucursalesSeleccionadas.unshift(guardia);
       } else {
-        let guardia = { id: '-999', nombre: 'GUARDIA' }
+        let guardia: any = { id: '-999', nombre: 'GUARDIA' }
         this.sucursalesOrdenadas.unshift(guardia);
       }
 
@@ -364,7 +364,6 @@ export default class CalendarBuilderComponent implements OnInit {
 
     return sucursal.activoMantenimientos.includes(String(this.usuario.idArea));
   }
-
 
   async registrarGuardia() {
     // this.fecha.setHours(0, 0, 0, 0);
@@ -487,7 +486,7 @@ export default class CalendarBuilderComponent implements OnInit {
   async agregarActividad(texto: string) {
     this.mostrarModalActividades = false;
     texto = `ACTIVIDAD: ${texto}`;
-    let actividad = { id: '-998', nombre: texto }
+    let actividad: any = { id: '-998', nombre: texto }
     this.sucursalesSeleccionadas = [actividad, ...this.sucursalesSeleccionadas];
   }
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-6x6-av.service';
+import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../../../services/users.service';
 import { CommonModule } from '@angular/common';
@@ -25,6 +25,7 @@ import { BranchMaintenanceTableAvComponent } from '../../../../components/mainte
   templateUrl: './modal-maintenance-av-history.component.html',
   styleUrl: './modal-maintenance-av-history.component.scss'
 })
+
 export class ModalMaintenanceAvHistoryComponent {
   @Input() showModalHistorialMantenimientos: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();

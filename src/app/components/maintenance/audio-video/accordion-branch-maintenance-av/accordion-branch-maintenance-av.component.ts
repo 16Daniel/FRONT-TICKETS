@@ -1,15 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-6x6-av.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { UsersService } from '../../../../services/users.service';
-import { MaintenancesHelperService } from '../../../../helpers/maintenances-helper.service';
-import { Usuario } from '../../../../models/usuario.model';
+import { Timestamp } from '@angular/fire/firestore';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
+
+import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { UsersService } from '../../../../services/users.service';
+import { Usuario } from '../../../../models/usuario.model';
 import { BranchMaintenanceTableAvComponent } from '../branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { Timestamp } from '@angular/fire/firestore';
+import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-av',
@@ -28,7 +28,7 @@ export class AccordionBranchMaintenanceAvComponent {
 
   constructor(
     private usersService: UsersService,
-    private maintenanceHelper: MaintenancesHelperService
+    private maintenance6x6AvService: Maintenance6x6AvService
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
@@ -102,7 +102,7 @@ export class AccordionBranchMaintenanceAvComponent {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenanceHelper.calcularPorcentajeAV(registro[0]);
+        porcentaje = this.maintenance6x6AvService.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;

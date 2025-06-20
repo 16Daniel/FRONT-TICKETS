@@ -2,12 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-6x6-av.model';
+import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Usuario } from '../../../../models/usuario.model';
-// import { MessageService } from 'primeng/api';
-// import { UsersService } from '../../../../services/users.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { MaintenancesHelperService } from '../../../../helpers/maintenances-helper.service';
+import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-branch-maintenance-table-av',
@@ -16,6 +14,7 @@ import { MaintenancesHelperService } from '../../../../helpers/maintenances-help
   templateUrl: './branch-maintenance-table-av.component.html',
   styleUrl: './branch-maintenance-table-av.component.scss'
 })
+
 export class BranchMaintenanceTableAvComponent {
   @Input() mantenimientos: Mantenimiento6x6AV[] = [];
   @Input() usuariosHelp: Usuario[] = [];
@@ -23,11 +22,9 @@ export class BranchMaintenanceTableAvComponent {
   mantenimientoSeleccionado: Mantenimiento6x6AV | undefined;
 
   constructor(
-    // private messageService: MessageService,
-    // private usersService: UsersService,
     public datesHelper: DatesHelperService,
-    public maintenancesHelper: MaintenancesHelperService
-  ) {}
+    public maintenance6x6AvService: Maintenance6x6AvService
+  ) { }
 
   obtenerNombreResponsable(idUsuario: string): string {
     let nombre = '';
