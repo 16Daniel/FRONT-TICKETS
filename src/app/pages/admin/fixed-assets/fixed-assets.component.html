@@ -53,6 +53,6 @@
         </div>
     </ng-template>
 </p-confirmDialog>
-<!-- 
-<app-modal-area-create *ngIf="mostrarModalArea" [mostrarModalCrearArea]="mostrarModalArea"
-    (closeEvent)="cerrarModalActivoFijo()" [area]="areaSeleccionada" [esNuevaArea]="esNuevaArea"></app-modal-area-create> -->
+
+<app-modal-fixed-assets-create *ngIf="mostrarModalActivoFijo" [mostrarModalCrearActivoFijo]="mostrarModalActivoFijo"
+    (closeEvent)="cerrarModalActivoFijo()" [activoFijo]="activoFijoSeleccionada" [esNuevoActivoFijo]="esNuevoActivoFijo"></app-modal-fixed-assets-create>

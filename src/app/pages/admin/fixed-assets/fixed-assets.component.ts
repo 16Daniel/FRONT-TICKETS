@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -7,8 +7,10 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
+
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
+import { ModalFixedAssetsCreateComponent } from '../../../modals/fixed-assets/modal-fixed-assets-create/modal-fixed-assets-create.component';
 
 
 @Component({
@@ -21,7 +23,7 @@ import { FixedAssetsService } from '../../../services/fixed-assets.service';
     TableModule,
     ToastModule,
     ConfirmDialogModule,
-    // ModalAreaCreateComponent
+    ModalFixedAssetsCreateComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',

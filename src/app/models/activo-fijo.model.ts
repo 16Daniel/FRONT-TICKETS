@@ -1,10 +1,10 @@
 export class ActivoFijo {
     id: string | any;
-    descricpion: string = '';
+    descripcion: string = '';
     idSucursal: string = '';
-    idDepartamento: string = '';
-    idCategoria: string = '';
     idArea: string = '';
+    idCategoriaActivoFijo: string = '';
+    idAreaActivoFijo: string = '';
     consecutivo: number = 0;
     referencia: string = '';
     eliminado: boolean = false;
