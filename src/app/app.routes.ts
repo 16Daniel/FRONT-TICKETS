@@ -100,6 +100,36 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'nomina',
+    children: [
+      {
+        path: 'constructor-de-calendarios',
+        title: 'Constructor de calendarios',
+        loadComponent: () => import('./pages/Nomina/work-shift-calendar/work-shift-calendar.component'),
+      },
+       {
+        path: '',
+        redirectTo: '/nomina/constructor-de-calendarios',
+        pathMatch: 'full',
+      },
+    ]
+  },
+   {
+    path: 'cedis',
+    children: [
+      {
+        path: 'control-aceite',
+        title: 'Control de aceite',
+        loadComponent: () => import('./pages/cedis/aceite/aceite.component'),
+      },
+       {
+        path: '',
+        redirectTo: '/cedis/control-aceite',
+        pathMatch: 'full',
+      },
+    ]
+  },
+  {
     path: 'auth',
     children: [
       {
