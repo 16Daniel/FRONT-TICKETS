@@ -1,0 +1,44 @@
+<p-dialog header="REGISTRAR ENTREGA" [modal]="true" [(visible)]="mostrarModalAgregar" [style]="{ width: '70rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+    <div class="p-3" style="min-height: 400px;">
+            <div class="row">
+               <div class="col-md-6">
+                <p-calendar 
+    class="max-w-full" 
+    [(ngModel)]="formFecha" 
+    [inline]="true" 
+    [showWeek]="true" />
+            </div>
+            <div class="col-md-6">
+                  <p-dropdown [options]="sucursales" [(ngModel)]="sucursal" name="sucursal" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+             <div class="mt-3">
+                  <p>CANTIDAD DE ACEITE</p>
+                  <input class="form-control" [(ngModel)]="formCantidad" type="number">
+             </div>
+           
+             <div class="mt-3 d-flex justify-content-end">
+                 <button class="btn bg-p-b p-3 rounded-3" (click)="guardarEntrega()"> <i class='bx bx-save' ></i> GUARDAR</button>
+             </div>
+
+            </div>
+    </div>
+    </div>
+</p-dialog>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
