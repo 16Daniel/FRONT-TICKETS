@@ -12,15 +12,14 @@
                 styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>ID</th>
-                        <th>DESCRIPCION</th>
                         <th>REFERENCIA</th>
+                        <th>DESCRIPCION</th>
                         <th>ACCIONES</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-activo>
                     <tr [pSelectableRow]="activo">
-                        <td>{{ activo.id }}</td>
+                        <td>{{ activo.referencia }}</td>
                         <td>{{ activo.descripcion }}</td>
                         <td>
                             <button class="btn btn-primary me-3" (click)="abrirModalEditarActivoFijo(activo)"><i

@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivoFijo } from '../models/activo-fijo.model';
 import {
+  addDoc,
   collection,
   doc,
   Firestore,
   getDoc,
+  getDocs,
   onSnapshot,
   query,
   setDoc,
@@ -22,23 +24,27 @@ export class FixedAssetsService {
   constructor(private firestore: Firestore) { }
 
   async create(activoFijo: ActivoFijo): Promise<void> {
-    const documentRef = doc(this.firestore, `${this.pathName}/${activoFijo.id}`);
+    const collectionRef = collection(this.firestore, this.pathName);
 
-    const snapshot = await getDoc(documentRef);
+    // Primero generamos una referencia con ID automático
+    const docRef = await addDoc(collectionRef, {
+      ...activoFijo,
+      id: '', // Se pone temporalmente para evitar error si Firestore requiere estructura completa
+    });
 
-    if (snapshot.exists()) {
-      throw new Error(`El activo fijo con id ${activoFijo.id} ya existe.`);
-    }
-
-    await setDoc(documentRef, activoFijo);
+    // Luego actualizamos el documento con su propio ID
+    await setDoc(docRef, { ...activoFijo, id: docRef.id });
   }
 
-  get(): Observable<ActivoFijo[]> {
+  get(idArea: string): Observable<ActivoFijo[]> {
     return new Observable<ActivoFijo[]>((observer) => {
       const collectionRef = collection(this.firestore, this.pathName);
 
       // Arreglo para los filtros
-      const constraints = [where('eliminado', '==', false)];
+      const constraints = [
+        where('eliminado', '==', false),
+        where('idArea', '==', idArea)
+      ];
 
       const q = query(collectionRef, ...constraints);
 
@@ -79,4 +85,29 @@ export class FixedAssetsService {
       console.error('Error al marcar como eliminado:', error);
     }
   }
+
+  async obtenerSecuencial(
+    idArea: string,
+    idSucursal: string,
+    idAreaActivoFijo: string,
+    idCategoriaActivoFijo: string
+  ): Promise<number> {
+    try {
+      const collectionRef = collection(this.firestore, this.pathName);
+      const q = query(
+        collectionRef,
+        where('idArea', '==', idArea),
+        where('idSucursal', '==', idSucursal),
+        where('idAreaActivoFijo', '==', idAreaActivoFijo),
+        where('idCategoriaActivoFijo', '==', idCategoriaActivoFijo)
+      );
+      const snapshot = await getDocs(q);
+      const count = snapshot.size;
+      return count + 1;
+    } catch (error) {
+      console.error('Error al obtener el count de documentos filtrados:', error);
+      throw error;
+    }
+  }
+
 }

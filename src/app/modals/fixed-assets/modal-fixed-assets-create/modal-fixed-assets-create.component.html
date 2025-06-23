@@ -1,33 +1,14 @@
 <p-dialog [header]="!esNuevoActivoFijo ? 'ACTUALIZAR ACTIVO FIJO' :'CREAR ACTIVO FIJO'"
-    [(visible)]="mostrarModalCrearActivoFijo" [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true"
-    (onHide)="onHide()">
+    [(visible)]="mostrarModalCrearActivoFijo" [modal]="true" [style]="{ 'width': '95vh', 'height': '80vh' }"
+    [maximizable]="true" (onHide)="onHide()">
     <form #form="ngForm" (ngSubmit)="enviar(form)">
 
-        <p class="fw-bold">DESCRIPCIÓN</p>
-        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA DESCRIPCIÓN"
-            [(ngModel)]="activoFijo.descripcion" name="descripcion"
-            [ngClass]="{'p-invalid': formDescripcionCtrl.invalid && formDescripcionCtrl.touched}" #formDescripcionCtrl="ngModel"
-            required>
-        <small *ngIf="formDescripcionCtrl.invalid && formDescripcionCtrl.touched" class="p-error">
-            Campo requerido.
-        </small>
-        <p></p>
-
-        <p class="fw-bold">CONSECUTIVO</p>
-        <input class="form-control" style="height: 48px;" type="number" placeholder="ESCRIBE EL CONSECUTIVO"
-            [(ngModel)]="activoFijo.consecutivo" name="consecutivo"
-            [ngClass]="{'p-invalid': formConsecutivoCtrl.invalid && formConsecutivoCtrl.touched}" #formConsecutivoCtrl="ngModel"
-            required>
-        <small *ngIf="formConsecutivoCtrl.invalid && formConsecutivoCtrl.touched" class="p-error">
-            Campo requerido.
-        </small>
-        <p></p>
-
-        <p class="fw-bold">SUCURSALES</p>
+        <p class="fw-bold">SUCURSAL</p>
         <p-dropdown [options]="sucursales" [(ngModel)]="activoFijo.idSucursal" name="sucursal" [optionValue]="'id'"
             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
             placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}" #formSucursalCtrl="ngModel"
-            [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required="">
+            [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required=""
+            [disabled]="true">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -43,11 +24,11 @@
             requerido.</small>
         <p></p>
 
-        <p class="fw-bold">ÁREAS</p>
+        <p class="fw-bold">ÁREA</p>
         <p-dropdown [options]="areas" [(ngModel)]="activoFijo.idArea" [optionValue]="'id'" name="area"
             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA"
             [style]="{width:'100%'}" #formAreaCtrl="ngModel"
-            [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
+            [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required [disabled]="true">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -60,6 +41,16 @@
             </ng-template>
         </p-dropdown>
         <small *ngIf="formAreaCtrl.invalid && formAreaCtrl.touched" class="p-error">Campo requerido.</small>
+        <p></p>
+
+        <p class="fw-bold">DESCRIPCIÓN</p>
+        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA DESCRIPCIÓN"
+            [(ngModel)]="activoFijo.descripcion" name="descripcion"
+            [ngClass]="{'p-invalid': formDescripcionCtrl.invalid && formDescripcionCtrl.touched}"
+            #formDescripcionCtrl="ngModel" required>
+        <small *ngIf="formDescripcionCtrl.invalid && formDescripcionCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
         <p></p>
 
         <p class="fw-bold">ÁREAS ACTIVOS FIJOS</p>

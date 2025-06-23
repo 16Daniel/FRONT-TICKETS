@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { ModalFixedAssetsCreateComponent } from '../../../modals/fixed-assets/modal-fixed-assets-create/modal-fixed-assets-create.component';
+import { Usuario } from '../../../models/usuario.model';
 
 
 @Component({
@@ -35,14 +36,16 @@ export default class FixedAssetsComponent implements OnInit {
   activosFijos: ActivoFijo[] = [];
   activoFijoSeleccionada: ActivoFijo = new ActivoFijo;
   subscripcion: Subscription | undefined;
-
+  usuario: Usuario;
 
   constructor(
     private confirmationService: ConfirmationService,
     private fixedAssetsService: FixedAssetsService,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
-  ) { }
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
     this.obtenerActivosFijos();
@@ -55,7 +58,7 @@ export default class FixedAssetsComponent implements OnInit {
   }
 
   obtenerActivosFijos() {
-    this.subscripcion = this.fixedAssetsService.get().subscribe(result => {
+    this.subscripcion = this.fixedAssetsService.get(this.usuario.idArea).subscribe(result => {
       this.activosFijos = result;
       this.cdr.detectChanges();
     }, (error) => {

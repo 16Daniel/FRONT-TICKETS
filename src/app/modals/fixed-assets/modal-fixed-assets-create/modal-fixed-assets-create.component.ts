@@ -74,9 +74,17 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
       return;
     }
 
+    this.activoFijo.consecutivo = await this.fixedAssetsService
+      .obtenerSecuencial(
+        this.activoFijo.idArea,
+        this.activoFijo.idSucursal,
+        this.activoFijo.idAreaActivoFijo,
+        this.activoFijo.idCategoriaActivoFijo
+      );
     this.activoFijo.referencia = this.crearReferencia();
-    console.log(this.activoFijo)
-    // this.esNuevoActivoFijo ? this.crear() : this.actualizar();
+
+
+    this.esNuevoActivoFijo ? this.crear() : this.actualizar();
   }
 
   crearReferencia() {
@@ -110,7 +118,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
   }
 
   actualizar() {
-    this.activoFijo = { ...this.activoFijo, id: parseInt(this.activoFijo.id) }
+    // this.activoFijo = { ...this.activoFijo, id: parseInt(this.activoFijo.id) }
     this.fixedAssetsService
       .update(this.activoFijo, this.idActivoFijoEditar)
       .then(() => {
@@ -129,7 +137,9 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
         this.sucursales = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
-        }));;
+        }));
+
+        this.activoFijo.idSucursal = parseInt(this.usuario.sucursales[0].id).toString();
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -144,7 +154,8 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
         this.areas = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
-        }));;
+        }));
+        this.activoFijo.idArea = this.usuario.idArea;
         this.cdr.detectChanges();
       },
       error: (error) => {
