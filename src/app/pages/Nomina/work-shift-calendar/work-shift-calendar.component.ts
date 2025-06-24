@@ -435,7 +435,7 @@ getLuminance(hexColor: string): number {
           for(let cm = 0; cm<cocinerosMat; cm++)
             {
               let id= 'p-c-m-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+cm; 
-              let titulo = '🟡 MATUTINO / COCINERO';
+              let titulo = '🟡 COCINERO';
               let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4003); 
                this.calendarComponent!.getApi().addEvent(newEvent);
             }
@@ -443,7 +443,7 @@ getLuminance(hexColor: string): number {
             for(let cm = 0; cm<cocinerosInter; cm++)
             {
               let id= 'p-c-i-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+cm; 
-              let titulo = '🟢 INTERMEDIO / COCINERO';
+              let titulo = '🟢 COCINERO';
               let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4003); 
                this.calendarComponent!.getApi().addEvent(newEvent);
             }
@@ -451,7 +451,7 @@ getLuminance(hexColor: string): number {
             for(let cm = 0; cm<cocinerosVes; cm++)
             {
               let id= 'p-c-v-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+cm; 
-              let titulo = '🟣 VESPERTINO / COCINERO';
+              let titulo = '🟣 COCINERO';
               let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4003); 
                this.calendarComponent!.getApi().addEvent(newEvent);
             }
@@ -460,7 +460,7 @@ getLuminance(hexColor: string): number {
              for(let v = 0; v<vendedoresMat; v++)
             {
               let id= 'p-v-m-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+v; 
-              let titulo = '🟡 MATUTINO / VENDEDOR';
+              let titulo = '🟡 VENDEDOR';
               let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4005); 
                this.calendarComponent!.getApi().addEvent(newEvent);
             }
@@ -468,7 +468,7 @@ getLuminance(hexColor: string): number {
               for(let v = 0; v<vendedoresInter; v++)
             {
               let id= 'p-v-i-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+v; 
-              let titulo = '🟢 INTERMEDIO / VENDEDOR';
+              let titulo = '🟢 VENDEDOR';
               let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4005); 
                this.calendarComponent!.getApi().addEvent(newEvent);
             }
@@ -476,7 +476,7 @@ getLuminance(hexColor: string): number {
               for(let v = 0; v<vendedoresVes; v++)
             {
               let id= 'p-v-v-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+v; 
-              let titulo = '🟣 VESPERTINO / VENDEDOR';
+              let titulo = '🟣 VENDEDOR';
               let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4005); 
                this.calendarComponent!.getApi().addEvent(newEvent);
             }
