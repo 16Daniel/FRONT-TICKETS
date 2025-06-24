@@ -1,22 +1,21 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { Timestamp } from '@angular/fire/firestore';
+import { AceiteService } from '../../../services/aceite.service';
+import { BranchesService } from '../../../services/branches.service';
+import { Sucursal } from '../../../models/sucursal.model';
 import { EntregaAceite } from '../../../models/aceite.model';
-import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AceiteService } from '../../../services/aceite.service';
-import { ModalAgregarEntregaComponent } from "../../../modals/modal-agregar-entrega/modal-agregar-entrega.component";
-import { Timestamp } from '@angular/fire/firestore';
-import { Sucursal } from '../../../models/sucursal.model';
-import { BranchesService } from '../../../services/branches.service';
+import { TableModule } from 'primeng/table';
 
 @Component({
-  selector: 'app-aceite',
+  selector: 'app-branches-oil-tab',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ModalAgregarEntregaComponent],
-  templateUrl: './aceite.component.html',
-  styleUrl: './aceite.component.scss',
+   imports: [CommonModule, FormsModule, TableModule],
+  templateUrl: './branches-oil-tab.component.html',
+  styleUrl: './branches-oil-tab.component.scss',
 })
-export default class AceiteComponent implements OnInit {
+export class BranchesOilTabComponent implements OnInit {
 public entregas:EntregaAceite[] = []; 
 public mostrarModalAgregar:boolean = false; 
 public sucursales: Sucursal[] = [];
