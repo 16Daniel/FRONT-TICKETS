@@ -49,29 +49,5 @@ constructor(private messageService: MessageService,private branchesService: Bran
     });
   }
 
-  async guardarEntrega()
-  {
-    let data:EntregaAceite =  {
-    idSucursal: this.sucursal!.id,
-    fecha: this.formFecha,
-    entregaCedis:this.formCantidad,
-    entregaSucursal: null,
-    porcentaje75: null,
-    intercambio: null,
-    diferencia: null,
-    comentariosCedis: null,
-    comentariosSucursal: null,
-    status: 1
-    }; 
-
-    try
-    {
-      await this.aceiteService.create(data);
-      this.showMessage('success','Success','Guardado correctamente');
-      this.formCantidad = 0; 
-      this.sucursal = undefined; 
-      this.closeEvent.emit();
-    }catch(error){ console.log(error);}
-  }
 
 }

@@ -13,6 +13,7 @@ import { Ticket } from '../../../models/ticket.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { BranchesService } from '../../../services/branches.service';
 import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
+import { BranchesOilTabComponent } from "../branches-oil-tab/branches-oil-tab.component";
 
 @Component({
   selector: 'app-branches-tabs',
@@ -24,8 +25,9 @@ import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/bra
     BranchesAudioVideoTabComponent,
     FormsModule,
     MultiSelectModule,
-    BranchesMaintenanceTabComponent
-  ],
+    BranchesMaintenanceTabComponent,
+    BranchesOilTabComponent
+],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',
 })
