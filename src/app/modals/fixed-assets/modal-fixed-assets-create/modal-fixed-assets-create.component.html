@@ -1,5 +1,5 @@
 <p-dialog [header]="!esNuevoActivoFijo ? 'ACTUALIZAR ACTIVO FIJO' :'CREAR ACTIVO FIJO'"
-    [(visible)]="mostrarModalCrearActivoFijo" [modal]="true" [style]="{ 'width': '95vh', 'height': '80vh' }"
+    [(visible)]="mostrarModalCrearActivoFijo" [modal]="true" [style]="{ 'width': '95vh', 'height': '95vh' }"
     [maximizable]="true" (onHide)="onHide()">
     <form #form="ngForm" (ngSubmit)="enviar(form)">
 
@@ -7,8 +7,7 @@
         <p-dropdown [options]="sucursales" [(ngModel)]="activoFijo.idSucursal" name="sucursal" [optionValue]="'id'"
             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
             placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}" #formSucursalCtrl="ngModel"
-            [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required=""
-            [disabled]="true">
+            [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required="">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -73,7 +72,7 @@
             requerido.</small>
         <p></p>
 
-        <p class="fw-bold">CATEGORIAS ACTIVOS FIJOS</p>
+        <p class="fw-bold">CATEGORIA</p>
         <p-dropdown [options]="categoriasActivosFijos" [(ngModel)]="activoFijo.idCategoriaActivoFijo"
             [optionValue]="'id'" name="categoriaActivoFijo" optionLabel="nombre" [filter]="true" filterBy="nombre"
             [showClear]="true" placeholder="SELECCIONAR CATEGORIA ACTIVO FIJO" [style]="{width:'100%'}"
@@ -93,6 +92,67 @@
         </p-dropdown>
         <small *ngIf="formCategoriaActivoFijoCtrl.invalid && formCategoriaActivoFijoCtrl.touched" class="p-error">Campo
             requerido.</small>
+        <p></p>
+
+        <p class="fw-bold">ESTATUS</p>
+        <p-dropdown [options]="estatusActivosFijos" [(ngModel)]="activoFijo.idEstatusActivoFijo" [optionValue]="'id'"
+            name="estatusActivoFijo" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+            placeholder="SELECCIONAR ESTATUS ACTIVO FIJO" [style]="{width:'100%'}" #formEstatusActivoFijo="ngModel"
+            [ngClass]="{'p-invalid': formEstatusActivoFijo.invalid && formEstatusActivoFijo.touched}" required>
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-estatus pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ estatus.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <small *ngIf="formEstatusActivoFijo.invalid && formEstatusActivoFijo.touched" class="p-error">Campo
+            requerido.</small>
+        <p></p>
+
+        <p class="fw-bold">UBICACIÓN</p>
+        <p-dropdown [options]="ubicacionesActivosFijos" [(ngModel)]="activoFijo.idUbicacionActivoFijo"
+            [optionValue]="'id'" name="ubicacionesActivosFijos" optionLabel="nombre" [filter]="true" filterBy="nombre"
+            [showClear]="true" placeholder="SELECCIONAR UBICACIÓN ACTIVO FIJO" [style]="{width:'100%'}"
+            #formUbicacionesActivosFijosCtrl="ngModel"
+            [ngClass]="{'p-invalid': formUbicacionesActivosFijosCtrl.invalid && formUbicacionesActivosFijosCtrl.touched}"
+            required>
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-ubicacion pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ ubicacion.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <small *ngIf="formUbicacionesActivosFijosCtrl.invalid && formUbicacionesActivosFijosCtrl.touched" class="p-error">Campo
+            requerido.</small>
+        <p></p>
+
+        <p class="fw-bold">NÚMERO DE MANTENIMIENTOS</p>
+        <input class="form-control" style="height: 48px;" type="number" placeholder="ESCRIBE EL NÚMERO DE MANTENIMIENTOS QUE TIENE"
+            [(ngModel)]="activoFijo.noMantenimientos" name="noMantenimientos"
+            [ngClass]="{'p-invalid': formnoMantenimientosCtrl.invalid && formnoMantenimientosCtrl.touched}"
+            #formnoMantenimientosCtrl="ngModel" required>
+        <small *ngIf="formnoMantenimientosCtrl.invalid && formnoMantenimientosCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
+        <p class="fw-bold">COSTO</p>
+        <input class="form-control" style="height: 48px;" type="number" placeholder="ESCRIBE EL COSTO DEL ACTIVO"
+            [(ngModel)]="activoFijo.costo" name="costo"
+            [ngClass]="{'p-invalid': formCostoCtrl.invalid && formCostoCtrl.touched}" #formCostoCtrl="ngModel" required>
+        <small *ngIf="formCostoCtrl.invalid && formCostoCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
         <p></p>
 
         <div class="d-flex justify-content-end mt-3">

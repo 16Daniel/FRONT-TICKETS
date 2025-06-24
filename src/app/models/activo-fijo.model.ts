@@ -5,7 +5,11 @@ export class ActivoFijo {
     idArea: string = '';
     idCategoriaActivoFijo: string = '';
     idAreaActivoFijo: string = '';
+    idEstatusActivoFijo: string = '';
+    idUbicacionActivoFijo: string = '';
     consecutivo: number = 0;
     referencia: string = '';
+    noMantenimientos: number | null = null;
+    costo: number | null = null;    
     eliminado: boolean = false;
 }

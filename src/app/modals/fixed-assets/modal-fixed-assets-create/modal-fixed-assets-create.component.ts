@@ -16,6 +16,10 @@ import { AreasFixedAssetsService } from '../../../services/areas-fixed-assets.se
 import { CategoriesFixedAssetsService } from '../../../services/categories-activos-fijos.service';
 import { AreaActivoFijo } from '../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../models/categoria-activo-fijo.model';
+import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model';
+import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
+import { StatusFixedAssetsService } from '../../../services/status-fixed-assets.service';
+import { LocationsFixedAssetsService } from '../../../services/locations-fixed-assets.service';
 
 @Component({
   selector: 'app-modal-fixed-assets-create',
@@ -24,6 +28,7 @@ import { CategoriaActivoFijo } from '../../../models/categoria-activo-fijo.model
   templateUrl: './modal-fixed-assets-create.component.html',
   styleUrl: './modal-fixed-assets-create.component.scss'
 })
+
 export class ModalFixedAssetsCreateComponent implements OnInit {
   @Input() mostrarModalCrearActivoFijo: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -36,6 +41,8 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
   sucursales: Sucursal[] = [];
   areasActivosFijos: AreaActivoFijo[] = [];
   categoriasActivosFijos: CategoriaActivoFijo[] = [];
+  ubicacionesActivosFijos: UbicacionActivoFijo[] = [];
+  estatusActivosFijos: EstatusActivoFijo[] = [];
 
   constructor(
     private messageService: MessageService,
@@ -44,7 +51,9 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private areasFixedAssetsService: AreasFixedAssetsService,
-    private categoriesFixedAssetsService: CategoriesFixedAssetsService
+    private categoriesFixedAssetsService: CategoriesFixedAssetsService,
+    private statusFixedAssetsService: StatusFixedAssetsService,
+    private locationsFixedAssetsService: LocationsFixedAssetsService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -58,6 +67,8 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     this.obtenerAreas();
     this.obtenerAreasActivosFijos();
     this.obtenerCategoriasActivosFijos();
+    this.obtenerUbicacionesActivosFijos();
+    this.obtenerEstatusActivosFijos();
   }
 
   onHide() {
@@ -73,16 +84,6 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
       this.showMessage('error', 'Error', 'Campos requeridos incompletos');
       return;
     }
-
-    this.activoFijo.consecutivo = await this.fixedAssetsService
-      .obtenerSecuencial(
-        this.activoFijo.idArea,
-        this.activoFijo.idSucursal,
-        this.activoFijo.idAreaActivoFijo,
-        this.activoFijo.idCategoriaActivoFijo
-      );
-    this.activoFijo.referencia = this.crearReferencia();
-
 
     this.esNuevoActivoFijo ? this.crear() : this.actualizar();
   }
@@ -105,7 +106,15 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
   }
 
   async crear() {
-    this.activoFijo = { ...this.activoFijo, id: parseInt(this.activoFijo.id) }
+    this.activoFijo.consecutivo = await this.fixedAssetsService
+      .obtenerSecuencial(
+        this.activoFijo.idArea,
+        this.activoFijo.idSucursal,
+        this.activoFijo.idAreaActivoFijo,
+        this.activoFijo.idCategoriaActivoFijo
+      );
+    this.activoFijo.referencia = this.crearReferencia();
+
     try {
       await this.fixedAssetsService.create({ ...this.activoFijo });
       this.cdr.detectChanges();
@@ -169,7 +178,6 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
       next: (data) => {
         this.areasActivosFijos = data.map((item: any) => ({
           ...item,
-          id: item.id.toString()
         }));;
         this.cdr.detectChanges();
       },
@@ -184,7 +192,34 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
       next: (data) => {
         this.categoriasActivosFijos = data.map((item: any) => ({
           ...item,
-          id: item.id.toString()
+        }));;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerUbicacionesActivosFijos() {
+    this.locationsFixedAssetsService.get().subscribe({
+      next: (data) => {
+        this.ubicacionesActivosFijos = data.map((item: any) => ({
+          ...item,
+        }));;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+      },
+    });
+  }
+
+  obtenerEstatusActivosFijos() {
+    this.statusFixedAssetsService.get().subscribe({
+      next: (data) => {
+        this.estatusActivosFijos = data.map((item: any) => ({
+          ...item,
         }));;
         this.cdr.detectChanges();
       },
