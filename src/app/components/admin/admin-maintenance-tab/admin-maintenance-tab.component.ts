@@ -176,6 +176,8 @@ export class AdminMaintenanceTabComponent {
               x.fecha = this.getDate(x.fecha);
               return x;
             });
+            this.cdr.detectChanges();
+
           });
         this.cdr.detectChanges();
       },

@@ -6,7 +6,6 @@ import {
   collection,
   doc,
   Firestore,
-  getDoc,
   getDocs,
   onSnapshot,
   query,
@@ -108,6 +107,41 @@ export class FixedAssetsService {
       console.error('Error al obtener el count de documentos filtrados:', error);
       throw error;
     }
+  }
+
+  getByReference(referencia: string): Observable<ActivoFijo | undefined> {
+    return new Observable<ActivoFijo | undefined>((observer) => {
+      const collectionRef = collection(this.firestore, this.pathName);
+
+      const constraints = [
+        where('eliminado', '==', false),
+        where('referencia', '==', referencia)
+      ];
+
+      const q = query(collectionRef, ...constraints);
+
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          if (!querySnapshot.empty) {
+            const docSnap = querySnapshot.docs[0]; // Solo el primero
+            const activo: ActivoFijo = {
+              id: docSnap.id,
+              ...(docSnap.data() as Omit<ActivoFijo, 'id'>),
+            };
+            observer.next(activo);
+          } else {
+            observer.next(undefined); // No encontrado
+          }
+        },
+        (error) => {
+          console.error('Error en la suscripción:', error);
+          observer.error(error);
+        }
+      );
+
+      return () => unsubscribe();
+    });
   }
 
 }
