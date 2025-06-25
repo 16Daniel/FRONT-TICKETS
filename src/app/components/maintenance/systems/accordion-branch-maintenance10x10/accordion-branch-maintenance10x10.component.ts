@@ -74,7 +74,7 @@ export class AccordionBranchMaintenance10x10Component {
 
   obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
     const mantenimientosSucursal = this.mantenimientos
-      .filter(m => m.idSucursal === idSucursal && m.fecha);
+      .filter(m => m.idSucursal == idSucursal && m.fecha);
 
     if (mantenimientosSucursal.length === 0) {
       // Si no hay mantenimientos, regresamos una fecha muy antigua

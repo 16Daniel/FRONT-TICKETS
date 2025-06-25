@@ -30,7 +30,7 @@ export class ModalUserCreateComponent implements OnInit {
   @Input() usuario: Usuario = new Usuario;
   @Input() esNuevoUsuario: boolean = true;
 
-  sucursales: Sucursal[] = [];
+  sucursales: Sucursal[] | any[] = [];
   roles: Rol[] = [];
   areas: Area[] = [];
 
@@ -132,7 +132,7 @@ export class ModalUserCreateComponent implements OnInit {
   obtenerSucursales() {
     this.branchesService.get().subscribe({
       next: (data) => {
-        this.sucursales = data;
+        this.sucursales = data.map((item: any) => ({ nombre: item.nombre, id: item.id.toString() }));
 
         this.sucursales.forEach(sucursal => {
           delete sucursal.activoMantenimientos;
