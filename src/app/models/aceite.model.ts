@@ -1,6 +1,6 @@
 export interface EntregaAceite {
   id?:string;   
-  idSucursal:string;
+  idSucursal:number;
   fecha:Date;                 
   entregaCedis: number | null;  
   entregaSucursal: number | null;  
@@ -9,5 +9,5 @@ export interface EntregaAceite {
   diferencia: number | null;      
   comentariosCedis: string | null; 
   comentariosSucursal: string | null; 
-  status:number|null; 
+  status:number; 
 }
