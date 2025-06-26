@@ -10,7 +10,8 @@
             <br>
 
             <p-table [value]="activosFijos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
+                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+                [(selection)]="activoSeleccionado" (onRowSelect)="mostrarModalDetalleActivoFijo = true">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>REFERENCIA</th>
@@ -73,3 +74,6 @@
 <app-modal-fixed-assets-create *ngIf="mostrarModalActivoFijo" [mostrarModalCrearActivoFijo]="mostrarModalActivoFijo"
     (closeEvent)="cerrarModalActivoFijo()" [activoFijo]="activoFijoSeleccionada"
     [esNuevoActivoFijo]="esNuevoActivoFijo"></app-modal-fixed-assets-create>
+
+<app-modal-fixed-assets-detail *ngIf="mostrarModalDetalleActivoFijo"
+    [mostrarModalDetalleActivoFijo]="mostrarModalDetalleActivoFijo"></app-modal-fixed-assets-detail>

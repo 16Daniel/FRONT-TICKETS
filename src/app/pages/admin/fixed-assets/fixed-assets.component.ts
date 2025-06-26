@@ -24,7 +24,7 @@ import { AreaActivoFijo } from '../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../models/categoria-activo-fijo.model';
 import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model';
 import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
-
+import { ModalFixedAssetsDetailComponent } from '../../../modals/fixed-assets/modal-fixed-assets-detail/modal-fixed-assets-detail.component';
 
 @Component({
   selector: 'app-fixed-assets',
@@ -36,12 +36,14 @@ import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
     TableModule,
     ToastModule,
     ConfirmDialogModule,
-    ModalFixedAssetsCreateComponent
+    ModalFixedAssetsCreateComponent,
+    ModalFixedAssetsDetailComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',
   styleUrl: './fixed-assets.component.scss'
 })
+
 export default class FixedAssetsComponent implements OnInit {
   esNuevoActivoFijo: boolean = false;
   mostrarModalActivoFijo: boolean = false;
@@ -49,6 +51,8 @@ export default class FixedAssetsComponent implements OnInit {
   activoFijoSeleccionada: ActivoFijo = new ActivoFijo;
   subscripcion: Subscription | undefined;
   usuario: Usuario;
+  mostrarModalDetalleActivoFijo: boolean = false;
+  activoSeleccionado: ActivoFijo | undefined;
 
   areas: Area[] = [];
   sucursales: Sucursal[] = [];
@@ -226,11 +230,16 @@ export default class FixedAssetsComponent implements OnInit {
     });
   }
 
+  onClickActivo() {
+    this.mostrarModalDetalleActivoFijo = true;
+    
+  }
+
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
   nombreArea = (idArea: string) => this.areas.find(x => x.id == idArea)?.nombre;
   nombreAreaActivoFijo = (idAreaActivoFijo: string) => this.areasActivosFijos.find(x => x.id == idAreaActivoFijo)?.nombre;
   nombreCategoriaActivoFijo = (idCategoriaActivoFijo: string) => this.categoriasActivosFijos.find(x => x.id == idCategoriaActivoFijo)?.nombre;
   nombreEstatusActivoFijo = (idEstatusActivoFijo: string) => this.estatusActivosFijos.find(x => x.id == idEstatusActivoFijo)?.nombre;
   nombreUbicacionActivoFijo = (idUbicacionActivoFijo: string) => this.ubicacionesActivosFijos.find(x => x.id == idUbicacionActivoFijo)?.nombre;
-  
+
 }
