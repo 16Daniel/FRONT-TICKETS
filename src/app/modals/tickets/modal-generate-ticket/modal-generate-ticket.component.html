@@ -2,9 +2,10 @@
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
     <form #form="ngForm" (ngSubmit)="enviarTicket(form)">
 
-        <p-dropdown [options]="sucursales" [(ngModel)]="ticket.idSucursal" name="sucursal" [optionValue]="'id'" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO"
-            [style]="{width:'100%'}" [disabled]="usuarioActivo.idRol == '2' || usuarioActivo.idRol == '3'">
+        <p-dropdown [options]="sucursales" [(ngModel)]="ticket.idSucursal" name="sucursal" [optionValue]="'id'"
+            optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+            placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}"
+            [disabled]="usuarioActivo.idRol == '2' || usuarioActivo.idRol == '3'">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -17,9 +18,10 @@
             </ng-template>
         </p-dropdown>
         <p></p>
-        <p-dropdown [options]="areas" [(ngModel)]="ticket.idArea" [optionValue]="'id'" name="area" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [disabled]="idArea != '0'" [showClear]="true" placeholder="SELECCIONAR ÁREA"
-            [style]="{width:'100%'}" (onChange)="onChangeArea()" #formAreaCtrl="ngModel"
+
+        <p-dropdown [options]="areas" [(ngModel)]="ticket.idArea" [optionValue]="'id'" name="area" optionLabel="nombre"
+            [filter]="true" filterBy="nombre" [disabled]="idArea != '0'" [showClear]="true"
+            placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}" (onChange)="onChangeArea()" #formAreaCtrl="ngModel"
             [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
@@ -54,13 +56,14 @@
             </ng-template>
         </p-dropdown>
         <small *ngIf="formCategoriaCtrl.invalid && formCategoriaCtrl.touched" class="p-error">Campo requerido.</small>
-        <P></P>
+        <p></p>
 
         <div *ngIf="mostrarCampoSubcategoria">
             <p></p>
-            <p-dropdown [options]="obtenerSubcategoriasFiltradas()" [(ngModel)]="ticket.idSubcategoria" [optionValue]="'id'"
-                name="subcategoria" optionLabel="name" [filter]="true" filterBy="nombre" [showClear]="true"
-                placeholder="SELECCIONAR SUBCATEGORIA" [style]="{width:'100%'}" #formSubcategoriaCtrl="ngModel"
+            <p-dropdown [options]="obtenerSubcategoriasFiltradas()" [(ngModel)]="ticket.idSubcategoria"
+                [optionValue]="'id'" name="subcategoria" optionLabel="name" [filter]="true" filterBy="nombre"
+                [showClear]="true" placeholder="SELECCIONAR SUBCATEGORIA" [style]="{width:'100%'}"
+                #formSubcategoriaCtrl="ngModel"
                 [ngClass]="{'p-invalid': formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched}" required>
 
                 <ng-template pTemplate="selectedItem" let-selectedOption>
@@ -77,7 +80,7 @@
             </p-dropdown>
             <small *ngIf="formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched" class="p-error">Campo
                 requerido.</small>
-            <P></P>
+            <p></p>
         </div>
 
         <input class="form-control" style="height: 48px;" type="text" placeholder="NOMBRE DEL SOLICITANTE"
@@ -87,7 +90,6 @@
         <small *ngIf="formNombreSolicitanteCtrl.invalid && formNombreSolicitanteCtrl.touched" class="p-error">
             Campo requerido.
         </small>
-
         <p></p>
 
         <p-dropdown [options]="prioridadesTicket" [(ngModel)]="ticket.idPrioridadTicket" [optionValue]="'id'"
@@ -114,8 +116,27 @@
             </ng-template>
         </p-dropdown>
         <small *ngIf="formPrioridadCtrl.invalid && formPrioridadCtrl.touched" class="p-error">Campo requerido.</small>
-
         <p></p>
+
+        <div class="form-check form-switch d-flex align-items-center gap-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                style="width: 3rem; height: 2rem;" name="ligarActivo" [(ngModel)]="esActivoFijo">
+            <label class="form-check-label fs-4" for="flexSwitchCheckChecked">¿LIGAR ACTIVO FIJO?</label>
+        </div>
+        <p></p>
+
+        <div *ngIf="esActivoFijo">
+            <p class="fw-bold">REFERENCIA ACTIVO FIJO</p>
+            <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA REFERENCIA"
+                [(ngModel)]="ticket.referenciaActivoFijo" name="referenciaActivoFijo"
+                [ngClass]="{'p-invalid': formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched}"
+                #formReferenciaActivoFijoCtrl="ngModel" required (change)="buscarActivoFijo()">
+            <small *ngIf="formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched" class="p-error">
+                Campo requerido.
+            </small>
+            <p></p>
+        </div>
+
         <P>FAVOR DE INGRESAR UNA DESCRIPCIÓN DEL PROBLEMA, SI ES NECESARIO PUEDE ADJUNTAR IMÁGENES</P>
         <p-editor [(ngModel)]="ticket.descripcion" name="descripcion" [style]="{ height: '320px' }"
             [ngClass]="{'p-invalid': formDescripcionCtrl.invalid && formDescripcionCtrl.touched}"

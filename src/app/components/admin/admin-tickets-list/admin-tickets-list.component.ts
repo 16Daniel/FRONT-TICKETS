@@ -180,7 +180,7 @@ export class AdminTicketsListComponent {
         this.categorias = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
-        }));;
+        }));
         this.categorias = this.categorias.filter(x => x.idArea == this.IdArea);
         this.cdr.detectChanges();
       },

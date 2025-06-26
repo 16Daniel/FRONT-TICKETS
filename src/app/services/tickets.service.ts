@@ -376,4 +376,21 @@ export class TicketsService {
       ...doc.data()
     }) as Ticket);
   }
+
+  async getByReferencia(referencia: string): Promise<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+
+    const q = query(
+      ticketsCollection,
+      where('referenciaActivoFijo', '==', referencia),
+    );
+
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }) as Ticket);
+  }
+
 }

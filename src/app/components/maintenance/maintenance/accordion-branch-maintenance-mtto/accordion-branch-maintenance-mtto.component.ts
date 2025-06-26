@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
@@ -32,7 +32,6 @@ export class AccordionBranchMaintenanceMttoComponent {
   constructor(
     private usersService: UsersService,
     private maintenanceMtooService: MaintenanceMtooService,
-
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
@@ -109,14 +108,13 @@ export class AccordionBranchMaintenanceMttoComponent {
 
   obtenerDiasPasados(idSucursal: string): number {
     let dias = 0;
-    const registro = this.mantenimientos.filter(x => x.idSucursal === idSucursal);
+    const registro = this.mantenimientos.filter(x => x.idSucursal == idSucursal);
 
     if (registro.length > 0 && registro[0].fecha) {
 
       let fechaM: Date;
 
       const rawFecha = registro[0].fecha;
-
       if (rawFecha instanceof Date) {
         fechaM = rawFecha;
       }

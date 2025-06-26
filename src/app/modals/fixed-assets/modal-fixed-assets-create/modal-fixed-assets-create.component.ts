@@ -1,58 +1,41 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Subscription } from 'rxjs';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
+import { MessageService } from 'primeng/api';
 
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
-import { ModalFixedAssetsCreateComponent } from '../../../modals/fixed-assets/modal-fixed-assets-create/modal-fixed-assets-create.component';
 import { Usuario } from '../../../models/usuario.model';
+import { Area } from '../../../models/area.model';
+import { DropdownModule } from 'primeng/dropdown';
+import { Sucursal } from '../../../models/sucursal.model';
 import { BranchesService } from '../../../services/branches.service';
 import { AreasService } from '../../../services/areas.service';
 import { AreasFixedAssetsService } from '../../../services/areas-fixed-assets.service';
 import { CategoriesFixedAssetsService } from '../../../services/categories-activos-fijos.service';
-import { StatusFixedAssetsService } from '../../../services/status-fixed-assets.service';
-import { LocationsFixedAssetsService } from '../../../services/locations-fixed-assets.service';
-import { Area } from '../../../models/area.model';
-import { Sucursal } from '../../../models/sucursal.model';
 import { AreaActivoFijo } from '../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../models/categoria-activo-fijo.model';
 import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model';
 import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
-import { ModalFixedAssetsDetailComponent } from '../../../modals/fixed-assets/modal-fixed-assets-detail/modal-fixed-assets-detail.component';
+import { StatusFixedAssetsService } from '../../../services/status-fixed-assets.service';
+import { LocationsFixedAssetsService } from '../../../services/locations-fixed-assets.service';
 
 @Component({
-  selector: 'app-fixed-assets',
+  selector: 'app-modal-fixed-assets-create',
   standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule,
-    ButtonModule,
-    TableModule,
-    ToastModule,
-    ConfirmDialogModule,
-    ModalFixedAssetsCreateComponent,
-    ModalFixedAssetsDetailComponent
-  ],
-  providers: [ConfirmationService, MessageService],
-  templateUrl: './fixed-assets.component.html',
-  styleUrl: './fixed-assets.component.scss'
+  imports: [CommonModule, FormsModule, DialogModule, DropdownModule],
+  templateUrl: './modal-fixed-assets-create.component.html',
+  styleUrl: './modal-fixed-assets-create.component.scss'
 })
 
-export default class FixedAssetsComponent implements OnInit {
-  esNuevoActivoFijo: boolean = false;
-  mostrarModalActivoFijo: boolean = false;
-  activosFijos: ActivoFijo[] = [];
-  activoFijoSeleccionada: ActivoFijo = new ActivoFijo;
-  subscripcion: Subscription | undefined;
+export class ModalFixedAssetsCreateComponent implements OnInit {
+  @Input() mostrarModalCrearActivoFijo: boolean = false;
+  @Output() closeEvent = new EventEmitter<boolean>();
+  @Input() activoFijo: ActivoFijo | any;
+  @Input() esNuevoActivoFijo: boolean = true;
+  idActivoFijoEditar: string = '';
   usuario: Usuario;
-  mostrarModalDetalleActivoFijo: boolean = false;
-  activoSeleccionado: ActivoFijo | undefined;
 
   areas: Area[] = [];
   sucursales: Sucursal[] = [];
@@ -62,10 +45,9 @@ export default class FixedAssetsComponent implements OnInit {
   estatusActivosFijos: EstatusActivoFijo[] = [];
 
   constructor(
-    private confirmationService: ConfirmationService,
-    private fixedAssetsService: FixedAssetsService,
-    public cdr: ChangeDetectorRef,
     private messageService: MessageService,
+    private cdr: ChangeDetectorRef,
+    private fixedAssetsService: FixedAssetsService,
     private branchesService: BranchesService,
     private areasService: AreasService,
     private areasFixedAssetsService: AreasFixedAssetsService,
@@ -76,8 +58,10 @@ export default class FixedAssetsComponent implements OnInit {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
-  ngOnInit(): void {
-    this.obtenerActivosFijos();
+  async ngOnInit() {
+    if (!this.esNuevoActivoFijo) {
+      this.idActivoFijoEditar = this.activoFijo.id;
+    }
 
     this.obtenerSucursales();
     this.obtenerAreas();
@@ -87,60 +71,73 @@ export default class FixedAssetsComponent implements OnInit {
     this.obtenerEstatusActivosFijos();
   }
 
-  ngOnDestroy() {
-    if (this.subscripcion != undefined) {
-      this.subscripcion.unsubscribe();
+  onHide() {
+    this.closeEvent.emit(false); // Cerrar modal
+  }
+
+  async enviar(form: NgForm) {
+    if (form.form.status == 'INVALID') {
+      Object.values(form.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+
+      this.showMessage('error', 'Error', 'Campos requeridos incompletos');
+      return;
     }
+
+    this.esNuevoActivoFijo ? this.crear() : this.actualizar();
   }
 
-  obtenerActivosFijos() {
-    this.subscripcion = this.fixedAssetsService.get(this.usuario.idArea).subscribe(result => {
-      this.activosFijos = result;
-      this.cdr.detectChanges();
-    }, (error) => {
-      console.log(error);
-      this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-    });
+  crearReferencia() {
+    const sucursal = this.rellenarCeros(this.activoFijo.idSucursal, 2);
+    const area = this.areas.find(x => x.id == this.activoFijo.idArea)?.nombre.substring(0, 1).toUpperCase();
+    const areaActivo = this.areasActivosFijos.find(x => x.id == this.activoFijo.idAreaActivoFijo)?.nombre.substring(0, 1).toUpperCase();
+    const categoriaActivo = this.categoriasActivosFijos.find(x => x.id == this.activoFijo.idCategoriaActivoFijo)?.nombre.substring(0, 1).toUpperCase();
+
+    return `RW${sucursal}${area}${areaActivo}${categoriaActivo}${this.activoFijo.consecutivo}`;
   }
 
-  abrirModalCrearActivoFijo() {
-    this.esNuevoActivoFijo = true;
-    this.mostrarModalActivoFijo = true;
-  }
-
-  abrirModalEditarActivoFijo(activoFijo: ActivoFijo) {
-    this.esNuevoActivoFijo = false;
-    this.mostrarModalActivoFijo = true;
-    this.activoFijoSeleccionada = activoFijo;
-  }
-
-  confirmaEliminacion(id: string) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: '¿Está seguro que desea eliminar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.eliminarActivoFijo(id);
-      },
-      reject: () => { },
-    });
-  }
-
-  async eliminarActivoFijo(idActivoFijo: string) {
-    await this.fixedAssetsService.delete(idActivoFijo);
-    this.showMessage('success', 'Success', 'Eliminado correctamente');
-  }
-
-  cerrarModalActivoFijo() {
-    this.mostrarModalActivoFijo = false;
-    this.activoFijoSeleccionada = new ActivoFijo;;
+  private rellenarCeros(numero: number, longitud: number): string {
+    return numero.toString().padStart(longitud, '0');
   }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+  async crear() {
+    this.activoFijo.consecutivo = await this.fixedAssetsService
+      .obtenerSecuencial(
+        this.activoFijo.idArea,
+        this.activoFijo.idSucursal,
+        this.activoFijo.idAreaActivoFijo,
+        this.activoFijo.idCategoriaActivoFijo
+      );
+    this.activoFijo.referencia = this.crearReferencia();
+
+    try {
+      await this.fixedAssetsService.create({ ...this.activoFijo });
+      this.cdr.detectChanges();
+      this.closeEvent.emit(false); // Cerrar modal
+      this.showMessage('success', 'Success', 'Guardado correctamente');
+
+    } catch (error: any) {
+      this.showMessage('error', 'Error', error.message);
+    }
+  }
+
+  actualizar() {
+    // this.activoFijo = { ...this.activoFijo, id: parseInt(this.activoFijo.id) }
+    this.fixedAssetsService
+      .update(this.activoFijo, this.idActivoFijoEditar)
+      .then(() => {
+        this.cdr.detectChanges();
+        this.closeEvent.emit(false); // Cerrar modal
+        this.showMessage('success', 'Success', 'Enviado correctamente');
+      })
+      .catch((error) =>
+        console.error('Error al actualizar los comentarios:', error)
+      );
   }
 
   obtenerSucursales() {
@@ -151,6 +148,7 @@ export default class FixedAssetsComponent implements OnInit {
           id: item.id.toString()
         }));
 
+        this.activoFijo.idSucursal = parseInt(this.usuario.sucursales[0].id).toString();
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -166,6 +164,7 @@ export default class FixedAssetsComponent implements OnInit {
           ...item,
           id: item.id.toString()
         }));
+        this.activoFijo.idArea = this.usuario.idArea;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -207,7 +206,7 @@ export default class FixedAssetsComponent implements OnInit {
       next: (data) => {
         this.ubicacionesActivosFijos = data.map((item: any) => ({
           ...item,
-        }));
+        }));;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -221,7 +220,7 @@ export default class FixedAssetsComponent implements OnInit {
       next: (data) => {
         this.estatusActivosFijos = data.map((item: any) => ({
           ...item,
-        }));
+        }));;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -229,17 +228,4 @@ export default class FixedAssetsComponent implements OnInit {
       },
     });
   }
-
-  onClickActivo() {
-    this.mostrarModalDetalleActivoFijo = true;
-    
-  }
-
-  nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
-  nombreArea = (idArea: string) => this.areas.find(x => x.id == idArea)?.nombre;
-  nombreAreaActivoFijo = (idAreaActivoFijo: string) => this.areasActivosFijos.find(x => x.id == idAreaActivoFijo)?.nombre;
-  nombreCategoriaActivoFijo = (idCategoriaActivoFijo: string) => this.categoriasActivosFijos.find(x => x.id == idCategoriaActivoFijo)?.nombre;
-  nombreEstatusActivoFijo = (idEstatusActivoFijo: string) => this.estatusActivosFijos.find(x => x.id == idEstatusActivoFijo)?.nombre;
-  nombreUbicacionActivoFijo = (idUbicacionActivoFijo: string) => this.ubicacionesActivosFijos.find(x => x.id == idUbicacionActivoFijo)?.nombre;
-
 }

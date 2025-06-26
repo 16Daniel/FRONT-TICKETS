@@ -14,7 +14,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
 
   async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
     const mantenimiento: MantenimientoMtto = {
-      idSucursal,
+      idSucursal: idSucursal.toString(),
       idUsuarioSoporte: idUsuario,
       fecha,
       estatus: true,

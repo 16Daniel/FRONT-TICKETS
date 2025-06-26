@@ -1,27 +1,44 @@
 <div class="pt-5">
-    <div class="pt-3 container">
+    <div class="pt-3" style="padding-left: 50px; padding-right: 50px;">
         <div class="m-2 mt-3 bg-white p-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h2>LISTA DE ACTIVOS FIJOS</h2>
-                <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-info" (click)="abrirModalCrearActivoFijo()">
+                <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-info"
+                    (click)="abrirModalCrearActivoFijo()">
                 </p-button>
             </div>
             <br>
 
             <p-table [value]="activosFijos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
+                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+                [(selection)]="activoSeleccionado" (onRowSelect)="mostrarModalDetalleActivoFijo = true">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>ID</th>
-                        <th>DESCRIPCION</th>
                         <th>REFERENCIA</th>
+                        <th>DESCRIPCION</th>
+                        <th>SUCURSAL</th>
+                        <th>AREA</th>
+                        <th>LOCACIÓN</th>
+                        <th>CATEGORIA</th>
+                        <th># MANT</th>
+                        <th>CONDICIÓN</th>
+                        <th>UBICACIÓN</th>
+                        <th>COSTO</th>
                         <th>ACCIONES</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-activo>
                     <tr [pSelectableRow]="activo">
-                        <td>{{ activo.id }}</td>
+                        <td>{{ activo.referencia }}</td>
                         <td>{{ activo.descripcion }}</td>
+                        <td>{{ nombreSucursal(activo.idSucursal) }}</td>
+                        <td>{{ nombreArea(activo.idArea) }}</td>
+                        <td>{{ nombreAreaActivoFijo(activo.idAreaActivoFijo) }}</td>
+                        <td>{{ nombreCategoriaActivoFijo(activo.idCategoriaActivoFijo) }}</td>
+                        <td>{{ activo.noMantenimientos }}</td>
+                        <td>{{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) }}</td>
+                        <td>{{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}</td>
+                        <td>{{ activo.costo | currency }}</td>
                         <td>
                             <button class="btn btn-primary me-3" (click)="abrirModalEditarActivoFijo(activo)"><i
                                     class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
@@ -53,6 +70,10 @@
         </div>
     </ng-template>
 </p-confirmDialog>
-<!-- 
-<app-modal-area-create *ngIf="mostrarModalArea" [mostrarModalCrearArea]="mostrarModalArea"
-    (closeEvent)="cerrarModalActivoFijo()" [area]="areaSeleccionada" [esNuevaArea]="esNuevaArea"></app-modal-area-create> -->
+
+<app-modal-fixed-assets-create *ngIf="mostrarModalActivoFijo" [mostrarModalCrearActivoFijo]="mostrarModalActivoFijo"
+    (closeEvent)="cerrarModalActivoFijo()" [activoFijo]="activoFijoSeleccionada"
+    [esNuevoActivoFijo]="esNuevoActivoFijo"></app-modal-fixed-assets-create>
+
+<app-modal-fixed-assets-detail *ngIf="mostrarModalDetalleActivoFijo"
+    [mostrarModalDetalleActivoFijo]="mostrarModalDetalleActivoFijo"></app-modal-fixed-assets-detail>
