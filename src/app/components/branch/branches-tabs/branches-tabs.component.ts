@@ -46,7 +46,7 @@ export class BranchesTabsComponent implements OnDestroy {
 
   esEspectadorActivo: boolean = false;
   sucursalesSeleccionadas: Sucursal[] = [];
-
+public tabindex:number = 0;
   private unsubscribe!: () => void;
 
   constructor(

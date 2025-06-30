@@ -122,7 +122,13 @@ export const routes: Routes = [
   },
    {
     path: 'cedis',
+    loadComponent: () => import('./pages/cedis/cedis.component'),
     children: [
+      {
+        path: 'recoleccion',
+        title: 'Control de aceite',
+        loadComponent: () => import('./pages/cedis/recoleccion-aceite/recoleccion-aceite.component'),
+      },
       {
         path: 'control-aceite',
         title: 'Control de aceite',
@@ -130,7 +136,7 @@ export const routes: Routes = [
       },
        {
         path: '',
-        redirectTo: '/cedis/control-aceite',
+        redirectTo: '/cedis/recoleccion',
         pathMatch: 'full',
       },
     ]

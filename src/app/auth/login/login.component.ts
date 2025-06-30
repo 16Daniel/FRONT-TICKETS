@@ -64,6 +64,8 @@ export default class LoginComponent {
               this.router.navigate(['/main/home']);
             } else if (userd.idRol == '4') {
               this.router.navigate(['/main/home-s']);
+            } else if (userd.idRol == '6') {
+              this.router.navigate(['/cedis/recoleccion']);
             }
           },
           error: (error) => {

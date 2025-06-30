@@ -21,6 +21,16 @@
         </small>
         <p></p>
 
+         <p class="fw-bold">ID FRONT</p>
+        <input class="form-control" style="height: 48px;" type="text" placeholder="INGRESE EL ID FRONT"
+            [(ngModel)]="sucursal.idFront" name="idfront"
+            [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formIdfCtrl="ngModel"
+            required>
+        <small *ngIf="formIdfCtrl.invalid && formIdfCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+
         <!-- <div class="d-flex justify-content-end align-items-center mt-3">
             <label class="me-2" for="activarMantenimientos">¿Activar mantenimientos?</label>
             <input id="activarMantenimientos" type="checkbox" [(ngModel)]="sucursal.activoMantenimientos"

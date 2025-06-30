@@ -8,44 +8,65 @@ import { ModalAgregarEntregaComponent } from "../../../modals/modal-agregar-entr
 import { Timestamp } from '@angular/fire/firestore';
 import { Sucursal } from '../../../models/sucursal.model';
 import { BranchesService } from '../../../services/branches.service';
-
+import { TabViewModule } from 'primeng/tabview';
+import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
+import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-aceite',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ModalAgregarEntregaComponent],
+  imports: [CommonModule, FormsModule, TableModule,TabViewModule,ToastModule,DialogModule,CalendarModule,DropdownModule],
+    providers:[MessageService],
   templateUrl: './aceite.component.html',
   styleUrl: './aceite.component.scss',
 })
 export default class AceiteComponent implements OnInit {
 public entregas:EntregaAceite[] = []; 
-public mostrarModalAgregar:boolean = false; 
+public entregasH:EntregaAceite[] = []; 
+public mostrarModalValidacion:boolean = false; 
 public sucursales: Sucursal[] = [];
-constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,)
+public sucursalSel: Sucursal|undefined;
+public formcomentarios:string = ""; 
+public itemEntrega:EntregaAceite|undefined; 
+public tipoActualizacion:number = 0;  
+public loading:boolean = false; 
+fechaini:Date = new Date(); 
+fechafin:Date = new Date(); 
+constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
 {
 
 }
   ngOnInit(): void 
   {
     this.obtenerSucursales(); 
-    this.consultarEntregas(); 
    }
  
+     showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
   consultarEntregas()
   {
-    this.aceiteService.getEnttregas().subscribe({
+    this.loading = true; 
+    this.aceiteService.getEntregasCedis().subscribe({
       next: (data) => {
         this.entregas= data;
-        console.log(this.entregas); 
+        this.loading = false; 
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.log(error);
+        this.loading = false; 
       },
     });
   }
-  abrirmodalAgregar()
+  abrirmodalValidacion(item:EntregaAceite,tipo:number)
   {
-    this.mostrarModalAgregar = true; 
+    this.tipoActualizacion = tipo; 
+    this.itemEntrega = item; 
+    this.mostrarModalValidacion = true; 
   }
 
    getDate(tsmp: Timestamp | any): Date {
@@ -59,9 +80,9 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       }
     }
 
-    obtenerNombreSucursal(idSucursal: string): string {
+   obtenerNombreSucursal(idSucursal:number): string {
     let str = '';
-    let temp = this.sucursales.filter((x) => x.id == idSucursal);
+    let temp = this.sucursales.filter((x) => x.idFront == idSucursal);
     if (temp.length > 0) {
       str = temp[0].nombre;
     }
@@ -69,14 +90,130 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
   }
 
      obtenerSucursales() {
+      this.loading = true; 
     this.branchesService.get().subscribe({
       next: (data) => {
+        let sucursalTodas:Sucursal = { id:'-1',nombre:'TODAS',idFront:-1,eliminado:false}
         this.sucursales = data;
+        this.sucursales.unshift(sucursalTodas); 
+        this.sucursalSel = sucursalTodas; 
+        this.loading = false; 
+        this.consultarEntregas(); 
         this.cdr.detectChanges();
       },
       error: (error) => {
-        
+        this.loading = false; 
       },
     });
   }
+
+    actualizarEntrega()
+  {   
+    if(this.formcomentarios == "")
+      {
+        this.showMessage('info','info','Favor de agregar un comentario');
+        return; 
+      }
+    if(this.tipoActualizacion == 1)
+      {
+                    this.loading = true; 
+              this.aceiteService.ValidacionCedis(this.itemEntrega!.id,this.formcomentarios).subscribe({
+              next: (data) => {
+                this.mostrarModalValidacion = false; 
+                this.showMessage('success','Success','Guardado correctamente');
+                this.formcomentarios = ""; 
+                this.consultarEntregas(); 
+                this.cdr.detectChanges();
+              },
+              error: (error) => {
+                
+              },
+            });
+      } else
+      {
+               this.loading = true; 
+              this.aceiteService.RechazoCedis(this.itemEntrega!.id,this.formcomentarios).subscribe({
+              next: (data) => {
+                this.mostrarModalValidacion = false; 
+                this.showMessage('success','Success','Guardado correctamente');
+                this.formcomentarios = ""; 
+                this.consultarEntregas(); 
+                this.cdr.detectChanges();
+              },
+              error: (error) => {
+                
+              },
+            });
+      }
+    
+  }
+
+  buscarRegistros()
+  {
+    this.loading = true
+    let idf = -2;
+    if(this.sucursalSel?.idFront != undefined)
+      {
+        idf = this.sucursalSel!.idFront;
+      }
+    this.aceiteService.getEntregasCedisH(idf,this.fechaini,this.fechafin).subscribe({
+      next: (data) => {
+        this.entregasH= data;
+        this.loading = false, 
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      },
+    });
+  }
+
+  exportarExcel()
+{ 
+  this.loading = true;
+  let data = JSON.stringify(this.entregasH);
+  this.aceiteService.exportarHistorialEntregas(this.entregasH).subscribe({
+    next: data => {
+      this.loading = false;
+      this.cdr.detectChanges();
+      const base64String = data.archivoBase64; // Aquí debes colocar tu cadena base64 del archivo Excel
+
+      // Decodificar la cadena base64
+      const binaryString = window.atob(base64String);
+  
+      // Convertir a un array de bytes
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+  
+      // Crear un Blob con los datos binarios
+      const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  
+      // Crear una URL para el Blob
+      const url = window.URL.createObjectURL(blob);
+  
+      // Crear un enlace para la descarga
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'HISTORIAL ENTREGAS DE ACEITE.xlsx'; // Establecer el nombre del archivo
+      document.body.appendChild(link);
+  
+      // Hacer clic en el enlace para iniciar la descarga
+      link.click();
+  
+      // Limpiar la URL y el enlace después de la descarga
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    },
+    error: error => {
+      this.loading = false; 
+      this.showMessage('error','Error','Error al generar el archivo de excel');
+      console.log(error);
+     
+    }
+});
+}
+
 }

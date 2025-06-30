@@ -7,34 +7,51 @@ import { EntregaAceite } from '../../../models/aceite.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
-
+import { TabViewModule } from 'primeng/tabview';
+import { Usuario } from '../../../models/usuario.model';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { CalendarModule } from 'primeng/calendar';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-branches-oil-tab',
   standalone: true,
-   imports: [CommonModule, FormsModule, TableModule],
+   imports: [CommonModule, FormsModule, TableModule,TabViewModule,ToastModule,DialogModule,CalendarModule],
+   providers:[MessageService],
   templateUrl: './branches-oil-tab.component.html',
   styleUrl: './branches-oil-tab.component.scss',
 })
 export class BranchesOilTabComponent implements OnInit {
 public entregas:EntregaAceite[] = []; 
-public mostrarModalAgregar:boolean = false; 
+public entregasH:EntregaAceite[] = []; 
+public itemEntrega:EntregaAceite|undefined; 
+public mostrarModalDevolucion:boolean = false; 
 public sucursales: Sucursal[] = [];
-constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,)
+public sucursal: Sucursal|undefined;
+fechaini:Date = new Date(); 
+fechafin:Date = new Date(); 
+usuario: Usuario;
+public formCantidad:number = 0; 
+public formcomentarios:string = ""; 
+public loading:boolean = true;
+constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
 {
-
+  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 }
   ngOnInit(): void 
   {
     this.obtenerSucursales(); 
-    this.consultarEntregas(); 
    }
  
+     showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
   consultarEntregas()
   {
-    this.aceiteService.getEnttregas().subscribe({
+    this.aceiteService.getEntregas(this.sucursal!.idFront!).subscribe({
       next: (data) => {
         this.entregas= data;
-        console.log(this.entregas); 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -42,10 +59,28 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       },
     });
   }
-  abrirmodalAgregar()
+
+   consultarEntregasH()
   {
-    this.mostrarModalAgregar = true; 
+    this.loading = true; 
+    this.aceiteService.getEntregasH(this.sucursal!.idFront!,this.fechaini,this.fechafin).subscribe({
+      next: (data) => {
+        this.entregasH= data;
+        this.loading = false; 
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
+  
+
+ abrirModalDevolucion(item:EntregaAceite)
+{
+  this.itemEntrega = item; 
+  this.mostrarModalDevolucion = true; 
+}
 
    getDate(tsmp: Timestamp | any): Date {
       try {
@@ -58,9 +93,9 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       }
     }
 
-    obtenerNombreSucursal(idSucursal: string): string {
+    obtenerNombreSucursal(idSucursal:number): string {
     let str = '';
-    let temp = this.sucursales.filter((x) => x.id == idSucursal);
+    let temp = this.sucursales.filter((x) => x.idFront == idSucursal);
     if (temp.length > 0) {
       str = temp[0].nombre;
     }
@@ -68,9 +103,49 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
   }
 
      obtenerSucursales() {
+      this.loading = true; 
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+        this.sucursal = this.obtenerSucursalporId(this.usuario.sucursales[0].id); 
+         this.consultarEntregas(); 
+          this.consultarEntregasH(); 
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        
+      },
+    });
+  }
+
+  obtenerSucursalporId(idSucursal:string):Sucursal
+  {
+      let sucursal = this.sucursales.filter(x=> x.id == idSucursal); 
+      return sucursal[0]; 
+  }
+
+  actualizarEntrega()
+  {
+    if(this.formcomentarios == "")
+      {
+        this.showMessage('info','info','Favor de agregar un comentario');
+        return; 
+      }
+    if(this.formCantidad <= 0)
+      {
+        this.showMessage('info','Error','la cantidad debe ser mayor a cero');
+        return; 
+      }
+      this.loading = true; 
+      this.aceiteService.ActualizarEntrega(this.itemEntrega!.id,this.formCantidad,this.formcomentarios).subscribe({
+      next: (data) => {
+        this.mostrarModalDevolucion = false; 
+        this.showMessage('success','Success','Guardado correctamente');
+        this.formCantidad = 0; 
+        this.formcomentarios = ""; 
+        this.sucursal = this.obtenerSucursalporId(this.usuario.sucursales[0].id); 
+         this.consultarEntregas(); 
+          this.consultarEntregasH(); 
         this.cdr.detectChanges();
       },
       error: (error) => {

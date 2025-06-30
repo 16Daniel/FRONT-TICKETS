@@ -18,10 +18,10 @@
       </div>
 
 
-      <div class="menu-items" style="overflow: auto;">
+      <div class="menu-items" style="overflow: auto; padding-bottom: 100px;">
         <i class='bx bx-support bx-lg'></i>
         <div class="fw-bold fs-3 mb-4" style="color: rgb(0, 0, 0);">REBEL TICKETS</div>
-        <li (click)="closemenu()"><a [routerLink]="'/main/home'"><i class='bx bxs-dashboard'></i>Inicio</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/home'" *ngIf="usuario.idRol != '6'"><i class='bx bxs-dashboard'></i>Inicio</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/users'"
             *ngIf="usuario.idRol == '1' || usuario.idRol == '5'"><i class='bx bx-user'></i>Usuarios</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/roles'" *ngIf="usuario.idRol == '1'"><i
@@ -45,6 +45,11 @@
               class='bx bxs-dashboard'></i>Control de versiones</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/fixed-assets'" *ngIf="usuario.idRol == '5'"><i
               class='bx bxs-dashboard'></i>Activos fijos</a></li>
+        
+              <li (click)="closemenu()"><a [routerLink]="'/cedis/recoleccion'" *ngIf="usuario.idRol == '6'">
+                <i class='bx bxs-droplet' ></i>&nbsp;Recolección de aceite</a></li>
+              <li (click)="closemenu()"><a [routerLink]="'/cedis/control-aceite'" *ngIf="usuario.controlDeAceite == true">
+                <i class='bx bxs-droplet' ></i>&nbsp;Control de aceite</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
