@@ -190,7 +190,10 @@ export default class CalendarBuilderComponent implements OnInit {
   obtenerSucursales() {
     this.branchesService.get().subscribe({
       next: (data) => {
-        this.sucursales = data;
+        this.sucursales = data.map((item: any) => ({
+          ...item,
+          id: item.id.toString()
+        }));;
         this.obtenerTodosLosTickets();
         this.cdr.detectChanges();
       },
@@ -331,7 +334,7 @@ export default class CalendarBuilderComponent implements OnInit {
       for (let sucursal of this.sucursalesSeleccionadas) {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
 
-          if(this.tieneMantenimientosActivos(sucursal.id)){
+          if (this.tieneMantenimientosActivos(sucursal.id)) {
             const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
             await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
           }

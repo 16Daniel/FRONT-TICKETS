@@ -30,13 +30,7 @@
             Campo requerido.
         </small>
         <p></p>
-
-        <!-- <div class="d-flex justify-content-end align-items-center mt-3">
-            <label class="me-2" for="activarMantenimientos">¿Activar mantenimientos?</label>
-            <input id="activarMantenimientos" type="checkbox" [(ngModel)]="sucursal.activoMantenimientos"
-                name="activoMantenimientos">
-        </div> -->
-
+  
         <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="usuario.idRol == '5'">
             <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
                 style="width: 3rem; height: 2rem;" name="activoMantenimientos"

@@ -28,4 +28,5 @@ export class Ticket {
   calificacionAnalista: number = 0;
   participantesChat: ParticipanteChat[] = [];
   validacionAdmin: boolean = false;
+  referenciaActivoFijo: string | undefined;
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
@@ -74,7 +74,7 @@ export class AccordionBranchMaintenance10x10Component {
 
   obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
     const mantenimientosSucursal = this.mantenimientos
-      .filter(m => m.idSucursal === idSucursal && m.fecha);
+      .filter(m => m.idSucursal == idSucursal && m.fecha);
 
     if (mantenimientosSucursal.length === 0) {
       // Si no hay mantenimientos, regresamos una fecha muy antigua
@@ -109,7 +109,7 @@ export class AccordionBranchMaintenance10x10Component {
 
   obtenerDiasPasados(idSucursal: string): number {
     let dias = 0;
-    const registro = this.mantenimientos.filter(x => x.idSucursal === idSucursal);
+    const registro = this.mantenimientos.filter(x => x.idSucursal == idSucursal);
 
     if (registro.length > 0 && registro[0].fecha) {
 

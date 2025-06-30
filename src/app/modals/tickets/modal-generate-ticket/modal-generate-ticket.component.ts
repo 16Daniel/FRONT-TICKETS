@@ -28,6 +28,7 @@ import { TicketsPriorityService } from '../../../services/tickets-priority.servi
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 import { ParticipanteChat } from '../../../models/participante-chat.model';
 import { Subcategoria } from '../../../models/subcategoria.model';
+import { FixedAssetsService } from '../../../services/fixed-assets.service';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -50,20 +51,16 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   ticket: Ticket = new Ticket
   sucursales: Sucursal[] = [];
-  // sucursal: Sucursal | any;
   usuarioActivo: Usuario = new Usuario();
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
   isLoading = false;
   mostrarCampoSubcategoria = false;
-  // formArea: any;
   formCategoria: any;
-  // formDescripcion: string = '';
-  // formNombreSolicitante: any;
-  // formPrioridad: any;
-  // formStatusSucursal: any;
   catUsuariosHelp: Usuario[] = [];
+
+  esActivoFijo: boolean = false;
 
   constructor(
     private ticketsService: TicketsService,
@@ -74,7 +71,8 @@ export class ModalGenerateTicketComponent implements OnInit {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private areasService: AreasService,
-    private ticketsPriorityService: TicketsPriorityService
+    private ticketsPriorityService: TicketsPriorityService,
+    private fixedAssetsService: FixedAssetsService
   ) { }
 
   ngOnInit(): void {
@@ -84,8 +82,6 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
-    // this.ticket.idSucursal = this.usuarioActivo.sucursales[0].id;
-    // this.formDepartamento = this.sucursal;
   }
 
   obtenerSucursales() {
@@ -305,4 +301,14 @@ export class ModalGenerateTicketComponent implements OnInit {
   obtenerSubcategoriasFiltradas = (): Subcategoria[] =>
     this.formCategoria.subcategorias.filter((x: Subcategoria) => x.eliminado == false)
 
+  buscarActivoFijo() {
+    this.fixedAssetsService
+      .getByReference(this.ticket.referenciaActivoFijo!)
+      .subscribe(result => {
+        if (!result) {
+          this.showMessage('warn', 'Error', 'No se encontró activo con referencia ' + this.ticket.referenciaActivoFijo);
+          this.ticket.referenciaActivoFijo = '';
+        }
+      });
+  }
 }
