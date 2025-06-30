@@ -10,8 +10,7 @@
             <br>
 
             <p-table [value]="activosFijos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
-                [(selection)]="activoSeleccionado" (onRowSelect)="mostrarModalDetalleActivoFijo = true">
+                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>REFERENCIA</th>
@@ -40,6 +39,13 @@
                         <td>{{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}</td>
                         <td>{{ activo.costo | currency }}</td>
                         <td>
+                            <button class="btn btn-primary me-3" (click)="mostrarTickets(activo)"><i
+                                    class='bx bx-receipt bx-sm' pTooltip="VER TICKETS" tooltipPosition="top"></i></button>
+
+                            <button class="btn btn-primary me-3" (click)="mostrarModalMantenimientos = true"><i
+                                    class='bx bx-wrench bx-sm' pTooltip="VER MANTENIMIENTOS"
+                                    tooltipPosition="top"></i></button>
+
                             <button class="btn btn-primary me-3" (click)="abrirModalEditarActivoFijo(activo)"><i
                                     class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
 
@@ -75,5 +81,6 @@
     (closeEvent)="cerrarModalActivoFijo()" [activoFijo]="activoFijoSeleccionada"
     [esNuevoActivoFijo]="esNuevoActivoFijo"></app-modal-fixed-assets-create>
 
-<app-modal-fixed-assets-detail *ngIf="mostrarModalDetalleActivoFijo"
-    [mostrarModalDetalleActivoFijo]="mostrarModalDetalleActivoFijo"></app-modal-fixed-assets-detail>
+<app-modal-fixed-assets-detail *ngIf="mostrarModalTickets"
+    [mostrarModalDetalleActivoFijo]="mostrarModalTickets" [activoFijo]="activoFijoSeleccionada"
+    (closeEvent)="mostrarModalTickets = false"></app-modal-fixed-assets-detail>

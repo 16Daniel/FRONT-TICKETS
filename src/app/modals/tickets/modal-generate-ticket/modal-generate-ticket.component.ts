@@ -29,6 +29,7 @@ import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 import { ParticipanteChat } from '../../../models/participante-chat.model';
 import { Subcategoria } from '../../../models/subcategoria.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
+import { ActivoFijo } from '../../../models/activo-fijo.model';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -61,6 +62,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   catUsuariosHelp: Usuario[] = [];
 
   esActivoFijo: boolean = false;
+  activoFijo: ActivoFijo | undefined;
 
   constructor(
     private ticketsService: TicketsService,
@@ -305,6 +307,9 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.fixedAssetsService
       .getByReference(this.ticket.referenciaActivoFijo!)
       .subscribe(result => {
+        this.activoFijo = result;
+        this.cdr.detectChanges();
+
         if (!result) {
           this.showMessage('warn', 'Error', 'No se encontró activo con referencia ' + this.ticket.referenciaActivoFijo);
           this.ticket.referenciaActivoFijo = '';
