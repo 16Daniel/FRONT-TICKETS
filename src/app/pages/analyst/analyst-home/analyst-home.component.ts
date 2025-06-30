@@ -30,6 +30,7 @@ import { AccordionBranchMaintenanceAvComponent } from '../../../components/maint
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../../components/analyst/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-analyst-home',
@@ -172,19 +173,32 @@ export default class AnalystHomeComponent implements OnInit {
 
     this.subscriptiontk = servicio
       .getUltimosMantenimientos(idsSucursales)
-      .subscribe({
-        next: (data) => {
-          this.ultimosmantenimientos = data.filter(
-            (elemento): elemento is Mantenimiento10x10 => elemento !== null
-          );
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error al escuchar los tickets:', error);
-        },
+      .subscribe((result) => {
+        let data = result.filter((element) => element.length > 0);
+        this.ultimosmantenimientos = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.ultimosmantenimientos.push(item);
+          }
+        }
+
+        this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
+          x.fecha = this.getDate(x.fecha);
+          return x;
+        });
+        this.cdr.detectChanges();
       });
+  }
+
+  getDate(tsmp: Timestamp | any): Date {
+    try {
+      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
+      const firestoreTimestamp = tsmp; // Ejemplo
+      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      return date;
+    } catch {
+      return tsmp;
+    }
   }
 
   async getTicketsResponsable(): Promise<void> {

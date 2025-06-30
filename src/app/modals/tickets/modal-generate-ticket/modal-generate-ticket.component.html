@@ -125,17 +125,29 @@
         </div>
         <p></p>
 
-        <div *ngIf="esActivoFijo">
-            <p class="fw-bold">REFERENCIA ACTIVO FIJO</p>
-            <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA REFERENCIA"
-                [(ngModel)]="ticket.referenciaActivoFijo" name="referenciaActivoFijo"
-                [ngClass]="{'p-invalid': formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched}"
-                #formReferenciaActivoFijoCtrl="ngModel" required (change)="buscarActivoFijo()">
-            <small *ngIf="formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched" class="p-error">
-                Campo requerido.
-            </small>
-            <p></p>
+        <div class="row">
+            <div class="col-md-6">
+                <div *ngIf="esActivoFijo">
+                    <!-- <p class="fw-bold">REFERENCIA ACTIVO FIJO</p> -->
+                    <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA REFERENCIA"
+                        [(ngModel)]="ticket.referenciaActivoFijo" name="referenciaActivoFijo"
+                        [ngClass]="{'p-invalid': formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched}"
+                        #formReferenciaActivoFijoCtrl="ngModel" required (change)="buscarActivoFijo()">
+                    <small *ngIf="formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched"
+                        class="p-error">
+                        Campo requerido.
+                    </small>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <p class="fw-bold" style="padding-top: 10px;">{{activoFijo?.descripcion}}</p>
+            </div>
         </div>
+
+
+
+
 
         <P>FAVOR DE INGRESAR UNA DESCRIPCIÓN DEL PROBLEMA, SI ES NECESARIO PUEDE ADJUNTAR IMÁGENES</P>
         <p-editor [(ngModel)]="ticket.descripcion" name="descripcion" [style]="{ height: '320px' }"

@@ -1,4 +1,4 @@
-<p-dialog [header]="!esNuevoActivoFijo ? 'ACTUALIZAR ACTIVO FIJO' :'CREAR ACTIVO FIJO'"
+<p-dialog [header]="!esNuevoActivoFijo ? 'ACTUALIZAR ACTIVO FIJO - ' + activoFijo.referencia :'CREAR ACTIVO FIJO'"
     [(visible)]="mostrarModalCrearActivoFijo" [modal]="true" [style]="{ 'width': '95vh', 'height': '95vh' }"
     [maximizable]="true" (onHide)="onHide()">
     <form #form="ngForm" (ngSubmit)="enviar(form)">

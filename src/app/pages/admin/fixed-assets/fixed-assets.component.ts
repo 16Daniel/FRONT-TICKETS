@@ -51,8 +51,9 @@ export default class FixedAssetsComponent implements OnInit {
   activoFijoSeleccionada: ActivoFijo = new ActivoFijo;
   subscripcion: Subscription | undefined;
   usuario: Usuario;
-  mostrarModalDetalleActivoFijo: boolean = false;
-  activoSeleccionado: ActivoFijo | undefined;
+  mostrarModalTickets: boolean = false;
+  // activoSeleccionado: ActivoFijo | undefined;
+  mostrarModalMantenimientos: boolean = false;
 
   areas: Area[] = [];
   sucursales: Sucursal[] = [];
@@ -230,10 +231,11 @@ export default class FixedAssetsComponent implements OnInit {
     });
   }
 
-  onClickActivo() {
-    this.mostrarModalDetalleActivoFijo = true;
-    
+  mostrarTickets = (activo: ActivoFijo) => {
+    this.mostrarModalTickets = true;
+    this.activoFijoSeleccionada = activo
   }
+
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
   nombreArea = (idArea: string) => this.areas.find(x => x.id == idArea)?.nombre;
@@ -241,5 +243,4 @@ export default class FixedAssetsComponent implements OnInit {
   nombreCategoriaActivoFijo = (idCategoriaActivoFijo: string) => this.categoriasActivosFijos.find(x => x.id == idCategoriaActivoFijo)?.nombre;
   nombreEstatusActivoFijo = (idEstatusActivoFijo: string) => this.estatusActivosFijos.find(x => x.id == idEstatusActivoFijo)?.nombre;
   nombreUbicacionActivoFijo = (idUbicacionActivoFijo: string) => this.ubicacionesActivosFijos.find(x => x.id == idUbicacionActivoFijo)?.nombre;
-
 }

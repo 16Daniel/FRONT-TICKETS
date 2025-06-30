@@ -184,20 +184,18 @@ export class Maintenance10x10Service implements IMantenimientoService {
       const q = query(
         mantenimientosRef,
         where('idSucursal', '==', idSucursal.toString()),
-        where('fecha', '>=', fechaHaceUnMes),
         where('estatus', '==', false),
         orderBy('fecha', 'desc'), // Ordena por fecha descendente
-        limit(1) // Solo el más reciente
+        limit(3)
       );
 
       // Ejecutar la consulta y obtener los datos
       return from(getDocs(q)).pipe(
         map(querySnapshot => {
           if (!querySnapshot.empty) {
-            const doc = querySnapshot.docs[0];
-            return { id: doc.id, ...doc.data() };
+            return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           }
-          return null; // Si no hay mantenimientos para la sucursal
+          return []; // Si no hay documentos, devuelve un array vacío
         })
       );
     });
