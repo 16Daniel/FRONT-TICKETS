@@ -3,4 +3,5 @@ export class Sucursal {
   nombre: string = '';
   activoMantenimientos?: string[] = [];
   eliminado: boolean = false;
+  idFront?:number|null; 
 }

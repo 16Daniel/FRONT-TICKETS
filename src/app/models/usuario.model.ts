@@ -12,4 +12,5 @@ export class Usuario {
   sucursales: Sucursal[] = [];
   esGuardia: boolean = false;
   idArea: string | any;
+  controlDeAceite?:boolean|null; 
 }

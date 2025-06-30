@@ -1,5 +1,5 @@
 export interface EntregaAceite {
-  id?:string;   
+  id:number;   
   idSucursal:number;
   fecha:Date;                 
   entregaCedis: number | null;  
