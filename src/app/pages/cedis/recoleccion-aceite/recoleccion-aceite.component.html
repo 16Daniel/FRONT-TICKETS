@@ -1,4 +1,4 @@
-<div class="p-3">
+<div class="p-3 bg-white">
 <h3 class="text-center mt-3 mb-3">RECOLECCIÓN DE ACEITE</h3>
 
    <p-table [value]="entregas" [tableStyle]="{ 'min-width': '50rem' }">
@@ -27,7 +27,7 @@
             <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
           <td>{{ record.entregaCedis || '' }}</td>
           <td>{{ record.entregaSucursal || '' }}</td>
-          <td>{{ record.porcentaje75*100  | number:'1.2-2' }}</td>
+          <td>{{ record.porcentaje75*100  | number:'1.0-0' }}%</td>
                          <td *ngIf="record.intercambio == 1"><i class='bx bx-minus-circle bx-sm' style="color:red"></i></td>
                  <td *ngIf="record.intercambio == 2"><i class='bx bx-check-circle bx-sm' style="color:rgb(44, 189, 0)"></i></td>
                   <td *ngIf="record.intercambio == 3"><i class='bx bx-plus-circle bx-sm' style="color:rgb(255, 153, 0)"></i></td>
