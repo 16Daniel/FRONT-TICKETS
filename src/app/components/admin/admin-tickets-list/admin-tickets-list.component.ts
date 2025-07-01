@@ -234,8 +234,19 @@ export class AdminTicketsListComponent {
   }
 
   actualizaTicket(ticket: Ticket) {
+    let nombreCategoria = this.categorias.find(x => x.id == ticket.idCategoria)?.nombre!;
+    let nombreSubcategoria = this.categorias
+      .find(x => x.id == ticket.idCategoria)?.subcategorias
+      .find(x => x.id == ticket.idSubcategoria)?.nombre!
+
+    ticket = {
+      ...ticket,
+      nombreCategoria,
+      nombreSubcategoria: nombreSubcategoria != undefined ? nombreSubcategoria : 'N/A'
+    }
+
     this.ticketsService
-      .update(ticket)
+      .update({...ticket})
       .then(() => { })
       .catch((error) => console.error(error));
   }
@@ -332,4 +343,5 @@ export class AdminTicketsListComponent {
     this.actualizaTicket(tk);
   }
 
+  obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
 }

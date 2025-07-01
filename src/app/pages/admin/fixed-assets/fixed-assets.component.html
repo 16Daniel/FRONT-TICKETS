@@ -40,9 +40,10 @@
                         <td>{{ activo.costo | currency }}</td>
                         <td>
                             <button class="btn btn-primary me-3" (click)="mostrarTickets(activo)"><i
-                                    class='bx bx-receipt bx-sm' pTooltip="VER TICKETS" tooltipPosition="top"></i></button>
+                                    class='bx bx-receipt bx-sm' pTooltip="VER TICKETS"
+                                    tooltipPosition="top"></i></button>
 
-                            <button class="btn btn-primary me-3" (click)="mostrarModalMantenimientos = true"><i
+                            <button class="btn btn-primary me-3" (click)="abrirModalMantenimientos(activo)"><i
                                     class='bx bx-wrench bx-sm' pTooltip="VER MANTENIMIENTOS"
                                     tooltipPosition="top"></i></button>
 
@@ -81,6 +82,9 @@
     (closeEvent)="cerrarModalActivoFijo()" [activoFijo]="activoFijoSeleccionada"
     [esNuevoActivoFijo]="esNuevoActivoFijo"></app-modal-fixed-assets-create>
 
-<app-modal-fixed-assets-detail *ngIf="mostrarModalTickets"
-    [mostrarModalDetalleActivoFijo]="mostrarModalTickets" [activoFijo]="activoFijoSeleccionada"
-    (closeEvent)="mostrarModalTickets = false"></app-modal-fixed-assets-detail>
+<app-modal-fixed-asset-tickets *ngIf="mostrarModalTickets" [mostrarModalDetalleActivoFijo]="mostrarModalTickets"
+    [activoFijo]="activoFijoSeleccionada" (closeEvent)="mostrarModalTickets = false"></app-modal-fixed-asset-tickets>
+
+<app-modal-fixed-asset-maintenance *ngIf="mostrarModalMantenimientos" [mostrarModal]="mostrarModalMantenimientos"
+    [activoFijo]="activoFijoSeleccionada"
+    (closeEvent)="mostrarModalMantenimientos = false"></app-modal-fixed-asset-maintenance>

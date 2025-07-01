@@ -1,5 +1,5 @@
-<p-dialog [header]="'DETALLES DEL ACTIVO FIJO - ' + activoFijo.referencia" [(visible)]="mostrarModalDetalleActivoFijo"
-    [modal]="true" [style]="{ 'width': '95vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog [header]="'TICKETS DEL ACTIVO FIJO - ' + activoFijo.referencia" [(visible)]="mostrarModalDetalleActivoFijo"
+    [modal]="true" [style]="{ 'width': '75vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
 
     <h5 class="text-dark fw-bold text-center">TICKETS</h5>
     <p></p>
@@ -10,5 +10,6 @@
 
 </p-dialog>
 
-<app-modal-ticket-detail *ngIf="mostrarModalDetalleActivoFijo" [ticket]="ticket" [showModalTicketDetail]="mostrarModalTicketDetail"
+<app-modal-ticket-detail *ngIf="mostrarModalDetalleActivoFijo" [ticket]="ticket"
+    [showModalTicketDetail]="mostrarModalTicketDetail"
     (closeEvent)="mostrarModalDetalleActivoFijo = false"></app-modal-ticket-detail>

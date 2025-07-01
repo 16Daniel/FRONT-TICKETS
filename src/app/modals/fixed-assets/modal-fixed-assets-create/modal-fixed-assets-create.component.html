@@ -132,13 +132,15 @@
                 </div>
             </ng-template>
         </p-dropdown>
-        <small *ngIf="formUbicacionesActivosFijosCtrl.invalid && formUbicacionesActivosFijosCtrl.touched" class="p-error">Campo
+        <small *ngIf="formUbicacionesActivosFijosCtrl.invalid && formUbicacionesActivosFijosCtrl.touched"
+            class="p-error">Campo
             requerido.</small>
         <p></p>
 
         <p class="fw-bold">NÚMERO DE MANTENIMIENTOS</p>
-        <input class="form-control" style="height: 48px;" type="number" placeholder="ESCRIBE EL NÚMERO DE MANTENIMIENTOS QUE TIENE"
-            [(ngModel)]="activoFijo.noMantenimientos" name="noMantenimientos"
+        <input class="form-control" style="height: 48px;" type="number"
+            placeholder="ESCRIBE EL NÚMERO DE MANTENIMIENTOS QUE TIENE" [(ngModel)]="activoFijo.noMantenimientos"
+            name="noMantenimientos"
             [ngClass]="{'p-invalid': formnoMantenimientosCtrl.invalid && formnoMantenimientosCtrl.touched}"
             #formnoMantenimientosCtrl="ngModel" required>
         <small *ngIf="formnoMantenimientosCtrl.invalid && formnoMantenimientosCtrl.touched" class="p-error">

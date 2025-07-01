@@ -1,3 +1,5 @@
+import { MantenimientoActivoFijo } from "./mantenimiento-activo-fijo.model";
+
 export class ActivoFijo {
     id: string | any;
     descripcion: string = '';
@@ -12,4 +14,5 @@ export class ActivoFijo {
     noMantenimientos: number | null = null;
     costo: number | null = null;    
     eliminado: boolean = false;
+    mantenimientos: MantenimientoActivoFijo[] = [];
 }

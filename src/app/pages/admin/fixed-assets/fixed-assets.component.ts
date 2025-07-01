@@ -24,7 +24,8 @@ import { AreaActivoFijo } from '../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../models/categoria-activo-fijo.model';
 import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model';
 import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
-import { ModalFixedAssetsDetailComponent } from '../../../modals/fixed-assets/modal-fixed-assets-detail/modal-fixed-assets-detail.component';
+import { ModalFixedAssetTicketsComponent } from '../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
+import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 
 @Component({
   selector: 'app-fixed-assets',
@@ -37,7 +38,8 @@ import { ModalFixedAssetsDetailComponent } from '../../../modals/fixed-assets/mo
     ToastModule,
     ConfirmDialogModule,
     ModalFixedAssetsCreateComponent,
-    ModalFixedAssetsDetailComponent
+    ModalFixedAssetTicketsComponent,
+    ModalFixedAssetMaintenanceComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',
@@ -112,6 +114,11 @@ export default class FixedAssetsComponent implements OnInit {
   abrirModalEditarActivoFijo(activoFijo: ActivoFijo) {
     this.esNuevoActivoFijo = false;
     this.mostrarModalActivoFijo = true;
+    this.activoFijoSeleccionada = activoFijo;
+  }
+
+  abrirModalMantenimientos(activoFijo: ActivoFijo) {
+    this.mostrarModalMantenimientos = true;
     this.activoFijoSeleccionada = activoFijo;
   }
 
