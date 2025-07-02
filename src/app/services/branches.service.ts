@@ -11,6 +11,7 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Sucursal } from '../models/sucursal.model';
@@ -70,6 +71,18 @@ export class BranchesService {
     const documentRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
     return updateDoc(documentRef, sucursal);
   }
+
+  async updateMultiple(sucursales:Sucursal[]): Promise<void> {
+    debugger
+  const batch = writeBatch(this.firestore);
+  
+  sucursales.forEach(item => {
+    const documentRef = doc(this.firestore, `${this.pathName}/${item.id}`);
+    batch.update(documentRef, item as any);
+  });
+  
+  return batch.commit();
+}
 
   async delete(idSucursal: string): Promise<void> {
     try {

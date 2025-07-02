@@ -16,11 +16,10 @@
           <th>ENTREGA CEDIS</th>
           <th>ENTREGA SUCURSAL</th>
           <th>75%</th>
-          <th>INTERCAMBIO</th>
+          <th>ESTATUS</th>
           <th>DIFERENCIA</th>
           <th>COMENTARIOS CEDIS</th>
           <th>COMENTARIOS SUCURSAL</th>
-          <th></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-record>
@@ -40,8 +39,6 @@
           <td>{{ record.diferencia || '' }}</td>
           <td>{{ record.comentariosCedis || '' }}</td>
           <td>{{ record.comentariosSucursal || '' }}</td>
-          <td><button class="btn btn-success" (click)="abrirmodalValidacion(record,1)"><i class='bx bx-check-circle bx-sm'></i></button></td>
-           <td><button class="btn btn-danger" (click)="abrirmodalValidacion(record,2)"><i class='bx bx-x-circle bx-sm' ></i></button></td>
         </tr>
     </ng-template>
 </p-table>
@@ -97,7 +94,7 @@
           <th>ENTREGA CEDIS</th>
           <th>ENTREGA SUCURSAL</th>
           <th>75%</th>
-          <th>INTERCAMBIO</th>
+          <th>ESTATUS</th>
           <th>DIFERENCIA</th>
           <th>COMENTARIOS CEDIS</th>
           <th>COMENTARIOS SUCURSAL</th>
@@ -125,6 +122,10 @@
 </p-table>
 
   </p-tabPanel>
+
+   <p-tabPanel header="CONFIGURACIÓN">
+    <app-control-aceite-tab></app-control-aceite-tab>
+   </p-tabPanel>
 </p-tabView>
 
 </div>

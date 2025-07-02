@@ -12,12 +12,14 @@ import { Usuario } from '../../../models/usuario.model';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { CalendarModule } from 'primeng/calendar';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 @Component({
   selector: 'app-branches-oil-tab',
   standalone: true,
-   imports: [CommonModule, FormsModule, TableModule,TabViewModule,ToastModule,DialogModule,CalendarModule],
-   providers:[MessageService],
+   imports: [CommonModule, FormsModule, TableModule,TabViewModule,ToastModule,DialogModule,CalendarModule,ConfirmDialogModule,InputNumberModule],
+   providers:[MessageService,ConfirmationService],
   templateUrl: './branches-oil-tab.component.html',
   styleUrl: './branches-oil-tab.component.scss',
 })
@@ -34,7 +36,7 @@ usuario: Usuario;
 public formCantidad:number = 0; 
 public formcomentarios:string = ""; 
 public loading:boolean = true;
-constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
+constructor(public aceiteService:AceiteService,private confirmationService: ConfirmationService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
 {
   this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 }
@@ -124,9 +126,9 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       return sucursal[0]; 
   }
 
-  actualizarEntrega()
-  {
-    if(this.formcomentarios == "")
+  confirmacion()
+  { 
+     if(this.formcomentarios == "")
       {
         this.showMessage('info','info','Favor de agregar un comentario');
         return; 
@@ -136,6 +138,29 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
         this.showMessage('info','Error','la cantidad debe ser mayor a cero');
         return; 
       }
+
+    this.confirmationService.confirm({
+      header: 'Confirmación',
+      message: `¿Está seguro que desea guardar la cantidad ingresada?`,
+      acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
+      rejectLabel: 'Cancelar', // 🔥 Cambia "No" por "Cancelar"
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+
+      accept: () => {
+       
+           this.actualizarEntrega(); 
+      },
+      reject: () => { },
+    });
+  }
+
+
+  actualizarEntrega()
+  {
+    
       this.loading = true; 
       this.aceiteService.ActualizarEntrega(this.itemEntrega!.id,this.formCantidad,this.formcomentarios).subscribe({
       next: (data) => {

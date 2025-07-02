@@ -57,7 +57,7 @@
                 <th>ENTREGA CEDIS</th>
                 <th>RECOLECCIÓN</th>
                 <th>75%</th>
-                <th>INTERCAMBIO</th>
+                <th>ESTATUS</th>
                 <th>DIFERENCIA</th>
                 <th>COMENTARIOS CEDIS</th>
                 <th>COMENTARIOS SUCURSAL</th>
@@ -96,14 +96,19 @@
     <div class="p-3" style="min-height: 400px;">
         <div class="col-12">
           <p>CANTIDAD RECOLECCIÓN</p>
-          <input type="number" class="form-control p-3" [(ngModel)]="formCantidad">
+          <p-inputNumber 
+            inputId="integeronly" 
+            [(ngModel)]="formCantidad"
+            [style]="{width:'100%'}"
+            class="w-100"
+            /> 
         </div>
         <div class="col-12 mt-3">
           <p>COMENTARIOS</p>
           <textarea class="form-control p-3" [(ngModel)]="formcomentarios"></textarea>
         </div>
         <div class="col-12 mt-3">
-          <button class="btn btn-success" (click)="actualizarEntrega()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+          <button class="btn btn-success" (click)="confirmacion()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
         </div>
     </div>
 </p-dialog>
@@ -112,3 +117,13 @@
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
   [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+  <p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p>{{ message.message }}</p>
+      <p class="text-danger fw-bold">{{formCantidad}} PIEZAS</p>
+    </div>
+  </ng-template>
+</p-confirmDialog>

@@ -6,7 +6,7 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
             [(ngModel)]="usuario.nombre" name="nombre"
             [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
-            required>
+            required [disabled]="choferCedis">
         <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error">
             Campo requerido.
         </small>
@@ -16,7 +16,7 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL APELLIDO PATERNO"
             [(ngModel)]="usuario.apellidoP" name="apellidoM"
             [ngClass]="{'p-invalid': formApellidoPCtrl.invalid && formApellidoPCtrl.touched}"
-            #formApellidoPCtrl="ngModel" required>
+            #formApellidoPCtrl="ngModel" required [disabled]="choferCedis">
         <small *ngIf="formApellidoPCtrl.invalid && formApellidoPCtrl.touched" class="p-error">
             Campo requerido.
         </small>
@@ -26,7 +26,7 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL APELLIDO MATERNO"
             [(ngModel)]="usuario.apellidoM" name="apellidoP"
             [ngClass]="{'p-invalid': formapellidoMCtrl.invalid && formapellidoMCtrl.touched}"
-            #formapellidoMCtrl="ngModel" required>
+            #formapellidoMCtrl="ngModel" required [disabled]="choferCedis">
         <small *ngIf="formapellidoMCtrl.invalid && formapellidoMCtrl.touched" class="p-error">
             Campo requerido.
         </small>
@@ -36,7 +36,7 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL CORREO"
             [(ngModel)]="usuario.email" name="email"
             [ngClass]="{'p-invalid': formCorreoCtrl.invalid && formCorreoCtrl.touched}" #formCorreoCtrl="ngModel"
-            required>
+            required [disabled]="choferCedis">
         <small *ngIf="formCorreoCtrl.invalid && formCorreoCtrl.touched" class="p-error">
             Campo requerido.
         </small>
@@ -46,7 +46,7 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA CONTRASEÑA"
             [(ngModel)]="usuario.password" name="password"
             [ngClass]="{'p-invalid': formPasswordCtrl.invalid && formPasswordCtrl.touched}" #formPasswordCtrl="ngModel"
-            required>
+            required [disabled]="choferCedis">
         <small *ngIf="formPasswordCtrl.invalid && formPasswordCtrl.touched" class="p-error">
             Campo requerido.
         </small>
@@ -55,7 +55,7 @@
         <p class="fw-bold">ROL DE USUARIO</p>
         <p-dropdown [options]="roles" [(ngModel)]="usuario.idRol" name="rol" optionValue="id" optionLabel="nombre" [filter]="true"
             filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ROL" [style]="{width:'100%'}"
-            #formRolCtrl="ngModel" [ngClass]="{'p-invalid': formRolCtrl.invalid && formRolCtrl.touched}" required>
+            #formRolCtrl="ngModel" [ngClass]="{'p-invalid': formRolCtrl.invalid && formRolCtrl.touched}" required [disabled]="choferCedis">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -76,7 +76,7 @@
         <p-dropdown [options]="areas" [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre" [filter]="true"
             filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ÁREA" [style]="{width:'100%'}"
             #formAreaCtrl="ngModel" [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" 
-            [required]="usuario.idRol == '4' || usuario.idRol == '5'">
+            [required]="usuario.idRol == '4' || usuario.idRol == '5'" [disabled]="choferCedis">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -102,7 +102,7 @@
             Campo requerido.
         </small>  
 
-            <div class="form-check mt-3">
+            <div class="form-check mt-3" *ngIf="choferCedis == false">
             <input class="form-check-input" type="checkbox" name="controldeaceite" [(ngModel)]="usuario.controlDeAceite">
             <label class="form-check-label">
                 CONTROL DE ACEITE
