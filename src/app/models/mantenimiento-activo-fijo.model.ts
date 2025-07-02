@@ -3,4 +3,5 @@ export class MantenimientoActivoFijo {
     costo: number | null = null;
     detalle: string = '';
     fecha: Date = new Date;
+    eliminado: boolean = false;
 }

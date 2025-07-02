@@ -8,6 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { MantenimientoActivoFijo } from '../../../models/mantenimiento-activo-fijo.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
+import { DatesHelperService } from '../../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-modal-fixed-asset-maintenance',
@@ -28,7 +29,8 @@ export class ModalFixedAssetMaintenanceComponent {
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private fixedAssetsService: FixedAssetsService
+    private fixedAssetsService: FixedAssetsService,
+    public datesHelper: DatesHelperService
   ) { }
 
   onHide() {
@@ -58,7 +60,6 @@ export class ModalFixedAssetMaintenanceComponent {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-
   confirmaEliminacion(id: string) {
     this.confirmationService.confirm({
       header: 'Confirmación',
@@ -75,6 +76,12 @@ export class ModalFixedAssetMaintenanceComponent {
   }
 
   eliminar(id: string) {
-
+    this.fixedAssetsService
+      .deleteMantenimiento(this.activoFijo.id, id)
+      .then(result => {
+        this.activoFijo.mantenimientos = this.activoFijo.mantenimientos
+          .filter((x: MantenimientoActivoFijo) => x.id != id);
+        this.cdr.detectChanges();
+      });
   }
 }

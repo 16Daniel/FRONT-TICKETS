@@ -40,7 +40,6 @@ export class FixedAssetsService {
     return new Observable<ActivoFijo[]>((observer) => {
       const collectionRef = collection(this.firestore, this.pathName);
 
-      // Arreglo para los filtros
       const constraints = [
         where('eliminado', '==', false),
         where('idArea', '==', idArea)
@@ -51,10 +50,18 @@ export class FixedAssetsService {
       const unsubscribe = onSnapshot(
         q,
         (querySnapshot) => {
-          const activos: ActivoFijo[] = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...(doc.data() as Omit<ActivoFijo, 'id'>),
-          }));
+          const activos: ActivoFijo[] = querySnapshot.docs.map((doc) => {
+            const data = doc.data() as Omit<ActivoFijo, 'id'>;
+
+            // Filtrar mantenimientos (si existen)
+            const mantenimientosFiltrados = (data.mantenimientos || []).filter(m => !m.eliminado);
+
+            return {
+              id: doc.id,
+              ...data,
+              mantenimientos: mantenimientosFiltrados
+            };
+          });
 
           activos.sort((a, b) => Number(a.id) - Number(b.id));
 
@@ -170,15 +177,21 @@ export class FixedAssetsService {
   async deleteMantenimiento(idActivoFijo: string, idMantenimiento: string): Promise<void> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idActivoFijo}`);
 
+    // Buscar el activo por id
     const snapshot = await getDocs(query(collection(this.firestore, this.pathName), where('id', '==', idActivoFijo)));
     if (!snapshot.empty) {
       const data = snapshot.docs[0].data() as ActivoFijo;
       const mantenimientos = data.mantenimientos || [];
 
-      const nuevosMantenimientos = mantenimientos.filter(m => m.id !== idMantenimiento);
+      // Buscar y marcar como eliminado
+      const nuevosMantenimientos = mantenimientos.map(m => {
+        if (m.id === idMantenimiento) {
+          return { ...m, eliminado: true }; // Marcar como eliminado
+        }
+        return m;
+      });
 
       await updateDoc(documentRef, { mantenimientos: nuevosMantenimientos });
     }
   }
-
 }

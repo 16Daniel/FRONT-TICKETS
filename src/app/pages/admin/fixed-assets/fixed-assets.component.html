@@ -23,6 +23,7 @@
                         <th>CONDICIÓN</th>
                         <th>UBICACIÓN</th>
                         <th>COSTO</th>
+                        <th>COSTO MANT.</th>
                         <th>ACCIONES</th>
                     </tr>
                 </ng-template>
@@ -38,6 +39,11 @@
                         <td>{{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) }}</td>
                         <td>{{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}</td>
                         <td>{{ activo.costo | currency }}</td>
+
+                        <td>
+                            {{ getCostoTotalMantenimientos(activo) | currency }}
+                        </td>
+
                         <td>
                             <button class="btn btn-primary me-3" (click)="mostrarTickets(activo)"><i
                                     class='bx bx-receipt bx-sm' pTooltip="VER TICKETS"

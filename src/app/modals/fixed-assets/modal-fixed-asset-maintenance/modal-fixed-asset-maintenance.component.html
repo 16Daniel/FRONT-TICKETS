@@ -46,18 +46,22 @@
         styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
         <ng-template pTemplate="header">
             <tr>
-                <th>ID</th>
+                <th># MANTENIMIENTO</th>
+                <th>FECHA</th>
+                <th>COSTO</th>
                 <th>DETALLE</th>
                 <th>ACCIONES</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-mantenimiento>
+        <ng-template pTemplate="body" let-mantenimiento let-i="rowIndex">
             <tr [pSelectableRow]="mantenimiento">
-                <td>{{ mantenimiento.id }}</td>
+                <td>{{ i + 1 }}</td> <!-- Contador que comienza en 1 -->
+                <td>{{ datesHelper.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+                <td>{{ mantenimiento.costo }}</td>
                 <td>{{ mantenimiento.detalle }}</td>
                 <td>
-                    <button class="btn btn-danger" (click)="confirmaEliminacion(mantenimiento.id)"><i class='bx bx-trash bx-sm'
-                            pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
+                    <button class="btn btn-danger" (click)="confirmaEliminacion(mantenimiento.id)"><i
+                            class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
                 </td>
             </tr>
         </ng-template>

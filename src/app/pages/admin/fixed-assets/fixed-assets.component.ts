@@ -137,6 +137,14 @@ export default class FixedAssetsComponent implements OnInit {
     });
   }
 
+  getCostoTotalMantenimientos(activo: ActivoFijo): number {
+    if (!activo.mantenimientos) return 0;
+
+    return activo.mantenimientos
+      .filter(m => !m.eliminado)
+      .reduce((total, m) => total + (m.costo || 0), 0);
+  }
+
   async eliminarActivoFijo(idActivoFijo: string) {
     await this.fixedAssetsService.delete(idActivoFijo);
     this.showMessage('success', 'Success', 'Eliminado correctamente');
