@@ -4,4 +4,5 @@ export class Sucursal {
   activoMantenimientos?: string[] = [];
   eliminado: boolean = false;
   idFront?:number|null; 
+  controlDeAceite?:boolean|null; 
 }

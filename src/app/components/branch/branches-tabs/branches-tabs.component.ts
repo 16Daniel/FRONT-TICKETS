@@ -56,7 +56,6 @@ public tabindex:number = 0;
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-
     this.obtenerTicketsPorSucursal(this.sucursal?.id);
     this.obtenerSucursales();
   }
@@ -74,6 +73,7 @@ public tabindex:number = 0;
   obtenerSucursales() {
     this.sucursalesService.get().subscribe(result => {
       this.sucursales = result;
+      this.sucursal = this.sucursales.filter(x =>x.id == this.usuario.sucursales[0].id)[0];  
       this.cdr.detectChanges();
 
     });

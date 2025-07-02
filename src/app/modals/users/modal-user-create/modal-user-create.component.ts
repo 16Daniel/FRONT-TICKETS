@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -29,7 +29,7 @@ export class ModalUserCreateComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() usuario: Usuario = new Usuario;
   @Input() esNuevoUsuario: boolean = true;
-
+  @Input() choferCedis:boolean = false
   sucursales: Sucursal[] | any[] = [];
   roles: Rol[] = [];
   areas: Area[] = [];
