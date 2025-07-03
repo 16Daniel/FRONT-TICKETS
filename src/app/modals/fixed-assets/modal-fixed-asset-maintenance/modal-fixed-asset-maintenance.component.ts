@@ -9,11 +9,13 @@ import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { MantenimientoActivoFijo } from '../../../models/mantenimiento-activo-fijo.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
+import { Ticket } from '../../../models/ticket.model';
+import { ModalFixedAssetSelectTicketComponent } from '../modal-fixed-asset-select-ticket/modal-fixed-asset-select-ticket.component';
 
 @Component({
   selector: 'app-modal-fixed-asset-maintenance',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, TableModule],
+  imports: [CommonModule, DialogModule, FormsModule, TableModule, ModalFixedAssetSelectTicketComponent],
   templateUrl: './modal-fixed-asset-maintenance.component.html',
   styleUrl: './modal-fixed-asset-maintenance.component.scss'
 })
@@ -24,6 +26,9 @@ export class ModalFixedAssetMaintenanceComponent {
   @Output() closeEvent = new EventEmitter<boolean>();
   mantenimientos: MantenimientoActivoFijo[] = [];
   mantenimiento: MantenimientoActivoFijo = new MantenimientoActivoFijo;
+
+  ticket: Ticket | undefined;
+  mostrarModalTcikets: boolean = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -83,5 +88,9 @@ export class ModalFixedAssetMaintenanceComponent {
           .filter((x: MantenimientoActivoFijo) => x.id != id);
         this.cdr.detectChanges();
       });
+  }
+
+  ligarTicket(ticket: Ticket) {
+    this.mantenimiento.folioTicket = ticket.folio;
   }
 }

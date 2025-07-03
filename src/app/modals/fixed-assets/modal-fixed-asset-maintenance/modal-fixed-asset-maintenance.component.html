@@ -7,7 +7,7 @@
 
     <form #form="ngForm" (ngSubmit)="crear(form)">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <p class="fw-bold">COSTO</p>
                 <input class="form-control" style="height: 48px;" type="number"
                     placeholder="INGRESA EL COSTO DEL MANTENIMIENTO" [(ngModel)]="mantenimiento.costo" name="costo"
@@ -18,7 +18,7 @@
                 </small>
                 <p></p>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <p class="fw-bold">DETALLE</p>
                 <input class="form-control" style="height: 48px;" type="text"
                     placeholder="ESCRIBE EL DETALLE DEL MANTENIMIENTO" [(ngModel)]="mantenimiento.detalle"
@@ -28,6 +28,17 @@
                     Campo requerido.
                 </small>
                 <p></p>
+            </div>
+            <div class="col-md-3">
+                <p class="fw-bold">TICKET</p>
+                <input class="form-control" style="height: 48px;" type="text" disabled="true"
+                    placeholder="FOLIO DEL TICKET" [(ngModel)]="mantenimiento.folioTicket" name="folioTicket"
+                    [ngClass]="{'p-invalid': formFolioTicketCtrl.invalid && formFolioTicketCtrl.touched}"
+                    #formFolioTicketCtrl="ngModel">
+            </div>
+            <div class="col-md-1" style="margin-top: 35px;">
+                <button type="button" class="btn bg-p-b p-3" (click)="mostrarModalTcikets = true"><i
+                        class='bx bx-plus'></i></button>
             </div>
         </div>
 
@@ -49,6 +60,7 @@
                 <th># MANTENIMIENTO</th>
                 <th>FECHA</th>
                 <th>COSTO</th>
+                <th>FOLIO TICKET</th>
                 <th>DETALLE</th>
                 <th>ACCIONES</th>
             </tr>
@@ -58,6 +70,7 @@
                 <td>{{ i + 1 }}</td> <!-- Contador que comienza en 1 -->
                 <td>{{ datesHelper.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
                 <td>{{ mantenimiento.costo }}</td>
+                <td>{{ mantenimiento.folioTicket ? mantenimiento.folioTicket : 'N/A' }}</td>
                 <td>{{ mantenimiento.detalle }}</td>
                 <td>
                     <button class="btn btn-danger" (click)="confirmaEliminacion(mantenimiento.id)"><i
@@ -67,3 +80,7 @@
         </ng-template>
     </p-table>
 </p-dialog>
+
+<app-modal-fixed-asset-select-ticket *ngIf="mostrarModalTcikets" [mostrarModal]="mostrarModalTcikets"
+    (closeEvent)="mostrarModalTcikets = false" [activoFijo]="activoFijo"
+    (ticketSelectedEvent)="ligarTicket($event)"></app-modal-fixed-asset-select-ticket>
