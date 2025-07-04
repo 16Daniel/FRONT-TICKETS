@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 
 import { ActivoFijo } from '../../../models/activo-fijo.model';
@@ -39,7 +40,8 @@ import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-asset
     ConfirmDialogModule,
     ModalFixedAssetsCreateComponent,
     ModalFixedAssetTicketsComponent,
-    ModalFixedAssetMaintenanceComponent
+    ModalFixedAssetMaintenanceComponent,
+    TooltipModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',

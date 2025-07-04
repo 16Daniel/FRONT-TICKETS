@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { MantenimientoActivoFijo } from '../../../models/mantenimiento-activo-fijo.model';
@@ -15,7 +16,7 @@ import { ModalFixedAssetSelectTicketComponent } from '../modal-fixed-asset-selec
 @Component({
   selector: 'app-modal-fixed-asset-maintenance',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, TableModule, ModalFixedAssetSelectTicketComponent],
+  imports: [CommonModule, DialogModule, FormsModule, TableModule, ModalFixedAssetSelectTicketComponent, TooltipModule],
   templateUrl: './modal-fixed-asset-maintenance.component.html',
   styleUrl: './modal-fixed-asset-maintenance.component.scss'
 })

@@ -28,7 +28,8 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-activo>
-                    <tr [pSelectableRow]="activo">
+                    <tr [pSelectableRow]="activo"
+                        [ngClass]="{'row-highlight': ( getCostoTotalMantenimientos(activo) >= activo.costo)}">
                         <td>{{ activo.referencia }}</td>
                         <td>{{ activo.descripcion }}</td>
                         <td>{{ nombreSucursal(activo.idSucursal) }}</td>
@@ -39,12 +40,8 @@
                         <td>{{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) }}</td>
                         <td>{{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}</td>
                         <td>{{ activo.costo | currency }}</td>
-
-                        <td>
-                            {{ getCostoTotalMantenimientos(activo) | currency }}
-                        </td>
-
-                        <td>
+                        <td>{{ getCostoTotalMantenimientos(activo) | currency }}</td>
+                        <td style="display: flex; gap: 10px">
                             <button class="btn btn-secondary me-3" (click)="mostrarTickets(activo)"><i
                                     class='bx bx-receipt bx-sm' pTooltip="VER TICKETS"
                                     tooltipPosition="top"></i></button>

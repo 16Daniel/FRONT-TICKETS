@@ -193,7 +193,7 @@ export default class CalendarBuilderComponent implements OnInit {
         this.sucursales = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
-        }));;
+        }));
         this.obtenerTodosLosTickets();
         this.cdr.detectChanges();
       },
