@@ -2,7 +2,8 @@
     (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
 
     <p-accordion>
-        <p-accordionTab *ngFor="let grupo of formulariosFreidoras; let i = index" [header]="'FREIDORA ' + (i + 1)">
+        <p-accordionTab *ngFor="let grupo of formulariosFreidoras; let i = index"
+            [header]="mantenimientosActivos[i]?.descripcion || 'Equipo ' + (i + 1)">
             <form [formGroup]="grupo" class="p-fluid mt-4">
                 <!-- Aquí el contenido que ya tienes dentro del div .freidora -->
                 <app-progress-bar-80 [progreso]="progresoPorFreidora[i]"></app-progress-bar-80>

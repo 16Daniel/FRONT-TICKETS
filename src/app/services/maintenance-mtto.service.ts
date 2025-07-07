@@ -16,6 +16,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
     const mantenimiento: MantenimientoMtto = {
       idSucursal: idSucursal.toString(),
       idUsuarioSoporte: idUsuario,
+      idActivoFijo: '',
+      descripcion: '',
       fecha,
       estatus: true,
       mantenimientoTermostato: true,
@@ -36,15 +38,30 @@ export class MaintenanceMtooService implements IMantenimientoService {
     });
   }
 
-  async create2(mantenimiento: MantenimientoMtto): Promise<void> {
+  async create2(idSucursal: string, idUsuario: string, fecha: Date, idActivoFijo: string, descripcion: string): Promise<void> {
+    const mantenimiento: MantenimientoMtto = {
+      idSucursal: idSucursal.toString(),
+      idUsuarioSoporte: idUsuario,
+      idActivoFijo,
+      fecha,
+      estatus: true,
+      descripcion,
+      mantenimientoTermostato: true,
+      mantenimientoPerillas: true,
+      mantenimientoTornilleria: true,
+      mantenimientoCableado: true,
+      mantenimientoRuedas: true,
+      mantenimientoTina: true,
+      mantenimientoMangueras: true,
+      mantenimientoLlavesDePaso: true,
+      observaciones: '',
+    };
+
     const mantenimientoRef = collection(this.firestore, this.pathName);
-    const docRef = await addDoc(mantenimientoRef, {
+    await addDoc(mantenimientoRef, {
       ...mantenimiento,
       timestamp: Timestamp.now(), // Usa el timestamp de Firestore
     });
-
-    // Agregar el ID generado al documento
-    await setDoc(docRef, { id: docRef.id }, { merge: true });
   }
 
   calcularPorcentaje(mantenimiento: MantenimientoMtto) {
