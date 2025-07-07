@@ -33,6 +33,7 @@ import { BranchVisitItemComponent } from '../../../components/common/branch-visi
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area.model';
 import { ModalActivityComponent } from '../../../modals/calendar/modal-activity/modal-activity.component';
+import { FixedAssetsService } from '../../../services/fixed-assets.service';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -92,7 +93,7 @@ export default class CalendarBuilderComponent implements OnInit {
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private areasService: AreasService,
-    // private actividadesService: ActivitiesService
+    private fixedAssetsService: FixedAssetsService
   ) {
     registerLocaleData(localeEs);
     this.obtenerAreas();
@@ -335,8 +336,18 @@ export default class CalendarBuilderComponent implements OnInit {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
 
           if (this.tieneMantenimientosActivos(sucursal.id)) {
-            const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-            await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+
+            if (this.usuario.idArea == '4') {
+              let freidoras = await this.fixedAssetsService.obtenerFredioras(sucursal.id);
+              freidoras.forEach(async element => {
+                const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+                await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+              });
+            }
+            else {
+              const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+              await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+            }
           }
 
         }

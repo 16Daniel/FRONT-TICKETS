@@ -194,4 +194,26 @@ export class FixedAssetsService {
       await updateDoc(documentRef, { mantenimientos: nuevosMantenimientos });
     }
   }
+
+  async obtenerFredioras(idSucursal: string): Promise<ActivoFijo[]> {
+    try {
+      const collectionRef = collection(this.firestore, this.pathName);
+      const q = query(
+        collectionRef,
+        where('idSucursal', '==', idSucursal),
+        where('esFreidora', '==', true)
+      );
+      const snapshot = await getDocs(q);
+      const freidoras: ActivoFijo[] = [];
+
+      snapshot.forEach((doc) => {
+        freidoras.push(doc.data() as ActivoFijo);
+      });
+
+      return freidoras;
+    } catch (error) {
+      console.error('Error al obtener las freidoras:', error);
+      throw error;
+    }
+  }
 }

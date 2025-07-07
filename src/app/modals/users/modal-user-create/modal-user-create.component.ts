@@ -93,7 +93,7 @@ export class ModalUserCreateComponent implements OnInit {
    */
   async guardarUsuario(uid: string) {
     this.usuario.uid = uid;
-    this.usuario.idArea = this.usuario.idArea.toString();
+    this.usuario.idArea = this.usuario.idArea ? this.usuario.idArea.toString() : '';
 
     try {
       await this.usersService.create({ ...this.usuario });
@@ -150,7 +150,10 @@ export class ModalUserCreateComponent implements OnInit {
   obtenerRoles() {
     this.rolesService.get().subscribe({
       next: (data) => {
-        this.roles = data;
+        this.roles = data.map((item: any) => ({
+            ...item,
+            id: item.id.toString()
+          }));
         this.cdr.detectChanges();
       },
       error: (error) => {
