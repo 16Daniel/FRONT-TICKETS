@@ -150,7 +150,7 @@ export class CalendarComponent implements OnInit {
 
 
         let mantenimientos = await servicio
-          .obtenerMantenimientoVisitaPorFecha(this.getDate(visita.fecha), sucursal.id);
+          .obtenerMantenimientoVisitaPorFecha(this.getDate(visita.fecha), sucursal.id, false);
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
         comentario = temp.length > 0 ? temp[0].comentario : '';

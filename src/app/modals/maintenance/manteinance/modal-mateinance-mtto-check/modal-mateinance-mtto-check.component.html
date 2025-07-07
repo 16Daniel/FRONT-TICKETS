@@ -1,64 +1,45 @@
 <p-dialog header="REGISTRO DE MANTENIMIENTO 8 DE 8" [(visible)]="showModal" [modal]="true" [maximizable]="true"
     (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
 
-    <div *ngIf="!hayFreidorasComprobadas">
-        <p class="fw-bold">NUMERO FREIDORAS</p>
-        <input class="form-control" style="height: 48px;" type="number" placeholder="ESCRIBE LA CANTIDAD DE FREIDORAS"
-            [(ngModel)]="cantidadFreidoras" name="cantidadFreidoras"
-            [ngClass]="{'p-invalid': formCantidadFreidorasCtrl.invalid && formCantidadFreidorasCtrl.touched}"
-            #formCantidadFreidorasCtrl="ngModel" required>
-        <small *ngIf="formCantidadFreidorasCtrl.invalid && formCantidadFreidorasCtrl.touched" class="p-error">
-            Campo requerido.
-        </small>
-        <p></p>
+    <p-accordion>
+        <p-accordionTab *ngFor="let grupo of formulariosFreidoras; let i = index" [header]="'FREIDORA ' + (i + 1)">
+            <form [formGroup]="grupo" class="p-fluid mt-4">
+                <!-- Aquí el contenido que ya tienes dentro del div .freidora -->
+                <app-progress-bar-80 [progreso]="progresoPorFreidora[i]"></app-progress-bar-80>
 
-        <div class="d-flex justify-content-end mt-3">
-            <button class="btn bg-p-b p-3" (click)="comprobarFreidoras()"><i class='bx bx-check'></i> COMPROBAR</button>
-        </div>
-    </div>
-
-    <div *ngIf="hayFreidorasComprobadas">
-        <p-accordion>
-            <p-accordionTab *ngFor="let grupo of formulariosFreidoras; let i = index" [header]="'FREIDORA ' + (i + 1)">
-                <form [formGroup]="grupo" class="p-fluid mt-4">
-                    <!-- Aquí el contenido que ya tienes dentro del div .freidora -->
-                    <app-progress-bar-80 [progreso]="progresoPorFreidora[i]"></app-progress-bar-80>
-
-                    <div class="p-grid p-ai-center">
-                        <div *ngFor="let opcion of opcionesDeMantenimiento; let j = index"
-                            class="p-col-12 p-md-6 p-lg-3">
-                            <div class="p-field-checkbox flex align-items-center">
-                                <p-checkbox [binary]="true" [formControlName]="opcion.controlName"
-                                    (onChange)="onCheckboxChange(i)">
-                                </p-checkbox>
-                                <label class="check-text ml-2" [pTooltip]="opcion.tooltip" tooltipPosition="top">
-                                    {{ j + 1 }}.- {{ opcion.label }}
-                                </label>
-                            </div>
+                <div class="p-grid p-ai-center">
+                    <div *ngFor="let opcion of opcionesDeMantenimiento; let j = index" class="p-col-12 p-md-6 p-lg-3">
+                        <div class="p-field-checkbox flex align-items-center">
+                            <p-checkbox [binary]="true" [formControlName]="opcion.controlName"
+                                (onChange)="onCheckboxChange(i)">
+                            </p-checkbox>
+                            <label class="check-text ml-2" [pTooltip]="opcion.tooltip" tooltipPosition="top">
+                                {{ j + 1 }}.- {{ opcion.label }}
+                            </label>
                         </div>
                     </div>
+                </div>
 
-                    <div class="p-field p-col-12 mt-3">
-                        <label for="observaciones_{{i}}" class="block mb-2">Observaciones</label>
-                        <textarea id="observaciones_{{i}}" formControlName="observaciones" pInputTextarea rows="3"
-                            class="w-full"
-                            [ngClass]="{'p-invalid': grupo.get('observaciones')?.invalid && grupo.get('observaciones')?.touched}">
+                <div class="p-field p-col-12 mt-3">
+                    <label for="observaciones_{{i}}" class="block mb-2">Observaciones</label>
+                    <textarea id="observaciones_{{i}}" formControlName="observaciones" pInputTextarea rows="3"
+                        class="w-full"
+                        [ngClass]="{'p-invalid': grupo.get('observaciones')?.invalid && grupo.get('observaciones')?.touched}">
         </textarea>
-                        <small *ngIf="grupo.get('observaciones')?.invalid && grupo.get('observaciones')?.touched"
-                            class="p-error">
-                            Campo requerido.
-                        </small>
-                    </div>
-                </form>
-            </p-accordionTab>
-        </p-accordion>
+                    <small *ngIf="grupo.get('observaciones')?.invalid && grupo.get('observaciones')?.touched"
+                        class="p-error">
+                        Campo requerido.
+                    </small>
+                </div>
+            </form>
+        </p-accordionTab>
+    </p-accordion>
 
 
-        <p-footer class="footer-buttons">
-            <div class="d-flex justify-content-end mt-3">
-                <button class="btn bg-p-b p-3" (click)="enviar()"><i class='bx bx-send'></i> ENVIAR</button>
-            </div>
-        </p-footer>
-    </div>
+    <p-footer class="footer-buttons">
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3" (click)="enviar()"><i class='bx bx-send'></i> ENVIAR</button>
+        </div>
+    </p-footer>
 
 </p-dialog>

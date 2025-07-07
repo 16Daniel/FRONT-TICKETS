@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
@@ -65,20 +65,33 @@ export class MaintenanceMtooService implements IMantenimientoService {
     return Math.round(porcentaje);
   }
 
-  async obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string) {
+  async obtenerMantenimientoVisitaPorFecha(
+    fecha: Date,
+    idSucursal: string,
+    estatus?: boolean
+  ) {
     const coleccionRef = collection(this.firestore, this.pathName);
 
-    // Convertir las fechas a timestamps de Firestore
+    // Convertir la fecha a las 00:00:00 del día
     fecha.setHours(0, 0, 0, 0);
-    const consulta = query(
-      coleccionRef,
+
+    // Construir los filtros dinámicamente
+    const filtros = [
       where('fecha', '==', fecha),
       where('idSucursal', '==', idSucursal),
-      where('estatus', '==', false),
-    );
+    ];
+
+    if (estatus !== undefined) {
+      filtros.push(where('estatus', '==', estatus));
+    }
+
+    const consulta = query(coleccionRef, ...filtros);
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: MantenimientoMtto[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MantenimientoMtto));
+    const documentos: MantenimientoMtto[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as MantenimientoMtto));
 
     return documentos;
   }
@@ -124,9 +137,9 @@ export class MaintenanceMtooService implements IMantenimientoService {
     });
   }
 
-  getMantenimientoActivo(
+  getMantenimientosActivosPorFecha(
     idSucursal: string | undefined,
-    callback: (mantenimiento: MantenimientoMtto | null) => void
+    callback: (mantenimientos: MantenimientoMtto[]) => void
   ): () => void {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
@@ -136,26 +149,25 @@ export class MaintenanceMtooService implements IMantenimientoService {
     const q = query(
       mantenimientosRef,
       where('fecha', '>=', hoy),
-      where('fecha', '<', new Date(hoy.getTime() + 24 * 60 * 60 * 1000)), // Fecha menor que mañana a las 00:00:00
+      where('fecha', '<', new Date(hoy.getTime() + 24 * 60 * 60 * 1000)),
       where('idSucursal', '==', idSucursal),
       where('estatus', '==', true)
     );
 
     // Suscribirse a cambios en tiempo real
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      if (querySnapshot.empty) {
-        callback(null); // No hay registros
-      } else {
-        const primerDoc = querySnapshot.docs[0];
-        const mantenimiento = {
-          id: primerDoc.id,
-          ...primerDoc.data(),
-        } as MantenimientoMtto;
-        callback(mantenimiento); // Devuelve el primer registro
-      }
+      const mantenimientos: MantenimientoMtto[] = [];
+
+      querySnapshot.forEach((doc) => {
+        mantenimientos.push({
+          id: doc.id,
+          ...doc.data(),
+        } as MantenimientoMtto);
+      });
+
+      callback(mantenimientos); // Devuelve todos los resultados
     });
 
-    // Retorna la función para desuscribirse
     return unsubscribe;
   }
 
@@ -258,5 +270,10 @@ export class MaintenanceMtooService implements IMantenimientoService {
 
     // Ejecutar todas las consultas en paralelo y combinar los resultados
     return forkJoin(consultas);
+  }
+
+  async delete(id: string): Promise<void> {
+    const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
+    await deleteDoc(mantenimientoRef);
   }
 }

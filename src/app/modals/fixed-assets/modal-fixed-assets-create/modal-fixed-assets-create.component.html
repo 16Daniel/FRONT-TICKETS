@@ -52,6 +52,12 @@
         </small>
         <p></p>
 
+        <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="usuario.idArea == '4'">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                style="width: 3rem; height: 2rem;" name="esFreidora" [(ngModel)]="activoFijo.esFreidora">
+            <label class="form-check-label fs-4" for="flexSwitchCheckChecked">¿ES FREIDORA?</label>
+        </div>
+
         <p class="fw-bold">ÁREAS ACTIVOS FIJOS</p>
         <p-dropdown [options]="areasActivosFijos" [(ngModel)]="activoFijo.idAreaActivoFijo" [optionValue]="'id'"
             name="areaActivoFijo" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"

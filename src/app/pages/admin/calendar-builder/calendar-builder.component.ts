@@ -477,10 +477,9 @@ export default class CalendarBuilderComponent implements OnInit {
 
         const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
         let temp = await servicio.obtenerMantenimientoVisitaPorFecha(this.getDate(this.registroDeVisita.fecha), sucursal.id);
-
-        if (temp.length > 0) {
-          await this.documentService.deleteDocument('mantenimientos-10x10', temp[0].id);
-        }
+        temp.forEach(async (element: any) => {
+          await servicio.delete(element.id);
+        });
       }
 
       await this.documentService.deleteDocument('visitas_programadas', this.registroDeVisita.id);

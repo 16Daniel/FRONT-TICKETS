@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
@@ -30,11 +30,10 @@ import { ProgressBar80Component } from '../../../../components/common/progress-b
 
 export class ModalMateinanceMttoCheckComponent implements OnInit {
   @Input() showModal: boolean = false;
-  @Input() mantenimientoActivo: MantenimientoMtto | null = null;
+  @Input() mantenimientosActivos: MantenimientoMtto[] = [];
   @Output() closeEvent = new EventEmitter<boolean>();
 
   formularioDeFreidoras: FormArray<FormGroup> = this.fb.array<FormGroup>([]);
-  hayFreidorasComprobadas: boolean = false;
   progresoPorFreidora: number[] = [];
   cantidadFreidoras: number | null = null;
   progreso: number = 0;
@@ -88,21 +87,15 @@ export class ModalMateinanceMttoCheckComponent implements OnInit {
     private mantenimientoService: MaintenanceMtooService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
-    private cdr: ChangeDetectorRef
-  ) {
-    // this.crearFormularioFreidora();
-  }
+  ) { }
 
   ngOnInit() {
-    if (this.mantenimientoActivo) {
+    this.mantenimientosActivos.forEach(element => {
       const formularioInicial = this.crearFormularioFreidora();
-
-      // Opcional: si quieres prellenarlo con datos de mantenimientoActivo
-      // formularioInicial.patchValue(this.mantenimientoActivo);
 
       this.formularioDeFreidoras.push(formularioInicial);
       this.progresoPorFreidora.push(0);
-    }
+    });
   }
 
   crearFormularioFreidora(): FormGroup {
@@ -124,25 +117,19 @@ export class ModalMateinanceMttoCheckComponent implements OnInit {
       return;
     }
 
-    const base = this.mantenimientoActivo!;
     const mantenimientos: MantenimientoMtto[] = this.formularioDeFreidoras.value.map((formValue: any, index: number) => ({
       ...formValue,
-      id: index === 0 ? base.id : '', // solo el primero mantiene el ID
-      idSucursal: base.idSucursal,
-      idUsuarioSoporte: base.idUsuarioSoporte,
-      fecha: base.fecha,
+      id: this.mantenimientosActivos[index].id,
+      idSucursal: this.mantenimientosActivos[index].idSucursal,
+      idUsuarioSoporte: this.mantenimientosActivos[index].idUsuarioSoporte,
+      fecha: this.mantenimientosActivos[index].fecha,
       fechaFin: new Date(),
       estatus: false,
     }));
 
-    for (let i = 0; i < mantenimientos.length; i++) {
-      const mtto = mantenimientos[i];
-      if (i === 0 && mtto.id) {
-        await this.mantenimientoService.update(mtto.id, mtto);
-      } else {
-        await this.mantenimientoService.create2(mtto);
-      }
-    }
+    mantenimientos.forEach(async element => {
+      await this.mantenimientoService.update(element.id, element);
+    });
 
     this.closeEvent.emit(false); // cerrar modal
   }
@@ -165,28 +152,6 @@ export class ModalMateinanceMttoCheckComponent implements OnInit {
     });
 
     this.progresoPorFreidora[index] = (checksMarcados / totalChecks) * 100;
-  }
-
-  comprobarFreidoras() {
-    if (this.cantidadFreidoras! > 0) {
-      this.hayFreidorasComprobadas = true;
-
-      // 👉 Borra desde la segunda posición para conservar el primero
-      while (this.formularioDeFreidoras.length > 1) {
-        this.formularioDeFreidoras.removeAt(1);
-      }
-
-      this.progresoPorFreidora.splice(1); // mantiene solo el primero
-
-      for (let i = 1; i < this.cantidadFreidoras!; i++) {
-        this.formularioDeFreidoras.push(this.crearFormularioFreidora());
-        this.progresoPorFreidora.push(0);
-      }
-
-      this.cdr.detectChanges();
-    } else {
-      this.showMessage('warn', 'Advertencia', 'La cantidad de freidoras debe ser mayor a 0');
-    }
   }
 
   get formulariosFreidoras(): FormGroup[] {
