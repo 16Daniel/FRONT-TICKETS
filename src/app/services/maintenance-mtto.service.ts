@@ -262,32 +262,32 @@ export class MaintenanceMtooService implements IMantenimientoService {
     return forkJoin(consultas);
   }
 
-  getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
-    // Mapea cada sucursal a una consulta independiente
-    const consultas = idsSucursales.map(idSucursal => {
-      const mantenimientosRef = collection(this.firestore, this.pathName);
-      const q = query(
-        mantenimientosRef,
-        where('idSucursal', '==', idSucursal.toString()),
-        where('estatus', '==', false),
-        orderBy('fecha', 'desc'), // Ordena por fecha descendente
-        limit(3)
-      );
+  // getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
+  //   // Mapea cada sucursal a una consulta independiente
+  //   const consultas = idsSucursales.map(idSucursal => {
+  //     const mantenimientosRef = collection(this.firestore, this.pathName);
+  //     const q = query(
+  //       mantenimientosRef,
+  //       where('idSucursal', '==', idSucursal.toString()),
+  //       where('estatus', '==', false),
+  //       orderBy('fecha', 'desc'), // Ordena por fecha descendente
+  //       limit(3)
+  //     );
 
-      // Ejecutar la consulta y obtener los datos
-      return from(getDocs(q)).pipe(
-        map(querySnapshot => {
-          if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
-          return []; // Si no hay documentos, devuelve un array vacío
-        })
-      );
-    });
+  //     // Ejecutar la consulta y obtener los datos
+  //     return from(getDocs(q)).pipe(
+  //       map(querySnapshot => {
+  //         if (!querySnapshot.empty) {
+  //           return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  //         }
+  //         return []; // Si no hay documentos, devuelve un array vacío
+  //       })
+  //     );
+  //   });
 
-    // Ejecutar todas las consultas en paralelo y combinar los resultados
-    return forkJoin(consultas);
-  }
+  //   // Ejecutar todas las consultas en paralelo y combinar los resultados
+  //   return forkJoin(consultas);
+  // }
 
   async delete(id: string): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
