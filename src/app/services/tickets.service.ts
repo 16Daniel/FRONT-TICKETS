@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   addDoc,
-  and,
   arrayUnion,
   collection,
   collectionData,
@@ -12,14 +11,13 @@ import {
   getDocs,
   limit,
   onSnapshot,
-  or,
   orderBy,
   query,
   Timestamp,
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Ticket } from '../models/ticket.model';
 
@@ -29,9 +27,11 @@ import { Ticket } from '../models/ticket.model';
 export class TicketsService {
   private headers = new HttpHeaders();
 
-  constructor(private firestore: Firestore, private http: HttpClient) {
-    this.headers.append('Accept', 'application/json');
-    this.headers.append('content-type', 'application/json');
+  constructor(private firestore: Firestore) {
+    
+    // this.getAll().subscribe(result => {
+    //   console.log(result);
+    // });
   }
 
   async create(ticket: Ticket) {
@@ -60,7 +60,6 @@ export class TicketsService {
 
     return collectionData(q, { idField: 'id' });
   }
-
 
   getByArea(idArea: string): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
@@ -393,4 +392,8 @@ export class TicketsService {
     }) as Ticket);
   }
 
+  getAll(): Observable<Ticket[] | any[]> {
+    const sucursalesCollection = collection(this.firestore, 'tickets');
+    return collectionData(sucursalesCollection, { idField: 'id' });
+  }
 }
