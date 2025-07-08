@@ -48,14 +48,17 @@ export class BranchesService {
       const unsubscribe = onSnapshot(
         q,
         (querySnapshot) => {
-          const areas: Sucursal[] = querySnapshot.docs.map((doc) => ({
+          const sucursales: Sucursal[] = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             ...(doc.data() as Omit<Sucursal, 'id'>),
           }));
 
-          areas.sort((a, b) => Number(a.id) - Number(b.id));
+          sucursales.sort((a, b) => Number(a.id) - Number(b.id));
 
-          observer.next(areas);
+          observer.next(sucursales.map((item: any) => ({
+            ...item,
+            id: item.id.toString()
+          })));
         },
         (error) => {
           console.error('Error en la suscripción:', error);
@@ -72,17 +75,17 @@ export class BranchesService {
     return updateDoc(documentRef, sucursal);
   }
 
-  async updateMultiple(sucursales:Sucursal[]): Promise<void> {
+  async updateMultiple(sucursales: Sucursal[]): Promise<void> {
     debugger
-  const batch = writeBatch(this.firestore);
-  
-  sucursales.forEach(item => {
-    const documentRef = doc(this.firestore, `${this.pathName}/${item.id}`);
-    batch.update(documentRef, item as any);
-  });
-  
-  return batch.commit();
-}
+    const batch = writeBatch(this.firestore);
+
+    sucursales.forEach(item => {
+      const documentRef = doc(this.firestore, `${this.pathName}/${item.id}`);
+      batch.update(documentRef, item as any);
+    });
+
+    return batch.commit();
+  }
 
   async delete(idSucursal: string): Promise<void> {
     try {

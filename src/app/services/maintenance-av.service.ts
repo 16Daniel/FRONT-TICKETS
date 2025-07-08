@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Mantenimiento6x6AV } from '../models/mantenimiento-av.model';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
@@ -50,20 +50,33 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return Math.round(porcentaje);
   }
 
-  async obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string) {
+  async obtenerMantenimientoVisitaPorFecha(
+    fecha: Date,
+    idSucursal: string,
+    estatus?: boolean
+  ) {
     const coleccionRef = collection(this.firestore, this.pathName);
 
-    // Convertir las fechas a timestamps de Firestore
+    // Convertir la fecha a las 00:00:00 del día
     fecha.setHours(0, 0, 0, 0);
-    const consulta = query(
-      coleccionRef,
+
+    // Construir los filtros dinámicamente
+    const filtros = [
       where('fecha', '==', fecha),
       where('idSucursal', '==', idSucursal),
-      where('estatus', '==', false),
-    );
+    ];
+
+    if (estatus !== undefined) {
+      filtros.push(where('estatus', '==', estatus));
+    }
+
+    const consulta = query(coleccionRef, ...filtros);
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento6x6AV));
+    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as Mantenimiento6x6AV));
 
     return documentos;
   }
@@ -243,5 +256,10 @@ export class Maintenance6x6AvService implements IMantenimientoService {
 
     // Ejecutar todas las consultas en paralelo y combinar los resultados
     return forkJoin(consultas);
+  }
+
+  async delete(id: string): Promise<void> {
+    const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
+    await deleteDoc(mantenimientoRef);
   }
 }

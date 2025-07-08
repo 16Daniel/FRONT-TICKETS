@@ -1,0 +1,86 @@
+<p-dialog [header]="'MANTENIMIENTOS DEL ACTIVO FIJO - ' + activoFijo.referencia" [(visible)]="mostrarModal"
+    [modal]="true" [style]="{ 'width': '75vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+
+    <h5 class="text-dark fw-bold text-center">NUEVO MANTENIMIENTO</h5>
+    <p></p>
+
+
+    <form #form="ngForm" (ngSubmit)="crear(form)">
+        <div class="row">
+            <div class="col-md-4">
+                <p class="fw-bold">COSTO</p>
+                <input class="form-control" style="height: 48px;" type="number"
+                    placeholder="INGRESA EL COSTO DEL MANTENIMIENTO" [(ngModel)]="mantenimiento.costo" name="costo"
+                    [ngClass]="{'p-invalid': formCostoCtrl.invalid && formCostoCtrl.touched}" #formCostoCtrl="ngModel"
+                    required>
+                <small *ngIf="formCostoCtrl.invalid && formCostoCtrl.touched" class="p-error">
+                    Campo requerido.
+                </small>
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <p class="fw-bold">DETALLE</p>
+                <input class="form-control" style="height: 48px;" type="text"
+                    placeholder="ESCRIBE EL DETALLE DEL MANTENIMIENTO" [(ngModel)]="mantenimiento.detalle"
+                    name="detalle" [ngClass]="{'p-invalid': formDetalleCtrl.invalid && formDetalleCtrl.touched}"
+                    #formDetalleCtrl="ngModel" required>
+                <small *ngIf="formDetalleCtrl.invalid && formDetalleCtrl.touched" class="p-error">
+                    Campo requerido.
+                </small>
+                <p></p>
+            </div>
+            <div class="col-md-3">
+                <p class="fw-bold">TICKET</p>
+                <input class="form-control" style="height: 48px;" type="text" disabled="true"
+                    placeholder="FOLIO DEL TICKET" [(ngModel)]="mantenimiento.folioTicket" name="folioTicket"
+                    [ngClass]="{'p-invalid': formFolioTicketCtrl.invalid && formFolioTicketCtrl.touched}"
+                    #formFolioTicketCtrl="ngModel">
+            </div>
+            <div class="col-md-1" style="margin-top: 35px;">
+                <button type="button" class="btn bg-p-b p-3" (click)="mostrarModalTcikets = true"><i
+                        class='bx bx-plus'></i></button>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3"><i class='bx bx-send'></i>ENVIAR</button>
+        </div>
+
+    </form>
+
+
+
+    <h5 class="text-dark fw-bold text-center">MANTENIMIENTOS</h5>
+    <p></p>
+
+    <p-table [value]="activoFijo.mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+        styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
+        <ng-template pTemplate="header">
+            <tr>
+                <th># MANTENIMIENTO</th>
+                <th>FECHA</th>
+                <th>COSTO</th>
+                <th>FOLIO TICKET</th>
+                <th>DETALLE</th>
+                <th>ACCIONES</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-mantenimiento let-i="rowIndex">
+            <tr [pSelectableRow]="mantenimiento">
+                <td>{{ i + 1 }}</td> <!-- Contador que comienza en 1 -->
+                <td>{{ datesHelper.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+                <td>{{ mantenimiento.costo }}</td>
+                <td>{{ mantenimiento.folioTicket ? mantenimiento.folioTicket : 'N/A' }}</td>
+                <td>{{ mantenimiento.detalle }}</td>
+                <td>
+                    <button class="btn btn-danger" (click)="confirmaEliminacion(mantenimiento.id)"><i
+                            class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>
+
+<app-modal-fixed-asset-select-ticket *ngIf="mostrarModalTcikets" [mostrarModal]="mostrarModalTcikets"
+    (closeEvent)="mostrarModalTcikets = false" [activoFijo]="activoFijo"
+    (ticketSelectedEvent)="ligarTicket($event)"></app-modal-fixed-asset-select-ticket>

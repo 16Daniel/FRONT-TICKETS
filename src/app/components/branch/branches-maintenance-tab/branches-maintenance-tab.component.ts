@@ -55,7 +55,7 @@ export class BranchesMaintenanceTabComponent {
   mostrarModalRating: boolean = false;
 
   sucursal: Sucursal | undefined;
-  mantenimientoActivo: MantenimientoMtto | null = null;
+  mantenimientosActivos: MantenimientoMtto[] = [];
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;
@@ -70,7 +70,7 @@ export class BranchesMaintenanceTabComponent {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
 
-    this.obtenerMantenimientoActivo();
+    this.obtenerMantenimientosActivos();
   }
 
   ngOnDestroy(): void {
@@ -120,11 +120,11 @@ export class BranchesMaintenanceTabComponent {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
-  async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+  async obtenerMantenimientosActivos() {
+    this.unsubscribe = this.mantenimientoService.getMantenimientosActivosPorFecha(
       this.sucursal?.id,
-      (mantenimiento) => {
-        this.mantenimientoActivo = mantenimiento;
+      (mantenimientos: MantenimientoMtto[]) => {
+        this.mantenimientosActivos = mantenimientos;
         this.cdr.detectChanges();
         // console.log('Mantenimiento activo:', this.mantenimientoActivo);
       }

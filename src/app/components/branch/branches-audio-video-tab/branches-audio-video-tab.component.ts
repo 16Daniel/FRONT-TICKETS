@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -78,6 +78,15 @@ export class BranchesAudioVideoTabComponent {
 
     if (this.unsubscribe) {
       this.unsubscribe();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['esEspectadorActivo']) {
+      const prev = changes['esEspectadorActivo'].previousValue;
+      const curr = changes['esEspectadorActivo'].currentValue;
+
+      this.cdr.detectChanges();
     }
   }
 

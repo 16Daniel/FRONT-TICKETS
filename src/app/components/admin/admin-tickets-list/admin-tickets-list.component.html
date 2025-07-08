@@ -12,6 +12,7 @@
             <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
             <th>AREA</th>
             <th>CATEGORÍA</th>
+            <th>SUBCATEGORÍA</th>
             <th>ESTATUS</th>
             <th>SOLICITANTE</th>
             <th>RESPONSABLE</th>
@@ -90,6 +91,21 @@
             <ng-template let-categoria pTemplate="item">
                 <div class="flex align-items-center gap-2">
                     <div>{{ categoria.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+    </td>
+    <td class="text-center">
+        <p-dropdown [options]="obtenerSubcategorias(tk.idCategoria)" [(ngModel)]="tk.idSubcategoria" optionLabel="name" [showClear]="false"
+            optionValue="id" [style]="{ width: '100%' }" (onChange)="actualizaTicket(tk)">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-subcategoria pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ subcategoria.nombre }}</div>
                 </div>
             </ng-template>
         </p-dropdown>
