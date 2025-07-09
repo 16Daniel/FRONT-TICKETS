@@ -201,7 +201,8 @@ export class FixedAssetsService {
       const q = query(
         collectionRef,
         where('idSucursal', '==', idSucursal),
-        where('esFreidora', '==', true)
+        where('esFreidora', '==', true),
+        where('eliminado', '==', false)
       );
       const snapshot = await getDocs(q);
       const freidoras: ActivoFijo[] = [];

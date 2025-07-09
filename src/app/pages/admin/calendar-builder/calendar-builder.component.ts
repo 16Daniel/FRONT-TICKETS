@@ -346,8 +346,14 @@ export default class CalendarBuilderComponent implements OnInit {
                 const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
                 this.usuario.idArea == '4' ?
-                  await this.maintenanceMtooService.create2(sucursal.id, this.usuarioseleccionado!.id, this.fecha, element.id!, element.descripcion)
-                  : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+                  await this.maintenanceMtooService.create2(
+                    sucursal.id, 
+                    this.usuarioseleccionado!.id, 
+                    this.fecha, 
+                    element.id!, 
+                    element.descripcion, 
+                    element.referencia
+                  ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
               });
             }
             else {

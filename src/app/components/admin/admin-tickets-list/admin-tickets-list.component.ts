@@ -235,9 +235,12 @@ export class AdminTicketsListComponent {
 
   actualizaTicket(ticket: Ticket) {
     let nombreCategoria = this.categorias.find(x => x.id == ticket.idCategoria)?.nombre!;
+
     let nombreSubcategoria = this.categorias
-      .find(x => x.id == ticket.idCategoria)?.subcategorias
-      .find(x => x.id == ticket.idSubcategoria)?.nombre!
+      .find(x => x.id == ticket.idCategoria)?.subcategorias ?
+      this.categorias
+        .find(x => x.id == ticket.idCategoria)?.subcategorias.find(x => x.id == ticket.idSubcategoria)?.nombre!
+      : '';
 
     ticket = {
       ...ticket,
@@ -246,7 +249,7 @@ export class AdminTicketsListComponent {
     }
 
     this.ticketsService
-      .update({...ticket})
+      .update({ ...ticket })
       .then(() => { })
       .catch((error) => console.error(error));
   }

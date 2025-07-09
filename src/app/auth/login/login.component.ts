@@ -32,7 +32,7 @@ export default class LoginComponent {
     private router: Router,
     private usersService: UsersService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
@@ -66,6 +66,8 @@ export default class LoginComponent {
               this.router.navigate(['/main/home-s']);
             } else if (userd.idRol == '6') {
               this.router.navigate(['/cedis/recoleccion']);
+            } else if (userd.idRol == '7') {
+              this.router.navigate(['/main/home-specialist']);
             }
           },
           error: (error) => {

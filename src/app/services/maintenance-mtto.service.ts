@@ -18,6 +18,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
       idUsuarioSoporte: idUsuario,
       idActivoFijo: '',
       descripcion: '',
+      referencia: '',
       fecha,
       estatus: true,
       mantenimientoTermostato: true,
@@ -38,7 +39,13 @@ export class MaintenanceMtooService implements IMantenimientoService {
     });
   }
 
-  async create2(idSucursal: string, idUsuario: string, fecha: Date, idActivoFijo: string, descripcion: string): Promise<void> {
+  async create2(
+    idSucursal: string,
+    idUsuario: string,
+    fecha: Date,
+    idActivoFijo: string,
+    descripcion: string,
+    referencia: string): Promise<void> {
     const mantenimiento: MantenimientoMtto = {
       idSucursal: idSucursal.toString(),
       idUsuarioSoporte: idUsuario,
@@ -46,6 +53,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
       fecha,
       estatus: true,
       descripcion,
+      referencia,
       mantenimientoTermostato: true,
       mantenimientoPerillas: true,
       mantenimientoTornilleria: true,

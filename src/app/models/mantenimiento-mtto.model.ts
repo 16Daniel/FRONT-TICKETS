@@ -7,6 +7,7 @@ export interface MantenimientoMtto {
   fecha: Date | undefined;
   idActivoFijo: string;
   descripcion: string;
+  referencia: string;
   mantenimientoTermostato: boolean;
   mantenimientoPerillas: boolean;
   mantenimientoTornilleria: boolean;
