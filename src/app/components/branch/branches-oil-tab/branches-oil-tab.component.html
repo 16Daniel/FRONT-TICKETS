@@ -15,6 +15,7 @@
                   <th>FECHA</th>
                   <th>ENTREGA CEDIS</th>
                    <th>COMENTARIOS CEDIS</th>
+                   <th>ESTATUS</th>
                   <th></th>
                 </tr>
             </ng-template>
@@ -24,6 +25,8 @@
                      <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
                   <td>{{ record.entregaCedis || '' }}</td>
                   <td>{{ record.comentariosCedis || '' }}</td>
+                  <td *ngIf="record.comentariosCedis == null"><i class='bx bx-time bx-sm text-primary'></i>&nbsp;POR VALIDAR</td>
+                  <td *ngIf="record.comentariosCedis != ''"><i class='bx bx-x-circle bx-sm text-danger' ></i>&nbsp;RECHAZADO</td>
                   <td><button class="btn btn-primary" (click)="abrirModalDevolucion(record)"><i class='bx bx-check-circle' ></i>&nbsp;RECOLECCIÓN</button></td>
                 </tr>
             </ng-template>

@@ -54,6 +54,7 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
     this.aceiteService.getEntregas(this.sucursal!.idFront!).subscribe({
       next: (data) => {
         this.entregas= data;
+        console.log(this.entregas);
         this.cdr.detectChanges();
       },
       error: (error) => {

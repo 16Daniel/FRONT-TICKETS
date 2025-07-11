@@ -79,6 +79,7 @@ export class ModalBranchCreateComponent implements OnInit {
   }
 
   actualizar() {
+    debugger
     this.sucursal = { ...this.sucursal, id: parseInt(this.sucursal.id) }
     this.branchesService
       .update(this.sucursal, this.idSucursalEditar)

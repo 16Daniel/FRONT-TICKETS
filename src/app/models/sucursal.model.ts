@@ -5,4 +5,5 @@ export class Sucursal {
   eliminado: boolean = false;
   idFront?:number|null; 
   controlDeAceite?:boolean|null; 
+  claUbicacion?:number|number;
 }
