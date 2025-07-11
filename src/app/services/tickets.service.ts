@@ -28,7 +28,7 @@ export class TicketsService {
   private headers = new HttpHeaders();
 
   constructor(private firestore: Firestore) {
-    
+
     // this.getAll().subscribe(result => {
     //   console.log(result);
     // });
@@ -395,5 +395,16 @@ export class TicketsService {
   getAll(): Observable<Ticket[] | any[]> {
     const sucursalesCollection = collection(this.firestore, 'tickets');
     return collectionData(sucursalesCollection, { idField: 'id' });
+  }
+
+  getTicketsPorEspecialista(idUsuarioEspecialista: string): Observable<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+
+    const q = query(
+      ticketsCollection,
+      where('idUsuarioEspecialista', '==', idUsuarioEspecialista)
+    );
+
+    return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 }

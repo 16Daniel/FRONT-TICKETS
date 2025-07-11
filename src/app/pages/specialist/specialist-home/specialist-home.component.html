@@ -1,7 +1,86 @@
 <div class="pt-5">
-    <div class="pt-3">
-        <!-- <div class="m-2 mt-3 bg-white p-3">
+    <div class="pt-3" style="padding-left: 50px; padding-right: 50px;">
+        <div class="m-2 mt-3 bg-white p-3">
 
-        </div> -->
+            <p-table [value]="tickets" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh"
+                selectionMode="single" [(selection)]="ticketSeleccionado"
+                (onRowSelect)="mostrarModalTicketDetail = true;">
+                <ng-template pTemplate="header">
+                    <tr class="text-center">
+                        <th>FOLIO</th>
+                        <th>FECHA</th>
+                        <th>DEATHLINE</th>
+                        <th>AREA</th>
+                        <th>SUCURSAL</th>
+                        <th>SOLICITANTE</th>
+                        <th>RESPONSABLE</th>
+                        <th>CATEGORÍA</th>
+                        <th>SUBCATEGORÍA</th>
+                        <th>ESTATUS</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </ng-template>
+                <!-- FF495F -->
+                <ng-template pTemplate="body" let-ticket>
+                    <tr [pSelectableRow]="ticket">
+                        <td class="text-center">{{ ticket.folio }}</td>
+                        <td class="text-center">
+                            {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
+                        </td>
+                        <td class="text-center">
+                            {{ getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}
+                        </td>
+                        <td class="text-center">
+                            {{ obtenerNombreArea(ticket.idArea) }}
+                        </td>
+                        <td class="text-center">
+                            {{obtenerNombreSucursal(ticket.idSucursal)}}
+                        </td>
+                        <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
+                        <td class="text-center">
+                            {{ obtenerNombreResponsable(ticket!.idResponsableFinaliza) }}
+                        </td>
+                        <td class="text-center">
+                            {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
+                        </td>
+                        <td class="text-center">
+                            {{ ticket.idSubcategoria == null ? "N/A" : ticket.nombreSubcategoria }}
+                        </td>
+                        <td class="text-center">
+                            <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm"
+                                style="color: #ff0028" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+                                tooltipPosition="top"></i>
+                            <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm"
+                                style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+                                tooltipPosition="top"></i>
+                            <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md"
+                                style="color: #a300ff" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+                                tooltipPosition="top"></i>
+                            <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm"
+                                style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+                                tooltipPosition="top"></i>
+                            <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm"
+                                style="color: #ff7b00" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+                                tooltipPosition="top"></i>
+                            <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm"
+                                style="color: #008500" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+                                tooltipPosition="top"></i>
+                            <i *ngIf="ticket.idEstatusTicket == '7'" class="bx bx-check bx-tada bx-sm"
+                                style="color: #a300ff" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
+                                tooltipPosition="top"></i>
+                        </td>
+                        <td style="display: flex; gap: 10px">
+
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+        </div>
     </div>
 </div>
+
+<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticketSeleccionado"
+    [showModalTicketDetail]="mostrarModalTicketDetail"
+    (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>

@@ -29,4 +29,6 @@ export class Ticket {
   participantesChat: ParticipanteChat[] = [];
   validacionAdmin: boolean = false;
   referenciaActivoFijo: string | undefined;
+  esAsignadoEspecialista: boolean = false;
+  idUsuarioEspecialista: string = '';
 }

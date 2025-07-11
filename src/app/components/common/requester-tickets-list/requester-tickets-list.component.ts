@@ -33,6 +33,7 @@ import { EstatusTicket } from '../../../models/estatus-ticket.model';
 import { ModalValidateTicketComponent } from '../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
 import { Sucursal } from '../../../models/sucursal.model';
 import { BranchesService } from '../../../services/branches.service';
+import { ModalSelectSpecialistUserComponent } from '../../../modals/users/modal-select-specialist-user/modal-select-specialist-user.component';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -50,6 +51,7 @@ import { BranchesService } from '../../../services/branches.service';
     ConfirmDialogModule,
     DropdownModule,
     FormsModule,
+    ModalSelectSpecialistUserComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './requester-tickets-list.component.html',
@@ -79,6 +81,8 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   chatsSinLeer = 0;
   estatusTickets: EstatusTicket[] = [];
   sucursales: Sucursal[] = [];
+  mostrarModalEspecialistas: boolean = false;
+  idSucursalEspecialista: string = '';
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -346,5 +350,11 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
+  }
+
+  onClickAsignarEspecialista(ticket: Ticket) {
+    this.idSucursalEspecialista = ticket.idSucursal;
+    this.ticketSeleccionado = ticket;
+    this.mostrarModalEspecialistas = true;
   }
 }

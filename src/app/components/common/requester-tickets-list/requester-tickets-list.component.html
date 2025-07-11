@@ -26,9 +26,12 @@
         <i class="bx bxs-hot bx-sm" style="color: red"></i>
       </td>
       <td class="text-center" *ngIf="ticket.idPrioridadTicket != '1'">
-        <i class="bx bxs-circle bx-sm" [style]="{
+        <i *ngIf="!ticket.esAsignadoEspecialista" class="bx bxs-circle bx-sm" [style]="{
                 color: obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket)
               }"></i>
+
+        <div *ngIf="ticket.esAsignadoEspecialista" ticket.esAsignadoEspecialista
+          style="margin: 2px; background-color: white; color: red; font-size: 1.5em;"> ✚ </div>
       </td>
       <td class="text-center">{{ ticket.folio }}</td>
       <td class="text-center">
@@ -74,8 +77,14 @@
       <td *ngIf="mostrarEstrellas">
         <app-rating-stars [rating]="ticket.calificacion" [editable]="false"></app-rating-stars>
       </td>
-
       <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
+        <!-- Unicode ejemplo: -->
+        <button class="btn btn-light" (click)="onClickAsignarEspecialista(ticket)" *ngIf="usuario.idRol == '4'"
+          style="margin: 2px; background-color: white; border: 1px solid #ccc; color: red; font-size: 1.5em;"
+          [disabled]="(esEspectadorActivo || ticket.esAsignadoEspecialista)" pTooltip="ASIGNAR A ESPECIALISTA"
+          tooltipPosition="top">
+          ✚
+        </button>
         <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
           [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar">
           <i class="bx bx-check-circle bx-sm" pTooltip="FINALIZAR TICKET" tooltipPosition="top"></i>
@@ -111,5 +120,7 @@
 <app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
   (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>
 
-
+<app-modal-select-specialist-user *ngIf="mostrarModalEspecialistas" [mostrarModal]="mostrarModalEspecialistas"
+  [idSucursal]="idSucursalEspecialista" [ticket]="ticketSeleccionado!"
+  (closeEvent)="mostrarModalEspecialistas = false"></app-modal-select-specialist-user>
 <p-confirmDialog />
