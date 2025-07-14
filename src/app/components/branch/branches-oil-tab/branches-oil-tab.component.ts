@@ -143,11 +143,6 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
         this.showMessage('info','info','Favor de agregar un comentario');
         return; 
       }
-    if(this.formCantidad <= 0)
-      {
-        this.showMessage('info','Error','la cantidad debe ser mayor a cero');
-        return; 
-      }
 
     this.confirmationService.confirm({
       header: 'Confirmación',
