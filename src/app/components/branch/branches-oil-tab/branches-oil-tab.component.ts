@@ -15,10 +15,11 @@ import { CalendarModule } from 'primeng/calendar';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 @Component({
   selector: 'app-branches-oil-tab',
   standalone: true,
-   imports: [CommonModule, FormsModule, TableModule,TabViewModule,ToastModule,DialogModule,CalendarModule,ConfirmDialogModule,InputNumberModule],
+   imports: [CommonModule, FormsModule, TableModule,TabViewModule,ToastModule,DialogModule,CalendarModule,ConfirmDialogModule,InputNumberModule,TriStateCheckboxModule],
    providers:[MessageService,ConfirmationService],
   templateUrl: './branches-oil-tab.component.html',
   styleUrl: './branches-oil-tab.component.scss',
@@ -26,6 +27,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 export class BranchesOilTabComponent implements OnInit {
 public entregas:EntregaAceite[] = []; 
 public entregasH:EntregaAceite[] = []; 
+public entregasHTodas:EntregaAceite[] = []; 
 public itemEntrega:EntregaAceite|undefined; 
 public mostrarModalDevolucion:boolean = false; 
 public sucursales: Sucursal[] = [];
@@ -36,6 +38,8 @@ usuario: Usuario;
 public formCantidad:number = 0; 
 public formcomentarios:string = ""; 
 public loading:boolean = true;
+value: boolean | null = null;
+estatusfiltro:string = "TODO"; 
 constructor(public aceiteService:AceiteService,private confirmationService: ConfirmationService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
 {
   this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -43,6 +47,10 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
   ngOnInit(): void 
   {
     this.obtenerSucursales(); 
+    
+    setInterval(() => {
+      this.consultarEntregas(); 
+    }, 60000);
    }
  
      showMessage(sev: string, summ: string, det: string) {
@@ -54,6 +62,7 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
     this.aceiteService.getEntregas(this.sucursal!.idFront!).subscribe({
       next: (data) => {
         this.entregas= data;
+        console.log(this.entregas);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -68,6 +77,7 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
     this.aceiteService.getEntregasH(this.sucursal!.idFront!,this.fechaini,this.fechafin).subscribe({
       next: (data) => {
         this.entregasH= data;
+        this.entregasHTodas = data; 
         this.loading = false; 
         this.cdr.detectChanges();
       },
@@ -177,5 +187,26 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
         
       },
     });
+  }
+
+  cambiarFIltro()
+  {
+      if(this.value == null)
+        {
+          this.entregasH = [...this.entregasHTodas]; 
+          this.estatusfiltro = "TODO";
+        }
+
+         if(this.value == true)
+        {
+          this.entregasH = this.entregasHTodas.filter(x => x.status == 3);  
+          this.estatusfiltro = "FINALIZADO";
+        }
+
+         if(this.value == false)
+        {
+           this.entregasH = this.entregasHTodas.filter(x => x.status == 2);  
+           this.estatusfiltro = "POR VALIDAR";
+        }
   }
 }

@@ -16,6 +16,7 @@
                         <th>ID</th>
                         <th>NOMBRE</th>
                         <th>ID FRONT</th>
+                        <th>CLA UBICACIÓN</th>
                         <th>ACCIONES</th>
                     </tr>
                 </ng-template>
@@ -24,6 +25,7 @@
                         <td>{{ sucursal.id }}</td>
                         <td>{{ sucursal.nombre }}</td>
                           <td>{{ sucursal.idFront }}</td>
+                           <td>{{ sucursal.claUbicacion }}</td>
                         <td>
                             <button class="btn btn-primary me-3" (click)="abrirModalEditarSucursal(sucursal)"><i
                                     class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>

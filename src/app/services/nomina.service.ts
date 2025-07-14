@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { PuestoNomina, EmpleadoNomina, TurnodbNomina, TurnoNomina, UbicacionNomina } from '../models/Nomina';
+import { PuestoNomina, EmpleadoNomina, TurnodbNomina, TurnoNomina, UbicacionNomina, Marcajes, EmpleadoHorario } from '../models/Nomina';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -42,7 +42,6 @@ export class NominaService {
 
       addTurnodb(idturno:number, nombre:string, alias:string):Observable<any>
    {
-    debugger
       let formdata = new FormData();
       formdata.append("cla_turno",idturno.toString());
       formdata.append("nombre", nombre); 
@@ -65,4 +64,20 @@ export class NominaService {
       return this.http.post<any>(this.url+'CalendarioNomina/guardarTurnos',data,{headers:this.headers})
    }
 
+   consultarMarcajes(idUbicacion:number, fechaIni:Date, fechaFin:Date):Observable<Marcajes[]>
+   {
+      let formdata = new FormData();
+      formdata.append("idUbicacion",idUbicacion.toString());
+      formdata.append("fechaIni", fechaIni.toISOString()); 
+      formdata.append("fechaFin", fechaFin.toISOString()); 
+      return this.http.post<Marcajes[]>(this.url+'PersonalNominas/getPersonalNominas',formdata,{headers:this.headers})
+   }
+
+     consultarCalendario(idUbicacion:number, fecha:Date):Observable<EmpleadoHorario[]>
+   {
+      let formdata = new FormData();
+      formdata.append("idSuc",idUbicacion.toString());
+      formdata.append("fecha", fecha.toISOString());  
+      return this.http.post<EmpleadoHorario[]>(this.url+'PersonalNominas/gethorariosSuc',formdata,{headers:this.headers})
+   }
 }

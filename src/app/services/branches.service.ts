@@ -36,6 +36,28 @@ export class BranchesService {
     await setDoc(documentRef, sucursal);
   }
 
+  async getOnce(): Promise<Sucursal[]> {
+  try {
+    const collectionRef = collection(this.firestore, this.pathName);
+    const constraints = [where('eliminado', '==', false)];
+    const q = query(collectionRef, ...constraints);
+    
+    const querySnapshot = await getDocs(q);
+    
+    const areas: Sucursal[] = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<Sucursal, 'id'>),
+    }));
+    
+    areas.sort((a, b) => Number(a.id) - Number(b.id));
+    
+    return areas;
+  } catch (error) {
+    console.error('Error al obtener los datos:', error);
+    throw error; // Puedes manejar el error según tus necesidades
+  }
+}
+
   get(): Observable<Sucursal[]> {
     return new Observable<Sucursal[]>((observer) => {
       const collectionRef = collection(this.firestore, this.pathName);

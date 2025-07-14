@@ -55,12 +55,12 @@ public loading: boolean = false;
     this.obtenerRoles();
    }
 
-    obtenerSucursales() {
-         this.loading = true; 
-       this.branchesService.get().subscribe({
-         next: (data) => {
-           this.sucursales = data;
-           for(let suc of this.sucursales)
+    async obtenerSucursales() {
+
+        this.loading = true; 
+       try {
+        this.sucursales = await this.branchesService.getOnce();
+         for(let suc of this.sucursales)
             {
               if(suc.controlDeAceite == true)
                 {
@@ -69,11 +69,8 @@ public loading: boolean = false;
             }
            this.loading = false; 
            this.cdr.detectChanges();
-         },
-         error: (error) => {
-           this.loading = false; 
-         },
-       });
+      } catch (error) {
+      }
       }
 
  obtenerNombreRol(idRol: string): string {
