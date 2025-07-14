@@ -14,7 +14,7 @@
 
         <p class="fw-bold">APELLIDO PATERNO</p>
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL APELLIDO PATERNO"
-            [(ngModel)]="usuario.apellidoP" name="apellidoM"
+            [(ngModel)]="usuario.apellidoP" name="apellidoP"
             [ngClass]="{'p-invalid': formApellidoPCtrl.invalid && formApellidoPCtrl.touched}"
             #formApellidoPCtrl="ngModel" required [disabled]="choferCedis">
         <small *ngIf="formApellidoPCtrl.invalid && formApellidoPCtrl.touched" class="p-error">
@@ -24,7 +24,7 @@
 
         <p class="fw-bold">APELLIDO MATERNO</p>
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL APELLIDO MATERNO"
-            [(ngModel)]="usuario.apellidoM" name="apellidoP"
+            [(ngModel)]="usuario.apellidoM" name="apellidoM"
             [ngClass]="{'p-invalid': formapellidoMCtrl.invalid && formapellidoMCtrl.touched}"
             #formapellidoMCtrl="ngModel" required [disabled]="choferCedis">
         <small *ngIf="formapellidoMCtrl.invalid && formapellidoMCtrl.touched" class="p-error">
@@ -53,9 +53,10 @@
         <p></p>
 
         <p class="fw-bold">ROL DE USUARIO</p>
-        <p-dropdown [options]="roles" [(ngModel)]="usuario.idRol" name="rol" optionValue="id" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ROL" [style]="{width:'100%'}"
-            #formRolCtrl="ngModel" [ngClass]="{'p-invalid': formRolCtrl.invalid && formRolCtrl.touched}" required [disabled]="choferCedis">
+        <p-dropdown [options]="roles" [(ngModel)]="usuario.idRol" name="rol" optionValue="id" optionLabel="nombre"
+            [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ROL"
+            [style]="{width:'100%'}" #formRolCtrl="ngModel"
+            [ngClass]="{'p-invalid': formRolCtrl.invalid && formRolCtrl.touched}" required [disabled]="choferCedis">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -72,10 +73,23 @@
         </small>
         <p></p>
 
+        <div *ngIf="usuario.idRol == '7'">
+            <p class="fw-bold">ESPECIALIDAD</p>
+            <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA ESPECIALIDAD"
+                [(ngModel)]="usuario.especialidad" name="especialidad"
+                [ngClass]="{'p-invalid': formEspecialidadCtrl.invalid && formEspecialidadCtrl.touched}"
+                #formEspecialidadCtrl="ngModel" required [disabled]="choferCedis">
+            <small *ngIf="formEspecialidadCtrl.invalid && formEspecialidadCtrl.touched" class="p-error">
+                Campo requerido.
+            </small>
+            <p></p>
+        </div>
+
         <p class="fw-bold">ÁREA</p>
-        <p-dropdown [options]="areas" [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ÁREA" [style]="{width:'100%'}"
-            #formAreaCtrl="ngModel" [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" 
+        <p-dropdown [options]="areas" [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre"
+            [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ÁREA"
+            [style]="{width:'100%'}" #formAreaCtrl="ngModel"
+            [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}"
             [required]="usuario.idRol == '4' || usuario.idRol == '5'" [disabled]="choferCedis">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
@@ -100,14 +114,15 @@
             [ngClass]="{'p-invalid': formsucursalesCtrl.invalid && formsucursalesCtrl.touched}" required />
         <small *ngIf="formsucursalesCtrl.invalid && formsucursalesCtrl.touched" class="p-error">
             Campo requerido.
-        </small>  
+        </small>
 
-            <div class="form-check mt-3" *ngIf="choferCedis == false">
-            <input class="form-check-input" type="checkbox" name="controldeaceite" [(ngModel)]="usuario.controlDeAceite">
+        <div class="form-check mt-3" *ngIf="choferCedis == false">
+            <input class="form-check-input" type="checkbox" name="controldeaceite"
+                [(ngModel)]="usuario.controlDeAceite">
             <label class="form-check-label">
                 CONTROL DE ACEITE
             </label>
-            </div>
+        </div>
 
         <div class="d-flex justify-content-end mt-3">
             <button class="btn bg-p-b p-3">

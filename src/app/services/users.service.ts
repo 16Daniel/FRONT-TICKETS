@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import {
   addDoc,
   collection,
@@ -45,18 +45,18 @@ export class UsersService {
     return new Observable((observer) => {
       // Referencia a la colección
       const collectionRef = collection(this.firestore, this.pathName);
-  
+
       // Arreglo de condiciones de filtrado
       const filtros: any[] = [where('idRol', '==', '4')];
-  
+
       // Agrega filtro dinámico por idArea si está definido
       if (idArea) {
         filtros.push(where('idArea', '==', idArea));
       }
-  
+
       // Construcción de la query con los filtros
       const q = query(collectionRef, ...filtros);
-  
+
       // Escucha en tiempo real
       const unsubscribe = onSnapshot(
         q,
@@ -65,7 +65,7 @@ export class UsersService {
             id: doc.id,
             ...doc.data(),
           }));
-  
+
           observer.next(users);
         },
         (error) => {
@@ -73,45 +73,10 @@ export class UsersService {
           observer.error(error);
         }
       );
-  
+
       return { unsubscribe };
     });
   }
-  
-  // getUsersHelp(): Observable<any[]> {
-  //   return new Observable((observer) => {
-  //     // Referencia a la colección
-  //     const collectionRef = collection(this.firestore, this.pathName);
-
-  //     // Consulta filtrada por el ID del usuario
-  //     const q = query(collectionRef, 
-  //       where('idRol', '==', '4'),
-  //     );
-
-
-
-  //     // Escucha en tiempo real
-  //     const unsubscribe = onSnapshot(
-  //       q,
-  //       (querySnapshot) => {
-  //         const tickets = querySnapshot.docs.map((doc) => ({
-  //           id: doc.id,
-  //           ...doc.data(),
-  //         }));
-
-  //         // Emitir los tickets actualizados
-  //         observer.next(tickets);
-  //       },
-  //       (error) => {
-  //         console.error('Error en la suscripción:', error);
-  //         observer.error(error);
-  //       }
-  //     );
-
-  //     // Manejo de limpieza
-  //     return { unsubscribe };
-  //   });
-  // }
 
   async registerAuthFirebaseUser(email: string, password: string): Promise<string | null> {
     try {
@@ -130,5 +95,22 @@ export class UsersService {
   async updateUserGuardStatus(userId: string, esGuardia: boolean): Promise<void> {
     const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
     return updateDoc(userRef, { esGuardia });
+  }
+
+  getUsuariosEspecialistas(idSucursal: string): Observable<any[]> {
+    const usersCollection = collection(this.firestore, this.pathName);
+
+    const q = query(
+      usersCollection,
+      where('idRol', '==', '7')
+    );
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((usuarios: any[]) => {
+        return usuarios.filter(usuario => {
+          return usuario.sucursales?.some((sucursal: any) => sucursal.id == idSucursal);
+        });
+      })
+    );
   }
 }

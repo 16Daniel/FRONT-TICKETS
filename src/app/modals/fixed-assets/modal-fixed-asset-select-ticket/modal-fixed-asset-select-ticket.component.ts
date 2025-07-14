@@ -2,18 +2,18 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { MessageService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { Ticket } from '../../../models/ticket.model';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { ModalTicketDetailComponent } from '../../tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { TooltipModule } from 'primeng/tooltip';
 import { Usuario } from '../../../models/usuario.model';
 import { Area } from '../../../models/area.model';
 import { AreasService } from '../../../services/areas.service';
 import { UsersService } from '../../../services/users.service';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-fixed-asset-select-ticket',
@@ -85,6 +85,7 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
     this.tickets = this.tickets.filter(item => item.idEstatusTicket != '3')
     this.cdr.detectChanges();
   }
+  
   obtenerNombreArea(idArea: string): string {
     let nombre = '';
     let area = this.areas.filter((x) => x.id == idArea);
@@ -116,7 +117,6 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
       },
     });
   }
-
 
   obtenerUsuariosHelp() {
     this.usersService.get().subscribe({

@@ -22,14 +22,22 @@
   <ng-template pTemplate="body" let-ticket>
     <tr [pSelectableRow]="ticket"
       [ngClass]="{'row-highlight': ticket.idEstatusTicket == '7' && ticketSeleccionado !== ticket}">
-      <td class="text-center" *ngIf="ticket.idPrioridadTicket == '1'">
-        <i class="bx bxs-hot bx-sm" style="color: red"></i>
-      </td>
-      <td class="text-center" *ngIf="ticket.idPrioridadTicket != '1'">
-        <i class="bx bxs-circle bx-sm" [style]="{
+
+      <td class="text-center">
+        <i *ngIf="!ticket.esAsignadoEspecialista && ticket.idPrioridadTicket != '1'" class="bx bxs-circle bx-sm"
+          [style]="{
                 color: obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket)
-              }"></i>
+              }">
+        </i>
+
+        <i class="bx bxs-hot bx-sm" style="color: red" *ngIf="ticket.idPrioridadTicket == '1' && !ticket.esAsignadoEspecialista"></i>
+
+        <div *ngIf="ticket.esAsignadoEspecialista" ticket.esAsignadoEspecialista
+          style="margin: 2px; background-color: white; color: red; font-size: 1.5em;"> ✚ </div>
       </td>
+
+
+
       <td class="text-center">{{ ticket.folio }}</td>
       <td class="text-center">
         {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
@@ -76,6 +84,7 @@
       </td>
 
       <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
+
         <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
           [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar">
           <i class="bx bx-check-circle bx-sm" pTooltip="FINALIZAR TICKET" tooltipPosition="top"></i>

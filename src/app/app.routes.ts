@@ -30,6 +30,12 @@ export const routes: Routes = [
         canActivate: [HomeGuard],
       },
       {
+        path: 'home-specialist',
+        title: 'Inicio',
+        loadComponent: () => import('./pages/specialist/specialist-home/specialist-home.component'),
+        canActivate: [HomeGuard],
+      },
+      {
         path: '',
         redirectTo: '/main/home',
         pathMatch: 'full',
