@@ -9,14 +9,14 @@ import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { ModalTicketDetailComponent } from '../../tickets/modal-ticket-detail/modal-ticket-detail.component';
 
 @Component({
-  selector: 'app-modal-fixed-assets-detail',
+  selector: 'app-modal-fixed-asset-tickets',
   standalone: true,
   imports: [CommonModule, DialogModule, RequesterTicketsListComponent, ModalTicketDetailComponent],
-  templateUrl: './modal-fixed-assets-detail.component.html',
-  styleUrl: './modal-fixed-assets-detail.component.scss'
+  templateUrl: './modal-fixed-asset-tickets.component.html',
+  styleUrl: './modal-fixed-asset-tickets.component.scss'
 })
 
-export class ModalFixedAssetsDetailComponent implements OnInit {
+export class ModalFixedAssetTicketsComponent implements OnInit {
   @Input() mostrarModalDetalleActivoFijo: boolean = false;
   @Input() activoFijo: ActivoFijo | any;
   @Output() closeEvent = new EventEmitter<boolean>();

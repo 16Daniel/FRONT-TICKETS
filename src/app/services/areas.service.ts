@@ -53,7 +53,10 @@ export class AreasService {
 
           areas.sort((a, b) => Number(a.id) - Number(b.id));
 
-          observer.next(areas);
+          observer.next(areas.map((item: any) => ({
+            ...item,
+            id: item.id.toString()
+          })));
         },
         (error) => {
           console.error('Error en la suscripción:', error);

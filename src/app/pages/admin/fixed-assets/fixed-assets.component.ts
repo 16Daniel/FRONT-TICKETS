@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 
 import { ActivoFijo } from '../../../models/activo-fijo.model';
@@ -24,7 +25,8 @@ import { AreaActivoFijo } from '../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../models/categoria-activo-fijo.model';
 import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model';
 import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
-import { ModalFixedAssetsDetailComponent } from '../../../modals/fixed-assets/modal-fixed-assets-detail/modal-fixed-assets-detail.component';
+import { ModalFixedAssetTicketsComponent } from '../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
+import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 
 @Component({
   selector: 'app-fixed-assets',
@@ -37,7 +39,9 @@ import { ModalFixedAssetsDetailComponent } from '../../../modals/fixed-assets/mo
     ToastModule,
     ConfirmDialogModule,
     ModalFixedAssetsCreateComponent,
-    ModalFixedAssetsDetailComponent
+    ModalFixedAssetTicketsComponent,
+    ModalFixedAssetMaintenanceComponent,
+    TooltipModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',
@@ -115,6 +119,11 @@ export default class FixedAssetsComponent implements OnInit {
     this.activoFijoSeleccionada = activoFijo;
   }
 
+  abrirModalMantenimientos(activoFijo: ActivoFijo) {
+    this.mostrarModalMantenimientos = true;
+    this.activoFijoSeleccionada = activoFijo;
+  }
+
   confirmaEliminacion(id: string) {
     this.confirmationService.confirm({
       header: 'Confirmación',
@@ -128,6 +137,14 @@ export default class FixedAssetsComponent implements OnInit {
       },
       reject: () => { },
     });
+  }
+
+  getCostoTotalMantenimientos(activo: ActivoFijo): number {
+    if (!activo.mantenimientos) return 0;
+
+    return activo.mantenimientos
+      .filter(m => !m.eliminado)
+      .reduce((total, m) => total + (m.costo || 0), 0);
   }
 
   async eliminarActivoFijo(idActivoFijo: string) {

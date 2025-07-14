@@ -33,6 +33,9 @@ import { BranchVisitItemComponent } from '../../../components/common/branch-visi
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area.model';
 import { ModalActivityComponent } from '../../../modals/calendar/modal-activity/modal-activity.component';
+import { FixedAssetsService } from '../../../services/fixed-assets.service';
+import { MantenimientoMtto } from '../../../models/mantenimiento-mtto.model';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -92,7 +95,8 @@ export default class CalendarBuilderComponent implements OnInit {
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private areasService: AreasService,
-    // private actividadesService: ActivitiesService
+    private fixedAssetsService: FixedAssetsService,
+    private maintenanceMtooService: MaintenanceMtooService
   ) {
     registerLocaleData(localeEs);
     this.obtenerAreas();
@@ -193,7 +197,7 @@ export default class CalendarBuilderComponent implements OnInit {
         this.sucursales = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
-        }));;
+        }));
         this.obtenerTodosLosTickets();
         this.cdr.detectChanges();
       },
@@ -335,8 +339,21 @@ export default class CalendarBuilderComponent implements OnInit {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
 
           if (this.tieneMantenimientosActivos(sucursal.id)) {
-            const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-            await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+
+            if (this.usuario.idArea == '4') {
+              let freidoras = await this.fixedAssetsService.obtenerFredioras(sucursal.id);
+              freidoras.forEach(async element => {
+                const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+
+                this.usuario.idArea == '4' ?
+                  await this.maintenanceMtooService.create2(sucursal.id, this.usuarioseleccionado!.id, this.fecha, element.id!, element.descripcion)
+                  : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+              });
+            }
+            else {
+              const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+              await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+            }
           }
 
         }
@@ -466,10 +483,9 @@ export default class CalendarBuilderComponent implements OnInit {
 
         const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
         let temp = await servicio.obtenerMantenimientoVisitaPorFecha(this.getDate(this.registroDeVisita.fecha), sucursal.id);
-
-        if (temp.length > 0) {
-          await this.documentService.deleteDocument('mantenimientos-10x10', temp[0].id);
-        }
+        temp.forEach(async (element: any) => {
+          await servicio.delete(element.id);
+        });
       }
 
       await this.documentService.deleteDocument('visitas_programadas', this.registroDeVisita.id);

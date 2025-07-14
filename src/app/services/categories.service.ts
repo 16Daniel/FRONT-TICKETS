@@ -110,11 +110,6 @@ export class CategoriesService {
     }
   }
 
-  addSubcategoria(idCategoria: string, sub: Subcategoria) {
-    const ref = collection(this.firestore, `${this.pathName}/${idCategoria}/subcategorias`);
-    return addDoc(ref, sub);
-  }
-
   async obtenerSecuencial(): Promise<number> {
     try {
       const collectionRef = collection(this.firestore, this.pathName);

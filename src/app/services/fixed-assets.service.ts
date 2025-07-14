@@ -13,6 +13,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
+import { MantenimientoActivoFijo } from '../models/mantenimiento-activo-fijo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,6 @@ export class FixedAssetsService {
     return new Observable<ActivoFijo[]>((observer) => {
       const collectionRef = collection(this.firestore, this.pathName);
 
-      // Arreglo para los filtros
       const constraints = [
         where('eliminado', '==', false),
         where('idArea', '==', idArea)
@@ -50,10 +50,18 @@ export class FixedAssetsService {
       const unsubscribe = onSnapshot(
         q,
         (querySnapshot) => {
-          const activos: ActivoFijo[] = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...(doc.data() as Omit<ActivoFijo, 'id'>),
-          }));
+          const activos: ActivoFijo[] = querySnapshot.docs.map((doc) => {
+            const data = doc.data() as Omit<ActivoFijo, 'id'>;
+
+            // Filtrar mantenimientos (si existen)
+            const mantenimientosFiltrados = (data.mantenimientos || []).filter(m => !m.eliminado);
+
+            return {
+              id: doc.id,
+              ...data,
+              mantenimientos: mantenimientosFiltrados
+            };
+          });
 
           activos.sort((a, b) => Number(a.id) - Number(b.id));
 
@@ -144,4 +152,68 @@ export class FixedAssetsService {
     });
   }
 
+  async addMantenimiento(idActivoFijo: string, mantenimiento: MantenimientoActivoFijo): Promise<MantenimientoActivoFijo | null> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${idActivoFijo}`);
+
+    // Generar ID único si no viene
+    mantenimiento.id = mantenimiento.id || doc(collection(this.firestore, 'temp')).id;
+
+    // Obtener el documento actual
+    const snapshot = await getDocs(query(collection(this.firestore, this.pathName), where('id', '==', idActivoFijo)));
+    if (!snapshot.empty) {
+      const data = snapshot.docs[0].data() as ActivoFijo;
+      const mantenimientos = data.mantenimientos || [];
+
+      mantenimientos.push(mantenimiento);
+
+      await updateDoc(documentRef, { mantenimientos });
+
+      return mantenimiento;
+    }
+
+    return null; // En caso de que no se encuentre el documento
+  }
+
+  async deleteMantenimiento(idActivoFijo: string, idMantenimiento: string): Promise<void> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${idActivoFijo}`);
+
+    // Buscar el activo por id
+    const snapshot = await getDocs(query(collection(this.firestore, this.pathName), where('id', '==', idActivoFijo)));
+    if (!snapshot.empty) {
+      const data = snapshot.docs[0].data() as ActivoFijo;
+      const mantenimientos = data.mantenimientos || [];
+
+      // Buscar y marcar como eliminado
+      const nuevosMantenimientos = mantenimientos.map(m => {
+        if (m.id === idMantenimiento) {
+          return { ...m, eliminado: true }; // Marcar como eliminado
+        }
+        return m;
+      });
+
+      await updateDoc(documentRef, { mantenimientos: nuevosMantenimientos });
+    }
+  }
+
+  async obtenerFredioras(idSucursal: string): Promise<ActivoFijo[]> {
+    try {
+      const collectionRef = collection(this.firestore, this.pathName);
+      const q = query(
+        collectionRef,
+        where('idSucursal', '==', idSucursal),
+        where('esFreidora', '==', true)
+      );
+      const snapshot = await getDocs(q);
+      const freidoras: ActivoFijo[] = [];
+
+      snapshot.forEach((doc) => {
+        freidoras.push(doc.data() as ActivoFijo);
+      });
+
+      return freidoras;
+    } catch (error) {
+      console.error('Error al obtener las freidoras:', error);
+      throw error;
+    }
+  }
 }

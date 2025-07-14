@@ -23,26 +23,30 @@
                         <th>CONDICIÓN</th>
                         <th>UBICACIÓN</th>
                         <th>COSTO</th>
+                        <th>COSTO MANT.</th>
                         <th>ACCIONES</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-activo>
-                    <tr [pSelectableRow]="activo">
+                    <tr [pSelectableRow]="activo"
+                        [ngClass]="{'row-highlight': ( getCostoTotalMantenimientos(activo) >= activo.costo)}">
                         <td>{{ activo.referencia }}</td>
                         <td>{{ activo.descripcion }}</td>
                         <td>{{ nombreSucursal(activo.idSucursal) }}</td>
                         <td>{{ nombreArea(activo.idArea) }}</td>
                         <td>{{ nombreAreaActivoFijo(activo.idAreaActivoFijo) }}</td>
                         <td>{{ nombreCategoriaActivoFijo(activo.idCategoriaActivoFijo) }}</td>
-                        <td>{{ activo.noMantenimientos }}</td>
+                        <td>{{ activo.mantenimientos.length }}</td>
                         <td>{{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) }}</td>
                         <td>{{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}</td>
                         <td>{{ activo.costo | currency }}</td>
-                        <td>
-                            <button class="btn btn-primary me-3" (click)="mostrarTickets(activo)"><i
-                                    class='bx bx-receipt bx-sm' pTooltip="VER TICKETS" tooltipPosition="top"></i></button>
+                        <td>{{ getCostoTotalMantenimientos(activo) | currency }}</td>
+                        <td style="display: flex; gap: 10px">
+                            <button class="btn btn-secondary me-3" (click)="mostrarTickets(activo)"><i
+                                    class='bx bx-receipt bx-sm' pTooltip="VER TICKETS"
+                                    tooltipPosition="top"></i></button>
 
-                            <button class="btn btn-primary me-3" (click)="mostrarModalMantenimientos = true"><i
+                            <button class="btn btn-warning me-3" (click)="abrirModalMantenimientos(activo)"><i
                                     class='bx bx-wrench bx-sm' pTooltip="VER MANTENIMIENTOS"
                                     tooltipPosition="top"></i></button>
 
@@ -81,6 +85,9 @@
     (closeEvent)="cerrarModalActivoFijo()" [activoFijo]="activoFijoSeleccionada"
     [esNuevoActivoFijo]="esNuevoActivoFijo"></app-modal-fixed-assets-create>
 
-<app-modal-fixed-assets-detail *ngIf="mostrarModalTickets"
-    [mostrarModalDetalleActivoFijo]="mostrarModalTickets" [activoFijo]="activoFijoSeleccionada"
-    (closeEvent)="mostrarModalTickets = false"></app-modal-fixed-assets-detail>
+<app-modal-fixed-asset-tickets *ngIf="mostrarModalTickets" [mostrarModalDetalleActivoFijo]="mostrarModalTickets"
+    [activoFijo]="activoFijoSeleccionada" (closeEvent)="mostrarModalTickets = false"></app-modal-fixed-asset-tickets>
+
+<app-modal-fixed-asset-maintenance *ngIf="mostrarModalMantenimientos" [mostrarModal]="mostrarModalMantenimientos"
+    [activoFijo]="activoFijoSeleccionada"
+    (closeEvent)="mostrarModalMantenimientos = false"></app-modal-fixed-asset-maintenance>

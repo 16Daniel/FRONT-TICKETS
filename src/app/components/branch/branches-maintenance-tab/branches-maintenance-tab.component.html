@@ -10,7 +10,7 @@
     (click)="mostrarModalHistorialMantenimientos = true">
   </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="CHECK 8 X 8" icon="pi pi-wrench"
+  <p-button *ngIf="usuario.idRol == '2' && mantenimientosActivos.length > 0" label="CHECK 8 X 8" icon="pi pi-wrench"
     styleClass="p-button-danger" (click)="mostrarAlerta()">
   </p-button>
 
@@ -43,7 +43,7 @@
 
 <app-modal-mateinance-mtto-check *ngIf="mostrarModalManteinance" [showModal]="mostrarModalManteinance"
   (closeEvent)="mostrarModalManteinance = false"
-  [mantenimientoActivo]="mantenimientoActivo"></app-modal-mateinance-mtto-check>
+  [mantenimientosActivos]="mantenimientosActivos"></app-modal-mateinance-mtto-check>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

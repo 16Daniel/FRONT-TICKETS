@@ -235,20 +235,33 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return forkJoin(consultas);
   }
 
-  async obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string) {
+  async obtenerMantenimientoVisitaPorFecha(
+    fecha: Date,
+    idSucursal: string,
+    estatus?: boolean
+  ) {
     const coleccionRef = collection(this.firestore, this.pathName);
 
-    // Convertir las fechas a timestamps de Firestore
+    // Convertir la fecha a las 00:00:00 del día
     fecha.setHours(0, 0, 0, 0);
-    const consulta = query(
-      coleccionRef,
+
+    // Construir los filtros dinámicamente
+    const filtros = [
       where('fecha', '==', fecha),
       where('idSucursal', '==', idSucursal),
-      where('estatus', '==', false),
-    );
+    ];
+
+    if (estatus !== undefined) {
+      filtros.push(where('estatus', '==', estatus));
+    }
+
+    const consulta = query(coleccionRef, ...filtros);
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Mantenimiento10x10));
+    const documentos: Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as Mantenimiento10x10));
 
     return documentos;
   }
