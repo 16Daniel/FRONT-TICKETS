@@ -8,11 +8,12 @@ import { AccordionModule } from 'primeng/accordion';
 import { Usuario } from '../../../models/usuario.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
+import { ModalSelectSpecialistUserComponent } from '../../users/modal-select-specialist-user/modal-select-specialist-user.component';
 
 @Component({
   selector: 'app-modal-ticket-detail',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, AccordionModule],
+  imports: [CommonModule, DialogModule, FormsModule, AccordionModule, ModalSelectSpecialistUserComponent],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
 })
@@ -21,6 +22,8 @@ export class ModalTicketDetailComponent {
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   usuario: Usuario;
+  mostrarModalEspecialistas: boolean = false;
+  idSucursalEspecialista: string = '';
 
   constructor(
     private ticketsService: TicketsService,
@@ -49,5 +52,10 @@ export class ModalTicketDetailComponent {
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+  onClickAsignarEspecialista() {
+    this.idSucursalEspecialista = this.ticket?.idSucursal;
+    this.mostrarModalEspecialistas = true;
   }
 }

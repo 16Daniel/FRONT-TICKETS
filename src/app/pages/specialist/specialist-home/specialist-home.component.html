@@ -71,7 +71,18 @@
                                 tooltipPosition="top"></i>
                         </td>
                         <td style="display: flex; gap: 10px">
-
+                            <button class="btn btn-warning" style="margin: 2px" (click)="onClickRechazar(ticket)">
+                                <i class="bx bx-undo bx-sm" pTooltip="RECHAZAR TICKET" tooltipPosition="top"></i>
+                            </button>
+                            <button class="btn btn-success" (click)="onClickValidar(ticket)" style="margin: 2px"
+                                *ngIf="ticket.idEstatusTicket != '7'">
+                                <i class="bx bx-check-circle bx-sm" pTooltip="VALIDAR TICKET" tooltipPosition="top"></i>
+                            </button>
+                            <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)"
+                                style="margin: 2px" [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
+                                <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)"
+                                    pTooltip="CHAT" tooltipPosition="top"></i>
+                            </button>
                         </td>
                     </tr>
                 </ng-template>
@@ -81,6 +92,14 @@
     </div>
 </div>
 
+<p-confirmDialog />
+
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticketSeleccionado"
     [showModalTicketDetail]="mostrarModalTicketDetail"
     (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+
+<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
+    [ticket]="ticketSeleccionado" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
+
+<app-modal-ticket-chat *ngIf="mostrarModalChatTicket" [showModalChatTicket]="mostrarModalChatTicket"
+    [ticket]="ticketSeleccionado" (closeEvent)="mostrarModalChatTicket = false"></app-modal-ticket-chat>

@@ -59,9 +59,14 @@ export class ModalSelectSpecialistUserComponent implements OnInit {
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
-        debugger
         this.ticket.idUsuarioEspecialista = this.usuarioSeleccionado?.id!
         this.ticket.esAsignadoEspecialista = true;
+        this.ticket.idResponsables.push(this.ticket.idUsuarioEspecialista);
+        this.ticket.participantesChat.push({
+          idUsuario: this.ticket.idUsuarioEspecialista,
+          ultimoComentarioLeido: 0,
+        });
+
         this.ticketsService
           .update(this.ticket)
           .then(() => {

@@ -110,6 +110,7 @@ export default class FixedAssetsComponent implements OnInit {
 
   abrirModalCrearActivoFijo() {
     this.esNuevoActivoFijo = true;
+    this.activoFijoSeleccionada = new ActivoFijo;
     this.mostrarModalActivoFijo = true;
   }
 

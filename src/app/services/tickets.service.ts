@@ -402,7 +402,9 @@ export class TicketsService {
 
     const q = query(
       ticketsCollection,
-      where('idUsuarioEspecialista', '==', idUsuarioEspecialista)
+      where('idUsuarioEspecialista', '==', idUsuarioEspecialista),
+      where('idEstatusTicket', 'not-in', ['3']),
+      where('esAsignadoEspecialista', '==', true),
     );
 
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
