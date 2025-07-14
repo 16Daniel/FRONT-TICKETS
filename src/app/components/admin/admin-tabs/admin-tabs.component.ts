@@ -8,16 +8,18 @@ import { Ticket } from '../../../models/ticket.model';
 import { AdminSysTabComponent } from "../admin-sys-tab/admin-sys-tab.component";
 import { AdminAudioVideoTabComponent } from "../admin-audio-video-tab/admin-audio-video-tab.component";
 import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-maintenance-tab.component';
+import { AdminReportsTabComponent } from "../admin-reports-tab/admin-reports-tab.component";
 
 @Component({
   selector: 'app-admin-tabs',
   standalone: true,
   imports: [
-    TabViewModule, 
-    AdminSysTabComponent, 
+    TabViewModule,
+    AdminSysTabComponent,
     AdminAudioVideoTabComponent,
-    AdminMaintenanceTabComponent
-  ],
+    AdminMaintenanceTabComponent,
+    AdminReportsTabComponent,
+],
   templateUrl: './admin-tabs.component.html',
 })
 

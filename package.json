@@ -26,6 +26,7 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@swimlane/ngx-charts": "^23.0.0-alpha.0",
     "@types/xlsx": "^0.0.36",
     "bootstrap": "^5.3.3",
     "nanoid": "^5.0.9",

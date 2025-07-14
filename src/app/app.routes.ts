@@ -107,11 +107,17 @@ export const routes: Routes = [
   },
   {
     path: 'nomina',
+      loadComponent: () => import('./pages/Nomina/nomina.component'),
     children: [
       {
         path: 'constructor-de-calendarios',
         title: 'Constructor de calendarios',
         loadComponent: () => import('./pages/Nomina/work-shift-calendar/work-shift-calendar.component'),
+      },
+       {
+        path: 'control-de-personal',
+        title: 'Control del personal',
+        loadComponent: () => import('./pages/Nomina/staff-control/staff-control.component'),
       },
        {
         path: '',

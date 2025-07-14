@@ -392,8 +392,45 @@ export class TicketsService {
     }) as Ticket);
   }
 
+   obtenerTicketsEntreFechas(
+    fechaInicio: Date,
+    fechaFin: Date,
+    callback: (result: Ticket[] | null) => void
+  ): () => void {
+    fechaInicio.setHours(0, 0, 0, 0);
+
+    const collectionRef = collection(this.firestore, 'tickets');
+
+    const q = query(
+      collectionRef,
+      where('idEstatusTicket', '==', '3'),
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc'),
+    );
+
+    // Suscribirse a cambios en tiempo real
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        callback(null); // No hay registros
+      } else {
+        const tickets = querySnapshot.docs.map(
+          (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Ticket)
+        ); // Tipar cada objeto como Ticket
+        callback(tickets); // Devuelve el primer registro
+      }
+    });
+
+    return unsubscribe;
+  }
+
   getAll(): Observable<Ticket[] | any[]> {
     const sucursalesCollection = collection(this.firestore, 'tickets');
     return collectionData(sucursalesCollection, { idField: 'id' });
   }
+
 }

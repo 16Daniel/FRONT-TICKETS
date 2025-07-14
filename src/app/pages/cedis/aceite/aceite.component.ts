@@ -42,6 +42,10 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
   ngOnInit(): void 
   {
     this.obtenerSucursales(); 
+
+    setInterval(() => {
+      this.consultarEntregas(); 
+    }, 60000);
    }
  
      showMessage(sev: string, summ: string, det: string) {
