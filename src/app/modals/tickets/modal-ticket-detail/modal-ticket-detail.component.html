@@ -23,9 +23,9 @@
         <button class="btn bg-p-b p-3">TRABAJAR</button>
     </div>
 
-    <div class="d-flex justify-content-end mt-3" *ngIf="usuario?.idRol == '4' && ticket?.idEstatusTicket == '2' && !ticket?.esAsignadoEspecialista"
+    <div class="d-flex justify-content-end mt-3" *ngIf="usuario?.idArea == '4' && usuario?.idRol == '4' && ticket?.idEstatusTicket == '2' && !ticket?.esAsignadoEspecialista"
         (click)="onClickAsignarEspecialista()">
-        <button class="btn bg-p-b p-3">ASIGNAR A ESPECIALISTA</button>
+        <button class="btn btn-danger p-3">ASIGNAR A ESPECIALISTA</button>
     </div>
 </p-dialog>
 

@@ -34,7 +34,7 @@
                 <input class="form-control" style="height: 48px;" type="text" disabled="true"
                     placeholder="FOLIO DEL TICKET" [(ngModel)]="mantenimiento.folioTicket" name="folioTicket"
                     [ngClass]="{'p-invalid': formFolioTicketCtrl.invalid && formFolioTicketCtrl.touched}"
-                    #formFolioTicketCtrl="ngModel">
+                    #formFolioTicketCtrl="ngModel" required>
             </div>
             <div class="col-md-1" style="margin-top: 35px;">
                 <button type="button" class="btn bg-p-b p-3" (click)="mostrarModalTcikets = true"><i
