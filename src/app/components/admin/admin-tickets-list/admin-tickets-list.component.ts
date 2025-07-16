@@ -347,4 +347,53 @@ export class AdminTicketsListComponent {
   }
 
   obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
+
+  obtenerBackgroundColorPrioridad(value: string): string {
+    let str = '';
+
+    if (value == '2') {
+      str = '#ff0000';
+    }
+
+    if (value == '3') {
+      str = '#ffe800';
+    }
+
+    if (value == '4') {
+      str = '#61ff00';
+    }
+
+    if (value == '1') {
+      str = 'black';
+    }
+    return str;
+  }
+
+  onPanicoClick(idTicket: string) {
+    this.confirmationService.confirm({
+      header: 'Confirmación',
+      message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      accept: () => {
+        let temp = this.tickets.filter((x) => x.id == idTicket);
+        if (temp.length > 0) {
+          let ticket = temp[0];
+          ticket.idPrioridadTicket = '1';
+
+          this.ticketsService
+            .update(ticket)
+            .then(() => {
+              this.showMessage('success', 'Success', 'Enviado correctamente');
+            })
+            .catch((error) =>
+              console.error('Error al actualizar los comentarios:', error)
+            );
+        }
+      },
+      reject: () => { },
+    });
+  }
 }
