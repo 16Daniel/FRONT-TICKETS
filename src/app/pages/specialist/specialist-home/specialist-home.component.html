@@ -8,6 +8,7 @@
                 (onRowSelect)="mostrarModalTicketDetail = true;">
                 <ng-template pTemplate="header">
                     <tr class="text-center">
+                        <th><span class="fs-1">🚥</span></th>
                         <th>FOLIO</th>
                         <th>FECHA</th>
                         <th>DEATHLINE</th>
@@ -24,28 +25,21 @@
                 <!-- FF495F -->
                 <ng-template pTemplate="body" let-ticket>
                     <tr [pSelectableRow]="ticket">
+                        <td class="text-center">
+                            <i *ngIf="ticket.idPrioridadTicket != '1'" class="bx bxs-circle bx-sm"
+                                [style]="{ color: obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket) }">
+                            </i>
+                            <i class="bx bxs-hot bx-sm" style="color: red" *ngIf="ticket.idPrioridadTicket == '1'"></i>
+                        </td>
                         <td class="text-center">{{ ticket.folio }}</td>
-                        <td class="text-center">
-                            {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
-                        </td>
-                        <td class="text-center">
-                            {{ getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}
-                        </td>
-                        <td class="text-center">
-                            {{ obtenerNombreArea(ticket.idArea) }}
-                        </td>
-                        <td class="text-center">
-                            {{obtenerNombreSucursal(ticket.idSucursal)}}
-                        </td>
+                        <td class="text-center">{{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+                        <td class="text-center">{{ getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+                        <td class="text-center">{{ obtenerNombreArea(ticket.idArea) }}</td>
+                        <td class="text-center">{{obtenerNombreSucursal(ticket.idSucursal)}}</td>
                         <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
-                        <td class="text-center">
-                            {{ obtenerNombreResponsable(usuario.id) }}
-                        </td>
-                        <td class="text-center">
-                            {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
-                        </td>
-                        <td class="text-center">
-                            {{ ticket.idSubcategoria == null ? "N/A" : ticket.nombreSubcategoria }}
+                        <td class="text-center">{{ obtenerNombreResponsable(usuario.id) }}</td>
+                        <td class="text-center">{{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}</td>
+                        <td class="text-center">{{ ticket.idSubcategoria == null ? "N/A" : ticket.nombreSubcategoria }}
                         </td>
                         <td class="text-center">
                             <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm"

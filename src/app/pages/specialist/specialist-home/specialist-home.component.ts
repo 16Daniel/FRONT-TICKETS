@@ -146,6 +146,27 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
     return str;
   }
 
+  obtenerBackgroundColorPrioridad(value: string): string {
+    let str = '';
+
+    if (value == '2') {
+      str = '#ff0000';
+    }
+
+    if (value == '3') {
+      str = '#ffe800';
+    }
+
+    if (value == '4') {
+      str = '#61ff00';
+    }
+
+    if (value == '1') {
+      str = 'black';
+    }
+    return str;
+  }
+
   obtenerNombreResponsable(id: string): string {
     let nombre = '';
 
