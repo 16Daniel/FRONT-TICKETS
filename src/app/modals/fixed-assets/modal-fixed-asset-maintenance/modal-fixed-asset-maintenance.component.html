@@ -32,7 +32,7 @@
             </div>
             <div class="col-md-3">
                 <p class="fw-bold">TICKET</p>
-                <input class="form-control" style="height: 48px;" type="text" readonly
+                <input class="form-control" style="height: 48px;" type="text" (change)="buscarTicket()"
                     placeholder="FOLIO DEL TICKET" [(ngModel)]="mantenimiento.folioTicket" name="folioTicket"
                     [ngClass]="{'p-invalid': formFolioTicketCtrl.invalid && formFolioTicketCtrl.touched}"
                     #formFolioTicketCtrl="ngModel" required>

@@ -392,7 +392,7 @@ export class TicketsService {
     }) as Ticket);
   }
 
-   obtenerTicketsEntreFechas(
+  obtenerTicketsEntreFechas(
     fechaInicio: Date,
     fechaFin: Date,
     callback: (result: Ticket[] | null) => void
@@ -441,6 +441,17 @@ export class TicketsService {
       where('idUsuarioEspecialista', '==', idUsuarioEspecialista),
       where('idEstatusTicket', 'not-in', ['3']),
       where('esAsignadoEspecialista', '==', true),
+    );
+
+    return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
+  }
+
+  getTicketsPorFolio(folio: string): Observable<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+
+    const q = query(
+      ticketsCollection,
+      where('folio', '==', folio),
     );
 
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
