@@ -110,8 +110,12 @@ export default class FixedAssetsComponent implements OnInit {
 
   obtenerActivosFijos() {
     this.subscripcion = this.fixedAssetsService.get(this.usuario.idArea).subscribe(result => {
-      this.activosFijos = result;
-      this.activosFijosFiltrados = result;
+      this.activosFijos = result.sort((a, b) => {
+        const idA = Number(a.idSucursal);
+        const idB = Number(b.idSucursal);
+        return idA - idB;
+      });
+      this.activosFijosFiltrados = this.activosFijos;
       this.cdr.detectChanges();
     }, (error) => {
       console.log(error);
