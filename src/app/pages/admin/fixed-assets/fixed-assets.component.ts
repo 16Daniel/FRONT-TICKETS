@@ -27,6 +27,7 @@ import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model
 import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
 import { ModalFixedAssetTicketsComponent } from '../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-fixed-assets',
@@ -41,7 +42,8 @@ import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-asset
     ModalFixedAssetsCreateComponent,
     ModalFixedAssetTicketsComponent,
     ModalFixedAssetMaintenanceComponent,
-    TooltipModule
+    TooltipModule,
+    DropdownModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',
@@ -52,6 +54,7 @@ export default class FixedAssetsComponent implements OnInit {
   esNuevoActivoFijo: boolean = false;
   mostrarModalActivoFijo: boolean = false;
   activosFijos: ActivoFijo[] = [];
+  activosFijosFiltrados: ActivoFijo[] = [];
   activoFijoSeleccionada: ActivoFijo = new ActivoFijo;
   subscripcion: Subscription | undefined;
   usuario: Usuario;
@@ -65,6 +68,13 @@ export default class FixedAssetsComponent implements OnInit {
   categoriasActivosFijos: CategoriaActivoFijo[] = [];
   ubicacionesActivosFijos: UbicacionActivoFijo[] = [];
   estatusActivosFijos: EstatusActivoFijo[] = [];
+
+  idSucursalFiltro: string | undefined;
+  idAreaFiltro: string | undefined;
+  idLocacionFiltro: string | undefined;
+  idCategoriaFiltro: string | undefined;
+  idEstatusFiltro: string | undefined;
+  idUbicacionFiltro: string | undefined;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -101,6 +111,7 @@ export default class FixedAssetsComponent implements OnInit {
   obtenerActivosFijos() {
     this.subscripcion = this.fixedAssetsService.get(this.usuario.idArea).subscribe(result => {
       this.activosFijos = result;
+      this.activosFijosFiltrados = result;
       this.cdr.detectChanges();
     }, (error) => {
       console.log(error);
@@ -252,6 +263,28 @@ export default class FixedAssetsComponent implements OnInit {
   mostrarTickets = (activo: ActivoFijo) => {
     this.mostrarModalTickets = true;
     this.activoFijoSeleccionada = activo
+  }
+
+  filtrarActivosFijos() {
+    this.activosFijosFiltrados = this.activosFijos.filter(activo => {
+      return (!this.idSucursalFiltro || activo.idSucursal === this.idSucursalFiltro) &&
+        (!this.idAreaFiltro || activo.idArea === this.idAreaFiltro) &&
+        (!this.idLocacionFiltro || activo.idAreaActivoFijo === this.idLocacionFiltro) &&
+        (!this.idCategoriaFiltro || activo.idCategoriaActivoFijo === this.idCategoriaFiltro) &&
+        (!this.idEstatusFiltro || activo.idEstatusActivoFijo === this.idEstatusFiltro) &&
+        (!this.idUbicacionFiltro || activo.idUbicacionActivoFijo === this.idUbicacionFiltro);
+    });
+  }
+
+  limpiarFiltros() {
+    this.idSucursalFiltro = undefined;
+    this.idAreaFiltro = undefined;
+    this.idLocacionFiltro = undefined;
+    this.idCategoriaFiltro = undefined;
+    this.idEstatusFiltro = undefined;
+    this.idUbicacionFiltro = undefined;
+
+    this.activosFijosFiltrados = this.activosFijos;
   }
 
 
