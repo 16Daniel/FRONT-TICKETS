@@ -1,0 +1,53 @@
+<div class="pt-5">
+    <!-- activo-fijo-detalle.component.html -->
+    <div class="container mt-4 px-3">
+        <div class="card shadow-sm rounded-4">
+            <div class="card-body">
+
+                <h5 class="card-title fw-bold text-primary text-center">
+                    {{ activo.descripcion || 'Activo sin descripción' }}
+                </h5>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Referencia:</strong> {{ activo.referencia || 'N/A' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Sucursal:</strong> {{ nombreSucursal(activo.idSucursal) }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Área:</strong> {{ nombreArea(activo.idArea) }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Categoría:</strong> {{ nombreCategoriaActivoFijo(activo.idCategoriaActivoFijo) }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Locación:</strong> {{ nombreAreaActivoFijo(activo.idAreaActivoFijo) }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Ubicación:</strong> {{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Costo:</strong>
+                        {{ activo.costo ? ('$' + activo.costo.toFixed(2)) : 'No registrado' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>¿Es freidora?</strong>
+                        <span class="badge bg-{{ activo.esFreidora ? 'success' : 'secondary' }}">
+                            {{ activo.esFreidora ? 'Sí' : 'No' }}
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Estado:</strong> {{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) }}
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+    [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+    [showTransformOptions]="'translateX(100%)'"></p-toast>

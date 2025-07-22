@@ -157,8 +157,16 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-activo>
-                    <tr [pSelectableRow]="activo"
-                        [ngClass]="{'row-highlight': ( getCostoTotalMantenimientos(activo) >= activo.costo)}">
+                    <tr [pSelectableRow]="activo" [ngClass]="{
+                        'row-highlight': getCostoTotalMantenimientos(activo) >= activo.costo,
+                        'row-rojo': nombreEstatusActivoFijo(activo.idEstatusActivoFijo) === 'DESCOMPUESTO' && getCostoTotalMantenimientos(activo) < activo.costo,
+                        'row-morado': (
+                            ['EN REPARACIÓN', 'REPARADO', 'POR INSTALAR'].includes(nombreEstatusActivoFijo(activo.idEstatusActivoFijo)!) &&
+                            getCostoTotalMantenimientos(activo) < activo.costo
+                        ),
+                        'row-verde': nombreEstatusActivoFijo(activo.idEstatusActivoFijo) === 'NUEVO' && getCostoTotalMantenimientos(activo) < activo.costo,
+                        'row-amarillo': nombreEstatusActivoFijo(activo.idEstatusActivoFijo) === 'USADO' && getCostoTotalMantenimientos(activo) < activo.costo
+                    }">
                         <td>{{ activo.referencia }}</td>
                         <td>{{ activo.descripcion }}</td>
                         <td>{{ nombreSucursal(activo.idSucursal) }}</td>
