@@ -2,6 +2,135 @@
     <div class="pt-3" style="padding-left: 50px; padding-right: 50px;">
         <div class="m-2 mt-3 bg-white p-3">
             <div class="d-flex justify-content-between align-items-center">
+                <h3>FILTROS DE BÚSQUEDA</h3>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <p class="fw-bold">SUCURSAL</p>
+                    <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalFiltro" name="sucursal"
+                        [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                        placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.nombre }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-dep pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ dep.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <p></p>
+                </div>
+                <div class="col-md-2">
+                    <p class="fw-bold">ÁREA</p>
+                    <p-dropdown [options]="areas" [(ngModel)]="idAreaFiltro" [optionValue]="'id'" name="area"
+                        optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                        placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.nombre }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-dep pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ dep.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <p></p>
+                </div>
+                <div class="col-md-2">
+                    <p class="fw-bold">LOCACIÓN</p>
+                    <p-dropdown [options]="areasActivosFijos" [(ngModel)]="idLocacionFiltro" [optionValue]="'id'"
+                        name="locacion" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                        placeholder="SELECCIONAR LOCACIÓN" [style]="{width:'100%'}">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.nombre }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-dep pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ dep.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <p></p>
+                </div>
+                <div class="col-md-2">
+                    <p class="fw-bold">CATEGORÍA</p>
+                    <p-dropdown [options]="categoriasActivosFijos" [(ngModel)]="idCategoriaFiltro" [optionValue]="'id'"
+                        name="categoria" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                        placeholder="SELECCIONAR CATEGORÍA" [style]="{width:'100%'}">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.nombre }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-dep pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ dep.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <p></p>
+                </div>
+                <div class="col-md-2">
+                    <p class="fw-bold">CONDICIÓN</p>
+                    <p-dropdown [options]="estatusActivosFijos" [(ngModel)]="idEstatusFiltro" [optionValue]="'id'"
+                        name="condicion" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                        placeholder="SELECCIONAR CONDICIÓN" [style]="{width:'100%'}">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.nombre }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-dep pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ dep.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <p></p>
+                </div>
+                <div class="col-md-2">
+                    <p class="fw-bold">UBICACIÓN</p>
+                    <p-dropdown [options]="ubicacionesActivosFijos" [(ngModel)]="idUbicacionFiltro" [optionValue]="'id'"
+                        name="ubicacion" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                        placeholder="SELECCIONAR CONDICIÓN" [style]="{width:'100%'}">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ selectedOption.nombre }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-dep pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ dep.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
+                <div class="d-flex gap-2">
+                    <p-button label="BUSCAR" icon="pi pi-search" styleClass="p-button-info"
+                        (click)="filtrarActivosFijos()"></p-button>
+                    <p-button label="LIMPIAR FILTROS" icon="pi pi-filter-slash" styleClass="p-button-secondary"
+                        (click)="limpiarFiltros()"></p-button>
+                </div>
+            </div>
+
+
+
+            <br>
+            <br>
+            <div class="d-flex justify-content-between align-items-center">
                 <h2>LISTA DE ACTIVOS FIJOS</h2>
                 <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-info"
                     (click)="abrirModalCrearActivoFijo()">
@@ -9,7 +138,7 @@
             </div>
             <br>
 
-            <p-table [value]="activosFijos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+            <p-table [value]="activosFijosFiltrados" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
                 styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
                 <ng-template pTemplate="header">
                     <tr>
@@ -28,8 +157,16 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-activo>
-                    <tr [pSelectableRow]="activo"
-                        [ngClass]="{'row-highlight': ( getCostoTotalMantenimientos(activo) >= activo.costo)}">
+                    <tr [pSelectableRow]="activo" [ngClass]="{
+                        'row-highlight': getCostoTotalMantenimientos(activo) >= activo.costo,
+                        'row-rojo': nombreEstatusActivoFijo(activo.idEstatusActivoFijo) === 'DESCOMPUESTO' && getCostoTotalMantenimientos(activo) < activo.costo,
+                        'row-morado': (
+                            ['EN REPARACIÓN', 'REPARADO', 'POR INSTALAR'].includes(nombreEstatusActivoFijo(activo.idEstatusActivoFijo)!) &&
+                            getCostoTotalMantenimientos(activo) < activo.costo
+                        ),
+                        'row-verde': nombreEstatusActivoFijo(activo.idEstatusActivoFijo) === 'NUEVO' && getCostoTotalMantenimientos(activo) < activo.costo,
+                        'row-amarillo': nombreEstatusActivoFijo(activo.idEstatusActivoFijo) === 'USADO' && getCostoTotalMantenimientos(activo) < activo.costo
+                    }">
                         <td>{{ activo.referencia }}</td>
                         <td>{{ activo.descripcion }}</td>
                         <td>{{ nombreSucursal(activo.idSucursal) }}</td>

@@ -91,7 +91,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
   crearReferencia() {
     const sucursal = this.rellenarCeros(this.activoFijo.idSucursal, 2);
     const area = this.areas.find(x => x.id == this.activoFijo.idArea)?.nombre.substring(0, 1).toUpperCase();
-    const areaActivo = this.areasActivosFijos.find(x => x.id == this.activoFijo.idAreaActivoFijo)?.nombre.substring(0, 1).toUpperCase();
+    const areaActivo = this.areasActivosFijos.find(x => x.id == this.activoFijo.idAreaActivoFijo)?.alias;
     const categoriaActivo = this.categoriasActivosFijos.find(x => x.id == this.activoFijo.idCategoriaActivoFijo)?.nombre.substring(0, 1).toUpperCase();
 
     return `RW${sucursal}${area}${areaActivo}${categoriaActivo}${this.activoFijo.consecutivo}`;

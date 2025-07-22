@@ -19,6 +19,7 @@ import { UsersService } from '../../../services/users.service';
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalValidateTicketComponent } from '../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
 import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
+import { Comentario } from '../../../models/comentario-chat.model';
 
 @Component({
   selector: 'app-specialist-home',
@@ -145,6 +146,27 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
     return str;
   }
 
+  obtenerBackgroundColorPrioridad(value: string): string {
+    let str = '';
+
+    if (value == '2') {
+      str = '#ff0000';
+    }
+
+    if (value == '3') {
+      str = '#ffe800';
+    }
+
+    if (value == '4') {
+      str = '#61ff00';
+    }
+
+    if (value == '1') {
+      str = 'black';
+    }
+    return str;
+  }
+
   obtenerNombreResponsable(id: string): string {
     let nombre = '';
 
@@ -191,7 +213,28 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
       accept: () => {
+        ticket.idUsuarioEspecialista = '';
         ticket.esAsignadoEspecialista = false;
+
+        let nuevoMensaje: Comentario = {
+          nombre: this.usuario?.nombre + ' ' + this.usuario?.apellidoP,
+          idUsuario: this.usuario?.id,
+          comentario: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+              <p><strong>Este ticket se asigna al siguiente analista:</strong></p>
+              <ul>
+                <li><strong>Fecha:</strong> ${new Date().toLocaleString()}</li>
+                <li><strong>Nombre:</strong> ${this.getUsuarioResponsable(ticket.idResponsableFinaliza)?.nombre} ${this.getUsuarioResponsable(ticket.idResponsableFinaliza)?.apellidoP}</li>
+              </ul>
+              <p>Él dará el seguimiento y finalizará este ticket.</p>
+            </div>
+          `,
+          fecha: new Date(),
+        };
+
+        ticket!.comentarios.push(nuevoMensaje);
+
+
         this.ticketsService
           .update(ticket)
           .then(() => {
@@ -253,5 +296,9 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
       },
       reject: () => { },
     });
+  }
+
+  getUsuarioResponsable(idResponsableFinaliza: string) {
+    return this.usuariosHelp.find(x => x.id == idResponsableFinaliza)
   }
 }

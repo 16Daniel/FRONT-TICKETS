@@ -12,6 +12,8 @@ import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
 import { Ticket } from '../../../models/ticket.model';
 import { ModalFixedAssetSelectTicketComponent } from '../modal-fixed-asset-select-ticket/modal-fixed-asset-select-ticket.component';
+import { TicketsService } from '../../../services/tickets.service';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-modal-fixed-asset-maintenance',
@@ -30,14 +32,18 @@ export class ModalFixedAssetMaintenanceComponent {
 
   ticket: Ticket | undefined;
   mostrarModalTcikets: boolean = false;
+  usuario: Usuario;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fixedAssetsService: FixedAssetsService,
-    public datesHelper: DatesHelperService
-  ) { }
+    public datesHelper: DatesHelperService,
+    private ticketsService: TicketsService
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   onHide() {
     this.closeEvent.emit(false); // Cerrar modal
@@ -93,5 +99,15 @@ export class ModalFixedAssetMaintenanceComponent {
 
   ligarTicket(ticket: Ticket) {
     this.mantenimiento.folioTicket = ticket.folio;
+  }
+
+  buscarTicket() {
+    this.ticketsService.getTicketsPorFolio(this.mantenimiento.folioTicket)
+      .subscribe(result => {
+        if (result.length == 0) {
+          this.showMessage('warn', 'Error', 'No se encontró ticket con folio ' + this.mantenimiento.folioTicket);
+          this.mantenimiento.folioTicket = '';
+        }
+      });
   }
 }
