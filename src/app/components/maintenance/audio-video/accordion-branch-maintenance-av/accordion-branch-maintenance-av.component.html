@@ -1,8 +1,6 @@
 <p-accordion class="w-full">
     <p-accordionTab
         *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales))">
-        >
-
         <ng-template pTemplate="header">
             <div class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center justify-content-between" [style]="{
             'background-color': obtenerColorDeFondoSucursal(obtenerPorcentajedeUltimoMantenimiento(item.id))

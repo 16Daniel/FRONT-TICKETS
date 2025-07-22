@@ -8,6 +8,7 @@ import { Usuario } from '../../../models/usuario.model';
 import { UsersService } from '../../../services/users.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
+import { Comentario } from '../../../models/comentario-chat.model';
 
 @Component({
   selector: 'app-modal-select-specialist-user',
@@ -22,6 +23,7 @@ export class ModalSelectSpecialistUserComponent implements OnInit {
   @Input() ticket: Ticket = new Ticket;
   @Output() closeEvent = new EventEmitter<boolean>();
 
+  usuario: Usuario;
   usuarios: Usuario[] = [];
   usuarioSeleccionado: Usuario | undefined;
 
@@ -31,7 +33,9 @@ export class ModalSelectSpecialistUserComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
     private messageService: MessageService,
-  ) { }
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
     this.obtenerEspecialistas();
@@ -66,6 +70,25 @@ export class ModalSelectSpecialistUserComponent implements OnInit {
           idUsuario: this.ticket.idUsuarioEspecialista,
           ultimoComentarioLeido: 0,
         });
+
+        let nuevoMensaje: Comentario = {
+          nombre: this.usuario?.nombre + ' ' + this.usuario?.apellidoP,
+          idUsuario: this.usuario?.id,
+          comentario: `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+      <p><strong>Este ticket se asigna al siguiente especialista:</strong></p>
+      <ul>
+        <li><strong>Fecha:</strong> ${new Date().toLocaleString()}</li>
+        <li><strong>Nombre:</strong> ${this.usuarioSeleccionado?.nombre} ${this.usuarioSeleccionado?.apellidoP}</li>
+        <li><strong>Especialidad:</strong> ${this.usuarioSeleccionado?.especialidad}</li>
+      </ul>
+      <p>Él dará el seguimiento y finalizará este ticket.</p>
+    </div>
+  `,
+          fecha: new Date(),
+        };
+
+        this.ticket!.comentarios.push(nuevoMensaje);
 
         this.ticketsService
           .update(this.ticket)

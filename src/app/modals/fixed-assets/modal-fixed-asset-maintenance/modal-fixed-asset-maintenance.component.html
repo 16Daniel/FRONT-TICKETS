@@ -1,11 +1,12 @@
-<p-dialog [header]="'MANTENIMIENTOS DEL ACTIVO FIJO - ' + activoFijo.referencia" [(visible)]="mostrarModal"
-    [modal]="true" [style]="{ 'width': '75vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog [header]="'MANTENIMIENTOS DEL ACTIVO FIJO - ' + activoFijo.referencia + ' ' + activoFijo.descripcion"
+    [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '75vw', 'height': '95vh' }" [maximizable]="true"
+    (onHide)="onHide()">
 
     <h5 class="text-dark fw-bold text-center">NUEVO MANTENIMIENTO</h5>
     <p></p>
 
 
-    <form #form="ngForm" (ngSubmit)="crear(form)">
+    <form #form="ngForm" (ngSubmit)="crear(form)" *ngIf="usuario?.idRol == '5'">
         <div class="row">
             <div class="col-md-4">
                 <p class="fw-bold">COSTO</p>
@@ -31,10 +32,14 @@
             </div>
             <div class="col-md-3">
                 <p class="fw-bold">TICKET</p>
-                <input class="form-control" style="height: 48px;" type="text" disabled="true"
+                <input class="form-control" style="height: 48px;" type="text" (change)="buscarTicket()"
                     placeholder="FOLIO DEL TICKET" [(ngModel)]="mantenimiento.folioTicket" name="folioTicket"
                     [ngClass]="{'p-invalid': formFolioTicketCtrl.invalid && formFolioTicketCtrl.touched}"
-                    #formFolioTicketCtrl="ngModel">
+                    #formFolioTicketCtrl="ngModel" required>
+                <small *ngIf="formFolioTicketCtrl.invalid && formFolioTicketCtrl.touched" class="p-error">
+                    Campo requerido.
+                </small>
+                <p></p>
             </div>
             <div class="col-md-1" style="margin-top: 35px;">
                 <button type="button" class="btn bg-p-b p-3" (click)="mostrarModalTcikets = true"><i

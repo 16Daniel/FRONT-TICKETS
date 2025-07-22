@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeGuard } from './guards/home.guard';
 import { AdminGuard } from './guards/admin.guard';
-import { BranchGuard } from './guards/branch.guard';
-import { AnalystGuard } from './guards/analyst.guard';
-import { AdminAreaGuard } from './guards/admin-area.guard';
 
 export const routes: Routes = [
   {
@@ -120,26 +117,26 @@ export const routes: Routes = [
   },
   {
     path: 'nomina',
-      loadComponent: () => import('./pages/Nomina/nomina.component'),
+    loadComponent: () => import('./pages/Nomina/nomina.component'),
     children: [
       {
         path: 'constructor-de-calendarios',
         title: 'Constructor de calendarios',
         loadComponent: () => import('./pages/Nomina/work-shift-calendar/work-shift-calendar.component'),
       },
-       {
+      {
         path: 'control-de-personal',
         title: 'Control del personal',
         loadComponent: () => import('./pages/Nomina/staff-control/staff-control.component'),
       },
-       {
+      {
         path: '',
         redirectTo: '/nomina/constructor-de-calendarios',
         pathMatch: 'full',
       },
     ]
   },
-   {
+  {
     path: 'cedis',
     loadComponent: () => import('./pages/cedis/cedis.component'),
     children: [
@@ -153,7 +150,7 @@ export const routes: Routes = [
         title: 'Control de aceite',
         loadComponent: () => import('./pages/cedis/aceite/aceite.component'),
       },
-       {
+      {
         path: '',
         redirectTo: '/cedis/recoleccion',
         pathMatch: 'full',
@@ -174,5 +171,11 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
     ],
+  },
+  {
+    path: 'fixed-assets/detail/:referencia',
+    title: 'Detalle del activos fijo',
+    loadComponent: () =>
+      import('./pages/fixed-assets/detail/detail.component'),
   },
 ];

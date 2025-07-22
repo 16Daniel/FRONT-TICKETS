@@ -4,5 +4,5 @@ export interface Comentario {
   comentario: string;
   idUsuario: string;
   nombre: string;
-  fecha: Timestamp;
+  fecha: Date;
 }
