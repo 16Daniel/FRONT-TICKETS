@@ -277,4 +277,24 @@ export class Maintenance10x10Service implements IMantenimientoService {
     );
     return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento10x10[]>;
   }
+
+  async obtenerMantenimientosEntreFechas(
+  fechaInicio: Date,
+  fechaFin: Date
+): Promise<any[]> {
+  const ticketsCollection = collection(this.firestore, this.pathName);
+  
+  const q = query(ticketsCollection, 
+    where('fecha', '>=', fechaInicio),
+    where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+    orderBy('fecha', 'desc')
+  );
+
+  const querySnapshot = await getDocs(q);
+  
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+}
 }

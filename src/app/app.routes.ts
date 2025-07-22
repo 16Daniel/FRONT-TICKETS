@@ -92,6 +92,13 @@ export const routes: Routes = [
           import('./pages/admin/areas/areas.component'),
         canActivate: [AdminGuard],
       },
+        {
+        path: 'kpis',
+        title: 'KPIS',
+        loadComponent: () =>
+          import('./components/admin/admin-reports-tab/admin-reports-tab.component'),
+        canActivate: [AdminGuard],
+      },
       {
         path: 'version-history',
         title: 'Historial de versiones',
