@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
-import { ActivatedRoute } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { BranchesService } from '../../../services/branches.service';
 import { AreasService } from '../../../services/areas.service';
 import { AreasFixedAssetsService } from '../../../services/areas-fixed-assets.service';
@@ -16,17 +18,27 @@ import { AreaActivoFijo } from '../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../models/categoria-activo-fijo.model';
 import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model';
 import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
+import { ModalFixedAssetTicketsComponent } from '../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
+import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [ToastModule],
-  providers: [MessageService],
+  imports: [
+    ToastModule,
+    CommonModule,
+    ModalFixedAssetTicketsComponent,
+    ModalFixedAssetMaintenanceComponent
+  ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
+
 export default class DetailComponent implements OnInit {
   activo: ActivoFijo = new ActivoFijo;
+  mostrarModalMantenimientos: boolean = false;
+  mostrarModalTickets: boolean = false;
 
   areas: Area[] = [];
   sucursales: Sucursal[] = [];
@@ -156,6 +168,14 @@ export default class DetailComponent implements OnInit {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
+  }
+
+  getCostoTotalMantenimientos(): number {
+    if (!this.activo.mantenimientos) return 0;
+
+    return this.activo.mantenimientos
+      .filter(m => !m.eliminado)
+      .reduce((total, m) => total + (m.costo || 0), 0);
   }
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;

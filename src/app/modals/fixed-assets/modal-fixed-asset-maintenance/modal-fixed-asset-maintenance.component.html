@@ -6,7 +6,7 @@
     <p></p>
 
 
-    <form #form="ngForm" (ngSubmit)="crear(form)">
+    <form #form="ngForm" (ngSubmit)="crear(form)" *ngIf="usuario?.idRol == '5'">
         <div class="row">
             <div class="col-md-4">
                 <p class="fw-bold">COSTO</p>

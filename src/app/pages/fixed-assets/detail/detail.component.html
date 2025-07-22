@@ -1,5 +1,4 @@
 <div class="pt-5">
-    <!-- activo-fijo-detalle.component.html -->
     <div class="container mt-4 px-3">
         <div class="card shadow-sm rounded-4">
             <div class="card-body">
@@ -9,38 +8,65 @@
                 </h5>
 
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <strong>Referencia:</strong> {{ activo.referencia || 'N/A' }}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Referencia:</strong>
+                        <span>{{ activo.referencia || 'N/A' }}</span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Sucursal:</strong> {{ nombreSucursal(activo.idSucursal) }}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Sucursal:</strong>
+                        <span>{{ nombreSucursal(activo.idSucursal) }}</span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Área:</strong> {{ nombreArea(activo.idArea) }}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Área:</strong>
+                        <span>{{ nombreArea(activo.idArea) }}</span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Categoría:</strong> {{ nombreCategoriaActivoFijo(activo.idCategoriaActivoFijo) }}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Categoría:</strong>
+                        <span>{{ nombreCategoriaActivoFijo(activo.idCategoriaActivoFijo) }}</span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Locación:</strong> {{ nombreAreaActivoFijo(activo.idAreaActivoFijo) }}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Ubicación:</strong>
+                        <span>{{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}</span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Ubicación:</strong> {{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) }}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Locación:</strong>
+                        <span>{{ nombreAreaActivoFijo(activo.idAreaActivoFijo) }}</span>
                     </li>
-                    <li class="list-group-item">
+                    <li class="list-group-item d-flex justify-content-between">
                         <strong>Costo:</strong>
-                        {{ activo.costo ? ('$' + activo.costo.toFixed(2)) : 'No registrado' }}
+                        <span>{{ activo.costo ? ('$' + activo.costo.toFixed(2)) : 'No registrado' }}</span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>¿Es freidora?</strong>
-                        <span class="badge bg-{{ activo.esFreidora ? 'success' : 'secondary' }}">
-                            {{ activo.esFreidora ? 'Sí' : 'No' }}
-                        </span>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Estado:</strong>
+                        <span>{{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) }}</span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Estado:</strong> {{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) }}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>No. Mantenimientos:</strong>
+                        <span>{{ activo.mantenimientos.length }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Costo mantenimientos:</strong>
+                        <span>{{ getCostoTotalMantenimientos() | currency }}</span>
                     </li>
                 </ul>
+
+
+                <div class="row mb-3">
+                    <div class="col-12 col-md-6 d-grid mb-2 mb-md-0">
+                        <button class="btn btn-primary" (click)="mostrarModalTickets = true">
+                            <i class="bi bi-ticket me-2"></i>
+                            TICKETS
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-6 d-grid">
+                        <button class="btn btn-warning" (click)="mostrarModalMantenimientos = true">
+                            <i class="bi bi-tools me-2"></i>
+                            MANTENIMIENTOS
+                        </button>
+                    </div>
+                </div>
+
+
 
             </div>
         </div>
@@ -51,3 +77,10 @@
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
     [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
     [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+
+<app-modal-fixed-asset-tickets *ngIf="mostrarModalTickets" [mostrarModalDetalleActivoFijo]="mostrarModalTickets"
+    [activoFijo]="activo" (closeEvent)="mostrarModalTickets = false"></app-modal-fixed-asset-tickets>
+
+<app-modal-fixed-asset-maintenance *ngIf="mostrarModalMantenimientos" [mostrarModal]="mostrarModalMantenimientos"
+    [activoFijo]="activo" (closeEvent)="mostrarModalMantenimientos = false"></app-modal-fixed-asset-maintenance>
