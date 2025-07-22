@@ -147,23 +147,7 @@ export default class AnalystHomeComponent implements OnInit {
 
     this.loading = true;
 
-    switch (this.usuario.idArea) {
-      case '1':
-        this.obtenerMantenimientosSistemas(idsSucursales);
-        break;
-
-      default:
-        this.obtenerMantenimientos(idsSucursales);
-        break;
-
-      // case '2':
-      //   this.obtenerMantenimientosAudioVideo(idsSucursales);
-      //   break;
-
-      // case '4':
-      //   this.obtenerMantenimientosAudioVideo(idsSucursales);
-      //   break;
-    }
+    this.obtenerMantenimientos(idsSucursales);
   }
 
   obtenerMantenimientos(idsSucursales: string[]) {
