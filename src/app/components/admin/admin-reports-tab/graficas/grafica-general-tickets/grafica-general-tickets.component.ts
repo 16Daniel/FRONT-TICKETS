@@ -266,8 +266,9 @@ public coloresEstatus:any;
 
 generarGraficaMantenimientos():any[]
 {
-  debugger
   let sucursales = this.sucursalesSel.filter(x => x.idFront != undefined || x.idFront != null); 
+  sucursales = sucursales.filter(x => x.activoMantenimientos);
+  sucursales = sucursales.filter(x=> x.activoMantenimientos!.length>0);  
   let data:any[] = [];
   
   for(let sucursal of sucursales)
@@ -285,6 +286,14 @@ generarGraficaMantenimientos():any[]
       data.push({name:sucursal.nombre,series:series}); 
 
     }
+  
+        data = data
+            .map(group => ({
+              ...group,
+              total: group.series.reduce((acc:any, item:any) => acc + item.value, 0)
+            }))
+            .sort((a, b) => b.total - a.total) // Ordenar de mayor a menor
+            .map(({ total, ...rest }) => rest);
 
   return data; 
 }
