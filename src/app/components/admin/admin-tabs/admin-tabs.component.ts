@@ -8,7 +8,7 @@ import { Ticket } from '../../../models/ticket.model';
 import { AdminSysTabComponent } from "../admin-sys-tab/admin-sys-tab.component";
 import { AdminAudioVideoTabComponent } from "../admin-audio-video-tab/admin-audio-video-tab.component";
 import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-maintenance-tab.component';
-import { AdminReportsTabComponent } from "../admin-reports-tab/admin-reports-tab.component";
+import AdminReportsTabComponent from '../admin-reports-tab/admin-reports-tab.component';
 
 @Component({
   selector: 'app-admin-tabs',
@@ -18,7 +18,7 @@ import { AdminReportsTabComponent } from "../admin-reports-tab/admin-reports-tab
     AdminSysTabComponent,
     AdminAudioVideoTabComponent,
     AdminMaintenanceTabComponent,
-    AdminReportsTabComponent,
+    AdminReportsTabComponent
 ],
   templateUrl: './admin-tabs.component.html',
 })

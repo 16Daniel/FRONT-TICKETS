@@ -1,7 +1,7 @@
-<div>
+<div class=" p-3 pt-5">
 
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <p>FECHA INICIO</p>
           <p-calendar 
     [(ngModel)]="fechaini" 
@@ -9,7 +9,7 @@
     [showIcon]="true" 
     inputId="icondisplay" [style]="{width:'100%'}" />
         </div>
-         <div class="col-md-3">
+         <div class="col-md-2">
            <p>FECHA FIN</p>
           <p-calendar 
     [(ngModel)]="fechafin" 
@@ -20,23 +20,30 @@
 
           <div class="col-md-3">
             <p>SUCURSAL</p>
-          <p-dropdown [options]="sucursales" [(ngModel)]="sucursalSel" name="sucursal" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR SUCURSAL"
-            [style]="{width:'100%'}">
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre }}</div>
-                </div>
-            </ng-template>
-            <ng-template let-dep pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ dep.nombre }}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
+                    <p-multiSelect 
+                [options]="sucursales" 
+                [(ngModel)]="sucursalesSel" 
+                [filter]="true" 
+                optionLabel="nombre" 
+                placeholder="SELECCIONAR SUCURSALES"
+                [style]="{width:'100%'}"
+                />
         </div>
 
-        <div class="col-md-3"><p>&nbsp;</p><button class="btn btn-warning p-2" (click)="obtenerTickets()"><i class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
+          <div class="col-md-3">
+            <p>ÁREAS</p>
+                    <p-multiSelect 
+                [options]="areas" 
+                [(ngModel)]="areasSel" 
+                [filter]="true" 
+                optionLabel="nombre" 
+                placeholder="SELECCIONAR ÁREAS"
+                [style]="{width:'100%'}"
+                />
+        </div>
+
+
+        <div class="col-md-2"><p>&nbsp;</p><button class="btn btn-warning p-2" (click)="obtenerTickets()"><i class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
         <!-- <button class="btn btn-success" (click)="exportarExcel()"><img width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button> -->
         </div>
       </div>
@@ -45,8 +52,17 @@
      <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
 </div>
 
-      <div class="m-3" *ngIf="todosLosTickets.length>0">
-               <app-grafica-general-tickets [todosLosTickets]="todosLosTickets" [areas]="areas"></app-grafica-general-tickets>
+      <div class="m-3" *ngIf="finalizado">
+               <app-grafica-general-tickets 
+               [todosLosTickets]="todosLosTickets"
+                [areas]="areasSel"
+                [usuarios]="usuariosFiltro"
+                [categorias]="categorias"
+                [catEstatusTicket]="estatusTicket"
+                [meses]="mesesDistintos"
+                [sucursalesSel]="sucursalesSel"
+                [mantenimientos]="manteniminetos"
+                ></app-grafica-general-tickets>
       </div>
 </div>
 
