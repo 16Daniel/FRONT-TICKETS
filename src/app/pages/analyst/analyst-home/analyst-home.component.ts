@@ -31,6 +31,8 @@ import { Maintenance6x6AvService } from '../../../services/maintenance-av.servic
 import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../../components/analyst/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { Timestamp } from '@angular/fire/firestore';
+import { AccordionBranchMaintenanceMttoComponent } from '../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 
 @Component({
   selector: 'app-analyst-home',
@@ -51,7 +53,8 @@ import { Timestamp } from '@angular/fire/firestore';
     PriorityTicketsAccordionAnalystComponent,
     ModalTenXtenMaintenanceNewComponent,
     AccordionBranchMaintenance10x10Component,
-    AccordionBranchMaintenanceAvComponent
+    AccordionBranchMaintenanceAvComponent,
+    AccordionBranchMaintenanceMttoComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './analyst-home.component.html',
@@ -91,6 +94,7 @@ export default class AnalystHomeComponent implements OnInit {
     private ticketsService: TicketsService,
     private mantenimientoSysService: Maintenance10x10Service,
     private maintenanceAvService: Maintenance6x6AvService,
+    private maintenanceMtooService: MaintenanceMtooService,
     private messageService: MessageService,
     private usersService: UsersService,
     private branchesService: BranchesService,
@@ -108,6 +112,10 @@ export default class AnalystHomeComponent implements OnInit {
 
       case '2':
         this.tituloMantenimiento = '6X6';
+        break;
+
+      case '4':
+        this.tituloMantenimiento = '8X8';
         break;
     }
   }
@@ -144,27 +152,39 @@ export default class AnalystHomeComponent implements OnInit {
         this.obtenerMantenimientosSistemas(idsSucursales);
         break;
 
-      case '2':
-        this.obtenerMantenimientosAudioVideo(idsSucursales);
+      default:
+        this.obtenerMantenimientos(idsSucursales);
         break;
+
+      // case '2':
+      //   this.obtenerMantenimientosAudioVideo(idsSucursales);
+      //   break;
+
+      // case '4':
+      //   this.obtenerMantenimientosAudioVideo(idsSucursales);
+      //   break;
     }
   }
 
-  obtenerMantenimientosAudioVideo(idsSucursales: string[]) {
-    this.subscriptiontk = this.maintenanceAvService
+  obtenerMantenimientos(idsSucursales: string[]) {
+    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+
+    this.subscriptiontk = servicio
       .getUltimosMantenimientos(idsSucursales)
-      .subscribe({
-        next: (data) => {
-          this.ultimosmantenimientos = data.filter(
-            (elemento): elemento is Mantenimiento10x10 => elemento !== null
-          );
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error al escuchar los tickets:', error);
-        },
+      .subscribe((result) => {
+        let data = result.filter((element) => element.length > 0);
+        this.ultimosmantenimientos = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.ultimosmantenimientos.push(item);
+          }
+        }
+
+        this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
+          x.fecha = this.getDate(x.fecha);
+          return x;
+        });
+        this.cdr.detectChanges();
       });
   }
 

@@ -76,6 +76,10 @@
       [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
     </app-accordion-branch-maintenance-av>
 
+    <app-accordion-branch-maintenance-mtto *ngIf="usuario.idArea == '4' && auxMostrarMantenimientos" [mantenimientos]="ultimosmantenimientos"
+      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
+    </app-accordion-branch-maintenance-mtto>
+
   </div>
 
 
