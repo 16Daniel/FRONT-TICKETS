@@ -1,7 +1,33 @@
+<div class="m-3 shadow rounded-3 p-3">
+      <p class="fw-bold fs-5 text-center">TICKETS X AREA</p>
+                 <div style="height: 500px;" >
+              <ngx-charts-bar-vertical-2d
+                [scheme]="colorSchemeG"
+                [results]="generarGraficaGeneral()"
+                [gradient]="gradient"
+                  [xAxis]="showXAxis"
+                  [yAxis]="showYAxis"
+                  [legend]="showLegend"
+                  [showXAxisLabel]="showXAxisLabel"
+                  [showYAxisLabel]="showYAxisLabel"
+                  [xAxisLabel]="xAxisLabel"
+                  [yAxisLabel]="yAxisLabel"
+                  [legendTitle]="'ÁREAS'"
+                [xAxisLabel]="'MES'"
+                [yAxisLabel]="yAxisLabel"
+                [showDataLabel]="true"
+                >
+                </ngx-charts-bar-vertical-2d>
+             </div>
+</div>
 
-                <ngx-charts-bar-vertical
-                [scheme]="colorScheme"
-                [results]="single"
+<div class="m-3 shadow rounded-3 p-3">
+      <p class="fw-bold fs-5 text-center">TICKETS X TURNO</p>
+
+                  <div style="height: 300px;" >
+            <ngx-charts-bar-horizontal-stacked
+                [scheme]="colorSchemeTurnos"
+                [results]="generarGraficaPorTurnos()"
                 [gradient]="gradient"
                 [xAxis]="showXAxis"
                 [yAxis]="showYAxis"
@@ -9,5 +35,77 @@
                 [showXAxisLabel]="showXAxisLabel"
                 [showYAxisLabel]="showYAxisLabel"
                 [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel">
-                </ngx-charts-bar-vertical>
+                [yAxisLabel]="yAxisLabel"
+                  [legendTitle]="'TURNOS'"
+                [showDataLabel]="true"
+                >
+                </ngx-charts-bar-horizontal-stacked>
+         </div>
+</div>
+
+
+<div class="m-3 shadow rounded-3 p-3">
+      <p class="fw-bold fs-5 text-center">MANTENIMIENTOS</p>
+
+                  <div style="height: 500px;" >
+            <ngx-charts-bar-vertical-stacked
+                [scheme]="colorSchemeCategorias"
+                [results]="generarGraficaMantenimientos()"
+                [gradient]="gradient"
+                [xAxis]="showXAxis"
+                [yAxis]="showYAxis"
+                [legend]="showLegend"
+                [showXAxisLabel]="showXAxisLabel"
+                [showYAxisLabel]="showYAxisLabel"
+                [xAxisLabel]="'SUCURSAL'"
+                [yAxisLabel]="'CANTIDAD'"
+                  [legendTitle]="'MES'"
+                [showDataLabel]="true"
+                >
+                </ngx-charts-bar-vertical-stacked>
+         </div>
+</div>
+
+<div class="m-3 shadow rounded-3 p-3">
+      <p class="fw-bold fs-5 text-center">TICKETS X CATEGORÍA</p>
+    <div style="height: 300px;" >
+            <ngx-charts-bar-horizontal-normalized
+            [scheme]="colorSchemeCategorias"
+            [results]="gCategorias"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+              [legendTitle]="'CATEGORÍAS'"
+            >
+            </ngx-charts-bar-horizontal-normalized>
+    </div>
+</div>
+
+<div *ngIf="usuariosSoporte.length>0">
+<div class="m-3 shadow rounded-3 p-3"*ngFor="let item of usuariosSoporte">
+    <p class="fw-bold fs-5">{{obtenerNombredeArea(item.idArea) +': ' + item.nombre+' '+item.apellidoP+' '+item.apellidoM}}</p>
+    <div  style="height: 500px;">
+            <ngx-charts-bar-vertical-stacked
+            [scheme]="coloresEstatus"
+            [results]="datosGraficaUsuario(item)"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="'SUCURSAL'"
+            [yAxisLabel]="yAxisLabel"
+            [showDataLabel]="true"
+              [legendTitle]="'ESTATUS'"
+            >
+            </ngx-charts-bar-vertical-stacked>
+    </div>
+</div>
+</div>
+
