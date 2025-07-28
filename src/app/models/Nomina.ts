@@ -56,3 +56,9 @@ export interface EmpleadoHorario {
   entrada: string;
   salida: string;
 }
+
+export interface Correonotificacion
+{
+  nombre:string; 
+  correo:string; 
+}
