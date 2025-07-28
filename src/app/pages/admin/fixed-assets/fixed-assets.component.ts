@@ -28,6 +28,7 @@ import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
 import { ModalFixedAssetTicketsComponent } from '../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { BuscarPorReferenciaPipe } from '../../../pipes/buscar-por-referencia.pipe';
 
 @Component({
   selector: 'app-fixed-assets',
@@ -43,7 +44,8 @@ import { DropdownModule } from 'primeng/dropdown';
     ModalFixedAssetTicketsComponent,
     ModalFixedAssetMaintenanceComponent,
     TooltipModule,
-    DropdownModule
+    DropdownModule,
+    BuscarPorReferenciaPipe
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',
@@ -61,6 +63,7 @@ export default class FixedAssetsComponent implements OnInit {
   mostrarModalTickets: boolean = false;
   // activoSeleccionado: ActivoFijo | undefined;
   mostrarModalMantenimientos: boolean = false;
+  textoBusquedaReferencia: string = '';
 
   areas: Area[] = [];
   sucursales: Sucursal[] = [];
@@ -132,7 +135,7 @@ export default class FixedAssetsComponent implements OnInit {
   abrirModalEditarActivoFijo(activoFijo: ActivoFijo) {
     this.esNuevoActivoFijo = false;
     this.mostrarModalActivoFijo = true;
-    this.activoFijoSeleccionada = activoFijo;
+    this.activoFijoSeleccionada = { ...activoFijo };
   }
 
   abrirModalMantenimientos(activoFijo: ActivoFijo) {
@@ -291,6 +294,17 @@ export default class FixedAssetsComponent implements OnInit {
     this.activosFijosFiltrados = this.activosFijos;
   }
 
+  obtenerCostoTotalActivos(lista: ActivoFijo[]): number {
+    return lista.reduce((total, activo) => total + (activo.costo || 0), 0);
+  }
+
+  get costoTotalFiltrado(): number {
+    const listaFiltrada = this.activosFijosFiltrados.filter(activo =>
+      !this.textoBusquedaReferencia ||
+      activo.referencia?.toLowerCase().includes(this.textoBusquedaReferencia.toLowerCase())
+    );
+    return this.obtenerCostoTotalActivos(listaFiltrada);
+  }
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
   nombreArea = (idArea: string) => this.areas.find(x => x.id == idArea)?.nombre;

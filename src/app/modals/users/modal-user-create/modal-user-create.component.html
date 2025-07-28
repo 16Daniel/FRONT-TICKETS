@@ -6,9 +6,12 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
             [(ngModel)]="usuario.nombre" name="nombre"
             [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
-            required [disabled]="choferCedis">
-        <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error">
+            required [disabled]="choferCedis" minlength="3" maxlength="50">
+        <small *ngIf="formNombreCtrl.errors?.['required'] && formNombreCtrl.touched" class="p-error">
             Campo requerido.
+        </small>
+        <small *ngIf="formNombreCtrl.errors?.['minlength'] && formNombreCtrl.touched" class="p-error">
+            Mínimo 3 caracteres.
         </small>
         <p></p>
 
@@ -16,9 +19,12 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL APELLIDO PATERNO"
             [(ngModel)]="usuario.apellidoP" name="apellidoP"
             [ngClass]="{'p-invalid': formApellidoPCtrl.invalid && formApellidoPCtrl.touched}"
-            #formApellidoPCtrl="ngModel" required [disabled]="choferCedis">
-        <small *ngIf="formApellidoPCtrl.invalid && formApellidoPCtrl.touched" class="p-error">
+            #formApellidoPCtrl="ngModel" required [disabled]="choferCedis" minlength="5" maxlength="50">
+        <small *ngIf="formApellidoPCtrl.errors?.['required'] && formApellidoPCtrl.touched" class="p-error">
             Campo requerido.
+        </small>
+        <small *ngIf="formApellidoPCtrl.errors?.['minlength'] && formApellidoPCtrl.touched" class="p-error">
+            Mínimo 5 caracteres.
         </small>
         <p></p>
 
@@ -26,19 +32,26 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL APELLIDO MATERNO"
             [(ngModel)]="usuario.apellidoM" name="apellidoM"
             [ngClass]="{'p-invalid': formapellidoMCtrl.invalid && formapellidoMCtrl.touched}"
-            #formapellidoMCtrl="ngModel" required [disabled]="choferCedis">
-        <small *ngIf="formapellidoMCtrl.invalid && formapellidoMCtrl.touched" class="p-error">
+            #formapellidoMCtrl="ngModel" required [disabled]="choferCedis" minlength="5" maxlength="50">
+        <small *ngIf="formapellidoMCtrl.errors?.['required'] && formapellidoMCtrl.touched" class="p-error">
             Campo requerido.
+        </small>
+        <small *ngIf="formapellidoMCtrl.errors?.['minlength'] && formapellidoMCtrl.touched" class="p-error">
+            Mínimo 5 caracteres.
         </small>
         <p></p>
 
         <p class="fw-bold">CORREO</p>
-        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL CORREO"
+        <input class="form-control" style="height: 48px;" type="email" placeholder="ESCRIBE EL CORREO"
             [(ngModel)]="usuario.email" name="email"
             [ngClass]="{'p-invalid': formCorreoCtrl.invalid && formCorreoCtrl.touched}" #formCorreoCtrl="ngModel"
-            required [disabled]="choferCedis">
-        <small *ngIf="formCorreoCtrl.invalid && formCorreoCtrl.touched" class="p-error">
+            required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" [disabled]="choferCedis">
+
+        <small *ngIf="formCorreoCtrl.errors?.['required'] && formCorreoCtrl.touched" class="p-error">
             Campo requerido.
+        </small>
+        <small *ngIf="formCorreoCtrl.errors?.['pattern'] && formCorreoCtrl.touched" class="p-error">
+            Correo electrónico inválido.
         </small>
         <p></p>
 
@@ -46,9 +59,13 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA CONTRASEÑA"
             [(ngModel)]="usuario.password" name="password"
             [ngClass]="{'p-invalid': formPasswordCtrl.invalid && formPasswordCtrl.touched}" #formPasswordCtrl="ngModel"
-            required [disabled]="choferCedis">
-        <small *ngIf="formPasswordCtrl.invalid && formPasswordCtrl.touched" class="p-error">
+            required [disabled]="choferCedis" minlength="8" maxlength="50">
+
+        <small *ngIf="formPasswordCtrl.errors?.['required'] && formPasswordCtrl.touched" class="p-error">
             Campo requerido.
+        </small>
+        <small *ngIf="formPasswordCtrl.errors?.['minlength'] && formPasswordCtrl.touched" class="p-error">
+            Mínimo 8 caracteres.
         </small>
         <p></p>
 
@@ -86,11 +103,11 @@
         </div>
 
         <p class="fw-bold">ÁREA</p>
-        <p-dropdown [options]="areas" [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre"
-            [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ÁREA"
-            [style]="{width:'100%'}" #formAreaCtrl="ngModel"
-            [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}"
-            [required]="usuario.idRol == '4' || usuario.idRol == '5'" [disabled]="choferCedis">
+        <p-dropdown [disabled]="usuarioEnSesion.idRol == '5' || choferCedis" [options]="areas"
+            [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [showClear]="true" placeholder="SELECCIONA EL ÁREA" [style]="{width:'100%'}"
+            #formAreaCtrl="ngModel" [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}"
+            [required]="usuario.idRol == '4' || usuario.idRol == '5'">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>

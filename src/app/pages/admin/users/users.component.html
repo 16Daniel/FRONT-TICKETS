@@ -24,7 +24,7 @@
                         <td>{{usuario.nombre}} {{usuario.apellidoP}} {{usuario.apellidoM}}</td>
                         <td>{{usuario.email}}</td>
                         <td>{{obtenerNombreRol(usuario.idRol)}}</td>
-                        <td>
+                        <td style="display: flex; gap: 10px">
                             <button class="btn btn-primary me-3" (click)="abrirModalEditarUsuario(usuario)"><i
                                     class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
 

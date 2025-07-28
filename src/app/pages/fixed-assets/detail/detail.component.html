@@ -1,5 +1,11 @@
 <div class="pt-5">
     <div class="container mt-4 px-3">
+
+        <div class="text-center mb-3">
+            <img src="assets/img/RW_LogoWEB.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
+        </div>
+
+
         <div class="card shadow-sm rounded-4">
             <div class="card-body">
 
@@ -44,11 +50,15 @@
                         <strong>No. Mantenimientos:</strong>
                         <span>{{ activo.mantenimientos.length }}</span>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between">
+                    <li class="list-group-item d-flex justify-content-between"
+                        [ngClass]="{ 'bg-danger text-white':getCostoTotalMantenimientos() > activo.costo! }">
+                        
                         <strong>Costo mantenimientos:</strong>
                         <span>{{ getCostoTotalMantenimientos() | currency }}</span>
                     </li>
                 </ul>
+
+                <br>
 
 
                 <div class="row mb-3">

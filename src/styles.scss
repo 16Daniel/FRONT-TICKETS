@@ -322,20 +322,20 @@ input[type="password" i],input[type="email" i] {
 {
   table-layout: auto;
   width: 100%;
-  font-size: medium;
+  // font-size: medium;
 }
 
 /* Pantallas de tabletas (ancho máximo de 1024px) */
 @media (max-width: 1024px) {
   .table-tk {
-    font-size: medium; /* Tamaño de texto para tabletas */
+    // font-size: medium; /* Tamaño de texto para tabletas */
   }
 }
 
 /* Pantallas de móviles (ancho máximo de 768px) */
 @media (max-width: 768px) {
   .table-tk{
-    font-size:small; /* Tamaño de texto para móviles */
+    // font-size:small; /* Tamaño de texto para móviles */
   }
 }
 
@@ -390,4 +390,8 @@ ol, ul {
   background-color: #FFE800!important;
   border-color: #FFE800 !important;
   color: black !important;
+}
+
+html, body {
+  font-size: 14px; // o el tamaño que desees
 }

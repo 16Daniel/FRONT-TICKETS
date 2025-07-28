@@ -1,12 +1,12 @@
-<p-dialog [header]="'MANTENIMIENTOS DEL ACTIVO FIJO - ' + activoFijo.referencia + ' ' + activoFijo.descripcion"
+<p-dialog [header]="activoFijo.referencia + ' - ' + activoFijo.descripcion"
     [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '75vw', 'height': '95vh' }" [maximizable]="true"
-    (onHide)="onHide()">
+    (onHide)="onHide()" styleClass="dialog-rojo">
 
-    <h5 class="text-dark fw-bold text-center">NUEVO MANTENIMIENTO</h5>
-    <p></p>
+    <form #form="ngForm" (ngSubmit)="crear(form)" *ngIf="usuario?.idRol == '5' || usuario?.idRol == '1'">
+        <h5 class="text-dark fw-bold text-center">NUEVO MANTENIMIENTO</h5>
+        <p></p>
 
 
-    <form #form="ngForm" (ngSubmit)="crear(form)" *ngIf="usuario?.idRol == '5'">
         <div class="row">
             <div class="col-md-4">
                 <p class="fw-bold">COSTO</p>
@@ -62,12 +62,12 @@
         styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
         <ng-template pTemplate="header">
             <tr>
-                <th># MANTENIMIENTO</th>
+                <th>#</th>
                 <th>FECHA</th>
                 <th>COSTO</th>
                 <th>FOLIO TICKET</th>
                 <th>DETALLE</th>
-                <th>ACCIONES</th>
+                <th *ngIf="usuario?.idRol == '5' || usuario?.idRol == '1'">ACCIONES</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-mantenimiento let-i="rowIndex">
@@ -77,7 +77,7 @@
                 <td>{{ mantenimiento.costo }}</td>
                 <td>{{ mantenimiento.folioTicket ? mantenimiento.folioTicket : 'N/A' }}</td>
                 <td>{{ mantenimiento.detalle }}</td>
-                <td>
+                <td *ngIf="usuario?.idRol == '5' || usuario?.idRol == '1'">
                     <button class="btn btn-danger" (click)="confirmaEliminacion(mantenimiento.id)"><i
                             class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
                 </td>
