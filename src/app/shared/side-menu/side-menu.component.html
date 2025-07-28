@@ -52,6 +52,9 @@
         <li (click)="closemenu()"><a [routerLink]="'/main/fixed-assets'"
             *ngIf="usuario.idRol == '1' || usuario.idRol == '5'"><i class='bx bxs-dashboard'></i>Activos fijos</a></li>
 
+                <li (click)="closemenu()"><a [routerLink]="'/nomina/control-de-personal'">
+                <i class='bx bx-group bx-sm'></i>&nbsp;Personal en sucursal</a></li>
+
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">
