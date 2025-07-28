@@ -117,6 +117,9 @@
                 </div>
             </div>
 
+            <input type="text" class="form-control" [(ngModel)]="textoBusquedaReferencia" placeholder="BUSCAR POR REFERENCIA">
+
+
             <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
                 <div class="d-flex gap-2">
                     <p-button label="BUSCAR" icon="pi pi-search" styleClass="p-button-info"
@@ -138,7 +141,7 @@
             </div>
             <br>
 
-            <p-table [value]="activosFijosFiltrados" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+            <p-table [value]="activosFijosFiltrados | buscarPorReferencia: textoBusquedaReferencia" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
                 styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
                 <ng-template pTemplate="header">
                     <tr>

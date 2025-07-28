@@ -28,6 +28,7 @@ import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
 import { ModalFixedAssetTicketsComponent } from '../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { BuscarPorReferenciaPipe } from '../../../pipes/buscar-por-referencia.pipe';
 
 @Component({
   selector: 'app-fixed-assets',
@@ -43,7 +44,8 @@ import { DropdownModule } from 'primeng/dropdown';
     ModalFixedAssetTicketsComponent,
     ModalFixedAssetMaintenanceComponent,
     TooltipModule,
-    DropdownModule
+    DropdownModule,
+    BuscarPorReferenciaPipe
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets.component.html',
@@ -61,6 +63,7 @@ export default class FixedAssetsComponent implements OnInit {
   mostrarModalTickets: boolean = false;
   // activoSeleccionado: ActivoFijo | undefined;
   mostrarModalMantenimientos: boolean = false;
+  textoBusquedaReferencia: string = '';
 
   areas: Area[] = [];
   sucursales: Sucursal[] = [];

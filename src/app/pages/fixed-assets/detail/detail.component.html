@@ -50,11 +50,15 @@
                         <strong>No. Mantenimientos:</strong>
                         <span>{{ activo.mantenimientos.length }}</span>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between">
+                    <li class="list-group-item d-flex justify-content-between"
+                        [ngClass]="{ 'bg-danger text-white':getCostoTotalMantenimientos() > activo.costo! }">
+                        
                         <strong>Costo mantenimientos:</strong>
                         <span>{{ getCostoTotalMantenimientos() | currency }}</span>
                     </li>
                 </ul>
+
+                <br>
 
 
                 <div class="row mb-3">
