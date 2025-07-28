@@ -1,15 +1,23 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { NominaService } from '../../../services/nomina.service';
-import { EmpleadoHorario, Marcajes, PuestoNomina, TurnodbNomina } from '../../../models/Nomina';
+import { Correonotificacion, EmpleadoHorario, Marcajes, PuestoNomina, TurnodbNomina } from '../../../models/Nomina';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { KnobModule } from 'primeng/knob';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { CorreosNotificacionService } from '../../../services/correos-notificacion.service';
+import { DropdownModule } from 'primeng/dropdown';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { Sucursal } from '../../../models/sucursal.model';
+import { BranchesService } from '../../../services/branches.service';
+import { Usuario } from '../../../models/usuario.model';
 @Component({
   selector: 'app-staff-control',
   standalone: true,
-  imports: [CommonModule,FormsModule,TableModule,KnobModule,ProgressBarModule],
+  imports: [CommonModule,FormsModule,TableModule,KnobModule,ProgressBarModule,DropdownModule,ToastModule],
+   providers: [MessageService],
   templateUrl: './staff-control.component.html',
   styleUrl: './staff-control.component.scss',
 })
@@ -18,23 +26,56 @@ public marcajes:Marcajes[] = [];
 public horarios:EmpleadoHorario[] = []; 
 public puestosDeTrabajo:any[] = []; 
 public loading:boolean = false; 
-public porcentajePersonal:number = 100;
-public vg:number = 91;  
-public value75:number = 75; 
 public turnos:TurnodbNomina[] = []; 
 public horaActual: number = 0; 
 public turnoActual:string = ""; 
 public departamentos:PuestoNomina[] = []; 
-    constructor( public cdr: ChangeDetectorRef,public apiserv:NominaService){}
+public correos:Correonotificacion[] = []; 
+public correoSel:Correonotificacion|undefined; 
+public sucursales: Sucursal[] = []; 
+public sucursalSel:Sucursal|undefined; 
+public usuario:Usuario; 
+    constructor( public cdr: ChangeDetectorRef,public apiserv:NominaService,
+      public correoService:CorreosNotificacionService,
+      private messageService: MessageService, 
+        private branchesService:BranchesService 
+    )
+    {
+       this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    }
   ngOnInit(): void 
   {
+    this.getCorreos(); 
     setInterval(() => {
       this.actualizarTurno(); 
+      this.consultar(); 
     }, 60000);
+
+     this.obtenerSucursales(); 
     this.getDepartamentos(); 
     this.obtenercalendario(); 
     this.getTurnos(); 
    }
+
+   consultar()
+   {
+    this.getDepartamentos(); 
+    this.obtenercalendario(); 
+    this.getTurnos(); 
+   }
+
+       getCorreos()
+  {
+     this.correoService.get().subscribe({
+      next: data => {
+         this.correos= data;
+         this.cdr.detectChanges();
+      },
+      error: error => {
+         console.log(error);
+      }
+  });
+  }
 
        getDepartamentos()
   {
@@ -80,10 +121,9 @@ public departamentos:PuestoNomina[] = [];
     const hoy = new Date();  
     const sieteDiasEnMilisegundos = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos  
     const fecha = new Date(hoy.getTime() - sieteDiasEnMilisegundos); 
-    this.apiserv.consultarMarcajes(2,fecha,fecha).subscribe({
+    this.apiserv.consultarMarcajes(this.sucursalSel!.claUbicacion!,hoy,hoy).subscribe({
       next: data => {
          this.marcajes = data;
-         console.log(data); 
          this.loading = false;   
          this.cdr.detectChanges();
       },
@@ -101,12 +141,11 @@ public departamentos:PuestoNomina[] = [];
     const hoy = new Date();  
     const sieteDiasEnMilisegundos = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos  
     const fecha = new Date(hoy.getTime() - sieteDiasEnMilisegundos); 
-    this.apiserv.consultarCalendario(2,fecha).subscribe({
+    this.apiserv.consultarCalendario(this.sucursalSel!.claUbicacion!,hoy).subscribe({
       next: data => {
          this.horarios = data;
-         console.log(this.horarios); 
          this.loading = false;   
-
+          this.puestosDeTrabajo = []; 
          let puestosunicos = [...new Set(this.horarios.map(emp => emp.nom_puesto))];
 
          for(let puesto of puestosunicos)
@@ -132,6 +171,7 @@ obtenerEmpleadosPuesto(item:any):string[]
   for(let item of data)
     {
       let horaEntrada:number = 0; 
+      let horaSalida:number = 0; 
       if(item.entrada.length >3)
         {
           horaEntrada = parseInt(item.entrada.substring(0,2)); 
@@ -139,7 +179,16 @@ obtenerEmpleadosPuesto(item:any):string[]
         {
          horaEntrada = parseInt(item.entrada.substring(0,1)); 
         }
-      if(horaEntrada <= this.horaActual)
+
+         if(item.salida.length >3)
+        {
+          horaSalida = parseInt(item.salida.substring(0,2)); 
+        } else
+        {
+         horaSalida = parseInt(item.salida.substring(0,1)); 
+        }
+
+      if(horaEntrada <= this.horaActual && horaSalida> this.horaActual)
         {
           temp.push(item); 
         }
@@ -152,7 +201,7 @@ obtenerEmpleadosPuesto(item:any):string[]
 
     for(let emp of empleadosMarcajes)
       {    
-        if(emp.entrada != "" && this.esHoraMenorQueActual(emp.entrada))
+        if(emp.entrada != "" && this.esHoraMenorQueActual(emp.entrada) && this.EsRequerido(emp))
           {  
                empleadosMarcaje++; 
           }
@@ -161,7 +210,7 @@ obtenerEmpleadosPuesto(item:any):string[]
 
       let verdes = empleadosMarcaje; 
       let rojos = 0; 
-      if(empleadosRequeridos<empleadosMarcaje)
+      if(empleadosMarcaje<empleadosRequeridos)
         {
           rojos = empleadosRequeridos- empleadosMarcaje; 
         }
@@ -185,7 +234,6 @@ obtenerEmpleadosPuesto(item:any):string[]
                  item.porcentaje = 0;
           }
                
-       this.porcentajeGeneral(); 
         return colores;  
 }
 
@@ -220,17 +268,162 @@ obtenerNombrePuesto(idPuesto:number):string
   return nombre; 
 }
 
-porcentajeGeneral()
+
+obtenerFondo(item:Marcajes):string
 {
-  let total = 0; 
-  let puestos = this.puestosDeTrabajo.filter(x =>x.contar == true); 
-  total = puestos.reduce((acumulador, item) => acumulador + item.porcentaje, 0);
-  if(total > 0)
-    {
-      this.porcentajePersonal = (total/puestos.length)*100; 
-    } else
-    {
-      this.porcentajePersonal = 0; 
-    }
+    let fondo = ""; 
+    let itemhorario = this.horarios.filter(x => x.cla_trab == item.cla_trab)[0]; 
+    if(itemhorario)
+      {
+        if(itemhorario.cla_turno == 0)
+          {
+            fondo = "bg-warning"
+          } else
+            {
+              if(item.entrada!="")
+                {
+                  fondo = "bg-success"; 
+                }else
+                  {
+                    fondo = "bg-danger"
+                  }
+            }
+      }
+      else{
+        fondo = "bg-warning"; 
+      }
+    return fondo; 
 }
+
+obtenerEntradacalendario(item:Marcajes):string
+{
+  let hora = "--"; 
+      let itemhorario = this.horarios.filter(x => x.cla_trab == item.cla_trab)[0];
+      if(itemhorario)
+        {
+          if(itemhorario.cla_turno == 0)
+            {
+              hora = "DESCANSO";  
+            } 
+            else
+              {
+                if(itemhorario.entrada.length>3)
+                  {
+                        let horaE = itemhorario.entrada.substring(0,2); 
+                        let minutosE = itemhorario.entrada.substring(2,4); 
+                        hora = horaE+":"+minutosE; 
+                  }else
+                    {
+                          let horaE = itemhorario.entrada.substring(0,1); 
+                        let minutosE = itemhorario.entrada.substring(1,3); 
+                        hora = horaE+":"+minutosE; 
+                    }
+              }
+        }
+  return hora; 
+}
+
+EsRequerido(item:Marcajes):boolean
+{
+  let value:boolean = false;
+    let itemhorario = this.horarios.filter(x => x.cla_trab == item.cla_trab)[0];
+      if(itemhorario)
+        {   
+          if(itemhorario.cla_turno == 0)
+            {
+              value = false; 
+            } else
+              {
+                 let horaEntrada:number = 0; 
+              let horaSalida:number = 0; 
+              if(itemhorario.entrada.length >3)
+                {
+                  horaEntrada = parseInt(itemhorario.entrada.substring(0,2)); 
+                } else
+                {
+                horaEntrada = parseInt(itemhorario.entrada.substring(0,1)); 
+                }
+
+                if(itemhorario.salida.length >3)
+                {
+                  horaSalida = parseInt(itemhorario.salida.substring(0,2)); 
+                } else
+                {
+                horaSalida = parseInt(itemhorario.salida.substring(0,1)); 
+                }
+           if(horaEntrada <= this.horaActual && horaSalida> this.horaActual)
+              {
+                value = true; 
+              }
+              }
+            
+        }
+  return value; 
+}
+
+formulariocorreo():boolean
+{
+   let found = false;
+    const elements = document.querySelectorAll('.bx-user.text-danger');
+      if (elements.length > 0) {
+        found = true;
+      }
+    return found;
+}
+
+enviarCorreo()
+{
+   this.loading = true;
+  if(this.correoSel == undefined)
+    {
+      this.showMessage("info","Error","Seleccionar regional")
+      return; 
+    }
+
+    let data:any[] = []; 
+    for(let item of this.puestosDeTrabajo)
+      {
+        let colores = this.obtenerEmpleadosPuesto(item);
+        if(colores.filter(x=> x == "text-danger").length>0)
+          {
+            data.push({nombrepuesto:item.nombre,empleadosRequeridos:colores.length,empleadosFaltantes:colores.filter(x=> x == "text-danger").length}); 
+          }
+      }
+  this.apiserv.enviarCorreo(this.sucursalSel!.idFront!,this.correoSel.nombre,this.correoSel!.correo,JSON.stringify(data)).subscribe({
+      next: data => {
+        this.loading = false; 
+        this.showMessage("success","Success","enviado correctamente");
+         this.cdr.detectChanges();
+      },
+      error: error => {
+         console.log(error);
+      }
+  });
+
+}
+
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+async obtenerSucursales() {
+
+        this.loading = true; 
+       try {
+        this.sucursales = await this.branchesService.getOnce();
+          this.sucursales.filter(x=> x.idFront && x.claUbicacion); 
+          if(this.usuario.idRol=='2')
+            {
+              let suc = this.sucursales.filter(x=>x.id == this.usuario.sucursales[0].id)[0]; 
+              this.sucursalSel = suc; 
+            } else
+              {
+                this.sucursalSel = this.sucursales[0]; 
+              }
+           this.loading = false; 
+           this.cdr.detectChanges();
+      } catch (error) {
+      }
+      }
+
 }

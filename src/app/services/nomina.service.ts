@@ -80,4 +80,14 @@ export class NominaService {
       formdata.append("fecha", fecha.toISOString());  
       return this.http.post<EmpleadoHorario[]>(this.url+'PersonalNominas/gethorariosSuc',formdata,{headers:this.headers})
    }
+
+     enviarCorreo(idSucursal:number,nombreRegional:string, correo:string, jdata:string):Observable<EmpleadoHorario[]>
+   {
+      let formdata = new FormData();
+      formdata.append("idSuc",idSucursal.toString());
+      formdata.append("nombreRegional", nombreRegional); 
+      formdata.append("correo", correo); 
+      formdata.append("jdata", jdata);  
+      return this.http.post<EmpleadoHorario[]>(this.url+'PersonalNominas/correoNotificacion',formdata,{headers:this.headers})
+   }
 }

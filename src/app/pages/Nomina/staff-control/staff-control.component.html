@@ -1,4 +1,29 @@
 <div class="pt-5">
+
+<div class="ms-3 me-3">
+    <div class="row">
+        <div class="col-10">
+                  <p-dropdown [options]="sucursales" [(ngModel)]="sucursalSel"
+            optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="false"
+            placeholder="SELECCIONAR SUCURSAL" [style]="{width:'100%','height':'56px'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        </div>
+         <div class="col-2">
+            <button class="btn bg-p-b p-3" (click)="consultar()" >CONSULTAR</button>
+         </div>
+    </div>
+</div>
+
 <div class="d-flex justify-content-center p-3" *ngIf="loading">
      <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
 </div>
@@ -7,28 +32,47 @@
       <div class="d-flex justify-content-center gap-3 flex-wrap bg-white p-3">
         <div class="p-3">
             <h3 class="text-center mb-3">PERSONAL DE LA SUCURSAL&nbsp;{{turnoActual}}</h3>
-           
-            <div class="d-flex justify-content-center mb-3 rounded-3">
-                     <p-knob [(ngModel)]="porcentajePersonal" valueTemplate="{value}%" [readonly]="true" valueColor="green" rangeColor="SlateGray" [size]="150"/>
-                </div>
 
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <div class="d-flex justify-content-center gap-3 flex-wrap" *ngIf="marcajes.length>0">
 
-                <div class="d-flex flex-column align-items-center p-3 shadow rounded-5" style="width: 15rem;" *ngFor="let item of puestosDeTrabajo">
-                    <p-knob [(ngModel)]="item.porcentaje" valueTemplate="{value}%" [readonly]="true" valueColor="green" rangeColor="SlateGray" [size]="100"/>
-                    <p class="text-center">{{item.nombre}}</p>
-                     <div class="d-flex justify-content-center flex-wrap gap-1">
-                     
+                @for (item of puestosDeTrabajo; track $index) 
+                {
+                    <div class="d-flex flex-column align-items-center p-3 shadow rounded-3" style="width: 15rem;" *ngIf="obtenerEmpleadosPuesto(item).length>0">
+                    <p class="text-center text-truncate" style="width: calc(100% - 10px);" [title]="item.nombre">{{item.nombre}}</p>
+                     <div class="d-flex justify-content-center flex-wrap gap-2"> 
+                         <div class="w-100 text-center">TOTAL: {{obtenerEmpleadosPuesto(item).length}}</div>
                         <div *ngFor="let color of obtenerEmpleadosPuesto(item)">
-                             <i class='bx bx-user-check bx-md {{color}}'></i>
+                             <i class='bx bx-user bx-md {{color}}'></i>
                         </div>
-                     <!-- <i class='bx bx-user-x bx-md text-danger' ></i> -->
                     </div>
                    
                 </div>
-
+                }
             </div>
         </div>
+    </div>
+
+    <div class="mt-3 bg-white p-3" *ngIf="formulariocorreo()">
+        <p class="text-center fw-bold"> <i class='bx bx-envelope bx-sm pt-3'></i>&nbsp;ENVIAR CORREO</p>
+        <p class="text-center">REGIONAL</p>
+         <p-dropdown [options]="correos" [(ngModel)]="correoSel" optionLabel="nombre" [showClear]="false"
+                    [style]="{ width:'100%' }">
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ selectedOption.nombre }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-dep pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ dep.nombre }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+
+         <div class="mt-3 d-flex justify-content-end">
+        <button class="btn bg-p-b p-3 rounded-3" [disabled]="correoSel == undefined" (click)="enviarCorreo()"><i class='bx bx-mail-send'></i>&nbsp;ENVIAR</button>
+    </div>
+
     </div>
 </div>
 
@@ -40,15 +84,17 @@
         <tr>
             <th>NOMBRE</th>
             <th>PUESTO</th>
-            <th>ENTRADA</th>
-            <th>SALIDA</th>
+            <th>ENTRADA CALENDARIO</th>
+            <th>ENTRADA REAL</th>
+            <th>SALIDA REAL</th>
             <th>INCIDENCA</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-        <tr class="bg-opacity-25" [ngClass]="{'bg-success': item.entrada!=''}">
+        <tr class="bg-opacity-25 {{obtenerFondo(item)}}" *ngIf="EsRequerido(item)">
             <td>{{item.nombre}}</td>
             <td>{{obtenerNombrePuesto(item.idpuesto)}}</td>
+            <td>{{obtenerEntradacalendario(item)}}</td>
             <td>{{item.entrada}}</td>
             <td>{{item.salida}}</td>
             <td>{{item.incidencia}}</td>
@@ -58,3 +104,9 @@
 
 </div>
 </div>
+
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+    [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+    [showTransformOptions]="'translateX(100%)'"></p-toast>
