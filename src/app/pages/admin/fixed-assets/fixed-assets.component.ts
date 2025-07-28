@@ -294,6 +294,17 @@ export default class FixedAssetsComponent implements OnInit {
     this.activosFijosFiltrados = this.activosFijos;
   }
 
+  obtenerCostoTotalActivos(lista: ActivoFijo[]): number {
+    return lista.reduce((total, activo) => total + (activo.costo || 0), 0);
+  }
+
+  get costoTotalFiltrado(): number {
+    const listaFiltrada = this.activosFijosFiltrados.filter(activo =>
+      !this.textoBusquedaReferencia ||
+      activo.referencia?.toLowerCase().includes(this.textoBusquedaReferencia.toLowerCase())
+    );
+    return this.obtenerCostoTotalActivos(listaFiltrada);
+  }
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
   nombreArea = (idArea: string) => this.areas.find(x => x.id == idArea)?.nombre;
