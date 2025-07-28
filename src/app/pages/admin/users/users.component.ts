@@ -31,6 +31,7 @@ import { Subscription } from 'rxjs';
   providers: [MessageService, ConfirmationService],
   templateUrl: './users.component.html',
 })
+
 export default class UsersComponent implements OnDestroy, OnInit {
   foundData: boolean = true;
   loading: boolean = true;
@@ -44,6 +45,8 @@ export default class UsersComponent implements OnDestroy, OnInit {
   subscripcionUsuarios: Subscription | undefined;
   private unsubscribe!: () => void;
 
+  usuario: Usuario;
+
   constructor(
     public documentsService: DocumentsService,
     private messageService: MessageService,
@@ -51,7 +54,9 @@ export default class UsersComponent implements OnDestroy, OnInit {
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
     private rolesService: RolesService
-  ) { }
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
     this.obtenerUsuarios();
@@ -81,6 +86,11 @@ export default class UsersComponent implements OnDestroy, OnInit {
     this.subscripcionUsuarios = this.usersService.get().subscribe({
       next: (data) => {
         this.catusuarios = data;
+
+        if (this.usuario.idRol == '5') {
+          this.catusuarios = this.catusuarios.filter(x => x.idArea == this.usuario.idArea);
+        }
+
         this.loading = false;
         if (data.length == 0) {
           this.foundData = false;
@@ -120,7 +130,7 @@ export default class UsersComponent implements OnDestroy, OnInit {
 
   abrirModalEditarUsuario(usuario: Usuario) {
     this.esNuevoUsuario = false;
-    this.usuarioSeleccionado = usuario;
+    this.usuarioSeleccionado = { ...usuario };
     this.mostrarModalUsuario = true;
   }
 
@@ -143,7 +153,7 @@ export default class UsersComponent implements OnDestroy, OnInit {
   }
 
   cerrarModalUsuario() {
-    this.mostrarModalUsuario = false; 
+    this.mostrarModalUsuario = false;
     this.usuarioSeleccionado = new Usuario;
   }
 }

@@ -113,21 +113,27 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
         this.activoFijo.idAreaActivoFijo,
         this.activoFijo.idCategoriaActivoFijo
       );
+
     this.activoFijo.referencia = this.crearReferencia();
+    const referenciaExiste = await this.fixedAssetsService.getByReferencePromise(this.activoFijo.referencia);
 
-    try {
-      await this.fixedAssetsService.create({ ...this.activoFijo });
-      this.cdr.detectChanges();
-      this.closeEvent.emit(false); // Cerrar modal
-      this.showMessage('success', 'Success', 'Guardado correctamente');
+    if (referenciaExiste) {
+      this.showMessage('error', 'Error', 'La referencia ya existe: ' + this.activoFijo.referencia);
+    }
+    else {
+      try {
+        await this.fixedAssetsService.create({ ...this.activoFijo });
+        this.cdr.detectChanges();
+        this.closeEvent.emit(false); // Cerrar modal
+        this.showMessage('success', 'Success', 'Guardado correctamente');
 
-    } catch (error: any) {
-      this.showMessage('error', 'Error', error.message);
+      } catch (error: any) {
+        this.showMessage('error', 'Error', error.message);
+      }
     }
   }
 
   actualizar() {
-    // this.activoFijo = { ...this.activoFijo, id: parseInt(this.activoFijo.id) }
     this.fixedAssetsService
       .update(this.activoFijo, this.idActivoFijoEditar)
       .then(() => {

@@ -29,10 +29,12 @@ export class ModalUserCreateComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() usuario: Usuario = new Usuario;
   @Input() esNuevoUsuario: boolean = true;
-  @Input() choferCedis:boolean = false
+  @Input() choferCedis: boolean = false
   sucursales: Sucursal[] | any[] = [];
   roles: Rol[] = [];
   areas: Area[] = [];
+
+  usuarioEnSesion: Usuario;
 
   constructor(
     private messageService: MessageService,
@@ -44,12 +46,17 @@ export class ModalUserCreateComponent implements OnInit {
     private documentsService: DocumentsService,
   ) {
     this.usuario = this.usuario.idRol ? this.usuario : new Usuario;
+    this.usuarioEnSesion = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+
   }
 
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerRoles();
     this.obtenerAreas();
+    if (this.usuarioEnSesion.idRol == '5')
+      this.usuario.idArea = this.usuarioEnSesion.idArea;
+    this.cdr.detectChanges();
   }
 
   async enviar(form: NgForm) {
@@ -58,7 +65,7 @@ export class ModalUserCreateComponent implements OnInit {
         control.markAsTouched();
       });
 
-      this.showMessage('error', 'Error', 'Campos requeridos incompletos');
+      // this.showMessage('error', 'Error', 'Campos requeridos incompletos');
       return;
     }
 
@@ -82,8 +89,9 @@ export class ModalUserCreateComponent implements OnInit {
       if (uid != null) {
         this.guardarUsuario(uid);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during registration:', error);
+      this.showMessage('error', 'Error', error.toString());
     }
   }
 
@@ -151,9 +159,9 @@ export class ModalUserCreateComponent implements OnInit {
     this.rolesService.get().subscribe({
       next: (data) => {
         this.roles = data.map((item: any) => ({
-            ...item,
-            id: item.id.toString()
-          }));
+          ...item,
+          id: item.id.toString()
+        }));
         this.cdr.detectChanges();
       },
       error: (error) => {

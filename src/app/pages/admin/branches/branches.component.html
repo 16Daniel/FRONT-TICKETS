@@ -24,8 +24,8 @@
                     <tr [pSelectableRow]="sucursal">
                         <td>{{ sucursal.id }}</td>
                         <td>{{ sucursal.nombre }}</td>
-                          <td>{{ sucursal.idFront }}</td>
-                           <td>{{ sucursal.claUbicacion }}</td>
+                        <td>{{ sucursal.idFront }}</td>
+                        <td>{{ sucursal.claUbicacion }}</td>
                         <td>
                             <button class="btn btn-primary me-3" (click)="abrirModalEditarSucursal(sucursal)"><i
                                     class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
@@ -59,4 +59,5 @@
 </p-confirmDialog>
 
 <app-modal-branch-create *ngIf="mostrarModalSucursal" [mostrarModalCrearSucursal]="mostrarModalSucursal"
-    (closeEvent)="cerrarModalSucursal()" [sucursal]="sucursalSeleccionada" [esNuevaSucursal]="esNuevaSucursal"></app-modal-branch-create>
+    (closeEvent)="cerrarModalSucursal()" [sucursal]="sucursalSeleccionada"
+    [esNuevaSucursal]="esNuevaSucursal"></app-modal-branch-create>

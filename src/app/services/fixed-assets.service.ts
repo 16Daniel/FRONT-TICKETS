@@ -152,6 +152,35 @@ export class FixedAssetsService {
     });
   }
 
+  getByReferencePromise(referencia: string): Promise<ActivoFijo | undefined> {
+    const collectionRef = collection(this.firestore, this.pathName);
+
+    const constraints = [
+      where('eliminado', '==', false),
+      where('referencia', '==', referencia)
+    ];
+
+    const q = query(collectionRef, ...constraints);
+
+    return getDocs(q)
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const docSnap = querySnapshot.docs[0]; // Solo el primero
+          const activo: ActivoFijo = {
+            id: docSnap.id,
+            ...(docSnap.data() as Omit<ActivoFijo, 'id'>),
+          };
+          return activo;
+        } else {
+          return undefined;
+        }
+      })
+      .catch((error) => {
+        console.error('Error al obtener el documento por referencia:', error);
+        throw error;
+      });
+  }
+
   async addMantenimiento(idActivoFijo: string, mantenimiento: MantenimientoActivoFijo): Promise<MantenimientoActivoFijo | null> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idActivoFijo}`);
 
