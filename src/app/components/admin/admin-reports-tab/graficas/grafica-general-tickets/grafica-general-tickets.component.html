@@ -1,5 +1,12 @@
 <div class="m-3 shadow rounded-3 p-3">
       <p class="fw-bold fs-5 text-center">TICKETS X AREA</p>
+      <div class="d-flex justify-content-center gap-3">
+       <div *ngFor="let item of tabTickets">
+         <div class="p-3 rounded-3" style="background-color: #ddd;">
+          {{item.nombre+': '}}<strong>{{item.total}}</strong>
+         </div>
+       </div>
+      </div>
                  <div style="height: 500px;" >
               <ngx-charts-bar-vertical-2d
                 [scheme]="colorSchemeG"
@@ -46,6 +53,14 @@
 
 <div class="m-3 shadow rounded-3 p-3">
       <p class="fw-bold fs-5 text-center">MANTENIMIENTOS</p>
+
+        <div class="d-flex justify-content-center gap-3">
+       <div *ngFor="let item of tabMantenimientos">
+          <div class="p-3 rounded-3" style="background-color: #ddd;">
+          {{item.nombre+': '}}<strong>{{item.total}}</strong>
+         </div>
+       </div>
+      </div>
 
                   <div style="height: 500px;" >
             <ngx-charts-bar-vertical-stacked
