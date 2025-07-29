@@ -2,16 +2,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { TableModule } from 'primeng/table';
-// import { MessageService } from 'primeng/api';
 
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
-// import { UsersService } from '../../../../services/users.service';
 import { Usuario } from '../../../../models/usuario.model';
+import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
 
 @Component({
   selector: 'app-branch-maintenance-table',
   standalone: true,
-  imports: [TableModule, CommonModule],
+  imports: [TableModule, CommonModule, ModalFinalCommentsComponent],
   templateUrl: './branch-maintenance-table.component.html',
 })
 export class BranchMaintenanceTableComponent {
@@ -19,15 +18,9 @@ export class BranchMaintenanceTableComponent {
   @Input() usuariosHelp: Usuario[] = [];
   @Output() clickEvent = new EventEmitter<Mantenimiento10x10>();
   mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
+  mostrarModalComentarios: boolean = false;
 
-  constructor(
-    // private messageService: MessageService,
-    // private usersService: UsersService
-  ) {}
-
-  // showMessage(sev: string, summ: string, det: string) {
-  //   this.messageService.add({ severity: sev, summary: summ, detail: det });
-  // }
+  constructor() { }
 
   calcularPorcentaje(mantenimiento: Mantenimiento10x10) {
     let porcentaje = 0;
@@ -51,19 +44,6 @@ export class BranchMaintenanceTableComponent {
     return porcentaje;
   }
 
-  // obtenerUsuariosHelp() {
-  //   this.usersService.get().subscribe({
-  //     next: (data) => {
-  //       this.usuariosHelp = data;
-  //       // this.cdr.detectChanges();
-  //     },
-  //     error: (error) => {
-  //       console.log(error);
-  //       this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-  //     },
-  //   });
-  // }
-
   obtenerNombreResponsable(idUsuario: string): string {
     let nombre = '';
 
@@ -85,7 +65,9 @@ export class BranchMaintenanceTableComponent {
     }
   }
 
-  onClick() {
-    this.clickEvent.emit(this.mantenimientoSeleccionado);
-  }
+  // onClick() {
+  //   // this.clickEvent.emit(this.mantenimientoSeleccionado);
+  //   this.mostrarModalComentarios = true;
+  //   this.man
+  // }
 }

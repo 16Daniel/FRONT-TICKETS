@@ -1,0 +1,9 @@
+<p-dialog header="COMENTARIOS DEL MANTENIMIENTO" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+
+    <p-accordion *ngIf="mantenimiento">
+        <p-accordionTab header="COMENTARIOS FINALES" [selected]="true">
+            <p [innerHTML]="mantenimiento.observaciones"></p>
+        </p-accordionTab>
+    </p-accordion>
+</p-dialog>
