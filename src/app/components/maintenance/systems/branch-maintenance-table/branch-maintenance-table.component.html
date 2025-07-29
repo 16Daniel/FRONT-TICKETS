@@ -1,6 +1,6 @@
 <p-table [value]="mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
     styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
-    [(selection)]="mantenimientoSeleccionado" (onRowSelect)="onClick()">
+    [(selection)]="mantenimientoSeleccionado" (onRowSelect)="this.mostrarModalComentarios = true;">
     <ng-template pTemplate="header">
         <tr class="text-center">
             <th>NOMBRE</th>
@@ -71,3 +71,7 @@
         </tr>
     </ng-template>
 </p-table>
+
+<app-modal-final-comments *ngIf="mostrarModalComentarios" [mostrarModal]="mostrarModalComentarios"
+    [mantenimiento]="mantenimientoSeleccionado"
+    (closeEvent)="mostrarModalComentarios = false"></app-modal-final-comments>
