@@ -10,11 +10,12 @@ import { EstatusTicket } from '../../../../../models/estatus-ticket.model';
 import { Sucursal } from '../../../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../../../models/mantenimiento-10x10.model';
 import { Timestamp } from '@angular/fire/firestore';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-grafica-general-tickets',
   standalone: true,
-  imports: [CommonModule,FormsModule,NgxChartsModule],
+  imports: [CommonModule,FormsModule,NgxChartsModule,TagModule],
    providers: [
      { provide: RendererFactory2, useValue: RendererFactory2 }
   ],
@@ -31,6 +32,8 @@ export class GraficaGeneralTicketsComponent implements OnInit {
 @Input() mantenimientos:Mantenimiento10x10[] = []; 
 public usuariosSoporte:Usuario[] = []; 
 gCategorias:any[] = []; 
+public tabTickets:any[] = []; 
+public tabMantenimientos:any[] = []; 
   // options
   showXAxis = true;
   showYAxis = true;
@@ -84,6 +87,17 @@ public coloresEstatus:any;
 
     this.usuariosSoporte = this.usuarios.filter(x=>x.idRol == '4');
      this.generarGraficaPorCategoria();  
+
+     for(let item of this.areas)
+      {
+        let total = this.todosLosTickets.filter(x => x.idArea == item.id).length; 
+        this.tabTickets.push({nombre:item.nombre,total:total});
+
+        if(item.id == '1')
+          {
+             this.tabMantenimientos.push({nombre:item.nombre,total:this.mantenimientos.length}); 
+          }
+      }
    }  
 
    generarGraficaGeneral():any[]
