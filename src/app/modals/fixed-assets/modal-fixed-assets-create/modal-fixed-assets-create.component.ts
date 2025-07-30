@@ -88,14 +88,58 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     this.esNuevoActivoFijo ? this.crear() : this.actualizar();
   }
 
-  crearReferencia() {
-    const sucursal = this.rellenarCeros(this.activoFijo.idSucursal, 2);
-    const area = this.areas.find(x => x.id == this.activoFijo.idArea)?.nombre.substring(0, 1).toUpperCase();
-    const areaActivo = this.areasActivosFijos.find(x => x.id == this.activoFijo.idAreaActivoFijo)?.alias;
-    const categoriaActivo = this.categoriasActivosFijos.find(x => x.id == this.activoFijo.idCategoriaActivoFijo)?.nombre.substring(0, 1).toUpperCase();
+  async crearReferencia(): Promise<string> {
+    if (this.activoFijo.referencia) {
+      if (!this.activoFijo.referenciasAnteriores) {
+        this.activoFijo.referenciasAnteriores = [];
+      }
 
-    return `RW${sucursal}${area}${areaActivo}${categoriaActivo}${this.activoFijo.consecutivo}`;
+      if (!this.activoFijo.referenciasAnteriores.includes(this.activoFijo.referencia)) {
+        this.activoFijo.referenciasAnteriores.push(this.activoFijo.referencia);
+      }
+    }
+
+    this.activoFijo.consecutivo = await this.fixedAssetsService
+      .obtenerSecuencial(
+        this.activoFijo.idArea,
+        this.activoFijo.idSucursal,
+        this.activoFijo.idAreaActivoFijo,
+        this.activoFijo.idCategoriaActivoFijo
+      );
+
+    const sucursal = this.rellenarCeros(this.activoFijo.idSucursal, 2);
+    const area = this.areas.find(x => x.id == this.activoFijo.idArea)?.nombre.substring(0, 1).toUpperCase() || '';
+    const areaActivo = this.areasActivosFijos.find(x => x.id == this.activoFijo.idAreaActivoFijo)?.alias || '';
+    const categoriaActivo = this.categoriasActivosFijos.find(x => x.id == this.activoFijo.idCategoriaActivoFijo)?.nombre.substring(0, 1).toUpperCase() || '';
+
+    const nuevaReferencia = `RW${sucursal}${area}${areaActivo}${categoriaActivo}${this.activoFijo.consecutivo}`;
+
+    this.activoFijo.referencia = nuevaReferencia;
+
+    return nuevaReferencia;
   }
+
+  requiereNuevaReferencia(
+    activoNuevo: any,
+    referenciaActual: string,
+    areas: any[],
+    areasActivosFijos: any[],
+    categoriasActivosFijos: any[]
+  ): boolean {
+
+    const sucursal = this.rellenarCeros(activoNuevo.idSucursal, 2);
+    const area = areas.find(x => x.id == activoNuevo.idArea)?.nombre.substring(0, 1).toUpperCase() || '';
+    const areaActivo = areasActivosFijos.find(x => x.id == activoNuevo.idAreaActivoFijo)?.alias || '';
+    const categoria = categoriasActivosFijos.find(x => x.id == activoNuevo.idCategoriaActivoFijo)?.nombre.substring(0, 1).toUpperCase() || '';
+
+    const referenciaBaseGenerada = `RW${sucursal}${area}${areaActivo}${categoria}`;
+
+    // Comparar solo el prefijo de la referencia actual (sin consecutivo)
+    const referenciaActualBase = referenciaActual.substring(0, referenciaBaseGenerada.length);
+
+    return referenciaBaseGenerada !== referenciaActualBase;
+  }
+
 
   private rellenarCeros(numero: number, longitud: number): string {
     return numero.toString().padStart(longitud, '0');
@@ -106,15 +150,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
   }
 
   async crear() {
-    this.activoFijo.consecutivo = await this.fixedAssetsService
-      .obtenerSecuencial(
-        this.activoFijo.idArea,
-        this.activoFijo.idSucursal,
-        this.activoFijo.idAreaActivoFijo,
-        this.activoFijo.idCategoriaActivoFijo
-      );
-
-    this.activoFijo.referencia = this.crearReferencia();
+    this.activoFijo.referencia = await this.crearReferencia();
     const referenciaExiste = await this.fixedAssetsService.getByReferencePromise(this.activoFijo.referencia);
 
     if (referenciaExiste) {
@@ -125,7 +161,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
         await this.fixedAssetsService.create({ ...this.activoFijo });
         this.cdr.detectChanges();
         this.closeEvent.emit(false); // Cerrar modal
-        this.showMessage('success', 'Success', 'Guardado correctamente');
+        this.showMessage('success', 'Success', 'Guardado correctamente con referencia ' + this.activoFijo.referencia);
 
       } catch (error: any) {
         this.showMessage('error', 'Error', error.message);
@@ -133,13 +169,24 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     }
   }
 
-  actualizar() {
+  async actualizar() {
+
+    if (this.requiereNuevaReferencia(
+      this.activoFijo,
+      this.activoFijo.referencia,
+      this.areas,
+      this.areasActivosFijos,
+      this.categoriasActivosFijos
+    )) {
+      this.activoFijo.referencia = await this.crearReferencia();
+    }
+
     this.fixedAssetsService
       .update(this.activoFijo, this.idActivoFijoEditar)
       .then(() => {
         this.cdr.detectChanges();
         this.closeEvent.emit(false); // Cerrar modal
-        this.showMessage('success', 'Success', 'Enviado correctamente');
+        this.showMessage('success', 'Success', 'Enviado correctamente con referencia ' + this.activoFijo.referencia);
       })
       .catch((error) =>
         console.error('Error al actualizar los comentarios:', error)

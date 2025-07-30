@@ -81,11 +81,11 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
   }
 
   async obtenerTickets() {
-    this.tickets = await this.ticketsService.getByReferencia(this.activoFijo?.referencia);
+    this.tickets = await this.ticketsService.obtenerTicketsPorActivo(this.activoFijo);
     this.tickets = this.tickets.filter(item => item.idEstatusTicket != '3')
     this.cdr.detectChanges();
   }
-  
+
   obtenerNombreArea(idArea: string): string {
     let nombre = '';
     let area = this.areas.filter((x) => x.id == idArea);

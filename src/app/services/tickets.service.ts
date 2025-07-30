@@ -20,6 +20,7 @@ import {
 import { HttpHeaders } from '@angular/common/http';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Ticket } from '../models/ticket.model';
+import { ActivoFijo } from '../models/activo-fijo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -376,41 +377,51 @@ export class TicketsService {
     }) as Ticket);
   }
 
-  async getByReferencia(referencia: string): Promise<Ticket[]> {
-    const ticketsCollection = collection(this.firestore, 'tickets');
+  // async getByReferencia(referencia: string): Promise<Ticket[]> {
+  //   const ticketsCollection = collection(this.firestore, 'tickets');
 
-    const q = query(
-      ticketsCollection,
-      where('referenciaActivoFijo', '==', referencia),
-    );
+  //   const q = query(
+  //     ticketsCollection,
+  //     where('referenciaActivoFijo', '==', referencia),
+  //   );
+
+  //   const snapshot = await getDocs(q);
+
+  //   return snapshot.docs.map(doc => ({
+  //     id: doc.id,
+  //     ...doc.data()
+  //   }) as Ticket);
+  // }
+
+  async obtenerTicketsPorActivo(activo: ActivoFijo): Promise<Ticket[]> {
+    const referencias = [activo.referencia, ...(activo.referenciasAnteriores || [])];
+
+    const collectionRef = collection(this.firestore, 'tickets');
+    const q = query(collectionRef, where('referenciaActivoFijo', 'in', referencias));
 
     const snapshot = await getDocs(q);
-
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }) as Ticket);
+    return snapshot.docs.map(doc => doc.data() as Ticket);
   }
 
-async obtenerTicketsEntreFechas(
-  fechaInicio: Date,
-  fechaFin: Date
-): Promise<any[]> {
-  const ticketsCollection = collection(this.firestore, 'tickets');
-  
-  const q = query(ticketsCollection, 
-    where('fecha', '>=', fechaInicio),
-    where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
-    orderBy('fecha', 'desc')
-  );
+  async obtenerTicketsEntreFechas(
+    fechaInicio: Date,
+    fechaFin: Date
+  ): Promise<any[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
 
-  const querySnapshot = await getDocs(q);
-  
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-}
+    const q = query(ticketsCollection,
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc')
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
 
   getAll(): Observable<Ticket[] | any[]> {
     const sucursalesCollection = collection(this.firestore, 'tickets');

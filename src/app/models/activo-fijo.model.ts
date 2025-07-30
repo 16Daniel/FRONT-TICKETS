@@ -15,4 +15,5 @@ export class ActivoFijo {
     esFreidora: boolean=false;
     eliminado: boolean = false;
     mantenimientos: MantenimientoActivoFijo[] = [];
+    referenciasAnteriores: string[] = []
 }

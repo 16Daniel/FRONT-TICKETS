@@ -9,6 +9,7 @@ import {
   getDocs,
   onSnapshot,
   query,
+  runTransaction,
   setDoc,
   updateDoc,
   where,
@@ -99,23 +100,30 @@ export class FixedAssetsService {
     idAreaActivoFijo: string,
     idCategoriaActivoFijo: string
   ): Promise<number> {
-    try {
-      const collectionRef = collection(this.firestore, this.pathName);
-      const q = query(
-        collectionRef,
-        where('idArea', '==', idArea),
-        where('idSucursal', '==', idSucursal),
-        where('idAreaActivoFijo', '==', idAreaActivoFijo),
-        where('idCategoriaActivoFijo', '==', idCategoriaActivoFijo)
-      );
-      const snapshot = await getDocs(q);
-      const count = snapshot.size;
-      return count + 1;
-    } catch (error) {
-      console.error('Error al obtener el count de documentos filtrados:', error);
-      throw error;
-    }
+    const docId = `${idSucursal}_${idArea}_${idAreaActivoFijo}_${idCategoriaActivoFijo}`;
+    const docRef = doc(this.firestore, 'consecutivos-activos', docId);
+
+    return await runTransaction(this.firestore, async (transaction) => {
+      const docSnap = await transaction.get(docRef);
+
+      let nuevoConsecutivo = 1;
+      if (docSnap.exists()) {
+        const data: any = docSnap.data();
+        nuevoConsecutivo = data.ultimoConsecutivo + 1;
+      }
+
+      transaction.set(docRef, {
+        idSucursal,
+        idArea,
+        idAreaActivoFijo,
+        idCategoriaActivoFijo,
+        ultimoConsecutivo: nuevoConsecutivo,
+      });
+
+      return nuevoConsecutivo;
+    });
   }
+
 
   getByReference(referencia: string): Observable<ActivoFijo | undefined> {
     return new Observable<ActivoFijo | undefined>((observer) => {
