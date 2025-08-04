@@ -230,4 +230,10 @@ ngOnInit(): void
   
   return Array.from(mesesUnicos).sort();
 }
+
+cambiarareas()
+{
+  this.tickets = []; 
+  this.manteniminetos = []; 
+}
 }

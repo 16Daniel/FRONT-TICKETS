@@ -119,27 +119,6 @@ public coloresEstatus:any;
           }         
           data.push({name:this.obtenerMesYAnioEspanol(mesanio).nombreMes,series:series}); 
       }
-    //  let ticketsmes = this.todosLosTickets.filter(x => x.fecha.toDate().getMonth()+1 == parseInt(mesanio.split('/')[0]) && x.fecha.toDate().getFullYear() == parseInt(mesanio.split('/')[1]) ); 
-    //    let areasdistintas = [...new Set(ticketsmes.map(x => x.idArea))];
-        
-    //      for(let ida of areasdistintas)
-    //       {
-    //         let series:any[] = []; 
-    //         let nombrearea = this.areas.filter(x=> x.id == ida)[0].nombre;
-    //           let tkarea = ticketsmes.filter(x=> x.idArea == ida); 
-
-    //         let tkcorporativo = 0; 
-    //         for(let tk of tkarea)
-    //           {
-    //               if(this.esCoporporativo(tk.idUsuario))
-    //                 {
-    //                   tkcorporativo++; 
-    //                 }
-    //           }                      
-    //           series.push({name:'CORPORATIVO',value:tkcorporativo});
-    //           series.push({name:'SUCURSAL',value:tkarea.length-tkcorporativo});
-    //         data.push({name:nombrearea,series:series});
-    //       }
           return data
    }
  
@@ -173,6 +152,7 @@ public coloresEstatus:any;
    generarGraficaPorTurnos():any[]
    {    
         let gTurnos:any[] = []; 
+        let tabTurnos:any[] = []; 
 
         let ticketsmes = this.todosLosTickets; 
         let areasdistintas = [...new Set(ticketsmes.map(x => x.idArea))];
@@ -182,7 +162,7 @@ public coloresEstatus:any;
             let fecha:Date = item.fecha.toDate(); 
           const horas = fecha.getHours();
           const minutos = fecha.getMinutes();
-          const totalHoras = horas + minutos / 60;
+          const totalHoras = horas + (minutos / 60);
           let esFin:boolean = this.esfinDeSemana(fecha);
           
           return totalHoras >= 9 && totalHoras < 19 && esFin == false;
@@ -193,9 +173,9 @@ public coloresEstatus:any;
           let fecha:Date = item.fecha.toDate(); 
           const horas = fecha.getHours();
           const minutos = fecha.getMinutes();
-          const totalHoras = horas + minutos / 60;
+          const totalHoras = horas + (minutos / 60);
           let esFin:boolean = this.esfinDeSemana(fecha);
-          return totalHoras < 9 || totalHoras >= 18 || esFin;
+          return totalHoras < 9 || totalHoras > 19 || esFin;
         });
 
          for(let ida of areasdistintas)
@@ -209,16 +189,17 @@ public coloresEstatus:any;
              series.push({name:'MATUTINO',value:tkm});
              series.push({name:'GUARDIA',value:tkg});
              gTurnos.push({name:nombrearea,series:series});
+             tabTurnos.push({nombre:nombrearea,total:tkm+tkg}); 
           }
 
-          return gTurnos; 
+          return [{data:gTurnos,totales:tabTurnos}]; 
    }
    
 
    datosGraficaUsuario(usuario:Usuario):any[]
    {
       let dataGU:any[] = []
-
+      let totaltickets = 0; 
       let sucursales = usuario.sucursales; 
 
       for(let suc of sucursales)
@@ -226,8 +207,9 @@ public coloresEstatus:any;
           let series:any[] = []; 
           for(let estatus of this.catEstatusTicket)
             {
-               let tickets =  this.todosLosTickets.filter(x=> x.idSucursal == suc.id && x.idEstatusTicket == estatus.id).length;
+               let tickets =  this.todosLosTickets.filter(x=> x.idSucursal == suc.id && x.idEstatusTicket == estatus.id && x.idArea == usuario.idArea).length;
                series.push({name:estatus.nombre,value:tickets});  
+               totaltickets = totaltickets + tickets; 
             }
 
             // series.sort((a, b) => b.value - a.value); 
@@ -241,8 +223,8 @@ public coloresEstatus:any;
             }))
             .sort((a, b) => b.total - a.total) // Ordenar de mayor a menor
             .map(({ total, ...rest }) => rest);
-
-      return dataGU; 
+              
+      return [{data:dataGU,total:totaltickets}]; 
    } 
 
    esCoporporativo(idUsuario:string):boolean
