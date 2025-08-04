@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
@@ -20,6 +21,7 @@ import { UbicacionActivoFijo } from '../../../models/ubicacion-activo-fijo.model
 import { EstatusActivoFijo } from '../../../models/estatus-activo-fijo.model';
 import { ModalFixedAssetTicketsComponent } from '../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
+import { ModalFaGenerateTicketComponent } from '../../../modals/fixed-assets/modal-fa-generate-ticket/modal-fa-generate-ticket.component';
 
 @Component({
   selector: 'app-detail',
@@ -28,7 +30,9 @@ import { ModalFixedAssetMaintenanceComponent } from '../../../modals/fixed-asset
     ToastModule,
     CommonModule,
     ModalFixedAssetTicketsComponent,
-    ModalFixedAssetMaintenanceComponent
+    ModalFixedAssetMaintenanceComponent,
+    ButtonModule,
+    ModalFaGenerateTicketComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './detail.component.html',
@@ -39,6 +43,7 @@ export default class DetailComponent implements OnInit {
   activo: ActivoFijo = new ActivoFijo;
   mostrarModalMantenimientos: boolean = false;
   mostrarModalTickets: boolean = false;
+  mostrarModalGenerateTicket: boolean = false;
 
   areas: Area[] = [];
   sucursales: Sucursal[] = [];
