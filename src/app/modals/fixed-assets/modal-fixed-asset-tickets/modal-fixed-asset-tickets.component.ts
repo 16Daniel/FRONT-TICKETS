@@ -36,7 +36,7 @@ export class ModalFixedAssetTicketsComponent implements OnInit {
   }
 
   async obtenerTickets() {
-    this.tickets = await this.ticketsService.getByReferencia(this.activoFijo?.referencia);
+    this.tickets = await this.ticketsService.obtenerTicketsPorActivo(this.activoFijo);
     this.cdr.detectChanges();
   }
 

@@ -5,9 +5,15 @@
             <img src="assets/img/RW_LogoWEB.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
         </div>
 
-
         <div class="card shadow-sm rounded-4">
             <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div></div>
+                    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary"
+                        (click)="mostrarModalGenerateTicket = true">
+                    </p-button>
+                </div>
 
                 <h5 class="card-title fw-bold text-primary text-center">
                     {{ activo.descripcion || 'Activo sin descripción' }}
@@ -52,7 +58,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between"
                         [ngClass]="{ 'bg-danger text-white':getCostoTotalMantenimientos() > activo.costo! }">
-                        
+
                         <strong>Costo mantenimientos:</strong>
                         <span>{{ getCostoTotalMantenimientos() | currency }}</span>
                     </li>
@@ -76,8 +82,6 @@
                     </div>
                 </div>
 
-
-
             </div>
         </div>
     </div>
@@ -94,3 +98,7 @@
 
 <app-modal-fixed-asset-maintenance *ngIf="mostrarModalMantenimientos" [mostrarModal]="mostrarModalMantenimientos"
     [activoFijo]="activo" (closeEvent)="mostrarModalMantenimientos = false"></app-modal-fixed-asset-maintenance>
+
+<app-modal-fa-generate-ticket *ngIf="mostrarModalGenerateTicket" [activoFijo]="activo"
+    [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+    (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-fa-generate-ticket>

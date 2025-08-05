@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import {
   addDoc,
   collection,
@@ -41,15 +41,22 @@ export class UsersService {
     return user;
   }
 
-  getUsersHelp(idArea?: string): Observable<any[]> {
+  getUsersHelp(idArea?: string, incluirEspecialistas: boolean = false): Observable<any[]> {
     return new Observable((observer) => {
       // Referencia a la colección
       const collectionRef = collection(this.firestore, this.pathName);
 
       // Arreglo de condiciones de filtrado
-      const filtros: any[] = [where('idRol', '==', '4')];
+      const filtros: any[] = [];
 
-      // Agrega filtro dinámico por idArea si está definido
+      // Filtro por rol
+      if (incluirEspecialistas) {
+        filtros.push(where('idRol', 'in', ['4', '7']));
+      } else {
+        filtros.push(where('idRol', '==', '4'));
+      }
+
+      // Filtro por área si se proporciona
       if (idArea) {
         filtros.push(where('idArea', '==', idArea));
       }
@@ -113,4 +120,20 @@ export class UsersService {
       })
     );
   }
+
+  async getUsuarioSucursal(idSucursal: string): Promise<Usuario | null> {
+    const usersCollection = collection(this.firestore, 'usuarios');
+    const userQuery = query(usersCollection, where('idRol', '==', '2'));
+
+    // Obtener todos los usuarios con rol 2
+    const usuarios = await firstValueFrom(collectionData(userQuery, { idField: 'id' })) as Usuario[];
+
+    // Buscar el primero que tenga esa sucursal
+    const usuarioEncontrado = usuarios.find(usuario =>
+      usuario.sucursales?.some(s => s.id === idSucursal)
+    );
+
+    return usuarioEncontrado || null;
+  }
+
 }
