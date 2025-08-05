@@ -334,24 +334,37 @@ export default class CalendarBuilderComponent implements OnInit {
 
     try {
       await this.visitasService.create(visita);
+      console.log(visita)
 
       for (let sucursal of this.sucursalesSeleccionadas) {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
 
+          console.log(this.tieneMantenimientosActivos(sucursal.id))
           if (this.tieneMantenimientosActivos(sucursal.id)) {
 
             if (this.usuario.idArea == '4') {
               let freidoras = await this.fixedAssetsService.obtenerFredioras(sucursal.id);
+              console.log(freidoras)
+
+              if (freidoras.length == 0) {
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: 'Warning',
+                  detail: 'Se registró la visita pero no se encontraron freidoras en activos fijos',
+                  life: 7000
+                });
+              }
+
               freidoras.forEach(async element => {
                 const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
                 this.usuario.idArea == '4' ?
                   await this.maintenanceMtooService.create2(
-                    sucursal.id, 
-                    this.usuarioseleccionado!.id, 
-                    this.fecha, 
-                    element.id!, 
-                    element.descripcion, 
+                    sucursal.id,
+                    this.usuarioseleccionado!.id,
+                    this.fecha,
+                    element.id!,
+                    element.descripcion,
                     element.referencia
                   ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
               });

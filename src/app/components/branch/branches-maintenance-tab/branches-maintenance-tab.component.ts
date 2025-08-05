@@ -124,6 +124,7 @@ export class BranchesMaintenanceTabComponent {
     this.unsubscribe = this.mantenimientoService.getMantenimientosActivosPorFecha(
       this.sucursal?.id,
       (mantenimientos: MantenimientoMtto[]) => {
+        console.log(mantenimientos)
         this.mantenimientosActivos = mantenimientos;
         this.cdr.detectChanges();
         // console.log('Mantenimiento activo:', this.mantenimientoActivo);
