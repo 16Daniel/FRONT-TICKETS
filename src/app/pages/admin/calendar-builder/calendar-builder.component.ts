@@ -179,7 +179,7 @@ export default class CalendarBuilderComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsersHelp(this.usuario.idArea).subscribe({
+    this.usersService.getUsersHelp(this.usuario.idArea, true).subscribe({
       next: (data) => {
         this.usuariosHelp = data;
         this.cdr.detectChanges();

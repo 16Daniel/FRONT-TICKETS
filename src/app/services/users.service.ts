@@ -41,15 +41,22 @@ export class UsersService {
     return user;
   }
 
-  getUsersHelp(idArea?: string): Observable<any[]> {
+  getUsersHelp(idArea?: string, incluirEspecialistas: boolean = false): Observable<any[]> {
     return new Observable((observer) => {
       // Referencia a la colección
       const collectionRef = collection(this.firestore, this.pathName);
 
       // Arreglo de condiciones de filtrado
-      const filtros: any[] = [where('idRol', '==', '4')];
+      const filtros: any[] = [];
 
-      // Agrega filtro dinámico por idArea si está definido
+      // Filtro por rol
+      if (incluirEspecialistas) {
+        filtros.push(where('idRol', 'in', ['4', '7']));
+      } else {
+        filtros.push(where('idRol', '==', '4'));
+      }
+
+      // Filtro por área si se proporciona
       if (idArea) {
         filtros.push(where('idArea', '==', idArea));
       }
