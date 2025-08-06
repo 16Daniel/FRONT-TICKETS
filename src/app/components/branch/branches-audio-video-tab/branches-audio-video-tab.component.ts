@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, input, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -42,6 +42,7 @@ import { ModalMaintenanceAvCheckComponent } from '../../../modals/maintenance/au
 export class BranchesAudioVideoTabComponent {
   @Input() tickets: Ticket[] = [];
   @Input() esEspectadorActivo: boolean = false;
+  @Input() todosLosTickets: Ticket[] = [];
 
   mostrarModalGenerateTicket: boolean = false;
   mostrarModalTicketDetail: boolean = false;
@@ -52,7 +53,6 @@ export class BranchesAudioVideoTabComponent {
   mantenimientoActivo: Mantenimiento6x6AV | null = null;
 
   sucursal: Sucursal | undefined;
-  todosLosTickets: Ticket[] = [];
   areas: Area[] = [];
   usuario: Usuario;
   loading: boolean = false;
@@ -108,7 +108,7 @@ export class BranchesAudioVideoTabComponent {
   }
 
   onClickGenerarTicket() {
-    if (this.verificarTicketsPorValidar(this.todosLosTickets)) {
+    if (this.verificarTicketsPorValidar(this.tickets)) {
       this.confirmationService.confirm({
         header: 'IMPORTANTE',
         message: `TIENES TICKETS PENDIENTES POR VALIDAR`,

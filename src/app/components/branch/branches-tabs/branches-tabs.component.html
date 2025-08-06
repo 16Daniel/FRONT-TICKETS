@@ -24,12 +24,12 @@
 
   <p-tabPanel header="AUDIO Y VIDEO">
     <app-branches-audio-video-tab [esEspectadorActivo]="esEspectadorActivo"
-      [tickets]="filtrarTicketsPorArea('2')"></app-branches-audio-video-tab>
+      [tickets]="filtrarTicketsPorArea('2')" [todosLosTickets]="todosLosTickets"></app-branches-audio-video-tab>
   </p-tabPanel>
 
   <p-tabPanel header="MANTENIMIENTO">
     <app-branches-maintenance-tab [esEspectadorActivo]="esEspectadorActivo"
-      [tickets]="filtrarTicketsPorArea('4')"></app-branches-maintenance-tab>
+      [tickets]="filtrarTicketsPorArea('4')" [todosLosTickets]="todosLosTickets"></app-branches-maintenance-tab>
   </p-tabPanel>
 
   <p-tabPanel header="ADMINISTRACIÓN ">
