@@ -30,6 +30,7 @@ import { ParticipanteChat } from '../../../models/participante-chat.model';
 import { Subcategoria } from '../../../models/subcategoria.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
+import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -64,6 +65,9 @@ export class ModalGenerateTicketComponent implements OnInit {
   esActivoFijo: boolean = false;
   activoFijo: ActivoFijo | undefined;
 
+  imagenesEvidencia: string[] = [];
+  imagenesBase64: string[] = [];
+
   constructor(
     private ticketsService: TicketsService,
     private folioGeneratorService: FolioGeneratorService,
@@ -74,7 +78,8 @@ export class ModalGenerateTicketComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
-    private fixedAssetsService: FixedAssetsService
+    private fixedAssetsService: FixedAssetsService,
+    private firebaseStorage: FirebaseStorageService
   ) { }
 
   ngOnInit(): void {
@@ -316,4 +321,35 @@ export class ModalGenerateTicketComponent implements OnInit {
         }
       });
   }
+
+  onSeleccionarImagenes() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    this.imagenesBase64 = []; // limpiar imágenes previas
+
+    Array.from(input.files).forEach(file => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          this.imagenesBase64.push(reader.result);
+          console.log(reader.result);
+
+          this.cdr.detectChanges();  // Forzar actualización de vista aquí
+        }
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+
 }
