@@ -67,6 +67,7 @@ export class ModalGenerateTicketComponent implements OnInit {
 
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
+  archivos: File[] = [];
 
   constructor(
     private ticketsService: TicketsService,
@@ -233,9 +234,21 @@ export class ModalGenerateTicketComponent implements OnInit {
       this.ticket.folio = folio;
       this.ticket.participantesChat = participantesChat;
 
-      await this.ticketsService.create({ ...this.ticket });
-      this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-      this.closeEvent.emit(false);
+      this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
+        .then(async urls => {
+          console.log('Todas las URLs:', urls);
+          this.ticket.imagenesEvidencia = urls;
+          await this.ticketsService.create({ ...this.ticket });
+          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+          this.closeEvent.emit(false);
+        })
+        .catch(async err => {
+          console.error('Error al subir una o más imágenes:', err);
+          this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
+          await this.ticketsService.create({ ...this.ticket });
+          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+          this.closeEvent.emit(false);
+        });
     });
   }
 
@@ -316,7 +329,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         this.cdr.detectChanges();
 
         if (!result) {
-          this.showMessage('warn', 'Error', 'No se encontró activo con referencia ' + this.ticket.referenciaActivoFijo);
+          this.showMessage('warn', 'Warning', 'No se encontró activo con referencia ' + this.ticket.referenciaActivoFijo);
           this.ticket.referenciaActivoFijo = '';
         }
       });
@@ -333,23 +346,21 @@ export class ModalGenerateTicketComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    this.imagenesBase64 = []; // limpiar imágenes previas
+    this.archivos = Array.from(input.files);
 
-    Array.from(input.files).forEach(file => {
+    this.imagenesBase64 = [];
+
+    this.archivos.forEach(file => {
       const reader = new FileReader();
 
       reader.onload = () => {
         if (typeof reader.result === 'string') {
           this.imagenesBase64.push(reader.result);
-          console.log(reader.result);
-
-          this.cdr.detectChanges();  // Forzar actualización de vista aquí
+          this.cdr.detectChanges();
         }
       };
 
       reader.readAsDataURL(file);
     });
   }
-
-
 }

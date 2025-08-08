@@ -1,0 +1,36 @@
+.modal-ticket-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+}
+
+.ticket-section {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+}
+
+.ticket-section:last-child {
+    border-bottom: none;
+}
+
+.ticket-section h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #333;
+}
+
+.evidencias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.imagen-evidencia {
+    width: 180px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(71, 55, 55, 0.1);
+}

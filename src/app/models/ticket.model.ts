@@ -22,6 +22,7 @@ export class Ticket {
   nombreSubcategoria: string | null = '';
   descripcion: string = '';
   comentarios: Comentario[] = [];
+  imagenesEvidencia: string[] = [];
   comentariosFinales?: string | null;
   folio: string = '';
   calificacion: number = 0;

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { AccordionModule } from 'primeng/accordion';
+import { CardModule } from 'primeng/card';
 
 import { Usuario } from '../../../models/usuario.model';
 import { TicketsService } from '../../../services/tickets.service';
@@ -13,7 +14,14 @@ import { ModalSelectSpecialistUserComponent } from '../../users/modal-select-spe
 @Component({
   selector: 'app-modal-ticket-detail',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, AccordionModule, ModalSelectSpecialistUserComponent],
+  imports: [
+    CommonModule, 
+    DialogModule, 
+    FormsModule, 
+    AccordionModule, 
+    ModalSelectSpecialistUserComponent,
+    CardModule
+  ],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
 })
