@@ -29,6 +29,7 @@ import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 import { ParticipanteChat } from '../../../models/participante-chat.model';
 import { Subcategoria } from '../../../models/subcategoria.model';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
+import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -60,6 +61,10 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   formCategoria: any;
   catUsuariosHelp: Usuario[] = [];
 
+  imagenesEvidencia: string[] = [];
+  imagenesBase64: string[] = [];
+  archivos: File[] = [];
+
   constructor(
     private ticketsService: TicketsService,
     private folioGeneratorService: FolioGeneratorService,
@@ -70,6 +75,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
+    private firebaseStorage: FirebaseStorageService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -224,9 +230,21 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       this.ticket.folio = folio;
       this.ticket.participantesChat = participantesChat;
 
-      await this.ticketsService.create({ ...this.ticket });
-      this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-      this.closeEvent.emit(false);
+      this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
+        .then(async urls => {
+          console.log('Todas las URLs:', urls);
+          this.ticket.imagenesEvidencia = urls;
+          await this.ticketsService.create({ ...this.ticket });
+          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+          this.closeEvent.emit(false);
+        })
+        .catch(async err => {
+          console.error('Error al subir una o más imágenes:', err);
+          this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
+          await this.ticketsService.create({ ...this.ticket });
+          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+          this.closeEvent.emit(false);
+        });
     });
   }
 
@@ -298,5 +316,34 @@ export class ModalFaGenerateTicketComponent implements OnInit {
 
   obtenerSubcategoriasFiltradas = (): Subcategoria[] =>
     this.formCategoria.subcategorias.filter((x: Subcategoria) => x.eliminado == false)
+
+  onSeleccionarImagenes() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    this.archivos = Array.from(input.files);
+
+    this.imagenesBase64 = [];
+
+    this.archivos.forEach(file => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          this.imagenesBase64.push(reader.result);
+          this.cdr.detectChanges();
+        }
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
 
 }

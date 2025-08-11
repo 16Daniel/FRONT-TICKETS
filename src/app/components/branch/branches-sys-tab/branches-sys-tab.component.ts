@@ -159,7 +159,7 @@ export class BranchesSysTabComponent {
   }
 
   onClickGenerarTicket() {
-    if (this.verificarTicketsPorValidar(this.todosLosTickets)) {
+    if (this.verificarTicketsPorValidar(this.tickets)) {
       this.confirmationService.confirm({
         header: 'IMPORTANTE',
         message: `TIENES TICKETS PENDIENTES POR VALIDAR`,
