@@ -10,17 +10,19 @@ import { Usuario } from '../../../models/usuario.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
 import { ModalSelectSpecialistUserComponent } from '../../users/modal-select-specialist-user/modal-select-specialist-user.component';
+import { ModalVisorImagenesComponent } from '../../modal-visor-imagenes/modal-visor-imagenes.component';
 
 @Component({
   selector: 'app-modal-ticket-detail',
   standalone: true,
   imports: [
-    CommonModule, 
-    DialogModule, 
-    FormsModule, 
-    AccordionModule, 
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    AccordionModule,
     ModalSelectSpecialistUserComponent,
-    CardModule
+    CardModule,
+    ModalVisorImagenesComponent
   ],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
@@ -31,7 +33,9 @@ export class ModalTicketDetailComponent {
   @Output() closeEvent = new EventEmitter<boolean>();
   usuario: Usuario;
   mostrarModalEspecialistas: boolean = false;
+  mostrarModalImagen: boolean = false;
   idSucursalEspecialista: string = '';
+  urlVisorImagen: string = '';
 
   constructor(
     private ticketsService: TicketsService,
@@ -65,5 +69,10 @@ export class ModalTicketDetailComponent {
   onClickAsignarEspecialista() {
     this.idSucursalEspecialista = this.ticket?.idSucursal;
     this.mostrarModalEspecialistas = true;
+  }
+
+  abrirModalImagen(url: string) {
+    this.mostrarModalImagen = true;
+    this.urlVisorImagen = url;
   }
 }

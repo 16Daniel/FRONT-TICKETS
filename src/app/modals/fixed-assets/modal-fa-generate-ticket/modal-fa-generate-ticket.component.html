@@ -121,8 +121,8 @@
         <div class="row">
             <div class="col-md-6">
                 <!-- <p class="fw-bold">REFERENCIA ACTIVO FIJO</p> -->
-                <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA REFERENCIA" disabled
-                    [(ngModel)]="ticket.referenciaActivoFijo" name="referenciaActivoFijo"
+                <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA REFERENCIA"
+                    disabled [(ngModel)]="ticket.referenciaActivoFijo" name="referenciaActivoFijo"
                     [ngClass]="{'p-invalid': formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched}"
                     #formReferenciaActivoFijoCtrl="ngModel" required>
                 <small *ngIf="formReferenciaActivoFijoCtrl.invalid && formReferenciaActivoFijoCtrl.touched"
@@ -137,7 +137,25 @@
         </div>
 
 
+        <div>
+            <input type="file" id="fileInput" (change)="onFileChange($event)" multiple accept="image/*" hidden />
+            <button type="button" (click)="onSeleccionarImagenes()" class="btn-upload">
+                Seleccionar imágenes
+            </button>
 
+            <div *ngIf="imagenesBase64.length > 0" class="mt-3">
+                <h5>Imágenes cargadas (base64):</h5>
+                <ul>
+                    <li *ngFor="let img of imagenesBase64; let i = index">
+                        Imagen {{ i + 1 }} - {{ img.length | number }} bytes
+                        <br />
+                        <img [src]="img" alt="Imagen {{ i + 1 }}" />
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <br>
 
 
         <P>FAVOR DE INGRESAR UNA DESCRIPCIÓN DEL PROBLEMA, SI ES NECESARIO PUEDE ADJUNTAR IMÁGENES</P>

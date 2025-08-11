@@ -1,0 +1,52 @@
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.btn-upload {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-upload:hover {
+    background-color: #0056b3;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+li {
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #fafafa;
+    width: 220px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 0.875rem;
+    color: #555;
+}
+
+li img {
+    max-width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 8px;
+    object-fit: contain;
+}
