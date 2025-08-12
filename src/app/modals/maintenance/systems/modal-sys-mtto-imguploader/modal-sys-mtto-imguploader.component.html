@@ -1,0 +1,34 @@
+<p-dialog [header]="'SUBIR EVIDENCIA PARA ' + titulo" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '40vw', height: '65vh' }"
+    [maximizable]="true" (onHide)="onHide()">
+
+    <!-- Área de subida -->
+    <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)">
+
+        <input type="file" id="fileUpload" #fileInput hidden accept="image/*" (change)="onFileSelected($event)">
+
+        <div class="upload-content">
+            <i class="pi pi-upload upload-icon"></i>
+            <p>Arrastra y suelta una imagen aquí</p>
+            <p>o</p>
+            <button type="button" class="btn-upload" (click)="fileInput.click()">
+                Seleccionar imagen
+            </button>
+        </div>
+    </div>
+
+    <!-- Vista previa -->
+    <div *ngIf="imagenesBase64?.length" class="preview-container">
+        <div *ngFor="let img of imagenesBase64" class="preview-item">
+            <img [src]="img" alt="Vista previa" />
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div style="width: 100%; display: flex; justify-content: flex-end;" *ngIf="imagenesBase64?.length">
+            <button type="button" class="btn-confirm" (click)="subirImagen()">
+                <i class="pi pi-check"></i> Subir
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>
