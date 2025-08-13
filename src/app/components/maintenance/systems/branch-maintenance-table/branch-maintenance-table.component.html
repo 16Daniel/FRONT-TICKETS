@@ -25,46 +25,46 @@
             <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
             </td>
             <td class="text-center">{{ dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}</td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'CAJA')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CAJA')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoCaja, 'bg-danger': !mantenimiento.mantenimientoCaja}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoCaja ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'IMPRESORAS')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'IMPRESORAS')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoImpresoras, 'bg-danger': !mantenimiento.mantenimientoImpresoras}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoImpresoras ? 'Si' : 'No' }}</label>
 
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'RACK')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'RACK')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoRack, 'bg-danger': !mantenimiento.mantenimientoRack}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoRack ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'TPV')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'TPV')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoPuntosVentaTabletas, 'bg-danger': !mantenimiento.mantenimientoPuntosVentaTabletas}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoPuntosVentaTabletas ? 'Si' : 'No'
                     }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'CONTENIDOS')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CONTENIDOS')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoContenidosSistemaCable, 'bg-danger': !mantenimiento.mantenimientoContenidosSistemaCable}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoContenidosSistemaCable ? 'Si' : 'No'
                     }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'INTERNET')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'INTERNET')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoInternet, 'bg-danger': !mantenimiento.mantenimientoInternet}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoInternet ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'CCTV')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CCTV')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoCCTV, 'bg-danger': !mantenimiento.mantenimientoCCTV}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoCCTV ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'NO BRAKES')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'NO BRAKES')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoNoBrakes, 'bg-danger': !mantenimiento.mantenimientoNoBrakes}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoNoBrakes ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'TIEMPOS COCINA')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'TIEMPOS COCINA')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoTiemposCocina, 'bg-danger': !mantenimiento.mantenimientoTiemposCocina}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoTiemposCocina ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalSubirEvidencia(mantenimiento, 'APPS')"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'APPS')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoConcentradorApps, 'bg-danger': !mantenimiento.mantenimientoConcentradorApps}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoConcentradorApps ? 'Si' : 'No' }}</label>
             </td>
@@ -83,5 +83,9 @@
     [mantenimiento]="mantenimientoSeleccionado"
     (closeEvent)="mostrarModalComentarios = false"></app-modal-final-comments>
 
-<app-modal-sys-mtto-imguploader *ngIf="mostrarModalImagen" [mostrarModal]="mostrarModalImagen"
-    (closeEvent)="mostrarModalImagen = false" [titulo]="tituloEvidencia"></app-modal-sys-mtto-imguploader>
+<app-modal-sys-mtto-imguploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
+    (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
+    [mantenimiento]="mantenimientoSeleccionado"></app-modal-sys-mtto-imguploader>
+
+<app-modal-visor-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen" [titulo]="tituloVisor!"
+    (closeEvent)="mostrarModalVisorImagen = false" [imagenUrl]="urlImagen!"></app-modal-visor-imagenes>

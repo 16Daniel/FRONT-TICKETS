@@ -1,8 +1,10 @@
-<p-dialog header="VISOR DE IMAGENES" [modal]="true" [(visible)]="mostrarModal"
-  [style]="{ width: '80vw', height: '80vh' }" [maximizable]="true" (onHide)="onHide()" >
+<p-dialog [header]="titulo" [modal]="true" [(visible)]="mostrarModal"
+  [style]="{ width: '80vw', height: '80vh' }" [maximizable]="true" (onHide)="onHide()">
 
   <div class="contenedor-imagen">
-        <img *ngIf="imagenUrl" [src]="imagenUrl" alt="Imagen" />
-    </div>
+    <img [src]="imagenUrl && imagenUrl.trim() !== '' 
+              ? imagenUrl 
+              : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'" alt="Imagen" />
+  </div>
 
 </p-dialog>

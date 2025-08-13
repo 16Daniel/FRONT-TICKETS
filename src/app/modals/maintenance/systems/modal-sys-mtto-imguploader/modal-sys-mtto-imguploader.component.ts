@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
+import Swal from 'sweetalert2';
+
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
+import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-modal-sys-mtto-imguploader',
@@ -20,7 +23,10 @@ export class ModalSysMttoImguploaderComponent {
   imagenesBase64: string[] = [];
   archivo: File | undefined;
 
-  constructor(private cdr: ChangeDetectorRef, private firebaseStorage: FirebaseStorageService) { }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private firebaseStorage: FirebaseStorageService,
+    private maintenance10x10Service: Maintenance10x10Service) { }
 
   onHide() {
     this.closeEvent.emit(); // Cerrar modal
@@ -51,15 +57,6 @@ export class ModalSysMttoImguploaderComponent {
     }
   }
 
-  // async handleFiles(files: FileList) {
-  //   this.imagenesBase64 = [];
-
-  //   for (const file of Array.from(files)) {
-  //     const base64 = await this.convertToBase64(file);
-  //     this.imagenesBase64.push(base64);
-  //   }
-  // }
-
   async handleFiles(files: FileList) {
     this.imagenesBase64 = [];
 
@@ -84,17 +81,81 @@ export class ModalSysMttoImguploaderComponent {
   }
 
   subirImagen() {
-    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, '')
-        .then(async url => {
-          
-          // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-          // this.closeEvent.emit(false);
-        })
-        .catch(async err => {
-          // console.error('Error al subir una o más imágenes:', err);
-          // this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
-          // this.closeEvent.emit(false);
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, 'sistemas')
+      .then(async url => {
+
+        this.actualizarUrlImagenMantenimiento(this.titulo!, url);
+
+        Swal.close();
+        this.closeEvent.emit();
+
+        // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+      })
+      .catch(async err => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Error al subir una o más imágenes!",
         });
+        // console.error('Error al subir una o más imágenes:', err);
+        // this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
+        this.closeEvent.emit();
+      });
+  }
+
+  async actualizarUrlImagenMantenimiento(campo: string, url: string) {
+    switch (campo) {
+      case 'CAJA':
+        this.mantenimiento!.mantenimientoCajaEvidenciaUrl = url;
+        break;
+      case 'IMPRESORAS':
+        this.mantenimiento!.mantenimientoImpresorasEvidenciaUrl = url;
+        break;
+      case 'RACK':
+        this.mantenimiento!.mantenimientoRackEvidenciaUrl = url;
+        break;
+      case 'TPV':
+        this.mantenimiento!.mantenimientoTiemposCocinaEvidenciaUrl = url;
+        break;
+      case 'CONTENIDOS':
+        this.mantenimiento!.mantenimientoConcentradorAppsEvidenciaUrl = url;
+        break;
+      case 'INTERNET':
+        this.mantenimiento!.mantenimientoInternetEvidenciaUrl = url;
+        break;
+      case 'CCTV':
+        this.mantenimiento!.mantenimientoCCTVEvidenciaUrl = url;
+        break;
+      case 'NO BRAKES':
+        this.mantenimiento!.mantenimientoNoBrakesEvidenciaUrl = url;
+        break;
+      case 'TIEMPOS COCINA':
+        this.mantenimiento!.mantenimientoTiemposCocinaEvidenciaUrl = url;
+        break;
+      case 'APPS':
+        this.mantenimiento!.mantenimientoConcentradorAppsEvidenciaUrl = url;
+        break;
+    }
+
+    await this.maintenance10x10Service.update(this.mantenimiento!.id, this.mantenimiento!);
+    Swal.fire({
+      title: "OK",
+      text: "La imágen se subió correctamente!",
+      icon: "success"
+    });
+
   }
 
 }

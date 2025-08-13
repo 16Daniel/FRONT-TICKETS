@@ -1,6 +1,7 @@
 <p-dialog [header]="'SUBIR EVIDENCIA PARA ' + titulo" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '40vw', height: '65vh' }"
     [maximizable]="true" (onHide)="onHide()">
 
+    <!-- <label for="">{{mantenimiento?.id}}</label> -->
     <!-- Área de subida -->
     <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)">
