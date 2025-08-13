@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { PuestoNomina, EmpleadoNomina, TurnodbNomina, TurnoNomina, UbicacionNomina, Marcajes, EmpleadoHorario } from '../models/Nomina';
+import { PuestoNomina, EmpleadoNomina, TurnodbNomina, TurnoNomina, UbicacionNomina, Marcajes, EmpleadoHorario, HistorailPersonal } from '../models/Nomina';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -89,5 +89,36 @@ export class NominaService {
       formdata.append("correo", correo); 
       formdata.append("jdata", jdata);  
       return this.http.post<EmpleadoHorario[]>(this.url+'PersonalNominas/correoNotificacion',formdata,{headers:this.headers})
+   }
+
+     guardarSolucion(idSuc:number,idemp:number, solucion:string):Observable<EmpleadoHorario[]>
+   {
+      let formdata = new FormData();
+      formdata.append("idSuc",idSuc.toString());
+      formdata.append("idemp",idemp.toString());
+      formdata.append("solucion",solucion);
+      return this.http.post<EmpleadoHorario[]>(this.url+'PersonalNominas/registrarSolucion',formdata,{headers:this.headers})
+   }
+
+      guardarComentarioSuc(idReg:number,comentario:string):Observable<EmpleadoHorario[]>
+   {
+      let formdata = new FormData();
+      formdata.append("idReg",idReg.toString());
+      formdata.append("comentario",comentario);
+      return this.http.post<EmpleadoHorario[]>(this.url+'PersonalNominas/registrarComentarioSuc',formdata,{headers:this.headers})
+   }
+   
+      confirmarSolucion(id:number):Observable<any>
+   {
+      return this.http.get<any>(this.url+'PersonalNominas/confirmarSolucion/'+id,{headers:this.headers})
+   }
+
+      obtnerHistorialPersonal(fechaini:Date,fechafin:Date,jdata:string):Observable<HistorailPersonal[]>
+   {
+      let formdata = new FormData();
+      formdata.append("fechaini",fechaini.toISOString());
+      formdata.append("fechafin",fechafin.toISOString());
+      formdata.append("jdatasuc",jdata);
+      return this.http.post<HistorailPersonal[]>(this.url+'PersonalNominas/HistorialPersonal',formdata,{headers:this.headers})
    }
 }

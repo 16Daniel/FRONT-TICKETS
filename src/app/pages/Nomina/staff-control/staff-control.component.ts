@@ -8,16 +8,18 @@ import { KnobModule } from 'primeng/knob';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { CorreosNotificacionService } from '../../../services/correos-notificacion.service';
 import { DropdownModule } from 'primeng/dropdown';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Sucursal } from '../../../models/sucursal.model';
 import { BranchesService } from '../../../services/branches.service';
 import { Usuario } from '../../../models/usuario.model';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @Component({
   selector: 'app-staff-control',
   standalone: true,
-  imports: [CommonModule,FormsModule,TableModule,KnobModule,ProgressBarModule,DropdownModule,ToastModule],
-   providers: [MessageService],
+  imports: [CommonModule,FormsModule,TableModule,KnobModule,ProgressBarModule,DropdownModule,ToastModule,DialogModule,ConfirmDialogModule],
+   providers: [MessageService,ConfirmationService],
   templateUrl: './staff-control.component.html',
   styleUrl: './staff-control.component.scss',
 })
@@ -35,10 +37,18 @@ public correoSel:Correonotificacion|undefined;
 public sucursales: Sucursal[] = []; 
 public sucursalSel:Sucursal|undefined; 
 public usuario:Usuario; 
+public modalSolucion:boolean = false; 
+public modalComentario:boolean = false; 
+public empleadoSolucion:number = 0;  
+public formcomentariosolucion:string = ""; 
+public formcomentarioSucursal:string = ""; 
+public idReg:number = -1;  
+
     constructor( public cdr: ChangeDetectorRef,public apiserv:NominaService,
       public correoService:CorreosNotificacionService,
       private messageService: MessageService, 
-        private branchesService:BranchesService 
+        private branchesService:BranchesService,
+         private confirmationService: ConfirmationService, 
     )
     {
        this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -286,6 +296,11 @@ obtenerFondo(item:Marcajes):string
                 }else
                   {
                     fondo = "bg-danger"
+                    if(item.regbitacora != null && item.regbitacora.comentariosucursal)
+                      {
+                           fondo = "bg-warning"
+                      }
+
                   }
             }
       }
@@ -426,4 +441,72 @@ async obtenerSucursales() {
       }
       }
 
+ abrirmodalSolucion(idemp:number)
+ {
+    this.empleadoSolucion = idemp;
+    this.modalSolucion = true; 
+ }     
+
+  abrirmodalcomentarioSuc(idreg:number)
+ {
+    this.idReg = idreg;
+    this.modalComentario = true; 
+ }     
+
+guardarSolucion()
+{
+  this.apiserv.guardarSolucion(this.sucursalSel!.claUbicacion!,this.empleadoSolucion,this.formcomentariosolucion).subscribe({
+      next: data => {
+          this.obtenerMarcajes(); 
+        this.formcomentariosolucion = ""; 
+        this.modalSolucion = false; 
+         this.showMessage("success","Success","Guardado correctamente"); 
+      },
+      error: error => {
+         console.log(error);
+      }
+  });
+}
+
+guardarComentarioSuc()
+{
+  this.apiserv.guardarComentarioSuc(this.idReg,this.formcomentarioSucursal).subscribe({
+      next: data => {
+          this.obtenerMarcajes(); 
+        this.formcomentarioSucursal = ""; 
+        this.modalComentario = false; 
+         this.showMessage("success","Success","Guardado correctamente"); 
+      },
+      error: error => {
+         console.log(error);
+      }
+  });
+}
+
+confirmarSolucion(idreg:number)
+{
+  this.confirmationService.confirm({
+      header: 'Confirmación',
+      message:
+        '   Confirmar solución   ',
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      accept: () => {
+
+                this.apiserv.confirmarSolucion(idreg).subscribe({
+                next: data => {
+                  this.obtenerMarcajes(); 
+                  this.showMessage("success","Success","Guardado correctamente"); 
+                },
+                error: error => {
+                  console.log(error);
+                }
+            });
+
+      },
+      reject: () => { },
+    });
+}
 }
