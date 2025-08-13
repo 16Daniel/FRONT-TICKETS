@@ -28,11 +28,12 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../../modals/mainten
 import { ModalTenXtenMaintenanceNewComponent } from '../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
-import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
+// import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../../components/analyst/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { Timestamp } from '@angular/fire/firestore';
 import { AccordionBranchMaintenanceMttoComponent } from '../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { MantenimientoFactoryService } from '../../admin/pages/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-analyst-home',
@@ -155,8 +156,8 @@ export default class AnalystHomeComponent implements OnInit {
 
     this.subscriptiontk = servicio
       .getUltimosMantenimientos(idsSucursales)
-      .subscribe((result) => {
-        let data = result.filter((element) => element.length > 0);
+      .subscribe((result: any) => {
+        let data = result.filter((element: any) => element.length > 0);
         this.ultimosmantenimientos = [];
         for (let itemdata of data) {
           for (let item of itemdata) {
@@ -177,8 +178,8 @@ export default class AnalystHomeComponent implements OnInit {
 
     this.subscriptiontk = servicio
       .getUltimosMantenimientos(idsSucursales)
-      .subscribe((result) => {
-        let data = result.filter((element) => element.length > 0);
+      .subscribe((result: any) => {
+        let data = result.filter((element: any) => element.length > 0);
         this.ultimosmantenimientos = [];
         for (let itemdata of data) {
           for (let item of itemdata) {

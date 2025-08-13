@@ -22,7 +22,7 @@ import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-ti
 import { AccordionBranchMaintenanceAvComponent } from '../../maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { Timestamp } from '@angular/fire/firestore';
-import { BranchesTicketsAccordionComponent } from '../../branch/branches-tickets-accordion/branches-tickets-accordion.component';
+import { BranchesTicketsAccordionComponent } from '../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',

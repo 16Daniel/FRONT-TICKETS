@@ -22,8 +22,8 @@ import { Maintenance10x10Service } from '../../../services/maintenance-10x10.ser
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { AccordionBranchMaintenance10x10Component } from '../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTicketDetailComponent } from "../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { BranchesTicketsAccordionComponent } from '../../branch/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
+import { BranchesTicketsAccordionComponent } from '../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
   selector: 'app-admin-sys-tab',

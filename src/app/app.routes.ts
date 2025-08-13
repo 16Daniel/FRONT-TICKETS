@@ -11,7 +11,7 @@ export const routes: Routes = [
       {
         path: 'home',
         title: 'Inicio',
-        loadComponent: () => import('./pages/branch/home/home.component'),
+        loadComponent: () => import('./pages/branch/pages/home/home.component'),
         canActivate: [HomeGuard],
       },
       {
@@ -23,7 +23,7 @@ export const routes: Routes = [
       {
         path: 'home-a',
         title: 'Inicio',
-        loadComponent: () => import('./pages/admin/admin-home/admin-home.component'),
+        loadComponent: () => import('./pages/admin/pages/admin-home/admin-home.component'),
         canActivate: [HomeGuard],
       },
       {
@@ -40,18 +40,18 @@ export const routes: Routes = [
       {
         path: 'roles',
         title: 'Roles de usuarios',
-        loadComponent: () => import('./pages/admin/roles/roles.component'),
+        loadComponent: () => import('./pages/admin/pages/roles/roles.component'),
       },
       {
         path: 'users',
         title: 'Usuarios',
-        loadComponent: () => import('./pages/admin/users/users.component'),
+        loadComponent: () => import('./pages/admin/pages/users/users.component'),
       },
       {
         path: 'calendar-builder',
         title: 'Constructor de calendarios',
         loadComponent: () =>
-          import('./pages/admin/calendar-builder/calendar-builder.component'),
+          import('./pages/admin/pages/calendar-builder/calendar-builder.component'),
       },
       {
         path: 'branch-visit-schedule',
@@ -65,28 +65,28 @@ export const routes: Routes = [
         path: 'version-control',
         title: 'Control de versiones',
         loadComponent: () =>
-          import('./pages/admin/version-control/version-control.component'),
+          import('./pages/admin/pages/version-control/version-control.component'),
         canActivate: [AdminGuard],
       },
       {
         path: 'branches',
         title: 'Sucursales',
         loadComponent: () =>
-          import('./pages/admin/branches/branches.component'),
+          import('./pages/admin/pages/branches/branches.component'),
         canActivate: [],
       },
       {
         path: 'categories',
         title: 'Categorias',
         loadComponent: () =>
-          import('./pages/admin/categories/categories.component'),
+          import('./pages/admin/pages/categories/categories.component'),
         canActivate: [],
       },
       {
         path: 'areas',
         title: 'Areas',
         loadComponent: () =>
-          import('./pages/admin/areas/areas.component'),
+          import('./pages/admin/pages/areas/areas.component'),
         canActivate: [AdminGuard],
       },
         {
@@ -106,7 +106,7 @@ export const routes: Routes = [
         path: 'fixed-assets',
         title: 'Activos fijos',
         loadComponent: () =>
-          import('./pages/admin/fixed-assets/fixed-assets.component'),
+          import('./pages/admin/pages/fixed-assets/fixed-assets.component'),
       },
     ],
   },
@@ -176,6 +176,6 @@ export const routes: Routes = [
     path: 'fixed-assets/detail/:referencia',
     title: 'Detalle del activos fijo',
     loadComponent: () =>
-      import('./pages/fixed-assets/detail/detail.component'),
+      import('./pages/fixed-assets/pages/detail/detail.component'),
   },
 ];

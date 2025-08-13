@@ -9,15 +9,13 @@ import { UsersService } from '../../../services/users.service';
 import { Usuario } from '../../../models/usuario.model';
 import { VisitaProgramada } from '../../../models/visita-programada';
 import ModalEventDetailComponent from "../../../modals/calendar/modal-event-detail/modal-event-detail.component";
-import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Ticket } from '../../../models/ticket.model';
 import { CalendarComponent } from "../../../components/common/calendar/calendar.component";
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { ColorUsuario } from '../../../models/color-usuario';
 import { DocumentsService } from '../../../services/documents.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { MantenimientoFactoryService } from '../../admin/calendar-builder/maintenance-factory.service';
+import { MantenimientoFactoryService } from '../../admin/pages/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-branch-visit-schedule',

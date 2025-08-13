@@ -18,8 +18,8 @@ import { DocumentsService } from '../../../services/documents.service';
 import { ColorUsuario } from '../../../models/color-usuario';
 import { TicketsService } from '../../../services/tickets.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
-import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
 import { BranchesService } from '../../../services/branches.service';
+import { MantenimientoFactoryService } from '../../../pages/admin/pages/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-calendar',
