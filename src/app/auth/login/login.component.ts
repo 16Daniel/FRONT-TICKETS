@@ -69,6 +69,9 @@ export default class LoginComponent {
             } else if (userd.idRol == '7') {
               this.router.navigate(['/main/home-specialist']);
             }
+            else if (userd.idRol == '8') {
+              this.router.navigate(['/nomina/control-de-personal']);
+            }
           },
           error: (error) => {
             console.log(error);
