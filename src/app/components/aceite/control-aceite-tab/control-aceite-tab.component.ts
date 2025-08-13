@@ -5,7 +5,6 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import UsersComponent from "../../../pages/admin/users/users.component";
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { ModalUserCreateComponent } from '../../../modals/users/modal-user-create/modal-user-create.component';

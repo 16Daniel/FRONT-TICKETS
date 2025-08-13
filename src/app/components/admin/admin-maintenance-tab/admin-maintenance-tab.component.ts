@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 import { ModalFilterTicketsComponent } from '../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { BranchesTicketsAccordionComponent } from '../../branch/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { Ticket } from '../../../models/ticket.model';
@@ -24,6 +23,7 @@ import { BranchesService } from '../../../services/branches.service';
 import { AccordionBranchMaintenanceMttoComponent } from '../../maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { MantenimientoMtto } from '../../../models/mantenimiento-mtto.model';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { BranchesTicketsAccordionComponent } from '../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
   selector: 'app-admin-maintenance-tab',

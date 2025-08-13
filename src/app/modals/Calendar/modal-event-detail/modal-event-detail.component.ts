@@ -14,10 +14,10 @@ import { TicketsService } from '../../../services/tickets.service';
 import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 import { BranchMaintenanceTableComponent } from '../../../components/maintenance/systems/branch-maintenance-table/branch-maintenance-table.component';
 import { ModalMaintenanceDetailComponent } from '../../maintenance/systems/modal-maintenance-detail/modal-maintenance-detail.component';
-import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
 import { BranchMaintenanceTableAvComponent } from '../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { RequesterTicketsListComponent } from '../../../components/common/requester-tickets-list/requester-tickets-list.component';
 import { BranchMaintenanceTableMttoComponent } from '../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { MantenimientoFactoryService } from '../../../pages/admin/pages/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -74,7 +74,7 @@ export default class ModalEventDetailComponent implements OnInit {
   async ngOnInit() {
     this.obtenerTickets();
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
-    await servicio.getUltimosMantenimientos([this.sucursal.id]).subscribe(result => {
+    await servicio.getUltimosMantenimientos([this.sucursal.id]).subscribe((result: any) => {
       this.mantenimientosDelDia = result;
       this.cdr.detectChanges();
     });

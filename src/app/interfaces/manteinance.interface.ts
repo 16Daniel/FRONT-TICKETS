@@ -6,4 +6,5 @@ export interface IMantenimientoService {
     obtenerMantenimientoVisitaPorFecha(fecha: Date, idSucursal: string, estatus?: boolean): Promise<any>;
     getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]>;
     delete(idMantenimiento: string): Promise<void>;
+    update(id: string, mantenimiento: any): Promise<void>;
 }

@@ -11,7 +11,8 @@ import { DialogModule } from 'primeng/dialog';
 })
 export class ModalVisorImagenesComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() imagenUrl: string | null = null; 
+  @Input() imagenUrl: string | null = null;
+  @Input() titulo: string = 'VISOR DE IMAGENES';
   @Output() closeEvent = new EventEmitter<boolean>();
 
   onHide() {

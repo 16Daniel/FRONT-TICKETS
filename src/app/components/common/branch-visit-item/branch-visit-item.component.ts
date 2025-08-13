@@ -6,7 +6,7 @@ import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 import { Ticket } from '../../../models/ticket.model';
 import ModalEventDetailComponent from '../../../modals/calendar/modal-event-detail/modal-event-detail.component';
 import { Usuario } from '../../../models/usuario.model';
-import { MantenimientoFactoryService } from '../../../pages/admin/calendar-builder/maintenance-factory.service';
+import { MantenimientoFactoryService } from '../../../pages/admin/pages/calendar-builder/maintenance-factory.service';
 
 @Component({
   selector: 'app-branch-visit-item',

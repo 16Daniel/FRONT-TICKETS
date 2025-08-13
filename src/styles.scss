@@ -395,3 +395,8 @@ ol, ul {
 html, body {
   font-size: 14px; // o el tamaño que desees
 }
+
+.swal-topmost {
+  z-index: 2147483647 !important;
+}
+

@@ -50,5 +50,5 @@
     [idSucursal]="idSucursalEspecialista" [ticket]="ticket!"
     (closeEvent)="mostrarModalEspecialistas = false"></app-modal-select-specialist-user>
 
-<app-modal-visor-imagenes [mostrarModal]="mostrarModalImagen" [imagenUrl]="urlVisorImagen"
+<app-modal-visor-imagenes *ngIf="mostrarModalImagen" [mostrarModal]="mostrarModalImagen" [imagenUrl]="urlVisorImagen"
     (closeEvent)="mostrarModalImagen = false"></app-modal-visor-imagenes>

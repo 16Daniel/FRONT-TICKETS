@@ -12,6 +12,7 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
+import Swal from 'sweetalert2';
 
 import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
@@ -187,6 +188,18 @@ export class ModalGenerateTicketComponent implements OnInit {
     }
 
     this.isLoading = true;
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+
 
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
       let folio = this.folioGeneratorService.generarFolio(
@@ -239,6 +252,7 @@ export class ModalGenerateTicketComponent implements OnInit {
           console.log('Todas las URLs:', urls);
           this.ticket.imagenesEvidencia = urls;
           await this.ticketsService.create({ ...this.ticket });
+          Swal.close();
           this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
           this.closeEvent.emit(false);
         })
