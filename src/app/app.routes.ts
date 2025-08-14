@@ -129,6 +129,11 @@ export const routes: Routes = [
         title: 'Control del personal',
         loadComponent: () => import('./pages/Nomina/staff-control/staff-control.component'),
       },
+       {
+        path: 'historial-del-personal',
+        title: 'Historial del personal',
+        loadComponent: () => import('./pages/Nomina/historial-personal/historial-personal.component'),
+      },
       {
         path: '',
         redirectTo: '/nomina/constructor-de-calendarios',

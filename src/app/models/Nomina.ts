@@ -43,6 +43,8 @@ export interface Marcajes {
   entrada: string;
   salida: string;
   incidencia: string;
+  regbitacora:BitacoraPersonal;
+  fecha?:string;
 }
 
 export interface EmpleadoHorario {
@@ -61,4 +63,29 @@ export interface Correonotificacion
 {
   nombre:string; 
   correo:string; 
+}
+
+export interface BitacoraPersonal {
+  id: number;
+  idsucursal: number;
+  idEmp: number;
+  solucion?: string;
+  comentariosucursal?: string;
+  status?: boolean;
+  fecha?: Date;
+}
+
+export interface HistorailPersonal
+{
+  claubicacion:number;
+  data:DataDia[];
+}
+
+export interface DataDia
+{
+ empleadosrequeridos:number
+  incidencias:Marcajes[];
+  fecha:string; 
+  asistencias:Marcajes[];
+  todo:Marcajes[];
 }
