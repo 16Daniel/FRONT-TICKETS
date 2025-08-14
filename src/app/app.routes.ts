@@ -29,7 +29,7 @@ export const routes: Routes = [
       {
         path: 'home-specialist',
         title: 'Inicio',
-        loadComponent: () => import('./pages/specialist/specialist-home/specialist-home.component'),
+        loadComponent: () => import('./pages/specialist/pages/specialist-home/specialist-home.component'),
         canActivate: [HomeGuard],
       },
       {

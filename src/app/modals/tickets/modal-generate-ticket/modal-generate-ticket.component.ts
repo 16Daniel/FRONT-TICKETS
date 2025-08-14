@@ -58,7 +58,6 @@ export class ModalGenerateTicketComponent implements OnInit {
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
-  isLoading = false;
   mostrarCampoSubcategoria = false;
   formCategoria: any;
   catUsuariosHelp: Usuario[] = [];
@@ -187,7 +186,6 @@ export class ModalGenerateTicketComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
     Swal.fire({
       target: document.body,
       allowOutsideClick: false,
@@ -201,7 +199,9 @@ export class ModalGenerateTicketComponent implements OnInit {
 
 
 
+    console.log(new Date, 'consultando secuencial...');
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
+      console.log(new Date, 'secuencial obtenido...');
       let folio = this.folioGeneratorService.generarFolio(
         parseInt(this.ticket.idSucursal),
         count
@@ -249,19 +249,19 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
         .then(async urls => {
-          console.log('Todas las URLs:', urls);
           this.ticket.imagenesEvidencia = urls;
           await this.ticketsService.create({ ...this.ticket });
           Swal.close();
-          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-          this.closeEvent.emit(false);
+          // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+          Swal.fire("OK", "TICKET CREADO!", "success");
+          this.closeEvent.emit();
         })
         .catch(async err => {
           console.error('Error al subir una o más imágenes:', err);
           this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
           await this.ticketsService.create({ ...this.ticket });
-          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-          this.closeEvent.emit(false);
+          Swal.fire("OK", "TICKET CREADO!", "success");
+          this.closeEvent.emit();
         });
     });
   }

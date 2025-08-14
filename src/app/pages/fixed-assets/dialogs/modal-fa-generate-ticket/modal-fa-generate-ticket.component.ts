@@ -12,6 +12,7 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
+import Swal from 'sweetalert2';
 
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Usuario } from '../../../../models/usuario.model';
@@ -56,7 +57,6 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
-  isLoading = false;
   mostrarCampoSubcategoria = false;
   formCategoria: any;
   catUsuariosHelp: Usuario[] = [];
@@ -182,7 +182,16 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
 
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
       let folio = this.folioGeneratorService.generarFolio(
@@ -232,18 +241,19 @@ export class ModalFaGenerateTicketComponent implements OnInit {
 
       this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
         .then(async urls => {
-          console.log('Todas las URLs:', urls);
           this.ticket.imagenesEvidencia = urls;
           await this.ticketsService.create({ ...this.ticket });
-          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-          this.closeEvent.emit(false);
+          Swal.close();
+          // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+          Swal.fire("OK", "TICKET CREADO!", "success");
+          this.closeEvent.emit();
         })
         .catch(async err => {
           console.error('Error al subir una o más imágenes:', err);
           this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
           await this.ticketsService.create({ ...this.ticket });
-          this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-          this.closeEvent.emit(false);
+          Swal.fire("OK", "TICKET CREADO!", "success");
+          this.closeEvent.emit();
         });
     });
   }

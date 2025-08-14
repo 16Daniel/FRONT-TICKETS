@@ -6,20 +6,20 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-import { TicketsService } from '../../../services/tickets.service';
-import { Usuario } from '../../../models/usuario.model';
-import { Ticket } from '../../../models/ticket.model';
-import { EstatusTicket } from '../../../models/estatus-ticket.model';
-import { StatusTicketService } from '../../../services/status-ticket.service';
-import { Area } from '../../../models/area.model';
-import { AreasService } from '../../../services/areas.service';
-import { Sucursal } from '../../../models/sucursal.model';
-import { BranchesService } from '../../../services/branches.service';
-import { UsersService } from '../../../services/users.service';
-import { ModalTicketDetailComponent } from '../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalValidateTicketComponent } from '../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
-import { ModalTicketChatComponent } from '../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
-import { Comentario } from '../../../models/comentario-chat.model';
+import { TicketsService } from '../../../../services/tickets.service';
+import { Usuario } from '../../../../models/usuario.model';
+import { Ticket } from '../../../../models/ticket.model';
+import { EstatusTicket } from '../../../../models/estatus-ticket.model';
+import { StatusTicketService } from '../../../../services/status-ticket.service';
+import { Area } from '../../../../models/area.model';
+import { AreasService } from '../../../../services/areas.service';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { BranchesService } from '../../../../services/branches.service';
+import { UsersService } from '../../../../services/users.service';
+import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
+import { ModalValidateTicketComponent } from '../../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
+import { ModalTicketChatComponent } from '../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
+import { Comentario } from '../../../../models/comentario-chat.model';
 
 @Component({
   selector: 'app-specialist-home',
