@@ -1,60 +1,40 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
-import { BadgeModule } from 'primeng/badge';
-import { AccordionModule } from 'primeng/accordion';
-import { TooltipModule } from 'primeng/tooltip';
-
-import { Usuario } from '../../../../models/usuario.model';
-import { Sucursal } from '../../../../models/sucursal.model';
 import { Ticket } from '../../../../models/ticket.model';
-import { Area } from '../../../../models/area.model';
-import { AdminTicketsListComponent } from '../../../admin/components/admin-tickets-list/admin-tickets-list.component';
+import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { BadgeModule } from 'primeng/badge';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AccordionModule } from 'primeng/accordion';
+import { Usuario } from '../../../../models/usuario.model';
 
 @Component({
-  selector: 'app-branches-tickets-accordion',
+  selector: 'app-user-tickets-accordion',
   standalone: true,
   imports: [
-    DropdownModule,
+    BadgeModule,
     CommonModule,
     FormsModule,
-    TableModule,
-    BadgeModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TooltipModule
   ],
-  templateUrl: './branches-tickets-accordion.component.html',
-  styleUrl: './branches-tickets-accordion.component.scss',
+  templateUrl: './user-tickets-accordion.component.html',
+  styleUrl: './user-tickets-accordion.component.scss',
 })
-
-export class BranchesTicketsAccordionComponent {
+export class UserTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
+  @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
   @Input() IdArea: string = '';
-  areas: Area[] = [];
-  ticket: Ticket | undefined;
-  usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
-  ticketSeleccionado: Ticket | undefined;
-  activeIndex: number = -1;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
+  activeIndex: number = -1;
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.activeIndex = -1;
   }
 
-  ordenarSucursales(): Sucursal[] {
-    return this.sucursales.sort((a, b) => {
-      const ticketsA = this.contarTickets(a.id);
-      const ticketsB = this.contarTickets(b.id);
-      return ticketsB - ticketsA; // Ordena de mayor a menor
-    });
-  }
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
@@ -62,20 +42,6 @@ export class BranchesTicketsAccordionComponent {
 
   contarTickets(idSucursal: number | any): number {
     return this.tickets.filter((x) => x.idSucursal == idSucursal && x.idEstatusTicket != '3').length;
-  }
-
-  obtenerResponsablesUC(idSucursal: string): string {
-    let idr = '';
-    for (let item of this.usuariosHelp) {
-      const existeSucursal = item.sucursales.some(
-        (sucursal) => sucursal.id == idSucursal
-      );
-      if (existeSucursal) {
-        idr = item.nombre + ' ' + item.apellidoP;
-      }
-    }
-
-    return idr;
   }
 
   obtenerColorTexto(value: number): string {
@@ -96,7 +62,7 @@ export class BranchesTicketsAccordionComponent {
     return str;
   }
 
-  obtenerBackGroundAcordion(value: number): string {
+  obtenerBackGroundSucursal(value: number): string {
     let str = '';
 
     if (value >= 5) {
@@ -114,7 +80,15 @@ export class BranchesTicketsAccordionComponent {
     return str;
   }
 
-  verificarTicketsNuevos(tickets: Ticket[]): boolean {
+  ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
+    return sucursales.sort((a, b) => {
+      const ticketsA = this.contarTickets(a.id);
+      const ticketsB = this.contarTickets(b.id);
+      return ticketsB - ticketsA; // Ordena de mayor a menor
+    });
+  }
+
+  verificarTicketsNuevos(tickets: Ticket[]) {
     let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
     return nuevosTickets.length > 0;
   }

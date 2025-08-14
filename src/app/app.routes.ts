@@ -17,7 +17,7 @@ export const routes: Routes = [
       {
         path: 'home-s',
         title: 'Inicio',
-        loadComponent: () => import('./pages/analyst/analyst-home/analyst-home.component'),
+        loadComponent: () => import('./pages/analyst/pages/analyst-home/analyst-home.component'),
         canActivate: [HomeGuard],
       },
       {
@@ -29,7 +29,7 @@ export const routes: Routes = [
       {
         path: 'home-specialist',
         title: 'Inicio',
-        loadComponent: () => import('./pages/specialist/specialist-home/specialist-home.component'),
+        loadComponent: () => import('./pages/specialist/pages/specialist-home/specialist-home.component'),
         canActivate: [HomeGuard],
       },
       {
@@ -58,7 +58,7 @@ export const routes: Routes = [
         title: 'Visitas programadas',
         loadComponent: () =>
           import(
-            './pages/analyst/branch-visit-schedule/branch-visit-schedule.component'
+            './pages/analyst/pages/branch-visit-schedule/branch-visit-schedule.component'
           ),
       },
       {
@@ -93,7 +93,7 @@ export const routes: Routes = [
         path: 'kpis',
         title: 'KPIS',
         loadComponent: () =>
-          import('./components/admin/admin-reports-tab/admin-reports-tab.component'),
+          import('./pages/admin/components/admin-reports-tab/admin-reports-tab.component'),
         canActivate: [AdminGuard],
       },
       {

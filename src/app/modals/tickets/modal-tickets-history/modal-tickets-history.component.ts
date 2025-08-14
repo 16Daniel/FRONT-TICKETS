@@ -18,7 +18,7 @@ import { Ticket } from '../../../models/ticket.model';
 import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
 import { Usuario } from '../../../models/usuario.model';
-import { RequesterTicketsListComponent } from '../../../components/common/requester-tickets-list/requester-tickets-list.component';
+import { RequesterTicketsListComponent } from '../../../components/requester-tickets-list/requester-tickets-list.component';
 
 @Component({
   selector: 'app-modal-tickets-history',

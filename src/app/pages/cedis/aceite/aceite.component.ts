@@ -14,7 +14,8 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
-import ControlAceiteTabComponent from "../../../components/aceite/control-aceite-tab/control-aceite-tab.component";
+import ControlAceiteTabComponent from '../../branch/components/control-aceite-tab/control-aceite-tab.component';
+
 @Component({
   selector: 'app-aceite',
   standalone: true,

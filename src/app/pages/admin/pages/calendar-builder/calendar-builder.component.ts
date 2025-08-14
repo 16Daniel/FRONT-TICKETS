@@ -24,18 +24,18 @@ import { VisitasService } from '../../../../services/visitas.service';
 import { GuardiasService } from '../../../../services/guardias.service';
 import { Guardia } from '../../../../models/guardia';
 import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { CalendarComponent } from "../../../../components/common/calendar/calendar.component";
 import { ModalColorsComponent } from "../../../../modals/calendar/modal-colors/modal-colors.component";
 import { DocumentsService } from '../../../../services/documents.service';
 import { ComentarioVisita } from '../../../../models/comentario-visita.model';
-import { MantenimientoFactoryService } from './maintenance-factory.service';
-import { BranchVisitItemComponent } from '../../../../components/common/branch-visit-item/branch-visit-item.component';
 import { AreasService } from '../../../../services/areas.service';
 import { Area } from '../../../../models/area.model';
 import { ModalActivityComponent } from '../../../../modals/calendar/modal-activity/modal-activity.component';
 import { FixedAssetsService } from '../../../../services/fixed-assets.service';
 import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
+import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
+import { CalendarComponent } from '../../../../components/calendar/calendar.component';
+import { BranchVisitItemComponent } from '../../../../components/branch-visit-item/branch-visit-item.component';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -467,14 +467,14 @@ export default class CalendarBuilderComponent implements OnInit {
     this.subscriptiontk = servicio
       .getUltimosMantenimientos(array_ids_Sucursales)
       .subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.arr_ultimosmantenimientos = data.filter(
-            (elemento): elemento is Mantenimiento10x10 => elemento !== null
+            (elemento: any): elemento is Mantenimiento10x10 => elemento !== null
           );
           this.loading = false;
           this.cdr.detectChanges();
         },
-        error: (error) => {
+        error: (error: any) => {
           this.loading = false;
           console.error('Error al escuchar los mantenimientos:', error);
         },

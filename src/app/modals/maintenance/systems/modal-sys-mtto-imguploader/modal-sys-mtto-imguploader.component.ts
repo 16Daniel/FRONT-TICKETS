@@ -99,18 +99,11 @@ export class ModalSysMttoImguploaderComponent {
 
         Swal.close();
         this.closeEvent.emit();
-
-        // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       })
       .catch(async err => {
         Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Error al subir una o más imágenes!",
-        });
-        // console.error('Error al subir una o más imágenes:', err);
-        // this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
+        Swal.fire("Oops...", "Error al subir una o más imágenes!", "error");
+        console.error('Error al subir una o más imágenes:', err);
         this.closeEvent.emit();
       });
   }
@@ -150,11 +143,7 @@ export class ModalSysMttoImguploaderComponent {
     }
 
     await this.maintenance10x10Service.update(this.mantenimiento!.id, this.mantenimiento!);
-    Swal.fire({
-      title: "OK",
-      text: "La imágen se subió correctamente!",
-      icon: "success"
-    });
+    Swal.fire("OK", "La imágen se subió correctamente!", "success");
 
   }
 

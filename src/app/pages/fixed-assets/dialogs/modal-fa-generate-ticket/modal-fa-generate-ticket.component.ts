@@ -14,27 +14,26 @@ import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import Swal from 'sweetalert2';
 
-import { Sucursal } from '../../../models/sucursal.model';
-import { Usuario } from '../../../models/usuario.model';
-import { Categoria } from '../../../models/categoria.mdoel';
-import { UsersService } from '../../../services/users.service';
-import { Ticket } from '../../../models/ticket.model';
-import { BranchesService } from '../../../services/branches.service';
-import { CategoriesService } from '../../../services/categories.service';
-import { AreasService } from '../../../services/areas.service';
-import { Area } from '../../../models/area.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { FolioGeneratorService } from '../../../services/folio-generator.service';
-import { TicketsPriorityService } from '../../../services/tickets-priority.service';
-import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
-import { ParticipanteChat } from '../../../models/participante-chat.model';
-import { Subcategoria } from '../../../models/subcategoria.model';
-import { FixedAssetsService } from '../../../services/fixed-assets.service';
-import { ActivoFijo } from '../../../models/activo-fijo.model';
-import { FirebaseStorageService } from '../../../services/firebase-storage.service';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { Usuario } from '../../../../models/usuario.model';
+import { Categoria } from '../../../../models/categoria.mdoel';
+import { UsersService } from '../../../../services/users.service';
+import { Ticket } from '../../../../models/ticket.model';
+import { BranchesService } from '../../../../services/branches.service';
+import { CategoriesService } from '../../../../services/categories.service';
+import { AreasService } from '../../../../services/areas.service';
+import { Area } from '../../../../models/area.model';
+import { TicketsService } from '../../../../services/tickets.service';
+import { FolioGeneratorService } from '../../../../services/folio-generator.service';
+import { TicketsPriorityService } from '../../../../services/tickets-priority.service';
+import { PrioridadTicket } from '../../../../models/prioridad-ticket.model';
+import { ParticipanteChat } from '../../../../models/participante-chat.model';
+import { Subcategoria } from '../../../../models/subcategoria.model';
+import { ActivoFijo } from '../../../../models/activo-fijo.model';
+import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
 
 @Component({
-  selector: 'app-modal-generate-ticket',
+  selector: 'app-modal-fa-generate-ticket',
   standalone: true,
   imports: [
     DialogModule,
@@ -43,27 +42,24 @@ import { FirebaseStorageService } from '../../../services/firebase-storage.servi
     CommonModule,
     EditorModule,
   ],
-  templateUrl: './modal-generate-ticket.component.html',
-  styleUrl: './modal-generate-ticket.component.scss',
+  templateUrl: './modal-fa-generate-ticket.component.html',
+  styleUrl: './modal-fa-generate-ticket.component.scss'
 })
 
-export class ModalGenerateTicketComponent implements OnInit {
+export class ModalFaGenerateTicketComponent implements OnInit {
   @Input() mostrarModalGenerateTicket: boolean = false;
-  @Input() idArea: string = '0';
+  @Input() activoFijo: ActivoFijo = new ActivoFijo;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   ticket: Ticket = new Ticket
   sucursales: Sucursal[] = [];
-  usuarioActivo: Usuario = new Usuario();
+  usuarioActivo?: Usuario | null;
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
   mostrarCampoSubcategoria = false;
   formCategoria: any;
   catUsuariosHelp: Usuario[] = [];
-
-  esActivoFijo: boolean = false;
-  activoFijo: ActivoFijo | undefined;
 
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
@@ -79,12 +75,12 @@ export class ModalGenerateTicketComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
-    private fixedAssetsService: FixedAssetsService,
     private firebaseStorage: FirebaseStorageService
   ) { }
 
-  ngOnInit(): void {
-    this.usuarioActivo = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  async ngOnInit(): Promise<void> {
+    this.usuarioActivo = await this.usersService.getUsuarioSucursal(this.activoFijo.idSucursal);
+    this.ticket.referenciaActivoFijo = this.activoFijo.referencia;
     this.obtenerSucursales();
     this.obtenerAreas();
     this.obtenerCategorias();
@@ -96,7 +92,7 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.ticket.idSucursal = parseInt(this.usuarioActivo.sucursales[0].id);
+        this.ticket.idSucursal = this.activoFijo.idSucursal;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -111,7 +107,7 @@ export class ModalGenerateTicketComponent implements OnInit {
         this.areas = data;
 
         // this.formArea = this.areas.find(x => x.id == this.idArea);
-        this.ticket.idArea = this.areas.find(x => x.id == this.idArea)!.id;
+        this.ticket.idArea = this.areas.find(x => x.id == this.activoFijo.idArea)!.id;
 
         this.cdr.detectChanges();
       },
@@ -197,11 +193,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       }
     });
 
-
-
-    console.log(new Date, 'consultando secuencial...');
     this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
-      console.log(new Date, 'secuencial obtenido...');
       let folio = this.folioGeneratorService.generarFolio(
         parseInt(this.ticket.idSucursal),
         count
@@ -220,7 +212,7 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       let participantesChat: ParticipanteChat[] = [];
       participantesChat.push({
-        idUsuario: this.usuarioActivo.id,
+        idUsuario: this.usuarioActivo?.id,
         ultimoComentarioLeido: 0,
       });
 
@@ -238,7 +230,7 @@ export class ModalGenerateTicketComponent implements OnInit {
       this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
       this.ticket.fechaEstimacion = fechaEstimacion;
       this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
-      this.ticket.idUsuario = this.usuarioActivo.id;
+      this.ticket.idUsuario = this.usuarioActivo?.id;
       this.ticket.nombreCategoria = this.formCategoria.nombre;
 
       if (this.formCategoria.activarSubcategorias)
@@ -335,20 +327,6 @@ export class ModalGenerateTicketComponent implements OnInit {
   obtenerSubcategoriasFiltradas = (): Subcategoria[] =>
     this.formCategoria.subcategorias.filter((x: Subcategoria) => x.eliminado == false)
 
-  buscarActivoFijo() {
-    this.fixedAssetsService
-      .getByReference(this.ticket.referenciaActivoFijo!)
-      .subscribe(result => {
-        this.activoFijo = result;
-        this.cdr.detectChanges();
-
-        if (!result) {
-          this.showMessage('warn', 'Warning', 'No se encontró activo con referencia ' + this.ticket.referenciaActivoFijo);
-          this.ticket.referenciaActivoFijo = '';
-        }
-      });
-  }
-
   onSeleccionarImagenes() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
@@ -377,4 +355,5 @@ export class ModalGenerateTicketComponent implements OnInit {
       reader.readAsDataURL(file);
     });
   }
+
 }

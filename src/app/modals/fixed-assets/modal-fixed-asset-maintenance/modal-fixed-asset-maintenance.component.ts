@@ -11,9 +11,9 @@ import { MantenimientoActivoFijo } from '../../../models/mantenimiento-activo-fi
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
 import { Ticket } from '../../../models/ticket.model';
-import { ModalFixedAssetSelectTicketComponent } from '../modal-fixed-asset-select-ticket/modal-fixed-asset-select-ticket.component';
 import { TicketsService } from '../../../services/tickets.service';
 import { Usuario } from '../../../models/usuario.model';
+import { ModalFixedAssetSelectTicketComponent } from '../../../pages/admin/dialogs/modal-fixed-asset-select-ticket/modal-fixed-asset-select-ticket.component';
 
 @Component({
   selector: 'app-modal-fixed-asset-maintenance',
