@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs';
 
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../../services/fixed-assets.service';
-import { ModalFixedAssetsCreateComponent } from '../../../../modals/fixed-assets/modal-fixed-assets-create/modal-fixed-assets-create.component';
 import { Usuario } from '../../../../models/usuario.model';
 import { BranchesService } from '../../../../services/branches.service';
 import { AreasService } from '../../../../services/areas.service';
@@ -29,6 +28,7 @@ import { ModalFixedAssetTicketsComponent } from '../../../../modals/fixed-assets
 import { ModalFixedAssetMaintenanceComponent } from '../../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { BuscarPorReferenciaPipe } from '../../../../pipes/buscar-por-referencia.pipe';
+import { ModalFixedAssetsCreateComponent } from '../../dialogs/modal-fixed-assets-create/modal-fixed-assets-create.component';
 
 @Component({
   selector: 'app-fixed-assets',

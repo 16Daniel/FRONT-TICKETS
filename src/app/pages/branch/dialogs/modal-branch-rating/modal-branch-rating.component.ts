@@ -5,13 +5,13 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { RatingStarsComponent } from '../../../../components/common/rating-stars/rating-stars.component';
 import { Usuario } from '../../../../models/usuario.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { TicketsService } from '../../../../services/tickets.service';
 import { Ticket } from '../../../../models/ticket.model';
+import { RatingStarsComponent } from '../../../../components/rating-stars/rating-stars.component';
 
 @Component({
   selector: 'app-modal-branch-rating',

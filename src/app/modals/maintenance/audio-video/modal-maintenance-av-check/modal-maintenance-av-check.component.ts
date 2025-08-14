@@ -9,7 +9,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { ProgressBar60Component } from '../../../../components/common/progress-bar-60/progress-bar-60.component';
+import { ProgressBar60Component } from '../../../../components/progress-bar-60/progress-bar-60.component';
 
 @Component({
   selector: 'app-modal-maintenance-av-check',

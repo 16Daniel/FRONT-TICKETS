@@ -21,7 +21,7 @@ import { UbicacionActivoFijo } from '../../../../models/ubicacion-activo-fijo.mo
 import { EstatusActivoFijo } from '../../../../models/estatus-activo-fijo.model';
 import { ModalFixedAssetTicketsComponent } from '../../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
-import { ModalFaGenerateTicketComponent } from '../../../../modals/fixed-assets/modal-fa-generate-ticket/modal-fa-generate-ticket.component';
+import { ModalFaGenerateTicketComponent } from '../../dialogs/modal-fa-generate-ticket/modal-fa-generate-ticket.component';
 
 @Component({
   selector: 'app-detail',

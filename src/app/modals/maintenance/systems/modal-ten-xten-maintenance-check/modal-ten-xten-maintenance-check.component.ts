@@ -13,8 +13,8 @@ import { CommonModule } from '@angular/common';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
-import { ProgressBarComponent } from '../../../../components/common/progress-bar/progress-bar.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { ProgressBarComponent } from '../../../../components/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-check',

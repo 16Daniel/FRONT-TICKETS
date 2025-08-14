@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 
 import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
-import { RatingStarsComponent } from '../../../components/common/rating-stars/rating-stars.component';
+import { RatingStarsComponent } from '../../../components/rating-stars/rating-stars.component';
 
 @Component({
   selector: 'app-modal-finalize-ticket',

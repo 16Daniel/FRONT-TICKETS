@@ -7,14 +7,14 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { Subscription } from 'rxjs';
 
 import { Rol } from '../../../../models/rol.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { UsersService } from '../../../../services/users.service';
 import { DocumentsService } from '../../../../services/documents.service';
-import { ModalUserCreateComponent } from '../../../../modals/users/modal-user-create/modal-user-create.component';
 import { RolesService } from '../../../../services/roles.service';
-import { Subscription } from 'rxjs';
+import { ModalUserCreateComponent } from '../../../../modals/users/modal-user-create/modal-user-create.component';
 
 @Component({
   selector: 'app-users',

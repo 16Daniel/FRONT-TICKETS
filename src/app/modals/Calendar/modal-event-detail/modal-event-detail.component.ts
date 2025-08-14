@@ -15,9 +15,9 @@ import { SucursalProgramada } from '../../../models/sucursal-programada.model';
 import { BranchMaintenanceTableComponent } from '../../../components/maintenance/systems/branch-maintenance-table/branch-maintenance-table.component';
 import { ModalMaintenanceDetailComponent } from '../../maintenance/systems/modal-maintenance-detail/modal-maintenance-detail.component';
 import { BranchMaintenanceTableAvComponent } from '../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { RequesterTicketsListComponent } from '../../../components/common/requester-tickets-list/requester-tickets-list.component';
 import { BranchMaintenanceTableMttoComponent } from '../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
-import { MantenimientoFactoryService } from '../../../pages/admin/pages/calendar-builder/maintenance-factory.service';
+import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
+import { RequesterTicketsListComponent } from '../../../components/requester-tickets-list/requester-tickets-list.component';
 
 @Component({
   selector: 'app-modal-event-detail',

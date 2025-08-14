@@ -9,8 +9,8 @@ import { CardModule } from 'primeng/card';
 import { Usuario } from '../../../models/usuario.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
-import { ModalSelectSpecialistUserComponent } from '../../users/modal-select-specialist-user/modal-select-specialist-user.component';
 import { ModalVisorImagenesComponent } from '../../modal-visor-imagenes/modal-visor-imagenes.component';
+import { ModalSelectSpecialistUserComponent } from '../../users/modal-select-specialist-user/modal-select-specialist-user.component';
 
 @Component({
   selector: 'app-modal-ticket-detail',

@@ -3,11 +3,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 
-import { RatingStarsComponent } from '../../../components/common/rating-stars/rating-stars.component';
 import { Ticket } from '../../../models/ticket.model';
 import { Usuario } from '../../../models/usuario.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { MessageService } from 'primeng/api';
+import { RatingStarsComponent } from '../../../components/rating-stars/rating-stars.component';
 
 @Component({
   selector: 'app-modal-validate-ticket',
