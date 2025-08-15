@@ -3,30 +3,29 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angu
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
+import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
+import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
 
 @Component({
-  selector: 'app-modal-sys-mtto-imguploader',
+  selector: 'app-modal-maintenance-mtto-imguploader',
   standalone: true,
   imports: [DialogModule, CommonModule],
-  templateUrl: './modal-sys-mtto-imguploader.component.html',
-  styleUrl: './modal-sys-mtto-imguploader.component.scss'
+  templateUrl: './modal-maintenance-mtto-imguploader.component.html',
+  styleUrl: './modal-maintenance-mtto-imguploader.component.scss'
 })
-export class ModalSysMttoImguploaderComponent {
+export class ModalMaintenanceMttoImguploaderComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() mantenimiento: Mantenimiento10x10 | undefined;
+  @Input() mantenimiento: MantenimientoMtto | undefined;
   @Input() titulo: string | undefined;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   imagenesBase64: string[] = [];
   archivo: File | undefined;
-
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance10x10Service: Maintenance10x10Service) { }
+    private maintenanceMtooService: MaintenanceMtooService) { }
 
   onHide() {
     this.closeEvent.emit(); // Cerrar modal
@@ -92,7 +91,7 @@ export class ModalSysMttoImguploaderComponent {
       }
     });
 
-    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, 'sistemas')
+    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, 'mantenimiento')
       .then(async url => {
 
         this.actualizarUrlImagenMantenimiento(this.titulo!, url);
@@ -110,40 +109,34 @@ export class ModalSysMttoImguploaderComponent {
 
   async actualizarUrlImagenMantenimiento(campo: string, url: string) {
     switch (campo) {
-      case 'CAJA':
-        this.mantenimiento!.mantenimientoCajaEvidenciaUrl = url;
+      case 'TERMOSTATO':
+        this.mantenimiento!.mantenimientoTermostatoEvidenciaUrl = url;
         break;
-      case 'IMPRESORAS':
-        this.mantenimiento!.mantenimientoImpresorasEvidenciaUrl = url;
+      case 'PERILLAS':
+        this.mantenimiento!.mantenimientoPerillasEvidenciaUrl = url;
         break;
-      case 'RACK':
-        this.mantenimiento!.mantenimientoRackEvidenciaUrl = url;
+      case 'TORNILLERIA':
+        this.mantenimiento!.mantenimientoTornilleriaEvidenciaUrl = url;
         break;
-      case 'TPV':
-        this.mantenimiento!.mantenimientoPuntosVentaTabletasEvidenciaUrl = url;
+      case 'RUEDAS':
+        this.mantenimiento!.mantenimientoRuedasEvidenciaUrl = url;
         break;
-      case 'CONTENIDOS':
-        this.mantenimiento!.mantenimientoContenidosSistemaCableEvidenciaUrl = url;
+      case 'CABLEADO':
+        this.mantenimiento!.mantenimientoCableadoEvidenciaUrl = url;
         break;
-      case 'INTERNET':
-        this.mantenimiento!.mantenimientoInternetEvidenciaUrl = url;
+      case 'TINAS':
+        this.mantenimiento!.mantenimientoTinaEvidenciaUrl = url;
         break;
-      case 'CCTV':
-        this.mantenimiento!.mantenimientoCCTVEvidenciaUrl = url;
+      case 'MANGUERAS':
+        this.mantenimiento!.mantenimientoManguerasEvidenciaUrl = url;
         break;
-      case 'NO BRAKES':
-        this.mantenimiento!.mantenimientoNoBrakesEvidenciaUrl = url;
-        break;
-      case 'TIEMPOS COCINA':
-        this.mantenimiento!.mantenimientoTiemposCocinaEvidenciaUrl = url;
-        break;
-      case 'APPS':
-        this.mantenimiento!.mantenimientoConcentradorAppsEvidenciaUrl = url;
+      case 'LLAVES':
+        this.mantenimiento!.mantenimientoLlavesDePasoEvidenciaUrl = url;
         break;
     }
 
-    await this.maintenance10x10Service.update(this.mantenimiento!.id, this.mantenimiento!);
+    await this.maintenanceMtooService.update(this.mantenimiento!.id, this.mantenimiento!);
     Swal.fire("OK", "LA IMÁGEN SE SUBIÓ CORRECTAMENTE!", "success");
-  }
 
+  }
 }

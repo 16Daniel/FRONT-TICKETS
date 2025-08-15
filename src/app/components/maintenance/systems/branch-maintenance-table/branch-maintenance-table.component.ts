@@ -96,10 +96,10 @@ export class BranchMaintenanceTableComponent {
         this.urlImagen = mantenimiento.mantenimientoRackEvidenciaUrl;
         break;
       case 'TPV':
-        this.urlImagen = mantenimiento.mantenimientoTiemposCocinaEvidenciaUrl;
+        this.urlImagen = mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrl;
         break;
       case 'CONTENIDOS':
-        this.urlImagen = mantenimiento.mantenimientoConcentradorAppsEvidenciaUrl;
+        this.urlImagen = mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrl;
         break;
       case 'INTERNET':
         this.urlImagen = mantenimiento.mantenimientoInternetEvidenciaUrl;

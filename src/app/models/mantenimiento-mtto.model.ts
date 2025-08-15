@@ -8,14 +8,30 @@ export interface MantenimientoMtto {
   idActivoFijo: string;
   descripcion: string;
   referencia: string;
+
   mantenimientoTermostato: boolean;
+  mantenimientoTermostatoEvidenciaUrl?: string;
+
   mantenimientoPerillas: boolean;
+  mantenimientoPerillasEvidenciaUrl?: string;
+
   mantenimientoTornilleria: boolean;
+  mantenimientoTornilleriaEvidenciaUrl?: string;
+
   mantenimientoRuedas: boolean;
+  mantenimientoRuedasEvidenciaUrl?: string;
+
   mantenimientoCableado: boolean;
+  mantenimientoCableadoEvidenciaUrl?: string;
+
   mantenimientoTina: boolean;
+  mantenimientoTinaEvidenciaUrl?: string;
+
   mantenimientoMangueras: boolean;
+  mantenimientoManguerasEvidenciaUrl?: string;
+
   mantenimientoLlavesDePaso: boolean;
+  mantenimientoLlavesDePasoEvidenciaUrl?: string;
 
   observaciones: string | undefined;
   estatus: boolean;

@@ -3,20 +3,20 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angu
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
+import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
+import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 
 @Component({
-  selector: 'app-modal-sys-mtto-imguploader',
+  selector: 'app-modal-av-mtto-imguploader',
   standalone: true,
   imports: [DialogModule, CommonModule],
-  templateUrl: './modal-sys-mtto-imguploader.component.html',
-  styleUrl: './modal-sys-mtto-imguploader.component.scss'
+  templateUrl: './modal-av-mtto-imguploader.component.html',
+  styleUrl: './modal-av-mtto-imguploader.component.scss'
 })
-export class ModalSysMttoImguploaderComponent {
+export class ModalAvMttoImguploaderComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() mantenimiento: Mantenimiento10x10 | undefined;
+  @Input() mantenimiento: Mantenimiento6x6AV | undefined;
   @Input() titulo: string | undefined;
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -26,7 +26,7 @@ export class ModalSysMttoImguploaderComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance10x10Service: Maintenance10x10Service) { }
+    private maintenance6x6AvService: Maintenance6x6AvService) { }
 
   onHide() {
     this.closeEvent.emit(); // Cerrar modal
@@ -92,7 +92,7 @@ export class ModalSysMttoImguploaderComponent {
       }
     });
 
-    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, 'sistemas')
+    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, 'audio-video')
       .then(async url => {
 
         this.actualizarUrlImagenMantenimiento(this.titulo!, url);
@@ -110,40 +110,27 @@ export class ModalSysMttoImguploaderComponent {
 
   async actualizarUrlImagenMantenimiento(campo: string, url: string) {
     switch (campo) {
-      case 'CAJA':
-        this.mantenimiento!.mantenimientoCajaEvidenciaUrl = url;
+      case 'CONEXIONES':
+        this.mantenimiento!.mantenimientoConexionesEvidenciaUrl = url;
         break;
-      case 'IMPRESORAS':
-        this.mantenimiento!.mantenimientoImpresorasEvidenciaUrl = url;
+      case 'CABLEADO':
+        this.mantenimiento!.mantenimientoCableadoEvidenciaUrl = url;
         break;
       case 'RACK':
         this.mantenimiento!.mantenimientoRackEvidenciaUrl = url;
         break;
-      case 'TPV':
-        this.mantenimiento!.mantenimientoPuntosVentaTabletasEvidenciaUrl = url;
+      case 'CONTROLES':
+        this.mantenimiento!.mantenimientoControlesEvidenciaUrl = url;
         break;
-      case 'CONTENIDOS':
-        this.mantenimiento!.mantenimientoContenidosSistemaCableEvidenciaUrl = url;
+      case 'NIVEL AUDIO':
+        this.mantenimiento!.mantenimientoNivelAudioEvidenciaUrl = url;
         break;
-      case 'INTERNET':
-        this.mantenimiento!.mantenimientoInternetEvidenciaUrl = url;
-        break;
-      case 'CCTV':
-        this.mantenimiento!.mantenimientoCCTVEvidenciaUrl = url;
-        break;
-      case 'NO BRAKES':
-        this.mantenimiento!.mantenimientoNoBrakesEvidenciaUrl = url;
-        break;
-      case 'TIEMPOS COCINA':
-        this.mantenimiento!.mantenimientoTiemposCocinaEvidenciaUrl = url;
-        break;
-      case 'APPS':
-        this.mantenimiento!.mantenimientoConcentradorAppsEvidenciaUrl = url;
+      case 'CANALES':
+        this.mantenimiento!.mantenimientoCanalesEvidenciaUrl = url;
         break;
     }
 
-    await this.maintenance10x10Service.update(this.mantenimiento!.id, this.mantenimiento!);
+    await this.maintenance6x6AvService.update(this.mantenimiento!.id, this.mantenimiento!);
     Swal.fire("OK", "LA IMÁGEN SE SUBIÓ CORRECTAMENTE!", "success");
   }
-
 }

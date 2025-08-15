@@ -1,6 +1,6 @@
 <p-table [value]="mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
     styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
-    [(selection)]="mantenimientoSeleccionado" (onRowSelect)="onClick()">
+    [(selection)]="mantenimientoSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
             <th>NOMBRE</th>
@@ -12,42 +12,61 @@
             <th>NIVEL DE AUDIO</th>
             <th>CANALES</th>
             <th>% DE PROGRESO</th>
+            <th></th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-mantenimiento>
-        <tr [pSelectableRow]="mantenimiento">
+        <tr>
             <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
             </td>
             <td class="text-center">{{ datesHelper.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}</td>
-            <td class="text-center"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CONEXIONES')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoConexiones, 'bg-danger': !mantenimiento.mantenimientoConexiones}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoConexiones ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CABLEADO')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoCableado, 'bg-danger': !mantenimiento.mantenimientoCableado}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoCableado ? 'Si' : 'No' }}</label>
 
             </td>
-            <td class="text-center"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'RACK')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoRack, 'bg-danger': !mantenimiento.mantenimientoRack}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoRack ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CONTROLES')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoControles, 'bg-danger': !mantenimiento.mantenimientoControles}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoControles ? 'Si' : 'No'
                     }}</label>
             </td>
-            <td class="text-center"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'NIVEL AUDIO')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoNivelAudio, 'bg-danger': !mantenimiento.mantenimientoNivelAudio}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoNivelAudio ? 'Si' : 'No'
                     }}</label>
             </td>
-            <td class="text-center"
+            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CANALES')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoCanales, 'bg-danger': !mantenimiento.mantenimientoCanales}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoCanales ? 'Si' : 'No' }}</label>
-            </td>            
+            </td>
             <td class="text-center">{{ maintenance6x6AvService.calcularPorcentaje(mantenimiento) }}%</td>
+            <td>
+                <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
+                    (click)="abrirModalDetalle(mantenimiento)">
+                    <i class='bx bx-show bx-sm'></i>
+                </button>
+            </td>
         </tr>
     </ng-template>
 </p-table>
+
+<app-modal-final-comments *ngIf="mostrarModalComentarios" [mostrarModal]="mostrarModalComentarios"
+    [mantenimiento]="mantenimientoSeleccionado"
+    (closeEvent)="mostrarModalComentarios = false"></app-modal-final-comments>
+
+<app-modal-av-mtto-imguploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
+    (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
+    [mantenimiento]="mantenimientoSeleccionado"></app-modal-av-mtto-imguploader>
+
+<app-modal-visor-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
+    [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false"
+    [imagenUrl]="urlImagen!"></app-modal-visor-imagenes>
