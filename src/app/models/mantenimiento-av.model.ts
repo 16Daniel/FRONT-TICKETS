@@ -7,11 +7,22 @@ export interface Mantenimiento6x6AV {
   fecha: Date | undefined;
 
   mantenimientoConexiones: boolean;
+  mantenimientoConexionesEvidenciaUrl?: string;
+
   mantenimientoCableado: boolean;
+  mantenimientoCableadoEvidenciaUrl?: string;
+
   mantenimientoRack: boolean;
+  mantenimientoRackEvidenciaUrl?: string;
+
   mantenimientoControles: boolean;
+  mantenimientoControlesEvidenciaUrl?: string;
+
   mantenimientoNivelAudio: boolean;
+  mantenimientoNivelAudioEvidenciaUrl?: string;
+
   mantenimientoCanales: boolean;
+  mantenimientoCanalesEvidenciaUrl?: string;
 
   observaciones: string | undefined;
   estatus: boolean;
