@@ -8,7 +8,9 @@ import {
   docData,
   documentId,
   Firestore,
+  getDoc,
   getDocs,
+  increment,
   limit,
   onSnapshot,
   orderBy,
@@ -305,15 +307,24 @@ export class TicketsService {
   }
 
   async obtenerSecuencialTickets(): Promise<number> {
-    try {
-      const sucursalesRef = collection(this.firestore, 'tickets');
-      const snapshot = await getDocs(sucursalesRef);
-      const count = snapshot.size;
-      return count + 1;
-    } catch (error) {
-      console.error('Error al obtener el count de tickets:', error);
-      throw error;
+    let counterRef = doc(this.firestore, 'consecutivos/tickets');
+
+    const snapshot = await getDoc(counterRef);
+
+    if (!snapshot.exists()) {
+      throw new Error('El contador no existe');
     }
+
+    const data = snapshot.data();
+    return (data['total'] ?? 0) + 1;
+  }
+
+  async incrementarContadorTickets(): Promise<void> {
+    let counterRef = doc(this.firestore, 'consecutivos/tickets');
+
+    await updateDoc(counterRef, {
+      total: increment(1),
+    });
   }
 
   get30LastTickets(): Observable<any[]> {
