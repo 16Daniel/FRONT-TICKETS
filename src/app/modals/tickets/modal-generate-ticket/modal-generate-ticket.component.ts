@@ -197,73 +197,72 @@ export class ModalGenerateTicketComponent implements OnInit {
       }
     });
 
+    let count = await this.ticketsService.obtenerSecuencialTickets();
+    let folio = this.folioGeneratorService.generarFolio(
+      parseInt(this.ticket.idSucursal),
+      count
+    );
 
+    const fechaEstimacion = new Date(); // Obtiene la fecha actual
+    fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
 
-    console.log(new Date, 'consultando secuencial...');
-    this.ticketsService.obtenerSecuencialTickets().then(async (count) => {
-      console.log(new Date, 'secuencial obtenido...');
-      let folio = this.folioGeneratorService.generarFolio(
-        parseInt(this.ticket.idSucursal),
-        count
-      );
-
-      const fechaEstimacion = new Date(); // Obtiene la fecha actual
-      fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
-
-      let idsResponsablesTicket = this.obtenerResponsablesTicket(this.ticket.idSucursal, this.ticket.idArea);
-      if (idsResponsablesTicket.length == 0) {
-        this.showMessage('error', 'Error', 'No hay analistas disponibles para el área seleccionada');
-        return;
-      }
+    let idsResponsablesTicket = this.obtenerResponsablesTicket(this.ticket.idSucursal, this.ticket.idArea);
+    if (idsResponsablesTicket.length == 0) {
+      this.showMessage('error', 'Error', 'No hay analistas disponibles para el área seleccionada');
+      return;
+    }
 
 
 
-      let participantesChat: ParticipanteChat[] = [];
+    let participantesChat: ParticipanteChat[] = [];
+    participantesChat.push({
+      idUsuario: this.usuarioActivo.id,
+      ultimoComentarioLeido: 0,
+    });
+
+    idsResponsablesTicket.forEach(id => {
       participantesChat.push({
-        idUsuario: this.usuarioActivo.id,
+        idUsuario: id,
         ultimoComentarioLeido: 0,
       });
-
-      idsResponsablesTicket.forEach(id => {
-        participantesChat.push({
-          idUsuario: id,
-          ultimoComentarioLeido: 0,
-        });
-      });
-
-      this.ticket.idResponsables = idsResponsablesTicket;
-      this.ticket.idSucursal = this.ticket.idSucursal.toString();
-      this.ticket.idArea = this.ticket.idArea.toString();
-      this.ticket.idCategoria = this.ticket.idCategoria.toString();
-      this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
-      this.ticket.fechaEstimacion = fechaEstimacion;
-      this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
-      this.ticket.idUsuario = this.usuarioActivo.id;
-      this.ticket.nombreCategoria = this.formCategoria.nombre;
-
-      if (this.formCategoria.activarSubcategorias)
-        this.ticket.nombreSubcategoria = this.formCategoria.subcategorias.find((x: Subcategoria) => x.id == this.ticket.idSubcategoria).nombre
-
-      this.ticket.folio = folio;
-      this.ticket.participantesChat = participantesChat;
-
-      this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
-        .then(async urls => {
-          this.ticket.imagenesEvidencia = urls;
-          await this.ticketsService.create({ ...this.ticket });
-          Swal.close();
-          // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-          Swal.fire("OK", "TICKET CREADO!", "success");
-          this.closeEvent.emit();
-        })
-        .catch(async err => {
-          console.error('Error al subir una o más imágenes:', err);
-          this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
-          await this.ticketsService.create({ ...this.ticket });
-          Swal.fire("OK", "TICKET CREADO!", "success");
-          this.closeEvent.emit();
-        });
     });
+
+    this.ticket.idResponsables = idsResponsablesTicket;
+    this.ticket.idSucursal = this.ticket.idSucursal.toString();
+    this.ticket.idArea = this.ticket.idArea.toString();
+    this.ticket.idCategoria = this.ticket.idCategoria.toString();
+    this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
+    this.ticket.fechaEstimacion = fechaEstimacion;
+    this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
+    this.ticket.idUsuario = this.usuarioActivo.id;
+    this.ticket.nombreCategoria = this.formCategoria.nombre;
+
+    if (this.formCategoria.activarSubcategorias)
+      this.ticket.nombreSubcategoria = this.formCategoria.subcategorias.find((x: Subcategoria) => x.id == this.ticket.idSubcategoria).nombre
+
+    this.ticket.folio = folio;
+    this.ticket.participantesChat = participantesChat;
+
+    this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
+      .then(async urls => {
+        this.ticket.imagenesEvidencia = urls;
+        await this.ticketsService.create({ ...this.ticket });
+        Swal.close();
+        // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
+        await this.ticketsService.incrementarContadorTickets();
+
+        Swal.fire("OK", "TICKET CREADO!", "success");
+        this.closeEvent.emit();
+      })
+      .catch(async err => {
+        console.error('Error al subir una o más imágenes:', err);
+        this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
+        await this.ticketsService.incrementarContadorTickets();
+
+        await this.ticketsService.create({ ...this.ticket });
+        Swal.fire("OK", "TICKET CREADO!", "success");
+        this.closeEvent.emit();
+      });
   }
 
   obtenerTipoSoporte(idArea: string) {
