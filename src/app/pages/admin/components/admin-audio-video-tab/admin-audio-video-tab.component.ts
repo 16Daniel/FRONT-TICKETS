@@ -23,6 +23,7 @@ import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-tic
 import { Timestamp } from '@angular/fire/firestore';
 import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -39,7 +40,8 @@ import { AccordionBranchMaintenanceAvComponent } from '../../../../components/ma
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    AccordionBranchMaintenanceAvComponent
+    AccordionBranchMaintenanceAvComponent,
+    IconosNotificacionesTicketsComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-audio-video-tab.component.html',

@@ -24,6 +24,7 @@ import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
 import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
+import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -40,7 +41,8 @@ import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    AccordionBranchMaintenanceMttoComponent
+    AccordionBranchMaintenanceMttoComponent,
+    IconosNotificacionesTicketsComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-maintenance-tab.component.html',
