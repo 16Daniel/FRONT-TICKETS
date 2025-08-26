@@ -31,6 +31,7 @@ import { AccordionBranchMaintenanceAvComponent } from '../../../../components/ma
 import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../components/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
+import { ModalRequestPurchaseComponent } from '../../dialogs/modal-request-purchase/modal-request-purchase.component';
 
 @Component({
   selector: 'app-analyst-home',
@@ -52,7 +53,8 @@ import { PriorityTicketsAccordionAnalystComponent } from '../../components/prior
     ModalTenXtenMaintenanceNewComponent,
     AccordionBranchMaintenance10x10Component,
     AccordionBranchMaintenanceAvComponent,
-    AccordionBranchMaintenanceMttoComponent
+    AccordionBranchMaintenanceMttoComponent,
+    ModalRequestPurchaseComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './analyst-home.component.html',
@@ -86,6 +88,7 @@ export default class AnalystHomeComponent implements OnInit {
   tituloMantenimiento: string = '';
   ordenarMantenimientosFecha: boolean = false;
   auxMostrarMantenimientos = true;
+  mostrarModalCompras: boolean = false;
 
   constructor(
     public cdr: ChangeDetectorRef,

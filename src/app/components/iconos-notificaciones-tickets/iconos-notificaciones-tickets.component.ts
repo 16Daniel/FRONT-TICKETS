@@ -22,7 +22,7 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '3';
-      const cumpleUsuario = this.usuario ? tk.idResponsableFinaliza === this.usuario.id : true;
+      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
       return cumpleEstatus && cumpleUsuario;
     }).length;
   }
@@ -35,7 +35,7 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '7';
-      const cumpleUsuario = this.usuario ? tk.idResponsableFinaliza === this.usuario.id : true;
+      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
       return cumpleEstatus && cumpleUsuario;
     }).length;
   }
@@ -48,7 +48,7 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '1';
-      const cumpleUsuario = this.usuario ? tk.idResponsableFinaliza === this.usuario.id : true;
+      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
       return cumpleEstatus && cumpleUsuario;
     }).length;
   }
@@ -61,7 +61,7 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '2';
-      const cumpleUsuario = this.usuario ? tk.idResponsableFinaliza === this.usuario.id : true;
+      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
       return cumpleEstatus && cumpleUsuario;
     }).length;
   }
@@ -71,7 +71,7 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '5';
-      const cumpleUsuario = this.usuario ? tk.idResponsableFinaliza === this.usuario.id : true;
+      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
       return cumpleEstatus && cumpleUsuario;
     }).length;
   }
