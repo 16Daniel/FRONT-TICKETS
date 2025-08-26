@@ -1,6 +1,6 @@
-export interface ColorUsuario 
-{
-    id?:string; 
-    idUsuario:string;
-    color:string;
+export interface ColorUsuario {
+    id?: string;
+    idUsuario: string;
+    idArea: string;
+    color: string;
 }

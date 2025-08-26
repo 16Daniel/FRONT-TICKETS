@@ -1,0 +1,57 @@
+<div class="d-flex gap-3">
+
+    <div class="position-relative d-flex justify-content-center align-items-center"
+        style="width: 40px; height: 40px; background-color: #007bff; color: white; border-radius: 8px;">
+
+        <i class="bx bxs-cart bx-sm" pTooltip="TICKETS COMPRANDO" tooltipPosition="top"></i>
+
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
+            {{ticketsNotificacionComprando}}
+        </span>
+    </div>
+
+    <div class="position-relative d-flex justify-content-center align-items-center"
+        style="width: 40px; height: 40px; background-color: rgb(138, 0, 218); color: white; border-radius: 8px;">
+
+        <i class="bx bxs-badge-check bx-sm" pTooltip="TICKETS TERMINADOS (POR VALIDAR DE UN ADMIN)" tooltipPosition="top"></i>
+
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
+            {{ticketsNotificacionTerminadoAdmin}}
+        </span>
+    </div>
+
+    <div class="position-relative d-flex justify-content-center align-items-center"
+        style="width: 40px; height: 40px; background-color: yellow; color: black; border-radius: 8px;">
+
+        <i class="bx bx-check-circle bx-sm" pTooltip="TICKETS POR VALIDAR" tooltipPosition="top"></i>
+
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
+            {{ticketsNotificacionPorValidar}}
+        </span>
+    </div>
+
+    <div class="position-relative d-flex justify-content-center align-items-center"
+        style="width: 40px; height: 40px; background-color: darkorange; color: white; border-radius: 8px;">
+
+        <i class="bx bx-sync bx-sm" pTooltip="TICKETS TRABAJANDO" tooltipPosition="top"></i>
+
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
+            {{ticketsNotificacionTrabajando}}
+        </span>
+    </div>
+
+    <div class="position-relative d-flex justify-content-center align-items-center"
+        style="width: 40px; height: 40px; background-color: red; color: white; border-radius: 8px;">
+
+        <i class="bx bx-dots-horizontal-rounded bx-sm" pTooltip="NUEVOS TICKETS" tooltipPosition="top"></i>
+
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
+            {{ticketsNotificacionNuevo}}
+        </span>
+    </div>
+</div>

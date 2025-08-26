@@ -24,6 +24,7 @@ import { AccordionBranchMaintenance10x10Component } from '../../../../components
 import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
 import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
+import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -41,6 +42,7 @@ import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/comp
     UserTicketsAccordionComponent,
     AccordionBranchMaintenance10x10Component,
     ModalTicketDetailComponent,
+    IconosNotificacionesTicketsComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-sys-tab.component.html',
