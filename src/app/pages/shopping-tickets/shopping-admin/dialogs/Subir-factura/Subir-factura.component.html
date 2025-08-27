@@ -1,0 +1,54 @@
+
+<p-dialog 
+    header="SUBIR FACTURA" 
+    [modal]="true"
+    [(visible)]="visible" 
+    [style]="{ width: '70rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="false"
+    (onHide)="onHide()"
+    >
+ 
+    <p class="text-center"> <i class='bx bx-error bx-sm text-warning' ></i> ARRASTRAR O SELECCIONAR LA FACTURA, SOLO SE PERMITE UN ARCHIVO EN FORMATO PDF.</p>
+
+   <div class="card">
+  <p-toast></p-toast>
+  
+  <p-fileUpload 
+   #fileUpload
+    name="uploadFile"
+    [customUpload]="true"
+    (uploadHandler)="onUpload($event)"
+    (onError)="onError($event)"
+    (onBeforeUpload)="onBeforeUpload($event)"
+    accept=".pdf"
+    maxFileSize="10000000"
+    [auto]="false"
+    chooseLabel="Seleccionar factura"
+    uploadLabel="Subir"
+    cancelLabel="Cancelar"
+    [showUploadButton]="true"
+    [showCancelButton]="true"
+    [multiple]="false"
+    [disabled]="uploading" 
+    >
+    
+    <ng-template pTemplate="content">
+        <p class="text-center m-0"><i class='bx bx-cloud-upload bx-md'></i></p>   
+        <p class="text-center m-0 mt-1">Arrastre y suelte archivos aquí para cargarlos.</p>
+        <ul *ngIf="uploadedFiles.length">
+        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+      </ul>
+    </ng-template>
+    
+  </p-fileUpload>
+
+  <p-progressBar 
+    *ngIf="uploading" 
+    mode="indeterminate" 
+    [style]="{height: '6px'}">
+  </p-progressBar>
+
+</div>
+
+</p-dialog>
