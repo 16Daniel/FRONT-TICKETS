@@ -25,7 +25,7 @@ export class PurchaseService {
       // Arreglo para los filtros
       const constraints = [where('eliminado', '==', false)];
       if (idArea) {
-        constraints.push(where('idArea', '==', parseInt(idArea)));
+        constraints.push(where('idArea', '==', idArea));
       }
 
       const q = query(collectionRef, ...constraints);

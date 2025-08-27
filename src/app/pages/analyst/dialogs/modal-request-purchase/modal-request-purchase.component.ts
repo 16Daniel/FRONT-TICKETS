@@ -93,7 +93,7 @@ export class ModalRequestPurchaseComponent implements OnInit {
   }
 
   obtenerCompras() {
-    this.purchaseService.get().subscribe({
+    this.purchaseService.get(this.usuario.idArea).subscribe({
       next: (data) => {
         this.compras = data;
         this.cdr.detectChanges();
