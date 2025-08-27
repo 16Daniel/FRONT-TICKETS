@@ -89,7 +89,7 @@ getComprasFiltro(
     condiciones.push(where('idUsuario', '==', idUsuario));
   }
 
-  if (idTipo && idTipo.trim() !== '') {
+  if (idTipo && idTipo.trim() !== '-1') {
     condiciones.push(where('tipoCompra', '==', idTipo));
   }
 
