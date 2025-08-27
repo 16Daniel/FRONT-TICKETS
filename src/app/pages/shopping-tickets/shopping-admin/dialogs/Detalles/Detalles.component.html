@@ -1,0 +1,102 @@
+<p-dialog 
+    header="DETALLES" 
+    [modal]="true"
+    [(visible)]="visible" 
+    [style]="{ width: '90%'}" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"
+    (onHide)="onHide()"
+     >
+        <div class="d-flex justify-content-center p-3" *ngIf="loading">
+     <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+</div>
+     <h5 class="text-center">ARTICULO(S)</h5>
+          <div class="mt-3 card" *ngIf="itemReg != undefined">
+                <p-table [value]="itemReg.articulos" [tableStyle]="{ 'min-width': '50rem' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Artículo</th>
+                                <th>Uds</th>
+                                <th>Precio x unidad</th>
+                                <th>Tipo</th>
+                                <th>Link de compra</th>
+                                <th>Proveedor</th>
+                                <th>Justificación</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product  let-i="rowIndex">
+                            <tr>
+                                <td>{{ product.art }}</td>
+                                <td>{{ product.uds }}</td>
+                                <td>${{ product.precio }}</td>
+                                <td>{{ product.tipo }}</td>
+                                <td><button type="button" class="btn btn-link" (click)="abrirLink(product.link)" *ngIf="product.link !=''">Abrir link</button></td>
+                                <td>{{ product.nomprov }}</td>
+                                <td>{{ product.justificacion }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table> 
+            </div> 
+         
+            <div class="m-3" *ngIf="itemReg != undefined">
+                <p class="fw-bold fs-5">Total: ${{obtenerTotalCompras(itemReg.articulos) | number:'1.0-2'}}</p>
+            </div>
+
+<div class="mt-5 row" *ngIf="usuario.id== idAdmin">
+<div class="col-md-4">
+    <p>ESTATUS</p>
+      <select class="form-select h-42" [(ngModel)]="formStatus">
+          <option [value]="item.id" *ngFor="let item of catStatus">{{item.nombre}}</option>
+        </select>
+</div>
+<div class="col-md-4">
+    <p>ESTATUS PAGO</p>
+       <select class="form-select h-42" [(ngModel)]="formStatusPago">
+          <option [value]="item.id" *ngFor="let item of catStatusPago">{{item.nombre}}</option>
+        </select>
+</div>
+<div class="col-md-4">
+    <p>FECHA DE PAGO</p>
+    <p-calendar 
+    [(ngModel)]="fechaPago" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay" 
+     dateFormat="dd/mm/yy"
+     [style]="{width:'100%'}"
+      [showButtonBar]="true"
+        [touchUI]="true" />
+</div>
+</div>
+
+<div class="row mt-3" *ngIf="usuario.id== idAdmin">
+<div class="col-md-6">
+    <p>FECHA DE ENTREGA</p>
+    <p-calendar 
+    [(ngModel)]="fechaentrega" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay" 
+     dateFormat="dd/mm/yy"
+     [style]="{width:'100%'}"
+      [showButtonBar]="true"
+       [touchUI]="true" 
+       />
+</div>
+<div class="col-md-6">
+    <p>PALABRA CLAVE</p>
+      <input type="text"  class="form-control h-42" [(ngModel)]="formPalabraClave">
+</div>
+</div>
+<div class="mt-3 d-flex justify-content-end gap-3">
+    <button class="btn btn-danger p-3" [disabled]="itemReg == undefined" (click)="solicitarCancelacion()" *ngIf="itemReg!.statuscompra == '1' && itemReg!.solicitudCancelacion == false && idAdmin != usuario.id"><i class="bx bx-x-circle bx-sm"></i>&nbsp;&nbsp;CANCELAR COMPRA</button>
+     <button class="btn btn-danger p-3" [disabled]="itemReg == undefined"  *ngIf="itemReg!.solicitudCancelacion && itemReg!.statuscompra != '0' && usuario.id== idAdmin" (click)="confirmarCancelacion()"  ><i class="bx bx-check bx-sm"></i>&nbsp;&nbsp;CONFIRMAR CANCELACIÓN</button>
+    <button class="btn bg-p-b p-3" [disabled]="itemReg == undefined" (click)="guardar()" *ngIf="usuario.id== idAdmin"><i class="bx bx-save bx-sm"></i>&nbsp;GUARDAR</button>  
+</div>
+
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog />

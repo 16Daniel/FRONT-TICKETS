@@ -1,0 +1,66 @@
+
+<p-dialog 
+    header="PROVEEDORES" 
+    [modal]="true"
+    [(visible)]="visible" 
+    [style]="{ width: '70rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"
+    (onHide)="onHide()"
+    >
+       
+<h2>Agregar Nuevo Proveedor</h2>
+<form (submit)="agregarProveedor()">
+  <div>
+    <label>Razón Social:</label>
+    <input class="form-control" [(ngModel)]="nuevoProveedor.razonSocial" name="razonSocial" required>
+  </div>
+  <div>
+    <label>Cuenta:</label>
+    <input class="form-control" [(ngModel)]="nuevoProveedor.cuenta" name="cuenta" type="number" required>
+  </div>
+  <div>
+    <label>Cuenta Interbancaria:</label>
+    <input class="form-control" [(ngModel)]="nuevoProveedor.cuentaInterbancaria" type="number" name="cuentaInterbancaria" required>
+  </div>
+  <div>
+    <label>Banco:</label>
+    <input class="form-control" [(ngModel)]="nuevoProveedor.banco" name="banco" required>
+  </div>
+  <div>
+    <label>RFC:</label>
+    <input class="form-control" [(ngModel)]="nuevoProveedor.rfc" name="rfc" required>
+  </div>
+  <button type="submit" class="btn btn-success p-2 mt-3">{{nuevoProveedor.id != undefined ? 'Actualizar':'Agregar'}} Proveedor</button>&nbsp;
+   <button type="button" class="btn btn-secondary p-2 mt-3" *ngIf="nuevoProveedor.id !=undefined" (click)="cancelar()">CANCELAR</button>
+</form>
+
+
+<div class="mt-3">
+<p-table [value]="proveedores" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>RAZON SOCIAL</th>
+            <th>CUENTA</th>
+            <th>CUENTA INTERBANCARIA</th>
+            <th>BANCO</th>
+            <th>RFC</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-prov>
+        <tr>
+            <td>{{ prov.razonSocial }}</td>
+            <td>{{ prov.cuenta }}</td>
+            <td>{{ prov.cuentaInterbancaria }}</td>
+            <td>{{ prov.banco }}</td>
+            <td>{{ prov.rfc }}</td>
+            <td><button class="btn btn-primary" (click)="editar(prov)">EDITAR</button></td>
+            <td><button class="btn btn-danger" (click)="eliminarProveedor(prov.id)">ELIMINAR</button></td>
+        </tr>
+    </ng-template>
+</p-table>  
+</div>
+
+
+
+</p-dialog>

@@ -140,7 +140,7 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
     ]
-  },
+  }, 
   {
     path: 'cedis',
     loadComponent: () => import('./pages/cedis/cedis.component'),
@@ -182,5 +182,19 @@ export const routes: Routes = [
     title: 'Detalle del activos fijo',
     loadComponent: () =>
       import('./pages/fixed-assets/pages/detail/detail.component'),
+  },
+  {
+    path: 'administracion',
+    children: [
+      { path:'',
+        redirectTo: '/administracion/compras',
+        pathMatch: 'full',
+      },
+      {
+        path: 'compras',
+        title: 'Compras',
+        loadComponent: () => import('./pages/shopping-tickets/shopping-admin/shopping-admin.component'),
+      }
+    ]
   },
 ];
