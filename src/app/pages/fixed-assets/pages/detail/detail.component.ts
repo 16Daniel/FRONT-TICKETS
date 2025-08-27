@@ -72,7 +72,7 @@ export default class DetailComponent implements OnInit {
     this.obtenerUbicacionesActivosFijos();
     this.obtenerEstatusActivosFijos();
 
-    const referencia = this.route.snapshot.paramMap.get('referencia');
+    const referencia = this.route.snapshot.paramMap.get('referencia')?.trim() || '';
 
     this.fixedAssetsService.getByReference(referencia!).subscribe((activo) => {
       if (activo) {
