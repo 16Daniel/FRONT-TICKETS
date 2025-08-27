@@ -22,6 +22,7 @@ export interface AdministracionCompra
     solicitudCancelacion:boolean; 
     participantesChat: ParticipanteChat[];
     solicitante:string;
+    tipoCompra:string; 
  }
 
 export interface ArticuloCompra
@@ -34,6 +35,7 @@ export interface ArticuloCompra
     idprov:string|null; 
     justificacion:string; 
     nomprov:string|null; 
+    idTipo:string; 
 }
 
 export interface Proveedor {

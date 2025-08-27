@@ -65,7 +65,8 @@ getComprasFiltro(
   statuscompra: string, 
   statuspago: string,
   idSucursal: string,
-  idUsuario:string
+  idUsuario:string,
+  idTipo:string 
 ): Observable<AdministracionCompra[]> {
   
   const comprasCollection = collection(this.firestore, this.comprastab);
@@ -88,6 +89,9 @@ getComprasFiltro(
     condiciones.push(where('idUsuario', '==', idUsuario));
   }
 
+  if (idTipo && idTipo.trim() !== '') {
+    condiciones.push(where('tipoCompra', '==', idTipo));
+  }
 
   if (fechaini && fechaFin) {
     fechaini.setHours(0,0,0,0);
