@@ -50,6 +50,13 @@
         </select>
 </div>
 
+<div class="col-auto">
+    <p>TIPO COMPRA</p>
+    <select class="form-select h-42" [(ngModel)]="filtroTipo">
+    <option *ngFor="let item of filtrocatTipoCompra" [value]="item.id">{{item.nombre}}</option>
+    </select>
+ </div>
+
  <div class="col-auto" *ngIf="usuario.id == idAdmin">
                                 <p>SUCURSAL / AREA</p>
                                 <p-dropdown [options]="sucursales" [(ngModel)]="filtroSucursal" name="sucursal" optionLabel="nombre" [filter]="true"

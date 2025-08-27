@@ -53,6 +53,8 @@ public filtroFechaFin:Date|undefined;
 public filtroStatus:string = "-1";
 public filtroStatusPago:string = "1"; 
 public filtroSucursal: Sucursal|undefined;
+public filtroTipo:string = "-1"; 
+public filtrocatTipoCompra:any[] = []; 
 constructor(
     private shopServ:ShoppingService,
     private cdr: ChangeDetectorRef,
@@ -104,7 +106,7 @@ constructor(
     Swal.showLoading(); 
       let idsuc = this.filtroSucursal == undefined ? '': this.filtroSucursal.id; 
       let idusuario = this.usuario.id == this.idAdmin ? '': this.usuario.id;
-        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario).subscribe({
+        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo).subscribe({
       next: (data) => {
         this.regcompras = data;
         Swal.close(); 
@@ -141,6 +143,8 @@ constructor(
      this.shopServ.getCatTipo().subscribe({
       next: (data) => {
         this.catTipoCompra = data;
+        this.filtrocatTipoCompra = [...this.catTipoCompra]; 
+        this.filtrocatTipoCompra.unshift({id:"-1",nombre:'TODO'})
         this.cdr.detectChanges();
       },
       error: (error) => {
