@@ -47,7 +47,7 @@ public fechaReg:Date = new Date();
 public modalArchivos:boolean = false;
 public modalChat:boolean = false;
 public usuario:Usuario;
-public idAdmin:string = 'QvSLmxLZjJnaGPPsA7zi';
+public idAdmin:string = 'pclOBh7sMdziimACOc1w';
 public filtroFechaIni:Date|undefined;
 public filtroFechaFin:Date|undefined;
 public filtroStatus:string = "-1";
