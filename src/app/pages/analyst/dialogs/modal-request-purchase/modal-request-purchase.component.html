@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-4">
                 <p class="fw-bold">JUSTIFICACIÓN</p>
-                <input class="form-control" style="height: 48px;" type="number" placeholder="INGRESA LA JUSTIFICACIÓNS"
+                <input class="form-control" style="height: 48px;" type="text" placeholder="INGRESA LA JUSTIFICACIÓNS"
                     [(ngModel)]="compra.justificacion" name="justificacion"
                     [ngClass]="{'p-invalid': formJustificacionCtrl.invalid && formJustificacionCtrl.touched}"
                     #formJustificacionCtrl="ngModel" required>
@@ -39,6 +39,45 @@
                     Campo requerido.
                 </small>
                 <p></p>
+            </div>
+            <div class="col-md-4">
+                <p class="fw-bold">SUCURSAL</p>
+                <p-dropdown [options]="sucursales" [(ngModel)]="compra.idSucursal" [optionValue]="'id'" name="sucursal"
+                    optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                    placeholder="SELECCIONAR SUCURSAL" [style]="{width:'100%'}" #formSucursalCtrl="ngModel"
+                    [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required>
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ selectedOption.nombre }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-dep pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ dep.nombre }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                <small *ngIf="formSucursalCtrl.invalid && formSucursalCtrl.touched" class="p-error">Campo
+                    requerido.</small>
+            </div>
+            <div class="col-md-4">
+                <p class="fw-bold">ÁREA</p>
+                <p-dropdown [options]="areas" [(ngModel)]="compra.idArea" [optionValue]="'id'" name="area"
+                    optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                    placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}" #formAreaCtrl="ngModel"
+                    [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}" required>
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ selectedOption.nombre }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-dep pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ dep.nombre }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                <small *ngIf="formAreaCtrl.invalid && formAreaCtrl.touched" class="p-error">Campo requerido.</small>
             </div>
         </div>
 
@@ -67,14 +106,19 @@
                 <th *ngIf="usuario?.idRol == '5' || usuario?.idRol == '1'">ACCIONES</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-mantenimiento let-i="rowIndex">
-            <tr [pSelectableRow]="mantenimiento">
-                <td>{{ mantenimiento.costo }}</td>
-                <td>{{ mantenimiento.folioTicket ? mantenimiento.folioTicket : 'N/A' }}</td>
-                <td>{{ mantenimiento.detalle }}</td>
-                <td *ngIf="usuario?.idRol == '5' || usuario?.idRol == '1'">
-                    <button class="btn btn-danger" (click)="confirmaEliminacion(mantenimiento.id)"><i
-                            class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
+        <ng-template pTemplate="body" let-compra let-i="rowIndex">
+            <tr [pSelectableRow]="compra">
+                <td>{{ datesHelper.getDate(compra.fecha) | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                <td>{{ compra.articulo }}</td>
+                <td>{{ compra.unidades }}</td>
+                <td>{{ obtenerNombreSucursal(compra.idSucursal) }}</td>
+                <td>{{ obtenerNombreAreas(compra.idArea) }}</td>
+                <td>{{ compra.justificacion }}</td>
+                <td>{{ obtenerNombreEstatus(compra.idEstatusCompra) }}</td>
+
+                <td *ngIf="usuario?.idRol == '4'">
+                    <button class="btn btn-danger" (click)="confirmaEliminacion(compra.id)"><i class='bx bx-trash bx-sm'
+                            pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
                 </td>
             </tr>
         </ng-template>
