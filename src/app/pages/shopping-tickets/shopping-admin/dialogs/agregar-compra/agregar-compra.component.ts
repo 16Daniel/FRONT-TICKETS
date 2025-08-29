@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, input, Input, Output, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -28,6 +28,7 @@ export class AgregarCompraComponent implements OnInit {
 @Input() catProveedores:Proveedor[] = [];  
 @Input() sucursales: Sucursal[] = [];
 @Input() idAdmin:string = ""; 
+@Input() catMetodosPago: any[] = []; 
 public FormSucursal:Sucursal|undefined; 
 public formarticulos:ArticuloCompra[] = []; 
 public formArtArticulo:string = ""; 
@@ -42,6 +43,7 @@ public formRegion:string = "";
 public formDireccion:string = ""; 
 public formRazonSocial:string = "";
 public formSolicitante:string = ''; 
+public formMetodoPago:string = ""; 
 public userdata:Usuario;
 
 constructor(
@@ -102,7 +104,6 @@ async guardar()
 {  
   let fecha = new Date(); 
   let nombremes =  this.getNombreMes(fecha.getMonth()); 
-   // SOLUCIÓN: Crear copia manual de los artículos
     let articulosdata = this.eliminarReferenciasCirculares(this.formarticulos);
    
     let participantesChatData:ParticipanteChat[] = [{idUsuario: this.userdata.id,ultimoComentarioLeido:0},{idUsuario: this.idAdmin,ultimoComentarioLeido:0}];
@@ -122,12 +123,15 @@ async guardar()
       fechaEntrega:null,
       palabraclave:"", 
       factura:'',
+      comprobantePago:'',
       comentarios:[],
       articulos: articulosdata,
       solicitudCancelacion: false,
       participantesChat:participantesChatData,
       solicitante:this.formSolicitante,
-      tipoCompra:this.formarticulos[0].idTipo
+      tipoCompra:this.formarticulos[0].idTipo,
+      idArea: this.userdata.idArea == undefined ? null : this.userdata.idArea,
+      metodoPago:this.formMetodoPago
     }   
     
     try {

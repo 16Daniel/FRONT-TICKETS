@@ -55,6 +55,15 @@
           <option [value]="item.id" *ngFor="let item of catStatusPago">{{item.nombre}}</option>
         </select>
 </div>
+  <div class="col-md-4">
+    <p>Método de pago</p>
+     <select class="form-select h-42" [(ngModel)]="formMetodoPago">
+      <option *ngFor="let item of catMetodosPago" [value]="item.id">{{item.nombre}}</option>
+    </select>
+</div>
+</div>
+
+<div class="row mt-3" *ngIf="usuario.id== idAdmin">
 <div class="col-md-4">
     <p>FECHA DE PAGO</p>
     <p-calendar 
@@ -67,10 +76,8 @@
       [showButtonBar]="true"
         [touchUI]="true" />
 </div>
-</div>
 
-<div class="row mt-3" *ngIf="usuario.id== idAdmin">
-<div class="col-md-6">
+    <div class="col-md-4">
     <p>FECHA DE ENTREGA</p>
     <p-calendar 
     [(ngModel)]="fechaentrega" 
@@ -83,7 +90,7 @@
        [touchUI]="true" 
        />
 </div>
-<div class="col-md-6">
+<div class="col-md-4">
     <p>PALABRA CLAVE</p>
       <input type="text"  class="form-control h-42" [(ngModel)]="formPalabraClave">
 </div>

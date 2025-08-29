@@ -113,7 +113,13 @@
                         <p>Dirección de entrega</p>
                         <input type="text"  class="form-control h-42"  [(ngModel)]="formDireccion">
                         </div>
-                          <div class="col-6">
+                          <div class="col-md-3">
+                                <p>Método de pago</p>
+                                <select class="form-select h-42" [(ngModel)]="formMetodoPago">
+                                    <option *ngFor="let item of catMetodosPago" [value]="item.id">{{item.nombre}}</option>
+                                    </select>
+                            </div>
+                          <div class="col-md-3">
                         <p>Solicitante</p>
                         <input type="text"  class="form-control h-42"  [(ngModel)]="formSolicitante">
                         </div>
@@ -150,7 +156,8 @@
             </div>
 
             <div class="mt-3 mb-3 d-flex justify-content-end" *ngIf="formarticulos.length>0">
-                <button class="btn bg-p-b p-3" [disabled]="formarticulos.length==0 || formDireccion == '' || formRazonSocial == '' || FormSucursal == undefined || formRegion == '' || formSolicitante == ''" (click)="guardar()">GUARDAR</button>
+                <button class="btn bg-p-b p-3" [disabled]="formarticulos.length==0 || formDireccion == '' || formRazonSocial == ''
+                 || FormSucursal == undefined || formRegion == '' || formSolicitante == '' || formMetodoPago == ''" (click)="guardar()">GUARDAR</button>
             </div>
 
 
