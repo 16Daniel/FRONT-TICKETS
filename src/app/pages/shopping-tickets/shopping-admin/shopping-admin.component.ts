@@ -11,7 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../models/AdministracionCompra';
 import Swal from 'sweetalert2';
 import { Timestamp } from '@angular/fire/firestore';
-import { SubirFacturaComponent } from "./dialogs/Subir-factura/Subir-factura.component";
+import { SubirdocumentoComponent } from "./dialogs/Subir-doumento/Subir-documento.component";
 import { AgregarCompraComponent } from "./dialogs/agregar-compra/agregar-compra.component";
 import { ArchivosComponent } from "./dialogs/Archivos/Archivos.component";
 import { DetallesComponent } from "./dialogs/Detalles/Detalles.component";
@@ -20,12 +20,17 @@ import { AdminComprasChatComponent } from "./dialogs/admin-compras-chat/admin-co
 import { Usuario } from '../../../models/usuario.model';
 import { CalendarModule } from 'primeng/calendar';
 import { GraficaAdminComprasComponent } from "./components/grafica-admin-compras/grafica-admin-compras.component";
+import { AreasService } from '../../../services/areas.service';
+import { Area } from '../../../models/area.model';
+import { MessagesModule } from 'primeng/messages';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
   imports: [CommonModule, DialogModule, TableModule, FormsModule, ProveedoresComponent,
-    DropdownModule, SubirFacturaComponent, AgregarCompraComponent, ArchivosComponent,
-    DetallesComponent, SideMenuComponent, AdminComprasChatComponent, CalendarModule, GraficaAdminComprasComponent],
+    DropdownModule, SubirdocumentoComponent, AgregarCompraComponent, ArchivosComponent,
+    DetallesComponent, SideMenuComponent, AdminComprasChatComponent, CalendarModule, GraficaAdminComprasComponent, 
+    MessagesModule,TooltipModule],
   templateUrl: './shopping-admin.component.html',
   styleUrl:'./shopping-admin.component.scss'
 })
@@ -42,29 +47,42 @@ public catStatusPago:any[] = [{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO
 public filtrocatStatusCompra:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'EN GESTIÓN'},{id:'0',nombre:'CANCELADO'},{id:'2',nombre:'COMPRADO'},{id:'3',nombre:'ENTREGADO'},{id:'4',nombre:'EN DEVOLUCIÓN'},{id:'5',nombre:'OTRO'}]
 public filtrocatStatusPago:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO'}]
 public regcompras:AdministracionCompra[] = []; 
+public facturasPendientes:AdministracionCompra[] = []; 
 public itemReg:AdministracionCompra|undefined; 
 public fechaReg:Date = new Date(); 
 public modalArchivos:boolean = false;
 public modalChat:boolean = false;
 public usuario:Usuario;
-public idAdmin:string = 'pclOBh7sMdziimACOc1w';
+//productivo
+ public idAdmin:string = 'pclOBh7sMdziimACOc1w';
+
+// public idAdmin:string = 'QvSLmxLZjJnaGPPsA7zi';
 public filtroFechaIni:Date|undefined;
 public filtroFechaFin:Date|undefined;
 public filtroStatus:string = "-1";
 public filtroStatusPago:string = "1"; 
 public filtroSucursal: Sucursal|undefined;
 public filtroTipo:string = "-1"; 
-public filtrocatTipoCompra:any[] = []; 
+public filtroRegion:string = '-1'; 
+public filtrocatTipoCompra:any[] = [];
+public  catareas: Area[] = []; 
+public catMetodosPago:any[] = [{id:'1',nombre:'EFECTIVO'},{id:'2',nombre:'TRANSFERENCIA'}];
+public messages:any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }]; 
+public tipoDoc:number = 1; 
+
 constructor(
     private shopServ:ShoppingService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
+    private areasService: AreasService,
     ){  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
   ngOnInit(): void 
-  {
+  { 
+    this.obtenerFacturasPendientes()
     this.obtenerTipoCompras(); 
     this.obtenerProveedores(); 
     this.obtenerSucursales();
+    this.obtenerAreas(); 
     if(this.usuario.id == this.idAdmin)
       {
         this.obtenerCompras(); 
@@ -79,6 +97,19 @@ constructor(
         this.shopServ.getCompras().subscribe({
       next: (data) => {
         this.regcompras = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+   }
+
+   obtenerFacturasPendientes()
+   {
+        this.shopServ.obtenerComprasFacturaPendiente(this.usuario.id).subscribe({
+      next: (data) => {
+        this.facturasPendientes = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -103,10 +134,19 @@ constructor(
    obtenerComprasFiltro()
    {  
       this.regcompras = []; 
-    Swal.showLoading(); 
+      Swal.showLoading(); 
+       let idArea = '-1';
+       if((this.usuario.idRol == '1' || this.usuario.idRol == '5') && this.usuario.id != this.idAdmin)
+        {
+          idArea = this.usuario.idArea;
+        }
       let idsuc = this.filtroSucursal == undefined ? '': this.filtroSucursal.id; 
       let idusuario = this.usuario.id == this.idAdmin ? '': this.usuario.id;
-        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo).subscribe({
+      if(this.usuario.idRol == '1' || this.usuario.idRol == '5')
+        {
+          idusuario = '';
+        }
+        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea).subscribe({
       next: (data) => {
         this.regcompras = data;
         Swal.close(); 
@@ -186,9 +226,10 @@ abrirModalProveedores()
   this.cdr.detectChanges();  
 }
 
-abrirModalFactura(item:AdministracionCompra)
+abrirModalDocumento(item:AdministracionCompra,tipodoc:number)
 {
   this.itemReg = item;
+  this.tipoDoc = tipodoc;
   this.modalFactura = true;
 }
 
@@ -218,6 +259,15 @@ obtenerNombreSucursal(idSucursal:string):string
     return nombre; 
 }
 
+obtenerNombreArea(idarea:string):string
+{
+    let nombre = "";
+    let area = this.catareas.filter(x=> x.id == idarea)[0]; 
+    
+    if(idarea != undefined){ nombre = area.nombre; }
+    return nombre; 
+}
+
   downloadPdfDirect(pdfUrl: string) {
   window.open(pdfUrl, '_blank');
 }
@@ -230,6 +280,11 @@ obtenerNombreEstatusPago(id:string):string
 {
   return this.catStatusPago.filter(x=> x.id == id).length>0 ? this.catStatusPago.filter(x=> x.id == id)[0].nombre : '';   
 }
+obtenerNombreMetodoPago(id:string):string
+{
+  return this.catMetodosPago.filter(x=> x.id == id).length>0 ? this.catMetodosPago.filter(x=> x.id == id)[0].nombre : '';   
+}
+
 
 
   verificarChatNoLeido(ticket:AdministracionCompra) {
@@ -263,5 +318,26 @@ obtenerTotalCompras(articulos:ArticuloCompra[]):number
     }
   return total;
 }
+
+obtenerAreas() {
+    this.areasService.get().subscribe({
+      next: (data) => {
+        this.catareas = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+hanPasado7Dias(fecha: Date): boolean {
+  const hoy = new Date();
+  const fechaLimite = new Date(fecha);
+  fechaLimite.setDate(fechaLimite.getDate() + 7);
+  
+  return hoy >= fechaLimite;
+}
+
 
 }

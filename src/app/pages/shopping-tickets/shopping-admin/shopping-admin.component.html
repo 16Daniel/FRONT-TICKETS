@@ -5,7 +5,7 @@
 </h4>
 <p>&nbsp;</p>
 <div class="row m-3">
-    <div class="col-auto"> <p>&nbsp;</p> <button class="btn bg-p-b p-2" (click)="abrirModal()">
+    <div class="col-auto" *ngIf="facturasPendientes.length == 0"> <p>&nbsp;</p> <button class="btn bg-p-b p-2" (click)="abrirModal()">
     <i class='bx bx-plus-circle bx-sm'></i>&nbsp;AGREGAR
 </button>
 </div>
@@ -58,6 +58,14 @@
  </div>
 
  <div class="col-auto" *ngIf="usuario.id == idAdmin">
+    <p>REGIÓN</p>
+    <select class="form-select h-42" [(ngModel)]="filtroRegion">
+       <option value="-1">TODO</option>
+        <option value="CDMX">CDMX</option>
+       <option value="QRO">QRO</option>
+     </select>
+                            </div> 
+ <div class="col-auto" *ngIf="usuario.id == idAdmin">
                                 <p>SUCURSAL / AREA</p>
                                 <p-dropdown [options]="sucursales" [(ngModel)]="filtroSucursal" name="sucursal" optionLabel="nombre" [filter]="true"
                                 filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
@@ -82,10 +90,20 @@
 
 </div>
 
+  
+<div class="p-3 shadow m-3 bg-white" *ngIf="facturasPendientes.length>0">
+ <p-messages 
+    [(value)]="messages" 
+    [enableService]="false" 
+    [closable]="false" />
+
+</div>
+
+
 <div class="p-3 shadow m-3 bg-white">
 
-    <div class="d-flex justify-content-center p-3" *ngIf="usuario.id == idAdmin && regcompras.length>0">
-        <div class="w-100"><app-grafica-admin-compras [sucursales]="sucursales" [registros]="regcompras"></app-grafica-admin-compras></div>
+    <div class="d-flex justify-content-center p-3" *ngIf="regcompras.length>0">
+        <div class="w-100"><app-grafica-admin-compras [sucursales]="sucursales" [registros]="regcompras" [catAreas]="catareas" [idAdmin]="idAdmin"></app-grafica-admin-compras></div>
     </div>
 
  <p-table [value]="regcompras" [tableStyle]="{ 'min-width': '50rem' }">
@@ -93,10 +111,11 @@
         <tr>
             <th>SOLICITANTE</th>
             <th>FECHA</th>
-            <th>MES</th>
             <th>REGION</th>
             <th>RAZON SOCIAL</th>
+            <th>PROVEEDOR</th>
             <th>SUCURSAL / AREA</th>
+            <th>MÉTODO PAGO</th>
             <th>ARTÍCULOS</th>
             <th>ESTATUS</th>
             <th>ESTATUS PAGO</th>
@@ -106,6 +125,7 @@
             <th>PALABRA CLAVE</th>
             <th>TOTAL</th>
             <th>FACTURA</th>
+            <th>COMPROBANTE PAGO</th>
             <th></th>
             <th></th>
         </tr>
@@ -114,10 +134,11 @@
         <tr class="bg-opacity-25" [ngClass]="{'bg-warning':(item.statuscompra == 0 || item.statuspago == 1), 'bg-success': item.statuspago == 2, 'bg-danger': item.statuscompra == 0}">
             <td>{{item.solicitante}}</td>
             <td>{{  obtenerFecha(item.fecha) | date}}</td>
-            <td>{{ item.mes }}</td>
             <td>{{ item.region }}</td>
             <td>{{ item.razonsocial }}</td>
+            <td>{{ obtenerNombreArea(item.idArea) }}</td>
             <td>{{ obtenerNombreSucursal(item.idsucursal )}}</td>
+            <td>{{obtenerNombreMetodoPago(item.metodoPago)}}</td>
             <td>{{obtenerNombreArticulos(item.articulos)}}</td>
             <td>{{ obtenerNombreEstatus(item.statuscompra) }}</td>
             <td>
@@ -132,15 +153,21 @@
             <td>${{obtenerTotalCompras(item.articulos)| number:'1.0-2'}}</td>
             <td>
                 <div class="d-flex gap-1 justify-content-center">
-                    <button class="btn btn-warning" (click)="abrirModalFactura(item)" *ngIf="item.statuspago != 2 && item.statuscompra > 0 || item.factura ==''"><i class='bx bx-cloud-upload bx-sm' ></i></button>&nbsp; 
+                    <button class="btn btn-warning" [disabled]="item.metodoPago == '1'" (click)="abrirModalDocumento(item,1)" *ngIf="item.statuspago != 2 && item.statuscompra > 0 || item.factura ==''"><i class='bx bx-cloud-upload bx-sm' ></i></button>&nbsp; 
                   <button class="btn btn-secondary" *ngIf="item.factura != ''" (click)="downloadPdfDirect(item.factura)"><i class='bx bxs-file-pdf bx-sm'></i></button>
+                </div>
+            </td> 
+            <td>
+                <div class="d-flex gap-1 justify-content-center">
+                    <button class="btn btn-warning" (click)="abrirModalDocumento(item,2)" *ngIf="item.statuspago == 2 && usuario.id == idAdmin"><i class='bx bx-cloud-upload bx-sm' ></i></button>&nbsp; 
+                  <button class="btn btn-secondary" *ngIf="item.comprobantePago != ''" (click)="downloadPdfDirect(item.comprobantePago)"><i class='bx bxs-file-pdf bx-sm'></i></button>
                 </div>
             </td>
             <td><button class="btn btn-primary btn-notification" style="margin: 2px" >
           <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"  [ngClass]="{'has-notification': verificarChatNoLeido(item)}"
             tooltipPosition="top" (click)="abrirModalChat(item)"></i>
         </button></td>
-            <td><button class="btn bg-p-b" (click)="abrirModalDetalles(item)"><i class='bx bx-show bx-sm' ></i></button></td>
+            <td><button class="btn bg-p-b" pTooltip="DETALLES"  (click)="abrirModalDetalles(item)"><i class='bx bx-show bx-sm' ></i></button></td>
         </tr>
     </ng-template>
 </p-table>
@@ -149,18 +176,18 @@
 </div>
 
 <app-agregar-compra *ngIf="visible" (closeEvent)="visible = false" [visible]="visible" [catTipoCompra]="catTipoCompra" 
-[catProveedores]="catProveedores" [sucursales]="sucursales" [idAdmin]="idAdmin"></app-agregar-compra>
+[catProveedores]="catProveedores" [sucursales]="sucursales" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago"></app-agregar-compra>
 
 <app-proveedores *ngIf="modalProveedores" [visible]="modalProveedores" (closeEvent)="modalProveedores = false"></app-proveedores>
 
-<app-subir-factura *ngIf="modalFactura" [visible]="modalFactura" (closeEvent)="modalFactura = false"
- [Reg]="itemReg"></app-subir-factura>
+<app-subir-documento *ngIf="modalFactura" [visible]="modalFactura" (closeEvent)="modalFactura = false"
+ [Reg]="itemReg" [tipoDoc]="tipoDoc"></app-subir-documento>
 
 <app-archivos *ngIf="modalArchivos && itemReg != undefined" [visible]="modalArchivos" 
 (closeEvent)="modalArchivos = false" [factura]="itemReg!.factura"></app-archivos>
 
 <app-detalles *ngIf="modalDetalles" [visible]="modalDetalles" [itemReg]="itemReg" [catStatus]="catStatusCompra" [catStatusPago]="catStatusPago"
-(closeEvent)="modalDetalles = false" [idAdmin]="idAdmin"></app-detalles>
+(closeEvent)="modalDetalles = false" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago"></app-detalles>
 
 <app-admin-compras-chat *ngIf="modalChat" [showModalChatCompra]="modalChat" [ticket]="itemReg"
   (closeEvent)="modalChat = false"></app-admin-compras-chat>
