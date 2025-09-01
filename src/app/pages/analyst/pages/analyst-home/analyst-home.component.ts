@@ -32,6 +32,9 @@ import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/
 import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../components/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
+import { PurchaseService } from '../../../../services/purchase.service';
+import { Compra } from '../../../../models/compra.model';
+import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 
 @Component({
   selector: 'app-analyst-home',
@@ -54,7 +57,8 @@ import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-
     AccordionBranchMaintenance10x10Component,
     AccordionBranchMaintenanceAvComponent,
     AccordionBranchMaintenanceMttoComponent,
-    ModalRequestPurchaseComponent
+    ModalRequestPurchaseComponent,
+    IconosNotificacionesTicketsComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './analyst-home.component.html',
@@ -89,6 +93,7 @@ export default class AnalystHomeComponent implements OnInit {
   ordenarMantenimientosFecha: boolean = false;
   auxMostrarMantenimientos = true;
   mostrarModalCompras: boolean = false;
+  compras: Compra[] = [];
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -98,8 +103,8 @@ export default class AnalystHomeComponent implements OnInit {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private notificationService: NotificationService,
-    private mantenimientoFactory: MantenimientoFactoryService
-
+    private mantenimientoFactory: MantenimientoFactoryService,
+    private purchaseService: PurchaseService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -123,6 +128,7 @@ export default class AnalystHomeComponent implements OnInit {
     this.getTicketsResponsable();
     this.obtnerUltimosMantenimientos();
     this.obtenerSucursales();
+    this.obtenerCompras();
     this.notificationService.solicitarPermiso();
   }
 
@@ -134,6 +140,12 @@ export default class AnalystHomeComponent implements OnInit {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+  }
+
+  obtenerCompras() {
+    this.purchaseService.getByUser(this.usuario.id).subscribe(result => {
+      this.compras = result;
+    })
   }
 
   obtnerUltimosMantenimientos() {
