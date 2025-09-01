@@ -31,7 +31,7 @@ import { AccordionBranchMaintenanceAvComponent } from '../../../../components/ma
 import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
 import { PriorityTicketsAccordionAnalystComponent } from '../../components/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
-import { ModalRequestPurchaseComponent } from '../../dialogs/modal-request-purchase/modal-request-purchase.component';
+import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 
 @Component({
   selector: 'app-analyst-home',

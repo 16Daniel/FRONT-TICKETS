@@ -26,6 +26,7 @@ import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/comp
 import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
+import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -44,7 +45,8 @@ import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-pur
     ModalTicketDetailComponent,
     AccordionBranchMaintenanceMttoComponent,
     IconosNotificacionesTicketsComponent,
-    ModalPurshasesComponent
+    ModalPurshasesComponent,
+    ModalRequestPurchaseComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-maintenance-tab.component.html',
@@ -60,6 +62,7 @@ export class AdminMaintenanceTabComponent {
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalCompras: boolean = false;
+  mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
   mantenimientos: MantenimientoMtto[] = [];
   catStatusT: EstatusTicket[] = [];

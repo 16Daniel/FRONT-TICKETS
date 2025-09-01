@@ -19,7 +19,11 @@
 
     <p-button (onClick)="opg.toggle($event)" icon="pi pi-users" label="AGRUPAR" styleClass="p-button-danger" />
 
-    <p-button label="COMPRAS" icon="pi pi-plus" styleClass="p-button-secondary" (click)="mostrarModalCompras = true">
+    <p-button label="COMPRAS" icon="pi pi-shopping-cart" styleClass="btn-compras" (click)="mostrarModalCompras = true">
+    </p-button>
+
+    <p-button label="SOLICITAR COMPRA" icon="pi pi-plus" styleClass="p-button-secondary"
+      (click)="mostrarModalSolicitarCompra = true">
     </p-button>
 
     <div class="form-check form-switch d-flex align-items-center gap-3">
@@ -81,6 +85,11 @@
   <p>SIN TICKETS PENDIENTES</p>
 </div>
 }
+
+
+
+<app-modal-request-purchase *ngIf="mostrarModalSolicitarCompra" [mostrarModal]="mostrarModalSolicitarCompra"
+  (closeEvent)="mostrarModalSolicitarCompra = false" [idArea]="IdArea"></app-modal-request-purchase>
 
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
   [showModalTicketDetail]="mostrarModalTicketDetail"

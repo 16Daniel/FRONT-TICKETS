@@ -1,22 +1,22 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
-import { Compra } from '../../../../models/compra.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { PurchaseService } from '../../../../services/purchase.service';
-import { Area } from '../../../../models/area.model';
-import { Sucursal } from '../../../../models/sucursal.model';
+import { Compra } from '../../models/compra.model';
+import { Usuario } from '../../models/usuario.model';
+import { PurchaseService } from '../../services/purchase.service';
+import { Area } from '../../models/area.model';
+import { Sucursal } from '../../models/sucursal.model';
 import { DropdownModule } from 'primeng/dropdown';
-import { AreasService } from '../../../../services/areas.service';
-import { BranchesService } from '../../../../services/branches.service';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { StatusPurchaseService } from '../../../../services/status-purchase.service';
-import { EstatusCompra } from '../../../../models/estatus-compras.model';
-import { TooltipModule } from 'primeng/tooltip';
+import { AreasService } from '../../services/areas.service';
+import { BranchesService } from '../../services/branches.service';
+import { DatesHelperService } from '../../helpers/dates-helper.service';
+import { StatusPurchaseService } from '../../services/status-purchase.service';
+import { EstatusCompra } from '../../models/estatus-compras.model';
 
 @Component({
   selector: 'app-modal-request-purchase',
@@ -34,6 +34,7 @@ import { TooltipModule } from 'primeng/tooltip';
 })
 export class ModalRequestPurchaseComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
+  @Input() idArea: string = '';
   @Output() closeEvent = new EventEmitter<boolean>();
 
   compras: Compra[] = [];
@@ -159,7 +160,7 @@ export class ModalRequestPurchaseComponent implements OnInit {
       ...this.compra,
       idEstatusCompra: '1',
       idUsuario: this.usuario.id,
-      idArea: this.usuario.idArea
+      idArea: this.idArea ? this.idArea : this.usuario.idArea
     });
     this.compra = new Compra;
     Swal.close();

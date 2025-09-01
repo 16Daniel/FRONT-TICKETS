@@ -25,6 +25,7 @@ import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/comp
 import { AccordionBranchMaintenanceAvComponent } from '../../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
+import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -43,7 +44,8 @@ import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-pur
     ModalTicketDetailComponent,
     AccordionBranchMaintenanceAvComponent,
     IconosNotificacionesTicketsComponent,
-    ModalPurshasesComponent
+    ModalPurshasesComponent,
+    ModalRequestPurchaseComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-audio-video-tab.component.html',
@@ -59,6 +61,7 @@ export class AdminAudioVideoTabComponent {
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalCompras: boolean = false;
+  mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
   mantenimientos: Mantenimiento6x6AV[] = [];
   catStatusT: EstatusTicket[] = [];
