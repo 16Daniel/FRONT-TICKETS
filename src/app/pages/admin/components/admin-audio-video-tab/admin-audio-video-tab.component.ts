@@ -24,6 +24,8 @@ import { Timestamp } from '@angular/fire/firestore';
 import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
+import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -41,7 +43,9 @@ import { IconosNotificacionesTicketsComponent } from '../../../../components/ico
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
     AccordionBranchMaintenanceAvComponent,
-    IconosNotificacionesTicketsComponent
+    IconosNotificacionesTicketsComponent,
+    ModalPurshasesComponent,
+    ModalRequestPurchaseComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-audio-video-tab.component.html',
@@ -56,6 +60,8 @@ export class AdminAudioVideoTabComponent {
   mostrarModalHistorial: boolean = false;
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
+  mostrarModalCompras: boolean = false;
+  mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
   mantenimientos: Mantenimiento6x6AV[] = [];
   catStatusT: EstatusTicket[] = [];

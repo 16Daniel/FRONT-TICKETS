@@ -25,6 +25,8 @@ import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.se
 import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
+import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -42,7 +44,9 @@ import { IconosNotificacionesTicketsComponent } from '../../../../components/ico
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
     AccordionBranchMaintenanceMttoComponent,
-    IconosNotificacionesTicketsComponent
+    IconosNotificacionesTicketsComponent,
+    ModalPurshasesComponent,
+    ModalRequestPurchaseComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-maintenance-tab.component.html',
@@ -57,6 +61,8 @@ export class AdminMaintenanceTabComponent {
   mostrarModalHistorial: boolean = false;
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
+  mostrarModalCompras: boolean = false;
+  mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
   mantenimientos: MantenimientoMtto[] = [];
   catStatusT: EstatusTicket[] = [];

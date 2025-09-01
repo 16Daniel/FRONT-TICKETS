@@ -25,6 +25,8 @@ import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-tic
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
 import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
+import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -42,7 +44,9 @@ import { IconosNotificacionesTicketsComponent } from '../../../../components/ico
     UserTicketsAccordionComponent,
     AccordionBranchMaintenance10x10Component,
     ModalTicketDetailComponent,
-    IconosNotificacionesTicketsComponent
+    IconosNotificacionesTicketsComponent,
+    ModalPurshasesComponent,
+    ModalRequestPurchaseComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-sys-tab.component.html',
@@ -59,6 +63,8 @@ export class AdminSysTabComponent {
   mostrarModalHistorial: boolean = false;
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
+  mostrarModalCompras: boolean = false;
+  mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
   mantenimientos: Mantenimiento10x10[] = [];
   catStatusT: EstatusTicket[] = [];
