@@ -18,15 +18,49 @@ export class PurchaseService {
     return docRef.id; // Devolver el ID del documento creado
   }
 
-  get(idArea?: string): Observable<Compra[]> {
+  getByArea(idArea: string): Observable<Compra[]> {
     return new Observable<Compra[]>((observer) => {
       const collectionRef = collection(this.firestore, this.pathName);
 
       // Arreglo para los filtros
-      const constraints = [where('eliminado', '==', false)];
-      if (idArea) {
-        constraints.push(where('idArea', '==', idArea));
-      }
+      const constraints = [
+        where('eliminado', '==', false),
+        // where('idEstatusCompra', 'not-in', ['4', '5']),
+        where('idArea', '==', idArea)];
+
+      const q = query(collectionRef, ...constraints);
+
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          const categorias: Compra[] = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<Compra, 'id'>),
+          }));
+
+          categorias.sort((a, b) => Number(a.id) - Number(b.id));
+
+          observer.next(categorias);
+        },
+        (error) => {
+          console.error('Error en la suscripción:', error);
+          observer.error(error);
+        }
+      );
+
+      return { unsubscribe };
+    });
+  }
+
+  getByUser(idUsuario: string): Observable<Compra[]> {
+    return new Observable<Compra[]>((observer) => {
+      const collectionRef = collection(this.firestore, this.pathName);
+
+      // Arreglo para los filtros
+      const constraints = [
+        where('eliminado', '==', false),
+        where('idEstatusCompra', 'not-in', ['4', '5']),
+        where('idUsuario', '==', idUsuario)];
 
       const q = query(collectionRef, ...constraints);
 

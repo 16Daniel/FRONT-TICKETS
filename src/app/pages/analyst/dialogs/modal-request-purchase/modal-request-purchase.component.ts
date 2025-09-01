@@ -6,7 +6,6 @@ import { FormsModule, NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 import { Compra } from '../../../../models/compra.model';
-import { ConfirmationService } from 'primeng/api';
 import { Usuario } from '../../../../models/usuario.model';
 import { PurchaseService } from '../../../../services/purchase.service';
 import { Area } from '../../../../models/area.model';
@@ -17,6 +16,7 @@ import { BranchesService } from '../../../../services/branches.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { StatusPurchaseService } from '../../../../services/status-purchase.service';
 import { EstatusCompra } from '../../../../models/estatus-compras.model';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-modal-request-purchase',
@@ -26,7 +26,8 @@ import { EstatusCompra } from '../../../../models/estatus-compras.model';
     TableModule,
     CommonModule,
     FormsModule,
-    DropdownModule
+    DropdownModule,
+    TooltipModule
   ],
   templateUrl: './modal-request-purchase.component.html',
   styleUrl: './modal-request-purchase.component.scss'
@@ -43,7 +44,6 @@ export class ModalRequestPurchaseComponent implements OnInit {
   sucursales: Sucursal[] = [];
 
   constructor(
-    private confirmationService: ConfirmationService,
     private purchaseService: PurchaseService,
     private statusPurchaseService: StatusPurchaseService,
     private cdr: ChangeDetectorRef,
@@ -93,7 +93,7 @@ export class ModalRequestPurchaseComponent implements OnInit {
   }
 
   obtenerCompras() {
-    this.purchaseService.get(this.usuario.idArea).subscribe({
+    this.purchaseService.getByUser(this.usuario.id).subscribe({
       next: (data) => {
         this.compras = data;
         this.cdr.detectChanges();
@@ -155,7 +155,12 @@ export class ModalRequestPurchaseComponent implements OnInit {
     });
 
 
-    await this.purchaseService.create({ ...this.compra, idEstatusCompra: '1' });
+    await this.purchaseService.create({
+      ...this.compra,
+      idEstatusCompra: '1',
+      idUsuario: this.usuario.id,
+      idArea: this.usuario.idArea
+    });
     this.compra = new Compra;
     Swal.close();
     this.cdr.detectChanges();
@@ -179,5 +184,10 @@ export class ModalRequestPurchaseComponent implements OnInit {
 
   obtenerNombreEstatus(idEstatus: string): string {
     return this.estatus.find(x => x.id === idEstatus)?.nombre || 'N/A';
+  }
+
+  getColorEstatus(idEstatusCompra: string): string {
+    const estatus = this.estatus.find(e => e.id === idEstatusCompra);
+    return estatus ? estatus.color : '#ffffff';
   }
 }
