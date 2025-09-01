@@ -26,12 +26,13 @@ export class DetallesComponent implements OnInit {
 @Output() closeEvent = new EventEmitter<boolean>();
 @Input() catStatus:any[] = []; 
 @Input() catStatusPago:any[] = []; 
+@Input() catMetodosPago:any[] =[]; 
 public fechaentrega:Date|null|undefined; 
 public fechaPago:Date|undefined|null;
 public formStatus:string = ""; 
 public formStatusPago:string = "";
 public formPalabraClave:string = ""; 
-
+public formMetodoPago:string =''; 
 public loading:boolean = false; 
 public usuario:Usuario;
 
@@ -56,7 +57,8 @@ constructor(
               }
              this.formPalabraClave = this.itemReg.palabraclave; 
              this.formStatus = this.itemReg.statuscompra; 
-             this.formStatusPago = this.itemReg.statuspago; 
+             this.formStatusPago = this.itemReg.statuspago;
+             this.formMetodoPago = this.itemReg.metodoPago; 
           }
    }
 
@@ -84,7 +86,7 @@ async guardar()
      this.itemReg!.palabraclave = this.formPalabraClave; 
      this.itemReg!.statuscompra = this.formStatus; 
      this.itemReg!.statuspago = this.formStatusPago; 
-    
+     this.itemReg!.metodoPago = this.formMetodoPago;
      try {
        await this.shopserv.updateCompra(this.itemReg!);  
        this.messageService.add({

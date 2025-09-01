@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, input, Input, Output, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -28,6 +28,7 @@ export class AgregarCompraComponent implements OnInit {
 @Input() catProveedores:Proveedor[] = [];  
 @Input() sucursales: Sucursal[] = [];
 @Input() idAdmin:string = ""; 
+@Input() catMetodosPago: any[] = []; 
 public FormSucursal:Sucursal|undefined; 
 public formarticulos:ArticuloCompra[] = []; 
 public formArtArticulo:string = ""; 
@@ -42,6 +43,7 @@ public formRegion:string = "";
 public formDireccion:string = ""; 
 public formRazonSocial:string = "";
 public formSolicitante:string = ''; 
+public formMetodoPago:string = ""; 
 public userdata:Usuario;
 
 constructor(
@@ -81,7 +83,7 @@ constructor(
           idprov = proveedor.id; 
         }
       
-      this.formarticulos.push({art:this.formArtArticulo,uds:this.formArtUds!,precio:this.formArtPrecio!,tipo:tipo.nombre,link:this.formArtLink,nomprov:nomprov,justificacion:this.formArtJustificacion,idprov:idprov!}); 
+      this.formarticulos.push({art:this.formArtArticulo,uds:this.formArtUds!,precio:this.formArtPrecio!,tipo:tipo.nombre,link:this.formArtLink,nomprov:nomprov,justificacion:this.formArtJustificacion,idprov:idprov!,idTipo:tipo.id}); 
       this.formArtArticulo = '';
       this.formArtJustificacion = ''; 
       this.formArtUds = undefined; 
@@ -100,10 +102,8 @@ constructor(
 
 async guardar()
 {  
-
   let fecha = new Date(); 
   let nombremes =  this.getNombreMes(fecha.getMonth()); 
-   // SOLUCIÓN: Crear copia manual de los artículos
     let articulosdata = this.eliminarReferenciasCirculares(this.formarticulos);
    
     let participantesChatData:ParticipanteChat[] = [{idUsuario: this.userdata.id,ultimoComentarioLeido:0},{idUsuario: this.idAdmin,ultimoComentarioLeido:0}];
@@ -123,11 +123,15 @@ async guardar()
       fechaEntrega:null,
       palabraclave:"", 
       factura:'',
+      comprobantePago:'',
       comentarios:[],
       articulos: articulosdata,
       solicitudCancelacion: false,
       participantesChat:participantesChatData,
-      solicitante:this.formSolicitante
+      solicitante:this.formSolicitante,
+      tipoCompra:this.formarticulos[0].idTipo,
+      idArea: this.userdata.idArea == undefined ? null : this.userdata.idArea,
+      metodoPago:this.formMetodoPago
     }   
     
     try {
@@ -188,7 +192,7 @@ getNombreMes(numeroMes: number): string {
   tieneArticuloOnline():boolean
   {
     let value = false;
-      let tipoonline = this.formarticulos.filter(x => x.tipo == 'ON-LINE'); 
+      let tipoonline = this.formarticulos.filter(x => x.idTipo == '1'); 
       if(tipoonline.length>0)
         {
             value = true

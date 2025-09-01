@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, doc, Firestore, orderBy, query, QueryConstraint, Timestamp, updateDoc, where } from '@angular/fire/firestore';
-import { from, Observable, switchMap } from 'rxjs';
+import { from, map, Observable, switchMap } from 'rxjs';
 import { AdministracionCompra, Proveedor } from '../models/AdministracionCompra';
 import { 
   Storage, 
@@ -8,7 +8,6 @@ import {
   uploadBytes, 
   getDownloadURL,
   deleteObject, 
-  uploadBytesResumable
 } from '@angular/fire/storage';
 
 @Injectable({
@@ -38,8 +37,23 @@ export class ShoppingService {
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
-    }
+ }
   
+   
+getComprasAdminstradorArea(idArea:string): Observable<any> {
+       const comprasCollection = collection(this.firestore, this.comprastab);
+  
+  // Crear la consulta con el filtro por idUsuario
+  const comprasQuery = query(
+    comprasCollection, 
+    where('statuspago', '==', '1'),
+    where('idArea', '==',idArea)
+
+  );
+  
+  return collectionData(comprasQuery, { idField: 'id' });
+  }
+
    getComprasUsuario(idUsuario: string): Observable<any> {
   const comprasCollection = collection(this.firestore, this.comprastab);
   
@@ -65,7 +79,10 @@ getComprasFiltro(
   statuscompra: string, 
   statuspago: string,
   idSucursal: string,
-  idUsuario:string
+  idUsuario:string,
+  idTipo:string,
+  region:string,
+  idArea:string 
 ): Observable<AdministracionCompra[]> {
   
   const comprasCollection = collection(this.firestore, this.comprastab);
@@ -88,6 +105,19 @@ getComprasFiltro(
     condiciones.push(where('idUsuario', '==', idUsuario));
   }
 
+  if (idTipo && idTipo.trim() !== '-1') {
+    condiciones.push(where('tipoCompra', '==', idTipo));
+  }
+
+   if (region && region.trim() !== '-1') {
+    condiciones.push(where('region', '==', region));
+  }
+
+   if (idArea && idArea.trim() !== '-1') {
+    condiciones.push(where('idArea', '==', idArea));
+  }
+
+
 
   if (fechaini && fechaFin) {
     fechaini.setHours(0,0,0,0);
@@ -107,7 +137,7 @@ getComprasFiltro(
   return collectionData(comprasQuery, { idField: 'id' }) as Observable<AdministracionCompra[]>;
 }
 
-async uploadFile(file: File, name: string,fecha:Date, path: string = 'facturas_compras/'): Promise<string> {
+async uploadFile(file: File, name: string,fecha:Date, path: string): Promise<string> {
   let año:string = fecha.getFullYear().toString(); 
   let mes:string = (fecha.getMonth()+1)<10 ? '0'+(fecha.getMonth()+1):''+(fecha.getMonth()+1);
 
@@ -122,6 +152,7 @@ async uploadFile(file: File, name: string,fecha:Date, path: string = 'facturas_c
     throw new Error(`Error al subir el archivo: ${error}`);
   }
 }
+
 
   // Eliminar archivo
   deleteFile(fileUrl: string): Observable<void> {
@@ -149,6 +180,28 @@ updateLastCommentRead(
         ultimoComentarioLeido,
       }),
     });
+  }
+
+
+  obtenerComprasFacturaPendiente(idUsuario:string): Observable<AdministracionCompra[]> {
+    const comprasCollection = collection(this.firestore, this.comprastab);
+    
+    // Obtener la fecha límite (7 días atrás desde hoy)
+    const fechaLimite = new Date();
+    fechaLimite.setDate(fechaLimite.getDate() - 7);
+    
+    const comprasQuery = query(
+      comprasCollection,
+      where('idUsuario', '==', idUsuario),
+      where('metodoPago', '==', '2'),
+      where('factura', '==', ''),
+      where('fechadepago', '!=', null),
+      where('fechadepago', '<=', Timestamp.fromDate(fechaLimite))
+    );
+
+    return collectionData(comprasQuery, { idField: 'id' }).pipe(
+      map(compras => compras as AdministracionCompra[])
+    );
   }
 
 

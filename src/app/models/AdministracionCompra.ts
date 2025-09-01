@@ -18,10 +18,14 @@ export interface AdministracionCompra
     palabraclave:string; 
     articulos:ArticuloCompra[]; 
     factura:string; 
+    comprobantePago:string;
     comentarios: Comentario[];
     solicitudCancelacion:boolean; 
     participantesChat: ParticipanteChat[];
     solicitante:string;
+    tipoCompra:string; 
+    idArea:string|null;
+    metodoPago:string; 
  }
 
 export interface ArticuloCompra
@@ -34,6 +38,7 @@ export interface ArticuloCompra
     idprov:string|null; 
     justificacion:string; 
     nomprov:string|null; 
+    idTipo:string; 
 }
 
 export interface Proveedor {

@@ -2,6 +2,8 @@ import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core'
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Sucursal } from '../../../../../models/sucursal.model';
 import { AdministracionCompra } from '../../../../../models/AdministracionCompra';
+import { Area } from '../../../../../models/area.model';
+import { Usuario } from '../../../../../models/usuario.model';
 @Component({
   selector: 'app-grafica-admin-compras',
   standalone: true,
@@ -12,7 +14,10 @@ import { AdministracionCompra } from '../../../../../models/AdministracionCompra
 export class GraficaAdminComprasComponent implements OnInit {
  @Input() sucursales:Sucursal[] = []; 
  @Input() registros:AdministracionCompra[] = []; 
+ @Input() catAreas:Area[] = []; 
+ @Input() idAdmin:string = '';
   public single: any[] = [];
+  public gproveedor: any[] = [];
   // options
   gradient: boolean = false;
   showLegend: boolean = true;
@@ -33,10 +38,10 @@ export class GraficaAdminComprasComponent implements OnInit {
     '#69F0AE', '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740'
   ]
 };
-
+public usuario:Usuario;
 constructor(
     private cdr: ChangeDetectorRef
-    ){ }
+    ){  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void 
   {
@@ -53,11 +58,39 @@ constructor(
             }
 
             this.single.push({name:this.obtenerNombreSucursal(idsuc),value:total})
-        }     
+        }
+
+        for(let ida of this.getAreasDisitintas())
+          {
+              let data = this.registros.filter(x => x.idArea == ida); 
+                let total = 0; 
+                for(let item of data)
+                  {
+                    for(let art of item.articulos)
+                      {
+                        total = total + (art.precio * art.uds); 
+                      }
+                  }
+
+               this.gproveedor.push({name:this.obtenerNombreArea(ida!),value:total})
+          }   
+          
+          this.cdr.detectChanges();
    }
 
    getDistinctSucursalIds(): string[] {
   const distinctIds = Array.from(new Set(this.registros.map(registro => registro.idsucursal)));
+  return distinctIds;
+}
+
+ getAreasDisitintas(): (string | null)[] {
+ const distinctIds = Array.from(
+  new Set(
+    this.registros
+      .filter(registro => registro.idArea !== null && registro.idArea !== undefined)
+      .map(registro => registro.idArea)
+  )
+);
   return distinctIds;
 }
 
@@ -67,6 +100,16 @@ constructor(
     let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 
     
     if(sucursal != undefined){ nombre = sucursal.nombre; }
+    return nombre; 
+}
+
+
+  obtenerNombreArea(idArea:string):string
+{
+    let nombre = "";
+    let area = this.catAreas.filter(x=> x.id == idArea)[0]; 
+    
+    if(area != undefined){ nombre = area.nombre; }
     return nombre; 
 }
 

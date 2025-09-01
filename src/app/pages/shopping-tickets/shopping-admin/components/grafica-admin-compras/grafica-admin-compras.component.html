@@ -1,8 +1,34 @@
-<div style="height: 200px; width: 100%;">
-      <ngx-charts-advanced-pie-chart
-  [scheme]="colorScheme"
-  [results]="single"
-  [gradient]="gradient"
-  >
-</ngx-charts-advanced-pie-chart>
+<div>
+ <div class="row" *ngIf="usuario.id != idAdmin">
+    <div class="col-12" style="height: 200px;">
+          <ngx-charts-advanced-pie-chart
+          [scheme]="colorScheme"
+          [results]="single"
+          [gradient]="gradient"
+          >
+        </ngx-charts-advanced-pie-chart> 
+    </div>
+   </div> 
+
+  <div class="row" *ngIf="usuario.id == idAdmin">
+    <div class="col-6" style="height: 270px;">
+      <p class="fw-bold fs-5 m-0">CLIENTE</p>
+          <ngx-charts-advanced-pie-chart
+          [scheme]="colorScheme"
+          [results]="single"
+          [gradient]="gradient"
+          >
+        </ngx-charts-advanced-pie-chart> 
+    </div>
+    <div class="col-6" style="height: 270px;">
+      <p class="fw-bold fs-5 m-0">PROVEEDOR</p>
+        <ngx-charts-advanced-pie-chart
+          [scheme]="colorScheme"
+          [results]="gproveedor"
+          [gradient]="gradient"
+          >
+        </ngx-charts-advanced-pie-chart>
+    </div>
+   </div> 
+
 </div>
