@@ -27,6 +27,8 @@ import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
 import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
+import { PurchaseService } from '../../../../services/purchase.service';
+import { Compra } from '../../../../models/compra.model';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -76,6 +78,7 @@ export class AdminMaintenanceTabComponent {
   usergroup: Usuario | undefined;
   idArea: string = '4';
   ordenarMantenimientosFecha: boolean = false;
+  compras: Compra[] = [];
   auxMostrarMantenimientos = true;
 
   constructor(
@@ -84,7 +87,8 @@ export class AdminMaintenanceTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: MaintenanceMtooService
+    private maintenanceService: MaintenanceMtooService,
+    private purchaseService: PurchaseService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -92,6 +96,7 @@ export class AdminMaintenanceTabComponent {
     this.obtenerTickets();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
+    this.obtenerCompras();
     this.todosLostickets = this.tickets;
   }
 
@@ -218,6 +223,12 @@ export class AdminMaintenanceTabComponent {
         console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
+    });
+  }
+
+  obtenerCompras() {
+    this.purchaseService.getByArea(this.idArea).subscribe(result => {
+      this.compras = result;
     });
   }
 

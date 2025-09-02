@@ -2,6 +2,7 @@ import { Component, Input, SimpleChanges } from '@angular/core';
 import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../models/usuario.model';
 import { TooltipModule } from 'primeng/tooltip';
+import { Compra } from '../../models/compra.model';
 
 @Component({
   selector: 'app-iconos-notificaciones-tickets',
@@ -12,6 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 })
 export class IconosNotificacionesTicketsComponent {
   @Input() tickets: Ticket[] = [];
+  @Input() compras: Compra[] = [];
   @Input() usuario?: Usuario;
 
   /**
@@ -66,13 +68,14 @@ export class IconosNotificacionesTicketsComponent {
     }).length;
   }
 
+  /**
+   * COMPRAS
+   */
   get ticketsNotificacionComprando() {
     if (this.tickets.length === 0) return 0;
 
-    return this.tickets.filter(tk => {
-      const cumpleEstatus = tk.idEstatusTicket === '5';
-      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
-      return cumpleEstatus && cumpleUsuario;
+    return this.compras.filter(compra => {
+      return compra.idEstatusCompra === '1' || compra.idEstatusCompra === '2';
     }).length;
   }
 }

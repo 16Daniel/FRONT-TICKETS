@@ -58,7 +58,7 @@ export const routes: Routes = [
         title: 'Visitas programadas',
         loadComponent: () =>
           import(
-            './pages/analyst/pages/branch-visit-schedule/branch-visit-schedule.component'
+            './pages/branch-visit-schedule/branch-visit-schedule.component'
           ),
       },
       {

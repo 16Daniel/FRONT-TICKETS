@@ -26,6 +26,8 @@ import { AccordionBranchMaintenanceAvComponent } from '../../../../components/ma
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
 import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
+import { PurchaseService } from '../../../../services/purchase.service';
+import { Compra } from '../../../../models/compra.model';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -75,6 +77,7 @@ export class AdminAudioVideoTabComponent {
   usergroup: Usuario | undefined;
   IdArea: string = '2';
   ordenarMantenimientosFecha: boolean = false;
+  compras: Compra[] = [];
   auxMostrarMantenimientos = true;
 
   constructor(
@@ -83,7 +86,8 @@ export class AdminAudioVideoTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance6x6AvService
+    private maintenanceService: Maintenance6x6AvService,
+    private purchaseService: PurchaseService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -91,6 +95,7 @@ export class AdminAudioVideoTabComponent {
     this.obtenerTickets();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
+    this.obtenerCompras();
     this.todosLostickets = this.tickets;
   }
 
@@ -217,6 +222,12 @@ export class AdminAudioVideoTabComponent {
         console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
+    });
+  }
+
+  obtenerCompras() {
+    this.purchaseService.getByArea(this.IdArea).subscribe(result => {
+      this.compras = result;
     });
   }
 

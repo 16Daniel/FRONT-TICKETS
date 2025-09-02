@@ -27,6 +27,8 @@ import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/comp
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
 import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
+import { PurchaseService } from '../../../../services/purchase.service';
+import { Compra } from '../../../../models/compra.model';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -79,7 +81,7 @@ export class AdminSysTabComponent {
   IdArea: string = '1';
   textoMantenimiento: string = '';
   ordenarMantenimientosFecha: boolean = false;
-
+  compras: Compra[] = [];
   auxMostrarMantenimientos = true;
 
   constructor(
@@ -88,7 +90,8 @@ export class AdminSysTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance10x10Service
+    private maintenanceService: Maintenance10x10Service,
+    private purchaseService: PurchaseService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -96,6 +99,7 @@ export class AdminSysTabComponent {
     this.obtenerTickets();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
+    this.obtenerCompras();
     this.todosLostickets = this.tickets;
 
     if (this.usuario.idArea == '1') this.textoMantenimiento = '10X10';
@@ -219,6 +223,12 @@ export class AdminSysTabComponent {
         console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
+    });
+  }
+
+  obtenerCompras() {
+    this.purchaseService.getByArea(this.IdArea).subscribe(result => {
+      this.compras = result;
     });
   }
 
