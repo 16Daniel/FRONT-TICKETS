@@ -12,30 +12,36 @@
     <div class="p-1">
       @if(arg.event.title == 'GUARDIA')
       {
-      <b><i class='bx bx-shield bx-sm'></i> {{ arg.event.title }}</b>
-      <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+      <div class="p-1 evento-calendario">
+        <b><i class='bx bx-shield bx-sm'></i> {{ arg.event.title }}</b>
+        <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+      </div>
       }
       @else if(arg.event.title.indexOf('ACTIVIDAD:') >= 0)
       {
-      <b><i class='bx bx-task bx-sm'></i> {{ arg.event.title }}</b>
-      <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+      <div class="p-1 evento-calendario">
+        <b><i class='bx bx-task bx-sm'></i> {{ arg.event.title }}</b>
+        <p>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+      </div>
       }
       @else
       {
-      <b><i class='bx bx-store bx-sm'></i> {{ arg.event.title }}</b>
-      <p class="p-0">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
-      <p class="p-0">
-        <span class="p-1 bg-white text-dark rounded-3">
-          {{arg.event.extendedProps.ticketsCount}} TICKETS:
-          {{arg.event.extendedProps.ticketsFinalizados}} RESUELTOS
-        </span>
-      </p>
-      <p class="p-0">
-        <span class="p-1 bg-white text-dark rounded-3">
-          {{textoMantenimiento(arg.event.extendedProps.idArea)}}:
-          {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0], arg.event.extendedProps.idArea)}}%
-        </span>
-      </p>
+      <div class="p-1 evento-calendario">
+        <b><i class='bx bx-store bx-sm'></i> {{ arg.event.title }}</b>
+        <p class="p-0">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+        <p class="p-0">
+          <span class="p-1 bg-white text-dark rounded-3">
+            {{arg.event.extendedProps.ticketsCount}} TICKETS:
+            {{arg.event.extendedProps.ticketsFinalizados}} RESUELTOS
+          </span>
+        </p>
+        <p class="p-0">
+          <span class="p-1 bg-white text-dark rounded-3">
+            {{textoMantenimiento(arg.event.extendedProps.idArea)}}:
+            {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0], arg.event.extendedProps.idArea)}}%
+          </span>
+        </p>
+      </div>
       }
     </div>
   </ng-template>

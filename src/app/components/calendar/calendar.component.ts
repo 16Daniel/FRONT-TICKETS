@@ -26,6 +26,7 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
   standalone: true,
   imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent],
   templateUrl: './calendar.component.html',
+  styleUrl: './calendar.component.scss'
 })
 
 export class CalendarComponent implements OnInit {
@@ -197,7 +198,7 @@ export class CalendarComponent implements OnInit {
   }
 
   async handleEventClick(clickInfo: EventClickArg) {
-    
+
     if (clickInfo.event.title != 'GUARDIA' && clickInfo.event.title.indexOf('ACTIVIDAD:') == -1) {
       let sucursal = this.sucursales.filter(x => x.nombre == clickInfo.event._def.title);
       this.FechaSeleccionada = clickInfo.event.start!;
