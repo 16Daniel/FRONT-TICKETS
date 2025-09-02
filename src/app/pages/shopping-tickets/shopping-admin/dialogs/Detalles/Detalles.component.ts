@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output, type OnInit } from '@angular/co
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
-import { AdministracionCompra, ArticuloCompra } from '../../../../../models/AdministracionCompra';
+import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../../../models/AdministracionCompra';
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { Timestamp } from '@angular/fire/firestore';
@@ -12,6 +12,7 @@ import { ShoppingService } from '../../../../../services/shopping.service';
 import Swal from 'sweetalert2';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Usuario } from '../../../../../models/usuario.model';
+import { Sucursal } from '../../../../../models/sucursal.model';
 @Component({
   selector: 'app-detalles',
   standalone: true,
@@ -27,6 +28,8 @@ export class DetallesComponent implements OnInit {
 @Input() catStatus:any[] = []; 
 @Input() catStatusPago:any[] = []; 
 @Input() catMetodosPago:any[] =[]; 
+@Input() sucursales: Sucursal[] = [];
+@Input() catProveedores:Proveedor[] = [];  
 public fechaentrega:Date|null|undefined; 
 public fechaPago:Date|undefined|null;
 public formStatus:string = ""; 
@@ -35,6 +38,7 @@ public formPalabraClave:string = "";
 public formMetodoPago:string =''; 
 public loading:boolean = false; 
 public usuario:Usuario;
+
 
 constructor(
    private messageService: MessageService,
@@ -198,5 +202,24 @@ obtenerTotalCompras(articulos:ArticuloCompra[]):number
   return total;
 }
 
+  obtenerNombreSucursal(idSucursal:string):string
+{ 
+    let nombre = "";
+    
+        let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 
+      
+      if(sucursal != undefined){ nombre = sucursal.nombre;}  
+    return nombre; 
+}
 
+obtenerProveedor(idProveedor:string|null):Proveedor[]
+{
+  debugger
+  let data:Proveedor[] = [];
+  if(idProveedor)
+    {
+       data = this.catProveedores.filter(x=> x.id == idProveedor); 
+    }
+  return data; 
+}
 }

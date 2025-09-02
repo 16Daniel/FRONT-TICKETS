@@ -24,6 +24,7 @@ import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area.model';
 import { MessagesModule } from 'primeng/messages';
 import { TooltipModule } from 'primeng/tooltip';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
@@ -250,12 +251,16 @@ obtenerNombreArticulos(articulos:ArticuloCompra[]):string
   return valor; 
 }
 
-obtenerNombreSucursal(idSucursal:string):string
+obtenerNombreSucursal(sucursales:string[]):string
 {
     let nombre = "";
-    let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 
-    
-    if(sucursal != undefined){ nombre = sucursal.nombre; }
+    for(let suc of sucursales)
+      {
+        let sucursal = this.sucursales.filter(x=> x.id == suc)[0]; 
+      
+      if(sucursal != undefined){ nombre += sucursal.nombre + ', ';}
+        }
+    if(nombre != ''){ nombre = nombre.substring(0,nombre.length-2); }    
     return nombre; 
 }
 
@@ -339,5 +344,94 @@ hanPasado7Dias(fecha: Date): boolean {
   return hoy >= fechaLimite;
 }
 
+
+exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'): void {
+    // Transformar los datos para tener una fila por artículo
+    const datosExportar = this.transformarDatos(compras);
+    
+    // Crear libro de trabajo y hoja
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Compras');
+    
+    // Guardar el archivo
+    XLSX.writeFile(wb, filename);
+  }
+
+  private transformarDatos(compras: AdministracionCompra[]): any[] {
+    const datos: any[] = [];
+
+    compras.forEach(compra => {
+      compra.articulos.forEach(articulo => {
+        datos.push({
+          // Datos de la compra
+          // 'ID Compra': compra.id || '',
+          'Fecha': this.formatTimestamp(compra.fecha),
+          'Mes': compra.mes,
+          'Razón Social': compra.razonsocial,
+          'Status Compra': this.obtenerNombreEstatus(compra.statuscompra),
+          'Status Pago': this.obtenerNombreEstatusPago(compra.statuspago),
+          'Fecha de Pago': this.formatTimestamp(compra.fechadepago),
+          'Fecha Entrega': this.formatTimestamp(compra.fechaEntrega),
+          'Tipo Compra': this.obtenerNombreTipocompra(compra.tipoCompra),
+          'Método Pago': this.obtenerNombreMetodoPago(compra.metodoPago),
+          
+          // Datos del artículo
+          'Artículo': articulo.art,
+          'Unidades': articulo.uds,
+          'Precio': articulo.precio,
+          'Tipo compra': articulo.tipo,
+          'Link de compra': articulo.link,
+          'Justificación': articulo.justificacion,
+          'Proveedor': articulo.nomprov || '',
+          'Región': articulo.region,
+          'Dirección Entrega': articulo.direccionentrega,
+          // Campos adicionales si los necesitas
+          'Sucursal': this.obtenerNombreSucursalArt(articulo.idsucursal),
+          'Área': this.obtenerNombreArea(compra.idArea || ''),
+          'Palabra clave': compra.palabraclave,
+          'Factura': compra.factura,
+          'Comprobante de pago': compra.comprobantePago,
+        });
+      });
+    });
+
+    return datos;
+  }
+
+  private formatTimestamp(timestamp: any): string {
+    if (!timestamp) return '';
+    
+    // Si es Firestore Timestamp
+    if (timestamp.toDate) {
+      return timestamp.toDate().toLocaleDateString();
+    }
+    
+    // Si es Date o string
+    try {
+      return new Date(timestamp).toLocaleDateString();
+    } catch {
+      return '';
+    }
+  }
+
+  obtenerNombreTipocompra(idTipoCompra:string)
+  {
+    let nombre = "";
+    let tipocompra = this.catTipoCompra.filter(x=> x.id == idTipoCompra)[0]; 
+    
+    if(tipocompra != undefined){ nombre = tipocompra.nombre; }
+    return nombre; 
+  }
+
+    obtenerNombreSucursalArt(idSucursal:string):string
+{ 
+    let nombre = "";
+    
+        let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 
+      
+      if(sucursal != undefined){ nombre = sucursal.nombre;}  
+    return nombre; 
+}
 
 }

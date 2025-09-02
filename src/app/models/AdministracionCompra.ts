@@ -7,13 +7,10 @@ export interface AdministracionCompra
     idUsuario: string;
     fecha:Timestamp, 
     mes:string, 
-    region:string,
     razonsocial:string; 
-    idsucursal:string;
     statuscompra:string;
     statuspago:string; 
     fechadepago:Timestamp|null; 
-    direccionentrega:string; 
     fechaEntrega:Timestamp|null; 
     palabraclave:string; 
     articulos:ArticuloCompra[]; 
@@ -26,6 +23,8 @@ export interface AdministracionCompra
     tipoCompra:string; 
     idArea:string|null;
     metodoPago:string; 
+    sucursales:string[]; 
+    regiones:string[];
  }
 
 export interface ArticuloCompra
@@ -38,7 +37,10 @@ export interface ArticuloCompra
     idprov:string|null; 
     justificacion:string; 
     nomprov:string|null; 
-    idTipo:string; 
+    idTipo:string;
+    region:string, 
+    idsucursal:string;
+    direccionentrega:string; 
 }
 
 export interface Proveedor {
