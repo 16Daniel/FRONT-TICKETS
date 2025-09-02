@@ -57,23 +57,8 @@
                             </div>
                         </div>
     
-                         <div class="row mt-3">
-                            <div class="col-12">
-                            <p>JUSTIFICACIÓN</p>
-                            <input type="text"  class="form-control h-42" [(ngModel)]="formArtJustificacion">
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <button class="btn btn-primary" (click)="agregarArticulo()" 
-                            [disabled]="formArtTipo =='' || formArtArticulo == '' || formArtJustificacion == '' || formArtPrecio == undefined || formArtUds == undefined">
-                            <i class='bx bx-plus-circle'></i>&nbsp;Agregar</button>
-                        </div>
-            </div>
-   
-              <div class="p-3" *ngIf="formarticulos.length>0">
-               
-              <div class="row mt-3">
-                            <div class="col-md-4">
+                        <div class="row mt-3">
+                             <div class="col-md-4">
                                 <p>REGIÓN</p>
                                 <select class="form-select h-42" [(ngModel)]="formRegion">
                                     <option value="CDMX">CDMX</option>
@@ -97,6 +82,30 @@
                                 </ng-template>
                                 </p-dropdown>
                             </div>
+                            <div class="col-4">
+                                <p>Dirección de entrega</p>
+                                <input type="text"  class="form-control h-42"  [(ngModel)]="formDireccion">
+                             </div>
+                        </div>
+
+                         <div class="row mt-3">
+                            <div class="col-12">
+                            <p>JUSTIFICACIÓN</p>
+                            <input type="text"  class="form-control h-42" [(ngModel)]="formArtJustificacion">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button class="btn btn-primary" (click)="agregarArticulo()" 
+                            [disabled]="formArtTipo =='' || formArtArticulo == '' || formArtJustificacion == '' || formArtPrecio == undefined || 
+                            formArtUds == undefined || FormSucursal == undefined || formRegion == '' || formDireccion == ''">
+                            <i class='bx bx-plus-circle'></i>&nbsp;Agregar</button>
+                        </div>
+            </div>
+   
+              <div class="p-3" *ngIf="formarticulos.length>0">
+               
+              <div class="row mt-3">
+                           
                             <div class="col-md-4">
                                 <p>RAZON SOCIAL</p>
                                 <select class="form-select h-42" [(ngModel)]="formRazonSocial">
@@ -109,17 +118,13 @@
                         </div>
 
                           <div class="row mt-3">
-                        <div class="col-6">
-                        <p>Dirección de entrega</p>
-                        <input type="text"  class="form-control h-42"  [(ngModel)]="formDireccion">
-                        </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                                 <p>Método de pago</p>
                                 <select class="form-select h-42" [(ngModel)]="formMetodoPago">
                                     <option *ngFor="let item of catMetodosPago" [value]="item.id">{{item.nombre}}</option>
                                     </select>
                             </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                         <p>Solicitante</p>
                         <input type="text"  class="form-control h-42"  [(ngModel)]="formSolicitante">
                         </div>
@@ -138,6 +143,9 @@
                                 <th>Link de compra</th>
                                 <th>Proveedor</th>
                                 <th>Justificación</th>
+                                <th>Región</th>
+                                <th>Sucursal / Área</th>
+                                <th>Dirección</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-product  let-i="rowIndex">
@@ -149,6 +157,9 @@
                                 <td>{{ product.link }}</td>
                                 <td>{{ product.nomprov }}</td>
                                 <td>{{ product.justificacion }}</td>
+                                <td>{{ product.region }}</td>
+                                <td>{{ obtenerNombreSucursal(product.idsucursal) }}</td>
+                                <td>{{ product.direccionentrega}}</td>
                                 <td><button class="btn btn-danger" (click)="borrarArt(i)"><i class='bx bx-trash bx-sm'></i></button></td>
                             </tr>
                         </ng-template>
@@ -156,8 +167,8 @@
             </div>
 
             <div class="mt-3 mb-3 d-flex justify-content-end" *ngIf="formarticulos.length>0">
-                <button class="btn bg-p-b p-3" [disabled]="formarticulos.length==0 || formDireccion == '' || formRazonSocial == ''
-                 || FormSucursal == undefined || formRegion == '' || formSolicitante == '' || formMetodoPago == ''" (click)="guardar()">GUARDAR</button>
+                <button class="btn bg-p-b p-3" [disabled]="formarticulos.length==0 || formRazonSocial == ''
+                 || formMetodoPago == '' || formSolicitante == ''" (click)="guardar()">GUARDAR</button>
             </div>
 
 

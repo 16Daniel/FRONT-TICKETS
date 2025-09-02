@@ -83,7 +83,9 @@ constructor(
           idprov = proveedor.id; 
         }
       
-      this.formarticulos.push({art:this.formArtArticulo,uds:this.formArtUds!,precio:this.formArtPrecio!,tipo:tipo.nombre,link:this.formArtLink,nomprov:nomprov,justificacion:this.formArtJustificacion,idprov:idprov!,idTipo:tipo.id}); 
+      this.formarticulos.push({art:this.formArtArticulo,uds:this.formArtUds!,precio:this.formArtPrecio!,
+        tipo:tipo.nombre,link:this.formArtLink,nomprov:nomprov,justificacion:this.formArtJustificacion,idprov:idprov!,
+        idTipo:tipo.id,region: this.formRegion,idsucursal:this.FormSucursal?.id,direccionentrega:this.formDireccion}); 
       this.formArtArticulo = '';
       this.formArtJustificacion = ''; 
       this.formArtUds = undefined; 
@@ -91,7 +93,9 @@ constructor(
       this.formArtTipo = ""; 
       this.formArtLink = ''; 
       this.formArtProveedor = '';    
-       
+      this.formDireccion = ''; 
+      this.formRegion = ''; 
+      this.FormSucursal = undefined;
     }
 
     borrarArt(index:number)
@@ -112,14 +116,11 @@ async guardar()
     {
       idUsuario:this.userdata.id,
       fecha: Timestamp.fromDate(fecha), 
-      mes:nombremes, 
-      region: this.formRegion, 
+      mes:nombremes,  
       razonsocial:this.formRazonSocial,
-      idsucursal:this.FormSucursal?.id,
       statuscompra:'1',
       statuspago:'1',
       fechadepago:null,
-      direccionentrega:this.formDireccion,
       fechaEntrega:null,
       palabraclave:"", 
       factura:'',
@@ -131,18 +132,19 @@ async guardar()
       solicitante:this.formSolicitante,
       tipoCompra:this.formarticulos[0].idTipo,
       idArea: this.userdata.idArea == undefined ? null : this.userdata.idArea,
-      metodoPago:this.formMetodoPago
+      metodoPago:this.formMetodoPago,
+      sucursales:this.getDistinctSucursalIds(articulosdata),
+      regiones:this.obtenerDistintasRegiones(articulosdata)
     }   
     
     try {
       
     await this.shopServ.AgregarCompra(data); 
-
-    this.formDireccion = ''; 
-    this.formRegion = ''; 
-    this.FormSucursal = undefined; 
+ 
     this.formRazonSocial = ''; 
     this.formarticulos = []; 
+    this.formSolicitante = '';
+    this.formMetodoPago = ''
 
      this.visible = false;   
       Swal.fire({
@@ -154,6 +156,30 @@ async guardar()
         console.log(error);  
     }
 }
+
+
+ getDistinctSucursalIds(articulos:ArticuloCompra[]): string[] {
+  const sucursalIds: string[] = [];
+  articulos.forEach(articulo => {
+      if (articulo.idsucursal !== null) {
+        sucursalIds.push(articulo.idsucursal);
+      }
+    });
+  let data = Array.from(new Set(sucursalIds))
+  return data;
+}
+
+obtenerDistintasRegiones(articulos:ArticuloCompra[]): string[] {
+  const sucursalIds: string[] = [];
+  articulos.forEach(articulo => {
+      if (articulo.region !== null) {
+        sucursalIds.push(articulo.region);
+      }
+    });
+  let data = Array.from(new Set(sucursalIds))
+  return data;
+}
+
 
 // Añade este método en tu componente
 private eliminarReferenciasCirculares(obj: any): any {
@@ -205,6 +231,16 @@ getNombreMes(numeroMes: number): string {
     this.formArtLink = ""; 
     this.formArtProveedor = ""; 
   }
+
+  obtenerNombreSucursal(idSucursal:string):string
+{ 
+    let nombre = "";
+    
+        let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 
+      
+      if(sucursal != undefined){ nombre = sucursal.nombre;}  
+    return nombre; 
+}
 
 }
 

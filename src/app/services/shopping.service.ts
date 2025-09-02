@@ -98,7 +98,7 @@ getComprasFiltro(
   }
   
   if (idSucursal && idSucursal.trim() !== '') {
-    condiciones.push(where('idsucursal', '==', idSucursal));
+    condiciones.push(where('sucursales', 'array-contains', idSucursal));
   }
   
    if (idUsuario && idUsuario.trim() !== '') {
@@ -110,7 +110,7 @@ getComprasFiltro(
   }
 
    if (region && region.trim() !== '-1') {
-    condiciones.push(where('region', '==', region));
+    condiciones.push(where('regiones', 'array-contains', region));
   }
 
    if (idArea && idArea.trim() !== '-1') {

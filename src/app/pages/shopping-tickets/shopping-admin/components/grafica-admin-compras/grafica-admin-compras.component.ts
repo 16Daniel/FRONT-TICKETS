@@ -44,15 +44,14 @@ constructor(
     ){  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void 
-  {
+  {  
       for(let idsuc of this.getDistinctSucursalIds())
-        {
-          let data = this.registros.filter(x => x.idsucursal == idsuc); 
+        { 
           let total = 0; 
-          for(let item of data)
+          for(let item of this.registros)
             {
-              for(let art of item.articulos)
-                {
+              for(let art of item.articulos.filter(x => x.idsucursal == idsuc))
+                { 
                   total = total + (art.precio * art.uds); 
                 }
             }
@@ -78,9 +77,18 @@ constructor(
           this.cdr.detectChanges();
    }
 
-   getDistinctSucursalIds(): string[] {
-  const distinctIds = Array.from(new Set(this.registros.map(registro => registro.idsucursal)));
-  return distinctIds;
+  getDistinctSucursalIds(): string[] {
+  const sucursalIds: string[] = [];
+  
+  this.registros.forEach(registro => {
+    registro.articulos.forEach(articulo => {
+      if (articulo.idsucursal !== null) {
+        sucursalIds.push(articulo.idsucursal);
+      }
+    });
+  });
+  let data = Array.from(new Set(sucursalIds))
+  return data;
 }
 
  getAreasDisitintas(): (string | null)[] {

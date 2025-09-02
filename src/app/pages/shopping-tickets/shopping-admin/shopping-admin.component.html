@@ -88,6 +88,10 @@
 </button>
 </div>
 
+ <div class="col-md-2"><p>&nbsp;</p>
+        <button class="btn btn-success" [disabled]="regcompras.length == 0" (click)="exportToExcel(regcompras)"><img width="26" height="26" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
+</div>
+
 </div>
 
   
@@ -110,7 +114,6 @@
             <th>ESTATUS</th>
             <th>ESTATUS PAGO</th>
             <th>FECHA DE PAGO</th>
-            <th>DIRECCION DE ENTREGA</th>
             <th>FECHA ENTREGA</th>
             <th>PALABRA CLAVE</th>
             <th>TOTAL</th>
@@ -127,7 +130,7 @@
             <td>{{ item.region }}</td>
             <td>{{ item.razonsocial }}</td>
             <td>{{ obtenerNombreArea(item.idArea) }}</td>
-            <td>{{ obtenerNombreSucursal(item.idsucursal )}}</td>
+            <td>{{ obtenerNombreSucursal(item.sucursales)}}</td>
             <td>{{obtenerNombreMetodoPago(item.metodoPago)}}</td>
             <td>{{obtenerNombreArticulos(item.articulos)}}</td>
             <td>{{ obtenerNombreEstatus(item.statuscompra) }}</td>
@@ -137,7 +140,6 @@
                 </td>
                 <!-- {{ obtenerNombreEstatusPago(item.statuspago) }} -->
             <td><span *ngIf="item.fechadepago != null">{{obtenerFecha(item.fechadepago) | date }}</span></td>
-            <td>{{ item.direccionentrega }}</td>
             <td><span *ngIf="item.fechaEntrega != null"> {{ obtenerFecha(item.fechaEntrega) | date}} </span></td>
             <td>{{ item.palabraclave }}</td>
             <td>${{obtenerTotalCompras(item.articulos)| number:'1.0-2'}}</td>
@@ -171,7 +173,10 @@
         <div class="w-100"><app-grafica-admin-compras [sucursales]="sucursales" [registros]="regcompras" [catAreas]="catareas" [idAdmin]="idAdmin"></app-grafica-admin-compras></div>
     </div>
 
- <p-table [value]="regcompras" [tableStyle]="{ 'min-width': '50rem' }">
+ <p-table [value]="regcompras" [tableStyle]="{'min-width': '60rem', 'padding':'10px'}" [scrollable]="true" scrollHeight="700px"
+        styleClass="p-datatable-gridlines" 
+        [paginator]="true"
+        [rows]="100">
     <ng-template pTemplate="header">
         <tr>
             <th>SOLICITANTE</th>
@@ -185,7 +190,6 @@
             <th>ESTATUS</th>
             <th>ESTATUS PAGO</th>
             <th>FECHA DE PAGO</th>
-            <th>DIRECCION DE ENTREGA</th>
             <th>FECHA ENTREGA</th>
             <th>PALABRA CLAVE</th>
             <th>TOTAL</th>
@@ -202,7 +206,7 @@
             <td>{{ item.region }}</td>
             <td>{{ item.razonsocial }}</td>
             <td>{{ obtenerNombreArea(item.idArea) }}</td>
-            <td>{{ obtenerNombreSucursal(item.idsucursal )}}</td>
+            <td>{{ obtenerNombreSucursal(item.sucursales )}}</td>
             <td>{{obtenerNombreMetodoPago(item.metodoPago)}}</td>
             <td>{{obtenerNombreArticulos(item.articulos)}}</td>
             <td>{{ obtenerNombreEstatus(item.statuscompra) }}</td>
@@ -212,7 +216,6 @@
                 </td>
                 <!-- {{ obtenerNombreEstatusPago(item.statuspago) }} -->
             <td><span *ngIf="item.fechadepago != null">{{obtenerFecha(item.fechadepago) | date }}</span></td>
-            <td>{{ item.direccionentrega }}</td>
             <td><span *ngIf="item.fechaEntrega != null"> {{ obtenerFecha(item.fechaEntrega) | date}} </span></td>
             <td>{{ item.palabraclave }}</td>
             <td>${{obtenerTotalCompras(item.articulos)| number:'1.0-2'}}</td>
@@ -252,7 +255,7 @@
 (closeEvent)="modalArchivos = false" [factura]="itemReg!.factura"></app-archivos>
 
 <app-detalles *ngIf="modalDetalles" [visible]="modalDetalles" [itemReg]="itemReg" [catStatus]="catStatusCompra" [catStatusPago]="catStatusPago"
-(closeEvent)="modalDetalles = false" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago"></app-detalles>
+(closeEvent)="modalDetalles = false" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago" [sucursales]="sucursales" [catProveedores]="catProveedores"></app-detalles>
 
 <app-admin-compras-chat *ngIf="modalChat" [showModalChatCompra]="modalChat" [ticket]="itemReg"
   (closeEvent)="modalChat = false"></app-admin-compras-chat>
