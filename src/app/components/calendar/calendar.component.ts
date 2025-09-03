@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, input, ViewChild, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, input, SimpleChanges, ViewChild, type OnInit } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
@@ -20,6 +20,7 @@ import { TicketsService } from '../../services/tickets.service';
 import { SucursalProgramada } from '../../models/sucursal-programada.model';
 import { BranchesService } from '../../services/branches.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { DatesHelperService } from '../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-calendar',
@@ -31,6 +32,7 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
 
 export class CalendarComponent implements OnInit {
   @Input() usuariosHelp: Usuario[] = [];
+  @Input() idUsuarioFiltro: string = '';
   @Input() tickets: Ticket[] = [];
   sucursales: Sucursal[] = [];
 
@@ -66,6 +68,7 @@ export class CalendarComponent implements OnInit {
     private ticketsService: TicketsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private branchesService: BranchesService,
+    private datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -73,6 +76,16 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerColores();
     this.obtenerSucursales();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idUsuarioFiltro'] && !changes['idUsuarioFiltro'].firstChange) {
+      const calendarApi = this.calendarComponent?.getApi();
+      if (calendarApi) {
+        const view = calendarApi.view;
+        this.mostrarEventos(view.activeStart, view.activeEnd);
+      }
+    }
   }
 
   obtenerSucursales() {
@@ -99,29 +112,25 @@ export class CalendarComponent implements OnInit {
 
   }
 
-  getDate(tsmp: Timestamp): Date {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date;
-  }
-
   async mostrarEventos(fechaIni: Date, fechaFin: Date) {
-    // Aquí
-
     this.loading = true;
     let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.usuario.idArea);
 
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, this.usuario.idArea);
     let calendarApi = this.calendarComponent!.getApi();
 
+    if (this.idUsuarioFiltro) {
+      visitas = visitas.filter(x => x.idUsuario == this.idUsuarioFiltro);
+      guardias = guardias.filter(x => x.idUsuario == this.idUsuarioFiltro);
+    }
+
     calendarApi.removeAllEvents();
     let contador = 1;
     for (let guardia of guardias) {
       calendarApi.addEvent({
         title: 'GUARDIA',
-        start: this.getDate(guardia.fecha),
-        end: this.getDate(guardia.fecha),
+        start: this.datesHelper.getDate(guardia.fecha),
+        end: this.datesHelper.getDate(guardia.fecha),
         allDay: true,
         color: this.obtenerColor(guardia.idUsuario),
         textColor: this.getLuminance(this.obtenerColor(guardia.idUsuario)) > 0.6 ? '#000000' : '#FFFFFF', // Color del texto
@@ -139,7 +148,7 @@ export class CalendarComponent implements OnInit {
 
       for (let sucursal of visita.sucursalesProgramadas) {
 
-        let fechaFin = this.getDate(visita.fecha);
+        let fechaFin = this.datesHelper.getDate(visita.fecha);
         const ticketsFinalizados = await this.ticketsService
           .getFinalizedTicketsByEndDate(
             sucursal.id,
@@ -151,13 +160,13 @@ export class CalendarComponent implements OnInit {
 
 
         let mantenimientos = await servicio
-          .obtenerMantenimientoVisitaPorFecha(this.getDate(visita.fecha), sucursal.id, false);
+          .obtenerMantenimientoVisitaPorFecha(this.datesHelper.getDate(visita.fecha), sucursal.id, false);
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
         comentario = temp.length > 0 ? temp[0].comentario : '';
         calendarApi.addEvent({
-          title: sucursal.nombre, start: this.getDate(visita.fecha),
-          end: this.getDate(visita.fecha), allDay: true,
+          title: sucursal.nombre, start: this.datesHelper.getDate(visita.fecha),
+          end: this.datesHelper.getDate(visita.fecha), allDay: true,
           color: this.obtenerColor(visita.idUsuario),
           textColor: this.getLuminance(this.obtenerColor(visita.idUsuario)) > 0.6 ? '#000000' : '#FFFFFF', // Color del texto
           extendedProps:
