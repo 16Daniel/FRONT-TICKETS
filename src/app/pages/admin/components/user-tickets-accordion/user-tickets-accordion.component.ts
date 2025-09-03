@@ -25,10 +25,10 @@ export class UserTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
-  @Input() IdArea: string = '';
+  @Input() idArea: string = '';
   usuario: Usuario | any;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor() { }
 
   activeIndex: number = -1;
   ngOnInit(): void {

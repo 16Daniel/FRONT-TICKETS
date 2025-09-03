@@ -75,7 +75,7 @@ export class AdminAudioVideoTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea: string = '2';
+  idArea: string = '2';
   ordenarMantenimientosFecha: boolean = false;
   compras: Compra[] = [];
   auxMostrarMantenimientos = true;
@@ -115,7 +115,7 @@ export class AdminAudioVideoTabComponent {
   }
 
   async obtenerTickets(): Promise<void> {
-    this.subscripcionTicket = this.ticketsService.getByArea(this.IdArea).subscribe({
+    this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
         let arr_temp: Ticket[] = [];
@@ -212,10 +212,10 @@ export class AdminAudioVideoTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
+    this.usersService.getUsersHelp(this.idArea, true).subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
+        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -226,7 +226,7 @@ export class AdminAudioVideoTabComponent {
   }
 
   obtenerCompras() {
-    this.purchaseService.getByArea(this.IdArea).subscribe(result => {
+    this.purchaseService.getByArea(this.idArea).subscribe(result => {
       this.compras = result;
     });
   }
