@@ -37,10 +37,12 @@ export class ModalPurshasesComponent {
   estatus: EstatusCompra[] = [];
   sucursales: Sucursal[] = [];
   usuariosHelp: Usuario[] = [];
+  usuariosFiltro: Usuario[] = [];
 
   //filtros
   idEstado: string = '';
   idSucursal: string = '';
+  idUsuario: string = '';
 
   constructor(
     private purchaseService: PurchaseService,
@@ -105,6 +107,7 @@ export class ModalPurshasesComponent {
     this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
+        this.usuariosFiltro = data.filter(x => x.idArea == this.idArea);
         this.cdr.detectChanges();
       },
     });
@@ -165,7 +168,8 @@ export class ModalPurshasesComponent {
   buscar() {
     this.comprasFiltradas = this.compras.filter(compra => {
       return (!this.idSucursal || this.idSucursal == compra.idSucursal) &&
-        (!this.idEstado || this.idEstado == compra.idEstatusCompra)
+        (!this.idEstado || this.idEstado == compra.idEstatusCompra) &&
+        (!this.idUsuario || this.idUsuario == compra.idUsuario)
     })
   }
 }

@@ -7,7 +7,7 @@
 
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <p class="fw-bold">SUCURSAL O ÁREA</p>
                 <p-dropdown [options]="sucursales" [(ngModel)]="idSucursal" [optionValue]="'id'" name="sucursal"
                     optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
@@ -24,11 +24,28 @@
                     </ng-template>
                 </p-dropdown>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <p class="fw-bold">ESTADO</p>
-                <p-dropdown [options]="estatus" [(ngModel)]="idEstado" [optionValue]="'id'" name="estadp"
+                <p-dropdown [options]="estatus" [(ngModel)]="idEstado" [optionValue]="'id'" name="estado"
                     optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
                     placeholder="SELECCIONAR ESTADO" [style]="{width:'100%'}">
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ selectedOption.nombre }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-dep pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ dep.nombre }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div>
+            <div class="col-md-4">
+                <p class="fw-bold">USUARIOS</p>
+                <p-dropdown [options]="usuariosFiltro" [(ngModel)]="idUsuario" [optionValue]="'id'" name="usuario"
+                    optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                    placeholder="SELECCIONAR EL USUARIO" [style]="{width:'100%'}">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <div class="flex align-items-center gap-2">
                             <div>{{ selectedOption.nombre }}</div>
