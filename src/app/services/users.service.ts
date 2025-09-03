@@ -115,18 +115,22 @@ export class UsersService {
     return updateDoc(userRef, { esGuardia });
   }
 
-  getUsuariosEspecialistas(idSucursal: string): Observable<any[]> {
+  getUsuariosEspecialistas(idSucursal: string, idArea?: string): Observable<any[]> {
     const usersCollection = collection(this.firestore, this.pathName);
 
-    const q = query(
-      usersCollection,
-      where('idRol', '==', '7')
-    );
+    // Construimos los filtros dinámicamente
+    const filtros: any[] = [where('idRol', '==', '7')];
+
+    if (idArea) {
+      filtros.push(where('idArea', '==', idArea));
+    }
+
+    const q = query(usersCollection, ...filtros);
 
     return collectionData(q, { idField: 'id' }).pipe(
       map((usuarios: any[]) => {
         return usuarios.filter(usuario => {
-          return usuario.sucursales?.some((sucursal: any) => sucursal.id == idSucursal);
+          return usuario.sucursales?.some((sucursal: any) => sucursal.id === idSucursal);
         });
       })
     );

@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../models/usuario.model';
 import { TooltipModule } from 'primeng/tooltip';
@@ -17,6 +17,13 @@ export class IconosNotificacionesTicketsComponent {
   @Input() usuario?: Usuario;
 
   /**
+   * Devuelve los ids de sucursales del usuario
+   */
+  private get sucursalesUsuario(): string[] {
+    return this.usuario?.sucursales?.map(s => s.id) ?? [];
+  }
+
+  /**
    * TICKETS TERMINADO (POR VALIDAR DE UN ADMIN)
    */
   get ticketsNotificacionTerminadoAdmin() {
@@ -24,8 +31,10 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '3';
-      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
-      return cumpleEstatus && cumpleUsuario;
+      const cumpleSucursal = this.usuario
+        ? this.sucursalesUsuario.includes(tk.idSucursal)
+        : true; // ✅ si no hay usuario, no filtra por sucursal
+      return cumpleEstatus && cumpleSucursal;
     }).length;
   }
 
@@ -37,8 +46,10 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '7';
-      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
-      return cumpleEstatus && cumpleUsuario;
+      const cumpleSucursal = this.usuario
+        ? this.sucursalesUsuario.includes(tk.idSucursal)
+        : true;
+      return cumpleEstatus && cumpleSucursal;
     }).length;
   }
 
@@ -50,8 +61,10 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '1';
-      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
-      return cumpleEstatus && cumpleUsuario;
+      const cumpleSucursal = this.usuario
+        ? this.sucursalesUsuario.includes(tk.idSucursal)
+        : true;
+      return cumpleEstatus && cumpleSucursal;
     }).length;
   }
 
@@ -63,8 +76,10 @@ export class IconosNotificacionesTicketsComponent {
 
     return this.tickets.filter(tk => {
       const cumpleEstatus = tk.idEstatusTicket === '2';
-      const cumpleUsuario = this.usuario ? tk.idResponsables?.includes(this.usuario.id) : true;
-      return cumpleEstatus && cumpleUsuario;
+      const cumpleSucursal = this.usuario
+        ? this.sucursalesUsuario.includes(tk.idSucursal)
+        : true;
+      return cumpleEstatus && cumpleSucursal;
     }).length;
   }
 
@@ -72,7 +87,7 @@ export class IconosNotificacionesTicketsComponent {
    * COMPRAS
    */
   get ticketsNotificacionComprando() {
-    if (this.tickets.length === 0) return 0;
+    if (this.compras.length === 0) return 0;
 
     return this.compras.filter(compra => {
       return compra.idEstatusCompra === '1' || compra.idEstatusCompra === '2';

@@ -20,6 +20,7 @@ import { Comentario } from '../../../models/comentario-chat.model';
 export class ModalSelectSpecialistUserComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Input() idSucursal: string = '';
+  @Input() idArea: string = '';
   @Input() ticket: Ticket = new Ticket;
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -46,7 +47,7 @@ export class ModalSelectSpecialistUserComponent implements OnInit {
   }
 
   obtenerEspecialistas() {
-    this.usuersService.getUsuariosEspecialistas(this.idSucursal)
+    this.usuersService.getUsuariosEspecialistas(this.idSucursal, this.idArea)
       .subscribe(result => {
         this.usuarios = result;
         this.cdr.detectChanges();
