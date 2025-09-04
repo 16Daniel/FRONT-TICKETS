@@ -127,7 +127,7 @@
         <tr class="bg-opacity-25" [ngClass]="{'bg-warning':(item.statuscompra == 0 || item.statuspago == 1), 'bg-success': item.statuspago == 2, 'bg-danger': item.statuscompra == 0}">
             <td>{{item.solicitante}}</td>
             <td>{{  obtenerFecha(item.fecha) | date}}</td>
-            <td>{{ item.region }}</td>
+            <td>{{ obtenerNombreRegiones(item.regiones) }}</td>
             <td>{{ item.razonsocial }}</td>
             <td>{{ obtenerNombreArea(item.idArea) }}</td>
             <td>{{ obtenerNombreSucursal(item.sucursales)}}</td>
@@ -203,7 +203,7 @@
         <tr class="bg-opacity-25" [ngClass]="{'bg-warning':(item.statuscompra == 0 || item.statuspago == 1), 'bg-success': item.statuspago == 2, 'bg-danger': item.statuscompra == 0}">
             <td>{{item.solicitante}}</td>
             <td>{{  obtenerFecha(item.fecha) | date}}</td>
-            <td>{{ item.region }}</td>
+            <td>{{ obtenerNombreRegiones(item.regiones) }}</td>
             <td>{{ item.razonsocial }}</td>
             <td>{{ obtenerNombreArea(item.idArea) }}</td>
             <td>{{ obtenerNombreSucursal(item.sucursales )}}</td>
