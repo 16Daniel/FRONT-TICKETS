@@ -111,7 +111,6 @@ constructor(
         this.shopServ.obtenerComprasFacturaPendiente(this.usuario.id).subscribe({
       next: (data) => {
         this.facturasPendientes = data;
-        
         let temp:AdministracionCompra[] = [];
         for(let item of this.facturasPendientes)
           {
@@ -129,7 +128,7 @@ constructor(
                   temp.push(item); 
                 }
           }
-
+          this.facturasPendientes = [...temp]; 
         this.cdr.detectChanges();
       },
       error: (error) => {
