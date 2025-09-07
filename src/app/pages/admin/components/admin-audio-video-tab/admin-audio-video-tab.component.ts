@@ -234,9 +234,17 @@ export class AdminAudioVideoTabComponent {
   agrupar(user: Usuario) {
     this.usergroup = user;
     this.mostrarAgrupacion = true;
+
+    if (this.usergroup.idRol === '7') {
+      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id)
+    }
+    else {
+      this.tickets = this.todosLostickets;
+    }
   }
 
   agruparPorSucursal() {
+    this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
     this.cdr.detectChanges();
