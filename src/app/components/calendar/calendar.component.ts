@@ -2,11 +2,12 @@ import { ChangeDetectorRef, Component, Input, input, SimpleChanges, ViewChild, t
 import { Timestamp } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, EventClickArg } from '@fullcalendar/core'; // useful for typechecking
+import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es'; // Importar idioma español
+import Swal from 'sweetalert2';
 
 import { VisitasService } from '../../services/visitas.service';
 import { GuardiasService } from '../../services/guardias.service';
@@ -45,7 +46,6 @@ export class CalendarComponent implements OnInit {
   usuarioSeleccionado: Usuario | any;
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
-  loading: boolean = false;
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridWeek',
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -100,22 +100,29 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  obtenerFechas(info: any) {
+  async obtenerFechas(info: any) {
+    const fechaini = new Date(info.start);
+    const fechafin = new Date(info.end);
 
-    let fechaini: Date = info.start;
-    let fechafin: Date = info.end;
-
-    fechafin.setHours(0, 0, 0, 0);
     fechaini.setHours(0, 0, 0, 0);
+    fechafin.setHours(0, 0, 0, 0);
 
-    this.mostrarEventos(fechaini, fechafin);
-
+    await this.mostrarEventos(fechaini, fechafin);
   }
 
   async mostrarEventos(fechaIni: Date, fechaFin: Date) {
-    this.loading = true;
-    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.usuario.idArea);
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
 
+    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.usuario.idArea);
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, this.usuario.idArea);
     let calendarApi = this.calendarComponent!.getApi();
 
@@ -125,6 +132,7 @@ export class CalendarComponent implements OnInit {
     }
 
     calendarApi.removeAllEvents();
+
     let contador = 1;
     for (let guardia of guardias) {
       calendarApi.addEvent({
@@ -143,6 +151,7 @@ export class CalendarComponent implements OnInit {
       );
       contador++;
     }
+
     for (let visita of visitas) {
       let comentario = '';
 
@@ -187,7 +196,7 @@ export class CalendarComponent implements OnInit {
       }
     }
 
-    this.loading = false;
+    Swal.close();
     this.cdr.detectChanges();
   }
 
