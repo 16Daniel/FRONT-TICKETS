@@ -50,7 +50,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return Math.round(porcentaje);
   }
 
-  async obtenerMantenimientoVisitaPorFecha(
+  async obtenerMantenimientoVisitaPorFechaArea(
     fecha: Date,
     idSucursal: string,
     estatus?: boolean
@@ -64,6 +64,35 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     const filtros = [
       where('fecha', '==', fecha),
       where('idSucursal', '==', idSucursal),
+    ];
+
+    if (estatus !== undefined) {
+      filtros.push(where('estatus', '==', estatus));
+    }
+
+    const consulta = query(coleccionRef, ...filtros);
+
+    const querySnapshot = await getDocs(consulta);
+    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as Mantenimiento6x6AV));
+
+    return documentos;
+  }
+
+  async obtenerMantenimientoVisitaPorFecha(
+    fecha: Date,
+    estatus?: boolean
+  ) {
+    const coleccionRef = collection(this.firestore, this.pathName);
+
+    // Convertir la fecha a las 00:00:00 del día
+    fecha.setHours(0, 0, 0, 0);
+
+    // Construir los filtros dinámicamente
+    const filtros = [
+      where('fecha', '==', fecha),
     ];
 
     if (estatus !== undefined) {
