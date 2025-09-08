@@ -111,6 +111,24 @@ constructor(
         this.shopServ.obtenerComprasFacturaPendiente(this.usuario.id).subscribe({
       next: (data) => {
         this.facturasPendientes = data;
+        let temp:AdministracionCompra[] = [];
+        for(let item of this.facturasPendientes)
+          {
+            let valor = true;
+            for(let art of item.articulos)
+              {
+                  if(art.tipo == "ON-LINE")
+                    {
+                      valor = false; 
+                    }
+              }
+
+              if(valor)
+                {
+                  temp.push(item); 
+                }
+          }
+          this.facturasPendientes = [...temp]; 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -261,6 +279,17 @@ obtenerNombreSucursal(sucursales:string[]):string
       if(sucursal != undefined){ nombre += sucursal.nombre + ', ';}
         }
     if(nombre != ''){ nombre = nombre.substring(0,nombre.length-2); }    
+    return nombre; 
+}
+
+obtenerNombreRegiones(regiones:string[]):string
+{
+    let nombre = "";
+    for(let reg of regiones)
+      {
+          nombre += reg + ', ';
+        }
+      if(nombre != ''){ nombre = nombre.substring(0,nombre.length-2); }    
     return nombre; 
 }
 
