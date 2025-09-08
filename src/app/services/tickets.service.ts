@@ -361,7 +361,6 @@ export class TicketsService {
   }
 
   async getFinalizedTicketsByEndDate(
-    idSucursal: string,
     fecha: Date,
     idArea: string
   ): Promise<Ticket[]> {
@@ -374,7 +373,6 @@ export class TicketsService {
     const q = query(
       ticketsCollection,
       where('idEstatusTicket', '==', '3'),
-      where('idSucursal', '==', idSucursal),
       where('idArea', '==', idArea),
       where('fechaFin', '>=', startOfDay),
       where('fechaFin', '<', endOfDay)

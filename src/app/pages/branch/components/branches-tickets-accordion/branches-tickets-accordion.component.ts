@@ -33,7 +33,7 @@ import { AdminTicketsListComponent } from '../../../admin/components/admin-ticke
 export class BranchesTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
-  @Input() IdArea: string = '';
+  @Input() idArea: string = '';
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];

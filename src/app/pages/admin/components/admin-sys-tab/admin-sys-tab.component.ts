@@ -78,7 +78,7 @@ export class AdminSysTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea: string = '1';
+  idArea: string = '1';
   textoMantenimiento: string = '';
   ordenarMantenimientosFecha: boolean = false;
   compras: Compra[] = [];
@@ -122,7 +122,7 @@ export class AdminSysTabComponent {
   }
 
   async obtenerTickets(): Promise<void> {
-    this.subscripcionTicket = this.ticketsService.getByArea(this.IdArea).subscribe({
+    this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
         let arr_temp: Ticket[] = [];
@@ -213,10 +213,10 @@ export class AdminSysTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
+    this.usersService.getUsersHelp(this.idArea, true).subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
+        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -227,7 +227,7 @@ export class AdminSysTabComponent {
   }
 
   obtenerCompras() {
-    this.purchaseService.getByArea(this.IdArea).subscribe(result => {
+    this.purchaseService.getByArea(this.idArea).subscribe(result => {
       this.compras = result;
     });
   }
@@ -235,9 +235,17 @@ export class AdminSysTabComponent {
   agrupar(user: Usuario) {
     this.usergroup = user;
     this.mostrarAgrupacion = true;
+
+    if (this.usergroup.idRol === '7') {
+      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id)
+    }
+    else {
+      this.tickets = this.todosLostickets;
+    }
   }
 
   agruparPorSucursal() {
+    this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
     this.cdr.detectChanges();

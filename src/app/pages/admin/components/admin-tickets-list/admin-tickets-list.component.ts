@@ -78,7 +78,7 @@ export class AdminTicketsListComponent {
   usuario: any;
   ticketSeleccionado: Ticket | undefined;
 
-  @Input() IdArea: string = '';
+  @Input() idArea: string = '';
 
   constructor(
     private ticketsService: TicketsService,
@@ -181,7 +181,7 @@ export class AdminTicketsListComponent {
           ...item,
           id: item.id.toString()
         }));
-        this.categorias = this.categorias.filter(x => x.idArea == this.IdArea);
+        this.categorias = this.categorias.filter(x => x.idArea == this.idArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -219,7 +219,7 @@ export class AdminTicketsListComponent {
     this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
+        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
         this.cdr.detectChanges();
       },
       error: (error) => {

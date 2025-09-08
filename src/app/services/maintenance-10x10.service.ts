@@ -235,7 +235,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return forkJoin(consultas);
   }
 
-  async obtenerMantenimientoVisitaPorFecha(
+  async obtenerMantenimientoVisitaPorFechaArea(
     fecha: Date,
     idSucursal: string,
     estatus?: boolean
@@ -266,6 +266,35 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return documentos;
   }
 
+  async obtenerMantenimientoVisitaPorFecha(
+    fecha: Date,
+    estatus?: boolean
+  ) {
+    const coleccionRef = collection(this.firestore, this.pathName);
+
+    // Convertir la fecha a las 00:00:00 del día
+    fecha.setHours(0, 0, 0, 0);
+
+    // Construir los filtros dinámicamente
+    const filtros = [
+      where('fecha', '==', fecha),
+    ];
+
+    if (estatus !== undefined) {
+      filtros.push(where('estatus', '==', estatus));
+    }
+
+    const consulta = query(coleccionRef, ...filtros);
+
+    const querySnapshot = await getDocs(consulta);
+    const documentos: Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as Mantenimiento10x10));
+
+    return documentos;
+  }
+
   getLastMaintenanceByBranch(idSucursal: string): Observable<Mantenimiento10x10[]> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
     const q = query(
@@ -279,22 +308,22 @@ export class Maintenance10x10Service implements IMantenimientoService {
   }
 
   async obtenerMantenimientosEntreFechas(
-  fechaInicio: Date,
-  fechaFin: Date
-): Promise<any[]> {
-  const ticketsCollection = collection(this.firestore, this.pathName);
-  
-  const q = query(ticketsCollection, 
-    where('fecha', '>=', fechaInicio),
-    where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
-    orderBy('fecha', 'desc')
-  );
+    fechaInicio: Date,
+    fechaFin: Date
+  ): Promise<any[]> {
+    const ticketsCollection = collection(this.firestore, this.pathName);
 
-  const querySnapshot = await getDocs(q);
-  
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-}
+    const q = query(ticketsCollection,
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc')
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
 }

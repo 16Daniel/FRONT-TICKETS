@@ -213,10 +213,10 @@ export class AdminMaintenanceTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
+    this.usersService.getUsersHelp(this.idArea, true).subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.idArea);
+        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.idArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -235,9 +235,17 @@ export class AdminMaintenanceTabComponent {
   agrupar(user: Usuario) {
     this.usergroup = user;
     this.mostrarAgrupacion = true;
+
+    if (this.usergroup.idRol === '7') {
+      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id)
+    }
+    else {
+      this.tickets = this.todosLostickets;
+    }
   }
 
   agruparPorSucursal() {
+    this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
     this.cdr.detectChanges();

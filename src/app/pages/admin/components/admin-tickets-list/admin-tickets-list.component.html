@@ -30,8 +30,9 @@
                 <i class="bx bxs-hot bx-sm" style="color: red"
                     *ngIf="tk.idPrioridadTicket == '1' && !tk.esAsignadoEspecialista"></i>
 
-                <div *ngIf="tk.esAsignadoEspecialista" ticket.esAsignadoEspecialista
-                    style="margin: 2px; background-color: white; color: red; font-size: 1.5em;"> ✚ </div>
+                <div *ngIf="tk.esAsignadoEspecialista" ticket.esAsignadoEspecialista [pTooltip]="obtenerNombreResponsable(tk.idUsuarioEspecialista)"
+                    tooltipPosition="top" style="margin: 2px; background-color: white; color: red; font-size: 1.5em;"> ✚
+                </div>
             </td>
             <td class="text-center">{{tk.folio}}</td>
             <td class="text-center">{{ getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
@@ -160,8 +161,8 @@
                 (click)="abrirModalDetalleTicket(tk)">
                 <i class='bx bx-show bx-sm'></i>
             </button>
-            <button *ngIf="(tk != undefined && tk!.idPrioridadTicket != '1')"
-                class="btn btn-dark" (click)="onPanicoClick(tk!.id)" style="margin: 2px">
+            <button *ngIf="(tk != undefined && tk!.idPrioridadTicket != '1')" class="btn btn-dark"
+                (click)="onPanicoClick(tk!.id)" style="margin: 2px">
                 <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)" pTooltip="PÁNICO"
                     tooltipPosition="top"></i>
             </button>
