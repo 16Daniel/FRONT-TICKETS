@@ -73,14 +73,15 @@ export default class AdminReportsTabComponent implements OnInit {
     private categoriesService: CategoriesService,
     private statusTicketService: StatusTicketService,
     private mantenimientosService: Maintenance10x10Service,
-  ) { }
+  ) {
+    this.areasService.areas$.subscribe(result => this.areas = result);
+  }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
   ngOnInit(): void {
-    this.obtenerAreas();
     this.obtenerSucursales();
     this.obtenerUsuarios();
     this.obtenerCategorias();
@@ -100,12 +101,6 @@ export default class AdminReportsTabComponent implements OnInit {
         console.log(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.areas$.subscribe(result => {
-      this.areas = result
     });
   }
 

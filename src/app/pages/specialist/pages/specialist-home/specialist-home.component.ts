@@ -12,7 +12,6 @@ import { Ticket } from '../../../../models/ticket.model';
 import { EstatusTicket } from '../../../../models/estatus-ticket.model';
 import { StatusTicketService } from '../../../../services/status-ticket.service';
 import { Area } from '../../../../models/area.model';
-import { AreasService } from '../../../../services/areas.service';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { BranchesService } from '../../../../services/branches.service';
 import { UsersService } from '../../../../services/users.service';
@@ -20,6 +19,8 @@ import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-tic
 import { ModalValidateTicketComponent } from '../../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
 import { ModalTicketChatComponent } from '../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
 import { Comentario } from '../../../../models/comentario-chat.model';
+import { DatesHelperService } from '../../../../helpers/dates-helper.service';
+import { AreasService } from '../../../../services/areas2.service';
 
 @Component({
   selector: 'app-specialist-home',
@@ -60,14 +61,15 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
     private branchesService: BranchesService,
     private usersService: UsersService,
     private confirmationService: ConfirmationService,
+    public datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+
+    this.areasService.areas$.subscribe(areas => this.areas = areas);
   }
 
   ngOnInit(): void {
     this.getTicketsPorEspecialista();
-    this.obtenerCatalogoEstatusTickets();
-    this.obtenerAreas();
     this.obtenerCatalogoEstatusTickets();
     this.obtenerSucursales();
     this.obtenerUsuariosHelp();
@@ -83,17 +85,6 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
         this.tickets = result;
         this.cdr.detectChanges()
       });
-  }
-
-  getDate(tsmp: Timestamp | any): Date {
-    try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    } catch {
-      return tsmp;
-    }
   }
 
   obtenerNombreEstatusTicket(idEstatusTicket: string) {
@@ -118,19 +109,6 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
       nombre = area[0].nombre;
     }
     return nombre;
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
   }
 
   showMessage(sev: string, summ: string, det: string) {

@@ -57,7 +57,6 @@ export class ModalPurshasesComponent {
   ngOnInit(): void {
     this.areas = this.areasService.areas;
     this.obtenerSucursales();
-    // this.obtenerAreas();
     this.obtenerCompras();
     this.obtenerEstatus();
     this.obtenerUsuariosHelp();
