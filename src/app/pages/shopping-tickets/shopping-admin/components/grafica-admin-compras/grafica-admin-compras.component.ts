@@ -4,6 +4,7 @@ import { Sucursal } from '../../../../../models/sucursal.model';
 import { AdministracionCompra } from '../../../../../models/AdministracionCompra';
 import { Area } from '../../../../../models/area.model';
 import { Usuario } from '../../../../../models/usuario.model';
+import { UsersService } from '../../../../../services/users.service';
 @Component({
   selector: 'app-grafica-admin-compras',
   standalone: true,
@@ -40,11 +41,14 @@ export class GraficaAdminComprasComponent implements OnInit {
 };
 public usuario:Usuario;
 constructor(
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private userServ:UsersService
     ){  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void 
-  {  
+  { 
+    this.registros = this.registros.filter(x => x.statuscompra != '0');    
+
       for(let idsuc of this.getDistinctSucursalIds())
         { 
           let total = 0; 
@@ -61,6 +65,7 @@ constructor(
 
         for(let ida of this.getAreasDisitintas())
           {
+            debugger
               let data = this.registros.filter(x => x.idArea == ida); 
                 let total = 0; 
                 for(let item of data)
@@ -71,7 +76,13 @@ constructor(
                       }
                   }
 
-               this.gproveedor.push({name:this.obtenerNombreArea(ida!),value:total})
+               if(this.obtenerNombreArea(ida!)== '')
+                {
+                  
+                } else
+                  {
+                      this.gproveedor.push({name:this.obtenerNombreArea(ida!),value:total})
+                  }
           }   
           
           this.cdr.detectChanges();

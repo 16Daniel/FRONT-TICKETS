@@ -134,7 +134,8 @@ async guardar()
       idArea: this.userdata.idArea == undefined ? null : this.userdata.idArea,
       metodoPago:this.formMetodoPago,
       sucursales:this.getDistinctSucursalIds(articulosdata),
-      regiones:this.obtenerDistintasRegiones(articulosdata)
+      regiones:this.obtenerDistintasRegiones(articulosdata),
+      validado:this.userdata.idRol == '2'? 0:1 
     }   
     
     try {
@@ -241,6 +242,8 @@ getNombreMes(numeroMes: number): string {
       if(sucursal != undefined){ nombre = sucursal.nombre;}  
     return nombre; 
 }
+
+
 
 }
 

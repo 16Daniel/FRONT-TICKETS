@@ -113,22 +113,22 @@
                                     <option value="REBEL W2">REBEL W2</option>
                                     <option value="REBEL W3">REBEL W3</option>
                                     <option value="REBEL WINGS 3">REBEL WINGS 3</option>
+                                    <option value="RW CENTRO">RW CENTRO</option>
                                     </select>
                             </div>
-                        </div>
 
-                          <div class="row mt-3">
-                          <div class="col-md-6">
+                              <div class="col-md-4">
                                 <p>Método de pago</p>
                                 <select class="form-select h-42" [(ngModel)]="formMetodoPago">
                                     <option *ngFor="let item of catMetodosPago" [value]="item.id">{{item.nombre}}</option>
                                     </select>
                             </div>
-                          <div class="col-md-6">
+                          <div class="col-md-4">
                         <p>Solicitante</p>
                         <input type="text"  class="form-control h-42"  [(ngModel)]="formSolicitante">
                         </div>
-                         </div>
+
+                        </div>
 
             </div>
 

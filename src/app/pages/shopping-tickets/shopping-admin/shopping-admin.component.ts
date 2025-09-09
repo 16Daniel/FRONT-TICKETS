@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
 import { ShoppingService } from '../../../services/shopping.service';
 import { FormsModule } from '@angular/forms';
 import { ProveedoresComponent } from "./dialogs/proveedores/proveedores.component";
@@ -11,12 +10,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../models/AdministracionCompra';
 import Swal from 'sweetalert2';
 import { Timestamp } from '@angular/fire/firestore';
-import { SubirdocumentoComponent } from "./dialogs/Subir-doumento/Subir-documento.component";
 import { AgregarCompraComponent } from "./dialogs/agregar-compra/agregar-compra.component";
-import { ArchivosComponent } from "./dialogs/Archivos/Archivos.component";
-import { DetallesComponent } from "./dialogs/Detalles/Detalles.component";
 import { SideMenuComponent } from "../../../shared/side-menu/side-menu.component";
-import { AdminComprasChatComponent } from "./dialogs/admin-compras-chat/admin-compras-chat.component";
 import { Usuario } from '../../../models/usuario.model';
 import { CalendarModule } from 'primeng/calendar';
 import { GraficaAdminComprasComponent } from "./components/grafica-admin-compras/grafica-admin-compras.component";
@@ -24,14 +19,15 @@ import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area.model';
 import { MessagesModule } from 'primeng/messages';
 import { TooltipModule } from 'primeng/tooltip';
+import { TabViewModule } from 'primeng/tabview';
 import * as XLSX from 'xlsx';
+import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
-  imports: [CommonModule, DialogModule, TableModule, FormsModule, ProveedoresComponent,
-    DropdownModule, SubirdocumentoComponent, AgregarCompraComponent, ArchivosComponent,
-    DetallesComponent, SideMenuComponent, AdminComprasChatComponent, CalendarModule, GraficaAdminComprasComponent, 
-    MessagesModule,TooltipModule],
+  imports: [CommonModule, DialogModule, FormsModule, ProveedoresComponent,
+    DropdownModule, AgregarCompraComponent, SideMenuComponent, CalendarModule, GraficaAdminComprasComponent,
+    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent],
   templateUrl: './shopping-admin.component.html',
   styleUrl:'./shopping-admin.component.scss'
 })
@@ -55,9 +51,9 @@ public modalArchivos:boolean = false;
 public modalChat:boolean = false;
 public usuario:Usuario;
 //productivo
- public idAdmin:string = 'pclOBh7sMdziimACOc1w';
+//  public idAdmin:string = 'pclOBh7sMdziimACOc1w';
 
-// public idAdmin:string = 'QvSLmxLZjJnaGPPsA7zi';
+public idAdmin:string = 'QvSLmxLZjJnaGPPsA7zi';
 public filtroFechaIni:Date|undefined;
 public filtroFechaFin:Date|undefined;
 public filtroStatus:string = "-1";
@@ -69,7 +65,6 @@ public filtrocatTipoCompra:any[] = [];
 public  catareas: Area[] = []; 
 public catMetodosPago:any[] = [{id:'1',nombre:'EFECTIVO'},{id:'2',nombre:'TRANSFERENCIA'}];
 public messages:any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }]; 
-public tipoDoc:number = 1; 
 
 constructor(
     private shopServ:ShoppingService,
@@ -182,21 +177,7 @@ constructor(
   {
     this.visible = true; 
   }
-  abrirModalChat(item:AdministracionCompra)
-  { 
-    this.itemReg = item; 
-    this.modalChat = true; 
-  }
-    abrirModalArchivos(item:AdministracionCompra)
-  { 
-    this.itemReg = item; 
-    this.modalArchivos = true; 
-  }
-  abrirModalDetalles(item:AdministracionCompra)
-  { 
-    this.itemReg = item; 
-    this.modalDetalles = true; 
-  }
+
   obtenerTipoCompras()
   {
      this.shopServ.getCatTipo().subscribe({
@@ -245,53 +226,6 @@ abrirModalProveedores()
   this.cdr.detectChanges();  
 }
 
-abrirModalDocumento(item:AdministracionCompra,tipodoc:number)
-{
-  this.itemReg = item;
-  this.tipoDoc = tipodoc;
-  this.modalFactura = true;
-}
-
-obtenerFecha(value:Timestamp):Date
-{
-  return value.toDate(); 
-}
-
-obtenerNombreArticulos(articulos:ArticuloCompra[]):string
-{
-    let valor = ""; 
-
-    for(let item of articulos)
-      {
-        valor = valor + item.art + ", "; 
-      }
-     valor = valor.substring(0,valor.length-2);    
-  return valor; 
-}
-
-obtenerNombreSucursal(sucursales:string[]):string
-{
-    let nombre = "";
-    for(let suc of sucursales)
-      {
-        let sucursal = this.sucursales.filter(x=> x.id == suc)[0]; 
-      
-      if(sucursal != undefined){ nombre += sucursal.nombre + ', ';}
-        }
-    if(nombre != ''){ nombre = nombre.substring(0,nombre.length-2); }    
-    return nombre; 
-}
-
-obtenerNombreRegiones(regiones:string[]):string
-{
-    let nombre = "";
-    for(let reg of regiones)
-      {
-          nombre += reg + ', ';
-        }
-      if(nombre != ''){ nombre = nombre.substring(0,nombre.length-2); }    
-    return nombre; 
-}
 
 obtenerNombreArea(idarea:string):string
 {
@@ -461,6 +395,22 @@ exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'
       
       if(sucursal != undefined){ nombre = sucursal.nombre;}  
     return nombre; 
+}
+
+
+obtenerSolicitudes(tipo:number):AdministracionCompra[]
+{
+  if(tipo == 0)
+    {
+      let data = this.regcompras.filter(x => x.validado == tipo); 
+      let temp = this.regcompras.filter( x=> !x.validado); 
+      data.push(...temp); 
+         return data;
+    } else
+      {
+         return this.regcompras.filter(x => x.validado == tipo); 
+      }
+ 
 }
 
 }
