@@ -13,12 +13,10 @@ import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../../services/fixed-assets.service';
 import { Usuario } from '../../../../models/usuario.model';
 import { BranchesService } from '../../../../services/branches.service';
-import { AreasService } from '../../../../services/areas.service';
 import { AreasFixedAssetsService } from '../../../../services/areas-fixed-assets.service';
 import { CategoriesFixedAssetsService } from '../../../../services/categories-activos-fijos.service';
 import { StatusFixedAssetsService } from '../../../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../../../services/locations-fixed-assets.service';
-import { Area } from '../../../../models/area.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { AreaActivoFijo } from '../../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../../models/categoria-activo-fijo.model';
@@ -29,6 +27,7 @@ import { ModalFixedAssetMaintenanceComponent } from '../../../../modals/fixed-as
 import { DropdownModule } from 'primeng/dropdown';
 import { BuscarPorReferenciaPipe } from '../../../../pipes/buscar-por-referencia.pipe';
 import { ModalFixedAssetsCreateComponent } from '../../dialogs/modal-fixed-assets-create/modal-fixed-assets-create.component';
+import { AreasService } from '../../../../services/areas2.service';
 
 @Component({
   selector: 'app-fixed-assets',
@@ -65,7 +64,7 @@ export default class FixedAssetsComponent implements OnInit {
   mostrarModalMantenimientos: boolean = false;
   textoBusquedaReferencia: string = '';
 
-  areas: Area[] = [];
+  // areas: Area[] = [];
   sucursales: Sucursal[] = [];
   areasActivosFijos: AreaActivoFijo[] = [];
   categoriasActivosFijos: CategoriaActivoFijo[] = [];
@@ -85,7 +84,7 @@ export default class FixedAssetsComponent implements OnInit {
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private branchesService: BranchesService,
-    private areasService: AreasService,
+    public areasService: AreasService,
     private areasFixedAssetsService: AreasFixedAssetsService,
     private categoriesFixedAssetsService: CategoriesFixedAssetsService,
     private statusFixedAssetsService: StatusFixedAssetsService,
@@ -98,7 +97,6 @@ export default class FixedAssetsComponent implements OnInit {
     this.obtenerActivosFijos();
 
     this.obtenerSucursales();
-    this.obtenerAreas();
     this.obtenerAreasActivosFijos();
     this.obtenerCategoriasActivosFijos();
     this.obtenerUbicacionesActivosFijos();
@@ -188,21 +186,6 @@ export default class FixedAssetsComponent implements OnInit {
           id: item.id.toString()
         }));
 
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data.map((item: any) => ({
-          ...item,
-          id: item.id.toString()
-        }));
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -307,7 +290,7 @@ export default class FixedAssetsComponent implements OnInit {
   }
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
-  nombreArea = (idArea: string) => this.areas.find(x => x.id == idArea)?.nombre;
+  nombreArea = (idArea: string) => this.areasService.areas.find(x => x.id == idArea)?.nombre;
   nombreAreaActivoFijo = (idAreaActivoFijo: string) => this.areasActivosFijos.find(x => x.id == idAreaActivoFijo)?.nombre;
   nombreCategoriaActivoFijo = (idCategoriaActivoFijo: string) => this.categoriasActivosFijos.find(x => x.id == idCategoriaActivoFijo)?.nombre;
   nombreEstatusActivoFijo = (idEstatusActivoFijo: string) => this.estatusActivosFijos.find(x => x.id == idEstatusActivoFijo)?.nombre;

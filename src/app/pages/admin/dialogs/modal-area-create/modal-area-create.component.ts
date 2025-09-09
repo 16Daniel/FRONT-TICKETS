@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
 import { Area } from '../../../../models/area.model';
-import { AreasService } from '../../../../services/areas.service';
+import { AreasService } from '../../../../services/areas2.service';
 
 @Component({
   selector: 'app-modal-area-create',

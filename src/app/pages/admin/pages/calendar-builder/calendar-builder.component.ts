@@ -27,15 +27,14 @@ import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-tic
 import { ModalColorsComponent } from "../../../../modals/calendar/modal-colors/modal-colors.component";
 import { DocumentsService } from '../../../../services/documents.service';
 import { ComentarioVisita } from '../../../../models/comentario-visita.model';
-import { AreasService } from '../../../../services/areas.service';
 import { Area } from '../../../../models/area.model';
 import { ModalActivityComponent } from '../../../../modals/calendar/modal-activity/modal-activity.component';
 import { FixedAssetsService } from '../../../../services/fixed-assets.service';
-import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
 import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
 import { CalendarComponent } from '../../../../components/calendar/calendar.component';
 import { BranchVisitItemComponent } from '../../../../components/branch-visit-item/branch-visit-item.component';
+import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -80,7 +79,6 @@ export default class CalendarBuilderComponent implements OnInit {
   showModalTicketDetail: boolean = false;
   showModalColors: boolean = false;
   usuario: Usuario;
-  areas: Area[] = [];
   area: Area | any;
   mostrarModalActividades: boolean = false;
 
@@ -94,26 +92,17 @@ export default class CalendarBuilderComponent implements OnInit {
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService,
-    private areasService: AreasService,
     private fixedAssetsService: FixedAssetsService,
-    private maintenanceMtooService: MaintenanceMtooService
+    private maintenanceMtooService: MaintenanceMtooService,
+    private datesHelper: DatesHelperService
   ) {
     registerLocaleData(localeEs);
-    this.obtenerAreas();
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerUsuariosHelp();
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe(result => {
-      this.areas = result;
-
-      this.area = this.areas.find(x => x.id == this.usuario.idArea)
-    });
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -334,7 +323,6 @@ export default class CalendarBuilderComponent implements OnInit {
 
     try {
       await this.visitasService.create(visita);
-      console.log(visita)
 
       for (let sucursal of this.sucursalesSeleccionadas) {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
@@ -501,7 +489,7 @@ export default class CalendarBuilderComponent implements OnInit {
       for (let sucursal of this.registroDeVisita.sucursalesProgramadas) {
 
         const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-        let temp = await servicio.obtenerMantenimientoVisitaPorFechaArea(this.getDate(this.registroDeVisita.fecha), sucursal.id);
+        let temp = await servicio.obtenerMantenimientoVisitaPorFechaArea(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
         temp.forEach(async (element: any) => {
           await servicio.delete(element.id);
         });
@@ -512,13 +500,6 @@ export default class CalendarBuilderComponent implements OnInit {
 
     this.guardarVisita()
 
-  }
-
-  getDate(tsmp: Timestamp): Date {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date;
   }
 
   async agregarActividad(texto: string) {

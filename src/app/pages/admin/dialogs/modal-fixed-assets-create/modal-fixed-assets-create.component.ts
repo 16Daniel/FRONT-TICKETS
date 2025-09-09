@@ -3,15 +3,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../../services/fixed-assets.service';
 import { Usuario } from '../../../../models/usuario.model';
 import { Area } from '../../../../models/area.model';
-import { DropdownModule } from 'primeng/dropdown';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { BranchesService } from '../../../../services/branches.service';
-import { AreasService } from '../../../../services/areas.service';
 import { AreasFixedAssetsService } from '../../../../services/areas-fixed-assets.service';
 import { CategoriesFixedAssetsService } from '../../../../services/categories-activos-fijos.service';
 import { AreaActivoFijo } from '../../../../models/area-activo-fijo.model';
@@ -20,6 +19,7 @@ import { UbicacionActivoFijo } from '../../../../models/ubicacion-activo-fijo.mo
 import { EstatusActivoFijo } from '../../../../models/estatus-activo-fijo.model';
 import { StatusFixedAssetsService } from '../../../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../../../services/locations-fixed-assets.service';
+import { AreasService } from '../../../../services/areas2.service';
 
 @Component({
   selector: 'app-modal-fixed-assets-create',
@@ -63,8 +63,8 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
       this.idActivoFijoEditar = this.activoFijo.id;
     }
 
+    this.areas = this.areasService.areas;
     this.obtenerSucursales();
-    this.obtenerAreas();
     this.obtenerAreasActivosFijos();
     this.obtenerCategoriasActivosFijos();
     this.obtenerUbicacionesActivosFijos();
@@ -202,22 +202,6 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
         }));
 
         this.activoFijo.idSucursal = parseInt(this.usuario.sucursales[0].id).toString();
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data.map((item: any) => ({
-          ...item,
-          id: item.id.toString()
-        }));
-        this.activoFijo.idArea = this.usuario.idArea;
         this.cdr.detectChanges();
       },
       error: (error) => {

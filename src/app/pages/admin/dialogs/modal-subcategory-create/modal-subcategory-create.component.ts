@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
@@ -20,7 +20,6 @@ export class ModalSubcategoryCreateComponent {
   @Input() subcategoria: Subcategoria = new Subcategoria;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Output() subcategoriaEvent = new EventEmitter<Subcategoria>();
-  // nombreSubcategoria: string = '';
 
   constructor(private messageService: MessageService) { }
 
