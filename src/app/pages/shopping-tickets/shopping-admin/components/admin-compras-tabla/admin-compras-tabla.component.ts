@@ -61,16 +61,11 @@ obtenerNombreArticulos(articulos:ArticuloCompra[]):string
   return valor; 
 }
 
-obtenerNombreSucursal(sucursales:string[]):string
-{
+obtenerNombreSucursal(sucursal:string):string
+{debugger
     let nombre = "";
-    for(let suc of sucursales)
-      {
-        let sucursal = this.sucursales.filter(x=> x.id == suc)[0]; 
-      
-      if(sucursal != undefined){ nombre += sucursal.nombre + ', ';}
-        }
-    if(nombre != ''){ nombre = nombre.substring(0,nombre.length-2); }    
+    let suc = this.sucursales.filter(x=> x.id == sucursal)[0];  
+    if(suc != undefined){ nombre = suc.nombre; } 
     return nombre; 
 }
 

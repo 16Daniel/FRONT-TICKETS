@@ -29,6 +29,7 @@ export class AgregarCompraComponent implements OnInit {
 @Input() sucursales: Sucursal[] = [];
 @Input() idAdmin:string = ""; 
 @Input() catMetodosPago: any[] = []; 
+@Input() idServicio:string = ""; 
 public FormSucursal:Sucursal|undefined; 
 public formarticulos:ArticuloCompra[] = []; 
 public formArtArticulo:string = ""; 
@@ -135,7 +136,8 @@ async guardar()
       metodoPago:this.formMetodoPago,
       sucursales:this.getDistinctSucursalIds(articulosdata),
       regiones:this.obtenerDistintasRegiones(articulosdata),
-      validado:this.userdata.idRol == '2'? 0:1 
+      validado:this.userdata.idRol == '2'? this.userdata.id == this.idServicio ? 1 : 0 : 1,
+      idSucursalSolicitante: this.userdata.idRol == '2'? this.userdata.sucursales[0].id : null
     }   
     
     try {
@@ -234,7 +236,7 @@ getNombreMes(numeroMes: number): string {
   }
 
   obtenerNombreSucursal(idSucursal:string):string
-{ 
+{  
     let nombre = "";
     
         let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 

@@ -21,13 +21,15 @@ import { MessagesModule } from 'primeng/messages';
 import { TooltipModule } from 'primeng/tooltip';
 import { TabViewModule } from 'primeng/tabview';
 import * as XLSX from 'xlsx';
+import { environment } from '../../../../environments/environments';
 import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
+import { MultiSelectModule } from 'primeng/multiselect';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
   imports: [CommonModule, DialogModule, FormsModule, ProveedoresComponent,
     DropdownModule, AgregarCompraComponent, SideMenuComponent, CalendarModule, GraficaAdminComprasComponent,
-    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent],
+    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule],
   templateUrl: './shopping-admin.component.html',
   styleUrl:'./shopping-admin.component.scss'
 })
@@ -39,6 +41,7 @@ public modalProveedores:boolean = false;
 public modalFactura:boolean = false; 
 public modalDetalles:boolean = false; 
 public sucursales: Sucursal[] = [];
+public sucursalesSel: Sucursal[] = [];
 public catStatusCompra:any[] = [{id:'1',nombre:'EN GESTIÓN'},{id:'0',nombre:'CANCELADO'},{id:'2',nombre:'COMPRADO'},{id:'3',nombre:'ENTREGADO'},{id:'4',nombre:'EN DEVOLUCIÓN'},{id:'5',nombre:'OTRO'}]
 public catStatusPago:any[] = [{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO'}]
 public filtrocatStatusCompra:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'EN GESTIÓN'},{id:'0',nombre:'CANCELADO'},{id:'2',nombre:'COMPRADO'},{id:'3',nombre:'ENTREGADO'},{id:'4',nombre:'EN DEVOLUCIÓN'},{id:'5',nombre:'OTRO'}]
@@ -50,12 +53,10 @@ public fechaReg:Date = new Date();
 public modalArchivos:boolean = false;
 public modalChat:boolean = false;
 public usuario:Usuario;
-//productivo
-//  public idAdmin:string = 'pclOBh7sMdziimACOc1w';
-
-public idAdmin:string = 'QvSLmxLZjJnaGPPsA7zi';
-public filtroFechaIni:Date|undefined;
-public filtroFechaFin:Date|undefined;
+public idAdmin:string = environment.idAdministracion;
+public idServicio:string = environment.idServicio;
+public filtroFechaIni:Date|undefined = this.getFirstDayOfMonth();
+public filtroFechaFin:Date|undefined = new Date();
 public filtroStatus:string = "-1";
 public filtroStatusPago:string = "1"; 
 public filtroSucursal: Sucursal|undefined;
@@ -84,7 +85,13 @@ constructor(
         this.obtenerCompras(); 
       } else
         {
-          this.obtenerComprasUsuario();
+          if(this.usuario.id == this.idServicio)
+            {
+                this.obtenerComprasServicio(); 
+            }else
+              {
+                  this.obtenerComprasUsuario();
+              }
         }
    }
    
@@ -99,6 +106,20 @@ constructor(
         console.log(error);
       },
     });
+   }
+
+     obtenerComprasServicio()
+   {
+        this.shopServ.getComprasServicio().subscribe({
+      next: (data) => {
+        this.regcompras = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+
    }
 
    obtenerFacturasPendientes()
@@ -160,7 +181,13 @@ constructor(
         {
           idusuario = '';
         }
-        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea).subscribe({
+
+        let sucursalesids:string[] = []; 
+       for(let suc of this.sucursalesSel)
+        {
+          sucursalesids.push(suc.nombre)
+        }
+        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids).subscribe({
       next: (data) => {
         this.regcompras = data;
         Swal.close(); 
@@ -400,17 +427,20 @@ exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'
 
 obtenerSolicitudes(tipo:number):AdministracionCompra[]
 {
+
   if(tipo == 0)
     {
       let data = this.regcompras.filter(x => x.validado == tipo); 
-      let temp = this.regcompras.filter( x=> !x.validado); 
-      data.push(...temp); 
          return data;
     } else
       {
          return this.regcompras.filter(x => x.validado == tipo); 
       }
  
+}
+
+getFirstDayOfMonth(): Date {
+  return new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 }
 
 }

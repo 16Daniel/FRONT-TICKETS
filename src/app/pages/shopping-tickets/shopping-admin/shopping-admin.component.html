@@ -87,12 +87,24 @@
                                 </p-dropdown>
 </div>
 
+<div class="col-auto" *ngIf="usuario.id == idServicio">
+<p>SUCURSALES</p>
+<p-multiSelect 
+    [options]="sucursales" 
+    [(ngModel)]="sucursalesSel" 
+    [filter]="true" 
+    optionLabel="nombre" 
+    placeholder="SELECCIONAR SUCURSALES"
+    [style]="{width:'100%'}"
+    />
+</div>
+
  <div class="col-auto"> <p>&nbsp;</p> <button class="btn btn-warning p-2" (click)="obtenerComprasFiltro()">
     <i class='bx bx-search bx-sm'></i>&nbsp;BUSCAR
 </button>
 </div>
 
- <div class="col-md-2"><p>&nbsp;</p>
+ <div class="col-auto"><p>&nbsp;</p>
         <button class="btn btn-success" [disabled]="regcompras.length == 0" (click)="exportToExcel(regcompras)"><img width="26" height="26" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
 </div>
 
@@ -107,13 +119,13 @@
 
  <app-admin-compras-tabla 
 [data]="facturasPendientes" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin"
+[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [sucursales]="sucursales"
 ></app-admin-compras-tabla> 
 
 </div>
 
 
-<!-- @if(usuario.id == idAdmin)
+@if(usuario.idRol != "2" && usuario.id != idServicio)
 {
     <div class="p-3 shadow m-3 bg-white">
     
@@ -123,12 +135,12 @@
 
 <app-admin-compras-tabla 
 [data]="obtenerSolicitudes(1)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false"
+[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" [sucursales]="sucursales"
 ></app-admin-compras-tabla>
 </div>
-} -->
+}
 
-@if(true)
+@if(usuario.idRol == "2" || usuario.id == idServicio)
 {
     <p-tabView>
     <p-tabPanel header="AUTORIZADO">
@@ -140,7 +152,7 @@
 
 <app-admin-compras-tabla 
 [data]="obtenerSolicitudes(1)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" [autorizado]="true"
+[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" [autorizado]="true" [sucursales]="sucursales"
 ></app-admin-compras-tabla>
 
 </div>
@@ -149,14 +161,14 @@
  <p-tabPanel header="POR VALIDAR">
 <app-admin-compras-tabla 
 [data]="obtenerSolicitudes(0)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin"  [autorizacion]="usuario.idRol == '2' ? false:true"
+[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin"  [autorizacion]="usuario.idRol == '2' ? false:true" [sucursales]="sucursales"
 ></app-admin-compras-tabla>
  </p-tabPanel>
 
   <p-tabPanel header="RECHAZADO">
 <app-admin-compras-tabla 
 [data]="obtenerSolicitudes(2)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" 
+[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false"  [sucursales]="sucursales"
 ></app-admin-compras-tabla>
  </p-tabPanel>
  
@@ -169,7 +181,8 @@
 </div>
 
 <app-agregar-compra *ngIf="visible" (closeEvent)="visible = false" [visible]="visible" [catTipoCompra]="catTipoCompra" 
-[catProveedores]="catProveedores" [sucursales]="sucursales" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago"></app-agregar-compra>
+[catProveedores]="catProveedores" [sucursales]="sucursales" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago"
+ [idServicio]="idServicio"></app-agregar-compra>
 
 <app-proveedores *ngIf="modalProveedores" [visible]="modalProveedores" (closeEvent)="modalProveedores = false"></app-proveedores>
 

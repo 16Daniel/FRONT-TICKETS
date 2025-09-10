@@ -39,7 +39,20 @@ export class ShoppingService {
   return collectionData(comprasQuery, { idField: 'id' });
  }
   
-   
+ 
+  getComprasServicio(): Observable<any> {
+       const comprasCollection = collection(this.firestore, this.comprastab);
+  
+  // Crear la consulta con el filtro por idUsuario
+  const comprasQuery = query(
+    comprasCollection, 
+    where('statuspago', '==', '1'),
+    where('idSucursalSolicitante', '!=', null)
+  );
+  
+  return collectionData(comprasQuery, { idField: 'id' });
+ }
+ 
 getComprasAdminstradorArea(idArea:string): Observable<any> {
        const comprasCollection = collection(this.firestore, this.comprastab);
   
@@ -82,7 +95,8 @@ getComprasFiltro(
   idUsuario:string,
   idTipo:string,
   region:string,
-  idArea:string 
+  idArea:string,
+  sucursalesIds:string[] 
 ): Observable<AdministracionCompra[]> {
   
   const comprasCollection = collection(this.firestore, this.comprastab);
@@ -117,6 +131,10 @@ getComprasFiltro(
     condiciones.push(where('idArea', '==', idArea));
   }
 
+  if(sucursalesIds.length>0)
+    {
+      where('idSucursalSolicitante', 'in', sucursalesIds)
+    }
 
 
   if (fechaini && fechaFin) {
