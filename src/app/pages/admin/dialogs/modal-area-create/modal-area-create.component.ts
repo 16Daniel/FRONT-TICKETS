@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
 import { Area } from '../../../../models/area.model';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-area-create',
@@ -62,7 +62,7 @@ export class ModalAreaCreateComponent {
   }
 
   async crear() {
-    this.area = { ...this.area, id: parseInt(this.area.id) }
+    // this.area = { ...this.area, id: parseInt(this.area.id) }
     try {
       await this.areasService.create({ ...this.area });
       this.cdr.detectChanges();

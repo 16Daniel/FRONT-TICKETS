@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 
 import { Area } from '../../../../models/area.model';
 import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-area-create.component';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-areas',

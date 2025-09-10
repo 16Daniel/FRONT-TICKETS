@@ -20,7 +20,7 @@ import { ModalValidateTicketComponent } from '../../../../modals/tickets/modal-v
 import { ModalTicketChatComponent } from '../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
 import { Comentario } from '../../../../models/comentario-chat.model';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-specialist-home',

@@ -17,7 +17,7 @@ import { BranchesService } from '../../../../services/branches.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { UsersService } from '../../../../services/users.service';
 import { Usuario } from '../../../../models/usuario.model';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-purshases',

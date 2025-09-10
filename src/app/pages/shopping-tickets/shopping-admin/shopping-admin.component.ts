@@ -25,7 +25,7 @@ import { AdminComprasChatComponent } from "./dialogs/admin-compras-chat/admin-co
 import { Usuario } from '../../../models/usuario.model';
 import { GraficaAdminComprasComponent } from "./components/grafica-admin-compras/grafica-admin-compras.component";
 import { Area } from '../../../models/area.model';
-import { AreasService } from '../../../services/areas2.service';
+import { AreasService } from '../../../services/areas.service';
 
 @Component({
   selector: 'app-shopping-admin',
@@ -82,6 +82,7 @@ export default class ShoppingAdminComponent implements OnInit {
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void {
+    this.catareas = this.areasService.areas;
     this.obtenerFacturasPendientes()
     this.obtenerTipoCompras();
     this.obtenerProveedores();

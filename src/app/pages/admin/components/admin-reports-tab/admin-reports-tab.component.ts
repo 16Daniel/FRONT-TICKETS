@@ -24,7 +24,7 @@ import { EstatusTicket } from '../../../../models/estatus-ticket.model';
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { GraficaGeneralTicketsComponent } from '../grafica-general-tickets/grafica-general-tickets.component';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-admin-reports-tab',

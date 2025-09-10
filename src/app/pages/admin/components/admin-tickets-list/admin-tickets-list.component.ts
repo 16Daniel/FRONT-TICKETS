@@ -29,7 +29,7 @@ import { EstatusTicket } from '../../../../models/estatus-ticket.model';
 import { ModalValidateTicketComponent } from "../../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component";
 import { ModalTicketChatComponent } from "../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component";
 import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 
 @Component({

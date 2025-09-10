@@ -25,7 +25,6 @@ import { TicketsService } from '../../services/tickets.service';
 import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
 import { Usuario } from '../../models/usuario.model';
-import { AreasService } from '../../services/areas.service';
 import { Area } from '../../models/area.model';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
@@ -33,6 +32,7 @@ import { ModalValidateTicketComponent } from '../../modals/tickets/modal-validat
 import { Sucursal } from '../../models/sucursal.model';
 import { BranchesService } from '../../services/branches.service';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
+import { AreasService } from '../../services/areas.service';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -159,16 +159,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.areasService.areas$.subscribe(areas => this.areas = areas);
   }
 
   onClick() {

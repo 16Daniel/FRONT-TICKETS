@@ -30,7 +30,7 @@ import { ParticipanteChat } from '../../../../models/participante-chat.model';
 import { Subcategoria } from '../../../../models/subcategoria.model';
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',

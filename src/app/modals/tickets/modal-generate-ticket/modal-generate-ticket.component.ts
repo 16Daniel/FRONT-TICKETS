@@ -21,7 +21,6 @@ import { UsersService } from '../../../services/users.service';
 import { Ticket } from '../../../models/ticket.model';
 import { BranchesService } from '../../../services/branches.service';
 import { CategoriesService } from '../../../services/categories.service';
-import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { FolioGeneratorService } from '../../../services/folio-generator.service';
@@ -32,6 +31,7 @@ import { Subcategoria } from '../../../models/subcategoria.model';
 import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
+import { AreasService } from '../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -84,9 +84,11 @@ export class ModalGenerateTicketComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.areas = this.areasService.areas;
+    this.ticket.idArea = this.areas.find(x => x.id == this.idArea)!.id;
+
     this.usuarioActivo = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.obtenerSucursales();
-    this.obtenerAreas();
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
@@ -97,22 +99,6 @@ export class ModalGenerateTicketComponent implements OnInit {
       next: (data) => {
         this.sucursales = data;
         this.ticket.idSucursal = parseInt(this.usuarioActivo.sucursales[0].id);
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
-
-        // this.formArea = this.areas.find(x => x.id == this.idArea);
-        this.ticket.idArea = this.areas.find(x => x.id == this.idArea)!.id;
-
         this.cdr.detectChanges();
       },
       error: (error) => {

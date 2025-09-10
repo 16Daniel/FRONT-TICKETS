@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Area } from '../models/area.model';
 import {
   collection,
@@ -18,57 +18,49 @@ import {
   providedIn: 'root',
 })
 export class AreasService {
-  pathName: string = 'cat_areas';
+  private pathName: string = 'cat_areas';
 
-  constructor(private firestore: Firestore) { }
+  private _areas: Area[] = [];
+  private _areasSubject = new BehaviorSubject<Area[]>([]);
+  public areas$: Observable<Area[]> = this._areasSubject.asObservable();
 
-  async create(area: Area): Promise<void> {
-    const documentRef = doc(this.firestore, `${this.pathName}/${area.id}`);
-
-    const snapshot = await getDoc(documentRef);
-
-    if (snapshot.exists()) {
-      throw new Error(`El area con id ${area.id} ya existe.`);
-    }
-
-    await setDoc(documentRef, area);
+  private _unsubscribe: (() => void) | null = null;
+  private _loaded: boolean = false;
+  public get areas(): Area[] {
+    return this._areas;
   }
 
-  get(): Observable<Area[]> {
-    return new Observable<Area[]>((observer) => {
-      const collectionRef = collection(this.firestore, this.pathName);
+  constructor(private firestore: Firestore) {
+    this.initListener();
+  }
 
-      // Arreglo para los filtros
-      const constraints = [where('eliminado', '==', false)];
+  public initListener(): void {
+    if (this._loaded) return;
 
-      const q = query(collectionRef, ...constraints);
+    const collectionRef = collection(this.firestore, this.pathName);
+    const q = query(collectionRef, where('eliminado', '==', false));
 
-      const unsubscribe = onSnapshot(
-        q,
-        (querySnapshot) => {
-          const areas: Area[] = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...(doc.data() as Omit<Area, 'id'>),
-          }));
-
-          areas.sort((a, b) => Number(a.id) - Number(b.id));
-
-          observer.next(areas.map((item: any) => ({
-            ...item,
-            id: item.id.toString()
-          })));
-        },
-        (error) => {
-          console.error('Error en la suscripción:', error);
-          observer.error(error);
-        }
-      );
-
-      return { unsubscribe };
+    this._unsubscribe = onSnapshot(q, (querySnapshot) => {
+      this._areas = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Area, 'id'>),
+      }));
+      this._areasSubject.next(this._areas);
+      this._loaded = true;
     });
   }
 
-  async update(area: Area | any, idArea: string): Promise<void> {
+  async create(area: Area): Promise<void> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${area.id}`);
+    const snapshot = await getDoc(documentRef);
+
+    if (snapshot.exists()) {
+      throw new Error(`El área con id ${area.id} ya existe.`);
+    }
+    await setDoc(documentRef, area);
+  }
+
+  async update(area: Partial<Area>, idArea: string): Promise<void> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idArea}`);
     return updateDoc(documentRef, area);
   }
@@ -76,23 +68,27 @@ export class AreasService {
   async delete(idArea: string): Promise<void> {
     try {
       const docRef = doc(this.firestore, `${this.pathName}/${idArea}`);
-      await updateDoc(docRef, {
-        eliminado: true,
-      });
+      await updateDoc(docRef, { eliminado: true });
     } catch (error) {
       console.error('Error al marcar como eliminado:', error);
     }
   }
 
-  async obtenerSecuencial(): Promise<number> {
+  async obtenerSecuencial(): Promise<string> {
     try {
       const collectionRef = collection(this.firestore, this.pathName);
       const snapshot = await getDocs(collectionRef);
-      const count = snapshot.size;
-      return count + 1;
+      return (snapshot.size + 1).toString();
     } catch (error) {
-      console.error('Error al obtener el count de areas:', error);
+      console.error('Error al obtener el count de áreas:', error);
       throw error;
+    }
+  }
+
+  unsubscribe(): void {
+    if (this._unsubscribe) {
+      this._unsubscribe();
+      this._unsubscribe = null;
     }
   }
 }

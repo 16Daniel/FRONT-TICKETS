@@ -27,7 +27,7 @@ import { ModalFixedAssetMaintenanceComponent } from '../../../../modals/fixed-as
 import { DropdownModule } from 'primeng/dropdown';
 import { BuscarPorReferenciaPipe } from '../../../../pipes/buscar-por-referencia.pipe';
 import { ModalFixedAssetsCreateComponent } from '../../dialogs/modal-fixed-assets-create/modal-fixed-assets-create.component';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-fixed-assets',

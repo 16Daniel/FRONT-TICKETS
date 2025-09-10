@@ -19,7 +19,7 @@ import { UbicacionActivoFijo } from '../../../../models/ubicacion-activo-fijo.mo
 import { EstatusActivoFijo } from '../../../../models/estatus-activo-fijo.model';
 import { StatusFixedAssetsService } from '../../../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../../../services/locations-fixed-assets.service';
-import { AreasService } from '../../../../services/areas2.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-fixed-assets-create',
