@@ -27,6 +27,7 @@ export interface AdministracionCompra
     regiones:string[];
     validado:number; 
     idSucursalSolicitante:string|null; 
+    validacionServico:boolean
  }
 
 export interface ArticuloCompra

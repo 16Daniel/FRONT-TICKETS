@@ -177,7 +177,7 @@ constructor(
         }
       let idsuc = this.filtroSucursal == undefined ? '': this.filtroSucursal.id; 
       let idusuario = this.usuario.id == this.idAdmin ? '': this.usuario.id;
-      if(this.usuario.idRol == '1' || this.usuario.idRol == '5')
+      if(this.usuario.idRol == '1' || this.usuario.idRol == '5' || this.usuario.id == this.idServicio)
         {
           idusuario = '';
         }
@@ -185,9 +185,11 @@ constructor(
         let sucursalesids:string[] = []; 
        for(let suc of this.sucursalesSel)
         {
-          sucursalesids.push(suc.nombre)
+          sucursalesids.push(suc.id);
         }
-        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids).subscribe({
+
+        let esServicio = this.usuario.id == this.idServicio ? true:false; 
+        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio).subscribe({
       next: (data) => {
         this.regcompras = data;
         Swal.close(); 
@@ -259,7 +261,7 @@ obtenerNombreArea(idarea:string):string
     let nombre = "";
     let area = this.catareas.filter(x=> x.id == idarea)[0]; 
     
-    if(idarea != undefined){ nombre = area.nombre; }
+    if(area != undefined){ nombre = area.nombre; }
     return nombre; 
 }
 
@@ -350,7 +352,7 @@ exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'
 
   private transformarDatos(compras: AdministracionCompra[]): any[] {
     const datos: any[] = [];
-
+ debugger
     compras.forEach(compra => {
       compra.articulos.forEach(articulo => {
         datos.push({

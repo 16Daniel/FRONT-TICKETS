@@ -5,10 +5,7 @@
     <ng-template pTemplate="header">
         <tr>
             <th>SOLICITANTE</th>
-            @if(autorizacion == true)
-            {
-                <th>SUCURSAL</th>
-            }
+            <th>SUCURSAL</th>
             <th>FECHA</th>
             <th>REGION</th>
             <th>RAZON SOCIAL</th>
@@ -33,7 +30,7 @@
     <ng-template pTemplate="body" let-item>
         <tr class="bg-opacity-25" [ngClass]="{'bg-warning':(item.statuscompra == 0 || item.statuspago == 1), 'bg-success': item.statuspago == 2, 'bg-danger': item.statuscompra == 0}">
             <td>{{item.solicitante}}</td>
-            @if(autorizacion == true){ <td>{{obtenerNombreSucursal(item.idSucursalSolicitante)}}</td> }
+            <td>{{obtenerNombreSucursal(item.idSucursalSolicitante)}}</td>
             <td>{{  obtenerFecha(item.fecha) | date}}</td>
             <td>{{ obtenerNombreRegiones(item.regiones) }}</td>
             <td>{{ item.razonsocial }}</td>

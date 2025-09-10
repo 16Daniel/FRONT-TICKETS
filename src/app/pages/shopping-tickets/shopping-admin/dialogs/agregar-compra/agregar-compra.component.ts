@@ -113,6 +113,9 @@ async guardar()
    
     let participantesChatData:ParticipanteChat[] = [{idUsuario: this.userdata.id,ultimoComentarioLeido:0},{idUsuario: this.idAdmin,ultimoComentarioLeido:0}];
 
+    let validacionServico = false; 
+  if(this.userdata.id == this.idServicio || this.userdata.idRol == "2"){ validacionServico = true; }
+
   let data:AdministracionCompra = 
     {
       idUsuario:this.userdata.id,
@@ -137,7 +140,8 @@ async guardar()
       sucursales:this.getDistinctSucursalIds(articulosdata),
       regiones:this.obtenerDistintasRegiones(articulosdata),
       validado:this.userdata.idRol == '2'? this.userdata.id == this.idServicio ? 1 : 0 : 1,
-      idSucursalSolicitante: this.userdata.idRol == '2'? this.userdata.sucursales[0].id : null
+      idSucursalSolicitante: this.userdata.idRol == '2'? this.userdata.sucursales[0].id : null,
+      validacionServico: validacionServico
     }   
     
     try {

@@ -62,7 +62,7 @@ obtenerNombreArticulos(articulos:ArticuloCompra[]):string
 }
 
 obtenerNombreSucursal(sucursal:string):string
-{debugger
+{
     let nombre = "";
     let suc = this.sucursales.filter(x=> x.id == sucursal)[0];  
     if(suc != undefined){ nombre = suc.nombre; } 
@@ -158,6 +158,7 @@ obtenerTotalCompras(articulos:ArticuloCompra[]):number
 
 abrirModalDocumento(item:AdministracionCompra,tipoDoc:number)
 {
+  this.itemReg = item; 
   this.modalFactura = true;
   this.tipoDoc = tipoDoc; 
 }

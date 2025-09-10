@@ -34,6 +34,7 @@ export class ShoppingService {
   const comprasQuery = query(
     comprasCollection, 
     where('statuspago', '==', '1'),
+    where('validado','==',1)
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
@@ -47,7 +48,7 @@ export class ShoppingService {
   const comprasQuery = query(
     comprasCollection, 
     where('statuspago', '==', '1'),
-    where('idSucursalSolicitante', '!=', null)
+    where('validacionServico','==',true) 
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
@@ -60,8 +61,8 @@ getComprasAdminstradorArea(idArea:string): Observable<any> {
   const comprasQuery = query(
     comprasCollection, 
     where('statuspago', '==', '1'),
-    where('idArea', '==',idArea)
-
+    where('idArea', '==',idArea),
+    where('validado','==',1)
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
@@ -96,9 +97,9 @@ getComprasFiltro(
   idTipo:string,
   region:string,
   idArea:string,
-  sucursalesIds:string[] 
+  sucursalesIds:string[],
+  esServicio:boolean
 ): Observable<AdministracionCompra[]> {
-  
   const comprasCollection = collection(this.firestore, this.comprastab);
   let condiciones: QueryConstraint[] = [];
 
@@ -127,16 +128,20 @@ getComprasFiltro(
     condiciones.push(where('regiones', 'array-contains', region));
   }
 
-   if (idArea && idArea.trim() !== '-1') {
+   if (idArea && idArea.trim() !== '-1' && esServicio == false) {
     condiciones.push(where('idArea', '==', idArea));
   }
 
   if(sucursalesIds.length>0)
     {
-      where('idSucursalSolicitante', 'in', sucursalesIds)
+       condiciones.push(where('idSucursalSolicitante', 'in', sucursalesIds)); 
     }
 
-
+    if(esServicio)
+      {
+       condiciones.push(where('validacionServico','==',true)); 
+      }
+   
   if (fechaini && fechaFin) {
     fechaini.setHours(0,0,0,0);
     fechaFin.setHours(23,59,59,999);
