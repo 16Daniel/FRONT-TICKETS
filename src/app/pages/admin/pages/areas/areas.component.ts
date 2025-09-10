@@ -9,8 +9,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
 import { Area } from '../../../../models/area.model';
-import { AreasService } from '../../../../services/areas.service';
 import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-area-create.component';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-areas',
@@ -29,7 +29,7 @@ import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-
   styleUrl: './areas.component.scss'
 })
 
-export default class AreasComponent implements OnInit, OnDestroy {
+export default class AreasComponent implements OnDestroy {
 
   esNuevaArea: boolean = false;
   mostrarModalArea: boolean = false;
@@ -37,17 +37,12 @@ export default class AreasComponent implements OnInit, OnDestroy {
   areaSeleccionada: Area = new Area;
   subscripcion: Subscription | undefined;
 
-
   constructor(
     private confirmationService: ConfirmationService,
-    private areasServicce: AreasService,
+    public areasService: AreasService,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
   ) { }
-
-  ngOnInit(): void {
-    this.obtenerAreas();
-  }
 
   ngOnDestroy() {
     if (this.subscripcion != undefined) {
@@ -55,28 +50,18 @@ export default class AreasComponent implements OnInit, OnDestroy {
     }
   }
 
-  obtenerAreas() {
-    this.subscripcion = this.areasServicce.get().subscribe(result => {
-      this.areas = result;
-      this.cdr.detectChanges();
-    }, (error) => {
-      console.log(error);
-      this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-    });
-  }
-
   abrirModalCrearArea() {
     this.esNuevaArea = true;
     this.mostrarModalArea = true;
   }
 
-  abrirModalEditarArea(area: Area) { 
+  abrirModalEditarArea(area: Area) {
     this.esNuevaArea = false;
     this.mostrarModalArea = true;
     this.areaSeleccionada = area;
   }
-  
-  confirmaEliminacion(id: string) { 
+
+  confirmaEliminacion(id: string) {
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: '¿Está seguro que desea eliminar?',
@@ -92,7 +77,7 @@ export default class AreasComponent implements OnInit, OnDestroy {
   }
 
   async eliminarArea(idSucursal: string) {
-    await this.areasServicce.delete(idSucursal);
+    await this.areasService.delete(idSucursal);
     this.showMessage('success', 'Success', 'Eliminada correctamente');
   }
 

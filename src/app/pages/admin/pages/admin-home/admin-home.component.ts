@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { AdminTabsComponent } from '../../components/admin-tabs/admin-tabs.component';
 
 @Component({
@@ -6,10 +6,9 @@ import { AdminTabsComponent } from '../../components/admin-tabs/admin-tabs.compo
   standalone: true,
   imports: [
     AdminTabsComponent
-],
+  ],
   templateUrl: './admin-home.component.html',
 })
 
 export default class AdminHomeComponent {
-
 }

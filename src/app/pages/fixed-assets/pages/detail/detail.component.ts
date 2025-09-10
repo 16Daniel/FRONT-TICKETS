@@ -8,12 +8,10 @@ import { ButtonModule } from 'primeng/button';
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../../services/fixed-assets.service';
 import { BranchesService } from '../../../../services/branches.service';
-import { AreasService } from '../../../../services/areas.service';
 import { AreasFixedAssetsService } from '../../../../services/areas-fixed-assets.service';
 import { CategoriesFixedAssetsService } from '../../../../services/categories-activos-fijos.service';
 import { StatusFixedAssetsService } from '../../../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../../../services/locations-fixed-assets.service';
-import { Area } from '../../../../models/area.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { AreaActivoFijo } from '../../../../models/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../../../models/categoria-activo-fijo.model';
@@ -22,6 +20,7 @@ import { EstatusActivoFijo } from '../../../../models/estatus-activo-fijo.model'
 import { ModalFixedAssetTicketsComponent } from '../../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { ModalFaGenerateTicketComponent } from '../../dialogs/modal-fa-generate-ticket/modal-fa-generate-ticket.component';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-detail',
@@ -45,7 +44,6 @@ export default class DetailComponent implements OnInit {
   mostrarModalTickets: boolean = false;
   mostrarModalGenerateTicket: boolean = false;
 
-  areas: Area[] = [];
   sucursales: Sucursal[] = [];
   areasActivosFijos: AreaActivoFijo[] = [];
   categoriasActivosFijos: CategoriaActivoFijo[] = [];
@@ -66,7 +64,6 @@ export default class DetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerSucursales();
-    this.obtenerAreas();
     this.obtenerAreasActivosFijos();
     this.obtenerCategoriasActivosFijos();
     this.obtenerUbicacionesActivosFijos();
@@ -96,21 +93,6 @@ export default class DetailComponent implements OnInit {
           id: item.id.toString()
         }));
 
-        // this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data.map((item: any) => ({
-          ...item,
-          id: item.id.toString()
-        }));
         // this.cdr.detectChanges();
       },
       error: (error) => {
@@ -184,7 +166,7 @@ export default class DetailComponent implements OnInit {
   }
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
-  nombreArea = (idArea: string) => this.areas.find(x => x.id == idArea)?.nombre;
+  nombreArea = (idArea: string) => this.areasService.areas.find(x => x.id == idArea)?.nombre;
   nombreAreaActivoFijo = (idAreaActivoFijo: string) => this.areasActivosFijos.find(x => x.id == idAreaActivoFijo)?.nombre;
   nombreCategoriaActivoFijo = (idCategoriaActivoFijo: string) => this.categoriasActivosFijos.find(x => x.id == idCategoriaActivoFijo)?.nombre;
   nombreEstatusActivoFijo = (idEstatusActivoFijo: string) => this.estatusActivosFijos.find(x => x.id == idEstatusActivoFijo)?.nombre;

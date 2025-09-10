@@ -5,6 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
 
 import { Compra } from '../../../../models/compra.model';
 import { Area } from '../../../../models/area.model';
@@ -12,12 +13,11 @@ import { EstatusCompra } from '../../../../models/estatus-compras.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { PurchaseService } from '../../../../services/purchase.service';
 import { StatusPurchaseService } from '../../../../services/status-purchase.service';
-import { AreasService } from '../../../../services/areas.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { UsersService } from '../../../../services/users.service';
 import { Usuario } from '../../../../models/usuario.model';
-import { ButtonModule } from 'primeng/button';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-purshases',
@@ -55,8 +55,8 @@ export class ModalPurshasesComponent {
   ) { }
 
   ngOnInit(): void {
+    this.areas = this.areasService.areas;
     this.obtenerSucursales();
-    this.obtenerAreas();
     this.obtenerCompras();
     this.obtenerEstatus();
     this.obtenerUsuariosHelp();
@@ -70,15 +70,6 @@ export class ModalPurshasesComponent {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
         this.cdr.detectChanges();
       }
     });

@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-md-2">
                     <p class="fw-bold">ÁREA</p>
-                    <p-dropdown [options]="areas" [(ngModel)]="idAreaFiltro" [optionValue]="'id'" name="area"
+                    <p-dropdown [options]="areasService.areas" [(ngModel)]="idAreaFiltro" [optionValue]="'id'" name="area"
                         optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
                         placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}">
                         <ng-template pTemplate="selectedItem" let-selectedOption>

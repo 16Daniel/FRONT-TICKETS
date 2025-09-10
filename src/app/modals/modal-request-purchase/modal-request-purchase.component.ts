@@ -12,11 +12,11 @@ import { PurchaseService } from '../../services/purchase.service';
 import { Area } from '../../models/area.model';
 import { Sucursal } from '../../models/sucursal.model';
 import { DropdownModule } from 'primeng/dropdown';
-import { AreasService } from '../../services/areas.service';
 import { BranchesService } from '../../services/branches.service';
 import { DatesHelperService } from '../../helpers/dates-helper.service';
 import { StatusPurchaseService } from '../../services/status-purchase.service';
 import { EstatusCompra } from '../../models/estatus-compras.model';
+import { AreasService } from '../../services/areas.service';
 
 @Component({
   selector: 'app-modal-request-purchase',
@@ -56,8 +56,8 @@ export class ModalRequestPurchaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.areas = this.areasService.areas;
     this.obtenerSucursales();
-    this.obtenerAreas();
     this.obtenerCompras();
     this.obtenerEstatus();
   }
@@ -70,15 +70,6 @@ export class ModalRequestPurchaseComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
         this.cdr.detectChanges();
       }
     });
