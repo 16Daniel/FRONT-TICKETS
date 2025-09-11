@@ -6,6 +6,7 @@ import {
   collectionData,
   doc,
   Firestore,
+  getDocs,
   onSnapshot,
   query,
   updateDoc,
@@ -134,6 +135,28 @@ export class UsersService {
     );
 
     return usuarioEncontrado || null;
+  }
+
+    async getUsuarioById(id: string): Promise<Usuario | null> {
+    try {
+    const usersCollection = collection(this.firestore, 'usuarios');
+    const userQuery = query(usersCollection, where('id', '==', id));
+    
+    const querySnapshot = await getDocs(userQuery);
+    
+    if (querySnapshot.empty) {
+      return null; // o throw new Error('Usuario no encontrado');
+    }
+    // Retorna el primer documento encontrado
+    const userDoc = querySnapshot.docs[0];
+    return {
+      id: userDoc.id,
+      ...userDoc.data()
+    } as Usuario;
+  } catch (error) {
+    console.error('Error al obtener usuario:', error);
+    throw error;
+  }
   }
 
 }

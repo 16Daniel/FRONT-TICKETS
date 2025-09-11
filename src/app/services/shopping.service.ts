@@ -34,7 +34,8 @@ export class ShoppingService {
   const comprasQuery = query(
     comprasCollection, 
     where('statuspago', '==', '1'),
-    where('validado','==',1)
+    where('validado','==',1),
+    orderBy('fecha', 'desc')
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
@@ -48,7 +49,8 @@ export class ShoppingService {
   const comprasQuery = query(
     comprasCollection, 
     where('statuspago', '==', '1'),
-    where('validacionServico','==',true) 
+    where('validacionServico','==',true),
+    orderBy('fecha', 'desc')
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
@@ -62,7 +64,8 @@ getComprasAdminstradorArea(idArea:string): Observable<any> {
     comprasCollection, 
     where('statuspago', '==', '1'),
     where('idArea', '==',idArea),
-    where('validado','==',1)
+    where('validado','==',1),
+    orderBy('fecha', 'desc')
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
@@ -75,7 +78,8 @@ getComprasAdminstradorArea(idArea:string): Observable<any> {
   const comprasQuery = query(
     comprasCollection, 
     where('idUsuario', '==', idUsuario),
-    where('statuspago', '==', '1')
+    where('statuspago', '==', '1'),
+    orderBy('fecha', 'desc')
   );
   
   return collectionData(comprasQuery, { idField: 'id' });

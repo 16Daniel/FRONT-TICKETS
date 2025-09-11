@@ -11,5 +11,5 @@ export const environment = {
     },
     apiURL:"https://operamx.no-ip.net/back/api_tickets/api/",
     idAdministracion:"pclOBh7sMdziimACOc1w",
-    idServicio:""
+    idServicio:"0Ax05ndesDcThRJKW6K0",
 };

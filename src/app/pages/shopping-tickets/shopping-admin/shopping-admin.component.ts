@@ -24,6 +24,7 @@ import * as XLSX from 'xlsx';
 import { environment } from '../../../../environments/environments';
 import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
 import { MultiSelectModule } from 'primeng/multiselect';
+import { UsersService } from '../../../services/users.service';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
@@ -72,9 +73,11 @@ constructor(
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private areasService: AreasService,
+    private userServ: UsersService
     ){  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
   ngOnInit(): void 
   { 
+    this.actualizarInfoUsuario();
     this.obtenerFacturasPendientes()
     this.obtenerTipoCompras(); 
     this.obtenerProveedores(); 
@@ -443,6 +446,19 @@ obtenerSolicitudes(tipo:number):AdministracionCompra[]
 
 getFirstDayOfMonth(): Date {
   return new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+}
+
+async actualizarInfoUsuario()
+{
+  if(this.usuario.idArea == null || this.usuario.idArea == undefined)
+    {
+      let usuarioTemp:Usuario|null = await this.userServ.getUsuarioById(this.usuario.id); 
+      if(usuarioTemp != null)
+        {
+          this.usuario = usuarioTemp; 
+          localStorage.setItem('rwuserdatatk', JSON.stringify(usuarioTemp));
+        }
+    }
 }
 
 }

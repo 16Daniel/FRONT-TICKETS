@@ -112,6 +112,7 @@ async guardar()
     let articulosdata = this.eliminarReferenciasCirculares(this.formarticulos);
    
     let participantesChatData:ParticipanteChat[] = [{idUsuario: this.userdata.id,ultimoComentarioLeido:0},{idUsuario: this.idAdmin,ultimoComentarioLeido:0}];
+    if(this.userdata.idRol == "2" && this.userdata.id != this.idServicio){ participantesChatData.push({idUsuario: this.idServicio,ultimoComentarioLeido:0}); }
 
     let validacionServico = false; 
   if(this.userdata.id == this.idServicio || this.userdata.idRol == "2"){ validacionServico = true; }
