@@ -1,33 +1,35 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Timestamp } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import Swal from 'sweetalert2';
+
 import { Ticket } from '../../../../models/ticket.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { EstatusTicket } from '../../../../models/estatus-ticket.model';
-import { Subscription } from 'rxjs';
 import { Usuario } from '../../../../models/usuario.model';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { TicketsService } from '../../../../services/tickets.service';
 import { UsersService } from '../../../../services/users.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
-import { ToastModule } from 'primeng/toast';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ModalFilterTicketsComponent } from '../../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { Timestamp } from '@angular/fire/firestore';
-import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
 import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 import { PurchaseService } from '../../../../services/purchase.service';
 import { Compra } from '../../../../models/compra.model';
+import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -115,6 +117,17 @@ export class AdminAudioVideoTabComponent {
   }
 
   async obtenerTickets(): Promise<void> {
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
     this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
@@ -160,9 +173,11 @@ export class AdminAudioVideoTabComponent {
 
         this.tickets = this.tickets.filter(x => x.validacionAdmin != true);
         this.cdr.detectChanges();
+        setTimeout(() => { Swal.close(); }, 1000);
       },
       error: (error) => {
         console.error('Error al escuchar los tickets:', error);
+        Swal.close();
       },
     });
   }

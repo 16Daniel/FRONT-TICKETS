@@ -9,17 +9,19 @@ import { AdminSysTabComponent } from "../admin-sys-tab/admin-sys-tab.component";
 import { AdminAudioVideoTabComponent } from "../admin-audio-video-tab/admin-audio-video-tab.component";
 import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-maintenance-tab.component';
 import AdminReportsTabComponent from '../admin-reports-tab/admin-reports-tab.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-tabs',
   standalone: true,
   imports: [
     TabViewModule,
+    CommonModule,
     AdminSysTabComponent,
     AdminAudioVideoTabComponent,
     AdminMaintenanceTabComponent,
     AdminReportsTabComponent
-],
+  ],
   templateUrl: './admin-tabs.component.html',
 })
 
@@ -31,6 +33,9 @@ export class AdminTabsComponent {
   tickets: Ticket[] = [];
   public todosLostickets: Ticket[] = [];
   ticket: Ticket | undefined;
+
+  activeIndex: number = 0;
+  tabsActivos: boolean[] = [true, false, false, false];
 
   private unsubscribe!: () => void;
 
@@ -52,4 +57,11 @@ export class AdminTabsComponent {
   refrescar() {
     this.cdr.detectChanges();
   }
+
+  onTabChange(event: any) {
+    const index = event.index;
+    this.activeIndex = index;
+    this.tabsActivos[index] = true;
+  }
+
 }
