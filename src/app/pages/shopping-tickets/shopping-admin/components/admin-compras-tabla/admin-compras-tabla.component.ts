@@ -85,7 +85,7 @@ obtenerNombreArea(idarea:string):string
     let nombre = "";
     let area = this.catareas.filter(x=> x.id == idarea)[0]; 
     
-    if(idarea != undefined){ nombre = area.nombre; }
+    if(area != undefined){ nombre = area.nombre; }
     return nombre; 
 }
 

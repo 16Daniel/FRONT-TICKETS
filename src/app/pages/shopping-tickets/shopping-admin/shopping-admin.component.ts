@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Timestamp } from '@angular/fire/firestore';
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ShoppingService } from '../../../services/shopping.service';
@@ -9,7 +8,6 @@ import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../models/AdministracionCompra';
 import Swal from 'sweetalert2';
-import { Timestamp } from '@angular/fire/firestore';
 import { AgregarCompraComponent } from "./dialogs/agregar-compra/agregar-compra.component";
 import { SideMenuComponent } from "../../../shared/side-menu/side-menu.component";
 import { Usuario } from '../../../models/usuario.model';
@@ -23,6 +21,9 @@ import { environment } from '../../../../environments/environments';
 import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
 import { MultiSelectModule } from 'primeng/multiselect';
 import { UsersService } from '../../../services/users.service';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { AreasService } from '../../../services/areas.service';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
