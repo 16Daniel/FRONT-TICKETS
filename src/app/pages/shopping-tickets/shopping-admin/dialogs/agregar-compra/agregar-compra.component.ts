@@ -29,6 +29,7 @@ export class AgregarCompraComponent implements OnInit {
 @Input() sucursales: Sucursal[] = [];
 @Input() idAdmin:string = ""; 
 @Input() catMetodosPago: any[] = []; 
+@Input() idServicio:string = ""; 
 public FormSucursal:Sucursal|undefined; 
 public formarticulos:ArticuloCompra[] = []; 
 public formArtArticulo:string = ""; 
@@ -111,6 +112,10 @@ async guardar()
     let articulosdata = this.eliminarReferenciasCirculares(this.formarticulos);
    
     let participantesChatData:ParticipanteChat[] = [{idUsuario: this.userdata.id,ultimoComentarioLeido:0},{idUsuario: this.idAdmin,ultimoComentarioLeido:0}];
+    if(this.userdata.idRol == "2" && this.userdata.id != this.idServicio){ participantesChatData.push({idUsuario: this.idServicio,ultimoComentarioLeido:0}); }
+
+    let validacionServico = false; 
+  if(this.userdata.id == this.idServicio || this.userdata.idRol == "2"){ validacionServico = true; }
 
   let data:AdministracionCompra = 
     {
@@ -134,7 +139,10 @@ async guardar()
       idArea: this.userdata.idArea == undefined ? null : this.userdata.idArea,
       metodoPago:this.formMetodoPago,
       sucursales:this.getDistinctSucursalIds(articulosdata),
-      regiones:this.obtenerDistintasRegiones(articulosdata)
+      regiones:this.obtenerDistintasRegiones(articulosdata),
+      validado:this.userdata.idRol == '2'? this.userdata.id == this.idServicio ? 1 : 0 : 1,
+      idSucursalSolicitante: this.userdata.idRol == '2'? this.userdata.sucursales[0].id : null,
+      validacionServico: validacionServico
     }   
     
     try {
@@ -233,7 +241,7 @@ getNombreMes(numeroMes: number): string {
   }
 
   obtenerNombreSucursal(idSucursal:string):string
-{ 
+{  
     let nombre = "";
     
         let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 
@@ -241,6 +249,8 @@ getNombreMes(numeroMes: number): string {
       if(sucursal != undefined){ nombre = sucursal.nombre;}  
     return nombre; 
 }
+
+
 
 }
 
