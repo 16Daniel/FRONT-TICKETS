@@ -3,7 +3,7 @@
   @if (usuario.idArea == '1' || usuario.idRol == '1')
   {
   <p-tabPanel header="SISTEMAS">
-    <ng-container *ngIf="tabsActivos[0]">
+    <ng-container *ngIf="tabsActivos['SISTEMAS']">
       <app-admin-sys-tab></app-admin-sys-tab>
     </ng-container>
   </p-tabPanel>
@@ -11,7 +11,7 @@
   @if (usuario.idArea == '2' || usuario.idRol == '1')
   {
   <p-tabPanel header="AUDIO Y VIDEO">
-    <ng-container *ngIf="tabsActivos[1]">
+    <ng-container *ngIf="tabsActivos['AUDIO Y VIDEO']">
       <app-admin-audio-video-tab></app-admin-audio-video-tab>
     </ng-container>
   </p-tabPanel>
@@ -19,7 +19,7 @@
   @if (usuario.idArea == '4' || usuario.idRol == '1')
   {
   <p-tabPanel header="MANTENIMIENTO">
-    <ng-container *ngIf="tabsActivos[2]">
+    <ng-container *ngIf="tabsActivos['MANTENIMIENTO']">
       <app-admin-maintenance-tab></app-admin-maintenance-tab>
     </ng-container>
   </p-tabPanel>
@@ -27,7 +27,7 @@
   @if (usuario.idRol == '1' || usuario.idRol == '5')
   {
   <p-tabPanel header="KPIs">
-    <ng-container *ngIf="tabsActivos[3]">
+    <ng-container *ngIf="tabsActivos['KPIs']">
       <app-admin-reports-tab></app-admin-reports-tab>
     </ng-container>
   </p-tabPanel>
