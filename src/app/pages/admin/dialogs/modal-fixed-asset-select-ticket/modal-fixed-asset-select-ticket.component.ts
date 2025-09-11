@@ -10,10 +10,9 @@ import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { TicketsService } from '../../../../services/tickets.service';
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { Area } from '../../../../models/area.model';
-import { AreasService } from '../../../../services/areas.service';
 import { UsersService } from '../../../../services/users.service';
 import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-fixed-asset-select-ticket',
@@ -28,7 +27,6 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>();
   @Output() ticketSelectedEvent = new EventEmitter<Ticket>();
   usuariosHelp: Usuario[] = [];
-  areas: Area[] = [];
 
   tickets: Ticket[] = [];
   ticketSeleccionado: Ticket | undefined;
@@ -46,7 +44,6 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerTickets();
-    this.obtenerAreas();
     this.obtenerUsuariosHelp();
   }
 
@@ -88,7 +85,7 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
 
   obtenerNombreArea(idArea: string): string {
     let nombre = '';
-    let area = this.areas.filter((x) => x.id == idArea);
+    let area = this.areasService.areas.filter((x) => x.id == idArea);
     if (area.length > 0) {
       nombre = area[0].nombre;
     }
@@ -103,19 +100,6 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
       nombre = temp[0].nombre + ' ' + temp[0].apellidoP;
     }
     return nombre;
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
   }
 
   obtenerUsuariosHelp() {

@@ -25,10 +25,10 @@ export class UserTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
-  @Input() IdArea: string = '';
+  @Input() idArea: string = '';
   usuario: Usuario | any;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor() { }
 
   activeIndex: number = -1;
   ngOnInit(): void {
@@ -81,10 +81,18 @@ export class UserTicketsAccordionComponent {
   }
 
   ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
-    return sucursales.sort((a, b) => {
+    let sucursalesFiltradas = sucursales;
+
+    if (this.usuarioAgrupacion?.idRol === '7') {
+      sucursalesFiltradas = sucursales.filter(sucursal =>
+        this.tickets.some(tk => tk.idSucursal === sucursal.id)
+      );
+    }
+
+    return sucursalesFiltradas.sort((a, b) => {
       const ticketsA = this.contarTickets(a.id);
       const ticketsB = this.contarTickets(b.id);
-      return ticketsB - ticketsA; // Ordena de mayor a menor
+      return ticketsB - ticketsA;
     });
   }
 

@@ -6,6 +6,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalGenerateTicketComponent } from '../../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
@@ -22,13 +23,13 @@ import { UsersService } from '../../../../services/users.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
-import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
 import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 import { PurchaseService } from '../../../../services/purchase.service';
 import { Compra } from '../../../../models/compra.model';
+import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -116,6 +117,17 @@ export class AdminMaintenanceTabComponent {
   }
 
   async obtenerTickets(): Promise<void> {
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
     this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
@@ -161,9 +173,11 @@ export class AdminMaintenanceTabComponent {
 
         this.tickets = this.tickets.filter(x => x.validacionAdmin != true);
         this.cdr.detectChanges();
+        setTimeout(() => { Swal.close(); }, 1000);
       },
       error: (error) => {
         console.error('Error al escuchar los tickets:', error);
+        Swal.close();
       },
     });
   }
@@ -213,10 +227,10 @@ export class AdminMaintenanceTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
+    this.usersService.getUsersHelp(this.idArea, true).subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.idArea);
+        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.idArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -235,9 +249,17 @@ export class AdminMaintenanceTabComponent {
   agrupar(user: Usuario) {
     this.usergroup = user;
     this.mostrarAgrupacion = true;
+
+    if (this.usergroup.idRol === '7') {
+      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id)
+    }
+    else {
+      this.tickets = this.todosLostickets;
+    }
   }
 
   agruparPorSucursal() {
+    this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
     this.cdr.detectChanges();

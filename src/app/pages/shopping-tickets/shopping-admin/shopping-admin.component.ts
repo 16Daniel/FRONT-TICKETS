@@ -1,21 +1,19 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Timestamp } from '@angular/fire/firestore';
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ShoppingService } from '../../../services/shopping.service';
-import { FormsModule } from '@angular/forms';
 import { ProveedoresComponent } from "./dialogs/proveedores/proveedores.component";
 import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';
-import { DropdownModule } from 'primeng/dropdown';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../models/AdministracionCompra';
 import Swal from 'sweetalert2';
 import { Timestamp } from '@angular/fire/firestore';
 import { AgregarCompraComponent } from "./dialogs/agregar-compra/agregar-compra.component";
 import { SideMenuComponent } from "../../../shared/side-menu/side-menu.component";
 import { Usuario } from '../../../models/usuario.model';
-import { CalendarModule } from 'primeng/calendar';
 import { GraficaAdminComprasComponent } from "./components/grafica-admin-compras/grafica-admin-compras.component";
-import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area.model';
 import { MessagesModule } from 'primeng/messages';
 import { TooltipModule } from 'primeng/tooltip';
@@ -32,8 +30,9 @@ import { UsersService } from '../../../services/users.service';
     DropdownModule, AgregarCompraComponent, SideMenuComponent, CalendarModule, GraficaAdminComprasComponent,
     MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule],
   templateUrl: './shopping-admin.component.html',
-  styleUrl:'./shopping-admin.component.scss'
+  styleUrl: './shopping-admin.component.scss'
 })
+
 export default class ShoppingAdminComponent implements OnInit {
 public visible:boolean = false; 
 public catTipoCompra:any[] = []; 
@@ -78,11 +77,11 @@ constructor(
   ngOnInit(): void 
   { 
     this.actualizarInfoUsuario();
+    this.catareas = this.areasService.areas;
     this.obtenerFacturasPendientes()
-    this.obtenerTipoCompras(); 
-    this.obtenerProveedores(); 
+    this.obtenerTipoCompras();
+    this.obtenerProveedores();
     this.obtenerSucursales();
-    this.obtenerAreas(); 
     if(this.usuario.id == this.idAdmin)
       {
         this.obtenerCompras(); 
@@ -109,7 +108,7 @@ constructor(
         console.log(error);
       },
     });
-   }
+  }
 
      obtenerComprasServicio()
    {
@@ -130,35 +129,30 @@ constructor(
         this.shopServ.obtenerComprasFacturaPendiente(this.usuario.id).subscribe({
       next: (data) => {
         this.facturasPendientes = data;
-        let temp:AdministracionCompra[] = [];
-        for(let item of this.facturasPendientes)
-          {
-            let valor = true;
-            for(let art of item.articulos)
-              {
-                  if(art.tipo == "ON-LINE")
-                    {
-                      valor = false; 
-                    }
-              }
-
-              if(valor)
-                {
-                  temp.push(item); 
-                }
+        let temp: AdministracionCompra[] = [];
+        for (let item of this.facturasPendientes) {
+          let valor = true;
+          for (let art of item.articulos) {
+            if (art.tipo == "ON-LINE") {
+              valor = false;
+            }
           }
-          this.facturasPendientes = [...temp]; 
+
+          if (valor) {
+            temp.push(item);
+          }
+        }
+        this.facturasPendientes = [...temp];
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.log(error);
       },
     });
-   }
+  }
 
-     obtenerComprasUsuario()
-   {
-        this.shopServ.getComprasUsuario(this.usuario.id).subscribe({
+  obtenerComprasUsuario() {
+    this.shopServ.getComprasUsuario(this.usuario.id).subscribe({
       next: (data) => {
         this.regcompras = data;
         this.cdr.detectChanges();
@@ -195,19 +189,18 @@ constructor(
         this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio).subscribe({
       next: (data) => {
         this.regcompras = data;
-        Swal.close(); 
+        Swal.close();
         this.cdr.detectChanges();
       },
       error: (error) => {
-        Swal.close(); 
+        Swal.close();
         console.log(error);
       },
     });
-   }
+  }
 
-  abrirModal()
-  {
-    this.visible = true; 
+  abrirModal() {
+    this.visible = true;
   }
 
   obtenerTipoCompras()
@@ -215,21 +208,8 @@ constructor(
      this.shopServ.getCatTipo().subscribe({
       next: (data) => {
         this.catTipoCompra = data;
-        this.filtrocatTipoCompra = [...this.catTipoCompra]; 
-        this.filtrocatTipoCompra.unshift({id:"-1",nombre:'TODO'})
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }  
-
-  obtenerProveedores()
-  {
-    this.shopServ.getProveedores().subscribe({
-      next: (data) => {
-        this.catProveedores= data;
+        this.filtrocatTipoCompra = [...this.catTipoCompra];
+        this.filtrocatTipoCompra.unshift({ id: "-1", nombre: 'TODO' })
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -238,7 +218,19 @@ constructor(
     });
   }
 
-    obtenerSucursales() {
+  obtenerProveedores() {
+    this.shopServ.getProveedores().subscribe({
+      next: (data) => {
+        this.catProveedores = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  obtenerSucursales() {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
@@ -246,21 +238,18 @@ constructor(
       },
       error: (error) => {
         console.log(error);
-       // this.showMessage('error', 'Error', 'Error al procesar la solicitud');
+        // this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
   }
 
 
-abrirModalProveedores()
-{
-  this.modalProveedores = true;
-  this.cdr.detectChanges();  
-}
+  abrirModalProveedores() {
+    this.modalProveedores = true;
+    this.cdr.detectChanges();
+  }
 
-
-obtenerNombreArea(idarea:string):string
-{
+  obtenerNombreArea(idarea: string): string {
     let nombre = "";
     let area = this.catareas.filter(x=> x.id == idarea)[0]; 
     
@@ -269,25 +258,22 @@ obtenerNombreArea(idarea:string):string
 }
 
   downloadPdfDirect(pdfUrl: string) {
-  window.open(pdfUrl, '_blank');
-}
+    window.open(pdfUrl, '_blank');
+  }
 
-obtenerNombreEstatus(id:string):string
-{
-  return this.catStatusCompra.filter(x=> x.id == id).length>0 ? this.catStatusCompra.filter(x=> x.id == id)[0].nombre : '';   
-}
-obtenerNombreEstatusPago(id:string):string
-{
-  return this.catStatusPago.filter(x=> x.id == id).length>0 ? this.catStatusPago.filter(x=> x.id == id)[0].nombre : '';   
-}
-obtenerNombreMetodoPago(id:string):string
-{
-  return this.catMetodosPago.filter(x=> x.id == id).length>0 ? this.catMetodosPago.filter(x=> x.id == id)[0].nombre : '';   
-}
+  obtenerNombreEstatus(id: string): string {
+    return this.catStatusCompra.filter(x => x.id == id).length > 0 ? this.catStatusCompra.filter(x => x.id == id)[0].nombre : '';
+  }
+  obtenerNombreEstatusPago(id: string): string {
+    return this.catStatusPago.filter(x => x.id == id).length > 0 ? this.catStatusPago.filter(x => x.id == id)[0].nombre : '';
+  }
+  obtenerNombreMetodoPago(id: string): string {
+    return this.catMetodosPago.filter(x => x.id == id).length > 0 ? this.catMetodosPago.filter(x => x.id == id)[0].nombre : '';
+  }
 
 
 
-  verificarChatNoLeido(ticket:AdministracionCompra) {
+  verificarChatNoLeido(ticket: AdministracionCompra) {
     const participantes = ticket.participantesChat.sort(
       (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
     );
@@ -303,52 +289,50 @@ obtenerNombreMetodoPago(id:string):string
 
       // Si el último comentario leído es menor que la longitud actual de los comentarios
       return comentarios.length > ultimoComentarioLeido;
-      
+
     }
 
     return false;
   }
 
-obtenerTotalCompras(articulos:ArticuloCompra[]):number
-{
-  let total = 0;
-  for(let item of articulos)
-    {
+  obtenerTotalCompras(articulos: ArticuloCompra[]): number {
+    let total = 0;
+    for (let item of articulos) {
       total = total + (item.precio * item.uds);
     }
-  return total;
-}
-
-obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.catareas = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+    return total;
   }
 
-hanPasado7Dias(fecha: Date): boolean {
-  const hoy = new Date();
-  const fechaLimite = new Date(fecha);
-  fechaLimite.setDate(fechaLimite.getDate() + 7);
-  
-  return hoy >= fechaLimite;
-}
+  // obtenerAreas() {
+  //   this.areasService.get().subscribe({
+  //     next: (data) => {
+  //       this.catareas = data;
+  //       this.cdr.detectChanges();
+  //     },
+  //     error: (error) => {
+  //       console.log(error);
+  //     },
+  //   });
+  // }
+
+  hanPasado7Dias(fecha: Date): boolean {
+    const hoy = new Date();
+    const fechaLimite = new Date(fecha);
+    fechaLimite.setDate(fechaLimite.getDate() + 7);
+
+    return hoy >= fechaLimite;
+  }
 
 
-exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'): void {
+  exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'): void {
     // Transformar los datos para tener una fila por artículo
     const datosExportar = this.transformarDatos(compras);
-    
+
     // Crear libro de trabajo y hoja
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Compras');
-    
+
     // Guardar el archivo
     XLSX.writeFile(wb, filename);
   }
@@ -370,7 +354,7 @@ exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'
           'Fecha Entrega': this.formatTimestamp(compra.fechaEntrega),
           'Tipo Compra': this.obtenerNombreTipocompra(compra.tipoCompra),
           'Método Pago': this.obtenerNombreMetodoPago(compra.metodoPago),
-          
+
           // Datos del artículo
           'Artículo': articulo.art,
           'Unidades': articulo.uds,
@@ -396,12 +380,12 @@ exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'
 
   private formatTimestamp(timestamp: any): string {
     if (!timestamp) return '';
-    
+
     // Si es Firestore Timestamp
     if (timestamp.toDate) {
       return timestamp.toDate().toLocaleDateString();
     }
-    
+
     // Si es Date o string
     try {
       return new Date(timestamp).toLocaleDateString();
@@ -410,24 +394,22 @@ exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'
     }
   }
 
-  obtenerNombreTipocompra(idTipoCompra:string)
-  {
+  obtenerNombreTipocompra(idTipoCompra: string) {
     let nombre = "";
-    let tipocompra = this.catTipoCompra.filter(x=> x.id == idTipoCompra)[0]; 
-    
-    if(tipocompra != undefined){ nombre = tipocompra.nombre; }
-    return nombre; 
+    let tipocompra = this.catTipoCompra.filter(x => x.id == idTipoCompra)[0];
+
+    if (tipocompra != undefined) { nombre = tipocompra.nombre; }
+    return nombre;
   }
 
-    obtenerNombreSucursalArt(idSucursal:string):string
-{ 
+  obtenerNombreSucursalArt(idSucursal: string): string {
     let nombre = "";
-    
-        let sucursal = this.sucursales.filter(x=> x.id == idSucursal)[0]; 
-      
-      if(sucursal != undefined){ nombre = sucursal.nombre;}  
-    return nombre; 
-}
+
+    let sucursal = this.sucursales.filter(x => x.id == idSucursal)[0];
+
+    if (sucursal != undefined) { nombre = sucursal.nombre; }
+    return nombre;
+  }
 
 
 obtenerSolicitudes(tipo:number):AdministracionCompra[]

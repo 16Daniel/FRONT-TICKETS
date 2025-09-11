@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
@@ -7,11 +7,12 @@ import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Usuario } from '../../../../models/usuario.model';
-import { Sucursal } from '../../../../models/sucursal.model';
+
+import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { Ticket } from '../../../../models/ticket.model';
+import { Sucursal } from '../../../../models/sucursal.model';
 import { Area } from '../../../../models/area.model';
-import { AdminTicketsListComponent } from '../../../admin/components/admin-tickets-list/admin-tickets-list.component';
+import { Usuario } from '../../../../models/usuario.model';
 
 @Component({
   selector: 'app-branches-tickets-accordion',
@@ -33,20 +34,26 @@ import { AdminTicketsListComponent } from '../../../admin/components/admin-ticke
 export class BranchesTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
-  @Input() IdArea: string = '';
+  @Input() idArea: string = '';
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
-  activeIndex: number = -1;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) {
+    
+   }
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.activeIndex = -1;
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+  if (changes['sucursales']) {
+    this.sucursales = this.ordenarSucursales();
+  }
+}
 
   ordenarSucursales(): Sucursal[] {
     return this.sucursales.sort((a, b) => {

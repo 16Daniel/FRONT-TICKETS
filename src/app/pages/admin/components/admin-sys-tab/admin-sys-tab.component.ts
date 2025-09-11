@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 import { Sucursal } from '../../../../models/sucursal.model';
 import { EstatusTicket } from '../../../../models/estatus-ticket.model';
@@ -23,12 +24,12 @@ import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model
 import { AccordionBranchMaintenance10x10Component } from '../../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
-import { BranchesTicketsAccordionComponent } from '../../../../pages/branch/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
 import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
 import { PurchaseService } from '../../../../services/purchase.service';
 import { Compra } from '../../../../models/compra.model';
+import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -78,8 +79,7 @@ export class AdminSysTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  IdArea: string = '1';
-  textoMantenimiento: string = '';
+  idArea: string = '1';
   ordenarMantenimientosFecha: boolean = false;
   compras: Compra[] = [];
   auxMostrarMantenimientos = true;
@@ -101,9 +101,6 @@ export class AdminSysTabComponent {
     this.obtenerSucursales();
     this.obtenerCompras();
     this.todosLostickets = this.tickets;
-
-    if (this.usuario.idArea == '1') this.textoMantenimiento = '10X10';
-    if (this.usuario.idArea == '2') this.textoMantenimiento = '6X6';
   }
 
   ngAfterViewInit() {
@@ -122,7 +119,18 @@ export class AdminSysTabComponent {
   }
 
   async obtenerTickets(): Promise<void> {
-    this.subscripcionTicket = this.ticketsService.getByArea(this.IdArea).subscribe({
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+    this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
         let arr_temp: Ticket[] = [];
@@ -172,9 +180,11 @@ export class AdminSysTabComponent {
         }));
 
         this.cdr.detectChanges();
+        setTimeout(() => { Swal.close(); }, 1000);
       },
       error: (error) => {
         console.error('Error al escuchar los tickets:', error);
+        Swal.close();
       },
     });
   }
@@ -213,10 +223,10 @@ export class AdminSysTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
+    this.usersService.getUsersHelp(this.idArea, true).subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
+        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -227,7 +237,7 @@ export class AdminSysTabComponent {
   }
 
   obtenerCompras() {
-    this.purchaseService.getByArea(this.IdArea).subscribe(result => {
+    this.purchaseService.getByArea(this.idArea).subscribe(result => {
       this.compras = result;
     });
   }
@@ -235,9 +245,17 @@ export class AdminSysTabComponent {
   agrupar(user: Usuario) {
     this.usergroup = user;
     this.mostrarAgrupacion = true;
+
+    if (this.usergroup.idRol === '7') {
+      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id)
+    }
+    else {
+      this.tickets = this.todosLostickets;
+    }
   }
 
   agruparPorSucursal() {
+    this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
     this.cdr.detectChanges();

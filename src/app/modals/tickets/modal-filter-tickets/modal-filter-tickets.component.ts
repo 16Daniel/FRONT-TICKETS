@@ -18,10 +18,10 @@ import { Ticket } from '../../../models/ticket.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { StatusTicketService } from '../../../services/status-ticket.service';
 import { Area } from '../../../models/area.model';
-import { AreasService } from '../../../services/areas.service';
 import { TicketsPriorityService } from '../../../services/tickets-priority.service';
 import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
 import { Sucursal } from '../../../models/sucursal.model';
+import { AreasService } from '../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-filter-tickets',
@@ -35,7 +35,7 @@ export class ModalFilterTicketsComponent implements OnInit {
   @Input() showModalFilterTickets: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Output() ticketsFiltradosEvent = new EventEmitter<Ticket[]>();
-  @Input() sucursales:Sucursal[] = [];
+  @Input() sucursales: Sucursal[] = [];
 
   ticketsFiltrados: Ticket[] = [];
   filterstatus: any | undefined;
@@ -60,8 +60,8 @@ export class ModalFilterTicketsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.areas = this.areasService.areas;
     this.obtenerCategorias();
-    this.obtenerAreas();
     this.obtenerStatusTickets();
   }
 
@@ -82,19 +82,6 @@ export class ModalFilterTicketsComponent implements OnInit {
     this.ticketsPriorityService.get().subscribe({
       next: (data) => {
         this.prioridadesTicket = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {

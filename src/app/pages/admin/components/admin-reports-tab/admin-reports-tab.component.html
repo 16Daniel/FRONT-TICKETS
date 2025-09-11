@@ -1,70 +1,45 @@
 <div class=" p-3 pt-5">
 
-      <div class="row">
-        <div class="col-md-2">
-          <p>FECHA INICIO</p>
-          <p-calendar 
-    [(ngModel)]="fechaini" 
-    [iconDisplay]="'input'" 
-    [showIcon]="true" 
-    inputId="icondisplay" [style]="{width:'100%'}" />
-        </div>
-         <div class="col-md-2">
-           <p>FECHA FIN</p>
-          <p-calendar 
-    [(ngModel)]="fechafin" 
-    [iconDisplay]="'input'" 
-    [showIcon]="true" 
-    inputId="icondisplay" [style]="{width:'100%'}" />
-        </div>
+  <div class="row">
+    <div class="col-md-2">
+      <p>FECHA INICIO</p>
+      <p-calendar [(ngModel)]="fechaini" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
+    </div>
+    <div class="col-md-2">
+      <p>FECHA FIN</p>
+      <p-calendar [(ngModel)]="fechafin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
+    </div>
 
-          <div class="col-md-3">
-            <p>SUCURSAL</p>
-                    <p-multiSelect 
-                [options]="sucursales" 
-                [(ngModel)]="sucursalesSel" 
-                [filter]="true" 
-                optionLabel="nombre" 
-                placeholder="SELECCIONAR SUCURSALES"
-                [style]="{width:'100%'}"
-                />
-        </div>
+    <div class="col-md-3">
+      <p>SUCURSAL</p>
+      <p-multiSelect [options]="sucursales" [(ngModel)]="sucursalesSel" [filter]="true" optionLabel="nombre"
+        placeholder="SELECCIONAR SUCURSALES" [style]="{width:'100%'}" />
+    </div>
 
-          <div class="col-md-3">
-            <p>ÁREAS</p>
-                    <p-multiSelect 
-                [options]="areas" 
-                [(ngModel)]="areasSel" 
-                [filter]="true" 
-                optionLabel="nombre" 
-                placeholder="SELECCIONAR ÁREAS"
-                [style]="{width:'100%'}"
-                (onChange)="cambiarareas()"
-                />
-        </div>
+    <div class="col-md-3">
+      <p>ÁREAS</p>
+      <p-multiSelect [options]="areas" [(ngModel)]="areasSel" [filter]="true" optionLabel="nombre"
+        placeholder="SELECCIONAR ÁREAS" [style]="{width:'100%'}" (onChange)="cambiarareas()" />
+    </div>
 
 
-        <div class="col-md-2"><p>&nbsp;</p><button class="btn btn-warning p-2" (click)="obtenerTickets()"><i class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
-        <!-- <button class="btn btn-success" (click)="exportarExcel()"><img width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button> -->
-        </div>
-      </div>
+    <div class="col-md-2">
+      <p>&nbsp;</p><button class="btn btn-warning p-2" (click)="obtenerTickets()"><i
+          class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
+    </div>
+  </div>
 
-      <div class="d-flex justify-content-center p-3" *ngIf="loading">
-     <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
-</div>
+  <div class="d-flex justify-content-center p-3" *ngIf="loading">
+    <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+  </div>
 
-      <div class="m-3" *ngIf="finalizado">
-               <app-grafica-general-tickets 
-               [todosLosTickets]="todosLosTickets"
-                [areas]="areasSel"
-                [usuarios]="usuariosFiltro"
-                [categorias]="categorias"
-                [catEstatusTicket]="estatusTicket"
-                [meses]="mesesDistintos"
-                [sucursalesSel]="sucursalesSel"
-                [mantenimientos]="manteniminetos"
-                ></app-grafica-general-tickets>
-      </div>
+  <div class="m-3" *ngIf="finalizado">
+    <app-grafica-general-tickets [todosLosTickets]="todosLosTickets" [areas]="areasSel" [usuarios]="usuariosFiltro"
+      [categorias]="categorias" [catEstatusTicket]="estatusTicket" [meses]="mesesDistintos"
+      [sucursalesSel]="sucursalesSel" [mantenimientos]="manteniminetos"></app-grafica-general-tickets>
+  </div>
 </div>
 
 

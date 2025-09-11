@@ -8,7 +8,7 @@
             </div>
             <br>
 
-            <p-table [value]="areas" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+            <p-table [value]="(areasService.areas$ | async) ?? []" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
                 styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
                 <ng-template pTemplate="header">
                     <tr>

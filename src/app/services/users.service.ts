@@ -42,30 +42,40 @@ export class UsersService {
     return user;
   }
 
-  getUsersHelp(idArea?: string, incluirEspecialistas: boolean = false): Observable<any[]> {
+  getUsersHelp(
+    idArea?: string,
+    incluirEspecialistas: boolean = false,
+    incluirAdministradores: boolean = false
+  ): Observable<any[]> {
     return new Observable((observer) => {
-      // Referencia a la colección
       const collectionRef = collection(this.firestore, this.pathName);
 
-      // Arreglo de condiciones de filtrado
       const filtros: any[] = [];
 
-      // Filtro por rol
+      let roles: string[] = [];
+
       if (incluirEspecialistas) {
-        filtros.push(where('idRol', 'in', ['4', '7']));
+        roles.push('4', '7');
       } else {
-        filtros.push(where('idRol', '==', '4'));
+        roles.push('4');
       }
 
-      // Filtro por área si se proporciona
+      if (incluirAdministradores) {
+        roles.push('5');
+      }
+
+      if (roles.length > 1) {
+        filtros.push(where('idRol', 'in', roles));
+      } else {
+        filtros.push(where('idRol', '==', roles[0]));
+      }
+
       if (idArea) {
         filtros.push(where('idArea', '==', idArea));
       }
 
-      // Construcción de la query con los filtros
       const q = query(collectionRef, ...filtros);
 
-      // Escucha en tiempo real
       const unsubscribe = onSnapshot(
         q,
         (querySnapshot) => {
@@ -86,6 +96,7 @@ export class UsersService {
     });
   }
 
+
   async registerAuthFirebaseUser(email: string, password: string): Promise<string | null> {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -105,18 +116,22 @@ export class UsersService {
     return updateDoc(userRef, { esGuardia });
   }
 
-  getUsuariosEspecialistas(idSucursal: string): Observable<any[]> {
+  getUsuariosEspecialistas(idSucursal: string, idArea?: string): Observable<any[]> {
     const usersCollection = collection(this.firestore, this.pathName);
 
-    const q = query(
-      usersCollection,
-      where('idRol', '==', '7')
-    );
+    // Construimos los filtros dinámicamente
+    const filtros: any[] = [where('idRol', '==', '7')];
+
+    if (idArea) {
+      filtros.push(where('idArea', '==', idArea));
+    }
+
+    const q = query(usersCollection, ...filtros);
 
     return collectionData(q, { idField: 'id' }).pipe(
       map((usuarios: any[]) => {
         return usuarios.filter(usuario => {
-          return usuario.sucursales?.some((sucursal: any) => sucursal.id == idSucursal);
+          return usuario.sucursales?.some((sucursal: any) => sucursal.id === idSucursal);
         });
       })
     );

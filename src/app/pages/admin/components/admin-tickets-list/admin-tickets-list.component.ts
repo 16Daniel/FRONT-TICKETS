@@ -7,6 +7,9 @@ import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { CalendarModule } from 'primeng/calendar';
 
 import { Ticket } from '../../../../models/ticket.model';
 import { TicketsService } from '../../../../services/tickets.service';
@@ -15,7 +18,6 @@ import { Sucursal } from '../../../../models/sucursal.model';
 import { Area } from '../../../../models/area.model';
 import { UsersService } from '../../../../services/users.service';
 import { BranchesService } from '../../../../services/branches.service';
-import { AreasService } from '../../../../services/areas.service';
 import { Categoria } from '../../../../models/categoria.mdoel';
 import { CategoriesService } from '../../../../services/categories.service';
 import { SupportTypesService } from '../../../../services/support-types.service';
@@ -24,13 +26,10 @@ import { TicketsPriorityService } from '../../../../services/tickets-priority.se
 import { PrioridadTicket } from '../../../../models/prioridad-ticket.model';
 import { StatusTicketService } from '../../../../services/status-ticket.service';
 import { EstatusTicket } from '../../../../models/estatus-ticket.model';
-import { ModalFinalizeTicketComponent } from "../../../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component";
 import { ModalValidateTicketComponent } from "../../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component";
 import { ModalTicketChatComponent } from "../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component";
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { TooltipModule } from 'primeng/tooltip';
-import { CalendarModule } from 'primeng/calendar';
+import { AreasService } from '../../../../services/areas.service';
 
 
 @Component({
@@ -78,13 +77,13 @@ export class AdminTicketsListComponent {
   usuario: any;
   ticketSeleccionado: Ticket | undefined;
 
-  @Input() IdArea: string = '';
+  @Input() idArea: string = '';
 
   constructor(
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private areasService: AreasService,
+    public areasService: AreasService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private categoriesService: CategoriesService,
@@ -93,12 +92,12 @@ export class AdminTicketsListComponent {
     private statusTicketService: StatusTicketService,
     private confirmationService: ConfirmationService,
   ) {
+    this.areas = this.areasService.areas;
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerPrioridadesTicket();
     this.obtenerTiposSoporte();
     this.obtenerEstatusTicket();
-    this.obtenerAreas();
     this.obtenerCategorias();
   }
 
@@ -158,22 +157,6 @@ export class AdminTicketsListComponent {
     });
   }
 
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data.map((item: any) => ({
-          ...item,
-          id: item.id.toString()
-        }));;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
   obtenerCategorias() {
     this.categoriesService.get().subscribe({
       next: (data) => {
@@ -181,7 +164,7 @@ export class AdminTicketsListComponent {
           ...item,
           id: item.id.toString()
         }));
-        this.categorias = this.categorias.filter(x => x.idArea == this.IdArea);
+        this.categorias = this.categorias.filter(x => x.idArea == this.idArea);
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -219,7 +202,7 @@ export class AdminTicketsListComponent {
     this.usersService.get().subscribe({
       next: (data) => {
         this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
+        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
         this.cdr.detectChanges();
       },
       error: (error) => {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -51,9 +51,9 @@ export class ModalUserCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.areas = this.areasService.areas;
     this.obtenerSucursales();
     this.obtenerRoles();
-    this.obtenerAreas();
     if (this.usuarioEnSesion.idRol == '5')
       this.usuario.idArea = this.usuarioEnSesion.idArea;
     this.cdr.detectChanges();
@@ -65,7 +65,6 @@ export class ModalUserCreateComponent implements OnInit {
         control.markAsTouched();
       });
 
-      // this.showMessage('error', 'Error', 'Campos requeridos incompletos');
       return;
     }
 
@@ -162,19 +161,6 @@ export class ModalUserCreateComponent implements OnInit {
           ...item,
           id: item.id.toString()
         }));
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
         this.cdr.detectChanges();
       },
       error: (error) => {

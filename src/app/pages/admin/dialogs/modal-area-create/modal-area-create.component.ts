@@ -62,7 +62,7 @@ export class ModalAreaCreateComponent {
   }
 
   async crear() {
-    this.area = { ...this.area, id: parseInt(this.area.id) }
+    // this.area = { ...this.area, id: parseInt(this.area.id) }
     try {
       await this.areasService.create({ ...this.area });
       this.cdr.detectChanges();

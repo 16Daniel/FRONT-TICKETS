@@ -21,7 +21,6 @@ import { UsersService } from '../../../../services/users.service';
 import { Ticket } from '../../../../models/ticket.model';
 import { BranchesService } from '../../../../services/branches.service';
 import { CategoriesService } from '../../../../services/categories.service';
-import { AreasService } from '../../../../services/areas.service';
 import { Area } from '../../../../models/area.model';
 import { TicketsService } from '../../../../services/tickets.service';
 import { FolioGeneratorService } from '../../../../services/folio-generator.service';
@@ -31,6 +30,7 @@ import { ParticipanteChat } from '../../../../models/participante-chat.model';
 import { Subcategoria } from '../../../../models/subcategoria.model';
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -79,10 +79,12 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
+    this.areas = this.areasService.areas;
+    this.ticket.idArea = this.areas.find(x => x.id == this.activoFijo.idArea)!.id;
+
     this.usuarioActivo = await this.usersService.getUsuarioSucursal(this.activoFijo.idSucursal);
     this.ticket.referenciaActivoFijo = this.activoFijo.referencia;
     this.obtenerSucursales();
-    this.obtenerAreas();
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
@@ -93,22 +95,6 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       next: (data) => {
         this.sucursales = data;
         this.ticket.idSucursal = this.activoFijo.idSucursal;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
-  obtenerAreas() {
-    this.areasService.get().subscribe({
-      next: (data) => {
-        this.areas = data;
-
-        // this.formArea = this.areas.find(x => x.id == this.idArea);
-        this.ticket.idArea = this.areas.find(x => x.id == this.activoFijo.idArea)!.id;
-
         this.cdr.detectChanges();
       },
       error: (error) => {

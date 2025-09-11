@@ -1,12 +1,3 @@
-<div class="d-flex justify-content-center" *ngIf="loading">
-  <div class="lds-ring">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-</div>
-
 <full-calendar #calendar [options]="calendarOptions">
   <ng-template #eventContent let-arg>
     <div class="p-1">
