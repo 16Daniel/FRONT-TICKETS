@@ -35,13 +35,20 @@ export class AdminTabsComponent {
   ticket: Ticket | undefined;
 
   activeIndex: number = 0;
-  tabsActivos: boolean[] = [true, false, false, false];
-
+  tabsActivos: Record<string, boolean> = {};
   private unsubscribe!: () => void;
 
   constructor(private cdr: ChangeDetectorRef) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
+
+    this.activeIndex = 0;
+    if(this.usuario.idArea == '1')
+      this.tabsActivos['SISTEMAS'] = true;
+    if(this.usuario.idArea == '2')
+      this.tabsActivos['AUDIO Y VIDEO'] = true;
+    if(this.usuario.idArea == '4')
+      this.tabsActivos['MANTENIMIENTO'] = true;
   }
 
   ngOnDestroy() {
@@ -59,9 +66,8 @@ export class AdminTabsComponent {
   }
 
   onTabChange(event: any) {
-    const index = event.index;
-    this.activeIndex = index;
-    this.tabsActivos[index] = true;
+    const header = event.originalEvent.target.innerText.trim();
+    this.activeIndex = event.index;
+    this.tabsActivos[header] = true;
   }
-
 }
