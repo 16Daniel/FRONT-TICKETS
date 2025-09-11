@@ -96,7 +96,6 @@ export class UsersService {
     });
   }
 
-
   async registerAuthFirebaseUser(email: string, password: string): Promise<string | null> {
     try {
       const userCredential = await createUserWithEmailAndPassword(
