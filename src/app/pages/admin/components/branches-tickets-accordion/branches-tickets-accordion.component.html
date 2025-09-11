@@ -1,5 +1,5 @@
-<p-accordion class="w-full" [activeIndex]="activeIndex">
-    <p-accordionTab *ngFor="let item of ordenarSucursales()">
+<p-accordion class="w-full">
+    <p-accordionTab *ngFor="let item of sucursales">
         <ng-template pTemplate="header">
             <div class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 justify-content-between" [style]="{
             'background-color': obtenerBackGroundAcordion(contarTickets(item.id))

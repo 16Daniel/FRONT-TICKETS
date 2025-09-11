@@ -92,10 +92,7 @@ export class AdminTicketsListComponent {
     private statusTicketService: StatusTicketService,
     private confirmationService: ConfirmationService,
   ) {
-    this.areas = this.areasService.areas.map((item: any) => ({
-      ...item,
-      id: item.id.toString()
-    }));
+    this.areas = this.areasService.areas;
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerPrioridadesTicket();
