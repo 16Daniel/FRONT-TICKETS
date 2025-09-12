@@ -59,6 +59,16 @@ constructor(
       {
         this.formArtTipo = '1'; 
       }
+
+      
+       if(this.userdata.idRol == '1' || this.userdata.idRol == '5')
+        {
+          this.catProveedores = this.catProveedores.filter(x => x.idUsuario == this.userdata.id || x.idArea == this.userdata.idArea); 
+        } else 
+          {
+            this.catProveedores = this.catProveedores.filter(x => x.idUsuario == this.userdata.id); 
+          }
+      
    } 
 
   agregarArticulo()

@@ -54,4 +54,5 @@ export interface Proveedor {
   banco: string;
   rfc: string;
   idUsuario:string; 
+  idArea:string|null; 
 }
