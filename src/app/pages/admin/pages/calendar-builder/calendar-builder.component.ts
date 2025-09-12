@@ -231,7 +231,7 @@ export default class CalendarBuilderComponent implements OnInit {
     return porcentaje
   }
 
-  async consultarUsuario() {
+  async llenarInfoUsuario() {
     this.sucursalesSeleccionadas = [];
     this.sucursalesOrdenadas = [];
     this.indicacionesVisitas = [];
