@@ -12,6 +12,7 @@ export const environment = {
    },
   apiURL:"https://localhost:7165/api/",
   idAdministracion:"hHqyRWm306Zmb5XADbbR",
-  idServicio:"QvSLmxLZjJnaGPPsA7zi"
+  idServicio:"QvSLmxLZjJnaGPPsA7zi",
+  idDireccion:"Mcaolq7LySn81CSX4n5L"
 };
 

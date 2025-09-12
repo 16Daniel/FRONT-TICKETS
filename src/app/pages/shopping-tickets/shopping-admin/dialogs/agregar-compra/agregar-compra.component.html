@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <p>Tipo</p>
-                                <select class="form-select h-42" [(ngModel)]="formArtTipo" (change)="cambiartipo()">
+                                <select class="form-select h-42" [(ngModel)]="formArtTipo" (change)="cambiartipo()" [disabled]="userdata.idRol == '2' && userdata.id != idServicio">
                                     <option *ngFor="let item of catTipoCompra" [value]="item.id">{{item.nombre}}</option>
                                     </select>
                             </div>

@@ -25,7 +25,8 @@ export class ProveedoresComponent implements OnInit {
     cuentaInterbancaria: '',
     banco: '',
     rfc: '',
-    idUsuario:''
+    idUsuario:'',
+    idArea: null
   };
 
   constructor(private proveedoresService: ProveedoresService) {  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
@@ -50,7 +51,8 @@ export class ProveedoresComponent implements OnInit {
           cuentaInterbancaria: '',
           banco: '',
           rfc: '',
-          idUsuario:this.usuario.id
+          idUsuario:this.usuario.id,
+          idArea:this.usuario.idArea
         };
 
         // Swal.fire({
@@ -79,7 +81,8 @@ export class ProveedoresComponent implements OnInit {
                 cuentaInterbancaria: '',
                 banco: '',
                 rfc: '',
-                idUsuario:this.usuario.id
+                idUsuario:this.usuario.id,
+                idArea:this.usuario.idArea
               };
         })
         .catch(error => console.error('Error al actualizar proveedor:', error));
@@ -110,7 +113,8 @@ export class ProveedoresComponent implements OnInit {
     cuentaInterbancaria: '',
     banco: '',
     rfc: '',
-    idUsuario:this.usuario.id
+    idUsuario:this.usuario.id,
+    idArea:this.usuario.idArea
   };
   }
 }
