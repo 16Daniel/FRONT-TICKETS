@@ -9,7 +9,7 @@
     (onHide)="onHide()"
     >
  
-    <p class="text-center"> <i class='bx bx-error bx-sm text-warning' ></i> ARRASTRAR O SELECCIONAR EL DOCUMENTO, SOLO SE PERMITE UN ARCHIVO EN FORMATO PDF.</p>
+    <p class="text-center"> <i class='bx bx-error bx-sm text-warning' ></i> ARRASTRAR O SELECCIONAR EL DOCUMENTO, SOLO SE PERMITE UN ARCHIVO DE IMAGEN O PDF.</p>
 
    <div class="card">
   <p-toast></p-toast>
@@ -21,7 +21,7 @@
     (uploadHandler)="onUpload($event)"
     (onError)="onError($event)"
     (onBeforeUpload)="onBeforeUpload($event)"
-    accept=".pdf"
+    accept=".pdf,image/*"
     maxFileSize="10000000"
     [auto]="false"
     chooseLabel="Seleccionar documento"

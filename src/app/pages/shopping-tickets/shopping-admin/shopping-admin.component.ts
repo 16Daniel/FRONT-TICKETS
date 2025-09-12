@@ -24,12 +24,13 @@ import { UsersService } from '../../../services/users.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { AreasService } from '../../../services/areas.service';
+import { InputSwitchModule } from 'primeng/inputswitch';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
   imports: [CommonModule, DialogModule, FormsModule, ProveedoresComponent,
     DropdownModule, AgregarCompraComponent, SideMenuComponent, CalendarModule, GraficaAdminComprasComponent,
-    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule],
+    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule,InputSwitchModule],
   templateUrl: './shopping-admin.component.html',
   styleUrl: './shopping-admin.component.scss'
 })
@@ -56,6 +57,7 @@ public modalChat:boolean = false;
 public usuario:Usuario;
 public idAdmin:string = environment.idAdministracion;
 public idServicio:string = environment.idServicio;
+public idDireccion:string = environment.idDireccion; 
 public filtroFechaIni:Date|undefined = this.getFirstDayOfMonth();
 public filtroFechaFin:Date|undefined = new Date();
 public filtroStatus:string = "-1";
@@ -67,7 +69,7 @@ public filtrocatTipoCompra:any[] = [];
 public  catareas: Area[] = []; 
 public catMetodosPago:any[] = [{id:'1',nombre:'EFECTIVO'},{id:'2',nombre:'TRANSFERENCIA'}];
 public messages:any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }]; 
-
+public verServicio:boolean = false; 
 constructor(
     private shopServ:ShoppingService,
     private cdr: ChangeDetectorRef,
@@ -187,6 +189,7 @@ constructor(
         }
 
         let esServicio = this.usuario.id == this.idServicio ? true:false; 
+        if(this.verServicio){ esServicio = true; }
         this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio).subscribe({
       next: (data) => {
         this.regcompras = data;
@@ -442,6 +445,17 @@ async actualizarInfoUsuario()
           localStorage.setItem('rwuserdatatk', JSON.stringify(usuarioTemp));
         }
     }
+}
+
+cambiarSwitch()
+{
+  if(this.verServicio)
+    {
+        this.obtenerComprasServicio(); 
+    }else
+      {
+         this.obtenerComprasUsuario();
+      }
 }
 
 }

@@ -4,14 +4,18 @@
      REQUISICIONES DE COMPRA
 </h4>
 
-<div class="p-3 d-flex justify-content-start gap-3">
-    <div class="col-auto" *ngIf="facturasPendientes.length == 0"> <p>&nbsp;</p> <button class="btn bg-p-b p-2" (click)="abrirModal()">
+<div class="ps-3 d-flex justify-content-start gap-3 align-items-center">
+    <div *ngIf="facturasPendientes.length == 0"> <button class="btn bg-p-b p-2" (click)="abrirModal()">
     <i class='bx bx-plus-circle bx-sm'></i>&nbsp;AGREGAR
 </button>
 </div>
-    <div class="col-auto"> <p>&nbsp;</p> <button class="btn bg-p-b p-2" (click)="abrirModalProveedores()">
+    <div *ngIf="usuario.idRol != '2' || usuario.id == idServicio"><button class="btn bg-p-b p-2" (click)="abrirModalProveedores()">
     <i class='bx bx-cog bx-sm'></i>&nbsp;PROVEEDORES
 </button></div>
+<div *ngIf="usuario.id == idDireccion">
+    <div>VISTA DE SERVICIO</div>
+<p-inputSwitch [(ngModel)]="verServicio" (ngModelChange)="cambiarSwitch()"/>
+</div>
 </div>
 
 <div class="row m-3">
@@ -119,13 +123,13 @@
 
  <app-admin-compras-tabla 
 [data]="facturasPendientes" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [sucursales]="sucursales"
+[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [sucursales]="sucursales" [autorizado]="true"
 ></app-admin-compras-tabla> 
 
 </div>
 
 
-@if(usuario.idRol != "2" && usuario.id != idServicio)
+@if(usuario.idRol != "2" && usuario.id != idServicio && verServicio == false)
 {
     <div class="p-3 shadow m-3 bg-white">
     
@@ -140,7 +144,7 @@
 </div>
 }
 
-@if(usuario.idRol == "2" || usuario.id == idServicio)
+@if(usuario.idRol == "2" || usuario.id == idServicio || verServicio)
 {
     <p-tabView>
     <p-tabPanel header="AUTORIZADO">
@@ -161,7 +165,7 @@
  <p-tabPanel header="POR VALIDAR">
 <app-admin-compras-tabla 
 [data]="obtenerSolicitudes(0)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin"  [autorizacion]="usuario.idRol == '2' ? false:true" [sucursales]="sucursales"
+[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin"  [autorizacion]="usuario.id == idServicio ? true:false" [sucursales]="sucursales"
 ></app-admin-compras-tabla>
  </p-tabPanel>
 

@@ -53,7 +53,13 @@ constructor(
     private messageService: MessageService,
     ){  this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
-  ngOnInit(): void { } 
+  ngOnInit(): void 
+  {
+    if(this.userdata.idRol == '2' && this.userdata.id != this.idServicio)
+      {
+        this.formArtTipo = '1'; 
+      }
+   } 
 
   agregarArticulo()
   {  

@@ -50,13 +50,13 @@
                 <td>
                 <div class="d-flex gap-1 justify-content-center">
                     <button class="btn btn-warning" [disabled]="item.metodoPago == '1'" (click)="abrirModalDocumento(item,1)" *ngIf="item.statuspago != 2 && item.statuscompra > 0 || item.factura ==''"><i class='bx bx-cloud-upload bx-sm' ></i></button>&nbsp; 
-                  <button class="btn btn-secondary" *ngIf="item.factura != ''" (click)="downloadPdfDirect(item.factura)"><i class='bx bxs-file-pdf bx-sm'></i></button>
+                  <button class="btn btn-secondary" *ngIf="item.factura != ''" (click)="downloadPdfDirect(item.factura)"><i class='bx bx-file-blank bx-sm'></i></button>
                 </div>
             </td> 
             <td>
                 <div class="d-flex gap-1 justify-content-center">
                     <button class="btn btn-warning" (click)="abrirModalDocumento(item,2)" *ngIf="item.statuspago == 2 && usuario.id == idAdmin"><i class='bx bx-cloud-upload bx-sm' ></i></button>&nbsp; 
-                  <button class="btn btn-secondary" *ngIf="item.comprobantePago != ''" (click)="downloadPdfDirect(item.comprobantePago)"><i class='bx bxs-file-pdf bx-sm'></i></button>
+                  <button class="btn btn-secondary" *ngIf="item.comprobantePago != ''" (click)="downloadPdfDirect(item.comprobantePago)"><i class='bx bx-file-blank bx-sm'></i></button>
                 </div>
             </td>
             }
