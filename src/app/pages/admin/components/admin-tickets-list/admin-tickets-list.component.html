@@ -36,13 +36,13 @@
                 </div>
             </td>
             <td class="text-center">{{tk.folio}}</td>
-            <td class="text-center">{{ getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
+            <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
             </td>
             <td class="text-center" *ngIf="mostrarFedchaEstimacion">
                 <p-calendar [showTime]="false" [touchUI]="true" [hourFormat]="'12'"
                     (onSelect)="ManejadorDeFecha($event,tk)"
-                    placeholder="{{getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
-                    title="{{getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}" />
+                    placeholder="{{datesHelper.getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
+                    title="{{datesHelper.getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}" />
             </td>
             <td class="text-center">
                 <p-dropdown [options]="areas" [(ngModel)]="tk.idArea" optionLabel="nombre" [showClear]="false"

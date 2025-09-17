@@ -11,10 +11,10 @@ import { Subscription } from 'rxjs';
 
 import { Rol } from '../../../../models/rol.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { UsersService } from '../../../../services/users.service';
 import { DocumentsService } from '../../../../services/documents.service';
 import { RolesService } from '../../../../services/roles.service';
 import { ModalUserCreateComponent } from '../../../../modals/users/modal-user-create/modal-user-create.component';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-users',
@@ -33,11 +33,9 @@ import { ModalUserCreateComponent } from '../../../../modals/users/modal-user-cr
 })
 
 export default class UsersComponent implements OnDestroy, OnInit {
-  foundData: boolean = true;
-  loading: boolean = true;
   mostrarModalUsuario: boolean = false;
   actualizar: boolean = false;
-  catusuarios: Usuario[] = [];
+  usuarios: Usuario[] = [];
   usuariosel: Usuario | undefined;
   roles: Rol[] = [];
   usuarioSeleccionado: Usuario | any = new Usuario;
@@ -59,7 +57,12 @@ export default class UsersComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerUsuarios();
+    this.usersService.usuarios$.subscribe(usuarios => {
+      this.usuarios = usuarios;
+      if (this.usuario.idRol == '5') {
+        this.usuarios = this.usuarios.filter(x => x.idArea == this.usuario.idArea);
+      }
+    });
     this.obtenerRoles();
   }
 
@@ -80,28 +83,6 @@ export default class UsersComponent implements OnDestroy, OnInit {
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
-
-  obtenerUsuarios() {
-    this.subscripcionUsuarios = this.usersService.get().subscribe({
-      next: (data) => {
-        this.catusuarios = data;
-
-        if (this.usuario.idRol == '5') {
-          this.catusuarios = this.catusuarios.filter(x => x.idArea == this.usuario.idArea);
-        }
-
-        this.loading = false;
-        if (data.length == 0) {
-          this.foundData = false;
-        }
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
   }
 
   obtenerNombreRol(idRol: string): string {

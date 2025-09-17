@@ -16,7 +16,6 @@ import { TicketsService } from '../../../../services/tickets.service';
 import { Usuario } from '../../../../models/usuario.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Area } from '../../../../models/area.model';
-import { UsersService } from '../../../../services/users.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { Categoria } from '../../../../models/categoria.mdoel';
 import { CategoriesService } from '../../../../services/categories.service';
@@ -30,6 +29,8 @@ import { ModalValidateTicketComponent } from "../../../../modals/tickets/modal-v
 import { ModalTicketChatComponent } from "../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component";
 import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { AreasService } from '../../../../services/areas.service';
+import { UsersService } from '../../../../services/users-2.service';
+import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 
 @Component({
@@ -91,6 +92,7 @@ export class AdminTicketsListComponent {
     private ticketsPriorityService: TicketsPriorityService,
     private statusTicketService: StatusTicketService,
     private confirmationService: ConfirmationService,
+    public datesHelper: DatesHelperService
   ) {
     this.areas = this.areasService.areas;
     this.obtenerUsuariosHelp();
@@ -192,24 +194,8 @@ export class AdminTicketsListComponent {
     return str;
   }
 
-  getDate(tsmp: Timestamp): Date {
-    const firestoreTimestamp = tsmp;
-    const date = firestoreTimestamp.toDate();
-    return date;
-  }
-
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4');
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usuariosHelp = this.usersService.usuarios;
   }
 
   showMessage(sev: string, summ: string, det: string) {

@@ -13,10 +13,8 @@ import { AceiteService } from '../../../../services/aceite.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { TicketsService } from '../../../../services/tickets.service';
 import { Ticket } from '../../../../models/ticket.model';
-// import { AreasService } from '../../../../services/areas.service';
 import { Area } from '../../../../models/area.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { UsersService } from '../../../../services/users.service';
 import { CategoriesService } from '../../../../services/categories.service';
 import { Categoria } from '../../../../models/categoria.mdoel';
 import { StatusTicketService } from '../../../../services/status-ticket.service';
@@ -25,6 +23,7 @@ import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { GraficaGeneralTicketsComponent } from '../grafica-general-tickets/grafica-general-tickets.component';
 import { AreasService } from '../../../../services/areas.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-admin-reports-tab',
@@ -164,19 +163,7 @@ export default class AdminReportsTabComponent implements OnInit {
   }
 
   obtenerUsuarios() {
-    this.subscripcionUsuarios = this.usersService.get().subscribe({
-      next: (data) => {
-        this.catusuarios = data
-        this.loading = false;
-        if (data.length == 0) {
-        }
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.catusuarios = this.usersService.usuarios;
   }
 
   obtenerEstatusTicket() {

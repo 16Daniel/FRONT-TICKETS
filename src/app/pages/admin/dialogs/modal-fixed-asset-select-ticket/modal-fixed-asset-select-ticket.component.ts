@@ -10,9 +10,9 @@ import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { TicketsService } from '../../../../services/tickets.service';
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { UsersService } from '../../../../services/users.service';
 import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { AreasService } from '../../../../services/areas.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-modal-fixed-asset-select-ticket',
@@ -103,16 +103,7 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usuariosHelp = this.usersService.usuarios;
   }
 
   showMessage(sev: string, summ: string, det: string) {
