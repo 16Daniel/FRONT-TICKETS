@@ -100,7 +100,7 @@
   (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
 
 <app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
+  (closeEvent)="mostrarModalGenerateTicket = false" idArea="1"></app-modal-generate-ticket>
 
 <app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets"
   [sucursales]="sucursales" (closeEvent)="mostrarModalFilterTickets = false"
