@@ -15,7 +15,6 @@ import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { EstatusTicket } from '../../../../models/estatus-ticket.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { TicketsService } from '../../../../services/tickets.service';
-import { UsersService } from '../../../../services/users.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { ModalFilterTicketsComponent } from '../../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
@@ -30,6 +29,8 @@ import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-
 import { PurchaseService } from '../../../../services/purchase.service';
 import { Compra } from '../../../../models/compra.model';
 import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
+import { UsersService } from '../../../../services/users-2.service';
+import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -89,7 +90,8 @@ export class AdminAudioVideoTabComponent {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private maintenanceService: Maintenance6x6AvService,
-    private purchaseService: PurchaseService
+    private purchaseService: PurchaseService,
+    private datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -200,7 +202,7 @@ export class AdminAudioVideoTabComponent {
             }
 
             this.mantenimientos = this.mantenimientos.map(x => {
-              x.fecha = this.getDate(x.fecha);
+              x.fecha = this.datesHelper.getDate(x.fecha);
               return x;
             });
             this.cdr.detectChanges();
@@ -215,29 +217,9 @@ export class AdminAudioVideoTabComponent {
     });
   }
 
-  getDate(tsmp: Timestamp | any): Date {
-    try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    } catch {
-      return tsmp;
-    }
-  }
-
   obtenerUsuariosHelp() {
-    this.usersService.getUsersHelp(this.idArea, true).subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        // this.usuariosHelp = this.usuariosHelp.filter((x) => x.idRol == '4' && x.idArea == this.IdArea);
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.getUsuariosPorRol(['4', '7'], this.usuario.idArea)
+      .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerCompras() {

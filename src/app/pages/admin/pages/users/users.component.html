@@ -1,6 +1,6 @@
 <div class="pt-5">
     <div class="pt-3 container">
-        <div class="m-2 mt-3 bg-white p-3" *ngIf="foundData && loading == false">
+        <div class="m-2 mt-3 bg-white p-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h2>LISTA DE USUARIOS</h2>
                 <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-info"
@@ -9,7 +9,7 @@
             </div>
             <br>
 
-            <p-table [value]="catusuarios" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+            <p-table [value]="usuarios" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
                 styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
                 <ng-template pTemplate="header">
                     <tr>

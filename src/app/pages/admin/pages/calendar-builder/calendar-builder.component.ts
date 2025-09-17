@@ -13,7 +13,6 @@ import { EditorModule } from 'primeng/editor';
 import { Subscription } from 'rxjs';
 
 import { TicketsService } from '../../../../services/tickets.service';
-import { UsersService } from '../../../../services/users.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Usuario } from '../../../../models/usuario.model';
@@ -35,6 +34,7 @@ import { MantenimientoFactoryService } from '../../../../services/maintenance-fa
 import { CalendarComponent } from '../../../../components/calendar/calendar.component';
 import { BranchVisitItemComponent } from '../../../../components/branch-visit-item/branch-visit-item.component';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -168,16 +168,8 @@ export default class CalendarBuilderComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsersHelp(this.usuario.idArea, true, true).subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.getUsuariosPorRol(['4', '7', '5'], this.usuario.idArea)
+      .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerSucursales() {
@@ -231,7 +223,7 @@ export default class CalendarBuilderComponent implements OnInit {
     return porcentaje
   }
 
-  async consultarUsuario() {
+  async llenarInfoUsuario() {
     this.sucursalesSeleccionadas = [];
     this.sucursalesOrdenadas = [];
     this.indicacionesVisitas = [];

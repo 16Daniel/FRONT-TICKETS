@@ -5,7 +5,7 @@
         <div class="col-md-4">
             <p-dropdown [options]="usuariosHelp" [(ngModel)]="usuarioseleccionado" name="usuario" optionLabel="nombre"
                 [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR USUARIO"
-                [style]="{width:'100%'}" (onChange)="consultarUsuario()">
+                [style]="{width:'100%'}" (onChange)="llenarInfoUsuario()">
                 <ng-template pTemplate="selectedItem" let-selectedOption>
                     <div class="flex align-items-center gap-2">
                         <div>{{ selectedOption.nombre + ' ' + selectedOption.apellidoP +' '+selectedOption.apellidoM}}
@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-4">
             <p-calendar [(ngModel)]="fecha" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-                dateFormat="dd/mm/yy" [style]="{width:'100%'}" />
+                dateFormat="dd/mm/yy" [style]="{width:'100%'}" (onSelect)="llenarInfoUsuario()"/>
         </div>
         <div class="col-md-2">
             <div class="form-check form-switch d-flex align-items-center gap-3">

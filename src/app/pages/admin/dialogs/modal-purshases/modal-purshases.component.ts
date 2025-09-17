@@ -15,9 +15,9 @@ import { PurchaseService } from '../../../../services/purchase.service';
 import { StatusPurchaseService } from '../../../../services/status-purchase.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { UsersService } from '../../../../services/users.service';
 import { Usuario } from '../../../../models/usuario.model';
 import { AreasService } from '../../../../services/areas.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-modal-purshases',
@@ -95,13 +95,8 @@ export class ModalPurshasesComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        this.usuariosFiltro = data.filter(x => x.idArea == this.idArea);
-        this.cdr.detectChanges();
-      },
-    });
+    this.usuariosHelp = this.usersService.usuarios;
+    this.usuariosFiltro = this.usuariosHelp.filter(x => x.idArea == this.idArea);
   }
 
   obtenerNombreSucursal(idSucursal: string): string {
