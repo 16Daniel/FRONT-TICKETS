@@ -102,7 +102,8 @@ getComprasFiltro(
   region:string,
   idArea:string,
   sucursalesIds:string[],
-  esServicio:boolean
+  esServicio:boolean,
+  razonSocial:string
 ): Observable<AdministracionCompra[]> {
   const comprasCollection = collection(this.firestore, this.comprastab);
   let condiciones: QueryConstraint[] = [];
@@ -132,6 +133,9 @@ getComprasFiltro(
     condiciones.push(where('regiones', 'array-contains', region));
   }
 
+  if (razonSocial && razonSocial.trim() !== '-1') {
+    condiciones.push(where('razonsocial', '==', razonSocial));
+  }
    if (idArea && idArea.trim() !== '-1' && esServicio == false) {
     condiciones.push(where('idArea', '==', idArea));
   }

@@ -74,9 +74,9 @@
      </select>
                             </div> 
  <div class="col-auto" *ngIf="usuario.id == idAdmin">
-                                <p>SUCURSAL / AREA</p>
+                                <p>CLIENTE</p>
                                 <p-dropdown [options]="sucursales" [(ngModel)]="filtroSucursal" name="sucursal" optionLabel="nombre" [filter]="true"
-                                filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
+                                filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR"
                                 [style]="{width:'100%'}">
                                 <ng-template pTemplate="selectedItem" let-selectedOption>
                                     <div class="flex align-items-center gap-2">
@@ -89,6 +89,30 @@
                                     </div>
                                 </ng-template>
                                 </p-dropdown>
+</div>
+ <div class="col-auto" *ngIf="usuario.id == idAdmin">
+                                <p>PROVEEDOR INTERNO</p>
+                                <p-dropdown [options]="catareas" [(ngModel)]="filtroArea" name="proveedor" optionLabel="nombre" [filter]="true"
+                                filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR"
+                                [style]="{width:'100%'}">
+                                <ng-template pTemplate="selectedItem" let-selectedOption>
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ selectedOption.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-dep pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ dep.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                                </p-dropdown>
+</div>
+
+<div class="col-auto">
+         <p>RAZÓN SOCIAL</p>
+         <select class="form-select h-42" [(ngModel)]="filtroRazonSocial">
+         <option *ngFor="let item of filtroCatRazonSocial" [value]="item.id">{{item.nombre}}</option>
+           </select>
 </div>
 
 <div class="col-auto" *ngIf="usuario.id == idServicio">

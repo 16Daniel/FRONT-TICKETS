@@ -197,4 +197,18 @@ export const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'inventario',
+    children: [
+      { path:'',
+        redirectTo: '/inventario/captura',
+        pathMatch: 'full',
+      },
+      {
+        path: 'captura',
+        title: 'Captura de inventario',
+        loadComponent: () => import('./pages/stock/captura-inventario-diario/captura-inventario-diario.component'),
+      }
+    ]
+  },
 ];
