@@ -48,12 +48,13 @@
                     placeholder="SELECCIONAR EL USUARIO" [style]="{width:'100%'}">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <div class="flex align-items-center gap-2">
-                            <div>{{ selectedOption.nombre }}</div>
+                            <div>{{ selectedOption.nombre + ' ' + selectedOption.apellidoP + ' ' +
+                                selectedOption.apellidoM }}</div>
                         </div>
                     </ng-template>
                     <ng-template let-dep pTemplate="item">
                         <div class="flex align-items-center gap-2">
-                            <div>{{ dep.nombre }}</div>
+                            <div>{{ dep.nombre + ' ' + dep.apellidoP + ' ' + dep.apellidoM }}</div>
                         </div>
                     </ng-template>
                 </p-dropdown>
