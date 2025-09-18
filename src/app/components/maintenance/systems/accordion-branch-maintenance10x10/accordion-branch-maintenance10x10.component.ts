@@ -7,9 +7,9 @@ import { AccordionModule } from 'primeng/accordion';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { UsersService } from '../../../../services/users.service';
 import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance10x10',
@@ -36,14 +36,7 @@ export class AccordionBranchMaintenance10x10Component {
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {

@@ -5,7 +5,6 @@ import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
 import { TicketsService } from '../../services/tickets.service';
-import { UsersService } from '../../services/users.service';
 import { Usuario } from '../../models/usuario.model';
 import { VisitaProgramada } from '../../models/visita-programada';
 import ModalEventDetailComponent from "../../modals/calendar/modal-event-detail/modal-event-detail.component";
@@ -16,6 +15,7 @@ import { ColorUsuario } from '../../models/color-usuario';
 import { DocumentsService } from '../../services/documents.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
+import { UsersService } from '../../services/users-2.service';
 
 @Component({
   selector: 'app-branch-visit-schedule',
@@ -32,7 +32,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
   arr_ultimosmantenimientos: Mantenimiento10x10[] = []; // <--- revisar
   usuario: Usuario;
   arr_data: VisitaProgramada[] = [];
-  // sucursales: Sucursal[] = [];
   sucursalSeleccionada: Sucursal | undefined;
   FechaSeleccionada: Date = new Date();
   showModalTicketDetail: boolean = false;
@@ -79,17 +78,8 @@ export default class BranchVisitScheduleComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        this.usuariosHelp = this.usuariosHelp.filter(x => x.idRol == '4');
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$
+    .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4'));
   }
 
   async obtenerTodosLosTickets(): Promise<void> {

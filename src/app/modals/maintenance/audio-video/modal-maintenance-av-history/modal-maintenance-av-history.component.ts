@@ -1,15 +1,16 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { MessageService } from 'primeng/api';
-import { UsersService } from '../../../../services/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
+
+import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
+import { Usuario } from '../../../../models/usuario.model';
+import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { BranchMaintenanceTableAvComponent } from '../../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-modal-maintenance-av-history',
@@ -62,16 +63,7 @@ export class ModalMaintenanceAvHistoryComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        // this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerUltimoMantenimiento() {

@@ -2,35 +2,36 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
+import Swal from 'sweetalert2';
+import { MessagesModule } from 'primeng/messages';
+import { TooltipModule } from 'primeng/tooltip';
+import { TabViewModule } from 'primeng/tabview';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import * as XLSX from 'xlsx';
+
 import { ShoppingService } from '../../../services/shopping.service';
 import { ProveedoresComponent } from "./dialogs/proveedores/proveedores.component";
 import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../models/AdministracionCompra';
-import Swal from 'sweetalert2';
 import { AgregarCompraComponent } from "./dialogs/agregar-compra/agregar-compra.component";
 import { SideMenuComponent } from "../../../shared/side-menu/side-menu.component";
 import { Usuario } from '../../../models/usuario.model';
 import { GraficaAdminComprasComponent } from "./components/grafica-admin-compras/grafica-admin-compras.component";
 import { Area } from '../../../models/area.model';
-import { MessagesModule } from 'primeng/messages';
-import { TooltipModule } from 'primeng/tooltip';
-import { TabViewModule } from 'primeng/tabview';
-import * as XLSX from 'xlsx';
 import { environment } from '../../../../environments/environments';
 import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
-import { MultiSelectModule } from 'primeng/multiselect';
-import { UsersService } from '../../../services/users.service';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
 import { AreasService } from '../../../services/areas.service';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { UsersService } from '../../../services/users-2.service';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
   imports: [CommonModule, DialogModule, FormsModule, ProveedoresComponent,
     DropdownModule, AgregarCompraComponent, SideMenuComponent, CalendarModule, GraficaAdminComprasComponent,
-    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule,InputSwitchModule],
+    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule, InputSwitchModule],
   templateUrl: './shopping-admin.component.html',
   styleUrl: './shopping-admin.component.scss'
 })
@@ -79,9 +80,9 @@ constructor(
     private branchesService: BranchesService,
     private areasService: AreasService,
     private userServ: UsersService
-    ){  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
-  ngOnInit(): void 
-  { 
+  ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
+
+  ngOnInit(): void {
     this.actualizarInfoUsuario();
     this.areasService.areas$.subscribe({
       next: (data) => {
@@ -96,24 +97,19 @@ constructor(
     this.obtenerTipoCompras();
     this.obtenerProveedores();
     this.obtenerSucursales();
-    if(this.usuario.id == this.idAdmin)
-      {
-        this.obtenerCompras(); 
-      } else
-        {
-          if(this.usuario.id == this.idServicio)
-            {
-                this.obtenerComprasServicio(); 
-            }else
-              {
-                  this.obtenerComprasUsuario();
-              }
-        }
-   }
-   
-   obtenerCompras()
-   {
-        this.shopServ.getCompras().subscribe({
+    if (this.usuario.id == this.idAdmin) {
+      this.obtenerCompras();
+    } else {
+      if (this.usuario.id == this.idServicio) {
+        this.obtenerComprasServicio();
+      } else {
+        this.obtenerComprasUsuario();
+      }
+    }
+  }
+
+  obtenerCompras() {
+    this.shopServ.getCompras().subscribe({
       next: (data) => {
         this.regcompras = data;
         this.cdr.detectChanges();
@@ -124,9 +120,8 @@ constructor(
     });
   }
 
-     obtenerComprasServicio()
-   {
-        this.shopServ.getComprasServicio().subscribe({
+  obtenerComprasServicio() {
+    this.shopServ.getComprasServicio().subscribe({
       next: (data) => {
         this.regcompras = data;
         this.cdr.detectChanges();
@@ -136,11 +131,10 @@ constructor(
       },
     });
 
-   }
+  }
 
-   obtenerFacturasPendientes()
-   {
-        this.shopServ.obtenerComprasFacturaPendiente(this.usuario.id).subscribe({
+  obtenerFacturasPendientes() {
+    this.shopServ.obtenerComprasFacturaPendiente(this.usuario.id).subscribe({
       next: (data) => {
         this.facturasPendientes = data;
         let temp: AdministracionCompra[] = [];
@@ -175,23 +169,20 @@ constructor(
         console.log(error);
       },
     });
-   }
+  }
 
-   obtenerComprasFiltro()
-   {  
-      this.regcompras = []; 
-      Swal.showLoading(); 
-       let idArea = '-1';
-       if((this.usuario.idRol == '1' || this.usuario.idRol == '5') && this.usuario.id != this.idAdmin)
-        {
-          idArea = this.usuario.idArea;
-        }
-      let idsuc = this.filtroSucursal == undefined ? '': this.filtroSucursal.id; 
-      let idusuario = this.usuario.id == this.idAdmin ? '': this.usuario.id;
-      if(this.usuario.idRol == '1' || this.usuario.idRol == '5' || this.usuario.id == this.idServicio)
-        {
-          idusuario = '';
-        }
+  obtenerComprasFiltro() {
+    this.regcompras = [];
+    Swal.showLoading();
+    let idArea = '-1';
+    if ((this.usuario.idRol == '1' || this.usuario.idRol == '5') && this.usuario.id != this.idAdmin) {
+      idArea = this.usuario.idArea;
+    }
+    let idsuc = this.filtroSucursal == undefined ? '' : this.filtroSucursal.id;
+    let idusuario = this.usuario.id == this.idAdmin ? '' : this.usuario.id;
+    if (this.usuario.idRol == '1' || this.usuario.idRol == '5' || this.usuario.id == this.idServicio) {
+      idusuario = '';
+    }
 
         let sucursalesids:string[] = []; 
        for(let suc of this.sucursalesSel)
@@ -224,9 +215,8 @@ constructor(
     this.visible = true;
   }
 
-  obtenerTipoCompras()
-  {
-     this.shopServ.getCatTipo().subscribe({
+  obtenerTipoCompras() {
+    this.shopServ.getCatTipo().subscribe({
       next: (data) => {
         this.catTipoCompra = data;
         this.filtrocatTipoCompra = [...this.catTipoCompra];
@@ -272,11 +262,11 @@ constructor(
 
   obtenerNombreArea(idarea: string): string {
     let nombre = "";
-    let area = this.catareas.filter(x=> x.id == idarea)[0]; 
-    
-    if(area != undefined){ nombre = area.nombre; }
-    return nombre; 
-}
+    let area = this.catareas.filter(x => x.id == idarea)[0];
+
+    if (area != undefined) { nombre = area.nombre; }
+    return nombre;
+  }
 
   downloadPdfDirect(pdfUrl: string) {
     window.open(pdfUrl, '_blank');
@@ -349,7 +339,7 @@ constructor(
 
   private transformarDatos(compras: AdministracionCompra[]): any[] {
     const datos: any[] = [];
- debugger
+    debugger
     compras.forEach(compra => {
       compra.articulos.forEach(articulo => {
         datos.push({
@@ -422,46 +412,37 @@ constructor(
   }
 
 
-obtenerSolicitudes(tipo:number):AdministracionCompra[]
-{
+  obtenerSolicitudes(tipo: number): AdministracionCompra[] {
 
-  if(tipo == 0)
-    {
-      let data = this.regcompras.filter(x => x.validado == tipo); 
-         return data;
-    } else
-      {
-         return this.regcompras.filter(x => x.validado == tipo); 
-      }
- 
-}
-
-getFirstDayOfMonth(): Date {
-  return new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-}
-
-async actualizarInfoUsuario()
-{
-  if(this.usuario.idArea == null || this.usuario.idArea == undefined)
-    {
-      let usuarioTemp:Usuario|null = await this.userServ.getUsuarioById(this.usuario.id); 
-      if(usuarioTemp != null)
-        {
-          this.usuario = usuarioTemp; 
-          localStorage.setItem('rwuserdatatk', JSON.stringify(usuarioTemp));
-        }
+    if (tipo == 0) {
+      let data = this.regcompras.filter(x => x.validado == tipo);
+      return data;
+    } else {
+      return this.regcompras.filter(x => x.validado == tipo);
     }
-}
 
-cambiarSwitch()
-{
-  if(this.verServicio)
-    {
-        this.obtenerComprasServicio(); 
-    }else
-      {
-         this.obtenerComprasUsuario();
+  }
+
+  getFirstDayOfMonth(): Date {
+    return new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  }
+
+  async actualizarInfoUsuario() {
+    if (this.usuario.idArea == null || this.usuario.idArea == undefined) {
+      let usuarioTemp: Usuario | null = await this.userServ.getUsuarioById(this.usuario.id);
+      if (usuarioTemp != null) {
+        this.usuario = usuarioTemp;
+        localStorage.setItem('rwuserdatatk', JSON.stringify(usuarioTemp));
       }
-}
+    }
+  }
+
+  cambiarSwitch() {
+    if (this.verServicio) {
+      this.obtenerComprasServicio();
+    } else {
+      this.obtenerComprasUsuario();
+    }
+  }
 
 }

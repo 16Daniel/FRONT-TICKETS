@@ -6,10 +6,10 @@ import { BadgeModule } from 'primeng/badge';
 
 import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Sucursal } from '../../../../models/sucursal.model';
-import { UsersService } from '../../../../services/users.service';
 import { Usuario } from '../../../../models/usuario.model';
 import { BranchMaintenanceTableAvComponent } from '../branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-av',
@@ -32,14 +32,7 @@ export class AccordionBranchMaintenanceAvComponent {
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {

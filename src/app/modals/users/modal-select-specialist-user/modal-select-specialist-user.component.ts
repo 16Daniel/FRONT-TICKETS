@@ -5,10 +5,10 @@ import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { Usuario } from '../../../models/usuario.model';
-import { UsersService } from '../../../services/users.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
 import { Comentario } from '../../../models/comentario-chat.model';
+import { UsersService } from '../../../services/users-2.service';
 
 @Component({
   selector: 'app-modal-select-specialist-user',
@@ -47,7 +47,7 @@ export class ModalSelectSpecialistUserComponent implements OnInit {
   }
 
   obtenerEspecialistas() {
-    this.usuersService.getUsuariosEspecialistas(this.idSucursal, this.idArea)
+    this.usuersService.getUsuariosPorRol(['7'], this.idArea)
       .subscribe(result => {
         this.usuarios = result;
         this.cdr.detectChanges();
