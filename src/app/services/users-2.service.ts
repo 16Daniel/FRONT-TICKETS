@@ -55,7 +55,7 @@ export class UsersService {
     return docRef.id;
   }
 
-  async getByUId(idu: string): Promise<Usuario | null> {
+  getByUId(idu: string): Usuario | null {
     return this._usuarios.find(u => u.uid === idu) || null;
   }
 
@@ -88,19 +88,6 @@ export class UsersService {
   async updateUserGuardStatus(userId: string, esGuardia: boolean): Promise<void> {
     const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
     return updateDoc(userRef, { esGuardia });
-  }
-
-  getUsuariosEspecialistas(idSucursal: string, idArea?: string): Observable<Usuario[]> {
-    return this.usuarios$.pipe(
-      map((usuarios: Usuario[]) => {
-        return usuarios.filter(usuario => {
-          const rolOk = usuario.idRol === '7';
-          const areaOk = idArea ? usuario.idArea === idArea : true;
-          const sucursalOk = usuario.sucursales?.some((s: any) => s.id === idSucursal);
-          return rolOk && areaOk && sucursalOk;
-        });
-      })
-    );
   }
 
   async getUsuarioSucursal(idSucursal: string): Promise<Usuario | null> {

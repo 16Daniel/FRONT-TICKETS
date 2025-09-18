@@ -5,9 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import Swal from 'sweetalert2';
 
-import { UsersService } from '../../services/users.service';
 import { AuthService } from '../../services/auth.service';
+import { UsersService } from '../../services/users-2.service';
 
 @Component({
   selector: 'app-login',
@@ -50,46 +51,49 @@ export default class LoginComponent {
   }
 
   async onLogin() {
+    Swal.fire({
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
     try {
       const user = await this.authService.login(this.email, this.pass);
-      if (user.user.uid != null || user.user.uid != null) {
-        (await this.usersService.getByUId(user.user.uid)).subscribe({
-          next: (data) => {
-            let userd: any = data[0];
-            localStorage.setItem('rwuserdatatk', JSON.stringify(data[0]));
 
-            if (userd.idRol == '1' || userd.idRol == '5') {
-              this.router.navigate(['/main/home-a']);
-            } else if ((userd.idRol == '2') || userd.idRol == '3') {
-              this.router.navigate(['/main/home']);
-            } else if (userd.idRol == '4') {
-              this.router.navigate(['/main/home-s']);
-            } else if (userd.idRol == '6') {
-              this.router.navigate(['/cedis/recoleccion']);
-            } else if (userd.idRol == '7') {
-              this.router.navigate(['/main/home-specialist']);
-            }
-            else if (userd.idRol == '8') {
-              this.router.navigate(['/nomina/control-de-personal']);
-            }
-          },
-          error: (error) => {
-            console.log(error);
-            this.showMessage(
-              'error',
-              'Error',
-              'Error al autenticar'
-            );
-          },
-        });
+      if (user?.user?.uid) {
+        const userd = this.usersService.getByUId(user.user.uid);
+
+        if (!userd) {
+          this.showMessage('error', 'Error', 'Usuario no encontrado');
+          return;
+        }
+
+        localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
+
+        if (userd.idRol === '1' || userd.idRol === '5') {
+          this.router.navigate(['/main/home-a']);
+        } else if (userd.idRol === '2' || userd.idRol === '3') {
+          this.router.navigate(['/main/home']);
+        } else if (userd.idRol === '4') {
+          this.router.navigate(['/main/home-s']);
+        } else if (userd.idRol === '6') {
+          this.router.navigate(['/cedis/recoleccion']);
+        } else if (userd.idRol === '7') {
+          this.router.navigate(['/main/home-specialist']);
+        } else if (userd.idRol === '8') {
+          this.router.navigate(['/nomina/control-de-personal']);
+        }
       }
+      Swal.close();
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      this.showMessage(
-        'error',
-        'Error',
-        'Error al autenticar'
-      );
+      this.showMessage('error', 'Error', 'Error al autenticar');
+      Swal.close();
     }
   }
 }

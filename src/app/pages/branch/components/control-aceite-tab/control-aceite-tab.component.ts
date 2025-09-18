@@ -1,34 +1,35 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
-import { BranchesService } from '../../../../services/branches.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { MultiSelectModule } from 'primeng/multiselect';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
-import { Usuario } from '../../../../models/usuario.model';
-import { Rol } from '../../../../models/rol.model';
-import { Subscription } from 'rxjs';
-import { DocumentsService } from '../../../../services/documents.service';
-import { UsersService } from '../../../../services/users.service';
-import { RolesService } from '../../../../services/roles.service';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Subscription } from 'rxjs';
+
+import { BranchesService } from '../../../../services/branches.service';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { Usuario } from '../../../../models/usuario.model';
+import { Rol } from '../../../../models/rol.model';
+import { DocumentsService } from '../../../../services/documents.service';
+import { RolesService } from '../../../../services/roles.service';
 import { ModalUserCreateComponent } from '../../../../modals/users/modal-user-create/modal-user-create.component';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-control-aceite-tab',
   standalone: true,
-  imports: [CommonModule, FormsModule, MultiSelectModule,TableModule,TooltipModule,ModalUserCreateComponent,ToastModule,ConfirmDialogModule],
-   providers: [MessageService, ConfirmationService],
+  imports: [CommonModule, FormsModule, MultiSelectModule, TableModule, TooltipModule, ModalUserCreateComponent, ToastModule, ConfirmDialogModule],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './control-aceite-tab.component.html',
   styleUrl: './control-aceite-tab.component.scss',
 })
 export default class ControlAceiteTabComponent implements OnInit {
-public sucursales: Sucursal[] = [];
-public sucursalesSel: Sucursal[] = [];
-public loading: boolean = false; 
+  public sucursales: Sucursal[] = [];
+  public sucursalesSel: Sucursal[] = [];
+  public loading: boolean = false;
   mostrarModalUsuario: boolean = false;
   actualizar: boolean = false;
   catusuarios: Usuario[] = [];
@@ -38,41 +39,38 @@ public loading: boolean = false;
   esNuevoUsuario: boolean = false;
   subscripcionUsuarios: Subscription | undefined;
   private unsubscribe!: () => void;
- constructor(
+  constructor(
     public documentsService: DocumentsService,
     private messageService: MessageService,
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
     private rolesService: RolesService,
-    private branchesService:BranchesService
+    private branchesService: BranchesService
   ) { }
-  ngOnInit(): void 
-  {
-    this.obtenerSucursales(); 
-       this.obtenerUsuarios();
+  ngOnInit(): void {
+    this.obtenerSucursales();
+    this.obtenerUsuarios();
     this.obtenerRoles();
-   }
+  }
 
-    async obtenerSucursales() {
+  async obtenerSucursales() {
 
-        this.loading = true; 
-       try {
-        this.sucursales = await this.branchesService.getOnce();
-         for(let suc of this.sucursales)
-            {
-              if(suc.controlDeAceite == true)
-                {
-                  this.sucursalesSel.push(suc); 
-                }
-            }
-           this.loading = false; 
-           this.cdr.detectChanges();
-      } catch (error) {
+    this.loading = true;
+    try {
+      this.sucursales = await this.branchesService.getOnce();
+      for (let suc of this.sucursales) {
+        if (suc.controlDeAceite == true) {
+          this.sucursalesSel.push(suc);
+        }
       }
-      }
+      this.loading = false;
+      this.cdr.detectChanges();
+    } catch (error) {
+    }
+  }
 
- obtenerNombreRol(idRol: string): string {
+  obtenerNombreRol(idRol: string): string {
     let name = '';
     let rol = this.roles.filter((x) => x.id == idRol);
     if (rol.length > 0) {
@@ -81,7 +79,7 @@ public loading: boolean = false;
     return name;
   }
 
-   abrirModalCrearUsuario() {
+  abrirModalCrearUsuario() {
     this.esNuevoUsuario = true;
     this.mostrarModalUsuario = true;
   }
@@ -91,19 +89,7 @@ public loading: boolean = false;
   }
 
   obtenerUsuarios() {
-    this.subscripcionUsuarios = this.usersService.get().subscribe({
-      next: (data) => {
-        this.catusuarios = data.filter(x=>x.idRol == 6);
-        this.loading = false;
-        if (data.length == 0) {
-        }
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.catusuarios = usuarios.filter(x => x.idRol == '6'));
   }
 
   abrirModalEditarUsuario(usuario: Usuario) {
@@ -112,12 +98,12 @@ public loading: boolean = false;
     this.mostrarModalUsuario = true;
   }
 
-    cerrarModalUsuario() {
-    this.mostrarModalUsuario = false; 
+  cerrarModalUsuario() {
+    this.mostrarModalUsuario = false;
     this.usuarioSeleccionado = new Usuario;
   }
 
-   obtenerRoles() {
+  obtenerRoles() {
     this.rolesService.get().subscribe({
       next: (data) => {
         this.roles = data;
@@ -132,25 +118,23 @@ public loading: boolean = false;
 
 
   async actualizarSucursales() {
- 
-    this.loading = true; 
-    let sucursales = [...this.sucursales]; 
-    for(let suc of sucursales)
-      {
-        suc.controlDeAceite = false; 
-      }
+
+    this.loading = true;
+    let sucursales = [...this.sucursales];
+    for (let suc of sucursales) {
+      suc.controlDeAceite = false;
+    }
     await this.branchesService.updateMultiple(sucursales);
 
-    for(let suc of this.sucursalesSel)
-      {
-          suc.controlDeAceite = true; 
-      }
-      await this.branchesService.updateMultiple(sucursales);
+    for (let suc of this.sucursalesSel) {
+      suc.controlDeAceite = true;
+    }
+    await this.branchesService.updateMultiple(sucursales);
 
-      this.obtenerSucursales(); 
+    this.obtenerSucursales();
 
-         this.showMessage('success', 'Success', 'Enviado correctamente');
-    this.loading = false; 
+    this.showMessage('success', 'Success', 'Enviado correctamente');
+    this.loading = false;
   }
 
 }

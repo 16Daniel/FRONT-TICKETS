@@ -14,13 +14,13 @@ import { StatusTicketService } from '../../../../services/status-ticket.service'
 import { Area } from '../../../../models/area.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { BranchesService } from '../../../../services/branches.service';
-import { UsersService } from '../../../../services/users.service';
 import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalValidateTicketComponent } from '../../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
 import { ModalTicketChatComponent } from '../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
 import { Comentario } from '../../../../models/comentario-chat.model';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { AreasService } from '../../../../services/areas.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-specialist-home',
@@ -169,16 +169,7 @@ export default class SpecialistHomeComponent implements OnInit, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   onClickRechazar(ticket: Ticket) {

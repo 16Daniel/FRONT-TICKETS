@@ -17,7 +17,6 @@ import Swal from 'sweetalert2';
 import { Sucursal } from '../../../models/sucursal.model';
 import { Usuario } from '../../../models/usuario.model';
 import { Categoria } from '../../../models/categoria.mdoel';
-import { UsersService } from '../../../services/users.service';
 import { Ticket } from '../../../models/ticket.model';
 import { BranchesService } from '../../../services/branches.service';
 import { CategoriesService } from '../../../services/categories.service';
@@ -32,6 +31,7 @@ import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 import { AreasService } from '../../../services/areas.service';
+import { UsersService } from '../../../services/users-2.service';
 
 @Component({
   selector: 'app-modal-generate-ticket',
@@ -279,15 +279,7 @@ export class ModalGenerateTicketComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.catUsuariosHelp = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.catUsuariosHelp = usuarios);
   }
 
   onHide() {

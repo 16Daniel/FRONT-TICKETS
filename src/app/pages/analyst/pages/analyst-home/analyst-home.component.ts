@@ -20,7 +20,6 @@ import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { Usuario } from '../../../../models/usuario.model';
 import { Area } from '../../../../models/area.model';
-import { UsersService } from '../../../../services/users.service';
 import { BranchesService } from '../../../../services/branches.service';
 import { NotificationService } from '../../../../services/notification.service';
 import { AccordionBranchMaintenance10x10Component } from '../../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
@@ -35,6 +34,7 @@ import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-
 import { PurchaseService } from '../../../../services/purchase.service';
 import { Compra } from '../../../../models/compra.model';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-analyst-home',

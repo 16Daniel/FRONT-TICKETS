@@ -9,9 +9,9 @@ import { MessageService } from 'primeng/api';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../../models/usuario.model';
-import { UsersService } from '../../../../services/users.service';
 import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
 import { BranchMaintenanceTableComponent } from '../../../../components/maintenance/systems/branch-maintenance-table/branch-maintenance-table.component';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',
@@ -50,7 +50,6 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursal = this.usuario.sucursales[0].id;
-    // this.obtenerMantenimientosPorSucursal(this.idSucursal);
     if (this.idSucursal) {
       this.obtenerUltimoMantenimiento();
     }
@@ -80,9 +79,6 @@ export class ModalTenXtenMaintenanceHistoryComponent {
         if (mantenimientos) {
 
           this.mantenimientos = mantenimientos;
-          // if (!this.paginaCargaPrimeraVez) {
-          //   this.showMessage('success', 'Success', 'Información localizada');
-          // }
 
           this.cdr.detectChanges();
         } else {
@@ -104,16 +100,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        // this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerUltimoMantenimiento() {

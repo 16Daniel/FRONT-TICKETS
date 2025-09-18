@@ -7,10 +7,10 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { Usuario } from '../../../../models/usuario.model';
-import { UsersService } from '../../../../services/users.service';
 import { BranchMaintenanceTableMttoComponent } from '../../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
 import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
+import { UsersService } from '../../../../services/users-2.service';
 
 @Component({
   selector: 'app-modal-maintenance-mtto-history',
@@ -22,11 +22,11 @@ import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.se
     CalendarModule,
     TableModule,
     BranchMaintenanceTableMttoComponent
-  ],  templateUrl: './modal-maintenance-mtto-history.component.html',
+  ], templateUrl: './modal-maintenance-mtto-history.component.html',
   styleUrl: './modal-maintenance-mtto-history.component.scss'
 })
 export class ModalMaintenanceMttoHistoryComponent {
-@Input() showModalHistorialMantenimientos: boolean = false;
+  @Input() showModalHistorialMantenimientos: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   fechaInicio: Date = new Date();
@@ -61,16 +61,7 @@ export class ModalMaintenanceMttoHistoryComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        // this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerUltimoMantenimiento() {

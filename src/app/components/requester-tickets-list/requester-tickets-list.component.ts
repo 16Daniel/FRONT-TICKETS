@@ -20,7 +20,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { Ticket } from '../../models/ticket.model';
-import { UsersService } from '../../services/users.service';
 import { TicketsService } from '../../services/tickets.service';
 import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
@@ -33,6 +32,7 @@ import { Sucursal } from '../../models/sucursal.model';
 import { BranchesService } from '../../services/branches.service';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 import { AreasService } from '../../services/areas.service';
+import { UsersService } from '../../services/users-2.service';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -192,16 +192,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.get().subscribe({
-      next: (data) => {
-        this.usuariosHelp = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   actualizaTicketEstatusSucursal(idTicket: string) {
