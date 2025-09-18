@@ -69,7 +69,7 @@
                                 <p>SUCURSAL / AREA</p>
                                 <p-dropdown [options]="sucursales" [(ngModel)]="FormSucursal" name="sucursal" optionLabel="nombre" [filter]="true"
                                 filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
-                                [style]="{width:'100%'}">
+                                [style]="{width:'100%'}" [disabled]="this.userdata.idRol == '2' && this.userdata.id != this.idServicio">
                                 <ng-template pTemplate="selectedItem" let-selectedOption>
                                     <div class="flex align-items-center gap-2">
                                         <div>{{ selectedOption.nombre }}</div>

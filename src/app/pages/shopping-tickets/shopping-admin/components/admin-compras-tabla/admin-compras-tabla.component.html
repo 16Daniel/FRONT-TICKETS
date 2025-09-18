@@ -5,11 +5,12 @@
     <ng-template pTemplate="header">
         <tr>
             <th>SOLICITANTE</th>
-            <th>SUCURSAL</th>
+            <th *ngIf="usuario.idRol == '2'">SUCURSAL</th>
             <th>FECHA</th>
-            <th>REGION</th>
             <th>RAZON SOCIAL</th>
-            <th>PROVEEDOR</th>
+            <th>TIPO</th>
+            <th>PROVEEDOR INTERNO</th>
+            <th>PROVEEDOR EXTERNO</th>
             <th>MÉTODO PAGO</th>
             <th>ESTATUS</th>
             <th>ESTATUS PAGO</th>
@@ -30,11 +31,12 @@
     <ng-template pTemplate="body" let-item>
         <tr class="bg-opacity-25" [ngClass]="{'bg-warning':(item.statuscompra == 0 || item.statuspago == 1), 'bg-success': item.statuspago == 2, 'bg-danger': item.statuscompra == 0}">
             <td>{{item.solicitante}}</td>
-            <td>{{obtenerNombreSucursal(item.idSucursalSolicitante)}}</td>
+            <td *ngIf="usuario.idRol == '2'">{{obtenerNombreSucursal(item.idSucursalSolicitante)}}</td>
             <td>{{  obtenerFecha(item.fecha) | date}}</td>
-            <td>{{ obtenerNombreRegiones(item.regiones) }}</td>
             <td>{{ item.razonsocial }}</td>
+            <td>{{ item.articulos[0].tipo}}</td>
             <td>{{ obtenerNombreArea(item.idArea) }}</td>
+            <td>{{ item.articulos[0].nomprov }}</td>
             <td>{{obtenerNombreMetodoPago(item.metodoPago)}}</td>
             <td>{{ obtenerNombreEstatus(item.statuscompra) }}</td>
             <td>

@@ -48,6 +48,7 @@ public catStatusCompra:any[] = [{id:'1',nombre:'EN GESTIÓN'},{id:'0',nombre:'CA
 public catStatusPago:any[] = [{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO'}]
 public filtrocatStatusCompra:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'EN GESTIÓN'},{id:'0',nombre:'CANCELADO'},{id:'2',nombre:'COMPRADO'},{id:'3',nombre:'ENTREGADO'},{id:'4',nombre:'EN DEVOLUCIÓN'},{id:'5',nombre:'OTRO'}]
 public filtrocatStatusPago:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO'}]
+public filtroCatRazonSocial:any[] = [{id:'-1',nombre:'TODO'},{id:'REBEL W1',nombre:'REBEL W1'},{id:'REBEL W2',nombre:'REBEL W2'},{id:'REBEL W3',nombre:'REBEL W3'},{id:'RW CENTRO',nombre:'RW CENTRO'}]; 
 public regcompras:AdministracionCompra[] = []; 
 public facturasPendientes:AdministracionCompra[] = []; 
 public itemReg:AdministracionCompra|undefined; 
@@ -65,8 +66,10 @@ public filtroStatusPago:string = "1";
 public filtroSucursal: Sucursal|undefined;
 public filtroTipo:string = "-1"; 
 public filtroRegion:string = '-1'; 
+public filtroRazonSocial:string = "-1"; 
 public filtrocatTipoCompra:any[] = [];
-public  catareas: Area[] = []; 
+public filtroArea:Area|undefined; 
+public catareas: Area[] = []; 
 public catMetodosPago:any[] = [{id:'1',nombre:'EFECTIVO'},{id:'2',nombre:'TRANSFERENCIA'}];
 public messages:any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }]; 
 public verServicio:boolean = false; 
@@ -80,7 +83,15 @@ constructor(
   ngOnInit(): void 
   { 
     this.actualizarInfoUsuario();
-    this.catareas = this.areasService.areas;
+    this.areasService.areas$.subscribe({
+      next: (data) => {
+        this.catareas = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
     this.obtenerFacturasPendientes()
     this.obtenerTipoCompras();
     this.obtenerProveedores();
@@ -187,10 +198,16 @@ constructor(
         {
           sucursalesids.push(suc.id);
         }
+        
+        if(this.filtroArea != undefined)
+          {
+            idArea = this.filtroArea.id; 
+          }
 
         let esServicio = this.usuario.id == this.idServicio ? true:false; 
         if(this.verServicio){ esServicio = true; }
-        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio).subscribe({
+        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,
+          idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio,this.filtroRazonSocial).subscribe({
       next: (data) => {
         this.regcompras = data;
         Swal.close();
@@ -307,17 +324,6 @@ constructor(
     return total;
   }
 
-  // obtenerAreas() {
-  //   this.areasService.get().subscribe({
-  //     next: (data) => {
-  //       this.catareas = data;
-  //       this.cdr.detectChanges();
-  //     },
-  //     error: (error) => {
-  //       console.log(error);
-  //     },
-  //   });
-  // }
 
   hanPasado7Dias(fecha: Date): boolean {
     const hoy = new Date();

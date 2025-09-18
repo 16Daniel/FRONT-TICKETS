@@ -54,7 +54,15 @@ constructor(
     ){  this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void 
-  {
+  {   
+
+    if(this.userdata.idRol == "2" && this.userdata.id != this.idServicio)
+      {
+        let suc = this.userdata.sucursales[0]; 
+        let temp = this.sucursales.filter(x => x.id == suc.id)[0]; 
+        this.FormSucursal = temp;      
+      } 
+
     if(this.userdata.idRol == '2' && this.userdata.id != this.idServicio)
       {
         this.formArtTipo = '1'; 
@@ -113,6 +121,13 @@ constructor(
       this.formDireccion = ''; 
       this.formRegion = ''; 
       this.FormSucursal = undefined;
+
+       if(this.userdata.idRol == "2" && this.userdata.id != this.idServicio)
+      {
+        let suc = this.userdata.sucursales[0]; 
+        let temp = this.sucursales.filter(x => x.id == suc.id)[0]; 
+        this.FormSucursal = temp;      
+      }  
     }
 
     borrarArt(index:number)

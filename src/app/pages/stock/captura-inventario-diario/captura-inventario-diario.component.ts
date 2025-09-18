@@ -7,7 +7,7 @@ import { Component, type OnInit } from '@angular/core';
   templateUrl: './captura-inventario-diario.component.html',
   styleUrl: './captura-inventario-diario.component.scss',
 })
-export class CapturaInventarioDiarioComponent implements OnInit {
+export default class CapturaInventarioDiarioComponent implements OnInit {
 
   ngOnInit(): void { }
 
