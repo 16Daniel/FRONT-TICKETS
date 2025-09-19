@@ -157,8 +157,8 @@
 {
     <div class="p-3 shadow m-3 bg-white">
     
-    <div class="d-flex justify-content-center p-3" *ngIf="obtenerSolicitudes(1).length>0">
-        <div class="w-100"><app-grafica-admin-compras [sucursales]="sucursales" [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin"></app-grafica-admin-compras></div>
+    <div class="d-flex justify-content-center p-3" *ngIf="verGrafica">
+        <div class="w-100"><app-grafica-admin-compras *ngIf="verGrafica" [sucursales]="sucursales" [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin"></app-grafica-admin-compras></div>
     </div>
 
 <app-admin-compras-tabla 
@@ -175,7 +175,10 @@
         <div class="p-3">
 
     <div class="d-flex justify-content-center p-3" *ngIf="obtenerSolicitudes(1).length>0">
-        <div class="w-100"><app-grafica-admin-compras [sucursales]="sucursales" [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin"></app-grafica-admin-compras></div>
+        <div class="w-100">
+            <app-grafica-admin-compras  *ngIf="obtenerSolicitudes(1).length>0" [sucursales]="sucursales"
+                 [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin">
+                </app-grafica-admin-compras></div>
     </div>
 
 <app-admin-compras-tabla 

@@ -74,6 +74,7 @@ public catareas: Area[] = [];
 public catMetodosPago:any[] = [{id:'1',nombre:'EFECTIVO'},{id:'2',nombre:'TRANSFERENCIA'}];
 public messages:any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }]; 
 public verServicio:boolean = false; 
+public verGrafica:boolean = false; 
 constructor(
     private shopServ:ShoppingService,
     private cdr: ChangeDetectorRef,
@@ -109,9 +110,11 @@ constructor(
   }
 
   obtenerCompras() {
+    this.verGrafica = false; 
     this.shopServ.getCompras().subscribe({
       next: (data) => {
         this.regcompras = data;
+        this.mostrarGrafica(); 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -121,9 +124,11 @@ constructor(
   }
 
   obtenerComprasServicio() {
+    this.verGrafica = false; 
     this.shopServ.getComprasServicio().subscribe({
       next: (data) => {
         this.regcompras = data;
+         this.mostrarGrafica(); 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -160,9 +165,11 @@ constructor(
   }
 
   obtenerComprasUsuario() {
+    this.verGrafica = false;
     this.shopServ.getComprasUsuario(this.usuario.id).subscribe({
       next: (data) => {
         this.regcompras = data;
+         this.mostrarGrafica(); 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -172,8 +179,10 @@ constructor(
   }
 
   obtenerComprasFiltro() {
+    this.verGrafica = false; 
     this.regcompras = [];
     Swal.showLoading();
+    this.cdr.detectChanges();
     let idArea = '-1';
     if ((this.usuario.idRol == '1' || this.usuario.idRol == '5') && this.usuario.id != this.idAdmin) {
       idArea = this.usuario.idArea;
@@ -202,6 +211,7 @@ constructor(
       next: (data) => {
         this.regcompras = data;
         Swal.close();
+         this.mostrarGrafica(); 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -444,5 +454,12 @@ constructor(
       this.obtenerComprasUsuario();
     }
   }
+
+mostrarGrafica()
+{
+   setTimeout(() => {
+          this.verGrafica = true;
+        }, 200);
+}
 
 }

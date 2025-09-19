@@ -60,7 +60,6 @@ export class GraficaAdminComprasComponent implements OnInit {
     }
 
     for (let ida of this.getAreasDisitintas()) {
-      debugger
       let data = this.registros.filter(x => x.idArea == ida);
       let total = 0;
       for (let item of data) {
@@ -75,7 +74,13 @@ export class GraficaAdminComprasComponent implements OnInit {
         this.gproveedor.push({ name: this.obtenerNombreArea(ida!), value: total })
       }
     }
+    
+    this.single.sort((a, b) => b.value - a.value);  
+    this.gproveedor.sort((a, b) => b.value - a.value);
 
+  }
+
+  ngAfterViewInit(): void {
     this.cdr.detectChanges();
   }
 
