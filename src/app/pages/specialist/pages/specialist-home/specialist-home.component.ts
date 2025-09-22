@@ -20,7 +20,7 @@ import { ModalTicketChatComponent } from '../../../../modals/tickets/modal-ticke
 import { Comentario } from '../../../../models/comentario-chat.model';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { AreasService } from '../../../../services/areas.service';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-specialist-home',

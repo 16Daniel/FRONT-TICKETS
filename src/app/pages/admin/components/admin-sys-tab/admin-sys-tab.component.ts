@@ -29,7 +29,7 @@ import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-
 import { PurchaseService } from '../../../../services/purchase.service';
 import { Compra } from '../../../../models/compra.model';
 import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 @Component({

@@ -29,7 +29,7 @@ import { ModalValidateTicketComponent } from "../../../../modals/tickets/modal-v
 import { ModalTicketChatComponent } from "../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component";
 import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { AreasService } from '../../../../services/areas.service';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 

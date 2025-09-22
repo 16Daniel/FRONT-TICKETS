@@ -31,7 +31,7 @@ import { FixedAssetsService } from '../../../services/fixed-assets.service';
 import { ActivoFijo } from '../../../models/activo-fijo.model';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 import { AreasService } from '../../../services/areas.service';
-import { UsersService } from '../../../services/users-2.service';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-modal-generate-ticket',

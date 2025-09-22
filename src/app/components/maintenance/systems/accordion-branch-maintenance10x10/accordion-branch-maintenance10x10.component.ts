@@ -9,7 +9,7 @@ import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model
 import { Usuario } from '../../../../models/usuario.model';
 import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance10x10',

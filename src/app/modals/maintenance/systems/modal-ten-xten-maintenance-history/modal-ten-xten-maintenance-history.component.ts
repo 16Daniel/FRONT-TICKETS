@@ -11,7 +11,7 @@ import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model
 import { Usuario } from '../../../../models/usuario.model';
 import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
 import { BranchMaintenanceTableComponent } from '../../../../components/maintenance/systems/branch-maintenance-table/branch-maintenance-table.component';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',

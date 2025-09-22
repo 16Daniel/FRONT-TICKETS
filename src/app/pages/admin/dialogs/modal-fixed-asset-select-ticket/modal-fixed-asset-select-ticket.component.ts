@@ -12,7 +12,7 @@ import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
 import { AreasService } from '../../../../services/areas.service';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-modal-fixed-asset-select-ticket',

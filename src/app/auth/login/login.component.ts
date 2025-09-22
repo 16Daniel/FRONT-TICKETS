@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import Swal from 'sweetalert2';
 
 import { AuthService } from '../../services/auth.service';
-import { UsersService } from '../../services/users-2.service';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-login',

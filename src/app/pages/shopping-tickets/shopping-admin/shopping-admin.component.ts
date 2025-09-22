@@ -25,7 +25,7 @@ import { Area } from '../../../models/area.model';
 import { environment } from '../../../../environments/environments';
 import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
 import { AreasService } from '../../../services/areas.service';
-import { UsersService } from '../../../services/users-2.service';
+import { UsersService } from '../../../services/users.service';
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,

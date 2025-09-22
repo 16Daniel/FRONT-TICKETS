@@ -34,7 +34,7 @@ import { MantenimientoFactoryService } from '../../../../services/maintenance-fa
 import { CalendarComponent } from '../../../../components/calendar/calendar.component';
 import { BranchVisitItemComponent } from '../../../../components/branch-visit-item/branch-visit-item.component';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-calendar-builder',

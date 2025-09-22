@@ -10,7 +10,7 @@ import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { BranchMaintenanceTableAvComponent } from '../../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-modal-maintenance-av-history',

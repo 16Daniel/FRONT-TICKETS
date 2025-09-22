@@ -9,7 +9,7 @@ import { Sucursal } from '../../../../models/sucursal.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { BranchMaintenanceTableAvComponent } from '../branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-av',

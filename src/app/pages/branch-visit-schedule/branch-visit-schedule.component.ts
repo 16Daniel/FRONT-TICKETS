@@ -15,7 +15,7 @@ import { ColorUsuario } from '../../models/color-usuario';
 import { DocumentsService } from '../../services/documents.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
-import { UsersService } from '../../services/users-2.service';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-branch-visit-schedule',
