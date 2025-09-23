@@ -32,7 +32,7 @@ import { Sucursal } from '../../models/sucursal.model';
 import { BranchesService } from '../../services/branches.service';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 import { AreasService } from '../../services/areas.service';
-import { UsersService } from '../../services/users-2.service';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-requester-tickets-list',

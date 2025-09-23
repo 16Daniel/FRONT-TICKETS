@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 import { VersionUsuarioService } from '../../services/version-usuario.service';
 import { Usuario } from '../../models/usuario.model';
@@ -39,6 +40,8 @@ export class UpdateBannerComponent implements OnInit {
         this.mostrarNotificacion = false;
       } else {
         this.mostrarNotificacion = this.paginaCargaPrimeraVez1 ? false : true;
+        if (this.mostrarNotificacion)
+          this.mostrarAlerta();
         this.paginaCargaPrimeraVez1 = false;
       }
       this.cdr.detectChanges();
@@ -52,8 +55,54 @@ export class UpdateBannerComponent implements OnInit {
           this.mostrarNotificacion = false;
         } else {
           this.mostrarNotificacion = this.paginaCargaPrimeraVez2 ? false : true;
-          this.paginaCargaPrimeraVez2 = false;        }
+          if (this.mostrarNotificacion)
+            this.mostrarAlerta();
+          this.paginaCargaPrimeraVez2 = false;
+        }
         this.cdr.detectChanges();
       });
+  }
+
+  mostrarAlerta() {
+    let fecha: Date;
+    if ((this.versionActual.fecha as any)?.toDate) {
+      fecha = (this.versionActual.fecha as any).toDate();
+    } else {
+      fecha = new Date(this.versionActual.fecha);
+    }
+
+    const fechaFormateada = fecha.toLocaleString('es-MX', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    Swal.fire({
+      title: `<span style="color:red; font-weight:bold;">🚨 NUEVA VERSIÓN 🚨</span><br/>Versión ${this.versionActual.version}`,
+      html: `
+        <div style="text-align:left;">
+          <p><b>Fecha:</b><br/> ${fechaFormateada}</p>
+          <p><b>Descripción:</b><br/> ${this.versionActual.descripcion}</p>
+        </div>
+        <style>
+          .swal2-html-container img {
+            max-width: 100% !important;
+            height: auto !important;
+          }
+        </style>
+        <p><a href="javascript:location.reload();" class="text-blue fw-bold">HAZ CLICK AQUÍ</a> PARA ACTUALIZAR</p>
+      `,
+      showCancelButton: false,
+      showConfirmButton: true,
+      confirmButtonText: 'Actualizar ahora',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        location.reload();
+      }
+    });
   }
 }

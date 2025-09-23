@@ -16,7 +16,7 @@ import { Rol } from '../../../../models/rol.model';
 import { DocumentsService } from '../../../../services/documents.service';
 import { RolesService } from '../../../../services/roles.service';
 import { ModalUserCreateComponent } from '../../../../modals/users/modal-user-create/modal-user-create.component';
-import { UsersService } from '../../../../services/users-2.service';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-control-aceite-tab',

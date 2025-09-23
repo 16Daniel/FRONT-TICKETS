@@ -14,7 +14,7 @@ import { RolesService } from '../../../services/roles.service';
 import { DocumentsService } from '../../../services/documents.service';
 import { Area } from '../../../models/area.model';
 import { AreasService } from '../../../services/areas.service';
-import { UsersService } from '../../../services/users-2.service';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-modal-user-create',

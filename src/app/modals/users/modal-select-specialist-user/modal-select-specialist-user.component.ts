@@ -8,7 +8,7 @@ import { Usuario } from '../../../models/usuario.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Ticket } from '../../../models/ticket.model';
 import { Comentario } from '../../../models/comentario-chat.model';
-import { UsersService } from '../../../services/users-2.service';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-modal-select-specialist-user',
