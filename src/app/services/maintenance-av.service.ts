@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Mantenimiento6x6AV } from '../models/mantenimiento-av.model';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
@@ -290,5 +290,65 @@ export class Maintenance6x6AvService implements IMantenimientoService {
   async delete(id: string): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await deleteDoc(mantenimientoRef);
+  }
+
+  getById(id: string): Observable<Mantenimiento6x6AV | undefined> {
+    return new Observable<Mantenimiento6x6AV | undefined>((subscriber) => {
+      const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
+
+      const unsubscribe = onSnapshot(
+        mantenimientoRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            subscriber.next({
+              id: snapshot.id,
+              ...snapshot.data(),
+            } as Mantenimiento6x6AV);
+          } else {
+            subscriber.next(undefined);
+          }
+        },
+        (error) => subscriber.error(error)
+      );
+
+      // limpiar suscripción al destruir
+      return () => unsubscribe();
+    });
+  }
+
+  async obtenerMantenimientosEntreFechas(
+    fechaInicio: Date,
+    fechaFin: Date
+  ): Promise<any[]> {
+    const ticketsCollection = collection(this.firestore, this.pathName);
+
+    const q = query(ticketsCollection,
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc')
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
+
+  updateLastCommentRead(
+    idMantenimiento: string,
+    idUsuario: string,
+    ultimoComentarioLeido: number
+  ) {
+    const ticketRef = doc(this.firestore, `${this.pathName}/${idMantenimiento}`);
+
+    // Actualizar el índice del último comentario leído para un participante
+    return updateDoc(ticketRef, {
+      participantesChat: arrayUnion({
+        idUsuario,
+        ultimoComentarioLeido,
+      }),
+    });
   }
 }

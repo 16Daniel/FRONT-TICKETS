@@ -14,6 +14,7 @@ import {
   onSnapshot,
   orderBy,
   limit,
+  arrayUnion,
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
@@ -45,6 +46,8 @@ export class Maintenance10x10Service implements IMantenimientoService {
       mantenimientoRack: false,
       mantenimientoTiemposCocina: false,
       observaciones: '',
+      comentarios: [],
+      participantesChat: []
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -82,12 +85,28 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento10x10[]>;
   }
 
-  async getById(id: string): Promise<Mantenimiento10x10 | undefined> {
-    const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
-    const snapshot = await getDoc(mantenimientoRef);
-    return snapshot.exists()
-      ? ({ id: snapshot.id, ...snapshot.data() } as Mantenimiento10x10)
-      : undefined;
+  getById(id: string): Observable<Mantenimiento10x10 | undefined> {
+    return new Observable<Mantenimiento10x10 | undefined>((subscriber) => {
+      const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
+
+      const unsubscribe = onSnapshot(
+        mantenimientoRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            subscriber.next({
+              id: snapshot.id,
+              ...snapshot.data(),
+            } as Mantenimiento10x10);
+          } else {
+            subscriber.next(undefined);
+          }
+        },
+        (error) => subscriber.error(error)
+      );
+
+      // limpiar suscripción al destruir
+      return () => unsubscribe();
+    });
   }
 
   async update(id: string, mantenimiento: Mantenimiento10x10): Promise<void> {
@@ -325,5 +344,21 @@ export class Maintenance10x10Service implements IMantenimientoService {
       id: doc.id,
       ...doc.data()
     }));
+  }
+
+  updateLastCommentRead(
+    idMantenimiento: string,
+    idUsuario: string,
+    ultimoComentarioLeido: number
+  ) {
+    const ticketRef = doc(this.firestore, `${this.pathName}/${idMantenimiento}`);
+
+    // Actualizar el índice del último comentario leído para un participante
+    return updateDoc(ticketRef, {
+      participantesChat: arrayUnion({
+        idUsuario,
+        ultimoComentarioLeido,
+      }),
+    });
   }
 }

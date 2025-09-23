@@ -10,16 +10,18 @@ import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { ModalMaintenanceMttoImguploaderComponent } from '../../../../modals/maintenance/manteinance/modal-maintenance-mtto-imguploader/modal-maintenance-mtto-imguploader.component';
 import { ModalVisorImagenesComponent } from '../../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
 import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
+import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
 
 @Component({
   selector: 'app-branch-maintenance-table-mtto',
   standalone: true,
   imports: [
-    TableModule, 
-    CommonModule, 
-    ModalMaintenanceMttoImguploaderComponent, 
+    TableModule,
+    CommonModule,
+    ModalMaintenanceMttoImguploaderComponent,
     ModalVisorImagenesComponent,
-    ModalFinalCommentsComponent
+    ModalFinalCommentsComponent,
+    ModalMaintenanceChatComponent
   ],
   templateUrl: './branch-maintenance-table-mtto.component.html',
   styleUrl: './branch-maintenance-table-mtto.component.scss'
@@ -30,6 +32,7 @@ export class BranchMaintenanceTableMttoComponent {
   @Output() clickEvent = new EventEmitter<MantenimientoMtto>();
   mantenimientoSeleccionado: MantenimientoMtto | undefined;
   mostrarModalComentarios: boolean = false;
+  mostrarModalChat: boolean = false;
   mostrarModalSubirImagen: boolean = false;
   mostrarModalVisorImagen: boolean = false;
   tituloEvidencia: string | undefined;
@@ -119,5 +122,10 @@ export class BranchMaintenanceTableMttoComponent {
   abrirModalDetalle(mantenimiento: any) {
     this.mantenimientoSeleccionado = mantenimiento;
     this.mostrarModalComentarios = true;
+  }
+
+  onClickChat(mantenimiento: any) {
+    this.mantenimientoSeleccionado = mantenimiento;
+    this.mostrarModalChat = true;
   }
 }

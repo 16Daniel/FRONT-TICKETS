@@ -14,7 +14,7 @@
             <th>MANGUERAS</th>
             <th>LLAVES DE PASO</th>
             <th>% DE PROGRESO</th>
-            <th></th>
+            <th>ACCIONES</th>
         </tr>
     </ng-template>
 
@@ -59,10 +59,16 @@
                 <label style="color: white;">{{ mantenimiento.mantenimientoLlavesDePaso ? 'Si' : 'No' }}</label>
             </td>
             <td class="text-center">{{ maintenanceMtooService.calcularPorcentaje(mantenimiento) }}%</td>
-            <td>
+            <td style="display: flex; gap: 10px">
                 <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
                     (click)="abrirModalDetalle(mantenimiento)">
                     <i class='bx bx-show bx-sm'></i>
+                </button>
+
+                <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)"
+                    style="margin: 2px">
+                    <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
+                        tooltipPosition="top"></i>
                 </button>
             </td>
         </tr>
@@ -80,3 +86,7 @@
 <app-modal-visor-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
     [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false"
     [imagenUrl]="urlImagen!"></app-modal-visor-imagenes>
+
+<app-modal-maintenance-chat *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
+    (closeEvent)="mostrarModalChat = false"
+    [idMnatenimiento]="mantenimientoSeleccionado?.id"></app-modal-maintenance-chat>

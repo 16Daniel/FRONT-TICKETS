@@ -1,63 +1,61 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewChecked,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Timestamp } from '@angular/fire/firestore';
-import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
-import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
+import { EditorModule } from 'primeng/editor';
 import { InputTextModule } from 'primeng/inputtext';
-
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
+import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MessageService } from 'primeng/api';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
 
 @Component({
-  selector: 'app-modal-ticket-chat',
+  selector: 'app-modal-maintenance-chat',
   standalone: true,
   imports: [
     FormsModule,
-    CardModule,
     CommonModule,
-    EditorModule,
+    // CardModule,
+    // EditorModule,
     DialogModule,
-    InputTextModule,
+    // InputTextModule
   ],
-  templateUrl: './modal-ticket-chat.component.html',
-  styleUrl: './modal-ticket-chat.component.scss',
+  templateUrl: './modal-maintenance-chat.component.html',
+  styleUrl: './modal-maintenance-chat.component.scss'
 })
-export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
-  @Input() showModalChatTicket: boolean = false;
-  @Input() ticket: Ticket | any;
+export class ModalMaintenanceChatComponent {
+  @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
+  @Input() idMnatenimiento?: string;
   @ViewChild('chatContainer') private chatContainer: any;
 
+  mantenimiento?: Mantenimiento10x10;
   userdata: Usuario;
   comentario: string = '';
 
   constructor(
-    private ticketsService: TicketsService,
+    private manteinanceService: Maintenance10x10Service,
     private messageService: MessageService,
-    public datesHelper: DatesHelperService
+    public datesHelper: DatesHelperService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   ngOnInit(): void {
-    this.ticketsService.updateLastCommentRead(
-      this.ticket.id,
-      this.userdata.id,
-      this.ticket.comentarios.length
-    );
+    this.manteinanceService.getById(this.idMnatenimiento!).subscribe(mantenimiento => {
+      this.mantenimiento = mantenimiento;
+
+      this.cdr.detectChanges();
+
+      this.manteinanceService.updateLastCommentRead(
+        this.mantenimiento!.id,
+        this.userdata.id,
+        (this.mantenimiento!.comentarios ? this.mantenimiento!.comentarios.length : 0)
+      );
+    });
   }
 
   esmiId(id: string): boolean {
@@ -74,11 +72,6 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
     this.closeEvent.emit(false); // Cerrar modal
   }
 
-  respuestaRapida() {
-    this.comentario = "ESTE TICKET YA ESTA TERMINADO. A ESPERA QUE LA SUCURSAL VALIDE Y FINALIZE EL TICKET MIENTRAS TANTO, NO SE PODRA LEVANTAR NINGUN OTRO TICKET HASTA TENER LA VALIDACION O SE CONFIRME QUE EL TICKET NO ESTA LISTO SALUDOS..."
-    this.enviarComentarioChat();
-  }
-
   enviarComentarioChat() {
     if (!this.comentario) {
       return;
@@ -92,18 +85,22 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
       comentario: this.comentario,
       fecha: new Date(),
     };
-    this.ticket!.comentarios.push(data);
 
-    this.ticketsService
-      .update(this.ticket)
+    if (!this.mantenimiento!.comentarios)
+      this.mantenimiento!.comentarios = [];
+
+    this.mantenimiento!.comentarios.push(data);
+
+    this.manteinanceService
+      .update(this.mantenimiento!.id, this.mantenimiento!)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
         this.comentario = '';
 
-        this.ticketsService.updateLastCommentRead(
-          this.ticket.id,
+        this.manteinanceService.updateLastCommentRead(
+          this.mantenimiento!.id,
           this.userdata.id,
-          this.ticket.comentarios.length
+          this.mantenimiento!.comentarios.length
         );
 
       })
@@ -129,4 +126,5 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
         this.chatContainer.nativeElement.scrollHeight;
     }
   }
+
 }

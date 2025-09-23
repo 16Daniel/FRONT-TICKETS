@@ -10,6 +10,7 @@ import { Maintenance6x6AvService } from '../../../../services/maintenance-av.ser
 import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
 import { ModalVisorImagenesComponent } from '../../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
 import { ModalAvMttoImguploaderComponent } from '../../../../modals/maintenance/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
+import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
 
 @Component({
   selector: 'app-branch-maintenance-table-av',
@@ -19,7 +20,8 @@ import { ModalAvMttoImguploaderComponent } from '../../../../modals/maintenance/
     CommonModule,
     ModalFinalCommentsComponent,
     ModalAvMttoImguploaderComponent,
-    ModalVisorImagenesComponent
+    ModalVisorImagenesComponent,
+    ModalMaintenanceChatComponent
   ],
   templateUrl: './branch-maintenance-table-av.component.html',
   styleUrl: './branch-maintenance-table-av.component.scss'
@@ -31,6 +33,7 @@ export class BranchMaintenanceTableAvComponent {
   @Output() clickEvent = new EventEmitter<Mantenimiento6x6AV>();
   mantenimientoSeleccionado: Mantenimiento6x6AV | undefined;
   mostrarModalComentarios: boolean = false;
+  mostrarModalChat: boolean = false;
   mostrarModalSubirImagen: boolean = false;
   mostrarModalVisorImagen: boolean = false;
   tituloEvidencia: string | undefined;
@@ -114,5 +117,10 @@ export class BranchMaintenanceTableAvComponent {
   abrirModalDetalle(mantenimiento: any) {
     this.mantenimientoSeleccionado = mantenimiento;
     this.mostrarModalComentarios = true;
+  }
+
+  onClickChat(mantenimiento: any) {
+    this.mantenimientoSeleccionado = mantenimiento;
+    this.mostrarModalChat = true;
   }
 }

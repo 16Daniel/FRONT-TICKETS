@@ -16,7 +16,7 @@
             <th>TIEMPOS COCINA</th>
             <th>CONCENTRADOR APPS</th>
             <th>% DE PROGRESO</th>
-            <th></th>
+            <th>ACCIONES</th>
         </tr>
     </ng-template>
 
@@ -69,10 +69,16 @@
                 <label style="color: white;">{{ mantenimiento.mantenimientoConcentradorApps ? 'Si' : 'No' }}</label>
             </td>
             <td class="text-center">{{ maintenance10x10Service.calcularPorcentaje(mantenimiento) }}%</td>
-            <td>
+            <td style="display: flex; gap: 10px">
                 <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
                     (click)="abrirModalDetalle(mantenimiento)">
                     <i class='bx bx-show bx-sm'></i>
+                </button>
+
+                <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)"
+                    style="margin: 2px">
+                    <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
+                        tooltipPosition="top"></i>
                 </button>
             </td>
         </tr>
@@ -87,5 +93,10 @@
     (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
     [mantenimiento]="mantenimientoSeleccionado"></app-modal-sys-mtto-imguploader>
 
-<app-modal-visor-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen" [titulo]="tituloVisor!"
-    (closeEvent)="mostrarModalVisorImagen = false" [imagenUrl]="urlImagen!"></app-modal-visor-imagenes>
+<app-modal-visor-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
+    [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false"
+    [imagenUrl]="urlImagen!"></app-modal-visor-imagenes>
+
+<app-modal-maintenance-chat *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
+    (closeEvent)="mostrarModalChat = false"
+    [idMnatenimiento]="mantenimientoSeleccionado?.id"></app-modal-maintenance-chat>

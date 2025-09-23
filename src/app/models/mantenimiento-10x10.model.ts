@@ -1,4 +1,6 @@
 import { Timestamp } from "@angular/fire/firestore";
+import { Comentario } from "./comentario-chat.model";
+import { ParticipanteChat } from "./participante-chat.model";
 
 export interface Mantenimiento10x10 {
   id?: string | any;
@@ -39,5 +41,9 @@ export interface Mantenimiento10x10 {
   observaciones: string | undefined;
   estatus: boolean;
   timestamp?: Timestamp | Date;
+
+  comentarios: Comentario[];
+  participantesChat: ParticipanteChat[];
+
 }
 

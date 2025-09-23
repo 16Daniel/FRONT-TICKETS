@@ -8,4 +8,14 @@ export interface IMantenimientoService {
     getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]>;
     delete(idMantenimiento: string): Promise<void>;
     update(id: string, mantenimiento: any): Promise<void>;
+    getById(id: string): Observable<any | undefined>;
+    obtenerMantenimientosEntreFechas(
+        fechaInicio: Date,
+        fechaFin: Date
+    ): Promise<any[]>;
+    updateLastCommentRead(
+        idMantenimiento: string,
+        idUsuario: string,
+        ultimoComentarioLeido: number
+    ): Promise<void>;
 }
