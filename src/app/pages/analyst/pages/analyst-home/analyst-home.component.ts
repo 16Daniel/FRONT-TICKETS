@@ -35,6 +35,7 @@ import { PurchaseService } from '../../../../services/purchase.service';
 import { Compra } from '../../../../models/compra.model';
 import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { UsersService } from '../../../../services/users.service';
+import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-analyst-home',
@@ -104,7 +105,8 @@ export default class AnalystHomeComponent implements OnInit {
     private branchesService: BranchesService,
     private notificationService: NotificationService,
     private mantenimientoFactory: MantenimientoFactoryService,
-    private purchaseService: PurchaseService
+    private purchaseService: PurchaseService,
+    private datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -158,29 +160,7 @@ export default class AnalystHomeComponent implements OnInit {
 
     this.loading = true;
 
-    this.obtenerMantenimientos(idsSucursales);
-  }
-
-  obtenerMantenimientos(idsSucursales: string[]) {
-    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-
-    this.subscriptiontk = servicio
-      .getUltimosMantenimientos(idsSucursales)
-      .subscribe((result: any) => {
-        let data = result.filter((element: any) => element.length > 0);
-        this.ultimosmantenimientos = [];
-        for (let itemdata of data) {
-          for (let item of itemdata) {
-            this.ultimosmantenimientos.push(item);
-          }
-        }
-
-        this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
-          x.fecha = this.getDate(x.fecha);
-          return x;
-        });
-        this.cdr.detectChanges();
-      });
+    this.obtenerMantenimientosSistemas(idsSucursales);
   }
 
   obtenerMantenimientosSistemas(idsSucursales: string[]) {
@@ -198,23 +178,13 @@ export default class AnalystHomeComponent implements OnInit {
         }
 
         this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
-          x.fecha = this.getDate(x.fecha);
+          x.fecha = this.datesHelper.getDate(x.fecha);
           return x;
         });
         this.cdr.detectChanges();
       });
   }
 
-  getDate(tsmp: Timestamp | any): Date {
-    try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    } catch {
-      return tsmp;
-    }
-  }
 
   async getTicketsResponsable(): Promise<void> {
     this.loading = true;

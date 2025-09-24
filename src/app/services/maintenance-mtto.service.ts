@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
+import { Comentario } from '../models/comentario-chat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
       mantenimientoMangueras: true,
       mantenimientoLlavesDePaso: true,
       observaciones: '',
+      comentarios: [],
+      participantesChat: []
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -63,6 +66,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
       mantenimientoMangueras: true,
       mantenimientoLlavesDePaso: true,
       observaciones: '',
+      comentarios: [],
+      participantesChat: []
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
@@ -11,9 +11,11 @@ import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.
 import { ModalSysMttoImguploaderComponent } from '../../../../modals/maintenance/systems/modal-sys-mtto-imguploader/modal-sys-mtto-imguploader.component';
 import { ModalVisorImagenesComponent } from '../../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
 import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
+import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
 
 @Component({
   selector: 'app-branch-maintenance-table',
+  styleUrl: './branch-maintenance-table.component.scss',
   standalone: true,
   imports: [
     TableModule,
@@ -28,6 +30,7 @@ import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/mo
 export class BranchMaintenanceTableComponent {
   @Input() mantenimientos: Mantenimiento10x10[] = [];
   @Input() usuariosHelp: Usuario[] = [];
+  @Input() idSucursal?: string;
   @Output() clickEvent = new EventEmitter<Mantenimiento10x10>();
 
   mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
@@ -43,8 +46,56 @@ export class BranchMaintenanceTableComponent {
   constructor(
     public dateHelpder: DatesHelperService,
     private cdr: ChangeDetectorRef,
-    public maintenance10x10Service: Maintenance10x10Service
+    public maintenance10x10Service: Maintenance10x10Service,
+    private mantenimientoFactory: MantenimientoFactoryService,
+    private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.observaActualizacionesChatTicket(changes);
+  }
+
+  observaActualizacionesChatTicket(changes: SimpleChanges) {
+    if (changes['mantenimientos'] && changes['mantenimientos'].currentValue) {
+      // this.obtenerMantenimientos(this.idSucursal!);
+      console.log('Mantenimientos actualizados');
+
+      // this.mantenimientos.forEach(element => {
+      //   if (!element.comentarios)
+      //     element.comentarios = []
+
+      //   console.log(element.id, element.comentarios.length)
+      //   this.cdr.detectChanges();
+      // });
+    }
+  }
+
+  obtenerMantenimientos(idsSucursal: string) {
+    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+
+    servicio
+      .getUltimosMantenimientos([...idsSucursal])
+      .subscribe((result: any) => {
+        let data = result.filter((element: any) => element.length > 0);
+        this.mantenimientos = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.mantenimientos.push(item);
+          }
+        }
+
+        this.mantenimientos = this.mantenimientos.map(x => {
+          x.fecha = this.datesHelper.getDate(x.fecha);
+          return x;
+        });
+
+        this.mantenimientos.forEach(element => {
+          
+          console.log(element.id, element.comentarios.length)
+        });
+        this.cdr.detectChanges();
+      });
+  }
 
   obtenerNombreResponsable(idUsuario: string): string {
     let nombre = '';
@@ -133,5 +184,29 @@ export class BranchMaintenanceTableComponent {
   onClickChat(mantenimiento: any) {
     this.mantenimientoSeleccionado = mantenimiento;
     this.mostrarModalChat = true;
+  }
+
+  verificarChatNoLeido(mantenimiento: Mantenimiento10x10) {
+    if (!mantenimiento.participantesChat)
+      mantenimiento.participantesChat = [];
+
+    const participantes = mantenimiento.participantesChat.sort(
+      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
+    );
+    const participante = participantes.find(
+      (p) => p.idUsuario === this.usuario.id
+    );
+
+    if (participante) {
+      const ultimoComentarioLeido = this.mostrarModalChat
+        ? mantenimiento.comentarios.length
+        : participante.ultimoComentarioLeido;
+      const comentarios = mantenimiento.comentarios;
+
+      // Si el último comentario leído es menor que la longitud actual de los comentarios
+      return comentarios.length > ultimoComentarioLeido;
+    }
+
+    return false;
   }
 }

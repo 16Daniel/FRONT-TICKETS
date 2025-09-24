@@ -10,6 +10,7 @@ import { Usuario } from '../../../models/usuario.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { MessageService } from 'primeng/api';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
+import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
 
 @Component({
   selector: 'app-modal-maintenance-chat',
@@ -27,8 +28,9 @@ import { DatesHelperService } from '../../../helpers/dates-helper.service';
 })
 export class ModalMaintenanceChatComponent {
   @Input() mostrarModal: boolean = false;
-  @Output() closeEvent = new EventEmitter<boolean>();
   @Input() idMnatenimiento?: string;
+  @Input() idArea?: string;
+  @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 
   mantenimiento?: Mantenimiento10x10;
@@ -36,7 +38,7 @@ export class ModalMaintenanceChatComponent {
   comentario: string = '';
 
   constructor(
-    private manteinanceService: Maintenance10x10Service,
+    private mantenimientoFactory: MantenimientoFactoryService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
     private cdr: ChangeDetectorRef,
@@ -45,12 +47,14 @@ export class ModalMaintenanceChatComponent {
   }
 
   ngOnInit(): void {
-    this.manteinanceService.getById(this.idMnatenimiento!).subscribe(mantenimiento => {
+    const servicio = this.mantenimientoFactory.getService(this.idArea!);
+
+    servicio.getById(this.idMnatenimiento!).subscribe(mantenimiento => {
       this.mantenimiento = mantenimiento;
 
       this.cdr.detectChanges();
 
-      this.manteinanceService.updateLastCommentRead(
+      servicio.updateLastCommentRead(
         this.mantenimiento!.id,
         this.userdata.id,
         (this.mantenimiento!.comentarios ? this.mantenimiento!.comentarios.length : 0)
@@ -91,13 +95,15 @@ export class ModalMaintenanceChatComponent {
 
     this.mantenimiento!.comentarios.push(data);
 
-    this.manteinanceService
+    const servicio = this.mantenimientoFactory.getService(this.idArea!);
+
+    servicio
       .update(this.mantenimiento!.id, this.mantenimiento!)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
         this.comentario = '';
 
-        this.manteinanceService.updateLastCommentRead(
+        servicio.updateLastCommentRead(
           this.mantenimiento!.id,
           this.userdata.id,
           this.mantenimiento!.comentarios.length

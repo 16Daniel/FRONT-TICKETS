@@ -15,11 +15,13 @@ import {
   orderBy,
   limit,
   arrayUnion,
+  serverTimestamp,
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
+import { Comentario } from '../models/comentario-chat.model';
 
 @Injectable({
   providedIn: 'root',
@@ -110,6 +112,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
   }
 
   async update(id: string, mantenimiento: Mantenimiento10x10): Promise<void> {
+    mantenimiento.timestamp = new Date();
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await updateDoc(mantenimientoRef, {
       ...mantenimiento,
@@ -222,7 +225,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     // Ejecutar todas las consultas en paralelo y combinar los resultados
     return forkJoin(consultas);
   }
-
+  
   getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
     const fechaActual = new Date();
     const fechaHaceUnMes = new Date(fechaActual);

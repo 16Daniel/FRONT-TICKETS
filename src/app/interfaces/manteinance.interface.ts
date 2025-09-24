@@ -1,4 +1,5 @@
 import { Observable } from "rxjs";
+import { Comentario } from "../models/comentario-chat.model";
 
 export interface IMantenimientoService {
     create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void>;

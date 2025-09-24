@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Mantenimiento6x6AV } from '../models/mantenimiento-av.model';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
+import { Comentario } from '../models/comentario-chat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,8 @@ export class Maintenance6x6AvService implements IMantenimientoService {
       mantenimientoNivelAudio: true,
       mantenimientoCanales: true,
       observaciones: '',
+      comentarios: [],
+      participantesChat: []
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
