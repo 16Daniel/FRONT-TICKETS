@@ -92,7 +92,6 @@ export class UpdateBannerComponent implements OnInit {
             height: auto !important;
           }
         </style>
-        <p><a href="javascript:location.reload();" class="text-blue fw-bold">HAZ CLICK AQUÍ</a> PARA ACTUALIZAR</p>
       `,
       showCancelButton: false,
       showConfirmButton: true,
