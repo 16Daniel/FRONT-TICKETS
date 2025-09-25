@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
-import { forkJoin, from, map, Observable } from 'rxjs';
+import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
 import { Comentario } from '../models/comentario-chat.model';
@@ -278,30 +278,30 @@ export class MaintenanceMtooService implements IMantenimientoService {
   }
 
   getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
-    // Mapea cada sucursal a una consulta independiente
-    const consultas = idsSucursales.map(idSucursal => {
-      const mantenimientosRef = collection(this.firestore, this.pathName);
-      const q = query(
-        mantenimientosRef,
-        where('idSucursal', '==', idSucursal.toString()),
-        where('estatus', '==', false),
-        orderBy('fecha', 'desc'), // Ordena por fecha descendente
-        limit(3)
-      );
+    // Creamos un Observable por cada sucursal
+    const observables = idsSucursales.map(idSucursal => {
+      return new Observable<any[]>(observer => {
+        const mantenimientosRef = collection(this.firestore, this.pathName);
+        const q = query(
+          mantenimientosRef,
+          where('idSucursal', '==', idSucursal.toString()),
+          where('estatus', '==', false),
+          orderBy('fecha', 'desc'),
+          limit(3)
+        );
 
-      // Ejecutar la consulta y obtener los datos
-      return from(getDocs(q)).pipe(
-        map(querySnapshot => {
-          if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
-          return []; // Si no hay documentos, devuelve un array vacío
-        })
-      );
+        const unsubscribe = onSnapshot(q, snapshot => {
+          const resultados = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          observer.next(resultados);
+        }, error => observer.error(error));
+
+        // Limpiar suscripción cuando se complete
+        return () => unsubscribe();
+      });
     });
 
-    // Ejecutar todas las consultas en paralelo y combinar los resultados
-    return forkJoin(consultas);
+    // Combinamos todos los Observables para emitir un array con los resultados por sucursal
+    return combineLatest(observables);
   }
 
   async delete(id: string): Promise<void> {

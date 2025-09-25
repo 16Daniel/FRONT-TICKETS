@@ -181,6 +181,7 @@ export default class AnalystHomeComponent implements OnInit {
           x.fecha = this.datesHelper.getDate(x.fecha);
           return x;
         });
+
         this.cdr.detectChanges();
       });
   }

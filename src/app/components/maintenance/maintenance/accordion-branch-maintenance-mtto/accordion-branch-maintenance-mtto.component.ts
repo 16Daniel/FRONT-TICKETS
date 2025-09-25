@@ -23,6 +23,7 @@ export class AccordionBranchMaintenanceMttoComponent {
   @Input() mantenimientos: MantenimientoMtto[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
+  @Input() mostrarChat: boolean = false;
 
   mantenimientosOriginal: MantenimientoMtto[] = [];
   mantenimientosOrdenados: MantenimientoMtto[] = [];

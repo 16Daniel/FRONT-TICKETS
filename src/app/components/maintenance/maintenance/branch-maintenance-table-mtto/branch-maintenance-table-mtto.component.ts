@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 
@@ -29,7 +29,9 @@ import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/mo
 export class BranchMaintenanceTableMttoComponent {
   @Input() mantenimientos: MantenimientoMtto[] = [];
   @Input() usuariosHelp: Usuario[] = [];
+  @Input() mostrarChat: boolean = false;
   @Output() clickEvent = new EventEmitter<MantenimientoMtto>();
+  
   mantenimientoSeleccionado: MantenimientoMtto | undefined;
   mostrarModalComentarios: boolean = false;
   mostrarModalChat: boolean = false;
@@ -45,6 +47,16 @@ export class BranchMaintenanceTableMttoComponent {
     private cdr: ChangeDetectorRef,
     public maintenanceMtooService: MaintenanceMtooService,
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
+
+  // ngOnChanges(changes: SimpleChanges) {
+  //   this.observaActualizacionesChatTicket(changes);
+  // }
+
+  // observaActualizacionesChatTicket(changes: SimpleChanges) {
+  //   if (changes['mantenimientos'] && changes['mantenimientos'].currentValue) {
+  //     console.log('Mantenimientos actualizados');
+  //   }
+  // }
 
   obtenerNombreResponsable(idUsuario: string): string {
     let nombre = '';
@@ -127,5 +139,32 @@ export class BranchMaintenanceTableMttoComponent {
   onClickChat(mantenimiento: any) {
     this.mantenimientoSeleccionado = mantenimiento;
     this.mostrarModalChat = true;
+  }
+
+  verificarChatNoLeido(mantenimiento: MantenimientoMtto) {
+    if (!mantenimiento.participantesChat)
+      mantenimiento.participantesChat = [];
+
+    if (!mantenimiento.comentarios)
+      mantenimiento.comentarios = [];
+
+    const participantes = mantenimiento.participantesChat.sort(
+      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
+    );
+    const participante = participantes.find(
+      (p) => p.idUsuario === this.usuario.id
+    );
+
+    if (participante) {
+      const ultimoComentarioLeido = this.mostrarModalChat
+        ? mantenimiento.comentarios.length
+        : participante.ultimoComentarioLeido;
+      let comentarios = mantenimiento.comentarios;
+
+      // Si el último comentario leído es menor que la longitud actual de los comentarios
+      return comentarios.length > ultimoComentarioLeido;
+    }
+
+    return false;
   }
 }

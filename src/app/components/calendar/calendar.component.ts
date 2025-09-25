@@ -125,7 +125,7 @@ export class CalendarComponent implements OnInit {
     let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.usuario.idArea);
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, this.usuario.idArea);
     let calendarApi = this.calendarComponent!.getApi();
-console.log(visitas)
+
     if (this.idUsuarioFiltro) {
       visitas = visitas.filter(x => x.idUsuario == this.idUsuarioFiltro);
       console.log(visitas)

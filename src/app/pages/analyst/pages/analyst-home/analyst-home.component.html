@@ -77,17 +77,17 @@
 
     <app-accordion-branch-maintenance10x10 *ngIf="usuario.idArea == '1' && auxMostrarMantenimientos"
       [mantenimientos]="ultimosmantenimientos" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
+      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
     </app-accordion-branch-maintenance10x10>
 
     <app-accordion-branch-maintenance-av *ngIf="usuario.idArea == '2' && auxMostrarMantenimientos"
       [mantenimientos]="ultimosmantenimientos" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
+      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
     </app-accordion-branch-maintenance-av>
 
     <app-accordion-branch-maintenance-mtto *ngIf="usuario.idArea == '4' && auxMostrarMantenimientos"
       [mantenimientos]="ultimosmantenimientos" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha">
+      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
     </app-accordion-branch-maintenance-mtto>
 
   </div>

@@ -55,8 +55,8 @@
                     <i class='bx bx-show bx-sm'></i>
                 </button>
 
-                <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)"
-                    style="margin: 2px">
+                <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)" *ngIf="mostrarChat"
+                    style="margin: 2px" [ngClass]="{'has-notification': verificarChatNoLeido(mantenimiento)}">
                     <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
                         tooltipPosition="top"></i>
                 </button>
@@ -78,5 +78,5 @@
     [imagenUrl]="urlImagen!"></app-modal-visor-imagenes>
 
 <app-modal-maintenance-chat *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
-    (closeEvent)="mostrarModalChat = false"
-    [idMnatenimiento]="mantenimientoSeleccionado?.id" [idArea]="'2'"></app-modal-maintenance-chat>
+    (closeEvent)="mostrarModalChat = false" [idMnatenimiento]="mantenimientoSeleccionado?.id"
+    [idArea]="'2'"></app-modal-maintenance-chat>

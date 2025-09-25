@@ -31,6 +31,7 @@ export class BranchMaintenanceTableComponent {
   @Input() mantenimientos: Mantenimiento10x10[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idSucursal?: string;
+  @Input() mostrarChat: boolean = false;
   @Output() clickEvent = new EventEmitter<Mantenimiento10x10>();
 
   mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
@@ -51,30 +52,21 @@ export class BranchMaintenanceTableComponent {
     private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.observaActualizacionesChatTicket(changes);
-  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   this.observaActualizacionesChatTicket(changes);
+  // }
 
-  observaActualizacionesChatTicket(changes: SimpleChanges) {
-    if (changes['mantenimientos'] && changes['mantenimientos'].currentValue) {
-      // this.obtenerMantenimientos(this.idSucursal!);
-      console.log('Mantenimientos actualizados');
+  // observaActualizacionesChatTicket(changes: SimpleChanges) {
+  //   if (changes['mantenimientos'] && changes['mantenimientos'].currentValue) {
+  //     console.log('Mantenimientos actualizados');
+  //   }
+  // }
 
-      // this.mantenimientos.forEach(element => {
-      //   if (!element.comentarios)
-      //     element.comentarios = []
-
-      //   console.log(element.id, element.comentarios.length)
-      //   this.cdr.detectChanges();
-      // });
-    }
-  }
-
-  obtenerMantenimientos(idsSucursal: string) {
+  obtenerMantenimientos(idsSucursales: string[]) {
     const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
     servicio
-      .getUltimosMantenimientos([...idsSucursal])
+      .getUltimosMantenimientos(idsSucursales)
       .subscribe((result: any) => {
         let data = result.filter((element: any) => element.length > 0);
         this.mantenimientos = [];
@@ -89,10 +81,6 @@ export class BranchMaintenanceTableComponent {
           return x;
         });
 
-        this.mantenimientos.forEach(element => {
-          
-          console.log(element.id, element.comentarios.length)
-        });
         this.cdr.detectChanges();
       });
   }
@@ -189,6 +177,9 @@ export class BranchMaintenanceTableComponent {
   verificarChatNoLeido(mantenimiento: Mantenimiento10x10) {
     if (!mantenimiento.participantesChat)
       mantenimiento.participantesChat = [];
+
+    if (!mantenimiento.comentarios)
+      mantenimiento.comentarios = [];
 
     const participantes = mantenimiento.participantesChat.sort(
       (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido

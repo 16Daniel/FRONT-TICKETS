@@ -30,7 +30,9 @@ import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/mo
 export class BranchMaintenanceTableAvComponent {
   @Input() mantenimientos: Mantenimiento6x6AV[] = [];
   @Input() usuariosHelp: Usuario[] = [];
+  @Input() mostrarChat: boolean = false;
   @Output() clickEvent = new EventEmitter<Mantenimiento6x6AV>();
+
   mantenimientoSeleccionado: Mantenimiento6x6AV | undefined;
   mostrarModalComentarios: boolean = false;
   mostrarModalChat: boolean = false;
@@ -122,5 +124,32 @@ export class BranchMaintenanceTableAvComponent {
   onClickChat(mantenimiento: any) {
     this.mantenimientoSeleccionado = mantenimiento;
     this.mostrarModalChat = true;
+  }
+
+  verificarChatNoLeido(mantenimiento: Mantenimiento6x6AV) {
+    if (!mantenimiento.participantesChat)
+      mantenimiento.participantesChat = [];
+
+    if (!mantenimiento.comentarios)
+      mantenimiento.comentarios = [];
+
+    const participantes = mantenimiento.participantesChat.sort(
+      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
+    );
+    const participante = participantes.find(
+      (p) => p.idUsuario === this.usuario.id
+    );
+
+    if (participante) {
+      const ultimoComentarioLeido = this.mostrarModalChat
+        ? mantenimiento.comentarios.length
+        : participante.ultimoComentarioLeido;
+      const comentarios = mantenimiento.comentarios;
+
+      // Si el último comentario leído es menor que la longitud actual de los comentarios
+      return comentarios.length > ultimoComentarioLeido;
+    }
+
+    return false;
   }
 }

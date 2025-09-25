@@ -1,14 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { EditorModule } from 'primeng/editor';
-import { InputTextModule } from 'primeng/inputtext';
+import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+
 import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { MessageService } from 'primeng/api';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
 
@@ -18,14 +16,12 @@ import { MantenimientoFactoryService } from '../../../services/maintenance-facto
   imports: [
     FormsModule,
     CommonModule,
-    // CardModule,
-    // EditorModule,
     DialogModule,
-    // InputTextModule
   ],
   templateUrl: './modal-maintenance-chat.component.html',
   styleUrl: './modal-maintenance-chat.component.scss'
 })
+
 export class ModalMaintenanceChatComponent {
   @Input() mostrarModal: boolean = false;
   @Input() idMnatenimiento?: string;
@@ -36,6 +32,7 @@ export class ModalMaintenanceChatComponent {
   mantenimiento?: Mantenimiento10x10;
   userdata: Usuario;
   comentario: string = '';
+  private mantenimientoSub?: Subscription;
 
   constructor(
     private mantenimientoFactory: MantenimientoFactoryService,
@@ -49,18 +46,28 @@ export class ModalMaintenanceChatComponent {
   ngOnInit(): void {
     const servicio = this.mantenimientoFactory.getService(this.idArea!);
 
-    servicio.getById(this.idMnatenimiento!).subscribe(mantenimiento => {
-      this.mantenimiento = mantenimiento;
+    this.mantenimientoSub = servicio.getById(this.idMnatenimiento!).subscribe(
+      async (mantenimiento) => {
+        this.mantenimiento = mantenimiento;
+        this.cdr.detectChanges();
 
-      this.cdr.detectChanges();
-
-      servicio.updateLastCommentRead(
-        this.mantenimiento!.id,
-        this.userdata.id,
-        (this.mantenimiento!.comentarios ? this.mantenimiento!.comentarios.length : 0)
-      );
-    });
+        try {
+          await servicio.updateLastCommentRead(
+            this.mantenimiento!.id,
+            this.userdata.id,
+            this.mantenimiento!.comentarios ? this.mantenimiento!.comentarios.length : 0
+          );
+        } catch (error) {
+          console.error('Error al actualizar last comment read', error);
+        }
+      }
+    );
   }
+
+  ngOnDestroy(): void {
+    this.mantenimientoSub?.unsubscribe();
+  }
+
 
   esmiId(id: string): boolean {
     let st = false;
@@ -72,9 +79,7 @@ export class ModalMaintenanceChatComponent {
     return st;
   }
 
-  onHide() {
-    this.closeEvent.emit(false); // Cerrar modal
-  }
+  onHide = () => this.closeEvent.emit(false)
 
   enviarComentarioChat() {
     if (!this.comentario) {
