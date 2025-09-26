@@ -160,7 +160,7 @@ getComprasFiltro(
     condiciones.push(where('fecha', '<=', finTimestamp));
   }
 
-  // Ordenar por fecha (opcional, pero recomendado)
+
   condiciones.push(orderBy('fecha', 'desc'));
 
   const comprasQuery = query(comprasCollection, ...condiciones);
