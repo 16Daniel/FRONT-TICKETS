@@ -1,4 +1,6 @@
 import { Timestamp } from "@angular/fire/firestore";
+import { Comentario } from "./comentario-chat.model";
+import { ParticipanteChat } from "./participante-chat.model";
 
 export interface MantenimientoMtto {
   id?: string | any;
@@ -36,4 +38,7 @@ export interface MantenimientoMtto {
   observaciones: string | undefined;
   estatus: boolean;
   timestamp?: Timestamp | Date;
+
+  comentarios: Comentario[];
+  participantesChat: ParticipanteChat[];
 }

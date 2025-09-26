@@ -23,6 +23,7 @@ export class AccordionBranchMaintenance10x10Component {
   @Input() mantenimientos: Mantenimiento10x10[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
+  @Input() mostrarChat: boolean = false;
 
   mantenimientosOriginal: Mantenimiento10x10[] = [];
   mantenimientosOrdenados: Mantenimiento10x10[] = [];

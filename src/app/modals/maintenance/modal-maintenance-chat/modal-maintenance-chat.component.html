@@ -1,8 +1,9 @@
-<p-dialog header="CHAT" [modal]="true" [(visible)]="showModalChatTicket" [style]="{ width: '50rem' }"
+<p-dialog header="CHAT" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
 
-    <div *ngIf="ticket != undefined" #chatContainer style="overflow: auto; max-height: 500px; padding-right: 10px;">
-        <div class="d-flex w-100" *ngFor="let item of ticket!.comentarios" [ngClass]="{
+    <div *ngIf="mantenimiento != undefined" #chatContainer
+        style="overflow: auto; max-height: 500px; padding-right: 10px;">
+        <div class="d-flex w-100" *ngFor="let item of mantenimiento!.comentarios" [ngClass]="{
             'justify-content-start': esmiId(item.idUsuario) == false,
             'justify-content-end': esmiId(item.idUsuario)
         }">
@@ -10,22 +11,22 @@
                 *ngIf="esmiId(item.idUsuario) == false">
                 <p class="p-1" style="color: black">{{ item.nombre }}</p>
                 <label [innerHTML]="item.comentario"></label>
-                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>
+                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM
+                        HH:mm' }}</label></p>
             </div>
 
-            <div *ngIf="esmiId(item.idUsuario)" class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: #F3F3F3">
+            <div *ngIf="esmiId(item.idUsuario)" class="p-1 rounded-3 mt-3"
+                style="max-width: 80%; background-color: #F3F3F3">
                 <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
                 <label [innerHTML]="item.comentario"></label>
-                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>
+                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM
+                        HH:mm' }}</label></p>
             </div>
         </div>
     </div>
 
     <p-footer>
         <div class="input-container" style="display: flex; width: 100%; margin-top: 10px">
-            <button *ngIf="(userdata.idRol == '1' || userdata.idRol == '5') && ticket.idEstatusTicket == '7'" class="btn btn-dark" style="flex-shrink: 0; padding: 10px; margin-right: 10px;" (click)="respuestaRapida()">
-                <i class="bx bx-copy bx-sm" style="color: rgb(255, 255, 255)"></i>
-            </button>
             <input pInputText placeholder="Escribe algo..." style="flex-grow: 1; margin-right: 10px;"
                 [(ngModel)]="comentario" (keyup.enter)="enviarComentarioChat()" />
             <button class="btn btn-dark" style="flex-shrink: 0; padding: 10px;" (click)="enviarComentarioChat()">

@@ -116,9 +116,12 @@ export class ModalTenXtenMaintenanceCheckComponent {
       return;
     }
 
+    console.log(this.mantenimientoActivo)
+
     const mantenimiento: Mantenimiento10x10 = {
       ...this.formularioDeMantenimiento.value,
       id: this.mantenimientoActivo?.id,
+      participantesChat: this.mantenimientoActivo?.participantesChat,
       idSucursal: this.mantenimientoActivo?.idSucursal,
       idUsuarioSoporte: this.mantenimientoActivo?.idUsuarioSoporte,
       fecha: this.mantenimientoActivo?.fecha,

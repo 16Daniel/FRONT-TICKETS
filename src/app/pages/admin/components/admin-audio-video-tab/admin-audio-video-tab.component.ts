@@ -189,7 +189,7 @@ export class AdminAudioVideoTabComponent {
       next: (data) => {
         this.sucursales = data;
         this.maintenanceService
-          .getUltimos3Mantenimientos(
+          .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {

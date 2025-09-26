@@ -1,4 +1,6 @@
 import { Timestamp } from "@angular/fire/firestore";
+import { Comentario } from "./comentario-chat.model";
+import { ParticipanteChat } from "./participante-chat.model";
 
 export interface Mantenimiento6x6AV {
   id?: string | any;
@@ -27,4 +29,7 @@ export interface Mantenimiento6x6AV {
   observaciones: string | undefined;
   estatus: boolean;
   timestamp?: Timestamp | Date;
+
+  comentarios: Comentario[];
+  participantesChat: ParticipanteChat[];
 }

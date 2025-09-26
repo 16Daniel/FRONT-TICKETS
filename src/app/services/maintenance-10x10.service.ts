@@ -7,16 +7,16 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-  getDoc,
   query,
   where,
   getDocs,
   onSnapshot,
   orderBy,
   limit,
+  arrayUnion,
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
-import { forkJoin, from, map, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 
@@ -28,7 +28,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
+  async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
     const mantenimiento: Mantenimiento10x10 = {
       idSucursal: idSucursal,
       idUsuarioSoporte: idUsuario,
@@ -45,12 +45,14 @@ export class Maintenance10x10Service implements IMantenimientoService {
       mantenimientoRack: false,
       mantenimientoTiemposCocina: false,
       observaciones: '',
+      comentarios: [],
+      participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
     await addDoc(mantenimientoRef, {
       ...mantenimiento,
-      timestamp: Timestamp.now(), // Usa el timestamp de Firestore
+      timestamp: Timestamp.now(),
     });
   }
 
@@ -82,12 +84,28 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento10x10[]>;
   }
 
-  async getById(id: string): Promise<Mantenimiento10x10 | undefined> {
-    const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
-    const snapshot = await getDoc(mantenimientoRef);
-    return snapshot.exists()
-      ? ({ id: snapshot.id, ...snapshot.data() } as Mantenimiento10x10)
-      : undefined;
+  getById(id: string): Observable<Mantenimiento10x10 | undefined> {
+    return new Observable<Mantenimiento10x10 | undefined>((subscriber) => {
+      const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
+
+      const unsubscribe = onSnapshot(
+        mantenimientoRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            subscriber.next({
+              id: snapshot.id,
+              ...snapshot.data(),
+            } as Mantenimiento10x10);
+          } else {
+            subscriber.next(undefined);
+          }
+        },
+        (error) => subscriber.error(error)
+      );
+
+      // limpiar suscripción al destruir
+      return () => unsubscribe();
+    });
   }
 
   async update(id: string, mantenimiento: Mantenimiento10x10): Promise<void> {
@@ -174,65 +192,30 @@ export class Maintenance10x10Service implements IMantenimientoService {
   }
 
   getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
-    const fechaActual = new Date();
-    const fechaHaceUnMes = new Date(fechaActual);
-    fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
-    fechaHaceUnMes.setHours(0, 0, 0, 0);
-    // Mapea cada sucursal a una consulta independiente
-    const consultas = idsSucursales.map(idSucursal => {
-      const mantenimientosRef = collection(this.firestore, this.pathName);
-      const q = query(
-        mantenimientosRef,
-        where('idSucursal', '==', idSucursal.toString()),
-        where('estatus', '==', false),
-        orderBy('fecha', 'desc'), // Ordena por fecha descendente
-        limit(3)
-      );
+    // Creamos un Observable por cada sucursal
+    const observables = idsSucursales.map(idSucursal => {
+      return new Observable<any[]>(observer => {
+        const mantenimientosRef = collection(this.firestore, this.pathName);
+        const q = query(
+          mantenimientosRef,
+          where('idSucursal', '==', idSucursal.toString()),
+          where('estatus', '==', false),
+          orderBy('fecha', 'desc'),
+          limit(3)
+        );
 
-      // Ejecutar la consulta y obtener los datos
-      return from(getDocs(q)).pipe(
-        map(querySnapshot => {
-          if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
-          return []; // Si no hay documentos, devuelve un array vacío
-        })
-      );
+        const unsubscribe = onSnapshot(q, snapshot => {
+          const resultados = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          observer.next(resultados);
+        }, error => observer.error(error));
+
+        // Limpiar suscripción cuando se complete
+        return () => unsubscribe();
+      });
     });
 
-    // Ejecutar todas las consultas en paralelo y combinar los resultados
-    return forkJoin(consultas);
-  }
-
-  getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
-    const fechaActual = new Date();
-    const fechaHaceUnMes = new Date(fechaActual);
-    fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
-    fechaHaceUnMes.setHours(0, 0, 0, 0);
-    // Mapea cada sucursal a una consulta independiente
-    const consultas = idsSucursales.map(idSucursal => {
-      const mantenimientosRef = collection(this.firestore, this.pathName);
-      const q = query(
-        mantenimientosRef,
-        where('idSucursal', '==', idSucursal.toString()),
-        where('estatus', '==', false),
-        orderBy('fecha', 'desc'), // Ordena por fecha descendente
-        limit(3)
-      );
-
-      // Ejecutar la consulta y obtener los datos
-      return from(getDocs(q)).pipe(
-        map(querySnapshot => {
-          if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
-          return []; // Si no hay documentos, devuelve un array vacío
-        })
-      );
-    });
-
-    // Ejecutar todas las consultas en paralelo y combinar los resultados
-    return forkJoin(consultas);
+    // Combinamos todos los Observables para emitir un array con los resultados por sucursal
+    return combineLatest(observables);
   }
 
   async obtenerMantenimientoVisitaPorFechaArea(
@@ -325,5 +308,21 @@ export class Maintenance10x10Service implements IMantenimientoService {
       id: doc.id,
       ...doc.data()
     }));
+  }
+
+  updateLastCommentRead(
+    idMantenimiento: string,
+    idUsuario: string,
+    ultimoComentarioLeido: number
+  ) {
+    const ticketRef = doc(this.firestore, `${this.pathName}/${idMantenimiento}`);
+
+    // Actualizar el índice del último comentario leído para un participante
+    return updateDoc(ticketRef, {
+      participantesChat: arrayUnion({
+        idUsuario,
+        ultimoComentarioLeido,
+      }),
+    });
   }
 }

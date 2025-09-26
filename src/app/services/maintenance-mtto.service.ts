@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
-import { forkJoin, from, map, Observable } from 'rxjs';
+import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
+import { ParticipanteChat } from '../models/participante-chat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
+  async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
     const mantenimiento: MantenimientoMtto = {
       idSucursal: idSucursal.toString(),
       idUsuarioSoporte: idUsuario,
@@ -30,6 +31,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
       mantenimientoMangueras: true,
       mantenimientoLlavesDePaso: true,
       observaciones: '',
+      comentarios: [],
+      participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -45,7 +48,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
     fecha: Date,
     idActivoFijo: string,
     descripcion: string,
-    referencia: string): Promise<void> {
+    referencia: string,
+    participantesChat: ParticipanteChat[]): Promise<void> {
     const mantenimiento: MantenimientoMtto = {
       idSucursal: idSucursal.toString(),
       idUsuarioSoporte: idUsuario,
@@ -63,6 +67,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
       mantenimientoMangueras: true,
       mantenimientoLlavesDePaso: true,
       observaciones: '',
+      comentarios: [],
+      participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -273,61 +279,94 @@ export class MaintenanceMtooService implements IMantenimientoService {
   }
 
   getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
-    // Mapea cada sucursal a una consulta independiente
-    const consultas = idsSucursales.map(idSucursal => {
-      const mantenimientosRef = collection(this.firestore, this.pathName);
-      const q = query(
-        mantenimientosRef,
-        where('idSucursal', '==', idSucursal.toString()),
-        where('estatus', '==', false),
-        orderBy('fecha', 'desc'), // Ordena por fecha descendente
-        limit(3)
-      );
+    // Creamos un Observable por cada sucursal
+    const observables = idsSucursales.map(idSucursal => {
+      return new Observable<any[]>(observer => {
+        const mantenimientosRef = collection(this.firestore, this.pathName);
+        const q = query(
+          mantenimientosRef,
+          where('idSucursal', '==', idSucursal.toString()),
+          where('estatus', '==', false),
+          orderBy('fecha', 'desc'),
+          limit(3)
+        );
 
-      // Ejecutar la consulta y obtener los datos
-      return from(getDocs(q)).pipe(
-        map(querySnapshot => {
-          if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
-          return []; // Si no hay documentos, devuelve un array vacío
-        })
-      );
+        const unsubscribe = onSnapshot(q, snapshot => {
+          const resultados = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          observer.next(resultados);
+        }, error => observer.error(error));
+
+        // Limpiar suscripción cuando se complete
+        return () => unsubscribe();
+      });
     });
 
-    // Ejecutar todas las consultas en paralelo y combinar los resultados
-    return forkJoin(consultas);
+    // Combinamos todos los Observables para emitir un array con los resultados por sucursal
+    return combineLatest(observables);
   }
-
-  // getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
-  //   // Mapea cada sucursal a una consulta independiente
-  //   const consultas = idsSucursales.map(idSucursal => {
-  //     const mantenimientosRef = collection(this.firestore, this.pathName);
-  //     const q = query(
-  //       mantenimientosRef,
-  //       where('idSucursal', '==', idSucursal.toString()),
-  //       where('estatus', '==', false),
-  //       orderBy('fecha', 'desc'), // Ordena por fecha descendente
-  //       limit(3)
-  //     );
-
-  //     // Ejecutar la consulta y obtener los datos
-  //     return from(getDocs(q)).pipe(
-  //       map(querySnapshot => {
-  //         if (!querySnapshot.empty) {
-  //           return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  //         }
-  //         return []; // Si no hay documentos, devuelve un array vacío
-  //       })
-  //     );
-  //   });
-
-  //   // Ejecutar todas las consultas en paralelo y combinar los resultados
-  //   return forkJoin(consultas);
-  // }
 
   async delete(id: string): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await deleteDoc(mantenimientoRef);
+  }
+
+  getById(id: string): Observable<MantenimientoMtto | undefined> {
+    return new Observable<MantenimientoMtto | undefined>((subscriber) => {
+      const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
+
+      const unsubscribe = onSnapshot(
+        mantenimientoRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            subscriber.next({
+              id: snapshot.id,
+              ...snapshot.data(),
+            } as MantenimientoMtto);
+          } else {
+            subscriber.next(undefined);
+          }
+        },
+        (error) => subscriber.error(error)
+      );
+
+      // limpiar suscripción al destruir
+      return () => unsubscribe();
+    });
+  }
+
+  async obtenerMantenimientosEntreFechas(
+    fechaInicio: Date,
+    fechaFin: Date
+  ): Promise<any[]> {
+    const ticketsCollection = collection(this.firestore, this.pathName);
+
+    const q = query(ticketsCollection,
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      orderBy('fecha', 'desc')
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
+
+  updateLastCommentRead(
+    idMantenimiento: string,
+    idUsuario: string,
+    ultimoComentarioLeido: number
+  ) {
+    const ticketRef = doc(this.firestore, `${this.pathName}/${idMantenimiento}`);
+
+    // Actualizar el índice del último comentario leído para un participante
+    return updateDoc(ticketRef, {
+      participantesChat: arrayUnion({
+        idUsuario,
+        ultimoComentarioLeido,
+      }),
+    });
   }
 }

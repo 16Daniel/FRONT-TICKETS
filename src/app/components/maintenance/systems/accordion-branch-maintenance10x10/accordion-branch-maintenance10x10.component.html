@@ -28,7 +28,7 @@
         </ng-template>
 
         <app-branch-maintenance-table [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"
-            [usuariosHelp]="usuariosHelp" S></app-branch-maintenance-table>
+            [usuariosHelp]="usuariosHelp" [idSucursal]="item.id" [mostrarChat]="mostrarChat"></app-branch-maintenance-table>
 
     </p-accordionTab>
 </p-accordion>

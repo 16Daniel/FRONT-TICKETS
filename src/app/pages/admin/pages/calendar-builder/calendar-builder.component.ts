@@ -35,6 +35,7 @@ import { CalendarComponent } from '../../../../components/calendar/calendar.comp
 import { BranchVisitItemComponent } from '../../../../components/branch-visit-item/branch-visit-item.component';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { UsersService } from '../../../../services/users.service';
+import { ParticipanteChat } from '../../../../models/participante-chat.model';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -319,7 +320,16 @@ export default class CalendarBuilderComponent implements OnInit {
       for (let sucursal of this.sucursalesSeleccionadas) {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
 
-          console.log(this.tieneMantenimientosActivos(sucursal.id))
+          let participantesChat: ParticipanteChat[] = [];
+          participantesChat.push({
+            idUsuario: this.usuario.id,
+            ultimoComentarioLeido: 0,
+          });
+          participantesChat.push({
+            idUsuario: this.usuarioseleccionado!.id,
+            ultimoComentarioLeido: 0,
+          });
+
           if (this.tieneMantenimientosActivos(sucursal.id)) {
 
             if (this.usuario.idArea == '4') {
@@ -345,13 +355,14 @@ export default class CalendarBuilderComponent implements OnInit {
                     this.fecha,
                     element.id!,
                     element.descripcion,
-                    element.referencia
-                  ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+                    element.referencia,
+                    participantesChat
+                  ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
               });
             }
             else {
               const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-              await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha);
+              await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
             }
           }
 
@@ -459,10 +470,6 @@ export default class CalendarBuilderComponent implements OnInit {
           console.error('Error al escuchar los mantenimientos:', error);
         },
       });
-  }
-
-  obtenerMantenimientoSucursal(idSucursal: string): Mantenimiento10x10[] {
-    return this.arr_ultimosmantenimientos.filter(x => x.idSucursal == idSucursal);
   }
 
   abrirmodalColores() {

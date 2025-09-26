@@ -58,6 +58,8 @@ sucursales: Sucursal[] = [];
       mantenimientoRack: false,
       mantenimientoTiemposCocina: false,
       observaciones: '',
+      comentarios: [],
+      participantesChat: []
     };
 
     // await this.mantenimientoService.create(mantenimiento);
