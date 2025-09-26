@@ -90,14 +90,6 @@ export class UsersService {
     return updateDoc(userRef, { esGuardia });
   }
 
-  async getUsuarioSucursal(idSucursal: string): Promise<Usuario | null> {
-    const usuarioEncontrado = this._usuarios.find(usuario =>
-      usuario.idRol === '2' &&
-      usuario.sucursales?.some(s => s.id === idSucursal)
-    );
-    return usuarioEncontrado || null;
-  }
-
   async getUsuarioById(id: string): Promise<Usuario | null> {
     return this._usuarios.find(u => u.id === id) || null;
   }

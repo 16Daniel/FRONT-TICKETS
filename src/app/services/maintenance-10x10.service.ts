@@ -16,7 +16,7 @@ import {
   arrayUnion,
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
-import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 
@@ -28,7 +28,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
+  async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
     const mantenimiento: Mantenimiento10x10 = {
       idSucursal: idSucursal,
       idUsuarioSoporte: idUsuario,
@@ -46,7 +46,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
       mantenimientoTiemposCocina: false,
       observaciones: '',
       comentarios: [],
-      participantesChat: []
+      participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -191,7 +191,6 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return unsubscribe;
   }
 
-
   getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
     // Creamos un Observable por cada sucursal
     const observables = idsSucursales.map(idSucursal => {
@@ -217,38 +216,6 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
     // Combinamos todos los Observables para emitir un array con los resultados por sucursal
     return combineLatest(observables);
-  }
-
-
-  getUltimos3Mantenimientos(idsSucursales: string[]): Observable<any[]> {
-    const fechaActual = new Date();
-    const fechaHaceUnMes = new Date(fechaActual);
-    fechaHaceUnMes.setMonth(fechaHaceUnMes.getMonth() - 1);
-    fechaHaceUnMes.setHours(0, 0, 0, 0);
-    // Mapea cada sucursal a una consulta independiente
-    const consultas = idsSucursales.map(idSucursal => {
-      const mantenimientosRef = collection(this.firestore, this.pathName);
-      const q = query(
-        mantenimientosRef,
-        where('idSucursal', '==', idSucursal.toString()),
-        where('estatus', '==', false),
-        orderBy('fecha', 'desc'), // Ordena por fecha descendente
-        limit(3)
-      );
-
-      // Ejecutar la consulta y obtener los datos
-      return from(getDocs(q)).pipe(
-        map(querySnapshot => {
-          if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
-          return []; // Si no hay documentos, devuelve un array vacío
-        })
-      );
-    });
-
-    // Ejecutar todas las consultas en paralelo y combinar los resultados
-    return forkJoin(consultas);
   }
 
   async obtenerMantenimientoVisitaPorFechaArea(

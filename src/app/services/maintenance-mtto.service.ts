@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
-import { Comentario } from '../models/comentario-chat.model';
+import { ParticipanteChat } from '../models/participante-chat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(idSucursal: string, idUsuario: string, fecha: Date): Promise<void> {
+  async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
     const mantenimiento: MantenimientoMtto = {
       idSucursal: idSucursal.toString(),
       idUsuarioSoporte: idUsuario,
@@ -32,7 +32,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
       mantenimientoLlavesDePaso: true,
       observaciones: '',
       comentarios: [],
-      participantesChat: []
+      participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -48,7 +48,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
     fecha: Date,
     idActivoFijo: string,
     descripcion: string,
-    referencia: string): Promise<void> {
+    referencia: string,
+    participantesChat: ParticipanteChat[]): Promise<void> {
     const mantenimiento: MantenimientoMtto = {
       idSucursal: idSucursal.toString(),
       idUsuarioSoporte: idUsuario,
@@ -67,7 +68,7 @@ export class MaintenanceMtooService implements IMantenimientoService {
       mantenimientoLlavesDePaso: true,
       observaciones: '',
       comentarios: [],
-      participantesChat: []
+      participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
@@ -308,7 +309,6 @@ export class MaintenanceMtooService implements IMantenimientoService {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await deleteDoc(mantenimientoRef);
   }
-
 
   getById(id: string): Observable<MantenimientoMtto | undefined> {
     return new Observable<MantenimientoMtto | undefined>((subscriber) => {

@@ -82,7 +82,15 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.areas = this.areasService.areas;
     this.ticket.idArea = this.areas.find(x => x.id == this.activoFijo.idArea)!.id;
 
-    this.usuarioActivo = await this.usersService.getUsuarioSucursal(this.activoFijo.idSucursal);
+    this.usersService.usuarios$.subscribe(usuarios => {
+      const usuarioEncontrado = usuarios.find(usuario =>
+        usuario.idRol === '2' &&
+        usuario.sucursales?.some(s => s.id == this.activoFijo.idSucursal)
+      );
+
+      this.usuarioActivo = usuarioEncontrado || null;
+    });
+
     this.ticket.referenciaActivoFijo = this.activoFijo.referencia;
     this.obtenerSucursales();
     this.obtenerCategorias();
