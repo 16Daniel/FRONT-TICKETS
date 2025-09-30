@@ -13,7 +13,6 @@ import { Ticket } from '../../models/ticket.model';
 import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
 import { ColorUsuario } from '../../models/color-usuario';
 import { DocumentsService } from '../../services/documents.service';
-import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { UsersService } from '../../services/users.service';
 
@@ -45,18 +44,13 @@ export default class BranchVisitScheduleComponent implements OnInit {
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
-
     private messageService: MessageService,
     private documentService: DocumentsService,
-    private mantenimientoFactory: MantenimientoFactoryService
+  ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
-  ) {
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-  }
-
-  showMessage(sev: string, summ: string, det: string) {
+  showMessage = (sev: string, summ: string, det: string) =>
     this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
+
 
   ngOnInit(): void {
     this.obtenerUsuariosHelp();
@@ -79,7 +73,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
 
   obtenerUsuariosHelp() {
     this.usersService.usuarios$
-    .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4'));
+      .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4'));
   }
 
   async obtenerTodosLosTickets(): Promise<void> {
@@ -129,7 +123,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
             }
           }
 
-          // this.obtnerUltimoMantenimiento();
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -139,38 +132,10 @@ export default class BranchVisitScheduleComponent implements OnInit {
       });
   }
 
-  // obtnerUltimoMantenimiento() {
-  //   let sucursales: Sucursal[] = [...this.sucursales];
-  //   let array_ids_Sucursales: string[] = [];
-
-  //   for (let item of sucursales) {
-  //     array_ids_Sucursales.push(item.id);
-  //   }
-
-  //   this.loading = true;
-  //   const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-  //   this.subscriptiontk = servicio
-  //     .getUltimosMantenimientos(array_ids_Sucursales)
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.arr_ultimosmantenimientos = data.filter(
-  //           (elemento): elemento is Mantenimiento10x10 => elemento !== null
-  //         );
-  //         this.loading = false;
-  //         this.cdr.detectChanges();
-  //       },
-  //       error: (error) => {
-  //         this.loading = false;
-  //         console.error('Error al escuchar los mantenimientos:', error);
-  //       },
-  //     });
-  // }
-
   obtenerNombreUsuario(idUsuario: string): string {
     let nombre = '';
     let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
     if (temp.length > 0) { nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
     return nombre
   }
-
 }
