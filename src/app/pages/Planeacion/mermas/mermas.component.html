@@ -1,0 +1,43 @@
+<div class="pt-5">
+    <h3 class="text-center">MERMAS</h3>
+
+    <div class="row m-0 mt-3">
+        <div class="col-md-3">
+        <p>FECHA INICIO</p>
+        <p-calendar 
+    [(ngModel)]="fechaini" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay"
+     dateFormat="dd/mm/yy" 
+     [style]="{width:'100%'}" />
+    </div>
+     <div class="col-md-3">
+        <p>FECHA FIN</p>
+        <p-calendar 
+    [(ngModel)]="fechafin" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay" 
+    dateFormat="dd/mm/yy"
+     [style]="{width:'100%'}"/>
+    </div>
+    <div class="col-md-3">
+           <p>SUCURSALES</p>
+            <p-multiSelect 
+                [options]="sucursales" 
+                [(ngModel)]="sucursalesSel" 
+                [filter]="true" 
+                optionLabel="nombre" 
+                placeholder="SELECCIONAR SUCURSALES"
+                [style]="{width:'100%'}"
+                />
+        </div>
+
+        <div class="col-md-3">
+            <p>&nbsp;</p>
+            <button class="btn bg-p-b p-3"><i class='bx bx-search' ></i>&nbsp;CONSULTAR</button>
+        </div>
+    </div>
+
+</div>
