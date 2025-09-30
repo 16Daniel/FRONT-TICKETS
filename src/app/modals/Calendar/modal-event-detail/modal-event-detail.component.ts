@@ -71,24 +71,24 @@ export default class ModalEventDetailComponent implements OnInit {
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
     await servicio.getMantenimientosPorSucursalYFecha([this.sucursal.id], this.fecha).subscribe((result: any) => {
       let data = result.filter((element: any) => element.length > 0);
-        this.mantenimientosDelDia = [];
-        for (let itemdata of data) {
-          for (let item of itemdata) {
-            this.mantenimientosDelDia.push(item);
-          }
+      this.mantenimientosDelDia = [];
+      for (let itemdata of data) {
+        for (let item of itemdata) {
+          this.mantenimientosDelDia.push(item);
         }
+      }
 
-        this.mantenimientosDelDia = this.mantenimientosDelDia.map(x => {
-          x.fecha = this.datesHelper.getDate(x.fecha);
-          return x;
-        });
+      this.mantenimientosDelDia = this.mantenimientosDelDia.map(x => {
+        x.fecha = this.datesHelper.getDate(x.fecha);
+        return x;
+      });
 
-        this.cdr.detectChanges();
+      this.cdr.detectChanges();
     });
   }
 
   onHide = () => this.closeEvent.emit();
-  
+
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
     this.clickEvent.emit(ticket);
@@ -102,7 +102,16 @@ export default class ModalEventDetailComponent implements OnInit {
 
   async obtenerTickets() {
     this.loading = true;
-    this.tickets = await this.ticketsService.getByIds(this.sucursal.idsTickets);
+
+    const tickets1 = await this.ticketsService.getByIds(this.sucursal.idsTickets);
+
+    const tickets2 = await this.ticketsService
+      .getFinalizedTicketsByEndDate(
+        this.fecha,
+        this.usuarioSeleccionado.idArea
+      );
+
+
     this.loading = false;
     this.cdr.detectChanges();
   }
