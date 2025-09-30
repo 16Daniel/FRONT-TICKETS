@@ -262,6 +262,38 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return combineLatest(observables);
   }
 
+  getMantenimientosPorSucursalYFecha(idsSucursales: string[], fecha: Date): Observable<any[]> {
+    const observables = idsSucursales.map(idSucursal => {
+      return new Observable<any[]>(observer => {
+        const mantenimientosRef = collection(this.firestore, this.pathName);
+
+        const q = query(
+          mantenimientosRef,
+          where('idSucursal', '==', idSucursal.toString()),
+          where('estatus', '==', false),
+          where('fecha', '==', fecha)
+        );
+
+        const unsubscribe = onSnapshot(
+          q,
+          snapshot => {
+            const resultados = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }));
+
+            observer.next(resultados);
+          },
+          error => observer.error(error)
+        );
+
+        return () => unsubscribe();
+      });
+    });
+
+    return combineLatest(observables);
+  }
+
   async delete(id: string): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await deleteDoc(mantenimientoRef);
