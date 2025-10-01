@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 
 import { TicketsService } from '../../services/tickets.service';
@@ -15,11 +16,14 @@ import { ColorUsuario } from '../../models/color-usuario';
 import { DocumentsService } from '../../services/documents.service';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { UsersService } from '../../services/users.service';
+import { Area } from '../../models/area.model';
+import { FormsModule } from '@angular/forms';
+import { AreasService } from '../../services/areas.service';
 
 @Component({
   selector: 'app-branch-visit-schedule',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarComponent],
+  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarComponent, DropdownModule, FormsModule],
   providers: [MessageService],
   templateUrl: './branch-visit-schedule.component.html',
 })
@@ -39,6 +43,8 @@ export default class BranchVisitScheduleComponent implements OnInit {
   colores: ColorUsuario[] = [];
   loading: boolean = true;
   subscriptiontk: Subscription | undefined;
+  areas: Area[] = [];
+  idArea: string = '';
 
   constructor(
     private ticketsService: TicketsService,
@@ -46,13 +52,18 @@ export default class BranchVisitScheduleComponent implements OnInit {
     private usersService: UsersService,
     private messageService: MessageService,
     private documentService: DocumentsService,
-  ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
+    private areasService: AreasService,
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.idArea = this.usuario.idArea;
+  }
 
   showMessage = (sev: string, summ: string, det: string) =>
     this.messageService.add({ severity: sev, summary: summ, detail: det });
 
 
   ngOnInit(): void {
+    this.areasService.areas$.subscribe(areas => this.areas = areas);
     this.obtenerUsuariosHelp();
     this.obtenerTodosLosTickets();
     this.obtenerColores();
@@ -73,7 +84,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
 
   obtenerUsuariosHelp() {
     this.usersService.usuarios$
-      .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4'));
+      .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4' || x.idRol == '5' || x.idRol == '7'));
   }
 
   async obtenerTodosLosTickets(): Promise<void> {
@@ -137,5 +148,9 @@ export default class BranchVisitScheduleComponent implements OnInit {
     let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
     if (temp.length > 0) { nombre = temp[0].nombre + ' ' + temp[0].apellidoP; }
     return nombre
+  }
+
+  onChangeArea() {
+
   }
 }

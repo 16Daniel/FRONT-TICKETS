@@ -35,6 +35,7 @@ export class CalendarComponent implements OnInit {
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idUsuarioFiltro: string = '';
   @Input() tickets: Ticket[] = [];
+  @Input() idArea: string = '';
   sucursales: Sucursal[] = [];
 
   comentario: string = '';
@@ -79,13 +80,15 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['idUsuarioFiltro'] && !changes['idUsuarioFiltro'].firstChange) {
+    if ((changes['idUsuarioFiltro'] && !changes['idUsuarioFiltro'].firstChange) || (changes['idArea'] && !changes['idArea'].firstChange)) {
       const calendarApi = this.calendarComponent?.getApi();
       if (calendarApi) {
         const view = calendarApi.view;
         this.mostrarEventos(view.activeStart, view.activeEnd);
       }
     }
+
+    console.log('entra')
   }
 
   obtenerSucursales() {
@@ -122,14 +125,20 @@ export class CalendarComponent implements OnInit {
       }
     });
 
-    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.usuario.idArea);
-    let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, this.usuario.idArea);
+    let idArea = this.usuario.idRol == '1' ? undefined : this.usuario.idArea;
+    if (this.idArea) idArea = this.idArea;
+
+    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, idArea);
+
+    if (this.idArea) {
+      console.log('el id area es', this.idArea)
+    }
+
+    let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, idArea);
     let calendarApi = this.calendarComponent!.getApi();
 
     if (this.idUsuarioFiltro) {
       visitas = visitas.filter(x => x.idUsuario == this.idUsuarioFiltro);
-      console.log(visitas)
-
       guardias = guardias.filter(x => x.idUsuario == this.idUsuarioFiltro);
     }
 
@@ -209,6 +218,8 @@ export class CalendarComponent implements OnInit {
   }
 
   obtenerUsuario(idUsuario: string) {
+    console.log(idUsuario)
+    console.log(this.usuariosHelp)
     return this.usuariosHelp.filter(x => x.id == idUsuario)[0];
   }
 
