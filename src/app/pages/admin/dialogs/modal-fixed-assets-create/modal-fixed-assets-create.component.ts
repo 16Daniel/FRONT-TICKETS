@@ -64,6 +64,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     }
 
     this.areas = this.areasService.areas;
+    this.activoFijo.idArea = this.usuario.idArea;
     this.obtenerSucursales();
     this.obtenerAreasActivosFijos();
     this.obtenerCategoriasActivosFijos();
@@ -71,9 +72,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     this.obtenerEstatusActivosFijos();
   }
 
-  onHide() {
-    this.closeEvent.emit(false); // Cerrar modal
-  }
+  onHide = () => this.closeEvent.emit(false); // Cerrar modal
 
   async enviar(form: NgForm) {
     if (form.form.status == 'INVALID') {
