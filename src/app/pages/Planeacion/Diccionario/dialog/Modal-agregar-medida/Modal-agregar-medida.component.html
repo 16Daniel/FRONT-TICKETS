@@ -1,0 +1,58 @@
+ <p-dialog header="EDITAR UNIDADES DE MEDIDA" [(visible)]="visible" [style]="{width: '75vw'}"
+  [maximizable]="false" [modal]="true" (onHide)="onHide()">
+   
+    <div *ngIf="itemumedidaupdate !=undefined">
+       <div class="row">
+      <div class="col-6">
+        <input class="form-control p-2" [value]="itemumedidaupdate!.nomProveedor" disabled>
+      </div>
+      <div class="col-6">
+        <input class="form-control p-2" [value]="itemumedidaupdate!.descripcion" disabled>
+      </div>
+     </div>
+     
+     <div class="row mt-3 p-3" style="background-color: rgba(255, 166, 0, 0.25);">
+        <p class="text-center fw-bold">XML Y PEDIDO DE PROVEEDOR</p>
+       <div class="col-md-6">
+        <P>UNIDAD DE MEDIDA</P>
+       <input class="form-control p-2" type="text" [(ngModel)]="itemumedidaupdate!.p_umedida">
+       </div>
+       <div class="col-md-6">
+        <p>UNIDADES</p>
+        <input class="form-control p-2" type="number" [(ngModel)]="itemumedidaupdate!.p_uds">
+       </div>
+      </div>
+      
+
+      <div class="row mt-3 bg-success bg-opacity-25 p-3">
+        <p class="text-center fw-bold">ALBARÁN DE COMPRA</p>
+       <div class="col-md-6">
+        <P>UNIDAD DE MEDIDA</P>
+       <input class="form-control p-2" type="text" [(ngModel)]="itemumedidaupdate!.umedida">
+       </div>
+       <div class="col-md-6">
+        <p>UNIDADES</p>
+        <input class="form-control p-2" type="number" [(ngModel)]="itemumedidaupdate!.uds">
+       </div>
+      </div>
+      
+
+      <div class="row mt-3 bg-danger bg-opacity-25 p-3">
+        <p class="text-center fw-bold">INVNETARIOS</p>
+       <div class="col-md-6">
+        <P>UNIDAD DE MEDIDA</P>
+       <input class="form-control p-2" type="text" [(ngModel)]="itemumedidaupdate!.i_umedida">
+       </div>
+       <div class="col-md-6">
+        <p>UNIDADES</p>
+        <input class="form-control p-2" type="number" [(ngModel)]="itemumedidaupdate!.i_uds">
+       </div>
+      </div>
+      
+      
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn bg-p-b p-3" (click)="actualizarDiccionario();">ACTUALIZAR</button>
+      </div>
+      
+    </div>
+    </p-dialog>

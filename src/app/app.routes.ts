@@ -211,4 +211,24 @@ export const routes: Routes = [
       }
     ]
   },
+   {
+    path: 'planeacion',
+    loadComponent: () => import('./pages/Planeacion/Planeacion.component'),
+    children: [
+      { path:'',
+        redirectTo: '/planeacion/diccionario',
+        pathMatch: 'full',
+      },
+      {
+        path: 'diccionario',
+        title: 'Diccionario',
+        loadComponent: () => import('./pages/Planeacion/Diccionario/Diccionario.component'),
+      },
+       {
+        path: 'mermas',
+        title: 'Mermas',
+        loadComponent: () => import('./pages/Planeacion/mermas/mermas.component'),
+      }
+    ]
+  },
 ];

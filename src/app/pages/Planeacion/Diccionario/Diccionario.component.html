@@ -1,0 +1,143 @@
+<div class="pt-5">
+<h3 class="text-center">DICCIONARIO REBEL</h3>
+
+<!-- <div class="p-3">
+ <button class="btn bg-p-b p-3"><i class='bx bx-plus' ></i> AGREGAR</button>
+</div> -->
+
+<div class="m-3 p-3 rounded-3 bg-white">
+  <h5 class="text-center">FILTROS</h5>
+  <p>&nbsp;</p>
+    <div class="row justify-content-center">
+       <div class="col-auto">
+        <p>
+        CÓDIGO INTERNO
+        </p>
+        <input type="text" class="form-control h-42 ifiltro"  [(ngModel)]="filtroCodart" (ngModelChange)="filtrarCodigointerno()">
+       </div>
+
+        <div class="col-auto">
+        <p>
+        DESCRIPCIÓN
+        </p>
+        <input type="text" class="form-control h-42 ifiltro" [(ngModel)]="filtroDescripcion" (ngModelChange)="filtrarDescripcion()">
+       </div>
+
+       <div class="col-auto">
+        <p>
+        REFERENCIA
+        </p>
+        <input type="text" class="form-control h-42 ifiltro" [(ngModel)]="filtroReferencia" (ngModelChange)="filtrarReferencia()">
+       </div>
+
+        <div class="col-auto">
+        <p>
+        NUM. IDENTIFICACIÓN
+        </p>
+        <input type="text" class="form-control h-42 ifiltro" [(ngModel)]="filtroNumIdentificacion" (ngModelChange)="filtrarNumIdentificacion()">
+       </div>
+
+        <div class="col-auto">
+        <p>
+        RFC
+        </p>
+        <input type="text" class="form-control h-42 ifiltro" [(ngModel)]="filtroRfc" (ngModelChange)="filtrarRfc()">
+       </div>
+
+        <div class="col-auto">
+        <p>
+        PROVEEDOR
+        </p>
+        <input type="text" class="form-control h-42 ifiltro" [(ngModel)]="filtroProveedor" (ngModelChange)="filtrarProveedor()">
+       </div>
+
+       <div class="col-auto">
+         <p>
+        PLANEACIÓN
+        </p>
+        <div class="h-42 p-2">
+           <span>  <i class='bx bx-x-circle bx-sm text-danger'></i>&nbsp;<p-inputSwitch [(ngModel)]="filtroPlanecionFalse" (ngModelChange)="filtroPlaneacion()" /></span>&nbsp;
+           <span>  <i class='bx bx-check-circle bx-sm text-success'></i>&nbsp;<p-inputSwitch [(ngModel)]="filtroPlanecionTrue" (ngModelChange)="filtroPlaneacion()" /></span>
+        </div>
+       </div>
+       
+    </div>
+</div>
+
+<div class="m-3" *ngIf="loading == false">
+<p-table [value]="diccionarioFiltro" 
+[tableStyle]="{'min-width': '60rem', 'padding':'10px'}" [scrollable]="true" scrollHeight="700px"
+        styleClass="p-datatable-gridlines" 
+        [paginator]="true"
+        [rows]="100"
+>
+    <ng-template pTemplate="header">
+        <tr>
+            <th colspan="6" class="bg-primary text-light">ICG</th>
+            <th colspan="5" class="bg-orange text-light" >XML Y PEDIDO DE PROVEEDOR</th>
+            <th colspan="2" class="bg-success text-light">ALBARÁN DE COMPRA</th>
+            <th colspan="4" class="bg-danger text-light">INVENTARIOS</th>
+        </tr>
+        <tr>
+            <th class="bg-primary bg-opacity-25">CÓDIGO INTERNO</th>
+            <th class="bg-primary bg-opacity-25">REFERENCIA</th>
+            <th class="bg-primary bg-opacity-25">ARÍCULO</th>
+            <th class="bg-primary bg-opacity-25">UNIDADES</th>
+            <th class="bg-primary bg-opacity-25">UNIDAD DE MEDIDA</th>
+            <th class="bg-primary bg-opacity-25">PLANEACIÓN</th>
+
+            <th class="bg-orange-25">RFC</th>
+            <th class="bg-orange-25">PROVEEDOR</th>
+            <th class="bg-orange-25">NÚMERO DE IDENTIFICACIÓN</th>
+            <th class="bg-orange-25">UNIDADES</th>
+            <th class="bg-orange-25">UNIDAD DE MEDIDA</th>
+
+              <th class="bg-success bg-opacity-25">UNIDADES</th>
+            <th class="bg-success bg-opacity-25">UNIDAD DE MEDIDA</th>
+
+              <th class="bg-danger bg-opacity-25">UNIDADES</th>
+            <th class="bg-danger bg-opacity-25">UNIDAD DE MEDIDA</th>
+
+            <th class="bg-danger bg-opacity-25"></th>
+            <th class="bg-danger bg-opacity-25"></th>
+        </tr>
+
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>
+            <td>{{ product.codarticulo }}</td>
+            <td>{{ product.refproveedor }}</td>
+            <td>{{ product.descripcion }}</td>
+            <td>{{ product.medidareferencia }}</td>
+            <td>{{ product.unidadmedida }}</td>
+            <td>
+                <i class='bx bx-check-circle bx-sm text-success' *ngIf="product.planeacion == true"></i>
+                <i class='bx bx-x-circle bx-sm text-danger' *ngIf="product.planeacion == false"></i>
+            </td>
+            
+            <td>{{ product.rfc }}</td>
+            <td>{{ product.nomProveedor }}</td>
+            <td>{{ product.noIdentificacion }}</td>
+            <td>{{ product.p_uds }}</td>
+            <td>{{ product.p_umedida }}</td>
+
+            <td>{{ product.uds }}</td>
+            <td>{{ product.umedida }}</td>
+
+            <td>{{ product.i_uds }}</td>
+            <td>{{ product.i_umedida }}</td>
+
+
+            <td><button class="btn btn-primary" (click)="abrirModalEditar(product)"><i class='bx bx-edit bx-sm'></i></button></td>
+            <td><button class="btn btn-danger" (click)="confirmarEliminacion(product)"><i class='bx bx-trash bx-sm'></i></button></td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>
+
+</div>
+
+<app-modal-agregar-medida [visible]="modalEditar" [itemumedidaupdate]="itemSel" (closeEvent)="modalEditar = false">  
+</app-modal-agregar-medida>
+
+<p-confirmDialog />
