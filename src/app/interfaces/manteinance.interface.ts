@@ -19,4 +19,5 @@ export interface IMantenimientoService {
         idUsuario: string,
         ultimoComentarioLeido: number
     ): Promise<void>;
+    getMantenimientosPorSucursalYFecha(idsSucursales: string[], fecha: Date): Observable<any[]>;
 }

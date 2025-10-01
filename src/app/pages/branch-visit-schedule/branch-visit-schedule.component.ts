@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 
 import { TicketsService } from '../../services/tickets.service';
@@ -13,14 +14,16 @@ import { Ticket } from '../../models/ticket.model';
 import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
 import { ColorUsuario } from '../../models/color-usuario';
 import { DocumentsService } from '../../services/documents.service';
-import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { UsersService } from '../../services/users.service';
+import { Area } from '../../models/area.model';
+import { FormsModule } from '@angular/forms';
+import { AreasService } from '../../services/areas.service';
 
 @Component({
   selector: 'app-branch-visit-schedule',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarComponent],
+  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarComponent, DropdownModule, FormsModule],
   providers: [MessageService],
   templateUrl: './branch-visit-schedule.component.html',
 })
@@ -40,25 +43,27 @@ export default class BranchVisitScheduleComponent implements OnInit {
   colores: ColorUsuario[] = [];
   loading: boolean = true;
   subscriptiontk: Subscription | undefined;
+  areas: Area[] = [];
+  idArea: string = '';
 
   constructor(
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
-
     private messageService: MessageService,
     private documentService: DocumentsService,
-    private mantenimientoFactory: MantenimientoFactoryService
-
+    private areasService: AreasService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.idArea = this.usuario.idArea;
   }
 
-  showMessage(sev: string, summ: string, det: string) {
+  showMessage = (sev: string, summ: string, det: string) =>
     this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
+
 
   ngOnInit(): void {
+    this.areasService.areas$.subscribe(areas => this.areas = areas);
     this.obtenerUsuariosHelp();
     this.obtenerTodosLosTickets();
     this.obtenerColores();
@@ -79,7 +84,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
 
   obtenerUsuariosHelp() {
     this.usersService.usuarios$
-    .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4'));
+      .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4' || x.idRol == '5' || x.idRol == '7'));
   }
 
   async obtenerTodosLosTickets(): Promise<void> {
@@ -129,7 +134,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
             }
           }
 
-          // this.obtnerUltimoMantenimiento();
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -139,33 +143,6 @@ export default class BranchVisitScheduleComponent implements OnInit {
       });
   }
 
-  // obtnerUltimoMantenimiento() {
-  //   let sucursales: Sucursal[] = [...this.sucursales];
-  //   let array_ids_Sucursales: string[] = [];
-
-  //   for (let item of sucursales) {
-  //     array_ids_Sucursales.push(item.id);
-  //   }
-
-  //   this.loading = true;
-  //   const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-  //   this.subscriptiontk = servicio
-  //     .getUltimosMantenimientos(array_ids_Sucursales)
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.arr_ultimosmantenimientos = data.filter(
-  //           (elemento): elemento is Mantenimiento10x10 => elemento !== null
-  //         );
-  //         this.loading = false;
-  //         this.cdr.detectChanges();
-  //       },
-  //       error: (error) => {
-  //         this.loading = false;
-  //         console.error('Error al escuchar los mantenimientos:', error);
-  //       },
-  //     });
-  // }
-
   obtenerNombreUsuario(idUsuario: string): string {
     let nombre = '';
     let temp = this.usuariosHelp.filter(x => x.id == idUsuario);
@@ -173,4 +150,7 @@ export default class BranchVisitScheduleComponent implements OnInit {
     return nombre
   }
 
+  onChangeArea() {
+
+  }
 }

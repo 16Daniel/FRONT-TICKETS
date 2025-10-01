@@ -52,17 +52,8 @@ export class BranchMaintenanceTableComponent {
     private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   this.observaActualizacionesChatTicket(changes);
-  // }
-
-  // observaActualizacionesChatTicket(changes: SimpleChanges) {
-  //   if (changes['mantenimientos'] && changes['mantenimientos'].currentValue) {
-  //     console.log('Mantenimientos actualizados');
-  //   }
-  // }
-
   obtenerMantenimientos(idsSucursales: string[]) {
+    debugger
     const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
     servicio

@@ -321,14 +321,49 @@ export default class CalendarBuilderComponent implements OnInit {
         if (sucursal.id != '-999' && sucursal.id != '-998') {
 
           let participantesChat: ParticipanteChat[] = [];
-          participantesChat.push({
-            idUsuario: this.usuario.id,
-            ultimoComentarioLeido: 0,
-          });
+
           participantesChat.push({
             idUsuario: this.usuarioseleccionado!.id,
             ultimoComentarioLeido: 0,
           });
+
+          let administradoresArea = this.usersService.usuarios
+            .filter(usuario => usuario.idRol == '5' && usuario.idArea == this.usuario.idArea);
+
+          let administradores = this.usersService.usuarios
+            .filter(usuario => usuario.idRol == '1' && usuario.idArea == this.usuario.idArea);
+
+          let sucursales = this.usersService.usuarios
+            .filter(usuario => usuario.idRol == '2');
+
+          administradoresArea.forEach(usuario => {
+            participantesChat.push({
+              idUsuario: usuario.id,
+              ultimoComentarioLeido: 0,
+            });
+          });
+
+          administradores.forEach(usuario => {
+            participantesChat.push({
+              idUsuario: usuario.id,
+              ultimoComentarioLeido: 0,
+            });
+          });
+
+          sucursales.forEach(usuario => {
+            participantesChat.push({
+              idUsuario: usuario.id,
+              ultimoComentarioLeido: 0,
+            });
+          });
+
+
+
+
+
+
+
+
 
           if (this.tieneMantenimientosActivos(sucursal.id)) {
 

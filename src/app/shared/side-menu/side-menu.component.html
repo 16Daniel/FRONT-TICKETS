@@ -21,7 +21,8 @@
       <div class="menu-items" style="overflow: auto; padding-bottom: 100px;">
         <i class='bx bx-support bx-lg'></i>
         <div class="fw-bold fs-3 mb-4" style="color: rgb(0, 0, 0);">REBEL TICKETS</div>
-        <li (click)="closemenu()"><a [routerLink]="'/main/home'" *ngIf="usuario.idRol != '6'"><i class='bx bxs-dashboard'></i>Inicio</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/home'" *ngIf="usuario.idRol != '6'"><i
+              class='bx bxs-dashboard'></i>Inicio</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/users'"
             *ngIf="usuario.idRol == '1' || usuario.idRol == '5'"><i class='bx bx-user'></i>Usuarios</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/roles'" *ngIf="usuario.idRol == '1'"><i
@@ -39,30 +40,36 @@
         </li>
         <li (click)="closemenu()" *ngIf="usuario?.idRol == '1' || usuario?.idRol == '5' "><a
             [routerLink]="'/main/calendar-builder'"><i class='bx bx-calendar-plus'></i>Registrar visita</a></li>
-        <li (click)="closemenu()" *ngIf="usuario?.idRol == '4' || usuario?.idRol == '2'|| usuario?.idRol == '7'"><a
-            [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
+        <li (click)="closemenu()"
+          *ngIf="usuario?.idRol == '4' || usuario?.idRol == '2'|| usuario?.idRol == '7' || usuario?.idRol == '5' || usuario?.idRol == '1'">
+          <a [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/version-control'" *ngIf="usuario.idRol == '1'"><i
               class='bx bxs-dashboard'></i>Control de versiones</a></li>
-        
-              <li (click)="closemenu()"><a [routerLink]="'/cedis/recoleccion'" *ngIf="usuario.idRol == '6'">
-                <i class='bx bxs-droplet' ></i>&nbsp;Recolección de aceite</a></li>
-              <li (click)="closemenu()"><a [routerLink]="'/cedis/control-aceite'" *ngIf="usuario.controlDeAceite == true">
-                <i class='bx bxs-droplet' ></i>&nbsp;Control de aceite</a></li>
-      
+
+        <li (click)="closemenu()"><a [routerLink]="'/cedis/recoleccion'" *ngIf="usuario.idRol == '6'">
+            <i class='bx bxs-droplet'></i>&nbsp;Recolección de aceite</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/cedis/control-aceite'" *ngIf="usuario.controlDeAceite == true">
+            <i class='bx bxs-droplet'></i>&nbsp;Control de aceite</a></li>
+
         <li (click)="closemenu()"><a [routerLink]="'/main/fixed-assets'"
             *ngIf="usuario.idRol == '1' || usuario.idRol == '5'"><i class='bx bxs-dashboard'></i>Activos fijos</a></li>
 
-                <li (click)="closemenu()"><a [routerLink]="'/nomina/control-de-personal'">
-                <i class='bx bx-group bx-sm'></i>&nbsp;Personal en sucursal</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/nomina/control-de-personal'">
+            <i class='bx bx-group bx-sm'></i>&nbsp;Personal en sucursal</a></li>
 
-                 <li (click)="closemenu()"><a [routerLink]="'/nomina/historial-del-personal'">
-                <i class='bx bx-group bx-sm'></i>&nbsp;Historial del Personal</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/nomina/historial-del-personal'">
+            <i class='bx bx-group bx-sm'></i>&nbsp;Historial del Personal</a></li>
 
+<<<<<<< HEAD
+        <li (click)="closemenu()"><a [routerLink]="'/administracion/compras'">
+            <i class='bx bx-shopping-bag bx-sm'></i>&nbsp;Requisición de compra</a></li>
+=======
                 <li (click)="closemenu()"><a [routerLink]="'/administracion/compras'">
                 <i class='bx bx-shopping-bag bx-sm' ></i>&nbsp;Requisición de compra</a></li>
      
                   <li (click)="closemenu()"><a [routerLink]="'/planeacion/diccionario'">
                 <i class='bx bx-book bx-sm'></i>&nbsp;Diccionario</a></li>
+>>>>>>> 5723838372f5c583b9faff4ff3f795be1fa8cc2e
 
                   <!-- <li (click)="closemenu()"><a [routerLink]="'/planeacion/mermas'">
                 <i class='bx bx-trash-alt bx-sm'></i>&nbsp;Mermas</a></li>

@@ -2,12 +2,10 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
-import { Timestamp } from '@angular/fire/firestore';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 
 import { Ticket } from '../../../models/ticket.model';
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
 import { ModalTicketDetailComponent } from "../../tickets/modal-ticket-detail/modal-ticket-detail.component";
 import { TicketsService } from '../../../services/tickets.service';
@@ -18,6 +16,7 @@ import { BranchMaintenanceTableAvComponent } from '../../../components/maintenan
 import { BranchMaintenanceTableMttoComponent } from '../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
 import { RequesterTicketsListComponent } from '../../../components/requester-tickets-list/requester-tickets-list.component';
+import { DatesHelperService } from '../../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -43,7 +42,6 @@ export default class ModalEventDetailComponent implements OnInit {
   @Input() fecha: Date | any;
   @Input() usuariosHelp: Usuario[] = [];
   @Input() usuarioSeleccionado: Usuario | any;
-  // @Input() Indicacion: string = '';
   @Input() comentario: string = '';
   @Input() idsTickets: string[] = [];
   @Output() clickEvent = new EventEmitter<Ticket>();
@@ -57,39 +55,39 @@ export default class ModalEventDetailComponent implements OnInit {
   loading: boolean = true;
   usuario: Usuario;
   mantenimientosDelDia: any[] = [];
-  // usuarioSoporte: Usuario;
 
   constructor(
     private ticketsService: TicketsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private cdr: ChangeDetectorRef,
+    private datesHelper: DatesHelperService
   ) {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-
-    // this.usuarioSoporte = this.usuariosHelp.filter(x => x.id == '')[0];
-
   }
 
   async ngOnInit() {
     this.obtenerTickets();
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
-    await servicio.getUltimosMantenimientos([this.sucursal.id]).subscribe((result: any) => {
-      this.mantenimientosDelDia = result;
+    await servicio.getMantenimientosPorSucursalYFecha([this.sucursal.id], this.fecha).subscribe((result: any) => {
+      let data = result.filter((element: any) => element.length > 0);
+      this.mantenimientosDelDia = [];
+      for (let itemdata of data) {
+        for (let item of itemdata) {
+          this.mantenimientosDelDia.push(item);
+        }
+      }
+
+      this.mantenimientosDelDia = this.mantenimientosDelDia.map(x => {
+        x.fecha = this.datesHelper.getDate(x.fecha);
+        return x;
+      });
+
       this.cdr.detectChanges();
     });
   }
 
-  getDate(tsmp: Timestamp): Date {
-    // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-    const firestoreTimestamp = tsmp; // Ejemplo
-    const date = firestoreTimestamp.toDate(); // Convierte a Date
-    return date;
-  }
-
-  onHide() {
-    this.closeEvent.emit(); // Cerrar modal
-  }
+  onHide = () => this.closeEvent.emit();
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
@@ -97,14 +95,27 @@ export default class ModalEventDetailComponent implements OnInit {
     this.showModalTicketDetail = true;
   }
 
-  abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento10x10 | any) {
+  abrirModalDetalleMantenimiento(mantenimiento: any) {
     this.mantenimiento = mantenimiento;
     this.mostrarModalDetalleMantenimeinto = true;
   }
 
   async obtenerTickets() {
     this.loading = true;
-    this.tickets = await this.ticketsService.getByIds(this.sucursal.idsTickets);
+
+    const tickets1 = await this.ticketsService.getByIds(this.sucursal.idsTickets);
+
+    const tickets2 = await this.ticketsService
+      .getFinalizedTicketsByEndDate(
+        this.fecha,
+        this.usuarioSeleccionado.idArea
+      );
+
+      console.log(tickets1)
+      console.log(tickets2)
+
+      this.tickets = tickets2
+
     this.loading = false;
     this.cdr.detectChanges();
   }

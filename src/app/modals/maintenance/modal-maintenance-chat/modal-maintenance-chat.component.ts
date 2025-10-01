@@ -104,16 +104,17 @@ export class ModalMaintenanceChatComponent {
 
     servicio
       .update(this.mantenimiento!.id, this.mantenimiento!)
-      .then(() => {
+      .then(async () => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
         this.comentario = '';
 
-        servicio.updateLastCommentRead(
+        await servicio.updateLastCommentRead(
           this.mantenimiento!.id,
           this.userdata.id,
           this.mantenimiento!.comentarios.length
         );
 
+        this.cdr.detectChanges();
       })
       .catch((error) =>
         console.error('Error al actualizar los comentarios:', error)

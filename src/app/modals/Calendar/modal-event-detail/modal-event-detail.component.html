@@ -22,16 +22,18 @@
         <h5 class=" text-dark fw-bold text-center">MANTENIMIENTO</h5>
 
         <app-branch-maintenance-table *ngIf=" usuarioSeleccionado.idArea == '1'" [mantenimientos]="mantenimientosDelDia"
-            [usuariosHelp]="usuariosHelp"
-            (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table>
+            [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"
+            [mostrarChat]="true"></app-branch-maintenance-table>
 
         <app-branch-maintenance-table-av *ngIf="usuarioSeleccionado.idArea == '2'"
             [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
-            (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table-av>
+            (clickEvent)="abrirModalDetalleMantenimiento($event)"
+            [mostrarChat]="true"></app-branch-maintenance-table-av>
 
         <app-branch-maintenance-table-mtto *ngIf="usuarioSeleccionado.idArea == '4'"
             [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
-            (clickEvent)="abrirModalDetalleMantenimiento($event)"></app-branch-maintenance-table-mtto>
+            (clickEvent)="abrirModalDetalleMantenimiento($event)"
+            [mostrarChat]="true"></app-branch-maintenance-table-mtto>
     </div>
 
     <div *ngIf="comentario != ''">
