@@ -8,6 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
+import * as XLSX from 'xlsx';
 
 import { ActivoFijo } from '../../../../models/activo-fijo.model';
 import { FixedAssetsService } from '../../../../services/fixed-assets.service';
@@ -289,6 +290,38 @@ export default class FixedAssetsComponent implements OnInit {
       activo.referencia?.toLowerCase().includes(this.textoBusquedaReferencia.toLowerCase())
     );
     return this.obtenerCostoTotalActivos(listaFiltrada);
+  }
+
+  exportToExcel(filename: string = 'listado_activos.xlsx'): void {
+    // Transformar los datos para tener una fila por artículo
+    const datosExportar = this.transformarDatos();
+
+    // Crear libro de trabajo y hoja
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Activos');
+
+    // Guardar el archivo
+    XLSX.writeFile(wb, filename);
+  }
+
+  private transformarDatos(): any[] {
+
+    const datos = this.activosFijosFiltrados.map(a => ({
+      REFERENCIA: a.referencia,
+      DESCRIPCION: a.descripcion,
+      SUCURSAL: this.nombreSucursal(a.idSucursal),
+      AREA: this.nombreArea(a.idArea),
+      LOCACION: this.nombreAreaActivoFijo(a.idUbicacionActivoFijo),
+      CATEGORIA: this.nombreCategoriaActivoFijo(a.idCategoriaActivoFijo),
+      '# MANT': a.mantenimientos.length,
+      CONDICION: this.nombreEstatusActivoFijo(a.idEstatusActivoFijo),
+      UBICACION: this.nombreUbicacionActivoFijo(a.idUbicacionActivoFijo),
+      COSTO: a.costo,
+      'COSTO MANT.': this.getCostoTotalMantenimientos(a)
+    }));
+
+    return datos;
   }
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
