@@ -3,6 +3,7 @@ import { environment } from '../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ITproducto } from '../models/Planecion';
 import { Observable } from 'rxjs';
+import { Merma } from '../models/Merma';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +33,11 @@ export class PlaneacionService {
    actualizarDiccionario(data:any)
    {
      return this.http.post<any>(this.url+'DiccionarioPlaneacion/UpdateMedidaUds/',data,{headers:this.headers})
+   } 
+
+   getMermas(data:any):Observable<Merma[]>
+   {
+      return this.http.post<Merma[]>(this.url+'Mermas/getMermas',data,{headers:this.headers})
    }
+
 }
