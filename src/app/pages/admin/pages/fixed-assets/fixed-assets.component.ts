@@ -110,7 +110,9 @@ export default class FixedAssetsComponent implements OnInit {
   }
 
   obtenerActivosFijos() {
-    this.subscripcion = this.fixedAssetsService.get(this.usuario.idArea).subscribe(result => {
+    let idArea = this.usuario.idRol == '1' ? undefined : this.usuario.idArea;
+
+    this.subscripcion = this.fixedAssetsService.get(idArea).subscribe(result => {
       this.activosFijos = result.sort((a, b) => {
         const idA = Number(a.idSucursal);
         const idB = Number(b.idSucursal);

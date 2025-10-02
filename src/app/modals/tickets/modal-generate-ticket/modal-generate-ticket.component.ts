@@ -278,13 +278,10 @@ export class ModalGenerateTicketComponent implements OnInit {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  obtenerUsuariosHelp() {
+  obtenerUsuariosHelp = () =>
     this.usersService.usuarios$.subscribe(usuarios => this.catUsuariosHelp = usuarios);
-  }
 
-  onHide() {
-    this.closeEvent.emit(false); // Cerrar modal
-  }
+  onHide = () => this.closeEvent.emit(false); // Cerrar modal
 
   obtenerResponsablesTicket(idSucursal: string, idArea: string): string[] {
     let idsResponsables: string[] = [];

@@ -100,7 +100,7 @@
   (closeEvent)="mostrarModalCompras = false"></app-modal-request-purchase>
 
 <app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false"></app-modal-generate-ticket>
+  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="usuario.idArea"></app-modal-generate-ticket>
 
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="itemtk"
   [showModalTicketDetail]="mostrarModalTicketDetail"
