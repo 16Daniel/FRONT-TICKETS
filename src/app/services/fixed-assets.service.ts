@@ -37,16 +37,19 @@ export class FixedAssetsService {
     await setDoc(docRef, { ...activoFijo, id: docRef.id });
   }
 
-  get(idArea: string): Observable<ActivoFijo[]> {
+  get(idArea?: string): Observable<ActivoFijo[]> {
     return new Observable<ActivoFijo[]>((observer) => {
       const collectionRef = collection(this.firestore, this.pathName);
 
-      const constraints = [
+      const filtros = [
         where('eliminado', '==', false),
-        where('idArea', '==', idArea)
       ];
 
-      const q = query(collectionRef, ...constraints);
+      if (idArea !== undefined) {
+        filtros.push(where('idArea', '==', idArea));
+      }
+
+      const q = query(collectionRef, ...filtros);
 
       const unsubscribe = onSnapshot(
         q,
