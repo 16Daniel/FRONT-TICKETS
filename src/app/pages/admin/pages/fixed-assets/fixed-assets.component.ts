@@ -312,7 +312,7 @@ export default class FixedAssetsComponent implements OnInit {
       DESCRIPCION: a.descripcion,
       SUCURSAL: this.nombreSucursal(a.idSucursal),
       AREA: this.nombreArea(a.idArea),
-      LOCACION: this.nombreAreaActivoFijo(a.idUbicacionActivoFijo),
+      LOCACION: this.nombreAreaActivoFijo(a.idAreaActivoFijo),
       CATEGORIA: this.nombreCategoriaActivoFijo(a.idCategoriaActivoFijo),
       '# MANT': a.mantenimientos.length,
       CONDICION: this.nombreEstatusActivoFijo(a.idEstatusActivoFijo),
