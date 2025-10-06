@@ -6,6 +6,7 @@ import {
   collectionData,
   doc,
   docData,
+  DocumentData,
   documentId,
   Firestore,
   getDoc,
@@ -155,81 +156,48 @@ export class TicketsService {
     });
   }
 
-  getHistorialTicketsPorUsuario(
+  async getHistorialTickets(
     fechaInicio: Date,
     fechaFin: Date,
-    idUsuario: string,
-    idArea: string,
-    callback: (result: Ticket[] | null) => void
-  ): () => void {
+    idSucursal: string,
+    idArea?: string,
+    idCategoria?: string,
+    calificacion?: number
+  ): Promise<Ticket[]> {
     fechaInicio.setHours(0, 0, 0, 0);
 
     const collectionRef = collection(this.firestore, 'tickets');
 
-    const q = query(
-      collectionRef,
-      where('idUsuario', '==', idUsuario),
-      where('idArea', '==', idArea),
-      where('fecha', '>=', fechaInicio),
-      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
-      orderBy('fecha', 'desc'),
-    );
-
-    // Suscribirse a cambios en tiempo real
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      if (querySnapshot.empty) {
-        callback(null); // No hay registros
-      } else {
-        const tickets = querySnapshot.docs.map(
-          (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as Ticket)
-        ); // Tipar cada objeto como Ticket
-        callback(tickets); // Devuelve el primer registro
-      }
-    });
-
-    return unsubscribe;
-  }
-
-  getHistorialTicketsPorResponsable(
-    fechaInicio: Date,
-    fechaFin: Date,
-    idUsuario: string,
-    callback: (result: Ticket[] | null) => void
-  ): () => void {
-    fechaInicio.setHours(0, 0, 0, 0);
-
-    const collectionRef = collection(this.firestore, 'tickets');
-
-    const q = query(
-      collectionRef,
-      where('idResponsableFinaliza', '==', idUsuario),
+    // Filtros base
+    const filtros: any[] = [
+      where('idSucursal', '==', idSucursal),
       where('idEstatusTicket', '==', '3'),
       where('fechaFin', '>=', fechaInicio),
       where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
-      orderBy('fecha', 'desc'),
-    );
+      orderBy('fecha', 'desc')
+    ];
 
-    // Suscribirse a cambios en tiempo real
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      if (querySnapshot.empty) {
-        callback(null); // No hay registros
-      } else {
-        const tickets = querySnapshot.docs.map(
-          (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as Ticket)
-        ); // Tipar cada objeto como Ticket
-        callback(tickets); // Devuelve el primer registro
-      }
+    // Filtros opcionales
+    if (idArea) filtros.push(where('idArea', '==', idArea));
+    if (idCategoria) filtros.push(where('idCategoria', '==', idCategoria));
+    if (calificacion) filtros.push(where('calificacion', '==', calificacion));
+
+    const q = query(collectionRef, ...filtros);
+
+    // Ejecutar promesa
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return [];
+    }
+
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data() as DocumentData;
+      return {
+        id: doc.id,
+        ...data
+      } as Ticket;
     });
-
-    return unsubscribe;
   }
 
   getTicketsPorUsuario(userId: string): Observable<any[]> {
