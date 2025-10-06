@@ -14,6 +14,10 @@
       (click)="mostrarModalGenerateTicket = true">
     </p-button>
 
+    <p-button label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
+      (click)="mostrarModalHistorial = true">
+    </p-button>
+
     <p-button label="FILTRAR TICKETS" icon="pi pi-filter" styleClass="p-button-success"
       (click)="mostrarModalFilterTickets = true">
     </p-button>
@@ -109,7 +113,7 @@
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
 <app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false"></app-modal-tickets-history>
+  (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-modal-tickets-history>
 
 <app-modal-purshases *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras" [idArea]="idArea"
   (closeEvent)="mostrarModalCompras = false"></app-modal-purshases>

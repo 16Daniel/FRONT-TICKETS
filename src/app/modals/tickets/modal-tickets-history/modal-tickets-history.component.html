@@ -1,39 +1,136 @@
 <p-dialog #dialogHtk header="HISTORIAL DE TICKETS" [modal]="true" [(visible)]="showModalHistorial"
-  [style]="{ width: '80vw', height: '80vh' }" [maximizable]="true" (onHide)="onHide()" >
-
+  [style]="{ width: '90vw', height: '90vh' }" [maximizable]="true" (onHide)="onHide()">
   <input class="invisible">
-  <div class="bg-white rounded-3 p-3">
-    <div class="row align-items-center gap-3">
-      <div class="col-auto">
-        <p class="fw-bold">FECHA INICIAL</p>
-      </div>
-      <div class="col-auto">
-        <p-calendar [(ngModel)]="fechaInicio" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
-      </div>
-      <div class="col-auto">
-        <p class="fw-bold">FECHA FINAL</p>
-      </div>
-      <div class="col-auto">
-        <p-calendar [(ngModel)]="fechaFin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
-      </div>
 
-      <div class="col-auto">
-        <button class="btn bg-p-b p-2" (click)="buscar();">BUSCAR</button>
-      </div>
-      <!-- <div class="col-auto">
-        <button class="btn bg-p-b p-2" style="background-color: #FF5722;" (click)="showModalFilterTickets = true">
-          <i class='bx bx-filter bx-sm'></i></button>
-      </div> -->
+  <div class="row" style="margin-top: 10px">
+    <div class="col-md-4">
+      <p class="fw-bold">FECHA INICIAL</p>
+      <p-calendar [(ngModel)]="fechaInicio" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
+    </div>
+    <div class="col-md-4">
+      <p class="fw-bold">FECHA FINAL</p>
+      <p-calendar [(ngModel)]="fechaFin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
+    </div>
+
+    <div class="col-md-4">
+      <p class="fw-bold">SUCURSAL</p>
+      <p-dropdown [options]="sucursales" [(ngModel)]="idsucursal" name="sucursal" optionLabel="name"
+        [optionValue]="'id'" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
+        [style]="{width:'100%'}" [disabled]="usuario.idRol == '2'">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption?.nombre }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-sucursal pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>{{ sucursal.nombre }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
     </div>
   </div>
 
-  <app-requester-tickets-list [tickets]="tickets" (clickEvent)="abrirModalDetalleTicket($event)"
+  <div class="row" style="margin-top: 10px">
+    <div class="col-md-4">
+      <p class="fw-bold">ÁREA</p>
+      <p-dropdown [options]="areas" [(ngModel)]="idArea" name="area" optionLabel="name" [optionValue]="'id'"
+        [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
+        [disabled]="true">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption?.nombre }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-area pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>{{ area.nombre }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+    <div class="col-md-4">
+      <p class="fw-bold">CATEGORÍA</p>
+      <p-dropdown [options]="categorias" [(ngModel)]="idCategoria" name="categoria" optionLabel="name"
+        [optionValue]="'id'" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR CATEGORIA"
+        [style]="{width:'100%'}">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption?.nombre }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-categoria pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>{{ categoria.nombre }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+    <div class="col-md-4">
+      <p class="fw-bold">CALIFICACIÓN</p>
+      <p-dropdown [options]="opcionesCalificacion" [(ngModel)]="calificacion" name="calificacion" optionLabel="label"
+        optionValue="value" [showClear]="true" placeholder="SELECCIONAR CALIFICACIÓN" [style]="{width:'100%'}">
+        <!-- Ítem seleccionado -->
+        <ng-template pTemplate="selectedItem" let-seleccionado>
+          <div class="flex align-items-center gap-2" *ngIf="seleccionado">
+            <div class="star-rating">
+              <span *ngFor="let s of [].constructor(seleccionado.value)">
+                ★
+              </span>
+              <span *ngFor="let s of [].constructor(5 - seleccionado.value)">
+                ☆
+              </span>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- Ítems del dropdown -->
+        <ng-template let-opcion pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div class="star-rating">
+              <span *ngFor="let s of [].constructor(opcion.value)">
+                ★
+              </span>
+              <span *ngFor="let s of [].constructor(5 - opcion.value)">
+                ☆
+              </span>
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+    </div>
+  </div>
+
+  <div class="row align-items-center" style="margin-top: 10px">
+    <div class="col-12 d-flex align-items-end">
+      <div class="flex-grow-1 me-2">
+        <label class="form-label fw-bold">Filtro</label>
+        <input type="text" class="form-control" (ngModelChange)="applyFiltroTexto($event)" [(ngModel)]="textoBusqueda"
+          placeholder="BUSCAR POR DESCRIPCIÓN">
+      </div>
+      <div>
+        <button class="btn bg-p-b p-2" (click)="buscar()">BUSCAR</button>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <app-requester-tickets-list [tickets]="ticketsFiltrados" (clickEvent)="abrirModalDetalleTicket($event)"
     [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false"></app-requester-tickets-list>
 </p-dialog>
+
+
+
+
 
 <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
   (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-modal-filter-tickets [showModalFilterTickets]="showModalFilterTickets"
-  [tickets]="todosLosTickets" (closeEvent)="showModalFilterTickets = false"
-  (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
+<app-modal-filter-tickets [showModalFilterTickets]="showModalFilterTickets" [tickets]="todosLosTickets"
+  (closeEvent)="showModalFilterTickets = false" (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
