@@ -87,8 +87,6 @@ export class CalendarComponent implements OnInit {
         this.mostrarEventos(view.activeStart, view.activeEnd);
       }
     }
-
-    console.log('entra')
   }
 
   obtenerSucursales() {
@@ -129,10 +127,6 @@ export class CalendarComponent implements OnInit {
     if (this.idArea) idArea = this.idArea;
 
     let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, idArea);
-
-    if (this.idArea) {
-      console.log('el id area es', this.idArea)
-    }
 
     let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, idArea);
     let calendarApi = this.calendarComponent!.getApi();
@@ -218,8 +212,6 @@ export class CalendarComponent implements OnInit {
   }
 
   obtenerUsuario(idUsuario: string) {
-    console.log(idUsuario)
-    console.log(this.usuariosHelp)
     return this.usuariosHelp.filter(x => x.id == idUsuario)[0];
   }
 

@@ -36,6 +36,7 @@ import { BranchVisitItemComponent } from '../../../../components/branch-visit-it
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { UsersService } from '../../../../services/users.service';
 import { ParticipanteChat } from '../../../../models/participante-chat.model';
+import { AreasService } from '../../../../services/areas.service';
 
 @Component({
   selector: 'app-calendar-builder',
@@ -63,6 +64,7 @@ export default class CalendarBuilderComponent implements OnInit {
   sucursalesOrdenadas: Sucursal[] = [];
   sucursalesSeleccionadas: Sucursal[] = [];
   usuariosHelp: Usuario[] = [];
+  usuariosHelpDropDown: Usuario[] = [];
   usuarioseleccionado: Usuario | undefined;
   fecha = new Date();
   ordenarxmantenimiento: boolean = false;
@@ -82,6 +84,8 @@ export default class CalendarBuilderComponent implements OnInit {
   usuario: Usuario;
   area: Area | any;
   mostrarModalActividades: boolean = false;
+  areas: Area[] = [];
+  idArea: string = '1';
 
   constructor(
     private ticketsService: TicketsService,
@@ -95,7 +99,8 @@ export default class CalendarBuilderComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private fixedAssetsService: FixedAssetsService,
     private maintenanceMtooService: MaintenanceMtooService,
-    private datesHelper: DatesHelperService
+    private datesHelper: DatesHelperService,
+    private areasService: AreasService
   ) {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -104,6 +109,7 @@ export default class CalendarBuilderComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerUsuariosHelp();
+    this.areasService.areas$.subscribe(areas => this.areas = areas);
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -169,8 +175,11 @@ export default class CalendarBuilderComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsuariosPorRol(['4', '7', '5'], this.usuario.idArea)
-      .subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.usersService.getUsuariosPorRol(['4', '7', '5'])
+      .subscribe(usuarios => {
+        this.usuariosHelp = usuarios;
+        this.usuariosHelpDropDown = usuarios.filter(x => x.idArea == this.usuario.idArea);
+      });
   }
 
   obtenerSucursales() {

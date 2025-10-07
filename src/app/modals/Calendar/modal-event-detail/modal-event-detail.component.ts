@@ -111,9 +111,6 @@ export default class ModalEventDetailComponent implements OnInit {
         this.usuarioSeleccionado.idArea
       );
 
-      console.log(tickets1)
-      console.log(tickets2)
-
       this.tickets = tickets2
 
     this.loading = false;

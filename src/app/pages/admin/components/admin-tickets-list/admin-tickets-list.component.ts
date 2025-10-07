@@ -202,6 +202,12 @@ export class AdminTicketsListComponent {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
+  actualizarEstatus(ticket: Ticket | any, idEstatusTicket: string) {
+    if (idEstatusTicket == '3') ticket.fechaFin = new Date();
+
+    this.actualizaTicket(ticket);
+  }
+
   actualizaTicket(ticket: Ticket) {
     let nombreCategoria = this.categorias.find(x => x.id == ticket.idCategoria)?.nombre!;
 
