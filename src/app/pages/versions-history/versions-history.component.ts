@@ -27,7 +27,7 @@ export default class VersionsHistoryComponent {
     private versionControlService: VersionControlService,
     private versionUsuarioService: VersionUsuarioService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
