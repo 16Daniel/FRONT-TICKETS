@@ -26,6 +26,7 @@ import { Area } from '../../../models/area.model';
 import { AreasService } from '../../../services/areas.service';
 import { BranchesService } from '../../../services/branches.service';
 import { Sucursal } from '../../../models/sucursal.model';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-modal-tickets-history',
@@ -39,6 +40,7 @@ import { Sucursal } from '../../../models/sucursal.model';
     CommonModule,
     ModalTicketDetailComponent,
     DropdownModule,
+    MultiSelectModule
   ],
   templateUrl: './modal-tickets-history.component.html',
   styleUrl: './modal-tickets-history.component.scss',
@@ -59,7 +61,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
   sucursales: Sucursal[] = [];
 
   idCategoria: string = ''
-  idsucursal: string = '';
+  idsucursales: string[] = [];
   calificacion?: number;
 
   textoBusqueda: string = '';
@@ -95,7 +97,7 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
     this.areas = this.areasService.areas;
     this.branchesService.get().subscribe(sucursales => {
       this.sucursales = sucursales;
-      this.idsucursal = this.usuario.sucursales[0].id;
+      this.idsucursales = [this.usuario.sucursales[0].id];
     });
   }
 
@@ -113,10 +115,11 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
   }
 
   buscar() {
+    console.log(this.idsucursales)
     this.ticketsService.getHistorialTickets(
       this.fechaInicio,
       this.fechaFin,
-      this.idsucursal,
+      this.idsucursales,
       this.idArea,
       (this.idCategoria ? this.idCategoria.toString() : undefined),
       this.calificacion

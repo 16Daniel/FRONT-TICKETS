@@ -64,6 +64,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() mostrarEstrellas: boolean = true;
   @Input() mostrarFedchaEstimacion: boolean = true;
   @Input() mostrarAccionValidar: boolean = true;
+  @Input() mostrarSucursal: boolean = false;
   @Input() esEspectadorActivo: boolean = false;
 
   @Output() clickEvent = new EventEmitter<Ticket>();

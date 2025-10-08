@@ -16,22 +16,26 @@
 
     <div class="col-md-4">
       <p class="fw-bold">SUCURSAL</p>
-      <p-dropdown [options]="sucursales" [(ngModel)]="idsucursal" name="sucursal" optionLabel="name"
-        [optionValue]="'id'" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
+      <p-multiSelect [options]="sucursales" [(ngModel)]="idsucursales" name="sucursales" optionLabel="nombre"
+        optionValue="id" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSALES"
         [style]="{width:'100%'}" [disabled]="usuario.idRol == '2'">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-          <div class="flex align-items-center gap-2">
-            <div>{{ selectedOption?.nombre }}</div>
-          </div>
-        </ng-template>
 
+        <!-- Template para ítems -->
         <ng-template let-sucursal pTemplate="item">
           <div class="flex align-items-center gap-2">
             <div>{{ sucursal.nombre }}</div>
           </div>
         </ng-template>
-      </p-dropdown>
+
+        <!-- Template para los seleccionados -->
+        <ng-template let-selectedOptions pTemplate="selectedItems">
+          <div *ngIf="selectedOptions?.length === 0">Seleccionar sucursales</div>
+          <div *ngIf="selectedOptions?.length === 1">{{ selectedOptions[0].nombre }}</div>
+          <div *ngIf="selectedOptions?.length > 1">{{ selectedOptions.length }} sucursales seleccionadas</div>
+        </ng-template>
+      </p-multiSelect>
     </div>
+
   </div>
 
   <div class="row" style="margin-top: 10px">
@@ -122,7 +126,7 @@
 
   <br>
   <app-requester-tickets-list [tickets]="ticketsFiltrados" (clickEvent)="abrirModalDetalleTicket($event)"
-    [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false"></app-requester-tickets-list>
+    [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false" [mostrarSucursal]="true"></app-requester-tickets-list>
 </p-dialog>
 
 

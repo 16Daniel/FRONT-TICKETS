@@ -159,7 +159,7 @@ export class TicketsService {
   async getHistorialTickets(
     fechaInicio: Date,
     fechaFin: Date,
-    idSucursal: string,
+    idsSucursales: string[],
     idArea?: string,
     idCategoria?: string,
     calificacion?: number
@@ -170,7 +170,7 @@ export class TicketsService {
 
     // Filtros base
     const filtros: any[] = [
-      where('idSucursal', '==', idSucursal),
+      where('idSucursal', 'in', idsSucursales),
       where('idEstatusTicket', '==', '3'),
       where('fechaFin', '>=', fechaInicio),
       where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),

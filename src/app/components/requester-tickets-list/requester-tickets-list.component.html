@@ -8,7 +8,7 @@
       <th>FECHA</th>
       <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
       <th>AREA</th>
-      <th *ngIf="esEspectadorActivo">SUCURSAL</th>
+      <th *ngIf="esEspectadorActivo || mostrarSucursal">SUCURSAL</th>
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
       <th>CATEGORÍA</th>
@@ -48,7 +48,7 @@
       <td class="text-center">
         {{ obtenerNombreArea(ticket.idArea) }}
       </td>
-      <td class="text-center" *ngIf="esEspectadorActivo">
+      <td class="text-center" *ngIf="esEspectadorActivo || mostrarSucursal">
         {{obtenerNombreSucursal(ticket.idSucursal)}}
       </td>
       <td class="text-center">{{ ticket.solicitante | uppercase }}</td>

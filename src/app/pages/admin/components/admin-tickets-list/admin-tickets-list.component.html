@@ -92,7 +92,7 @@
             </td>
             <td class="text-center">
                 <p-dropdown [options]="estatusTicket" [(ngModel)]="tk.idEstatusTicket" optionLabel="nombre"
-                    [showClear]="false" optionValue="id" (onChange)="actualizaTicket(tk)" [style]="{ border: 'none' }">
+                    [showClear]="false" optionValue="id" (onChange)="actualizarEstatus(tk, $event.value)" [style]="{ border: 'none' }">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <div class="flex align-items-center gap-2">
                             <i class="bx {{ selectedOption.icon }} {{
