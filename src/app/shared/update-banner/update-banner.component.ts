@@ -6,6 +6,7 @@ import { VersionUsuarioService } from '../../services/version-usuario.service';
 import { Usuario } from '../../models/usuario.model';
 import { ControlVersion } from '../../models/control-version.model';
 import { VersionControlService } from '../../services/version-control.service';
+import { VersionUsuario } from '../../models/version-usuario.model';
 
 @Component({
   selector: 'app-update-banner',
@@ -98,10 +99,18 @@ export class UpdateBannerComponent implements OnInit {
       confirmButtonText: 'Actualizar ahora',
       allowOutsideClick: false,
       allowEscapeKey: false,
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
+        await this.guardarVersionUsuario();
         location.reload();
       }
     });
+  }
+
+  async guardarVersionUsuario() {
+    const nuevoRegistro: VersionUsuario = new VersionUsuario();
+    nuevoRegistro.idUsuario = this.usuario.id;
+    nuevoRegistro.idVersion = this.versionActual.id;
+    await this.versionUsuarioService.updateUserVersion({ ...nuevoRegistro });
   }
 }
