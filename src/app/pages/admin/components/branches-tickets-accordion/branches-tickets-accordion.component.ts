@@ -13,6 +13,7 @@ import { Ticket } from '../../../../models/ticket.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Area } from '../../../../models/area.model';
 import { Usuario } from '../../../../models/usuario.model';
+import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-branches-tickets-accordion',
@@ -25,7 +26,8 @@ import { Usuario } from '../../../../models/usuario.model';
     BadgeModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TooltipModule
+    TooltipModule,
+    TpvsDevicesTableComponent
   ],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
@@ -40,6 +42,7 @@ export class BranchesTicketsAccordionComponent {
   usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
+  mostrarTPVs: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {
     

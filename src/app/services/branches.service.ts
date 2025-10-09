@@ -24,6 +24,8 @@ export class BranchesService {
   constructor(private firestore: Firestore) { }
 
   async create(sucursal: Sucursal): Promise<void> {
+        const data = this.serializeSucursal(sucursal);
+
     const documentRef = doc(this.firestore, `${this.pathName}/${sucursal.id}`);
 
     const snapshot = await getDoc(documentRef);
@@ -32,7 +34,7 @@ export class BranchesService {
       throw new Error(`La sucursal con id ${sucursal.id} ya existe.`);
     }
 
-    await setDoc(documentRef, sucursal);
+    await setDoc(documentRef, data);
   }
 
   async getOnce(): Promise<Sucursal[]> {
@@ -92,8 +94,17 @@ export class BranchesService {
   }
 
   async update(sucursal: Sucursal | any, idSucursal: string): Promise<void> {
+    const data = this.serializeSucursal(sucursal);
     const documentRef = doc(this.firestore, `${this.pathName}/${idSucursal}`);
-    return updateDoc(documentRef, sucursal);
+    return updateDoc(documentRef, data);
+  }
+
+  private serializeSucursal(sucursal: Sucursal): any {
+    return {
+      ...sucursal,
+      tabletas: sucursal.tabletas!.map(t => ({ ...t })),
+      tpvs: sucursal.tpvs!.map(t => ({ ...t }))
+    };
   }
 
   async updateMultiple(sucursales: Sucursal[]): Promise<void> {

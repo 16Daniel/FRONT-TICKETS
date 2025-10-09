@@ -3,15 +3,17 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { Sucursal } from '../../../../models/sucursal.model';
 import { BranchesService } from '../../../../services/branches.service';
 import { Usuario } from '../../../../models/usuario.model';
+import { DispositivoTPV } from '../../../../models/dispositivo-tpv';
 
 @Component({
   selector: 'app-modal-branch-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule],
+  imports: [CommonModule, FormsModule, DialogModule, InputNumberModule],
   templateUrl: './modal-branch-create.component.html',
   styleUrl: './modal-branch-create.component.scss'
 })
@@ -24,28 +26,34 @@ export class ModalBranchCreateComponent implements OnInit {
   idSucursalEditar: string = '';
   usuario: Usuario;
 
+  cantidadTabletas: number = 0;
+  cantidadTPVs: number = 0;
+
   constructor(
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService
-  ) {
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-  }
+  ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   async ngOnInit() {
     if (!this.esNuevaSucursal) {
       this.idSucursalEditar = this.sucursal.id;
+      if (!this.sucursal.tabletas) this.sucursal.tabletas = [];
+      if (!this.sucursal.tpvs) this.sucursal.tpvs = [];
+      if (!this.sucursal.tabletasRequeridas) this.sucursal.tabletasRequeridas = 0;
+      if (!this.sucursal.tpvsRequeridos) this.sucursal.tpvsRequeridos = 0;
     }
 
     if (this.esNuevaSucursal) {
       this.sucursal.id = await this.branchesService.obtenerSecuencial();
       this.cdr.detectChanges();
     }
+
+    this.cantidadTabletas = this.sucursal.tabletas?.length || 0;
+    this.cantidadTPVs = this.sucursal.tpvs?.length || 0;
   }
 
-  onHide() {
-    this.closeEvent.emit(false); // Cerrar modal
-  }
+  onHide = () => this.closeEvent.emit(false);
 
   async enviar(form: NgForm) {
     if (form.form.status == 'INVALID') {
@@ -79,7 +87,6 @@ export class ModalBranchCreateComponent implements OnInit {
   }
 
   actualizar() {
-    debugger
     this.sucursal = { ...this.sucursal, id: parseInt(this.sucursal.id) }
     this.branchesService
       .update(this.sucursal, this.idSucursalEditar)
@@ -113,6 +120,28 @@ export class ModalBranchCreateComponent implements OnInit {
     } else {
       sucursal.activoMantenimientos.push(this.usuario.idArea);
     }
+  }
+
+  onTabletasChange(cantidad: number) {
+    while (this.sucursal.tabletas.length < cantidad) {
+      this.sucursal.tabletas.push(new DispositivoTPV());
+    }
+    while (this.sucursal.tabletas.length > cantidad) {
+      this.sucursal.tabletas.pop();
+    }
+
+    console.log(this.sucursal)
+  }
+
+  onTPVsChange(cantidad: number) {
+    while (this.sucursal.tpvs.length < cantidad) {
+      this.sucursal.tpvs.push(new DispositivoTPV());
+    }
+    while (this.sucursal.tpvs.length > cantidad) {
+      this.sucursal.tpvs.pop();
+    }
+
+    console.log(this.sucursal)
   }
 
 }
