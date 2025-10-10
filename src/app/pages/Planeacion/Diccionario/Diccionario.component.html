@@ -134,7 +134,7 @@
 
 </div>
 
-<app-modal-agregar-medida [visible]="modalEditar" [itemumedidaupdate]="itemSel" (closeEvent)="modalEditar = false">  
+<app-modal-agregar-medida [visible]="modalEditar" [itemumedidaupdate]="itemSel" (closeEvent)="modalEditar = false" (actualizartabla)="getDiccionario2()">  
 </app-modal-agregar-medida>
 
 <p-confirmDialog />

@@ -5,17 +5,19 @@ import { FormsModule } from '@angular/forms';
 import { ITproducto } from '../../../../../models/Planecion';
 import { PlaneacionService } from '../../../../../services/Planeacion.service';
 import Swal from 'sweetalert2';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @Component({
   selector: 'app-modal-agregar-medida',
   standalone: true,
-  imports: [CommonModule,DialogModule,FormsModule],
+  imports: [CommonModule,DialogModule,FormsModule,InputSwitchModule],
   templateUrl: './Modal-agregar-medida.component.html',
 })
 export class ModalAgregarMedidaComponent implements OnInit {
 @Input() visible:boolean = false; 
 @Input() itemumedidaupdate: ITproducto | undefined; 
 @Output() closeEvent = new EventEmitter<boolean>();
+@Output() actualizartabla = new EventEmitter<void>();
 
 constructor(public apiserv:PlaneacionService, public cdr: ChangeDetectorRef)
 {
@@ -45,12 +47,15 @@ constructor(public apiserv:PlaneacionService, public cdr: ChangeDetectorRef)
         formdata.append("pumedida",this.itemumedidaupdate!.p_umedida);
         formdata.append("iuds",this.itemumedidaupdate!.i_uds);
         formdata.append("iumedida",this.itemumedidaupdate!.i_umedida);
-      
+        let strplaneacion = this.itemumedidaupdate.planeacion == true ? 'T':'F';
+         formdata.append("planeacion",strplaneacion);
+
           Swal.showLoading(); 
           this.apiserv.actualizarDiccionario(formdata).subscribe({
             next: data => { 
               Swal.close(); 
               Swal.fire("OK", "¡ACTUALIZADO CORRECTAMENTE!", "success");
+              this.actualizartabla.emit(); 
               this.closeEvent.emit(false); // Cerrar modal
             },
             error: error => { 

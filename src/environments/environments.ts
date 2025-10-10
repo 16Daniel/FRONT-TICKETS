@@ -11,8 +11,8 @@ export const environment = {
      measurementId: 'G-ZSNCNBN2KL',
    },
   apiURL:"https://localhost:7165/api/",
-  idAdministracion:"hHqyRWm306Zmb5XADbbR",
-  idServicio:"QvSLmxLZjJnaGPPsA7zi",
+  idAdministracion:"QvSLmxLZjJnaGPPsA7zi",
+  idServicio:"hHqyRWm306Zmb5XADbbR" ,
   idDireccion:"Mcaolq7LySn81CSX4n5L"
 };
 
