@@ -9,14 +9,14 @@
     </thead>
     <tbody>
         <tr>
-            <!-- Iteramos sobre los dispositivos existentes -->
+            <!-- Tabletas existentes -->
             <td *ngFor="let tablet of sucursal.tabletas; let i = index" style="padding: 0.5rem;"
                 [style]="{ 'background-color': getColorEstatus(tablet.estatus) }">
-                <span style="font-size: 2.5rem; cursor: pointer;" title="ID: {{ tablet.id }}"
-                    (click)="verDetallesDispositivo(tablet.id)">📱</span>
+                <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tablet.estatus)"
+                    tooltipPosition="top" (click)="verDetallesDispositivo(tablet.id)">📱</span>
             </td>
 
-            <!-- Relleno con ❌ hasta llegar al número requerido -->
+            <!-- Relleno con ❌ -->
             <td *ngFor="let j of crearArray(sucursal.tabletasRequeridas! - (sucursal.tabletas?.length || 0))"
                 style="padding: 0.5rem;">
                 <span style="font-size: 2.5rem;">❌</span>
@@ -40,13 +40,13 @@
             <!-- TPVs existentes -->
             <td *ngFor="let tpv of sucursal.tpvs; let i = index" style="padding: 0.5rem;"
                 [style]="{ 'background-color': getColorEstatus(tpv.estatus) }">
-                <span style="font-size: 2.5rem; cursor: pointer;" title="ID: {{ tpv.id }}"
-                    (click)="verDetallesDispositivo(tpv.id)">
+                <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tpv.estatus)"
+                    tooltipPosition="top" (click)="verDetallesDispositivo(tpv.id)">
                     💻
                 </span>
             </td>
 
-            <!-- Relleno con ❌ hasta completar los requeridos -->
+            <!-- Relleno con ❌ -->
             <td *ngFor="let j of crearArray(sucursal.tpvsRequeridos! - (sucursal.tpvs?.length || 0))"
                 style="padding: 0.5rem;">
                 <span style="font-size: 2.5rem;">❌</span>

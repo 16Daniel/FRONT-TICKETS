@@ -33,9 +33,13 @@ export class TpvsDevicesTableComponent {
   }
 
   getColorEstatus(idEstatus: string): string {
-    debugger
     const estatus = this.estatus.find(e => e.id === idEstatus);
     return estatus ? estatus.color : '#ffffff';
+  }
+
+  getNombreEstatus(idEstatus: string): string {
+    const estatus = this.estatus.find(e => e.id === idEstatus);
+    return estatus ? estatus.nombre : '...';
   }
 
   verDetallesDispositivo(id: string) {
