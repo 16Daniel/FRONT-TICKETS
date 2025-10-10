@@ -1,33 +1,56 @@
-<div class="card p-3">
-    <h5>Tabletas</h5>
-    <p-table [value]="[1]" [responsive]="true">
-        <ng-template pTemplate="header">
-            <tr>
-                <th *ngFor="let col of columnasTabletas">#</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body">
-            <tr>
-                <td *ngFor="let col of columnasTabletas">
-                    <i class="{{ iconoTableta(columnasTabletas.indexOf(col)) }} fs-3"></i>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+<!-- TABLA TABLETAS -->
+<table class="w-100 text-center mb-3" style="border-collapse: collapse;" *ngIf="!isLoading">
+    <thead>
+        <tr>
+            <th [attr.colspan]="sucursal.tabletasRequeridas" style="padding: 0.5rem; font-size: 1.2rem;">
+                📱 Tabletas ({{ sucursal.tabletas?.length || 0 }}/{{ sucursal.tabletasRequeridas || 0 }})
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <!-- Iteramos sobre los dispositivos existentes -->
+            <td *ngFor="let tablet of sucursal.tabletas; let i = index" style="padding: 0.5rem;"
+                [style]="{ 'background-color': getColorEstatus(tablet.estatus) }">
+                <span style="font-size: 2.5rem; cursor: pointer;" title="ID: {{ tablet.id }}"
+                    (click)="verDetallesDispositivo(tablet.id)">📱</span>
+            </td>
 
-    <h5 class="mt-4">Puntos de Venta</h5>
-    <p-table [value]="[1]" [responsive]="true">
-        <ng-template pTemplate="header">
-            <tr>
-                <th *ngFor="let col of columnasTPVs">#</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body">
-            <tr>
-                <td *ngFor="let col of columnasTPVs">
-                    <i class="{{ iconoTPV(columnasTPVs.indexOf(col)) }} fs-3"></i>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-</div>
+            <!-- Relleno con ❌ hasta llegar al número requerido -->
+            <td *ngFor="let j of crearArray(sucursal.tabletasRequeridas! - (sucursal.tabletas?.length || 0))"
+                style="padding: 0.5rem;">
+                <span style="font-size: 2.5rem;">❌</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- TABLA TPVs -->
+<table class="w-100 text-center mb-3" style="border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th [attr.colspan]="sucursal.tpvsRequeridos" style="padding: 0.5rem; font-size: 1.2rem;">
+                💻 Puntos de venta ({{ sucursal.tpvs?.length || 0 }}/{{ sucursal.tpvsRequeridos || 0 }})
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <!-- TPVs existentes -->
+            <td *ngFor="let tpv of sucursal.tpvs; let i = index" style="padding: 0.5rem;"
+                [style]="{ 'background-color': getColorEstatus(tpv.estatus) }">
+                <span style="font-size: 2.5rem; cursor: pointer;" title="ID: {{ tpv.id }}"
+                    (click)="verDetallesDispositivo(tpv.id)">
+                    💻
+                </span>
+            </td>
+
+            <!-- Relleno con ❌ hasta completar los requeridos -->
+            <td *ngFor="let j of crearArray(sucursal.tpvsRequeridos! - (sucursal.tpvs?.length || 0))"
+                style="padding: 0.5rem;">
+                <span style="font-size: 2.5rem;">❌</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

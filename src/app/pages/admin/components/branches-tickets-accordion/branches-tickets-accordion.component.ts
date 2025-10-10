@@ -43,20 +43,22 @@ export class BranchesTicketsAccordionComponent {
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
   mostrarTPVs: boolean = false;
+  mostrarTPVsMap: { [idSucursal: string]: boolean } = {};
 
   constructor(private cdr: ChangeDetectorRef) {
-    
-   }
+
+  }
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.sucursales.forEach(s => this.mostrarTPVsMap[s.id] = false);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-  if (changes['sucursales']) {
-    this.sucursales = this.ordenarSucursales();
+    if (changes['sucursales']) {
+      this.sucursales = this.ordenarSucursales();
+    }
   }
-}
 
   ordenarSucursales(): Sucursal[] {
     return this.sucursales.sort((a, b) => {
