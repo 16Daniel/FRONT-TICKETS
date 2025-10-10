@@ -1,4 +1,4 @@
-import { Component, Input, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../../../models/AdministracionCompra';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -41,7 +41,9 @@ public tipoDoc:number = 1;
 @Input() autorizacion:boolean = false; 
 @Input() autorizado:boolean = false; 
 
-constructor(private shopServ:ShoppingService){ this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
+public docs:string = ""; 
+
+constructor(private shopServ:ShoppingService, public cdr: ChangeDetectorRef){ this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
   ngOnInit(): void { }
 
 obtenerFecha(value:Timestamp):Date
@@ -145,9 +147,11 @@ obtenerTotalCompras(articulos:ArticuloCompra[]):number
     this.itemReg = item; 
     this.modalChat = true; 
   }
-    abrirModalArchivos(item:AdministracionCompra)
+    abrirModalArchivos(item:AdministracionCompra,data:string,tipodoc:number)
   { 
+    this.tipoDoc = tipodoc; 
     this.itemReg = item; 
+    this.docs = data; 
     this.modalArchivos = true; 
   }
   abrirModalDetalles(item:AdministracionCompra)

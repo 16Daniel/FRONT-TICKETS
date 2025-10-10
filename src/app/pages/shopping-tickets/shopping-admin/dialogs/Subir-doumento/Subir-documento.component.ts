@@ -32,11 +32,12 @@ export class SubirdocumentoComponent {
   // Método que se ejecuta cuando se selecciona un archivo
   async onUpload(event: any) {
     let URL = ""; 
+    let archivos:string[] = [];
+      let path = this.tipoDoc == 1 ? 'facturas_compras/' : 'comprobantes_pago_compras/'; 
     for (const file of event.files) {
       this.uploading = true;
       try {
-        let path = this.tipoDoc == 1 ? 'facturas_compras/' : 'comprobantes_pago_compras/';
-        URL = await  this.shopserv.uploadFile(file,this.Reg!.id!,this.Reg!.fecha.toDate(),path); 
+        URL = await  this.shopserv.uploadFile(file,this.Reg!.fecha.toDate(),path, this.Reg!.id!); 
          this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
@@ -51,13 +52,21 @@ export class SubirdocumentoComponent {
           });
       }
      
-    } 
+    }
+    
+     let año:string = this.Reg!.fecha.toDate().getFullYear().toString(); 
+      let mes:string = (this.Reg!.fecha.toDate().getMonth()+1)<10 ? '0'+(this.Reg!.fecha.toDate().getMonth()+1):''+(this.Reg!.fecha.toDate().getMonth()+1);
+      let strfecha:string = año +'-'+ mes +'/'; 
+      let docspath = path+ strfecha + this.Reg!.id + "/";
+      
+      archivos = await this.shopserv.getFileUrls(docspath); 
+      
     if(this.tipoDoc == 1)
       {
-          this.Reg!.factura = URL
+          this.Reg!.factura = JSON.stringify(archivos); 
       } else 
         {
-            this.Reg!.comprobantePago = URL
+            this.Reg!.comprobantePago = JSON.stringify(archivos); 
         }
      await this.actualizarUrl(this.Reg!);
      this.uploading = false; 

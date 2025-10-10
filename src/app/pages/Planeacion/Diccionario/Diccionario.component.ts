@@ -60,6 +60,25 @@ getDiccionario()
 
   }
 
+  getDiccionario2()
+  {
+    this.loading = true; 
+    Swal.showLoading(); 
+     this.apiserv.getDiccionario().subscribe({
+      next: data => {
+         this.diccionario = data;
+         this.loading = false; 
+         Swal.close(); 
+         this.cdr.detectChanges();
+      },
+      error: error => {
+        Swal.close(); 
+         console.log(error);
+      }
+  });
+
+  }
+
 abrirModalEditar(item:ITproducto)
 {
   this.itemSel = item; 

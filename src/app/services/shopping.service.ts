@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, doc, Firestore, orderBy, query, QueryConstraint, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { from, map, Observable, switchMap } from 'rxjs';
-import { AdministracionCompra, Proveedor } from '../models/AdministracionCompra';
+import { AdministracionCompra, PagoAdicional, Proveedor } from '../models/AdministracionCompra';
 import { 
   Storage, 
   ref, 
   uploadBytes, 
   getDownloadURL,
-  deleteObject, 
+  deleteObject,
+  listAll, 
 } from '@angular/fire/storage';
 
 @Injectable({
@@ -15,6 +16,7 @@ import {
 })
 export class ShoppingService {
   comprastab:string = 'compras_administracion'; 
+  pagosAdicionalesTab:string = 'pagos_adicionales_administracion'; 
   constructor(private firestore: Firestore,private storage: Storage) { }
     
    getCatTipo(): Observable<any> {
@@ -103,7 +105,8 @@ getComprasFiltro(
   idArea:string,
   sucursalesIds:string[],
   esServicio:boolean,
-  razonSocial:string
+  razonSocial:string,
+  metodoPago:string
 ): Observable<AdministracionCompra[]> {
   const comprasCollection = collection(this.firestore, this.comprastab);
   let condiciones: QueryConstraint[] = [];
@@ -140,6 +143,10 @@ getComprasFiltro(
     condiciones.push(where('idArea', '==', idArea));
   }
 
+  if (metodoPago && metodoPago.trim() !== '') {
+    condiciones.push(where('metodoPago', '==', metodoPago));
+  }
+
   if(sucursalesIds.length>0)
     {
        condiciones.push(where('idSucursalSolicitante', 'in', sucursalesIds)); 
@@ -168,12 +175,12 @@ getComprasFiltro(
   return collectionData(comprasQuery, { idField: 'id' }) as Observable<AdministracionCompra[]>;
 }
 
-async uploadFile(file: File, name: string,fecha:Date, path: string): Promise<string> {
+async uploadFile(file: File,fecha:Date, path: string,id:string): Promise<string> {
   let año:string = fecha.getFullYear().toString(); 
   let mes:string = (fecha.getMonth()+1)<10 ? '0'+(fecha.getMonth()+1):''+(fecha.getMonth()+1);
-
   let strfecha:string = año +'-'+ mes +'/'; 
-  const fileRef = ref(this.storage, path+ strfecha + name.trim() + '.' + file.name.split('.')[1]);
+  let strRef = path+ strfecha + id + "/" + file.name.trim(); 
+  const fileRef = ref(this.storage, strRef);
   
   try {
     const snapshot = await uploadBytes(fileRef, file);
@@ -235,5 +242,46 @@ updateLastCommentRead(
     );
   }
 
+
+    async getFileUrls(path: string): Promise<string[]> {
+    const storageRef = ref(this.storage, path);
+    
+    try {
+      const result = await listAll(storageRef);
+      
+      // Retorna directamente un array de strings con las URLs
+      const urls = await Promise.all(
+        result.items.map(async (itemRef) => {
+          return await getDownloadURL(itemRef);
+        })
+      );
+      
+      return urls;
+    } catch (error) {
+      console.error('Error getting file URLs:', error);
+      return []; // Retorna array vacío en caso de error
+    }
+  }
+
+
+   async AgregarPago(item:PagoAdicional) : Promise<void>
+    {
+       const ref = collection(this.firestore,this.pagosAdicionalesTab);
+       const docRef = await addDoc(ref, item);
+    }
+
+ getPagos(tipo:number): Observable<any> {
+       const comprasCollection = collection(this.firestore, this.pagosAdicionalesTab);
+  
+  // Crear la consulta con el filtro por idUsuario
+  const comprasQuery = query(
+    comprasCollection, 
+    where('tipoPago', '==', tipo),
+    orderBy('fecha', 'desc')
+  );
+  
+  return collectionData(comprasQuery, { idField: 'id' });
+ }
+  
 
 } 

@@ -193,7 +193,7 @@ export const routes: Routes = [
       {
         path: 'compras',
         title: 'Compras',
-        loadComponent: () => import('./pages/shopping-tickets/shopping-admin/shopping-admin.component'),
+        loadComponent: () => import('./pages/shopping-tickets/pagos-tabs/pagos-tabs.component'),
       }
     ]
   },

@@ -30,7 +30,7 @@ import { UsersService } from '../../../services/users.service';
   selector: 'app-shopping-admin',
   standalone: true,
   imports: [CommonModule, DialogModule, FormsModule, ProveedoresComponent,
-    DropdownModule, AgregarCompraComponent, SideMenuComponent, CalendarModule, GraficaAdminComprasComponent,
+    DropdownModule, AgregarCompraComponent, CalendarModule, GraficaAdminComprasComponent,
     MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule, InputSwitchModule],
   templateUrl: './shopping-admin.component.html',
   styleUrl: './shopping-admin.component.scss'
@@ -51,6 +51,7 @@ public filtrocatStatusCompra:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'EN
 public filtrocatStatusPago:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO'}]
 public filtroCatRazonSocial:any[] = [{id:'-1',nombre:'TODO'},{id:'REBEL W1',nombre:'REBEL W1'},{id:'REBEL W2',nombre:'REBEL W2'},{id:'REBEL W3',nombre:'REBEL W3'},{id:'RW CENTRO',nombre:'RW CENTRO'}]; 
 public regcompras:AdministracionCompra[] = []; 
+public regcomprasTodo: AdministracionCompra[] = []; 
 public facturasPendientes:AdministracionCompra[] = []; 
 public itemReg:AdministracionCompra|undefined; 
 public fechaReg:Date = new Date(); 
@@ -70,6 +71,8 @@ public filtroRegion:string = '-1';
 public filtroRazonSocial:string = "-1"; 
 public filtrocatTipoCompra:any[] = [];
 public filtroArea:Area|undefined; 
+public filtroMetodoPago:string = ""; 
+public filtroSolicitante:string = ""; 
 public catareas: Area[] = []; 
 public catMetodosPago:any[] = [{id:'1',nombre:'EFECTIVO'},{id:'2',nombre:'TRANSFERENCIA'}];
 public messages:any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }]; 
@@ -114,6 +117,7 @@ constructor(
     this.shopServ.getCompras().subscribe({
       next: (data) => {
         this.regcompras = data;
+        this.regcomprasTodo = data; 
         this.mostrarGrafica(); 
         this.cdr.detectChanges();
       },
@@ -128,6 +132,7 @@ constructor(
     this.shopServ.getComprasServicio().subscribe({
       next: (data) => {
         this.regcompras = data;
+        this.regcomprasTodo = data; 
          this.mostrarGrafica(); 
         this.cdr.detectChanges();
       },
@@ -169,6 +174,7 @@ constructor(
     this.shopServ.getComprasUsuario(this.usuario.id).subscribe({
       next: (data) => {
         this.regcompras = data;
+        this.regcomprasTodo = data; 
          this.mostrarGrafica(); 
         this.cdr.detectChanges();
       },
@@ -207,9 +213,10 @@ constructor(
         let esServicio = this.usuario.id == this.idServicio ? true:false; 
         if(this.verServicio){ esServicio = true; }
         this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,
-          idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio,this.filtroRazonSocial).subscribe({
+          idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio,this.filtroRazonSocial,this.filtroMetodoPago).subscribe({
       next: (data) => {
         this.regcompras = data;
+        this.regcomprasTodo = data; 
         Swal.close();
          this.mostrarGrafica(); 
         this.cdr.detectChanges();
@@ -276,10 +283,6 @@ constructor(
 
     if (area != undefined) { nombre = area.nombre; }
     return nombre;
-  }
-
-  downloadPdfDirect(pdfUrl: string) {
-    window.open(pdfUrl, '_blank');
   }
 
   obtenerNombreEstatus(id: string): string {
@@ -460,6 +463,17 @@ mostrarGrafica()
    setTimeout(() => {
           this.verGrafica = true;
         }, 200);
+}
+
+filtrarSolicitante()
+{
+    if(this.filtroSolicitante == "")
+      {
+        this.regcompras = this.regcomprasTodo;
+      } else
+        {
+          this.regcompras = this.regcomprasTodo.filter(x => x.solicitante.toLocaleLowerCase().includes(this.filtroSolicitante.toLocaleLowerCase())); 
+        }
 }
 
 }

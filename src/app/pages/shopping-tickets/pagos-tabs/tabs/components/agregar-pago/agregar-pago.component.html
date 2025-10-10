@@ -1,0 +1,43 @@
+<p-dialog 
+    [header]="'AGREGAR '+nombretab" 
+    [modal]="true"
+    [(visible)]="visible" 
+    [style]="{ width: '70%' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"
+    (onHide)="onHide()"
+    >
+
+    <div class="p-3">
+
+        <div class="row">
+            <div class="col-6">
+                <p>SOLICITANTE</p>
+                <input class="form-control h-42" type="text" [(ngModel)]="formSolicitante"> 
+            </div>
+            <div class="col-6">
+                <p>BENEFICIARIO</p>
+                <input class="form-control h-42" type="text" [(ngModel)]="formBeneficiario">
+            </div>
+        </div>
+
+             <div class="row mt-3">
+            <div class="col-6">
+                <p>MONTO</p>
+                <input class="form-control h-42" type="number" [(ngModel)]="formMonto">
+            </div>
+            <div class="col-6">
+                <p>JUSTIFICACIÓN</p>
+                <input class="form-control h-42" type="text" [(ngModel)]="formJustificacion">
+            </div>
+        </div>
+    </div>
+
+    
+            <div class="mt-3 mb-3 d-flex justify-content-end">
+                <button class="btn bg-p-b p-3" [disabled]="formSolicitante == '' || formBeneficiario == '' || formMonto <= 0 || formJustificacion == ''"
+                (click)="guardar()">
+                    <i class='bx bx-save bx-sm'></i>&nbsp;GUARDAR</button>
+            </div>
+
+</p-dialog>

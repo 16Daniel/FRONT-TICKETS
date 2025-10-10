@@ -9,36 +9,34 @@
      >
         
      <p class="fs-5 fw-bold text-center">{{links.length}} ARCHIVO(S)</p>
-
-     <div class="d-flex justify-content-center gap-3">
-        <div class="shadow-lg p-3 rounded-5" style="min-width: 20rem;">
-
-            <div class="row">
-                <div class="col-6">  <img src="data:image/png;base64,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" alt="external-PDF-file-extension-bearicons-outline-color-bearicons"> </div>
-                <div class="col-6">
-                <p>FACTURA PDF</p>
-                <button class="btn btn-grad2" (click)="downloadPdfDirect(obtenerLinkPdf())"><i class='bx bxs-download bx-sm' ></i>&nbsp;</button>
-                </div>
-            </div>
-           
-        </div>
-
-        <div class="shadow-lg p-3 rounded-5" style="min-width: 20rem;" *ngIf="obtenerLinkXml() !=''">
-
-            
-            <div class="row">
-                <div class="col-6">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEUUlEQVR4nO2bS2/TQBDHe+qBD8Bngi+CEDEfAFUo4gAUbF+AAylSjSrUliAQ6gmJp8QJUR5V30gNbdNWFJq0Sduktnc9aOLYbFzHXie2N6EZaaTVxo/8fzuenV0nQ0MDG9jABtaB5S7lzimSdl3JaCuKpBmqpIEA31YkbTSbzQ8PpWny5Ynzamb8qyDRpxwhpCpekcYX8MZj2bz7JYz9QmQn1W2A+kHD6dGubz/r7DHoG3Pf3UhITbya0eZt8c/g1XylYwDdijcP1sGqld37CxH/uqB3BCAu8fhZKgDkFvF5V3wnAOIUnwoAOUB8VABxi08cgBwingcAre8nJj5RADKH+DAApPYH0BBCEuITAyBzig8CQGolaDGzHlk8ggsSnwiA3KXcOafIeXTjGbxaqLYVHxYB1IGgH0cWbx7uNE619KO24hMBoEjadbxgDkc+RPzLj8XGzR9em2yf8IxaR+ItatjwLAvAOE4RQEZbiVqKvnv6NrZsT+pl8DWipxYBBq9wHPkP+bdQ31uLd6rTDwEsykRALb0IUAXW9i0JD599tADxPQWAJDHPmyeB4nsGAEmoyOFx4QCIQPFCAax+moXcyKTwzRBuz2hFWXp8MTYAYyNT4kVFdOWqthULAFLddi968/NJXzj3o6KGAHCe7TMJgDCJ7cwBIJ5sf6YAEJ+pjhfA7C6BtQMKo7P/+rC9c2RB8ZC6fYUKhfUqhVvMcdjeqNLGZ04fnrPJnJc4ANJmnucFsHVk1/Tviqbbh2203zXL7XNspvDvOGw75j0uFQAkoMjhBTCxbC9rDQrwYE6He3M66M11ztQP45Sw8okFt2ft0d+rW+IAkJAKL0oOWCzZipdKFJbKzXa5NYxZw5FnR18IAAgpb6MAYEfdiYb7c3pbAKW61XDhAGhAbR91FnCee28+8ApjhbPt1AHQkIVNVADvt/gAsKEvPAkaAau6KAAw3DHsHcPHAR8LPwCY/H5W7KkP20IBkIAlbRQAy83Et8gkQWz7AWgXGakDICHreV4Ak6v2NKgTe9TZhPhkxehdABCymcEL4NexncjebPIVQrwAvBZWHXYNgHp2cngBfN4ljfkfixu2FN6tWXBo2EUP9qEAPxHefmynDoD6bGN1uxhCCHe/dHZuJx5LIWT4/DIjLQFCAFC2FqiVwKxsnvplxn8LgLaI38NXNADUBDipnA0ARkvYbwDgy0p8ZdV8NMZGplPd0BS2KWq6+/b2yDte+LbaVxAUSSuqV7QLkQCYXb60CHNvgu3EuUOb19TmBftBfKIArD4QnygA6APxfQeAxiy+rwDQBMSnAmBKnoFpdaZFTNQ+VvzknecwJb9oEdFNX+IAVJ+IiNrn94Xj7hsAiMtUjxAMYW9o8/Rh2GO4ekM27r6eTII0oYSXVhLcxgtuLa31vPj179/i/8uMImmjohcukT0zfjs2ANlsfrgJoREJPe5i/jY3sIENbOh/sb/IDWD27YYrEQAAAABJRU5ErkJggg==" alt="xml-file">
-                </div>
-                <div class="col-6">
-                <p>FACTURA XML</p>
-                 <button class="btn btn-grad" (click)="downloadPdfDirect(obtenerLinkXml())"><i class='bx bxs-download bx-sm' ></i>&nbsp;</button>
-                </div>
-            </div>
-
-        </div>
-     </div>
-    
-
      
+     <div class="d-flex justify-content-center p-3" *ngIf="loading">
+     <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+</div>
+
+     <table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of links; let i = index">
+     <td>
+         <i class='bx bxs-file-pdf bx-lg' *ngIf="esPdf(item)"></i>
+            <i class='bx bx-image bx-lg' *ngIf="!esPdf(item)"></i>
+     </td>
+      <td>{{getFileNameFromUrlManual(item)}}</td>
+      <td><button class="btn btn-warning" (click)="downloadPdfDirect(item)"><i class='bx bx-cloud-download bx-sm'></i></button></td>
+      <td>  <button class="btn btn-danger" (click)="confrimarEliminar(item,i)"><i class='bx bx-trash bx-sm' ></i></button></td>
+    </tr>
+  </tbody>
+</table>
+
 </p-dialog>
+
+
+<p-confirmDialog />
