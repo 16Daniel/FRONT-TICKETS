@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   collection,
   doc,
+  docData,
   Firestore,
   getDoc,
   getDocs,
@@ -24,7 +25,7 @@ export class BranchesService {
   constructor(private firestore: Firestore) { }
 
   async create(sucursal: Sucursal): Promise<void> {
-        const data = this.serializeSucursal(sucursal);
+    const data = this.serializeSucursal(sucursal);
 
     const documentRef = doc(this.firestore, `${this.pathName}/${sucursal.id}`);
 
@@ -35,6 +36,11 @@ export class BranchesService {
     }
 
     await setDoc(documentRef, data);
+  }
+
+  getById(id: string): Observable<Sucursal> {
+    const ticketDoc = doc(this.firestore, `${this.pathName}/${id}`);
+    return docData(ticketDoc, { idField: 'id' }) as Observable<Sucursal>;
   }
 
   async getOnce(): Promise<Sucursal[]> {

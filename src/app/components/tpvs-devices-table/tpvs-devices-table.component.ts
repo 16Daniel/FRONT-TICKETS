@@ -13,37 +13,56 @@ import { EstatusTPV } from '../../models/estatus-tpv';
   templateUrl: './tpvs-devices-table.component.html',
   styleUrl: './tpvs-devices-table.component.scss'
 })
-export class TpvsDevicesTableComponent {
+export class TpvsDevicesTableComponent implements OnInit {
   @Input() sucursal!: Sucursal;
+
   estatus: EstatusTPV[] = [];
   isLoading: boolean = true;
 
+  tabletasFaltantes: number[] = [];
+  tpvsFaltantes: number[] = [];
+
   constructor(
     private estatusService: StatusTpvsDevicesService,
-    private cdr: ChangeDetectorRef) {
-    this.estatusService.estatus$.subscribe(estatus => {
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  ngOnInit(): void {
+    // Suscripción al servicio
+    this.estatusService.estatus$.subscribe((estatus) => {
       this.estatus = estatus;
       this.isLoading = false;
+      this.actualizarFaltantes();
       this.cdr.detectChanges();
-    })
+    });
   }
 
-  crearArray(cantidad: number = 0): number[] {
-    return Array.from({ length: cantidad }, (_, i) => i);
+  private actualizarFaltantes(): void {
+    const faltantesTabletas = Math.max(
+      (this.sucursal.tabletasRequeridas || 0) - (this.sucursal.tabletas?.length || 0),
+      0
+    );
+
+    const faltantesTpvs = Math.max(
+      (this.sucursal.tpvsRequeridos || 0) - (this.sucursal.tpvs?.length || 0),
+      0
+    );
+
+    this.tabletasFaltantes = Array.from({ length: faltantesTabletas }, (_, i) => i);
+    this.tpvsFaltantes = Array.from({ length: faltantesTpvs }, (_, i) => i);
   }
 
   getColorEstatus(idEstatus: string): string {
-    const estatus = this.estatus.find(e => e.id === idEstatus);
+    const estatus = this.estatus.find((e) => e.id === idEstatus);
     return estatus ? estatus.color : '#ffffff';
   }
 
   getNombreEstatus(idEstatus: string): string {
-    const estatus = this.estatus.find(e => e.id === idEstatus);
+    const estatus = this.estatus.find((e) => e.id === idEstatus);
     return estatus ? estatus.nombre : '...';
   }
 
-  verDetallesDispositivo(id: string) {
+  verDetallesDispositivo(id: string): void {
     console.log('ID del dispositivo:', id);
   }
-
 }

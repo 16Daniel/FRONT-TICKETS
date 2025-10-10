@@ -19,6 +19,7 @@ import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { ModalBranchRatingComponent } from '../../dialogs/modal-branch-rating/modal-branch-rating.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -35,7 +36,8 @@ import { ModalBranchRatingComponent } from '../../dialogs/modal-branch-rating/mo
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
     PriorityTicketsAccordionComponent,
-    ModalBranchRatingComponent
+    ModalBranchRatingComponent,
+    FormsModule
   ],
   templateUrl: './branches-sys-tab.component.html',
   styleUrl: './branches-sys-tab.component.scss',
@@ -53,6 +55,7 @@ export class BranchesSysTabComponent {
   mostrarModal10x10: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalRating: boolean = false;
+  mostrarTPVs: boolean = false;
 
   sucursal: Sucursal | undefined;
   mantenimientoActivo: Mantenimiento10x10 | null = null;
