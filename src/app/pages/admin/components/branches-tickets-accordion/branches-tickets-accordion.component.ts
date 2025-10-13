@@ -37,12 +37,12 @@ export class BranchesTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
+  @Input() mostrarTpvs: boolean = false;
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
-  mostrarTPVs: boolean = false;
   mostrarTPVsMap: { [idSucursal: string]: boolean } = {};
 
   constructor(private cdr: ChangeDetectorRef) {

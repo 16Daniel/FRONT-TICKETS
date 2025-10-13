@@ -5,11 +5,13 @@ import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.service';
 import { EstatusTPV } from '../../models/estatus-tpv';
+import { ModalColorEstatusDispositivoTpvComponent } from '../../modals/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
+import { DispositivoTPV } from '../../models/dispositivo-tpv';
 
 @Component({
   selector: 'app-tpvs-devices-table',
   standalone: true,
-  imports: [CommonModule, TableModule, TooltipModule],
+  imports: [CommonModule, TableModule, TooltipModule, ModalColorEstatusDispositivoTpvComponent],
   templateUrl: './tpvs-devices-table.component.html',
   styleUrl: './tpvs-devices-table.component.scss'
 })
@@ -18,6 +20,7 @@ export class TpvsDevicesTableComponent implements OnInit {
 
   estatus: EstatusTPV[] = [];
   isLoading: boolean = true;
+  mostrarModaalEstatus: boolean = false;
 
   tabletasFaltantes: number[] = [];
   tpvsFaltantes: number[] = [];
@@ -62,7 +65,8 @@ export class TpvsDevicesTableComponent implements OnInit {
     return estatus ? estatus.nombre : '...';
   }
 
-  verDetallesDispositivo(id: string): void {
-    console.log('ID del dispositivo:', id);
+  verDetallesDispositivo(dispositivo: DispositivoTPV): void {
+    console.log('Ddispositivo:', dispositivo);
+    this.mostrarModaalEstatus = true;
   }
 }
