@@ -13,7 +13,7 @@
             <td *ngFor="let tablet of sucursal.tabletas" style="padding: 0.5rem;"
                 [style.backgroundColor]="getColorEstatus(tablet.estatus)">
                 <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tablet.estatus)"
-                    tooltipPosition="top" (click)="verDetallesDispositivo(tablet)">
+                    tooltipPosition="top" (click)="verDetallesDispositivo(tablet, 'TABLETA')">
                     📱
                 </span>
             </td>
@@ -41,7 +41,7 @@
             <td *ngFor="let tpv of sucursal.tpvs" style="padding: 0.5rem;"
                 [style.backgroundColor]="getColorEstatus(tpv.estatus)">
                 <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tpv.estatus)"
-                    tooltipPosition="top" (click)="verDetallesDispositivo(tpv)">
+                    tooltipPosition="top" (click)="verDetallesDispositivo(tpv, 'TPV')">
                     💻
                 </span>
             </td>
@@ -55,4 +55,5 @@
 </table>
 
 <app-modal-color-estatus-dispositivo-tpv *ngIf="mostrarModaalEstatus" [mostrarModal]="mostrarModaalEstatus"
-    (closeEvent)="mostrarModaalEstatus = false"></app-modal-color-estatus-dispositivo-tpv>
+    (closeEvent)="mostrarModaalEstatus = false" [sucursal]="sucursal"
+    [dispositivo]="dispositivoSeleccionado" [tipo]="tipo"></app-modal-color-estatus-dispositivo-tpv>

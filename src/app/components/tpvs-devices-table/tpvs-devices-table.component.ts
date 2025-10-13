@@ -7,6 +7,7 @@ import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.ser
 import { EstatusTPV } from '../../models/estatus-tpv';
 import { ModalColorEstatusDispositivoTpvComponent } from '../../modals/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
 import { DispositivoTPV } from '../../models/dispositivo-tpv';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-tpvs-devices-table',
@@ -17,13 +18,15 @@ import { DispositivoTPV } from '../../models/dispositivo-tpv';
 })
 export class TpvsDevicesTableComponent implements OnInit {
   @Input() sucursal!: Sucursal;
+  dispositivoSeleccionado!: DispositivoTPV;
 
   estatus: EstatusTPV[] = [];
   isLoading: boolean = true;
   mostrarModaalEstatus: boolean = false;
-
+  tipo!: string;
   tabletasFaltantes: number[] = [];
   tpvsFaltantes: number[] = [];
+  usuario!: Usuario;
 
   constructor(
     private estatusService: StatusTpvsDevicesService,
@@ -38,6 +41,8 @@ export class TpvsDevicesTableComponent implements OnInit {
       this.actualizarFaltantes();
       this.cdr.detectChanges();
     });
+
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   private actualizarFaltantes(): void {
@@ -65,8 +70,13 @@ export class TpvsDevicesTableComponent implements OnInit {
     return estatus ? estatus.nombre : '...';
   }
 
-  verDetallesDispositivo(dispositivo: DispositivoTPV): void {
-    console.log('Ddispositivo:', dispositivo);
-    this.mostrarModaalEstatus = true;
+  verDetallesDispositivo(dispositivo: DispositivoTPV, tipo: string): void {
+    if (this.usuario.idRol == '1' || this.usuario.idRol == '5') {
+      console.log('Ddispositivo:', dispositivo);
+      this.mostrarModaalEstatus = true;
+      this.dispositivoSeleccionado = dispositivo;
+      this.tipo = tipo;
+    }
+    else return;
   }
 }
