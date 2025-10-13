@@ -56,3 +56,22 @@ export interface Proveedor {
   idUsuario:string; 
   idArea:string|null; 
 }
+
+export interface PagoAdicional {
+  id?: string; // Opcional porque Firestore lo genera automáticamente
+  solicitante:string; 
+  beneficiario:string; 
+  monto:number; 
+  justificacion:string; 
+  documentos:string;
+  status:string; 
+  fecha:Timestamp; 
+  idUsuario:string; 
+  idArea:string;
+  comentarios: Comentario[];
+  solicitudCancelacion:boolean; 
+  participantesChat: ParticipanteChat[];
+  tipoPago:number; 
+}
+
+

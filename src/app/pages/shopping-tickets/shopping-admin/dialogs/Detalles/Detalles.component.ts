@@ -13,10 +13,11 @@ import Swal from 'sweetalert2';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Usuario } from '../../../../../models/usuario.model';
 import { Sucursal } from '../../../../../models/sucursal.model';
+import { SubirdocumentoComponent } from "../Subir-doumento/Subir-documento.component";
 @Component({
   selector: 'app-detalles',
   standalone: true,
-  imports: [CommonModule, DialogModule,ToastModule,FormsModule,TableModule,CalendarModule,ConfirmDialogModule,],
+  imports: [CommonModule, DialogModule, ToastModule, FormsModule, TableModule, CalendarModule, ConfirmDialogModule, SubirdocumentoComponent],
   providers:[MessageService,ConfirmationService],
   templateUrl: './Detalles.component.html',
 })
@@ -39,7 +40,8 @@ public formMetodoPago:string ='';
 public loading:boolean = false; 
 public usuario:Usuario;
 
-
+public modalFactura:boolean = false; 
+public tipoDoc:number = 1; 
 constructor(
    private messageService: MessageService,
    private shopserv: ShoppingService,
@@ -214,7 +216,6 @@ obtenerTotalCompras(articulos:ArticuloCompra[]):number
 
 obtenerProveedor(idProveedor:string|null):Proveedor[]
 {
-  debugger
   let data:Proveedor[] = [];
   if(idProveedor)
     {
@@ -222,4 +223,12 @@ obtenerProveedor(idProveedor:string|null):Proveedor[]
     }
   return data; 
 }
+
+abrirModalDocumento(item:AdministracionCompra,tipoDoc:number)
+{
+  this.itemReg = item; 
+  this.modalFactura = true;
+  this.tipoDoc = tipoDoc; 
+}
+
 }

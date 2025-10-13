@@ -1,9 +1,5 @@
-<app-side-menu />
-<div class="pt-5 mt-5">
-<h4 class="text-center">
-     REQUISICIONES DE COMPRA
-</h4>
 
+<div >
 <div class="ps-3 d-flex justify-content-start gap-3 align-items-center">
     <div *ngIf="facturasPendientes.length == 0"> <button class="btn bg-p-b p-2" (click)="abrirModal()">
     <i class='bx bx-plus-circle bx-sm'></i>&nbsp;AGREGAR
@@ -18,7 +14,7 @@
 </div>
 </div>
 
-<div class="row m-3">
+<div class="row m-3 gap-2 p-3" style="background-color: rgb(211, 218, 223);">
 
 <div class="col-auto">
     <p>FECHA INICIO</p>
@@ -127,6 +123,15 @@
     />
 </div>
 
+<div class="col-auto">
+         <p>MÉTODO DE PAGO</p>
+         <select class="form-select h-42" [(ngModel)]="filtroMetodoPago">
+            <option value="">TODO</option>
+         <option *ngFor="let item of catMetodosPago" [value]="item.id">{{item.nombre}}</option>
+           </select>
+</div>
+
+
  <div class="col-auto"> <p>&nbsp;</p> <button class="btn btn-warning p-2" (click)="obtenerComprasFiltro()">
     <i class='bx bx-search bx-sm'></i>&nbsp;BUSCAR
 </button>
@@ -135,6 +140,12 @@
  <div class="col-auto"><p>&nbsp;</p>
         <button class="btn btn-success" [disabled]="regcompras.length == 0" (click)="exportToExcel(regcompras)"><img width="26" height="26" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
 </div>
+
+<div class="col-auto">
+         <p>SOLICITANTE</p>
+         <input type="text" class="form-control h-42" [(ngModel)]="filtroSolicitante" (ngModelChange)="filtrarSolicitante()">
+</div>
+
 
 </div>
 

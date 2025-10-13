@@ -1,0 +1,12 @@
+ <div> 
+    <button class="btn bg-p-b p-2" (click)="abrirModalAgregar()">
+    <i class='bx bx-plus-circle bx-sm'></i>&nbsp;AGREGAR
+</button>
+</div>
+
+
+<div class="m-3">
+ <app-admin-pagos-adicionales-table [data]="data" [tipoPago]="4"></app-admin-pagos-adicionales-table>
+</div>
+
+<app-agregar-pago *ngIf="modalAgregar" (closeEvent)="modalAgregar = false" [visible]="modalAgregar" [tipoPago]="4"></app-agregar-pago>
