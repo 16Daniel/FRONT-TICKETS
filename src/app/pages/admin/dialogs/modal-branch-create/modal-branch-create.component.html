@@ -3,9 +3,9 @@
     <form #form="ngForm" (ngSubmit)="enviar(form)">
 
         <p class="fw-bold">ID</p>
-        <input [disabled]="true" class="form-control" style="height: 48px;" type="text"
-            placeholder="ESCRIBE EL ID" [(ngModel)]="sucursal.id" name="id"
-            [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}" #formidCtrl="ngModel" required>
+        <input [disabled]="true" class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL ID"
+            [(ngModel)]="sucursal.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
+            #formidCtrl="ngModel" required>
         <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error">
             Campo requerido.
         </small>
@@ -21,28 +21,65 @@
         </small>
         <p></p>
 
-         <p class="fw-bold">ID FRONT</p>
+        <p class="fw-bold">ID FRONT</p>
         <input class="form-control" style="height: 48px;" type="number" placeholder="INGRESE EL ID FRONT"
             [(ngModel)]="sucursal.idFront" name="idfront"
-            [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formIdfCtrl="ngModel"
-            required>
+            [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formIdfCtrl="ngModel" required>
         <small *ngIf="formIdfCtrl.invalid && formIdfCtrl.touched" class="p-error">
             Campo requerido.
         </small>
         <p></p>
 
-          <p class="fw-bold">CLA UBICACIÓN</p>
-        <input class="form-control" style="height: 48px;" type="number" placeholder="INGRESE EL ID DE UBICACIÓN EN FORTIA"
-            [(ngModel)]="sucursal.claUbicacion" name="claubicacion">
+        <p class="fw-bold">CLA UBICACIÓN</p>
+        <input class="form-control" style="height: 48px;" type="number"
+            placeholder="INGRESE EL ID DE UBICACIÓN EN FORTIA" [(ngModel)]="sucursal.claUbicacion" name="claubicacion">
         <p></p>
-  
-  
-        <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="usuario.idRol == '5' || usuario.idRol == '1'">
+
+        <div class="row mt-3">
+            <div class="col-md-6 col-12">
+                <p class="fw-bold">TABLETAS REQUERIDAS</p>
+                <p-inputNumber [(ngModel)]="sucursal.tabletasRequeridas" name="tabletasRequeridas" mode="decimal"
+                    [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+                    decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+                    class="contador-gris"></p-inputNumber>
+            </div>
+            <div class="col-md-6 col-12">
+                <p class="fw-bold">CANTIDAD DE TABLETAS</p>
+                <p-inputNumber [(ngModel)]="cantidadTabletas" (ngModelChange)="onTabletasChange($event)"
+                    name="cantidadTabletas" mode="decimal" [showButtons]="true" buttonLayout="horizontal"
+                    incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="0"
+                    [inputStyle]="{ width: '100%', height: '48px' }" class="contador-gris"
+                    [max]="sucursal.tabletasRequeridas">
+                </p-inputNumber>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6 col-12">
+                <p class="fw-bold">PUNTOS DE VENTA REQUERIDOS</p>
+                <p-inputNumber [(ngModel)]="sucursal.tpvsRequeridos" name="tpvsRequeridos" mode="decimal"
+                    [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+                    decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+                    class="contador-gris"></p-inputNumber>
+            </div>
+            <div class="col-md-6 col-12">
+                <p class="fw-bold">CANTIDAD DE PUNTOS DE VENTA</p>
+                <p-inputNumber [(ngModel)]="cantidadTPVs" (ngModelChange)="onTPVsChange($event)" name="cantidadTPVs"
+                    mode="decimal" [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+                    decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+                    class="contador-gris" [max]="sucursal.tpvsRequeridos">
+                </p-inputNumber>
+            </div>
+        </div>
+
+        <div class="form-check form-switch d-flex align-items-center gap-3 mt-3"
+            *ngIf="usuario.idRol == '5' || usuario.idRol == '1'">
             <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
                 style="width: 3rem; height: 2rem;" name="activoMantenimientos"
                 [checked]="esMantenimientoActivo(sucursal)" (change)="toggleMantenimiento(sucursal)">
             <label class="form-check-label fs-4" for="flexSwitchCheckChecked">¿ACTIVAR MANTENIMIENTOS?</label>
         </div>
+
 
         <div class="d-flex justify-content-end mt-3">
             <button class="btn bg-p-b p-3">

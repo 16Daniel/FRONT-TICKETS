@@ -1,0 +1,59 @@
+<!-- TABLA TABLETAS -->
+<table class="w-100 text-center mb-3" style="border-collapse: collapse;" *ngIf="!isLoading">
+    <thead>
+        <tr>
+            <th [attr.colspan]="sucursal.tabletasRequeridas" style="padding: 0.5rem; font-size: 1.2rem;">
+                📱 Tabletas ({{ sucursal.tabletas?.length || 0 }}/{{ sucursal.tabletasRequeridas || 0 }})
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <!-- Tabletas existentes -->
+            <td *ngFor="let tablet of sucursal.tabletas" style="padding: 0.5rem;"
+                [style.backgroundColor]="getColorEstatus(tablet.estatus)">
+                <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tablet.estatus)"
+                    tooltipPosition="top" (click)="verDetallesDispositivo(tablet, 'TABLETA')">
+                    📱
+                </span>
+            </td>
+
+            <!-- Relleno con ❌ -->
+            <td *ngFor="let j of tabletasFaltantes" style="padding: 0.5rem;">
+                <span style="font-size: 2.5rem;">❌</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- TABLA TPVs -->
+<table class="w-100 text-center mb-3" style="border-collapse: collapse;" *ngIf="!isLoading">
+    <thead>
+        <tr>
+            <th [attr.colspan]="sucursal.tpvsRequeridos" style="padding: 0.5rem; font-size: 1.2rem;">
+                💻 Puntos de venta ({{ sucursal.tpvs?.length || 0 }}/{{ sucursal.tpvsRequeridos || 0 }})
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <!-- TPVs existentes -->
+            <td *ngFor="let tpv of sucursal.tpvs" style="padding: 0.5rem;"
+                [style.backgroundColor]="getColorEstatus(tpv.estatus)">
+                <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tpv.estatus)"
+                    tooltipPosition="top" (click)="verDetallesDispositivo(tpv, 'TPV')">
+                    💻
+                </span>
+            </td>
+
+            <!-- Relleno con ❌ -->
+            <td *ngFor="let j of tpvsFaltantes" style="padding: 0.5rem;">
+                <span style="font-size: 2.5rem;">❌</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<app-modal-color-estatus-dispositivo-tpv *ngIf="mostrarModaalEstatus" [mostrarModal]="mostrarModaalEstatus"
+    (closeEvent)="mostrarModaalEstatus = false" [sucursal]="sucursal"
+    [dispositivo]="dispositivoSeleccionado" [tipo]="tipo"></app-modal-color-estatus-dispositivo-tpv>

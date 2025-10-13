@@ -1,0 +1,48 @@
+<p-dialog header="ESTATUS DISPOSITIVO" [modal]="true" [(visible)]="mostrarModal"
+    [style]="{ 'width': '50vw', 'height': '50vh' }" [maximizable]="true" (onHide)="onHide()">
+
+    <div class="p-fluid">
+
+        <div class="mb-3">
+            <label class="fw-bold mb-2 d-block">Seleccionar estatus TPV</label>
+
+            <p-dropdown [options]="estatusTPVList" [(ngModel)]="estatusSeleccionado" optionLabel="nombre"
+                [showClear]="true" placeholder="Seleccione un estatus" class="w-full">
+
+                <!-- Template para mostrar color y nombre -->
+                <ng-template pTemplate="item" let-estatus>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="rounded-circle" [ngStyle]="{
+                'display': 'inline-block',
+                'width': '1rem',
+                'height': '1rem',
+                'background-color': estatus.color
+              }">
+                        </span>
+                        <span>{{ estatus.nombre }}</span>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="selectedItem" let-estatus>
+                    <div class="d-flex align-items-center gap-2" *ngIf="estatus">
+                        <span class="rounded-circle" [ngStyle]="{
+                'display': 'inline-block',
+                'width': '1rem',
+                'height': '1rem',
+                'background-color': estatus.color
+              }">
+                        </span>
+                        <span>{{ estatus.nombre }}</span>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+
+        <div class="mt-4 text-end">
+            <p-button label="GUARDAR" icon="pi pi-check" styleClass="p-button-sm p-button-primary"
+                (click)="guardarEstatus()">
+            </p-button>
+        </div>
+
+    </div>
+</p-dialog>

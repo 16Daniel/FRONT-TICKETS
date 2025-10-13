@@ -5,7 +5,9 @@ import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 import { RequesterTicketsListComponent } from '../../../../components/requester-tickets-list/requester-tickets-list.component';
-
+import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { BranchesService } from '../../../../services/branches.service';
 
 @Component({
   selector: 'app-priority-tickets-accordion',
@@ -15,7 +17,8 @@ import { RequesterTicketsListComponent } from '../../../../components/requester-
     AccordionModule,
     BadgeModule,
     CommonModule,
-    TooltipModule
+    TooltipModule,
+    TpvsDevicesTableComponent
   ],
   templateUrl: './priority-tickets-accordion.component.html',
   styleUrl: './priority-tickets-accordion.component.scss',
@@ -23,15 +26,20 @@ import { RequesterTicketsListComponent } from '../../../../components/requester-
 export class PriorityTicketsAccordionComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() esEspectadorActivo: boolean = false;
-  
+  @Input() mostrarTpvs: boolean = false;
+  sucursal: Sucursal = new Sucursal;
+  userdata: any;
+
   @Output() clickEvent = new EventEmitter<Ticket>();
+
+  constructor(private branchesService: BranchesService) {
+
+  }
 
   ngOnInit(): void {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.branchesService.getById(this.userdata.sucursales[0].id).subscribe(sucursal => this.sucursal = sucursal);
   }
-
-  // activeIndex: number | null = null;
-  userdata: any;
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.clickEvent.emit(ticket);

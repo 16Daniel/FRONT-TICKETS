@@ -1,0 +1,15 @@
+::ng-deep .contador-gris .p-inputnumber-button {
+    background-color: #e0e0e0 !important;
+    border-color: #c5c5c5 !important;
+    color: #333 !important;
+}
+
+::ng-deep .contador-gris .p-inputnumber-button:hover {
+    background-color: #bdbdbd !important;
+}
+
+::ng-deep .contador-gris .p-inputtext {
+    text-align: center;
+    border: 1px solid #c5c5c5 !important;
+    height: 48px;
+}

@@ -13,6 +13,7 @@ import { Ticket } from '../../../../models/ticket.model';
 import { Sucursal } from '../../../../models/sucursal.model';
 import { Area } from '../../../../models/area.model';
 import { Usuario } from '../../../../models/usuario.model';
+import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-branches-tickets-accordion',
@@ -25,7 +26,8 @@ import { Usuario } from '../../../../models/usuario.model';
     BadgeModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TooltipModule
+    TooltipModule,
+    TpvsDevicesTableComponent
   ],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
@@ -35,25 +37,28 @@ export class BranchesTicketsAccordionComponent {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
+  @Input() mostrarTpvs: boolean = false;
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
+  mostrarTPVsMap: { [idSucursal: string]: boolean } = {};
 
   constructor(private cdr: ChangeDetectorRef) {
-    
-   }
+
+  }
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.sucursales.forEach(s => this.mostrarTPVsMap[s.id] = false);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-  if (changes['sucursales']) {
-    this.sucursales = this.ordenarSucursales();
+    if (changes['sucursales']) {
+      this.sucursales = this.ordenarSucursales();
+    }
   }
-}
 
   ordenarSucursales(): Sucursal[] {
     return this.sucursales.sort((a, b) => {
