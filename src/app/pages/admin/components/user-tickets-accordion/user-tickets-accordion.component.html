@@ -16,18 +16,21 @@
 
                 <span class="icon-circle bx-tada"
                     *ngIf="verificarTicketsPendientesValidar(filtrarTicketsPorSucursal(item.id))">
-                    <i class="pi pi-check" style="font-size: 1.5rem; color: #7C3AED;" pTooltip="PENDIENTE VALIDAR" tooltipPosition="top"></i>
+                    <i class="pi pi-check" style="font-size: 1.5rem; color: #7C3AED;" pTooltip="PENDIENTE VALIDAR"
+                        tooltipPosition="top"></i>
                 </span>
 
                 <div class="d-flex justify-content-center gap-3">
                     <span class="icon-circle bx-tada"
                         *ngIf="verificarTicketsNuevos(filtrarTicketsPorSucursal(item.id))">
                         <!-- <i class="pi pi-headphones" pTooltip="NUEVO TICKET" tooltipPosition="top"></i> -->
-                        <i class="fas fa-headset" style="font-size: 1.5rem; color: #FF0000;" pTooltip="NUEVO TICKET" tooltipPosition="top"></i>
+                        <i class="fas fa-headset" style="font-size: 1.5rem; color: #FF0000;" pTooltip="NUEVO TICKET"
+                            tooltipPosition="top"></i>
                     </span>
 
                     <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(filtrarTicketsPorSucursal(item.id))">
-                        <i class="pi pi-comments" style="font-size: 1.5rem; color: #0F99E4;" pTooltip="NUEVO CHAT" tooltipPosition="top"></i>
+                        <i class="pi pi-comments" style="font-size: 1.5rem; color: #0F99E4;" pTooltip="NUEVO CHAT"
+                            tooltipPosition="top"></i>
                     </span>
 
                 </div>
@@ -36,7 +39,17 @@
 
         </ng-template>
 
-        <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)"
-            [idArea]="idArea"></app-admin-tickets-list>
+        <div class="form-check form-switch d-flex align-items-center gap-2">
+            <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
+                [(ngModel)]="mostrarTPVsMap[item.id]">
+            <label class="form-check-label fs-6">MOSTRAR TPVs</label>
+
+        </div>
+        <br>
+
+        <app-tpvs-devices-table *ngIf="mostrarTPVsMap[item.id]" [sucursal]="obtenerSucursal(item.id)!"></app-tpvs-devices-table>
+
+        <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" [idArea]="idArea"
+            *ngIf="!mostrarTPVsMap[item.id]"></app-admin-tickets-list>
     </p-accordionTab>
 </p-accordion>
