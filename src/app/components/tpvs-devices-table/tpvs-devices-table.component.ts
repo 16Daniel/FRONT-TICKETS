@@ -34,7 +34,6 @@ export class TpvsDevicesTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Suscripción al servicio
     this.estatusService.estatus$.subscribe((estatus) => {
       this.estatus = estatus;
       this.isLoading = false;
