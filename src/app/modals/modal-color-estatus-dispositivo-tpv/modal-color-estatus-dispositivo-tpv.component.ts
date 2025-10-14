@@ -69,8 +69,6 @@ export class ModalColorEstatusDispositivoTpvComponent implements OnInit {
 
     this.branchesServices.update(this.sucursal, this.sucursal.id);
 
-    console.log(this.estatusSeleccionado);
-    console.log(this.sucursal);
     this.closeEvent.emit(false);
   }
 

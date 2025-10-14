@@ -129,8 +129,6 @@ export class ModalBranchCreateComponent implements OnInit {
     while (this.sucursal.tabletas.length > cantidad) {
       this.sucursal.tabletas.pop();
     }
-
-    console.log(this.sucursal)
   }
 
   onTPVsChange(cantidad: number) {
@@ -140,8 +138,6 @@ export class ModalBranchCreateComponent implements OnInit {
     while (this.sucursal.tpvs.length > cantidad) {
       this.sucursal.tpvs.pop();
     }
-
-    console.log(this.sucursal)
   }
 
 }
