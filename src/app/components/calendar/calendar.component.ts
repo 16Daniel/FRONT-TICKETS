@@ -77,6 +77,7 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerColores();
     this.obtenerSucursales();
+    console.log()
   }
 
   ngOnChanges(changes: SimpleChanges): void {
