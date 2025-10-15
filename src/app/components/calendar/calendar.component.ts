@@ -35,7 +35,7 @@ export class CalendarComponent implements OnInit {
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idUsuarioFiltro: string = '';
   @Input() tickets: Ticket[] = [];
-  @Input() idArea: string = '';
+  @Input() idArea: any = '';
   sucursales: Sucursal[] = [];
 
   comentario: string = '';
@@ -77,7 +77,6 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerColores();
     this.obtenerSucursales();
-    console.log()
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -124,12 +123,9 @@ export class CalendarComponent implements OnInit {
       }
     });
 
-    let idArea = this.usuario.idRol == '1' ? undefined : this.usuario.idArea;
-    if (this.idArea) idArea = this.idArea;
+    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, this.idArea);
 
-    let visitas = await this.visitasService.obtenerVisitaFechas(fechaIni, fechaFin, idArea);
-
-    let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, idArea);
+    let guardias = await this.guardiasService.obtenerGuardiasFechas(fechaIni, fechaFin, this.idArea);
     let calendarApi = this.calendarComponent!.getApi();
 
     if (this.idUsuarioFiltro) {
