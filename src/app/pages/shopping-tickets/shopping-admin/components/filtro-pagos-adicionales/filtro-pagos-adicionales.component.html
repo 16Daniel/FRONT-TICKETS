@@ -1,0 +1,58 @@
+<div class="row m-3 gap-2 p-3" style="background-color: rgb(211, 218, 223);">
+    <div class="col-auto">
+    <p>FECHA INICIO</p>
+    <p-calendar 
+    [(ngModel)]="filtroFechaIni" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay" 
+     dateFormat="dd/mm/yy"
+     [style]="{width:'100%'}"
+      [showButtonBar]="true"
+        [touchUI]="true" />
+</div>
+<div class="col-auto">
+    <p>FECHA FIN</p>
+    <p-calendar 
+    [(ngModel)]="filtroFechaFin" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay" 
+     dateFormat="dd/mm/yy"
+     [style]="{width:'100%'}"
+      [showButtonBar]="true"
+        [touchUI]="true" />
+</div>
+
+<div class="col-auto">
+                <p>ESTATUS</p>
+                <select class="form-select h-42" [(ngModel)]="filtroEstatus">
+                <option value="">TODO</option>
+                <option value="0">CANCELADO</option>
+                <option value="1">POR PAGAR</option>
+                <option value="2">PAGADO</option>
+              </select>
+</div>
+
+ <div class="col-auto"> <p>&nbsp;</p> <button class="btn btn-warning p-2" (click)="filtrar()">
+    <i class='bx bx-search bx-sm'></i>&nbsp;BUSCAR
+</button>
+</div>
+
+ <div class="col-auto"><p>&nbsp;</p>
+        <button class="btn btn-success" [disabled]="dataPagos.length == 0" (click)="exportToExcel(dataPagos)"><img width="26" height="26" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
+</div>
+
+
+<div class="col-auto">
+         <p>SOLICITANTE</p>
+         <input type="text" class="form-control h-42" [(ngModel)]="filtroSolicitante" (ngModelChange)="filtrarSolicitante()">
+</div>
+
+
+<div class="col-auto">
+         <p>BENEFICIARIO</p>
+         <input type="text" class="form-control h-42" [(ngModel)]="filtroBeneficiario" (ngModelChange)="filtrarBeneficiario()">
+</div>
+
+</div>

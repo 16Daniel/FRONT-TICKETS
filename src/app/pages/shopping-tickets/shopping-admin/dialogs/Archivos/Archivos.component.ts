@@ -6,7 +6,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ShoppingService } from '../../../../../services/shopping.service';
-import { AdministracionCompra } from '../../../../../models/AdministracionCompra';
+import { AdministracionCompra, PagoAdicional } from '../../../../../models/AdministracionCompra';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-archivos',
@@ -19,7 +19,7 @@ import Swal from 'sweetalert2';
 export class ArchivosComponent implements OnInit {
 @Input() visible:boolean = false;
 @Input() docs:string = ""; 
-@Input() itemReg:AdministracionCompra|undefined; 
+@Input() itemReg:AdministracionCompra|PagoAdicional|undefined; 
 @Input() tipoDoc:number=0; 
 @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -71,6 +71,11 @@ getFileNameFromUrlManual(fileUrl: string): string {
 esPdf(nombre:string):boolean
 {
   return nombre.toLowerCase().includes(".pdf"); 
+} 
+
+esExcel(nombre:string):boolean
+{
+  return nombre.toLowerCase().includes(".xlsx"); 
 }
 
 confrimarEliminar(url:string,index:number)
@@ -100,13 +105,19 @@ confrimarEliminar(url:string,index:number)
         let jdata = JSON.stringify(this.links); 
         if(this.links.length == 0){ jdata = ""; cerrarModal = true;}
 
-        if(this.tipoDoc == 1)
+      if('tipoPago' in this.itemReg!)
+        {
+          this.itemReg!.documentos = jdata; 
+        } else
           {
-            this.itemReg!.factura = jdata; 
-          }else
-            {
-                 this.itemReg!.comprobantePago = jdata;  
-            }
+              if(this.tipoDoc == 1)
+              {
+                this.itemReg!.factura = jdata; 
+              }else
+                {
+                    this.itemReg!.comprobantePago = jdata;  
+                }
+          }
 
         this.updateDoc(cerrarModal);
       },
@@ -121,7 +132,13 @@ confrimarEliminar(url:string,index:number)
 
 async updateDoc(cerrar:boolean)
 {
-  await this.shopServ.updateCompra(this.itemReg); 
+    if('tipoPago' in this.itemReg!)
+      {
+            await this.shopServ.updatePagoAdicional(this.itemReg); 
+      } else
+        {
+            await this.shopServ.updateCompra(this.itemReg); 
+        }
   this.loading = false; 
    this.cdr.detectChanges();
    if(cerrar)

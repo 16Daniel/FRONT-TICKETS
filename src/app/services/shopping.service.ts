@@ -203,13 +203,21 @@ async uploadFile(file: File,fecha:Date, path: string,id:string): Promise<string>
     const documentRef = doc(this.firestore, `${this.comprastab}/${docId}`);
     return updateDoc(documentRef, data);
   }
-    
+  
+  async updatePagoAdicional(data:any): Promise<void> {
+    let docId = data.id;
+    const documentRef = doc(this.firestore, `${this.pagosAdicionalesTab}/${docId}`);
+    return updateDoc(documentRef, data);
+  }
+
 updateLastCommentRead(
     ticketId: string,
     idUsuario: string,
-    ultimoComentarioLeido: number
+    ultimoComentarioLeido: number,
+    tipo:number
   ) {
-    const ticketRef = doc(this.firestore, `${this.comprastab}/${ticketId}`);
+    let coleccion = tipo == 1 ? this.comprastab : this.pagosAdicionalesTab; 
+    const ticketRef = doc(this.firestore, `${coleccion}/${ticketId}`);
 
     // Actualizar el índice del último comentario leído para un participante
     return updateDoc(ticketRef, {
@@ -219,7 +227,6 @@ updateLastCommentRead(
       }),
     });
   }
-
 
   obtenerComprasFacturaPendiente(idUsuario:string): Observable<AdministracionCompra[]> {
     const comprasCollection = collection(this.firestore, this.comprastab);
@@ -277,11 +284,82 @@ updateLastCommentRead(
   const comprasQuery = query(
     comprasCollection, 
     where('tipoPago', '==', tipo),
+    where('status', '==', '1'),
     orderBy('fecha', 'desc')
   );
   
   return collectionData(comprasQuery, { idField: 'id' });
  }
+
+ getPagosUsuario(tipo:number,idusuario:string): Observable<any> {
+       const comprasCollection = collection(this.firestore, this.pagosAdicionalesTab);
   
+  // Crear la consulta con el filtro por idUsuario
+  const comprasQuery = query(
+    comprasCollection, 
+    where('tipoPago', '==', tipo),
+    where('status', '==', '1'),
+    where('idUsuario','==',idusuario),
+    orderBy('fecha', 'desc')
+  );
+  
+  return collectionData(comprasQuery, { idField: 'id' });
+ }
+ 
+  getPagosArea(tipo:number,idarea:string): Observable<any> {
+       const comprasCollection = collection(this.firestore, this.pagosAdicionalesTab);
+  
+  // Crear la consulta con el filtro por idUsuario
+  const comprasQuery = query(
+    comprasCollection, 
+    where('tipoPago', '==', tipo),
+    where('status', '==', '1'),
+    where('idArea', '==',idarea),
+    orderBy('fecha', 'desc')
+  );
+  
+  return collectionData(comprasQuery, { idField: 'id' });
+ }
+
+getPagosfiltro(
+  tipopago:number,
+  fechaini: Date | undefined, 
+  fechaFin: Date | undefined, 
+  statuspago: string,
+  idUsuario: string,
+  idArea:string
+): Observable<PagoAdicional[]> {
+  const comprasCollection = collection(this.firestore, this.pagosAdicionalesTab);
+  let condiciones: QueryConstraint[] = [];
+
+  // Agregar filtros
+  if (statuspago && statuspago.trim() !== '') {
+    condiciones.push(where('status', '==', statuspago));
+  }  
+   
+    if (idUsuario && idUsuario.trim() !== '') {
+    condiciones.push(where('idUsuario', '==', idUsuario));
+  }  
+
+    if (idArea && idArea.trim() !== '') {
+    condiciones.push(where('idArea', '==', idArea));
+  }  
+  if (fechaini && fechaFin) {
+    fechaini.setHours(0,0,0,0);
+    fechaFin.setHours(23,59,59,999);
+    const inicioTimestamp = Timestamp.fromDate(fechaini);
+    const finTimestamp = Timestamp.fromDate(fechaFin);
+    
+    condiciones.push(where('fecha', '>=', inicioTimestamp));
+    condiciones.push(where('fecha', '<=', finTimestamp));
+  }
+
+  condiciones.push(where('tipoPago', '==', tipopago));
+  condiciones.push(orderBy('fecha', 'desc'));
+
+  const comprasQuery = query(comprasCollection, ...condiciones);
+  
+  return collectionData(comprasQuery, { idField: 'id' }) as Observable<PagoAdicional[]>;
+}
 
 } 

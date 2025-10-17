@@ -72,6 +72,7 @@ export interface PagoAdicional {
   solicitudCancelacion:boolean; 
   participantesChat: ParticipanteChat[];
   tipoPago:number; 
+  fechaPago:Timestamp|null; 
 }
 
 

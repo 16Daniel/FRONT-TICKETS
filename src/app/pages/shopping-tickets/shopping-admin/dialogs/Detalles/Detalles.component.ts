@@ -116,7 +116,7 @@ async guardar()
 { 
    this.confirmationService.confirm({
       header: 'Confirmación',
-      message: 'Está segur@ que desea canclar la compra?',
+      message: 'Está segur@ que desea cancelar la compra?',
       acceptIcon: 'pi pi-check mr-2',
       rejectIcon: 'pi pi-times mr-2',
       acceptButtonStyleClass: 'btn bg-p-b p-3',
@@ -158,7 +158,7 @@ async enviarSolicitudCancelacion()
 { 
    this.confirmationService.confirm({
       header: 'Confirmación',
-      message: 'Está segur@ que desea canclar la compra?',
+      message: 'Está segur@ que desea cancelar la compra?',
       acceptIcon: 'pi pi-check mr-2',
       rejectIcon: 'pi pi-times mr-2',
       acceptButtonStyleClass: 'btn bg-p-b p-3',
@@ -178,7 +178,7 @@ async cancelarCompra()
        this.messageService.add({
         severity: 'success',
         summary: 'Success',
-        detail: 'Solicitud enviada correctamente'
+        detail: 'Cancelado correctamente'
       });
       this.loading = false;
         this.closeEvent.emit(false);
