@@ -4,6 +4,10 @@
 </button>
 </div>
 
+<app-filtro-pagos-adicionales [tipoPago]="2" (result)="onResultReceived($event)"></app-filtro-pagos-adicionales>
+
+<app-grafica-pagos-adicionales [registros]="data"  *ngIf="vergrafica"></app-grafica-pagos-adicionales>
+
 <div class="m-3">
  <app-admin-pagos-adicionales-table [data]="data" [tipoPago]="2"></app-admin-pagos-adicionales-table>
 </div>

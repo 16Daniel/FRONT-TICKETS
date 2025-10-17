@@ -12,6 +12,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { Usuario } from '../../../../../../models/usuario.model';
 import { ParticipanteChat } from '../../../../../../models/participante-chat.model';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../../../../environments/environments';
 @Component({
   selector: 'app-agregar-pago',
   standalone: true,
@@ -25,7 +26,7 @@ export class AgregarPagoComponent
   @Output() closeEvent = new EventEmitter<boolean>(); 
   @Input() visible:boolean = false;
   @Input() tipoPago:number = 1; 
-  @Input() idAdmin:string = ""; 
+public idAdmin:string = environment.idAdministracion; 
 public formSolicitante:string = "";
 public formBeneficiario:string = ""; 
 public formMonto:number = 0; 
@@ -83,7 +84,8 @@ async guardar()
       comentarios:[],
       solicitudCancelacion:false, 
       participantesChat:participantesChatData,
-      tipoPago: this.tipoPago
+      tipoPago: this.tipoPago,
+      fechaPago: null
   }
 
      try {
