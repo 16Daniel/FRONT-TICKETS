@@ -14,6 +14,7 @@ import { BranchesService } from '../../../../services/branches.service';
 import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
 import { BranchesOilTabComponent } from "../branches-oil-tab/branches-oil-tab.component";
 import { Sucursal } from '../../../../models/sucursal.model';
+import { NotificacionNuevoMensajeChatComponent } from '../../../../components/notificacion-nuevo-mensaje-chat/notificacion-nuevo-mensaje-chat.component';
 
 @Component({
   selector: 'app-branches-tabs',
@@ -26,8 +27,9 @@ import { Sucursal } from '../../../../models/sucursal.model';
     FormsModule,
     MultiSelectModule,
     BranchesMaintenanceTabComponent,
-    BranchesOilTabComponent
-],
+    BranchesOilTabComponent,
+    NotificacionNuevoMensajeChatComponent
+  ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',
 })
@@ -46,7 +48,7 @@ export class BranchesTabsComponent implements OnDestroy {
 
   esEspectadorActivo: boolean = false;
   sucursalesSeleccionadas: Sucursal[] = [];
-public tabindex:number = 0;
+  public tabindex: number = 0;
   private unsubscribe!: () => void;
 
   constructor(
@@ -73,7 +75,7 @@ public tabindex:number = 0;
   obtenerSucursales() {
     this.sucursalesService.get().subscribe(result => {
       this.sucursales = result;
-      this.sucursal = this.sucursales.filter(x =>x.id == this.usuario.sucursales[0].id)[0];  
+      this.sucursal = this.sucursales.filter(x => x.id == this.usuario.sucursales[0].id)[0];
       this.cdr.detectChanges();
 
     });
@@ -215,14 +217,4 @@ public tabindex:number = 0;
     this.espectadorEmitter.emit(this.esEspectadorActivo);
 
   }
-
-  // onSucursalesChange() {
-  //   console.log('Sucursales seleccionadas:', this.sucursalesSeleccionadas.map(x => x.id));
-  // }
-
-  // filtrarTicketsPorSucursales(tickets: Ticket[], idSucursales: string[]): Ticket[] {
-  //   if (!idSucursales || idSucursales.length === 0) return [];
-
-  //   return tickets.filter(ticket => idSucursales.includes(ticket.idSucursal));
-  // }
 }

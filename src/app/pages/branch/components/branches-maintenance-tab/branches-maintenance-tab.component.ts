@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
@@ -33,7 +33,6 @@ import { ModalBranchRatingComponent } from '../../dialogs/modal-branch-rating/mo
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
     ModalMateinanceMttoCheckComponent,
-    // BranchMaintenanceTableMttoComponent
     ModalMaintenanceMttoHistoryComponent
   ],
   templateUrl: './branches-maintenance-tab.component.html',
@@ -78,22 +77,6 @@ export class BranchesMaintenanceTabComponent {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // if (changes['esEspectadorActivo']) {
-    //   const prev = changes['esEspectadorActivo'].previousValue;
-    //   const curr = changes['esEspectadorActivo'].currentValue;
-    //   console.log(`esEspectadorActivo cambió de ${prev} a ${curr}`);
-
-      // Aquí pones la lógica que quieres que se ejecute cuando cambie
-      // this.onEspectadorActivoChanged(curr);
-    //   this.cdr.detectChanges();
-    // }
-  }
-
-  // onEspectadorActivoChanged(nuevoValor: boolean) {
-  //   console.log('Nuevo valor de esEspectadorActivo:', nuevoValor);
-  // }
-
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.ticket = ticket;
     this.mostrarModalTicketDetail = true;
@@ -123,10 +106,8 @@ export class BranchesMaintenanceTabComponent {
     this.unsubscribe = this.mantenimientoService.getMantenimientosActivosPorFecha(
       this.sucursal?.id,
       (mantenimientos: MantenimientoMtto[]) => {
-        console.log(mantenimientos)
         this.mantenimientosActivos = mantenimientos;
         this.cdr.detectChanges();
-        // console.log('Mantenimiento activo:', this.mantenimientoActivo);
       }
     );
   }
