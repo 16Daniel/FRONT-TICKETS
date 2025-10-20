@@ -9,7 +9,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Timestamp } from '@angular/fire/firestore';
 import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { EditorModule } from 'primeng/editor';
@@ -60,7 +59,6 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
       'Tickets',
       this.userdata.id
     );
-
 
     this.ticketsService.updateLastCommentRead(
       this.ticket.id,

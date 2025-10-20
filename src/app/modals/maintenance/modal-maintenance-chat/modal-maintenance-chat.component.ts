@@ -9,6 +9,7 @@ import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
 import { Usuario } from '../../../models/usuario.model';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
+import { MensajesPendientesService } from '../../../services/mensajes-pendientes.service';
 
 @Component({
   selector: 'app-modal-maintenance-chat',
@@ -39,11 +40,18 @@ export class ModalMaintenanceChatComponent {
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
     private cdr: ChangeDetectorRef,
+    private mensajesPendientesService: MensajesPendientesService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.mensajesPendientesService.marcarComoLeidos(
+      this.idMnatenimiento!,
+      'Mantenimientos',
+      this.userdata.id
+    );
+
     const servicio = this.mantenimientoFactory.getService(this.idArea!);
 
     this.mantenimientoSub = servicio.getById(this.idMnatenimiento!).subscribe(
@@ -115,6 +123,17 @@ export class ModalMaintenanceChatComponent {
         );
 
         this.cdr.detectChanges();
+
+        await this.mensajesPendientesService.crearMensajesPendientes(
+          'Mantenimientos',
+          this.mantenimiento!.id,
+          {
+            idUsuario: idu,
+            nombre: data.nombre,
+            comentario: data.comentario
+          },
+          this.mantenimiento!.participantesChat
+        );
       })
       .catch((error) =>
         console.error('Error al actualizar los comentarios:', error)

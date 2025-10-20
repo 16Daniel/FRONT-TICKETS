@@ -14,7 +14,6 @@ import { BranchesService } from '../../../../services/branches.service';
 import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
 import { BranchesOilTabComponent } from "../branches-oil-tab/branches-oil-tab.component";
 import { Sucursal } from '../../../../models/sucursal.model';
-import { NotificacionNuevoMensajeChatComponent } from '../../../../components/notificacion-nuevo-mensaje-chat/notificacion-nuevo-mensaje-chat.component';
 
 @Component({
   selector: 'app-branches-tabs',
@@ -28,7 +27,6 @@ import { NotificacionNuevoMensajeChatComponent } from '../../../../components/no
     MultiSelectModule,
     BranchesMaintenanceTabComponent,
     BranchesOilTabComponent,
-    NotificacionNuevoMensajeChatComponent
   ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',

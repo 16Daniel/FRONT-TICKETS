@@ -17,7 +17,8 @@ import { MensajePendiente } from '../../models/mensajes-pendientes.model';
 })
 export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy {
   visible = false;
-  contador = 15;
+  contador = 15; //Segundos
+  mostrarCada = 10; //Segundos
   private intervalId: any;
   private reminderInterval: any;
 
@@ -38,7 +39,7 @@ export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy 
         this.tiposOrigen = Array.from(new Set(this.pendientes.map(p => p.tipoOrigen)));
         this.mostrarRecordatorio();
       }
-    }, 60000);
+    }, (this.mostrarCada * 1000));
 
 
     this.mensajesPendientesService
