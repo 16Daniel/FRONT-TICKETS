@@ -93,8 +93,7 @@ export const routes: Routes = [
         path: 'kpis',
         title: 'KPIS',
         loadComponent: () =>
-          import('./pages/admin/components/admin-reports-tab/admin-reports-tab.component'),
-        canActivate: [AdminGuard],
+          import('./pages/admin/components/admin-reports-tab/admin-reports-tab.component')
       },
       {
         path: 'version-history',
