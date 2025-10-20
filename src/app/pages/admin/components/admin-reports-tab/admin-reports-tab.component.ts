@@ -163,7 +163,7 @@ export default class AdminReportsTabComponent implements OnInit {
   }
 
   obtenerUsuarios() {
-    this.catusuarios = this.usersService.usuarios;
+    this.usersService.usuarios$.subscribe(usuarios => this.catusuarios = usuarios); 
   }
 
   obtenerEstatusTicket() {
