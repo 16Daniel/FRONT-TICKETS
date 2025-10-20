@@ -5,6 +5,8 @@ import { DialogModule } from 'primeng/dialog';
 
 import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../models/usuario.model';
+import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
+import { MensajePendiente } from '../../models/mensajes-pendientes.model';
 
 @Component({
   selector: 'app-notificacion-nuevo-mensaje-chat',
@@ -14,33 +16,40 @@ import { Usuario } from '../../models/usuario.model';
   styleUrls: ['./notificacion-nuevo-mensaje-chat.component.scss']
 })
 export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy {
-  @Input() tickets: Ticket[] = [];
-
   visible = false;
-  contador = 5;
+  contador = 15;
   private intervalId: any;
   private reminderInterval: any;
 
   usuario!: Usuario;
+  tiposOrigen: string[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {
+  pendientes: MensajePendiente[] = [];
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private mensajesPendientesService: MensajesPendientesService) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   ngOnInit() {
     this.reminderInterval = setInterval(() => {
+      if (this.pendientes.length > 0) {
+        this.tiposOrigen = Array.from(new Set(this.pendientes.map(p => p.tipoOrigen)));
+        this.mostrarRecordatorio();
+      }
+    }, 60000);
 
-      console.log('leyendo tickets...', this.tickets.length)
-      this.tickets.forEach(ticket => {
-        console.log(this.verificarChatNoLeido(ticket), ticket.folio)
-        if (this.verificarChatNoLeido(ticket)) {
+
+    this.mensajesPendientesService
+      .obtenerPendientesPorUsuario(this.usuario.id)
+      .subscribe(pendientes => {
+        this.pendientes = pendientes;
+        if (this.pendientes.length > 0) {
+          this.tiposOrigen = Array.from(new Set(this.pendientes.map(p => p.tipoOrigen)));
           this.mostrarRecordatorio();
-          return;
         }
-
       });
-
-    }, 10000);
   }
 
   ngOnDestroy() {
@@ -52,7 +61,7 @@ export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy 
     if (this.visible) return;
 
     this.visible = true;
-    this.contador = 5;
+    this.contador = 15;
     clearInterval(this.intervalId);
 
     this.intervalId = setInterval(() => {
@@ -69,24 +78,5 @@ export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy 
     this.visible = false;
     clearInterval(this.intervalId);
     this.cdr.detectChanges();
-  }
-
-  verificarChatNoLeido(ticket: Ticket) {
-    const participantes = ticket.participantesChat.sort(
-      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
-    );
-    const participante = participantes.find(
-      (p) => p.idUsuario === this.usuario.id
-    );
-
-    if (participante) {
-      const ultimoComentarioLeido = participante.ultimoComentarioLeido;
-
-      const comentarios = ticket.comentarios;
-
-      return comentarios.length > ultimoComentarioLeido;
-    }
-
-    return false;
   }
 }
