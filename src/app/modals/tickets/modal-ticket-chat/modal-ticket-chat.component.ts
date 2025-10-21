@@ -9,7 +9,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Timestamp } from '@angular/fire/firestore';
 import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { EditorModule } from 'primeng/editor';
@@ -20,6 +19,7 @@ import { Ticket } from '../../../models/ticket.model';
 import { TicketsService } from '../../../services/tickets.service';
 import { Usuario } from '../../../models/usuario.model';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
+import { MensajesPendientesService } from '../../../services/mensajes-pendientes.service';
 
 @Component({
   selector: 'app-modal-ticket-chat',
@@ -47,12 +47,19 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
-    public datesHelper: DatesHelperService
+    public datesHelper: DatesHelperService,
+    private mensajesPendientesService: MensajesPendientesService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.mensajesPendientesService.marcarComoLeidos(
+      this.ticket.id,
+      'Tickets',
+      this.userdata.id
+    );
+
     this.ticketsService.updateLastCommentRead(
       this.ticket.id,
       this.userdata.id,
@@ -96,7 +103,7 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
 
     this.ticketsService
       .update(this.ticket)
-      .then(() => {
+      .then(async () => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
         this.comentario = '';
 
@@ -104,6 +111,17 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
           this.ticket.id,
           this.userdata.id,
           this.ticket.comentarios.length
+        );
+
+        await this.mensajesPendientesService.crearMensajesPendientes(
+          'Tickets',
+          this.ticket!.id,
+          {
+            idUsuario: idu,
+            nombre: data.nombre,
+            comentario: data.comentario
+          },
+          this.ticket!.participantesChat
         );
 
       })

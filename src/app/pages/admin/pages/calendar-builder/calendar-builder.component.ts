@@ -110,6 +110,7 @@ export default class CalendarBuilderComponent implements OnInit {
     this.obtenerSucursales();
     this.obtenerUsuariosHelp();
     this.areasService.areas$.subscribe(areas => this.areas = areas);
+    this.idArea = this.usuario.idArea;
   }
 
   showMessage(sev: string, summ: string, det: string) {

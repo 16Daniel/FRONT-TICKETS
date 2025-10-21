@@ -1,29 +1,33 @@
 import { Component, EventEmitter, Input, Output, ViewChild, type OnInit } from '@angular/core';
-import { AdministracionCompra, PagoAdicional } from '../../../../../models/AdministracionCompra';
-import { Usuario } from '../../../../../models/usuario.model';
-import { ShoppingService } from '../../../../../services/shopping.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
-import { Timestamp } from '@angular/fire/firestore';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
-import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
-import { FormsModule } from '@angular/forms';
+
+import { AdministracionCompra, PagoAdicional } from '../../../../../models/AdministracionCompra';
+import { Usuario } from '../../../../../models/usuario.model';
+import { ShoppingService } from '../../../../../services/shopping.service';
+import { DatesHelperService } from '../../../../../helpers/dates-helper.service';
+import { MensajesPendientesService } from '../../../../../services/mensajes-pendientes.service';
+
 @Component({
   selector: 'app-admin-compras-chat',
   standalone: true,
-  imports: [ FormsModule,
-      CardModule,
-      CommonModule,
-      EditorModule,
-      DialogModule,
-      InputTextModule,],
-  providers:[MessageService],
+  imports: [FormsModule,
+    CardModule,
+    CommonModule,
+    EditorModule,
+    DialogModule,
+    InputTextModule,],
+  providers: [MessageService],
   templateUrl: './admin-compras-chat.component.html',
 })
+
 export class AdminComprasChatComponent implements OnInit {
-@Input() showModalChatCompra: boolean = false;
+  @Input() showModalChatCompra: boolean = false;
   @Input() ticket: AdministracionCompra | PagoAdicional | undefined;
   @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
@@ -34,29 +38,40 @@ export class AdminComprasChatComponent implements OnInit {
   constructor(
     private shopSev: ShoppingService,
     private messageService: MessageService,
+    public datesHelper: DatesHelperService,
+    private mensajesPendientesService: MensajesPendientesService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    if ("tipoPago" in this.ticket!) {
+      await this.mensajesPendientesService.marcarComoLeidos(
+        this.ticket!.id!,
+        'Pagos',
+        this.userdata.id
+      );
 
-    if("tipoPago" in this.ticket!)
-      {
-           this.shopSev.updateLastCommentRead(
-            this.ticket!.id!,
-            this.userdata.id,
-            this.ticket!.comentarios.length,
-            2
-          ); 
-      } else
-        {
-              this.shopSev.updateLastCommentRead(
-              this.ticket!.id!,
-              this.userdata.id,
-              this.ticket!.comentarios.length,
-              1
-            );
-        }
+      this.shopSev.updateLastCommentRead(
+        this.ticket!.id!,
+        this.userdata.id,
+        this.ticket!.comentarios.length,
+        2
+      );
+    } else {
+      await this.mensajesPendientesService.marcarComoLeidos(
+        this.ticket!.id!,
+        'Compras',
+        this.userdata.id
+      );
+
+      this.shopSev.updateLastCommentRead(
+        this.ticket!.id!,
+        this.userdata.id,
+        this.ticket!.comentarios.length,
+        1
+      );
+    }
   }
 
   esmiId(id: string): boolean {
@@ -69,10 +84,7 @@ export class AdminComprasChatComponent implements OnInit {
     return st;
   }
 
-  onHide() {
-    this.closeEvent.emit(false); // Cerrar modal
-  }
-
+  onHide = () => this.closeEvent.emit(false);
 
   enviarComentarioChat() {
     if (!this.comentario) {
@@ -89,42 +101,62 @@ export class AdminComprasChatComponent implements OnInit {
     };
     this.ticket!.comentarios.push(data);
 
-    if("tipoPago" in this.ticket!)
-      {
-            this.shopSev
-          .updatePagoAdicional(this.ticket)
-          .then(() => {
-            this.showMessage('success', 'Success', 'Enviado correctamente');
-            this.comentario = '';
-              this.shopSev.updateLastCommentRead(
-                this.ticket!.id!,
-                this.userdata.id,
-                this.ticket!.comentarios.length,
-                2
-              );  
-          })
-          .catch((error) =>
-            console.error('Error al actualizar los comentarios:', error)
+    if ("tipoPago" in this.ticket!) {
+      this.shopSev
+        .updatePagoAdicional(this.ticket)
+        .then(async () => {
+          this.showMessage('success', 'Success', 'Enviado correctamente');
+          this.comentario = '';
+          this.shopSev.updateLastCommentRead(
+            this.ticket!.id!,
+            this.userdata.id,
+            this.ticket!.comentarios.length,
+            2
           );
-      } else 
-        {  
-          this.shopSev
-            .updateCompra(this.ticket)
-            .then(() => {
-              this.showMessage('success', 'Success', 'Enviado correctamente');
-              this.comentario = '';
-                    this.shopSev.updateLastCommentRead(
-                    this.ticket!.id!,
-                    this.userdata.id,
-                    this.ticket!.comentarios.length,
-                    1
-                  );
-            })
-            .catch((error) =>
-              console.error('Error al actualizar los comentarios:', error)
-            );
 
-        }
+          await this.mensajesPendientesService.crearMensajesPendientes(
+            'Pagos',
+            this.ticket!.id!,
+            {
+              idUsuario: idu,
+              nombre: data.nombre,
+              comentario: data.comentario
+            },
+            this.ticket!.participantesChat
+          );
+        })
+        .catch((error) =>
+          console.error('Error al actualizar los comentarios:', error)
+        );
+    } else {
+      this.shopSev
+        .updateCompra(this.ticket)
+        .then(async () => {
+          this.showMessage('success', 'Success', 'Enviado correctamente');
+          this.comentario = '';
+          this.shopSev.updateLastCommentRead(
+            this.ticket!.id!,
+            this.userdata.id,
+            this.ticket!.comentarios.length,
+            1
+          );
+
+          await this.mensajesPendientesService.crearMensajesPendientes(
+            'Compras',
+            this.ticket!.id!,
+            {
+              idUsuario: idu,
+              nombre: data.nombre,
+              comentario: data.comentario
+            },
+            this.ticket!.participantesChat
+          );
+        })
+        .catch((error) =>
+          console.error('Error al actualizar los comentarios:', error)
+        );
+
+    }
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -144,15 +176,4 @@ export class AdminComprasChatComponent implements OnInit {
         this.chatContainer.nativeElement.scrollHeight;
     }
   }
-
-  getDate(tsmp: Timestamp | Date): Date {
-    if (tsmp instanceof Date) {
-      return tsmp;
-    } else {
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    }
-  }
-
 }

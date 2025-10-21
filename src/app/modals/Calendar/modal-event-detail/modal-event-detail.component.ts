@@ -44,6 +44,7 @@ export default class ModalEventDetailComponent implements OnInit {
   @Input() usuarioSeleccionado: Usuario | any;
   @Input() comentario: string = '';
   @Input() idsTickets: string[] = [];
+  @Input() verFinzalizadosHoy: boolean = true;
   @Output() clickEvent = new EventEmitter<Ticket>();
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -103,17 +104,30 @@ export default class ModalEventDetailComponent implements OnInit {
   async obtenerTickets() {
     this.loading = true;
 
-    const tickets1 = await this.ticketsService.getByIds(this.sucursal.idsTickets);
+    try {
+      const ticketsAsignados = await this.ticketsService.getByIds(this.sucursal.idsTickets);
 
-    const tickets2 = await this.ticketsService
-      .getFinalizedTicketsByEndDate(
+      const ticketsExtrasFinzalizadosHoy = await this.ticketsService.getFinalizedTicketsByEndDate(
         this.fecha,
         this.usuarioSeleccionado.idArea
       );
 
-      this.tickets = tickets2
+      const idsExistentes = new Set(ticketsAsignados.map(t => t.id));
 
-    this.loading = false;
-    this.cdr.detectChanges();
+      if (this.verFinzalizadosHoy) {
+        const nuevosTickets = ticketsExtrasFinzalizadosHoy.filter(t => !idsExistentes.has(t.id));
+        this.tickets = [...ticketsAsignados, ...nuevosTickets];
+      }
+      else {
+        this.tickets = [...ticketsAsignados];
+      }
+
+    } catch (error) {
+      console.error('Error al obtener tickets:', error);
+    } finally {
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
   }
+
 }

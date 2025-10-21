@@ -1,0 +1,16 @@
+<p-dialog [(visible)]="visible" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false"
+    [dismissableMask]="false" [style]="{ width: '400px', textAlign: 'center' }">
+
+    <div class="text-center p-3">
+        <h3>🔔 Recuerda leer tus mensajes pendientes</h3>
+        <p class="text-secondary">
+            Tienes nuevos mensajes en los módulos de: <strong>{{ tiposOrigen.join(', ') }}</strong>
+        </p>
+        <p class="text-secondary">
+            Se cerrará automáticamente en {{ contador }} segundos.
+        </p>
+
+        <button pButton type="button" label="Aceptar" class="p-button-success mt-3" (click)="cerrar()">
+        </button>
+    </div>
+</p-dialog>

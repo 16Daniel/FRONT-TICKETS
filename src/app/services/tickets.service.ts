@@ -20,7 +20,6 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { HttpHeaders } from '@angular/common/http';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Ticket } from '../models/ticket.model';
 import { ActivoFijo } from '../models/activo-fijo.model';
@@ -29,14 +28,8 @@ import { ActivoFijo } from '../models/activo-fijo.model';
   providedIn: 'root',
 })
 export class TicketsService {
-  private headers = new HttpHeaders();
 
-  constructor(private firestore: Firestore) {
-
-    // this.getAll().subscribe(result => {
-    //   console.log(result);
-    // });
-  }
+  constructor(private firestore: Firestore) { }
 
   async create(ticket: Ticket) {
     const ref = collection(this.firestore, 'tickets');
@@ -44,11 +37,6 @@ export class TicketsService {
     return docRef.id;
   }
 
-  /**
-   * Consulta tickets que esten en los estatus enviados
-   * @param estatus lista de idEstatusTicket
-   * @returns 
-   */
   get(idArea?: string): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
 
