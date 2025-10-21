@@ -27,7 +27,8 @@
     <tr *ngFor="let item of links; let i = index">
      <td>
          <i class='bx bxs-file-pdf bx-lg' *ngIf="esPdf(item)"></i>
-            <i class='bx bx-image bx-lg' *ngIf="!esPdf(item)"></i>
+            <i class='bx bx-image bx-lg' *ngIf="!esPdf(item) && !esExcel(item)"></i>
+            <i class='bx bxs-file-doc bx-lg' *ngIf="esExcel(item)"></i>
      </td>
       <td>{{getFileNameFromUrlManual(item)}}</td>
       <td><button class="btn btn-warning" (click)="downloadPdfDirect(item)"><i class='bx bx-cloud-download bx-sm'></i></button></td>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild, type OnInit } from '@angular/core';
-import { AdministracionCompra } from '../../../../../models/AdministracionCompra';
+import { AdministracionCompra, PagoAdicional } from '../../../../../models/AdministracionCompra';
 import { Usuario } from '../../../../../models/usuario.model';
 import { ShoppingService } from '../../../../../services/shopping.service';
 import { MessageService } from 'primeng/api';
@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminComprasChatComponent implements OnInit {
 @Input() showModalChatCompra: boolean = false;
-  @Input() ticket: AdministracionCompra[] | any;
+  @Input() ticket: AdministracionCompra | PagoAdicional | undefined;
   @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 
@@ -39,11 +39,24 @@ export class AdminComprasChatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.shopSev.updateLastCommentRead(
-      this.ticket.id,
-      this.userdata.id,
-      this.ticket.comentarios.length
-    );
+
+    if("tipoPago" in this.ticket!)
+      {
+           this.shopSev.updateLastCommentRead(
+            this.ticket!.id!,
+            this.userdata.id,
+            this.ticket!.comentarios.length,
+            2
+          ); 
+      } else
+        {
+              this.shopSev.updateLastCommentRead(
+              this.ticket!.id!,
+              this.userdata.id,
+              this.ticket!.comentarios.length,
+              1
+            );
+        }
   }
 
   esmiId(id: string): boolean {
@@ -60,10 +73,6 @@ export class AdminComprasChatComponent implements OnInit {
     this.closeEvent.emit(false); // Cerrar modal
   }
 
-  respuestaRapida() {
-    this.comentario = "ESTE TICKET YA ESTA TERMINADO. A ESPERA QUE LA SUCURSAL VALIDE Y FINALIZE EL TICKET MIENTRAS TANTO, NO SE PODRA LEVANTAR NINGUN OTRO TICKET HASTA TENER LA VALIDACION O SE CONFIRME QUE EL TICKET NO ESTA LISTO SALUDOS..."
-    this.enviarComentarioChat();
-  }
 
   enviarComentarioChat() {
     if (!this.comentario) {
@@ -80,22 +89,42 @@ export class AdminComprasChatComponent implements OnInit {
     };
     this.ticket!.comentarios.push(data);
 
-    this.shopSev
-      .updateCompra(this.ticket)
-      .then(() => {
-        this.showMessage('success', 'Success', 'Enviado correctamente');
-        this.comentario = '';
+    if("tipoPago" in this.ticket!)
+      {
+            this.shopSev
+          .updatePagoAdicional(this.ticket)
+          .then(() => {
+            this.showMessage('success', 'Success', 'Enviado correctamente');
+            this.comentario = '';
+              this.shopSev.updateLastCommentRead(
+                this.ticket!.id!,
+                this.userdata.id,
+                this.ticket!.comentarios.length,
+                2
+              );  
+          })
+          .catch((error) =>
+            console.error('Error al actualizar los comentarios:', error)
+          );
+      } else 
+        {  
+          this.shopSev
+            .updateCompra(this.ticket)
+            .then(() => {
+              this.showMessage('success', 'Success', 'Enviado correctamente');
+              this.comentario = '';
+                    this.shopSev.updateLastCommentRead(
+                    this.ticket!.id!,
+                    this.userdata.id,
+                    this.ticket!.comentarios.length,
+                    1
+                  );
+            })
+            .catch((error) =>
+              console.error('Error al actualizar los comentarios:', error)
+            );
 
-        this.shopSev.updateLastCommentRead(
-          this.ticket.id,
-          this.userdata.id,
-          this.ticket.comentarios.length
-        );
-
-      })
-      .catch((error) =>
-        console.error('Error al actualizar los comentarios:', error)
-      );
+        }
   }
 
   showMessage(sev: string, summ: string, det: string) {
