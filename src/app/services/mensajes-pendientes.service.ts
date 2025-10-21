@@ -22,7 +22,7 @@ export class MensajesPendientesService {
   constructor(private firestore: Firestore) { }
 
   public async crearMensajesPendientes(
-    tipoOrigen: 'Tickets' | 'Mantenimientos' | 'Arturo',
+    tipoOrigen: 'Tickets' | 'Mantenimientos' | 'Compras' | 'Pagos',
     idOrigen: string,
     comentario: { idUsuario: string; nombre: string; comentario: string },
     participantes: { idUsuario: string }[]
@@ -68,7 +68,7 @@ export class MensajesPendientesService {
 
   async marcarComoLeidos(
     idOrigen: string,
-    tipoOrigen: 'Tickets' | 'Mantenimientos' | 'Arturo',
+    tipoOrigen: 'Tickets' | 'Mantenimientos' | 'Compras' | 'Pagos',
     idUsuario: string
   ) {
     const q = query(

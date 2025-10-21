@@ -1,7 +1,7 @@
 export interface MensajePendiente {
     id?: string;
     idOrigen: string; // ID del ticket, mantenimiento, etc.
-    tipoOrigen: 'Tickets' | 'Mantenimientos' | 'Arturo'; // tipo de chat
+    tipoOrigen: 'Tickets' | 'Mantenimientos' | 'Compras' | 'Pagos'; // tipo de chat
     idComentario: string;
     idUsuarioDestino: string;
     idUsuarioRemitente: string;

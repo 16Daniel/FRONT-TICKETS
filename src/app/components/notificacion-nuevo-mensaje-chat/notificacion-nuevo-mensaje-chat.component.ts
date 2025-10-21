@@ -18,7 +18,7 @@ import { MensajePendiente } from '../../models/mensajes-pendientes.model';
 export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy {
   visible = false;
   contador = 15; //Segundos
-  mostrarCada = 10; //Segundos
+  mostrarCada = 60; //Segundos
   private intervalId: any;
   private reminderInterval: any;
 

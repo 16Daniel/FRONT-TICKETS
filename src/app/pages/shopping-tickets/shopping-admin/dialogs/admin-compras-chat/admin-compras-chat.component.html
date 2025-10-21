@@ -10,13 +10,13 @@
                 *ngIf="esmiId(item.idUsuario) == false">
                 <p class="p-1" style="color: black">{{ item.nombre }}</p>
                 <label [innerHTML]="item.comentario"></label>
-                <p class="align-right"><label style="font-size: 10px;">{{ getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>
+                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>
             </div>
 
             <div *ngIf="esmiId(item.idUsuario)" class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: #F3F3F3">
                 <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
                 <label [innerHTML]="item.comentario"></label>
-                <p class="align-right"><label style="font-size: 10px;">{{ getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>
+                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM HH:mm' }}</label></p>
             </div>
         </div>
     </div>
