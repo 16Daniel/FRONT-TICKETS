@@ -49,6 +49,9 @@ constructor(private branchesService:BranchesService,
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data; 
+
+        this.sucursales = this.sucursales.filter(x=> x.idFront);
+
          if(this.usuario.idRol == "2" && this.usuario.id != this.idServicio)
           {
             let suc = this.sucursales.filter(x => x.id == this.usuario.sucursales[0].id); 
