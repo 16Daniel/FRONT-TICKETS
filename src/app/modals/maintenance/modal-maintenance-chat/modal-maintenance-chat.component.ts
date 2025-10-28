@@ -46,9 +46,22 @@ export class ModalMaintenanceChatComponent {
   }
 
   async ngOnInit() {
+    let tipoOrigen: '10x10' | '8x8' | '6x6';
+    switch (this.idArea) {
+      case '1':
+        tipoOrigen = '10x10';
+        break;
+      case '2':
+        tipoOrigen = '6x6';
+        break;
+      case '4':
+        tipoOrigen = '8x8';
+        break;
+    }
+
     await this.mensajesPendientesService.marcarComoLeidos(
       this.idMnatenimiento!,
-      'Mantenimientos',
+      tipoOrigen!,
       this.userdata.id
     );
 
@@ -124,8 +137,21 @@ export class ModalMaintenanceChatComponent {
 
         this.cdr.detectChanges();
 
+        let tipoOrigen: '10x10' | '8x8' | '6x6';
+        switch (this.idArea) {
+          case '1':
+            tipoOrigen = '10x10';
+            break;
+          case '2':
+            tipoOrigen = '6x6';
+            break;
+          case '4':
+            tipoOrigen = '8x8';
+            break;
+        }
+
         await this.mensajesPendientesService.crearMensajesPendientes(
-          'Mantenimientos',
+          tipoOrigen!,
           this.mantenimiento!.id,
           {
             idUsuario: idu,

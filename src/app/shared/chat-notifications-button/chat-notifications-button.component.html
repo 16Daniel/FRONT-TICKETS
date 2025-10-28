@@ -1,0 +1,41 @@
+<div class="notification-wrapper" (click)="toggleNotifications()">
+    <p-button icon="pi pi-comments" severity="secondary" styleClass="p-button-text boton-campana">
+    </p-button>
+
+    <!-- Badge -->
+    <span *ngIf="notificaciones.length > 0" class="notification-badge">
+        {{ notificaciones.length }}
+    </span>
+
+    <!-- Dropdown -->
+    <div class="notification-dropdown" *ngIf="showNotifications" (click)="$event.stopPropagation()">
+        <div *ngIf="notificaciones.length === 0" class="empty">
+            No hay notificaciones
+        </div>
+
+        <ul *ngIf="notificaciones.length > 0" class="notification-list">
+            <li *ngFor="let item of notificaciones" (click)="seleccionarNotificacion(item)">
+                <span>
+                    <i class="pi pi-comments" style="margin-right:0.5rem; color:#007ad9; font-size:1.2rem;"></i>
+                    {{ 'Tienes un nuevo mensaje en ' + item.tipoOrigen }}
+                </span>
+                <small>
+                    <i class="pi pi-user" style="margin-right:0.3rem; color:#555; font-size:1rem;"></i>
+                    {{ 'De: ' + item.nombreRemitente }}
+                </small>
+
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<app-modal-ticket-chat *ngIf="mostrarModalChatTicket" [showModalChatTicket]="mostrarModalChatTicket" [ticket]="ticket"
+    (closeEvent)="cerrarChatTicket()"></app-modal-ticket-chat>
+
+<app-modal-maintenance-chat *ngIf="mostrarModalChatMantenimiento" [mostrarModal]="mostrarModalChatMantenimiento"
+    (closeEvent)="cerrarChatMantenimiento()" [idMnatenimiento]="mantenimiento?.id"
+    [idArea]="idArea"></app-modal-maintenance-chat>
+
+<app-admin-compras-chat *ngIf="mostrarModalChatCompra" [showModalChatCompra]="mostrarModalChatCompra" [ticket]="compra"
+    (closeEvent)="cerrarChatCompras()"></app-admin-compras-chat>

@@ -11,11 +11,12 @@ import { environment } from '../../../environments/environments';
 import { DocumentsService } from '../../services/documents.service';
 import { VersionButtonComponent } from '../version-button/version-button.component';
 import { Usuario } from '../../models/usuario.model';
+import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 
 @Component({
   selector: 'app-side-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, MenubarModule, VersionButtonComponent, ButtonModule],
+  imports: [CommonModule, FormsModule, MenubarModule, VersionButtonComponent, ButtonModule, ChatNotificationsButtonComponent],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +28,7 @@ export class SideMenuComponent implements OnInit {
   usuario: Usuario;
   urlbase: string = '';
   tituloBanner: string;
-  
+
   constructor(
     public cdr: ChangeDetectorRef,
     private router: Router,
@@ -35,11 +36,11 @@ export class SideMenuComponent implements OnInit {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 
-    if(this.usuario.idRol == '2') {
+    if (this.usuario.idRol == '2') {
       this.tituloBanner = this.usuario.sucursales[0].nombre;
     }
     else {
-      this.tituloBanner = `${ this.usuario.nombre } ${ this.usuario.apellidoP }`;
+      this.tituloBanner = `${this.usuario.nombre} ${this.usuario.apellidoP}`;
     }
 
   }

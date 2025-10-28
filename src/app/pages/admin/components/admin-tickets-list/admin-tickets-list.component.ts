@@ -31,6 +31,7 @@ import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-tic
 import { AreasService } from '../../../../services/areas.service';
 import { UsersService } from '../../../../services/users.service';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
+import { MensajesPendientesService } from '../../../../services/mensajes-pendientes.service';
 
 
 @Component({
@@ -92,7 +93,8 @@ export class AdminTicketsListComponent {
     private ticketsPriorityService: TicketsPriorityService,
     private statusTicketService: StatusTicketService,
     private confirmationService: ConfirmationService,
-    public datesHelper: DatesHelperService
+    public datesHelper: DatesHelperService,
+    private mensajesPendientesService: MensajesPendientesService
   ) {
     this.areas = this.areasService.areas;
     this.obtenerUsuariosHelp();
@@ -295,6 +297,21 @@ export class AdminTicketsListComponent {
   }
 
   onClickValidacionAdmin(ticket: Ticket) {
+
+    const usuariosUnicosMap = new Map<string, { idUsuario: string }>();
+    ticket.participantesChat.forEach(p => {
+      usuariosUnicosMap.set(p.idUsuario, p);
+    });
+    const usuariosUnicos = Array.from(usuariosUnicosMap.values());
+
+    usuariosUnicos.forEach(async participante => {
+      await this.mensajesPendientesService.marcarComoLeidos(
+        ticket.id,
+        'Tickets',
+        participante.idUsuario
+      );
+    });
+
     this.confirmationService.confirm({
       header: 'Confirmación',
       message:

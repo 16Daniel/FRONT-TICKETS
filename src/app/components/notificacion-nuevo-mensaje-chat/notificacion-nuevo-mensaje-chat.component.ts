@@ -44,7 +44,7 @@ export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy 
 
     this.mensajesPendientesService
       .obtenerPendientesPorUsuario(this.usuario.id)
-      .subscribe(pendientes => {
+      .subscribe(pendientes => {        
         this.pendientes = pendientes;
         if (this.pendientes.length > 0) {
           this.tiposOrigen = Array.from(new Set(this.pendientes.map(p => p.tipoOrigen)));
