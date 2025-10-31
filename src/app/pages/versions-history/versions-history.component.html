@@ -4,7 +4,7 @@
 
             <h2>HISTORIAL DE VERSIONES</h2>
             <br>
-            <p-table [value]="versiones" [tableStyle]="{ 'min-width': '50rem' }">
+            <p-table [value]="versiones" scrollable="true" scrollHeight="400px" [tableStyle]="{ 'min-width': '70rem' }">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Versión</th>
@@ -13,13 +13,16 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-version>
-                    <tr>
+                    <tr (click)="abrirModalEditar(version)" style="cursor: pointer;">
                         <td>{{ version.version }}</td>
-                        <td [innerHTML]="version.descripcion"></td>
-                        <td>{{ getDate(version.fecha) | date }}</td>
+                        <td [innerHTML]="version.descripcion" class="col-descripcion"></td>
+                        <td>{{ datesHelper.getDate(version.fecha) | date }}</td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     </div>
 </div>
+
+<app-modal-version-edit *ngIf="mostrarModalEditar" [mostrarModal]="mostrarModalEditar"
+    (closeEvent)="mostrarModalEditar = false" [version]="versionSeleccionada"></app-modal-version-edit>
