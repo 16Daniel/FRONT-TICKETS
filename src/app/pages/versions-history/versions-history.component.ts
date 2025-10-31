@@ -1,21 +1,24 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { Subscription } from 'rxjs';
+
 import { VersionControlService } from '../../services/version-control.service';
 import { ControlVersion } from '../../models/control-version.model';
-import { TableModule } from 'primeng/table';
-import { Timestamp } from '@firebase/firestore';
 import { VersionUsuario } from '../../models/version-usuario.model';
 import { Usuario } from '../../models/usuario.model';
 import { VersionUsuarioService } from '../../services/version-usuario.service';
-import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { DatesHelperService } from '../../helpers/dates-helper.service';
+import { ModalVersionEditComponent } from '../admin/dialogs/modal-version-edit/modal-version-edit.component';
 
 @Component({
   selector: 'app-versions-history',
   standalone: true,
-  imports: [TableModule, CommonModule],
+  imports: [TableModule, CommonModule, ModalVersionEditComponent],
   templateUrl: './versions-history.component.html',
   styleUrl: './versions-history.component.scss',
 })
+
 export default class VersionsHistoryComponent {
   versionActual: ControlVersion | any;
   versiones: ControlVersion[] = [];
@@ -23,10 +26,13 @@ export default class VersionsHistoryComponent {
   usuario: Usuario | any = null;
   private versionSubscription: Subscription | undefined;
 
+  mostrarModalEditar: boolean = false;
+
   constructor(
     private versionControlService: VersionControlService,
     private versionUsuarioService: VersionUsuarioService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public datesHelper: DatesHelperService
   ) { }
 
   async ngOnInit() {
@@ -46,20 +52,8 @@ export default class VersionsHistoryComponent {
   }
 
   ngOnDestroy() {
-    // Desuscribirse para evitar fugas de memoria
     if (this.versionSubscription) {
       this.versionSubscription.unsubscribe();
-    }
-  }
-
-  getDate(tsmp: Timestamp | any): Date {
-    try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
-    } catch {
-      return tsmp;
     }
   }
 
@@ -68,5 +62,11 @@ export default class VersionsHistoryComponent {
     nuevoRegistro.idUsuario = this.usuario.id;
     nuevoRegistro.idVersion = this.versionActual.id;
     await this.versionUsuarioService.updateUserVersion({ ...nuevoRegistro });
+  }
+
+  abrirModalEditar(version: ControlVersion) {
+    console.log('Versión clickeada:', version);
+    this.mostrarModalEditar = true;
+    this.versionSeleccionada = version;
   }
 }

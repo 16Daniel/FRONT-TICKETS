@@ -1,0 +1,19 @@
+<p-dialog header="EDITAR VERSIÓN" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '95vh' }"
+    [maximizable]="true" (onHide)="onHide()">
+    <form #form="ngForm" (ngSubmit)="enviar(form)">
+
+        <p-editor [(ngModel)]="version.descripcion" name="descripcion" [style]="{ height: '320px' }"
+            [ngClass]="{'p-invalid': descripcionCtrl.invalid && descripcionCtrl.touched}" class="p-invalid"
+            #descripcionCtrl="ngModel" name="version" required />
+        <small *ngIf="descripcionCtrl.invalid && descripcionCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+
+        <div class="col-12">
+            <div class="d-flex justify-content-end mt-3">
+                <button class="btn bg-p-b p-3"><i class='bx bx-send'></i>ENVIAR</button>
+            </div>
+        </div>
+    </form>
+
+</p-dialog>

@@ -10,6 +10,8 @@ import {
   orderBy,
   limit,
   getDocsFromServer,
+  doc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ControlVersion } from '../models/control-version.model';
@@ -20,7 +22,7 @@ import { ControlVersion } from '../models/control-version.model';
 export class VersionControlService {
   pathName: string = 'control_versiones';
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   async versionExist(version: string): Promise<boolean> {
     const ref = collection(this.firestore, this.pathName);
@@ -55,5 +57,10 @@ export class VersionControlService {
 
     // Convertir la consulta a un Observable
     return collectionData(q, { idField: 'id' }) as Observable<ControlVersion[]>;
+  }
+
+  async update(version: Partial<ControlVersion>, idVersion: string): Promise<void> {
+    const documentRef = doc(this.firestore, `${this.pathName}/${idVersion}`);
+    return updateDoc(documentRef, version);
   }
 }
