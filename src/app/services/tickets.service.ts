@@ -318,21 +318,28 @@ export class TicketsService {
 
   async getFinalizedTicketsByEndDate(
     fecha: Date,
-    idArea: string
+    idArea: string,
+    idSucursal?: string
   ): Promise<Ticket[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
 
-    // Rango de día
     const startOfDay = Timestamp.fromDate(new Date(fecha.setHours(0, 0, 0, 0)));
     const endOfDay = Timestamp.fromDate(new Date(fecha.setHours(24, 0, 0, 0))); // siguiente día a las 00:00
 
-    const q = query(
-      ticketsCollection,
+    // filtros base
+    const filters = [
       where('idEstatusTicket', '==', '3'),
       where('idArea', '==', idArea),
       where('fechaFin', '>=', startOfDay),
       where('fechaFin', '<', endOfDay)
-    );
+    ];
+
+    // agregar idSucursal solo si se proporciona
+    if (idSucursal) {
+      filters.push(where('idSucursal', '==', idSucursal));
+    }
+
+    const q = query(ticketsCollection, ...filters);
 
     const snapshot = await getDocs(q);
 

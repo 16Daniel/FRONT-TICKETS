@@ -158,18 +158,22 @@ export class CalendarComponent implements OnInit {
       let comentario = '';
 
       let fechaFin = this.datesHelper.getDate(visita.fecha);
-      const ticketsFinalizadosTotales = await this.ticketsService
-        .getFinalizedTicketsByEndDate(
-          fechaFin,
-          visita.idArea
-        );
+      // const ticketsFinalizadosTotales = await this.ticketsService
+      //   .getFinalizedTicketsByEndDate(
+      //     fechaFin,
+      //     visita.idArea,
+      //   );
+
       const servicio = this.mantenimientoFactory.getService(visita.idArea);
       const mantenimientosTotales = await servicio
         .obtenerMantenimientoVisitaPorFecha(this.datesHelper.getDate(visita.fecha), false);
 
       for (let sucursal of visita.sucursalesProgramadas) {
 
-        const ticketsFinalizados = ticketsFinalizadosTotales.filter(x => x.idSucursal == sucursal.id);
+        let ticketsProgramadosVisita = await this.ticketsService.getByIds(sucursal.idsTickets);
+        let ticketsFinalizados = ticketsProgramadosVisita.filter(x => x.idEstatusTicket == '3')
+
+        // const ticketsFinalizados = ticketsFinalizadosTotales.filter(x => x.idSucursal == sucursal.id);
         const mantenimientos = mantenimientosTotales.filter((x: any) => x.idSucursal == sucursal.id)
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);

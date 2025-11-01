@@ -6,7 +6,7 @@
       <th><span class="fs-1">🚥</span></th>
       <th>FOLIO</th>
       <th>FECHA</th>
-      <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
+      <th *ngIf="mostrarFedchaEstimacion">FECHA FIN</th>
       <th>AREA</th>
       <th *ngIf="esEspectadorActivo || mostrarSucursal">SUCURSAL</th>
       <th>SOLICITANTE</th>
@@ -43,7 +43,7 @@
         {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
       </td>
       <td class="text-center" *ngIf="mostrarFedchaEstimacion">
-        {{ getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}
+        {{ getDate(ticket!.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}
       </td>
       <td class="text-center">
         {{ obtenerNombreArea(ticket.idArea) }}
