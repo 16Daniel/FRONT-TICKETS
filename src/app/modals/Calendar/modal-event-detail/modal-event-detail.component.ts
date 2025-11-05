@@ -109,7 +109,8 @@ export default class ModalEventDetailComponent implements OnInit {
 
       const ticketsExtrasFinzalizadosHoy = await this.ticketsService.getFinalizedTicketsByEndDate(
         this.fecha,
-        this.usuarioSeleccionado.idArea
+        this.usuarioSeleccionado.idArea,
+        this.sucursal.id
       );
 
       const idsExistentes = new Set(ticketsAsignados.map(t => t.id));

@@ -65,8 +65,10 @@ export default class VersionsHistoryComponent {
   }
 
   abrirModalEditar(version: ControlVersion) {
+    if (this.usuario.idRol != '1') return;
+
     console.log('Versión clickeada:', version);
     this.mostrarModalEditar = true;
-    this.versionSeleccionada = version;
+    this.versionSeleccionada = { ...version };
   }
 }
