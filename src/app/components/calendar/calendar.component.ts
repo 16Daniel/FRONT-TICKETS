@@ -22,6 +22,7 @@ import { SucursalProgramada } from '../../models/sucursal-programada.model';
 import { BranchesService } from '../../services/branches.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../helpers/dates-helper.service';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-calendar',
@@ -69,7 +70,8 @@ export class CalendarComponent implements OnInit {
     private ticketsService: TicketsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private branchesService: BranchesService,
-    private datesHelper: DatesHelperService
+    private datesHelper: DatesHelperService,
+    private usuariosService: UsersService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -157,7 +159,7 @@ export class CalendarComponent implements OnInit {
     for (let visita of visitas) {
       let comentario = '';
 
-      let fechaFin = this.datesHelper.getDate(visita.fecha);
+      // let fechaFin = this.datesHelper.getDate(visita.fecha);
       // const ticketsFinalizadosTotales = await this.ticketsService
       //   .getFinalizedTicketsByEndDate(
       //     fechaFin,
@@ -170,10 +172,22 @@ export class CalendarComponent implements OnInit {
 
       for (let sucursal of visita.sucursalesProgramadas) {
 
+        const usuarioEvento = await this.usuariosService.getUsuarioById(visita.idUsuario);
         let ticketsProgramadosVisita = await this.ticketsService.getByIds(sucursal.idsTickets);
-        let ticketsFinalizados = ticketsProgramadosVisita.filter(x => x.idEstatusTicket == '3')
+        let ticketsFinalizados = ticketsProgramadosVisita.filter(x => x.idEstatusTicket == '3');
 
-        // const ticketsFinalizados = ticketsFinalizadosTotales.filter(x => x.idSucursal == sucursal.id);
+        const idsExistentes = new Set(ticketsFinalizados.map(t => t.id));
+
+        const ticketsExtrasFinzalizadosNuevos = await this.ticketsService.getFinalizedTicketsByEndDate(
+          this.convertTimestampToDate(visita.fecha)!,
+          usuarioEvento!.idArea,
+          sucursal.id
+        );
+
+        const nuevosTickets = ticketsExtrasFinzalizadosNuevos.filter(t => !idsExistentes.has(t.id));
+
+        let totalTickets = [...ticketsFinalizados, ...nuevosTickets];
+
         const mantenimientos = mantenimientosTotales.filter((x: any) => x.idSucursal == sucursal.id)
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
@@ -191,7 +205,7 @@ export class CalendarComponent implements OnInit {
             comentario: comentario,
             ticketsCount: sucursal.idsTickets.length,
             idsTickets: sucursal.idsTickets,
-            ticketsFinalizados: ticketsFinalizados.length,
+            ticketsFinalizados: totalTickets.length,
             fechaVisita: visita.fecha,
             mantenimientosDelDia: mantenimientos
           },
@@ -204,6 +218,16 @@ export class CalendarComponent implements OnInit {
     Swal.close();
     this.cdr.detectChanges();
   }
+
+  convertTimestampToDate(timestamp: any): Date | null {
+    if (!timestamp) return null;
+    // Si ya es Date, lo regresa tal cual
+    if (timestamp instanceof Date) return timestamp;
+    // Si es un Timestamp de Firestore
+    if (timestamp.toDate) return timestamp.toDate();
+    return null;
+  }
+
 
   obtenerNombreUsuario(idUsuario: string): string {
     let nombre = '';
