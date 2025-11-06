@@ -107,15 +107,16 @@ constructor(
   }
 
 filtrar()
-{
+{  
+  debugger
       Swal.showLoading();
       let idArea:string = ""; 
+      let idUsuario = this.usuario.id == this.idAdmin ? '': this.usuario.id; 
       if ((this.usuario.idRol == '1' || this.usuario.idRol == '5') && this.usuario.id != this.idAdmin) {
         idArea = this.usuario.idArea;
+        idUsuario = ""; 
       }
        
-      let idUsuario = this.usuario.id == this.idAdmin ? '': this.usuario.id; 
-
         this.shopServ.getPagosfiltro(this.tipoPago,this.filtroFechaIni,this.filtroFechaFin,this.filtroEstatus,idUsuario,idArea).subscribe({
         next: (data) => {
           this.dataPagos = data;

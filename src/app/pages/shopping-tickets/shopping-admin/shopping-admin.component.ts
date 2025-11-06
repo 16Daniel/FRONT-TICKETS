@@ -87,6 +87,7 @@ constructor(
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void {
+    debugger
     this.actualizarInfoUsuario();
     this.areasService.areas$.subscribe({
       next: (data) => {

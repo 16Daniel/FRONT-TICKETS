@@ -1,0 +1,164 @@
+<p-dialog 
+    header="INVENTARIO" 
+    [modal]="true"
+    [(visible)]="visible" 
+    [style]="{ width: '70%'}" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"
+    (onHide)="onHide()"
+     >
+
+<h1 class="text-center m-3">{{descripcion}}</h1>
+<br>
+
+ <div class="d-flex justify-content-center" *ngIf="loading">
+                    <div class="lds-ring">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+  </div>
+
+
+  <div style="background-color: #d8e3ec;" class="p-3 rounded-3">
+    @if(loading == false)
+{
+  <div class="m-3 d-flex justify-content-center gap-1" *ngIf="umedida.toLocaleLowerCase() == 'ml' || umedida.toLocaleLowerCase() == 'pza'"><p-inputSwitch [(ngModel)]="vistaPorcentajes" (ngModelChange)="cambiarEstado($event)" /><div class="h-42">&nbsp;CALCULADORA GRÁFICA</div></div>
+  @if(vistaPorcentajes)
+{
+ 
+  <div class="d-flex flex-column gap-3 p-3">
+    <div class="row shadow-sm border rounded-3 bg-white" *ngFor="let item of ubicaciones; let i = index" style ="overflow: auto;">
+      
+      <p class="text-center mt-3 fw-bold fs-5">{{item.ubicacion}}&nbsp;<button class="btn btn-danger" (click)="borrar(i)"><i class='bx bxs-x-circle bx-sm' ></i></button></p>
+      <div class="col-12">        
+        <select class="form-select mt-3 mb-3" [(ngModel)]="item.presentacion">
+          <option value="-1">SELECCIONAR PRESENTACIÓN</option>
+          <option [value]="itemp" *ngFor="let itemp of presentaciones">PRESENTACIÓN&nbsp;{{itemp}}&nbsp;{{umedida}}</option>
+        </select>
+      
+      </div>
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'ml'">
+         <div class="d-flex justify-content-center">
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_RW- BOTELLA 1.png" width="100" height="100">
+         </div>
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,1)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+         <p><input type="number" class="form-control text-center" [(ngModel)]="item.p1" [disabled]="true" style="width: 80px;"></p>
+          <button class="btn bg-white" (click)="restarInv(item,1)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+      </div>
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'ml'">
+        <div class="d-flex justify-content-center">
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_RW- BOTELLA 3-4.png" width="100" height="100">
+         </div>
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,2)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+         <p><input type="number" class="form-control text-center" [(ngModel)]="item.p2" [disabled]="true" style="width: 80px;"></p>
+          <button class="btn bg-white" (click)="restarInv(item,2)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+      </div>
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'ml'">
+        <div class="d-flex justify-content-center">
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_ RW-BOTELLA 1-2.png" width="100" height="100">
+         </div>
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,3)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+         <p><input type="number" class="form-control text-center" [(ngModel)]="item.p3" [disabled]="true" style="width: 80px;"></p>
+          <button class="btn bg-white" (click)="restarInv(item,3)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+      </div>
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'ml'">
+       <div class="d-flex justify-content-center">
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_RW-BOTELLA 1-4.png" width="100" height="100">
+         </div>
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,4)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+         <p><input type="number" class="form-control text-center" [(ngModel)]="item.p4" [disabled]="true" style="width: 80px;"></p>
+          <button class="btn bg-white" (click)="restarInv(item,4)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+      </div>
+
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'pza'">
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,1)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_RW-CAJA 1 .png" width="100" height="100">
+           <button class="btn bg-white" (click)="restarInv(item,1)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+        <p><input type="number" class="form-control" [(ngModel)]="item.p1" [disabled]="true"></p>
+      </div>
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'pza'">
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,2)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_RW- CAJA 3-4 .png" width="100" height="100">
+           <button class="btn bg-white" (click)="restarInv(item,2)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+        <p><input type="number" class="form-control" [(ngModel)]="item.p2" [disabled]="true"></p>
+      </div>
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'pza'">
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,3)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_ RW-CAJA 1-2.png" width="100" height="100">
+           <button class="btn bg-white" (click)="restarInv(item,3)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+        <p><input type="number" class="form-control" [(ngModel)]="item.p3" [disabled]="true"></p>
+      </div>
+      <div class="col-3" *ngIf="umedida.toLocaleLowerCase() == 'pza'">
+        <div class="d-flex justify-content-center">
+          <button class="btn bg-white" (click)="incrementarInv(item,4)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-plus-circle bx-sm text-primary' ></i></button>
+          <img src="/assets/img/RW-IT--ICONOS INVENTARIO-25_RW-CAJA 1-4.png" width="100" height="100">
+           <button class="btn bg-white" (click)="restarInv(item,4)"  [disabled]="item.presentacion=='-1'"><i class='bx bx-minus-circle bx-sm text-danger'></i></button>
+        </div>
+        <p><input type="number" class="form-control" [(ngModel)]="item.p4" [disabled]="true"></p>
+      </div>
+
+    </div>
+  </div> 
+
+} @else 
+{
+   <div class="m-3 table-responsive">
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">UBICACION</th>
+        <th scope="col">CANTIDAD</th>
+        <th scope="col">UNIDAD DE MEDIDA</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody id="bodytab">
+        <tr *ngFor="let item of ubicaciones; let i = index">
+        <td>{{item.ubicacion}}</td>
+        <td><input class="form-control p-1" [(ngModel)]="item.uds" type="number" (input)="gettotal()"></td>
+        <td>{{ umedida }}</td>
+        <td> <button class="btn btn-danger" (click)="borrar(i)"><i class='bx bxs-x-circle bx-sm' ></i>&nbsp;BORRAR</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+}
+ <button class="btn btn-warning" (click)="addubicacion()"><i class='bx bx-plus-circle bx-sm'></i> AGREGAR UBICACIÓN</button>
+
+<div class="d-flex flex-column justify-content-center mt-3 ">
+<p class="text-center fs-3">TOTAL</p>
+<input class="form-control p-1 text-center fs-3" disabled [value]="total + ' ' + umedida" >
+</div>
+
+}
+  </div>
+
+<div class="d-flex justify-content-center">
+  <button class="btn btn-secondary m-3" (click)="onHide()"><i class='bx bx-x bx-sm' ></i>&nbsp;CANCELAR</button>
+  <button class="btn m-3" [ngClass]="{'btn-success': isGreen, 'btn-warning': !isGreen}" (click)="guardarcalculoinv()" 
+  [disabled]="ubicaciones.length==0 || loading"><i class='bx bx-check bx-sm'></i>&nbsp;GUARDAR</button>
+</div>
+
+
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog />

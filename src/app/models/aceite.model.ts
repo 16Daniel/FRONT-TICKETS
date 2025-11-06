@@ -10,4 +10,6 @@ export interface EntregaAceite {
   comentariosCedis: string | null; 
   comentariosSucursal: string | null; 
   status:number; 
+  manual:boolean; 
+  fechaRecoleccion:Date|null; 
 }

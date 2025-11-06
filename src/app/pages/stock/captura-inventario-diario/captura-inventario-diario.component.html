@@ -1,16 +1,29 @@
-<div class="pt-3">
-    <p class="text-center fw-bold fs-5">INVENTARIO</p>
+<div class="pt-4" *ngIf="capturarInv">
+
+<div class="row m-3 gap-2 p-3" style="background-color: rgb(211, 218, 223);">
+    <div class="col-6">
+         <p>NOMBRE ARTÍCULO</p>
+         <input type="text" class="form-control h-42" [(ngModel)]="filtroArticulo" (ngModelChange)="filtrararticulo()">
+</div>
+<div class="col-auto">
+    <div class="" style="height: 35px;">
+        <p class="fw-bold fs-5" *ngIf="turnoMatutino">TURNO MATUTINO</p>
+        <p class="fw-bold fs-5" *ngIf="!turnoMatutino">TURNO VESPERTINO</p>
+        </div>
+     <p class="fs-3 text-danger">{{catArticulos.length}}&nbsp;ARTÍCULOS PENDIENTES DE INVENTARIAR</p>
+</div>
+</div>
 
 <div class="p-3">
-    <div class="mb-3">
-        <input class="form-control h-42" type="text" >
-    </div>
-<p-table [value]="catArticulos" [tableStyle]="{ 'min-width': '50rem' }">
+<p-table [value]="catArticulos" [tableStyle]="{'min-width': '30rem', 'padding':'10px'}" [scrollable]="true" scrollHeight="700px"
+        styleClass="p-datatable-gridlines" >
     <ng-template pTemplate="header">
         <tr>
             <th>NOMBRE</th>
             <th>UNIDAD DE MEDIDA </th>
-            <th>CAPTURA</th>
+            <th>INVENTARIO</th>
+            <!-- <th>INTENTOS</th> -->
+            <th></th>
             <th></th>
         </tr>
     </ng-template>
@@ -18,11 +31,54 @@
         <tr>
             <td>{{ item.descripcion }}</td>
             <td>{{ item.unidadmedida }}</td>
-            <td>0</td>
-            <td><button class="btn btn-primary"><i class='bx bxs-edit bx-sm'></i></button></td>
+            <td>{{ getCaptura(item.codarticulo) }}</td>
+             <!-- <td>
+               <div class="rounded-3 text-center" [ngClass]="{'bg-success text-light': item.intentos == 1,'bg-warning text-dark': item.intentos == 2,'bg-danger text-light': item.intentos == 3}">
+                {{ item.intentos }}
+               </div>
+            </td> -->
+            <td>
+                <!-- <button class="btn btn-warning" (click)="validar(item,getCaptura(item.codarticulo))" *ngIf="item.validado==false && item.intentos != 3">VALIDAR</button>
+                <button class="btn bg-p-b" *ngIf="item.validado==true || item.intentos == 3">GUARDAR</button> -->
+                 <button class="btn bg-p-b" (click)="ConfirmarGuardar(item)">GUARDAR</button>
+            </td>
+            <td>
+                <button class="btn btn-primary" (click)="abrirModalUbicaciones(item.codarticulo,item.descripcion,item.unidadmedida)"><i class='bx bxs-edit bx-sm'></i></button>
+            </td>
         </tr>
     </ng-template>
 </p-table>
+
 </div>
 
 </div>
+
+<div *ngIf="!capturarInv">
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+        <div class="p-5 bg-white shadow d-flex flex-column align-items-center justify-content-center rounded-3">
+            <img src="/assets/img/Waiting.gif" width="150">
+            <p>LA CAPTURA DE INVENTARIO AÚN NO ESTÁ DISPONIBLE</p>
+            <p>HORARIOS DE CAPTURA: <strong>7 AM - 11 AM</strong> Y <strong>22 PM - 1 AM</strong></p>
+        </div>
+    </div>
+</div>
+
+<app-ubicaciones-inventario 
+*ngIf="modalubicaciones" 
+[visible]="modalubicaciones" 
+(closeEvent)="modalubicaciones = false"
+[idfront]="idSucursal"
+[codarticulo]="codArticulo"
+[descripcion]="descripcion"
+[umedida]="itemumedida"
+(eventoDeGuardado)="actualizarUbicaciones()"
+></app-ubicaciones-inventario>
+
+  <p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p [innerHTML]="message.message"></p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
