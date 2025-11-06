@@ -11,4 +11,22 @@ export interface Inventario
   regularizaSemanal: string | null;
   inventarioMensual: string | null;
   orden: number | null;
+  validado:boolean|null;
+  intentos:number|null; 
+  invInicial?:number; 
+  diferencia?:number; 
  }
+
+export interface InvModel {
+  id?: number;
+  branch: number;
+  invInicial: number;
+  invReg: number;
+  diferencia: number;
+  intentos: number;
+  articulo: string;
+  createdBy: number;
+  createdDate: String;
+  updatedBy: number;
+  updatedDate: String;
+}

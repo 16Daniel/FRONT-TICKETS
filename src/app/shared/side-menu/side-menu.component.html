@@ -72,6 +72,9 @@
         <li (click)="closemenu()" *ngIf="usuario.idRol == '4'"><a [routerLink]="'/main/kpis'">
                 <i class='bx bx-objects-vertical-bottom bx-sm'></i>&nbsp;Kpis</a></li>
 
+  <!-- <li (click)="closemenu()" *ngIf="usuario.idRol == '2'"><a [routerLink]="'/inventario/captura'">
+                  <i class='bx bx-clipboard bx-sm'></i>&nbsp;Inventario</a></li> -->
+
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">

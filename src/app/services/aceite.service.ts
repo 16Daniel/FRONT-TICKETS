@@ -71,6 +71,12 @@ export class AceiteService {
     exportarHistorialEntregas(dataH:EntregaAceite[]): Observable<any> {
       return this.http.post<any>(this.url+'Aceite/generar-excel',dataH,{headers:this.headers});
     }
-
+    
+    agregarEntregaManual(ids:number,fecha:Date): Observable<any> {
+      let data = new FormData(); 
+      data.append("ids",ids.toString());
+      data.append("fecha",fecha.toISOString()); 
+      return this.http.post<any>(this.url+'Aceite/agregarEntregaManual',data,{headers:this.headers});
+    }
 
 }

@@ -5,6 +5,7 @@
      <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
 </div>
 
+<button class="btn bg-p-b m-3 p-3" (click)="abrirModalagregarRecoleccion()">AGREGAR RECOLECCIÓN</button>
 
 <p-tabView>
   <p-tabPanel header="POR VALIDAR">
@@ -91,6 +92,7 @@
         <tr>
           <th>SUCURSAL</th>
           <th>FECHA</th>
+          <th>FECHA RECOLECCIÓN</th>
           <th>ENTREGA CEDIS</th>
           <th>ENTREGA SUCURSAL</th>
           <th>75%</th>
@@ -107,7 +109,14 @@
         'bg-warning': record.intercambio == 3
         }">
             <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
-            <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+            <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
+           @if(record.fechaRecoleccion == null)
+           {
+              <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
+           } @else
+           {
+             <td>{{ getDate(record.fechaRecoleccion) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+           }
           <td>{{ record.entregaCedis || '' }}</td>
           <td>{{ record.entregaSucursal || '' }}</td>
           <td>{{ record.porcentaje75*100 | number:'1.0-0' }}%</td>
@@ -145,6 +154,9 @@
     </div>
 </p-dialog>
 
+
+<app-agregar-recoleccion *ngIf="modalAgregarRecoleccion" [visible]="modalAgregarRecoleccion" 
+(closeEvent)="modalAgregarRecoleccion = false" [sucursales]="sucursales"></app-agregar-recoleccion>
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

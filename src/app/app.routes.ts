@@ -198,6 +198,7 @@ export const routes: Routes = [
   },
   {
     path: 'inventario',
+    loadComponent: () => import('./pages/stock/stock.component'),
     children: [
       { path:'',
         redirectTo: '/inventario/captura',
