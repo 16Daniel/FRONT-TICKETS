@@ -12,6 +12,7 @@ import { ModalSysMttoImguploaderComponent } from '../../../../modals/maintenance
 import { ModalVisorImagenesComponent } from '../../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
 import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
 import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
+import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 
 @Component({
   selector: 'app-branch-maintenance-table',
@@ -22,7 +23,7 @@ import { MantenimientoFactoryService } from '../../../../services/maintenance-fa
     CommonModule,
     ModalFinalCommentsComponent,
     ModalSysMttoImguploaderComponent,
-    ModalVisorImagenesComponent,
+    ModalVisorVariasImagenesComponent,
     ModalMaintenanceChatComponent
   ],
   templateUrl: './branch-maintenance-table.component.html',

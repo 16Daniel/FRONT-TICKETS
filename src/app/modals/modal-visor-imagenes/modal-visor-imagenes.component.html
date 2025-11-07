@@ -2,25 +2,9 @@
   [maximizable]="true" (onHide)="onHide()">
 
   <div class="contenedor-imagen">
-    <img [src]="imagenActual" alt="Imagen principal" />
+    <img [src]="imagenUrl && imagenUrl.trim() !== '' 
+              ? imagenUrl 
+              : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'" alt="Imagen" />
   </div>
 
-  <!-- Navegación -->
-  <div class="botones-navegacion" *ngIf="imagenes.length > 1">
-    <button (click)="anterior()" [disabled]="imagenSeleccionadaIndex === 0">
-      ◀
-    </button>
-    <span>{{ imagenSeleccionadaIndex + 1 }} / {{ imagenes.length }}</span>
-    <button (click)="siguiente()" [disabled]="imagenSeleccionadaIndex === imagenes.length - 1">
-      ▶
-    </button>
-  </div>
-
-  <!-- Miniaturas -->
-  <div class="miniaturas" *ngIf="imagenes.length > 1">
-    <div *ngFor="let img of imagenes; let i = index" class="miniatura"
-      [class.seleccionada]="i === imagenSeleccionadaIndex" (click)="seleccionarImagen(i)">
-      <img [src]="img" alt="Miniatura" />
-    </div>
-  </div>
 </p-dialog>

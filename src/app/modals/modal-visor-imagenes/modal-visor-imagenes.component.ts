@@ -7,39 +7,15 @@ import { DialogModule } from 'primeng/dialog';
   standalone: true,
   imports: [DialogModule, CommonModule],
   templateUrl: './modal-visor-imagenes.component.html',
-  styleUrls: ['./modal-visor-imagenes.component.scss']
+  styleUrl: './modal-visor-imagenes.component.scss'
 })
 export class ModalVisorImagenesComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() imagenes: string[] = [];
-  @Input() imagenUrl!: string;
-  @Input() titulo: string = 'VISOR DE IMÁGENES';
+  @Input() imagenUrl: string | null = null;
+  @Input() titulo: string = 'VISOR DE IMAGENES';
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  imagenSeleccionadaIndex: number = 0; // índice actual
-
   onHide() {
-    this.closeEvent.emit(); // cerrar modal
-  }
-
-  get imagenActual(): string {
-    return this.imagenes[this.imagenSeleccionadaIndex] ||
-      'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg';
-  }
-
-  seleccionarImagen(index: number) {
-    this.imagenSeleccionadaIndex = index;
-  }
-
-  siguiente() {
-    if (this.imagenSeleccionadaIndex < this.imagenes.length - 1) {
-      this.imagenSeleccionadaIndex++;
-    }
-  }
-
-  anterior() {
-    if (this.imagenSeleccionadaIndex > 0) {
-      this.imagenSeleccionadaIndex--;
-    }
+    this.closeEvent.emit(); // Cerrar modal
   }
 }
