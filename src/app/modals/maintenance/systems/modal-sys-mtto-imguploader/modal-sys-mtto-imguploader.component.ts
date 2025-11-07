@@ -21,15 +21,16 @@ export class ModalSysMttoImguploaderComponent {
   @Output() closeEvent = new EventEmitter<boolean>();
 
   imagenesBase64: string[] = [];
-  archivo: File | undefined;
+  archivos: File[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance10x10Service: Maintenance10x10Service) { }
+    private maintenance10x10Service: Maintenance10x10Service
+  ) { }
 
   onHide() {
-    this.closeEvent.emit(); // Cerrar modal
+    this.closeEvent.emit();
   }
 
   onDragOver(event: DragEvent) {
@@ -44,7 +45,6 @@ export class ModalSysMttoImguploaderComponent {
   onDrop(event: DragEvent) {
     event.preventDefault();
     (event.currentTarget as HTMLElement).classList.remove('dragover');
-
     if (event.dataTransfer?.files?.length) {
       this.handleFiles(event.dataTransfer.files);
     }
@@ -58,13 +58,12 @@ export class ModalSysMttoImguploaderComponent {
   }
 
   async handleFiles(files: FileList) {
-    this.imagenesBase64 = [];
-
-    const file = files[0];
-    this.archivo = file;
-    const base64 = await this.convertToBase64(file);
-    this.imagenesBase64.push(base64);
-
+    const nuevasImagenes = Array.from(files);
+    for (const file of nuevasImagenes) {
+      const base64 = await this.convertToBase64(file);
+      this.imagenesBase64.push(base64);
+      this.archivos.push(file);
+    }
     this.cdr.detectChanges();
   }
 
@@ -80,70 +79,105 @@ export class ModalSysMttoImguploaderComponent {
     });
   }
 
-  subirImagen() {
+  async subirImagen() {
+    if (!this.archivos.length) return;
+
     Swal.fire({
       target: document.body,
       allowOutsideClick: false,
       icon: 'info',
-      text: 'Espere por favor...',
+      text: 'Subiendo imágenes...',
       didOpen: () => Swal.showLoading(),
-      customClass: {
-        container: 'swal-topmost'
-      }
+      customClass: { container: 'swal-topmost' }
     });
 
-    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, 'sistemas')
-      .then(async url => {
+    try {
+      const urls = await Promise.all(
+        this.archivos.map(file =>
+          this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(file, 'sistemas')
+        )
+      );
 
-        this.actualizarUrlImagenMantenimiento(this.titulo!, url);
+      await this.actualizarUrlsImagenMantenimiento(this.titulo!, urls);
 
-        Swal.close();
-        this.closeEvent.emit();
-      })
-      .catch(async err => {
-        Swal.close();
-        Swal.fire("Oops...", "ERROR AL SUBIR LA IMÁGEN!", "error");
-        console.error('Error al subir una o más imágenes:', err);
-        this.closeEvent.emit();
-      });
+      Swal.close();
+      Swal.fire("OK", "Las imágenes se subieron correctamente!", "success");
+      this.closeEvent.emit();
+
+    } catch (err) {
+      console.error('Error al subir una o más imágenes:', err);
+      Swal.close();
+      Swal.fire("Oops...", "Error al subir imágenes!", "error");
+      this.closeEvent.emit();
+    }
   }
 
-  async actualizarUrlImagenMantenimiento(campo: string, url: string) {
+  async actualizarUrlsImagenMantenimiento(campo: string, urls: string[]) {
+    if (!this.mantenimiento) return;
+
     switch (campo) {
       case 'CAJA':
-        this.mantenimiento!.mantenimientoCajaEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoCajaEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoCajaEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'IMPRESORAS':
-        this.mantenimiento!.mantenimientoImpresorasEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoImpresorasEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoImpresorasEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'RACK':
-        this.mantenimiento!.mantenimientoRackEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoRackEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoRackEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'TPV':
-        this.mantenimiento!.mantenimientoPuntosVentaTabletasEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'CONTENIDOS':
-        this.mantenimiento!.mantenimientoContenidosSistemaCableEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'INTERNET':
-        this.mantenimiento!.mantenimientoInternetEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoInternetEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoInternetEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'CCTV':
-        this.mantenimiento!.mantenimientoCCTVEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoCCTVEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoCCTVEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'NO BRAKES':
-        this.mantenimiento!.mantenimientoNoBrakesEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoNoBrakesEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoNoBrakesEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'TIEMPOS COCINA':
-        this.mantenimiento!.mantenimientoTiemposCocinaEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls || []),
+          ...urls
+        ];
         break;
       case 'APPS':
-        this.mantenimiento!.mantenimientoConcentradorAppsEvidenciaUrl = url;
+        this.mantenimiento.mantenimientoConcentradorAppsEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoConcentradorAppsEvidenciaUrls || []),
+          ...urls
+        ];
         break;
     }
 
-    await this.maintenance10x10Service.update(this.mantenimiento!.id, this.mantenimiento!);
-    Swal.fire("OK", "LA IMÁGEN SE SUBIÓ CORRECTAMENTE!", "success");
+    await this.maintenance10x10Service.update(this.mantenimiento.id, this.mantenimiento);
   }
-
 }

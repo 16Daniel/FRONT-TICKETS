@@ -43,6 +43,7 @@ export class BranchMaintenanceTableComponent {
   urlImagen: string | undefined;
   usuario: Usuario;
   tituloVisor: string | undefined;
+  imagenes: string[] = []; // ✅ arreglo de imágenes
 
   constructor(
     public dateHelpder: DatesHelperService,
@@ -116,43 +117,44 @@ export class BranchMaintenanceTableComponent {
   }
 
   abrirModalVisorImagen(mantenimiento: Mantenimiento10x10, campo: string) {
-    this.urlImagen = '';
+    this.imagenes = [];
     this.tituloVisor = campo;
 
     switch (campo) {
       case 'CAJA':
-        this.urlImagen = mantenimiento.mantenimientoCajaEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoCajaEvidenciaUrls || [];
         break;
       case 'IMPRESORAS':
-        this.urlImagen = mantenimiento.mantenimientoImpresorasEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoImpresorasEvidenciaUrls || [];
         break;
       case 'RACK':
-        this.urlImagen = mantenimiento.mantenimientoRackEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoRackEvidenciaUrls || [];
         break;
       case 'TPV':
-        this.urlImagen = mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls || [];
         break;
       case 'CONTENIDOS':
-        this.urlImagen = mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrls || [];
         break;
       case 'INTERNET':
-        this.urlImagen = mantenimiento.mantenimientoInternetEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoInternetEvidenciaUrls || [];
         break;
       case 'CCTV':
-        this.urlImagen = mantenimiento.mantenimientoCCTVEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoCCTVEvidenciaUrls || [];
         break;
       case 'NO BRAKES':
-        this.urlImagen = mantenimiento.mantenimientoNoBrakesEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoNoBrakesEvidenciaUrls || [];
         break;
       case 'TIEMPOS COCINA':
-        this.urlImagen = mantenimiento.mantenimientoTiemposCocinaEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls || [];
         break;
       case 'APPS':
-        this.urlImagen = mantenimiento.mantenimientoConcentradorAppsEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoConcentradorAppsEvidenciaUrls || [];
         break;
     }
 
     this.mostrarModalVisorImagen = true;
+    this.cdr.detectChanges();
   }
 
   abrirModalDetalle(mantenimiento: any) {
