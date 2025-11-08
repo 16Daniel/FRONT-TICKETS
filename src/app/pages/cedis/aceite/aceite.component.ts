@@ -15,11 +15,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import ControlAceiteTabComponent from '../../branch/components/control-aceite-tab/control-aceite-tab.component';
+import { AgregarRecoleccionComponent } from "./dialogs/agregar-recoleccion.component/agregar-recoleccion.component";
 
 @Component({
   selector: 'app-aceite',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule, ControlAceiteTabComponent],
+  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule, ControlAceiteTabComponent, AgregarRecoleccionComponent],
     providers:[MessageService],
   templateUrl: './aceite.component.html',
   styleUrl: './aceite.component.scss',
@@ -34,6 +35,7 @@ public formcomentarios:string = "";
 public itemEntrega:EntregaAceite|undefined; 
 public tipoActualizacion:number = 0;  
 public loading:boolean = false; 
+public modalAgregarRecoleccion:boolean = false; 
 fechaini:Date = new Date(); 
 fechafin:Date = new Date(); 
 constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
@@ -220,6 +222,11 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
      
     }
 });
+}
+
+abrirModalagregarRecoleccion()
+{
+  this.modalAgregarRecoleccion = true; 
 }
 
 }
