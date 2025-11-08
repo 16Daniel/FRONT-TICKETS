@@ -1,0 +1,26 @@
+<p-dialog [header]="titulo" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '80vw', height: '80vh' }"
+    [maximizable]="true" (onHide)="onHide()">
+
+    <div class="contenedor-imagen">
+        <img [src]="imagenActual" alt="Imagen principal" />
+    </div>
+
+    <!-- Navegación -->
+    <div class="botones-navegacion" *ngIf="imagenes.length > 1">
+        <button (click)="anterior()" [disabled]="imagenSeleccionadaIndex === 0">
+            ◀
+        </button>
+        <span>{{ imagenSeleccionadaIndex + 1 }} / {{ imagenes.length }}</span>
+        <button (click)="siguiente()" [disabled]="imagenSeleccionadaIndex === imagenes.length - 1">
+            ▶
+        </button>
+    </div>
+
+    <!-- Miniaturas -->
+    <div class="miniaturas" *ngIf="imagenes.length > 1">
+        <div *ngFor="let img of imagenes; let i = index" class="miniatura"
+            [class.seleccionada]="i === imagenSeleccionadaIndex" (click)="seleccionarImagen(i)">
+            <img [src]="img" alt="Miniatura" />
+        </div>
+    </div>
+</p-dialog>

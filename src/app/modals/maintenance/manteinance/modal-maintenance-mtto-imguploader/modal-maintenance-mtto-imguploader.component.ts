@@ -21,14 +21,15 @@ export class ModalMaintenanceMttoImguploaderComponent {
   @Output() closeEvent = new EventEmitter<boolean>();
 
   imagenesBase64: string[] = [];
-  archivo: File | undefined;
+  archivos: File[] = [];
+
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
     private maintenanceMtooService: MaintenanceMtooService) { }
 
   onHide() {
-    this.closeEvent.emit(); // Cerrar modal
+    this.closeEvent.emit();
   }
 
   onDragOver(event: DragEvent) {
@@ -43,7 +44,6 @@ export class ModalMaintenanceMttoImguploaderComponent {
   onDrop(event: DragEvent) {
     event.preventDefault();
     (event.currentTarget as HTMLElement).classList.remove('dragover');
-
     if (event.dataTransfer?.files?.length) {
       this.handleFiles(event.dataTransfer.files);
     }
@@ -57,13 +57,12 @@ export class ModalMaintenanceMttoImguploaderComponent {
   }
 
   async handleFiles(files: FileList) {
-    this.imagenesBase64 = [];
-
-    const file = files[0];
-    this.archivo = file;
-    const base64 = await this.convertToBase64(file);
-    this.imagenesBase64.push(base64);
-
+    const nuevasImagenes = Array.from(files);
+    for (const file of nuevasImagenes) {
+      const base64 = await this.convertToBase64(file);
+      this.imagenesBase64.push(base64);
+      this.archivos.push(file);
+    }
     this.cdr.detectChanges();
   }
 
@@ -79,64 +78,100 @@ export class ModalMaintenanceMttoImguploaderComponent {
     });
   }
 
-  subirImagen() {
+  async subirImagen() {
+    if (!this.archivos.length) return;
+
     Swal.fire({
       target: document.body,
       allowOutsideClick: false,
       icon: 'info',
-      text: 'Espere por favor...',
+      text: 'Subiendo imágenes...',
       didOpen: () => Swal.showLoading(),
-      customClass: {
-        container: 'swal-topmost'
-      }
+      customClass: { container: 'swal-topmost' }
     });
 
-    this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(this.archivo!, 'mantenimiento')
-      .then(async url => {
+    try {
+      const urls = await Promise.all(
+        this.archivos.map(file =>
+          this.firebaseStorage.cargarImagenesEvidenciasMantenimiento(file, 'sistemas')
+        )
+      );
 
-        this.actualizarUrlImagenMantenimiento(this.titulo!, url);
+      await this.actualizarUrlsImagenMantenimiento(this.titulo!, urls);
 
-        Swal.close();
-        this.closeEvent.emit();
-      })
-      .catch(async err => {
-        Swal.close();
-        Swal.fire("Oops...", "ERROR AL SUBIR LA IMÁGEN!", "error");
-        console.error('Error al subir una o más imágenes:', err);
-        this.closeEvent.emit();
-      });
+      Swal.close();
+      Swal.fire("OK", "Las imágenes se subieron correctamente!", "success");
+      this.closeEvent.emit();
+
+    } catch (err) {
+      console.error('Error al subir una o más imágenes:', err);
+      Swal.close();
+      Swal.fire("Oops...", "Error al subir imágenes!", "error");
+      this.closeEvent.emit();
+    }
   }
 
-  async actualizarUrlImagenMantenimiento(campo: string, url: string) {
+  async actualizarUrlsImagenMantenimiento(campo: string, urls: string[]) {
     switch (campo) {
       case 'TERMOSTATO':
-        this.mantenimiento!.mantenimientoTermostatoEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoTermostatoEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoTermostatoEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
+
       case 'PERILLAS':
-        this.mantenimiento!.mantenimientoPerillasEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoPerillasEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoPerillasEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
+
       case 'TORNILLERIA':
-        this.mantenimiento!.mantenimientoTornilleriaEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoTornilleriaEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoTornilleriaEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
+
       case 'RUEDAS':
-        this.mantenimiento!.mantenimientoRuedasEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoRuedasEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoRuedasEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
+
       case 'CABLEADO':
-        this.mantenimiento!.mantenimientoCableadoEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoCableadoEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoCableadoEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
+
       case 'TINAS':
-        this.mantenimiento!.mantenimientoTinaEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoTinaEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoTinaEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
+
       case 'MANGUERAS':
-        this.mantenimiento!.mantenimientoManguerasEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoManguerasEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoManguerasEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
+
       case 'LLAVES':
-        this.mantenimiento!.mantenimientoLlavesDePasoEvidenciaUrl = url;
+        this.mantenimiento!.mantenimientoLlavesDePasoEvidenciaUrls = [
+          ...(this.mantenimiento!.mantenimientoLlavesDePasoEvidenciaUrls || []),
+          ...urls,
+        ];
         break;
     }
 
     await this.maintenanceMtooService.update(this.mantenimiento!.id, this.mantenimiento!);
-    Swal.fire("OK", "LA IMÁGEN SE SUBIÓ CORRECTAMENTE!", "success");
-
+    Swal.fire("OK", "Las imágenes se subieron correctamente!", "success");
   }
+
 }

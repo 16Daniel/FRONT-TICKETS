@@ -8,9 +8,9 @@ import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
 import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
 import { ModalMaintenanceMttoImguploaderComponent } from '../../../../modals/maintenance/manteinance/modal-maintenance-mtto-imguploader/modal-maintenance-mtto-imguploader.component';
-import { ModalVisorImagenesComponent } from '../../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
 import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
 import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
+import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 
 @Component({
   selector: 'app-branch-maintenance-table-mtto',
@@ -19,7 +19,7 @@ import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/mo
     TableModule,
     CommonModule,
     ModalMaintenanceMttoImguploaderComponent,
-    ModalVisorImagenesComponent,
+    ModalVisorVariasImagenesComponent,
     ModalFinalCommentsComponent,
     ModalMaintenanceChatComponent
   ],
@@ -31,7 +31,7 @@ export class BranchMaintenanceTableMttoComponent {
   @Input() usuariosHelp: Usuario[] = [];
   @Input() mostrarChat: boolean = false;
   @Output() clickEvent = new EventEmitter<MantenimientoMtto>();
-  
+
   mantenimientoSeleccionado: MantenimientoMtto | undefined;
   mostrarModalComentarios: boolean = false;
   mostrarModalChat: boolean = false;
@@ -41,22 +41,13 @@ export class BranchMaintenanceTableMttoComponent {
   urlImagen: string | undefined;
   usuario: Usuario;
   tituloVisor: string | undefined;
+  imagenes: string[] = []; // ✅ arreglo de imágenes
 
   constructor(
     public datesHelper: DatesHelperService,
     private cdr: ChangeDetectorRef,
     public maintenanceMtooService: MaintenanceMtooService,
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
-
-  // ngOnChanges(changes: SimpleChanges) {
-  //   this.observaActualizacionesChatTicket(changes);
-  // }
-
-  // observaActualizacionesChatTicket(changes: SimpleChanges) {
-  //   if (changes['mantenimientos'] && changes['mantenimientos'].currentValue) {
-  //     console.log('Mantenimientos actualizados');
-  //   }
-  // }
 
   obtenerNombreResponsable(idUsuario: string): string {
     let nombre = '';
@@ -103,28 +94,28 @@ export class BranchMaintenanceTableMttoComponent {
 
     switch (campo) {
       case 'TERMOSTATO':
-        this.urlImagen = mantenimiento.mantenimientoTermostatoEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoTermostatoEvidenciaUrls || [];
         break;
       case 'PERILLAS':
-        this.urlImagen = mantenimiento.mantenimientoPerillasEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoPerillasEvidenciaUrls || [];
         break;
       case 'TORNILLERIA':
-        this.urlImagen = mantenimiento.mantenimientoTornilleriaEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoTornilleriaEvidenciaUrls || [];
         break;
       case 'RUEDAS':
-        this.urlImagen = mantenimiento.mantenimientoRuedasEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoRuedasEvidenciaUrls || [];
         break;
       case 'CABLEADO':
-        this.urlImagen = mantenimiento.mantenimientoCableadoEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoCableadoEvidenciaUrls || [];
         break;
       case 'TINAS':
-        this.urlImagen = mantenimiento.mantenimientoTinaEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoTinaEvidenciaUrls || [];
         break;
       case 'MANGUERAS':
-        this.urlImagen = mantenimiento.mantenimientoManguerasEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoManguerasEvidenciaUrls || [];
         break;
       case 'LLAVES':
-        this.urlImagen = mantenimiento.mantenimientoLlavesDePasoEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoLlavesDePasoEvidenciaUrls || [];
         break;
     }
 

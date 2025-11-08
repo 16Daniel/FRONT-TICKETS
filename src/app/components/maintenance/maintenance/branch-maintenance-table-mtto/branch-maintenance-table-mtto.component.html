@@ -65,8 +65,9 @@
                     <i class='bx bx-show bx-sm'></i>
                 </button>
 
-                <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)" *ngIf="mostrarChat"
-                    style="margin: 2px" [ngClass]="{'has-notification': verificarChatNoLeido(mantenimiento)}">
+                <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)"
+                    *ngIf="mostrarChat" style="margin: 2px"
+                    [ngClass]="{'has-notification': verificarChatNoLeido(mantenimiento)}">
                     <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
                         tooltipPosition="top"></i>
                 </button>
@@ -83,9 +84,9 @@
     (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
     [mantenimiento]="mantenimientoSeleccionado"></app-modal-maintenance-mtto-imguploader>
 
-<app-modal-visor-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
+<app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
     [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false"
-    [imagenUrl]="urlImagen!"></app-modal-visor-imagenes>
+    [imagenes]="imagenes"></app-modal-visor-varias-imagenes>
 
 <app-modal-maintenance-chat *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
     (closeEvent)="mostrarModalChat = false" [idMnatenimiento]="mantenimientoSeleccionado?.id"

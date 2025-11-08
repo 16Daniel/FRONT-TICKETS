@@ -9,34 +9,34 @@ export interface Mantenimiento10x10 {
   fecha: Date | undefined;
 
   mantenimientoCaja: boolean;
-  mantenimientoCajaEvidenciaUrl?: string;
+  mantenimientoCajaEvidenciaUrls?: string[];
 
   mantenimientoImpresoras: boolean;
-  mantenimientoImpresorasEvidenciaUrl?: string;
+  mantenimientoImpresorasEvidenciaUrls?: string[];
 
   mantenimientoRack: boolean;
-  mantenimientoRackEvidenciaUrl?: string;
+  mantenimientoRackEvidenciaUrls?: string[];
 
   mantenimientoPuntosVentaTabletas: boolean;
-  mantenimientoPuntosVentaTabletasEvidenciaUrl?: string;
+  mantenimientoPuntosVentaTabletasEvidenciaUrls?: string[];
 
   mantenimientoContenidosSistemaCable: boolean;
-  mantenimientoContenidosSistemaCableEvidenciaUrl?: string;
+  mantenimientoContenidosSistemaCableEvidenciaUrls?: string[];
 
   mantenimientoInternet: boolean;
-  mantenimientoInternetEvidenciaUrl?: string;
+  mantenimientoInternetEvidenciaUrls?: string[];
 
   mantenimientoCCTV: boolean;
-  mantenimientoCCTVEvidenciaUrl?: string;
+  mantenimientoCCTVEvidenciaUrls?: string[];
 
   mantenimientoNoBrakes: boolean;
-  mantenimientoNoBrakesEvidenciaUrl?: string;
+  mantenimientoNoBrakesEvidenciaUrls?: string[];
 
   mantenimientoTiemposCocina: boolean;
-  mantenimientoTiemposCocinaEvidenciaUrl?: string;
+  mantenimientoTiemposCocinaEvidenciaUrls?: string[];
 
   mantenimientoConcentradorApps: boolean;
-  mantenimientoConcentradorAppsEvidenciaUrl?: string;
+  mantenimientoConcentradorAppsEvidenciaUrls?: string[];
 
   observaciones: string | undefined;
   estatus: boolean;

@@ -8,9 +8,9 @@ import { Usuario } from '../../../../models/usuario.model';
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
-import { ModalVisorImagenesComponent } from '../../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
 import { ModalAvMttoImguploaderComponent } from '../../../../modals/maintenance/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
 import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
+import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 
 @Component({
   selector: 'app-branch-maintenance-table-av',
@@ -20,7 +20,7 @@ import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/mo
     CommonModule,
     ModalFinalCommentsComponent,
     ModalAvMttoImguploaderComponent,
-    ModalVisorImagenesComponent,
+    ModalVisorVariasImagenesComponent,
     ModalMaintenanceChatComponent
   ],
   templateUrl: './branch-maintenance-table-av.component.html',
@@ -42,6 +42,7 @@ export class BranchMaintenanceTableAvComponent {
   urlImagen: string | undefined;
   usuario: Usuario;
   tituloVisor: string | undefined;
+  imagenes: string[] = []; // ✅ arreglo de imágenes
 
   constructor(
     public datesHelper: DatesHelperService,
@@ -94,22 +95,22 @@ export class BranchMaintenanceTableAvComponent {
 
     switch (campo) {
       case 'CONEXIONES':
-        this.urlImagen = mantenimiento.mantenimientoConexionesEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoConexionesEvidenciaUrls || [];
         break;
       case 'CABLEADO':
-        this.urlImagen = mantenimiento.mantenimientoCableadoEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoCableadoEvidenciaUrls || [];;
         break;
       case 'RACK':
-        this.urlImagen = mantenimiento.mantenimientoRackEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoRackEvidenciaUrls || [];
         break;
       case 'CONTROLES':
-        this.urlImagen = mantenimiento.mantenimientoControlesEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoControlesEvidenciaUrls || [];
         break;
       case 'NIVEL AUDIO':
-        this.urlImagen = mantenimiento.mantenimientoNivelAudioEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoNivelAudioEvidenciaUrls || [];
         break;
       case 'CANALES':
-        this.urlImagen = mantenimiento.mantenimientoCanalesEvidenciaUrl;
+        this.imagenes = mantenimiento.mantenimientoCanalesEvidenciaUrls || [];
         break;
     }
 

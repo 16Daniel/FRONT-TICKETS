@@ -9,22 +9,22 @@ export interface Mantenimiento6x6AV {
   fecha: Date | undefined;
 
   mantenimientoConexiones: boolean;
-  mantenimientoConexionesEvidenciaUrl?: string;
+  mantenimientoConexionesEvidenciaUrls?: string[];
 
   mantenimientoCableado: boolean;
-  mantenimientoCableadoEvidenciaUrl?: string;
+  mantenimientoCableadoEvidenciaUrls?: string[];
 
   mantenimientoRack: boolean;
-  mantenimientoRackEvidenciaUrl?: string;
+  mantenimientoRackEvidenciaUrls?: string[];
 
   mantenimientoControles: boolean;
-  mantenimientoControlesEvidenciaUrl?: string;
+  mantenimientoControlesEvidenciaUrls?: string[];
 
   mantenimientoNivelAudio: boolean;
-  mantenimientoNivelAudioEvidenciaUrl?: string;
+  mantenimientoNivelAudioEvidenciaUrls?: string[];
 
   mantenimientoCanales: boolean;
-  mantenimientoCanalesEvidenciaUrl?: string;
+  mantenimientoCanalesEvidenciaUrls?: string[];
 
   observaciones: string | undefined;
   estatus: boolean;
