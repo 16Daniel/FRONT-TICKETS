@@ -12,28 +12,28 @@ export interface MantenimientoMtto {
   referencia: string;
 
   mantenimientoTermostato: boolean;
-  mantenimientoTermostatoEvidenciaUrl?: string;
+  mantenimientoTermostatoEvidenciaUrls?: string[];
 
   mantenimientoPerillas: boolean;
-  mantenimientoPerillasEvidenciaUrl?: string;
+  mantenimientoPerillasEvidenciaUrls?: string[];
 
   mantenimientoTornilleria: boolean;
-  mantenimientoTornilleriaEvidenciaUrl?: string;
+  mantenimientoTornilleriaEvidenciaUrls?: string[];
 
   mantenimientoRuedas: boolean;
-  mantenimientoRuedasEvidenciaUrl?: string;
+  mantenimientoRuedasEvidenciaUrls?: string[];
 
   mantenimientoCableado: boolean;
-  mantenimientoCableadoEvidenciaUrl?: string;
+  mantenimientoCableadoEvidenciaUrls?: string[];
 
   mantenimientoTina: boolean;
-  mantenimientoTinaEvidenciaUrl?: string;
+  mantenimientoTinaEvidenciaUrls?: string[];
 
   mantenimientoMangueras: boolean;
-  mantenimientoManguerasEvidenciaUrl?: string;
+  mantenimientoManguerasEvidenciaUrls?: string[];
 
   mantenimientoLlavesDePaso: boolean;
-  mantenimientoLlavesDePasoEvidenciaUrl?: string;
+  mantenimientoLlavesDePasoEvidenciaUrls?: string[];
 
   observaciones: string | undefined;
   estatus: boolean;

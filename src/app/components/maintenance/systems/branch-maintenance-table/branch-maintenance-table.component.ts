@@ -9,7 +9,6 @@ import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/moda
 import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { ModalSysMttoImguploaderComponent } from '../../../../modals/maintenance/systems/modal-sys-mtto-imguploader/modal-sys-mtto-imguploader.component';
-import { ModalVisorImagenesComponent } from '../../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
 import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
 import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
 import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
