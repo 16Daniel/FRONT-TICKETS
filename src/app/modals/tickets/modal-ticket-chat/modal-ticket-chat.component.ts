@@ -45,7 +45,7 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
 
   userdata: Usuario;
   comentario: string = '';
-  sucursal!: Sucursal;
+  sucursal: Sucursal = new Sucursal;
 
   constructor(
     private ticketsService: TicketsService,

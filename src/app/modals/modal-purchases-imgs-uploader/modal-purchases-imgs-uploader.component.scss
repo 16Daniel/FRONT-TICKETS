@@ -1,0 +1,96 @@
+/* Contenedor principal */
+.upload-container {
+    border: 2px dashed #aaa;
+    border-radius: 10px;
+    text-align: center;
+    padding: 2rem;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    background-color: #fafafa;
+    margin-bottom: 1.5rem;
+}
+
+.upload-container:hover,
+.upload-container.dragover {
+    border-color: #007ad9;
+    background-color: #eef6ff;
+}
+
+.upload-icon {
+    font-size: 2.8rem;
+    color: #007ad9;
+    margin-bottom: 1rem;
+}
+
+.upload-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.upload-separator {
+    margin: 0.3rem 0;
+    color: #666;
+}
+
+/* Botón principal */
+.btn-upload {
+    background-color: #007ad9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-upload:hover {
+    background-color: #005fa3;
+}
+
+/* Vista previa de imágenes */
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    max-height: 28vh;
+    overflow-y: auto;
+}
+
+.preview-item img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease-in-out;
+}
+
+.preview-item img:hover {
+    transform: scale(1.05);
+    border-color: #007ad9;
+}
+
+/* Footer */
+.footer-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-confirm {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-confirm:hover {
+    background-color: #1e7e34;
+}

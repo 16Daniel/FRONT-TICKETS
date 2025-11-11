@@ -8,5 +8,6 @@ export class Compra {
     articulo: string = '';
     unidades?: number;
     justificacion: string = '';
-    eliminado: boolean = false;
+    eliminado: boolean = false;  
+    evidenciaUrls?: string[];
 }
