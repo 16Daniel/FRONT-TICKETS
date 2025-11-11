@@ -18,11 +18,22 @@ import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 import { Usuario } from '../../../../models/usuario.model';
 import { AreasService } from '../../../../services/areas.service';
 import { UsersService } from '../../../../services/users.service';
+import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalPurchasesImgsUploaderComponent } from '../../../../modals/modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
 
 @Component({
   selector: 'app-modal-purshases',
   standalone: true,
-  imports: [DialogModule, TableModule, CommonModule, DropdownModule, FormsModule, ButtonModule],
+  imports: [
+    DialogModule,
+    TableModule,
+    CommonModule,
+    DropdownModule,
+    FormsModule,
+    ButtonModule,
+    ModalPurchasesImgsUploaderComponent,
+    ModalVisorVariasImagenesComponent
+  ],
   templateUrl: './modal-purshases.component.html',
   styleUrl: './modal-purshases.component.scss'
 })
@@ -43,6 +54,11 @@ export class ModalPurshasesComponent {
   idEstado: string = '';
   idSucursal: string = '';
   idUsuario: string = '';
+
+  mostrarModalSubirImagen = false;
+  mostrarModalVisorImagen = false;
+  compraSeleccionada!: Compra;
+  imagenes: string[] = [];
 
   constructor(
     private purchaseService: PurchaseService,
@@ -157,5 +173,16 @@ export class ModalPurshasesComponent {
         (!this.idEstado || this.idEstado == compra.idEstatusCompra) &&
         (!this.idUsuario || this.idUsuario == compra.idUsuario)
     })
+  }
+
+  abrirModalSubirImagen(compra: Compra) {
+    this.mostrarModalSubirImagen = true;
+    this.compraSeleccionada = compra;
+  }
+
+  abrirModalVisorImagenes(compra: Compra) {
+    this.mostrarModalVisorImagen = true;
+    this.compraSeleccionada = compra;
+    this.imagenes = compra.evidenciaUrls || [];
   }
 }

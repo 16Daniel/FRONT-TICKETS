@@ -1,4 +1,4 @@
-<p-dialog [header]="'COMPRAS'" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '75vw', 'height': '95vh' }"
+<p-dialog [header]="'COMPRAS'" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '85vw', 'height': '95vh' }"
     [maximizable]="true" (onHide)="onHide()" styleClass="dialog-rojo">
 
     <form #form="ngForm" (ngSubmit)="crear(form)">
@@ -97,12 +97,25 @@
                 <td>{{ compra.justificacion }}</td>
                 <td>{{ obtenerNombreEstatus(compra.idEstatusCompra) }}</td>
                 <td>
-                    <button class="btn btn-danger" (click)="confirmaEliminacion(compra.id)"
+                    <button class="btn btn-danger me-3" (click)="confirmaEliminacion(compra.id)"
                         *ngIf="compra.idEstatusCompra == '1'">
                         <i class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i>
+                    </button>
+                    <button class="btn btn-primary me-3" (click)="abrirModalSubirImagen(compra)"><i
+                            class='bx bx-upload bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
+
+                    <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
+                        (click)="abrirModalVisorImagenes(compra)">
+                        <i class='bx bx-show bx-sm'></i>
                     </button>
                 </td>
             </tr>
         </ng-template>
     </p-table>
 </p-dialog>
+
+<app-modal-purchases-imgs-uploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
+    (closeEvent)="mostrarModalSubirImagen = false" [compra]="compraSeleccionada"></app-modal-purchases-imgs-uploader>
+
+<app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen" (closeEvent)="mostrarModalVisorImagen = false"
+    [imagenes]="imagenes"></app-modal-visor-varias-imagenes>

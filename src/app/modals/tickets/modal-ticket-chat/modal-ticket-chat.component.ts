@@ -20,6 +20,8 @@ import { TicketsService } from '../../../services/tickets.service';
 import { Usuario } from '../../../models/usuario.model';
 import { DatesHelperService } from '../../../helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../services/mensajes-pendientes.service';
+import { BranchesService } from '../../../services/branches.service';
+import { Sucursal } from '../../../models/sucursal.model';
 
 @Component({
   selector: 'app-modal-ticket-chat',
@@ -43,17 +45,21 @@ export class ModalTicketChatComponent implements AfterViewChecked, OnInit {
 
   userdata: Usuario;
   comentario: string = '';
+  sucursal: Sucursal = new Sucursal;
 
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
-    private mensajesPendientesService: MensajesPendientesService
+    private mensajesPendientesService: MensajesPendientesService,
+    private sucursalesService: BranchesService
   ) {
     this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   async ngOnInit() {
+    this.sucursalesService.getById(this.ticket.idSucursal).subscribe(sucursal => this.sucursal = sucursal);
+
     await this.mensajesPendientesService.marcarComoLeidos(
       this.ticket.id,
       'Tickets',

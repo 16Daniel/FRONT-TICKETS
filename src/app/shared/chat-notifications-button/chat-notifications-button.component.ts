@@ -78,7 +78,6 @@ export class ChatNotificationsButtonComponent implements OnInit {
   }
 
   seleccionarNotificacion(item: MensajePendiente) {
-    console.log('Notificación seleccionada:', item);
     this.showNotifications = false;
     switch (item.tipoOrigen) {
       case 'Tickets':

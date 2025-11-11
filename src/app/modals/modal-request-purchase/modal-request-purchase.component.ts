@@ -17,6 +17,8 @@ import { DatesHelperService } from '../../helpers/dates-helper.service';
 import { StatusPurchaseService } from '../../services/status-purchase.service';
 import { EstatusCompra } from '../../models/estatus-compras.model';
 import { AreasService } from '../../services/areas.service';
+import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
+import { ModalVisorVariasImagenesComponent } from '../modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 
 @Component({
   selector: 'app-modal-request-purchase',
@@ -27,7 +29,9 @@ import { AreasService } from '../../services/areas.service';
     CommonModule,
     FormsModule,
     DropdownModule,
-    TooltipModule
+    TooltipModule,
+    ModalPurchasesImgsUploaderComponent,
+    ModalVisorVariasImagenesComponent
   ],
   templateUrl: './modal-request-purchase.component.html',
   styleUrl: './modal-request-purchase.component.scss'
@@ -43,6 +47,10 @@ export class ModalRequestPurchaseComponent implements OnInit {
   areas: Area[] = [];
   estatus: EstatusCompra[] = [];
   sucursales: Sucursal[] = [];
+  mostrarModalSubirImagen = false;
+  mostrarModalVisorImagen = false;
+  compraSeleccionada!: Compra;
+  imagenes: string[] = [];
 
   constructor(
     private purchaseService: PurchaseService,
@@ -181,5 +189,16 @@ export class ModalRequestPurchaseComponent implements OnInit {
   getColorEstatus(idEstatusCompra: string): string {
     const estatus = this.estatus.find(e => e.id === idEstatusCompra);
     return estatus ? estatus.color : '#ffffff';
+  }
+
+  abrirModalSubirImagen(compra: Compra) {
+    this.mostrarModalSubirImagen = true;
+    this.compraSeleccionada = compra;
+  }
+
+  abrirModalVisorImagenes(compra: Compra) { 
+    this.mostrarModalVisorImagen = true;
+    this.compraSeleccionada = compra;
+    this.imagenes = compra.evidenciaUrls || [];
   }
 }
