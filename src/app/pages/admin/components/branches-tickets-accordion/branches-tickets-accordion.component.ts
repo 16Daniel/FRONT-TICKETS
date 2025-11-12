@@ -14,6 +14,7 @@ import { Sucursal } from '../../../../models/sucursal.model';
 import { Area } from '../../../../models/area.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
+import { GraficaTickets30DiasComponent } from '../../../../components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 @Component({
   selector: 'app-branches-tickets-accordion',
@@ -27,7 +28,8 @@ import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-t
     AccordionModule,
     AdminTicketsListComponent,
     TooltipModule,
-    TpvsDevicesTableComponent
+    TpvsDevicesTableComponent,
+    GraficaTickets30DiasComponent
   ],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
@@ -44,6 +46,7 @@ export class BranchesTicketsAccordionComponent {
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
   mostrarTPVsMap: { [idSucursal: string]: boolean } = {};
+  mostrarGraficasMap: { [idSucursal: string]: boolean } = {};
 
   constructor(private cdr: ChangeDetectorRef) {
 
@@ -52,6 +55,7 @@ export class BranchesTicketsAccordionComponent {
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursales.forEach(s => this.mostrarTPVsMap[s.id] = false);
+    this.sucursales.forEach(s => this.mostrarGraficasMap[s.id] = false);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -89,6 +93,13 @@ export class BranchesTicketsAccordionComponent {
 
     return idr;
   }
+
+  get mostrarTickets() {
+    return (id: string): boolean => {
+      return !this.mostrarTPVsMap[id] || !this.mostrarGraficasMap[id];
+    };
+  }
+
 
   obtenerColorTexto(value: number): string {
     let str = '';

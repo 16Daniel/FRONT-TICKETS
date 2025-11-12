@@ -2,9 +2,8 @@
     <p-accordionTab *ngFor="let item of sucursales">
         <ng-template pTemplate="header">
             <div class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 justify-content-between" [style]="{
-            'background-color': obtenerBackGroundAcordion(contarTickets(item.id))
-          }">
-
+          'background-color': obtenerBackGroundAcordion(contarTickets(item.id))
+        }">
                 <div>
                     <p-badge [value]="contarTickets(item.id)" class="ml-auto mr-2" [size]="'large'"
                         [style]="{ 'background-color': 'white', color: 'black' }" />
@@ -32,19 +31,34 @@
                     </span>
                 </div>
             </div>
-
         </ng-template>
-        <div class="form-check form-switch d-flex align-items-center gap-2">
-            <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
-                [(ngModel)]="mostrarTPVsMap[item.id]">
-            <label class="form-check-label fs-6">MOSTRAR TPVs</label>
 
+        <div class="d-flex align-items-center gap-4 mt-2">
+            <!-- 🔘 SWITCH TPVs -->
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+                <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
+                    [(ngModel)]="mostrarTPVsMap[item.id]" />
+                <label class="form-check-label fs-6 m-0">MOSTRAR TPVs</label>
+            </div>
+
+            <!-- 🔘 SWITCH GRÁFICA -->
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+                <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
+                    [(ngModel)]="mostrarGraficasMap[item.id]" />
+                <label class="form-check-label fs-6 m-0">MOSTRAR GRÁFICA</label>
+            </div>
         </div>
-        <br>
 
+        <br />
+
+        <!-- 📊 Mostrar tabla de TPVs -->
         <app-tpvs-devices-table *ngIf="mostrarTPVsMap[item.id]" [sucursal]="item"></app-tpvs-devices-table>
 
-        <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" *ngIf="!mostrarTPVsMap[item.id]"
-            [idArea]="idArea"></app-admin-tickets-list>
+        <!-- 📉 Mostrar gráfica -->
+        <app-grafica-tickets-30-dias *ngIf="mostrarGraficasMap[item.id]" [idSucursal]="item.id" [idArea]="'1'"></app-grafica-tickets-30-dias>
+
+        <!-- 🧾 Mostrar lista de tickets (cuando no se muestran TPVs ni gráfica) -->
+        <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)"
+            *ngIf="!mostrarTPVsMap[item.id] && !mostrarGraficasMap[item.id]" [idArea]="idArea"></app-admin-tickets-list>
     </p-accordionTab>
 </p-accordion>

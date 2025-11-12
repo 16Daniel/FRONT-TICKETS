@@ -1,0 +1,13 @@
+:host ::ng-deep .ngx-charts {
+    background: white !important;
+}
+
+:host ::ng-deep .line-series path {
+    stroke-width: 3px !important;
+    stroke: #007bff !important;
+}
+
+:host ::ng-deep .gridline-path,
+:host ::ng-deep .grid-panel rect {
+    fill: white !important;
+}
