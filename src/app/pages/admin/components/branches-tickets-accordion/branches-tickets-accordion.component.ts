@@ -14,7 +14,7 @@ import { Sucursal } from '../../../../models/sucursal.model';
 import { Area } from '../../../../models/area.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
-import { GraficaTickets30DiasComponent } from '../../../../components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { GraficaTickets30DiasComponent } from '../../../../components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 @Component({
   selector: 'app-branches-tickets-accordion',
