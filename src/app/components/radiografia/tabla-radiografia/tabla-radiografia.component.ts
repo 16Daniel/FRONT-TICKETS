@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Ticket } from '../../../models/ticket.model';
+import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
 
 @Component({
   selector: 'app-tabla-radiografia',
@@ -10,7 +11,9 @@ import { Ticket } from '../../../models/ticket.model';
 })
 export class TablaRadiografiaComponent {
   @Input() tickets: any[] = [];
-  @Input() mantenimientos: any[] = [];
+  @Input() idArea!: string;
+  @Input() idSucursal!: string;
+  mantenimientos: any[] = [];
 
   visitas = 0;
   totalTickets = 0;
@@ -18,7 +21,18 @@ export class TablaRadiografiaComponent {
   pendientes = 0;
   porcentajeMtto = 0;
 
-  ngOnChanges() {
+  constructor(private mantenimientoFactory: MantenimientoFactoryService) { }
+
+  async ngOnChanges() {
+    const hoy = new Date();
+    const hace30Dias = new Date();
+    hace30Dias.setDate(hoy.getDate() - 30);
+    const servicio = this.mantenimientoFactory.getService(this.idArea);
+    this.mantenimientos = await servicio.obtenerMantenimientosEntreFechas(hace30Dias, hoy);
+    this.mantenimientos = this.mantenimientos.filter(x => x.idSucursal == this.idSucursal);
+    this.mantenimientos = this.mantenimientos.filter(x => x.estatus == false);
+    console.log(this.mantenimientos)
+
     this.calcularResumen();
   }
 
@@ -27,6 +41,7 @@ export class TablaRadiografiaComponent {
     this.totalTickets = this.tickets.length;
     this.resueltos = this.tickets.filter((ticket: Ticket) => ticket.idEstatusTicket === '3').length;
     this.pendientes = this.tickets.filter((ticket: Ticket) => ticket.idEstatusTicket !== '3').length;
-    this.porcentajeMtto = this.mantenimientos.length > 0 ? 100 : 0;
+    const servicio = this.mantenimientoFactory.getService(this.idArea);
+    this.porcentajeMtto = servicio.calcularPorcentaje(this.mantenimientos[0]);
   }
 }

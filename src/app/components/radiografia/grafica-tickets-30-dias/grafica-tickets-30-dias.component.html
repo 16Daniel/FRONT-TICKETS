@@ -32,7 +32,8 @@
     <div class="contenedor-resumen" *ngIf="!loading">
       <app-tabla-radiografia
         [tickets]="tickets"
-        [mantenimientos]="[]">
+        [idArea]="idArea"
+        [idSucursal]="idSucursal">
       </app-tabla-radiografia>
     </div>
 

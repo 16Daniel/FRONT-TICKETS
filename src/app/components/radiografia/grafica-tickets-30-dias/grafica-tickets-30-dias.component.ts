@@ -46,7 +46,6 @@ export class GraficaTickets30DiasComponent implements OnInit {
 
   async cargarDatos() {
     this.tickets = await this.ticketsService.getTicketsUltimos30Dias(this.idSucursal, this.idArea);
-    console.log(this.tickets)
 
     // Crear un mapa de días → cantidad
     const conteoPorDia = new Map<string, number>();
@@ -75,7 +74,5 @@ export class GraficaTickets30DiasComponent implements OnInit {
           .map(([dia, cantidad]) => ({ name: dia, value: cantidad }))
       }
     ];
-
-    console.log(this.data)
   }
 }
