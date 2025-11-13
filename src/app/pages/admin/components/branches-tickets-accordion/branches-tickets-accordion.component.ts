@@ -45,8 +45,8 @@ export class BranchesTicketsAccordionComponent {
   usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
-  mostrarTPVsMap: { [idSucursal: string]: boolean } = {};
-  mostrarGraficasMap: { [idSucursal: string]: boolean } = {};
+  mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
+  // mostrarGraficasMap: { [idSucursal: string]: boolean } = {};
 
   constructor(private cdr: ChangeDetectorRef) {
 
@@ -54,8 +54,8 @@ export class BranchesTicketsAccordionComponent {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursales.forEach(s => this.mostrarTPVsMap[s.id] = false);
-    this.sucursales.forEach(s => this.mostrarGraficasMap[s.id] = false);
+    this.sucursales.forEach(s => this.mostrarRadiografiaMap[s.id] = false);
+    // this.sucursales.forEach(s => this.mostrarGraficasMap[s.id] = false);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -96,7 +96,7 @@ export class BranchesTicketsAccordionComponent {
 
   get mostrarTickets() {
     return (id: string): boolean => {
-      return !this.mostrarTPVsMap[id] || !this.mostrarGraficasMap[id];
+      return !this.mostrarRadiografiaMap[id];
     };
   }
 

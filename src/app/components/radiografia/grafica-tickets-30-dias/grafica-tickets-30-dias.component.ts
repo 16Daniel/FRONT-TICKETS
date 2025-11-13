@@ -38,10 +38,10 @@ export class GraficaTickets30DiasComponent implements OnInit {
   async ngOnInit() {
     await this.cargarDatos();
 
-    setTimeout(() => {
-      this.loading = false;
-      this.cdr.detectChanges();
-    }, 2000);
+    // setTimeout(() => {
+    //   this.loading = false;
+    //   this.cdr.detectChanges();
+    // }, 2000);
   }
 
   async cargarDatos() {
@@ -74,5 +74,8 @@ export class GraficaTickets30DiasComponent implements OnInit {
           .map(([dia, cantidad]) => ({ name: dia, value: cantidad }))
       }
     ];
+
+    this.loading = false;
+    this.cdr.detectChanges();
   }
 }
