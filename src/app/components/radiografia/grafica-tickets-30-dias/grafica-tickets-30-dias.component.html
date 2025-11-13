@@ -1,0 +1,41 @@
+<div class="contenedor-grafica">
+
+  <!-- 🔹 Título general -->
+  <h3 class="titulo-grafica">ÚLTIMOS 30 DÍAS</h3>
+
+  <div class="contenido-grafica">
+
+    <!-- 🔹 Gráfica -->
+    <div class="contenedor-grafica-linea">
+      <div *ngIf="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
+      </div>
+
+      <ngx-charts-line-chart
+        *ngIf="!loading"
+        [view]="[700, 400]"
+        [scheme]="colorScheme"
+        [results]="data"
+        [curve]="curve"
+        [gradient]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showXAxisLabel]="false"
+        [showYAxisLabel]="false"
+        [autoScale]="true">
+      </ngx-charts-line-chart>
+    </div>
+
+    <!-- 🔹 Tabla resumen -->
+    <div class="contenedor-resumen" *ngIf="!loading">
+      <app-tabla-radiografia
+        [tickets]="tickets"
+        [idArea]="idArea"
+        [idSucursal]="idSucursal">
+      </app-tabla-radiografia>
+    </div>
+
+  </div>
+</div>

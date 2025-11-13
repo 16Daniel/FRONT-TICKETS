@@ -1,0 +1,87 @@
+:host ::ng-deep .ngx-charts {
+  background: white !important;
+}
+
+:host ::ng-deep .line-series path {
+  stroke-width: 3px !important;
+  stroke: #007bff !important;
+}
+
+:host ::ng-deep .gridline-path,
+:host ::ng-deep .grid-panel rect {
+  fill: white !important;
+}
+
+/* 🔹 Título general */
+.titulo-grafica {
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* 🔹 Contenedor general */
+.contenedor-grafica {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* 🔹 Layout interno (gráfica + tabla) */
+.contenido-grafica {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+}
+
+.contenedor-grafica-linea {
+  flex: 1;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  position: relative;
+}
+
+.contenedor-resumen {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px 30px;
+  width: 620px;
+}
+
+/* 🔹 Loading overlay */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-overlay p {
+  font-family: 'Segoe UI', sans-serif;
+  color: #666;
+  font-size: 15px;
+}

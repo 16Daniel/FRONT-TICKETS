@@ -407,4 +407,25 @@ export class TicketsService {
 
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
+
+   async getTicketsUltimos30Dias(idSucursal: string, idArea: string) {
+    const hoy = new Date();
+    const hace30Dias = new Date();
+    hace30Dias.setDate(hoy.getDate() - 30);
+
+    const ticketsRef = collection(this.firestore, 'tickets');
+    const q = query(
+      ticketsRef,
+      where('idSucursal', '==', idSucursal),
+      where('idArea', '==', idArea),
+      where('fecha', '>=', Timestamp.fromDate(hace30Dias))
+    );
+
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as any[];
+  }
 }
