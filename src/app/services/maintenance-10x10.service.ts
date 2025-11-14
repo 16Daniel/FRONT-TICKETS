@@ -57,6 +57,8 @@ export class Maintenance10x10Service implements IMantenimientoService {
   }
 
   calcularPorcentaje(mantenimiento: Mantenimiento10x10): number {
+    if (!mantenimiento) return 0;
+
     let porcentaje = 0;
     mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
     mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;

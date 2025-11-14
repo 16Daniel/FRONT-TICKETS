@@ -37,11 +37,6 @@ export class GraficaTickets30DiasComponent implements OnInit {
 
   async ngOnInit() {
     await this.cargarDatos();
-
-    // setTimeout(() => {
-    //   this.loading = false;
-    //   this.cdr.detectChanges();
-    // }, 2000);
   }
 
   async cargarDatos() {

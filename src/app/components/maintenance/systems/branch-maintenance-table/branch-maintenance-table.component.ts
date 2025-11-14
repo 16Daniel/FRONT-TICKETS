@@ -193,4 +193,67 @@ export class BranchMaintenanceTableComponent {
 
     return false;
   }
+
+  onEliminarImagen(event: any) {
+    this.actualizarImagenesPorTitulo(event.titulo, event.url)
+  }
+
+  async actualizarImagenesPorTitulo(titulo: string, url: string) {
+    if (!this.mantenimientoSeleccionado) return;
+
+    switch (titulo) {
+
+      case 'CAJA':
+        this.mantenimientoSeleccionado.mantenimientoCajaEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoCajaEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'IMPRESORAS':
+        this.mantenimientoSeleccionado.mantenimientoImpresorasEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoImpresorasEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'RACK':
+        this.mantenimientoSeleccionado.mantenimientoRackEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoRackEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'TPV':
+        this.mantenimientoSeleccionado.mantenimientoPuntosVentaTabletasEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoPuntosVentaTabletasEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'CONTENIDOS':
+        this.mantenimientoSeleccionado.mantenimientoContenidosSistemaCableEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoContenidosSistemaCableEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'INTERNET':
+        this.mantenimientoSeleccionado.mantenimientoInternetEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoInternetEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'CCTV':
+        this.mantenimientoSeleccionado.mantenimientoCCTVEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoCCTVEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'NO BRAKES':
+        this.mantenimientoSeleccionado.mantenimientoNoBrakesEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoNoBrakesEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'TIEMPOS COCINA':
+        this.mantenimientoSeleccionado.mantenimientoTiemposCocinaEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoTiemposCocinaEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'APPS':
+        this.mantenimientoSeleccionado.mantenimientoConcentradorAppsEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoConcentradorAppsEvidenciaUrls || []).filter(u => u !== url);
+        break;
+    }
+
+    await this.maintenance10x10Service.update(this.mantenimientoSeleccionado.id, this.mantenimientoSeleccionado);
+  }
 }
