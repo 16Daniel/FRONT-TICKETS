@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 import { TooltipModule } from 'primeng/tooltip';
@@ -8,6 +9,7 @@ import { Sucursal } from '../../../../models/sucursal.model';
 import { Ticket } from '../../../../models/ticket.model';
 import { Usuario } from '../../../../models/usuario.model';
 import { RequesterTicketsListComponent } from '../../../../components/requester-tickets-list/requester-tickets-list.component';
+import { GraficaTickets30DiasComponent } from '../../../../components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',
@@ -17,7 +19,9 @@ import { RequesterTicketsListComponent } from '../../../../components/requester-
     BadgeModule,
     AccordionModule,
     RequesterTicketsListComponent,
-    TooltipModule
+    TooltipModule,
+    FormsModule,
+    GraficaTickets30DiasComponent
   ],
   templateUrl: './priority-tickets-accordion-analyst.component.html',
   styleUrl: './priority-tickets-accordion-analyst.component.scss',
@@ -26,12 +30,13 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() esEspectadorActivo: boolean = false;
-  
+
   @Output() clickEvent = new EventEmitter<Ticket>();
 
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
   usuario: Usuario | any;
+  mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
