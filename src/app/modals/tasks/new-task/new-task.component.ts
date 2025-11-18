@@ -11,7 +11,6 @@ import { DialogModule } from 'primeng/dialog';
   styleUrl: './new-task.component.scss'
 })
 export class NewTaskComponent {
-  @Input() esNuevoUsuario: boolean = true;
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 

@@ -34,24 +34,24 @@
     border-radius: 50%;
 }
 
-/* Colores de ejemplo */
-.estatus-1 {
+/* COLORES CORRECTOS SEGÚN idEstatus */
+
+/* To Do */
+.estatus-todo {
     background: #f39c12;
 }
 
-/* pendiente */
-.estatus-2 {
+/* Working */
+.estatus-working {
     background: #3498db;
 }
 
-/* trabajando */
-.estatus-3 {
+/* Pause */
+.estatus-pause {
     background: #9b59b6;
 }
 
-/* pausa */
-.estatus-4 {
+/* Done */
+.estatus-done {
     background: #2ecc71;
 }
-
-/* terminado */
