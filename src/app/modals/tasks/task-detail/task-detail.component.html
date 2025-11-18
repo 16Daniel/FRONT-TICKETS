@@ -1,0 +1,15 @@
+<p-dialog [header]="'DETALLE DE TAREA'" [(visible)]="mostrarModal"
+    [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+    <form #form="ngForm" (ngSubmit)="enviar(form)">
+
+
+
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn bg-p-b p-3">
+                <i class='bx bx-send'></i>
+                <label>GUARDAR</label>
+            </button>
+        </div>
+    </form>
+
+</p-dialog>

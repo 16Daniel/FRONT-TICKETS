@@ -14,7 +14,7 @@ import { BranchesService } from '../../../../services/branches.service';
 import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
 import { BranchesOilTabComponent } from "../branches-oil-tab/branches-oil-tab.component";
 import { Sucursal } from '../../../../models/sucursal.model';
-import { DashboardTasksComponent } from '../../../../components/dashboard-tasks/dashboard-tasks.component';
+import { DashboardTasksComponent } from '../../../../components/tasks/dashboard-tasks/dashboard-tasks.component';
 
 @Component({
   selector: 'app-branches-tabs',
