@@ -1,0 +1,64 @@
+.kanban-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 20px;
+}
+
+.columna {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.lista {
+    min-height: 300px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.item {
+    background: #ececec;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: grab;
+    transition: 0.2s;
+}
+
+.item:hover {
+    background: #dcdcdc;
+}
+
+
+
+//boton agregar 
+.acciones {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    margin: 0 0 20px 0;
+}
+
+.acciones button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #4a90e2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.acciones button:hover {
+    background: #357ab8;
+}
