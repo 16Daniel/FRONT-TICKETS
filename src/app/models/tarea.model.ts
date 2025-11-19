@@ -8,7 +8,7 @@ export class Tarea {
     idSucursal: string = '';
     comentariosGerencia: string = '';
     comentariosResponsable: string = '';
-    idEstatus: string = '';
+    idEstatus: string = '1';
     chat: string[] = [];
     evidenciaUrls: string[] = [];
 }
