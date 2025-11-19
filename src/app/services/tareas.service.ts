@@ -13,7 +13,7 @@ import {
   updateDoc,
   docData,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Tarea } from '../models/tarea.model';
 
 @Injectable({
@@ -43,8 +43,18 @@ export class TareasService {
       where('idSucursal', '==', idSucursal),
       orderBy('fecha', 'desc')
     );
-    return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((tareas: any[]) =>
+        tareas.map(t => ({
+          ...t,
+          fecha: t.fecha?.toDate ? t.fecha.toDate() : t.fecha,
+          fechaFin: t.fechaFin?.toDate ? t.fechaFin.toDate() : t.fechaFin
+        }))
+      )
+    ) as Observable<Tarea[]>;
   }
+
 
   getByEstatus(idEstatus: string): Observable<Tarea[]> {
     const ref = collection(this.firestore, this.pathName);

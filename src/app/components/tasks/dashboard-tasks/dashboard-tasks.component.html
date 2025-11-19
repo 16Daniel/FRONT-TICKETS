@@ -10,7 +10,7 @@
        id="todoList"
        [cdkDropListData]="toDo"
        [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
+       (cdkDropListDropped)="drop($event, '1')">
 
     <h3>TO DO</h3>
 
@@ -28,7 +28,7 @@
        id="workingList"
        [cdkDropListData]="working"
        [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
+       (cdkDropListDropped)="drop($event, '2')">
 
     <h3>WORKING</h3>
 
@@ -40,23 +40,6 @@
 
   </div>
 
-  <!-- PAUSE -->
-  <div class="columna"
-       cdkDropList
-       id="pauseList"
-       [cdkDropListData]="pause"
-       [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
-
-    <h3>PAUSE</h3>
-
-    <app-task-card
-      *ngFor="let t of pause"
-      [tarea]="t"
-      cdkDrag>
-    </app-task-card>
-
-  </div>
 
   <!-- DONE -->
   <div class="columna"
@@ -64,12 +47,31 @@
        id="doneList"
        [cdkDropListData]="done"
        [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
+       (cdkDropListDropped)="drop($event, '4')">
 
     <h3>DONE</h3>
 
     <app-task-card
       *ngFor="let t of done"
+      [tarea]="t"
+      cdkDrag>
+    </app-task-card>
+
+  </div>
+
+  
+  <!-- PAUSE -->
+  <div class="columna"
+       cdkDropList
+       id="pauseList"
+       [cdkDropListData]="pause"
+       [cdkDropListConnectedTo]="dropListIds"
+       (cdkDropListDropped)="drop($event, '3')">
+
+    <h3>PAUSE</h3>
+
+    <app-task-card
+      *ngFor="let t of pause"
       [tarea]="t"
       cdkDrag>
     </app-task-card>
