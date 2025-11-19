@@ -1,3 +1,7 @@
+<div class="acciones">
+    <button (click)="abrirModalAgregarTarea()">Agregar</button>
+</div>
+
 <div class="tablero-tareas">
 
   <!-- TODO -->
@@ -8,7 +12,7 @@
        [cdkDropListConnectedTo]="dropListIds"
        (cdkDropListDropped)="drop($event)">
 
-    <h3>Por hacer</h3>
+    <h3>TO DO</h3>
 
     <app-task-card
       *ngFor="let t of toDo"
@@ -26,7 +30,7 @@
        [cdkDropListConnectedTo]="dropListIds"
        (cdkDropListDropped)="drop($event)">
 
-    <h3>En progreso</h3>
+    <h3>WORKING</h3>
 
     <app-task-card
       *ngFor="let t of working"
@@ -44,7 +48,7 @@
        [cdkDropListConnectedTo]="dropListIds"
        (cdkDropListDropped)="drop($event)">
 
-    <h3>Pausadas</h3>
+    <h3>PAUSE</h3>
 
     <app-task-card
       *ngFor="let t of pause"
@@ -62,7 +66,7 @@
        [cdkDropListConnectedTo]="dropListIds"
        (cdkDropListDropped)="drop($event)">
 
-    <h3>Terminadas</h3>
+    <h3>DONE</h3>
 
     <app-task-card
       *ngFor="let t of done"
@@ -78,7 +82,3 @@
 <app-new-task *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
     (closeEvent)="mostrarModalNuevaTarea = false">
 </app-new-task>
-
-<app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
-    (closeEvent)="mostrarModalDetalleTarea = false">
-</app-task-detail>

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
+import { Tarea } from '../../../models/tarea.model';
 
 @Component({
   selector: 'app-task-detail',
@@ -11,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 })
 export class TaskDetailComponent {
   @Input() mostrarModal: boolean = false;
+  @Input() tarea!: Tarea | any;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   onHide = () => this.closeEvent.emit(false);

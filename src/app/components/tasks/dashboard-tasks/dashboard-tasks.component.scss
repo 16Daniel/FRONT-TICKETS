@@ -19,3 +19,27 @@
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
   border-radius: 8px;
 }
+
+
+/* Botón Agregar */
+.acciones {
+    // padding: 20px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.acciones button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #4a90e2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.acciones button:hover {
+    background: #357ab8;
+}

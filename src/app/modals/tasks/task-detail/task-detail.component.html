@@ -1,15 +1,65 @@
-<p-dialog [header]="'DETALLE DE TAREA'" [(visible)]="mostrarModal"
-    [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog 
+    [header]="'DETALLE DE TAREA'" 
+    [(visible)]="mostrarModal"
+    [modal]="true" 
+    [style]="{ 'width': '95vh' }" 
+    [maximizable]="true"
+    (onHide)="onHide()"
+>
+
     <form #form="ngForm" (ngSubmit)="enviar(form)">
 
+        <!-- ========================== -->
+        <!--   INFORMACIÓN DE LA TAREA  -->
+        <!-- ========================== -->
+        <div class="p-3">
 
+            <!-- ID / Título -->
+            <div class="mb-3">
+                <label class="fw-bold">Título</label>
+                <input [(ngModel)]="tarea.titulo" name="titulo"
+                    class="form-control" placeholder="Título de la tarea">
+            </div>
 
+            <!-- DESCRIPCION -->
+            <div class="mb-3">
+                <label class="fw-bold">Descripción</label>
+                <textarea [(ngModel)]="tarea.descripcion" name="descripcion"
+                    class="form-control" rows="3"></textarea>
+            </div>
+
+            <!-- SUCURSAL (MOSTRAR POR AHORA FICTICIA) -->
+            <div class="mb-3">
+                <label class="fw-bold">Sucursal</label>
+                <input 
+                    class="form-control"
+                    [value]="tarea.sucursal || 'SUCURSAL DEMO (FICTICIA)'" 
+                    disabled
+                >
+            </div>
+
+            <!-- ESTADO -->
+            <div class="mb-3">
+                <label class="fw-bold">Estado</label>
+                <select [(ngModel)]="tarea.estado" name="estado"
+                    class="form-control">
+                    <option value="TODO">Por hacer</option>
+                    <option value="WORKING">En progreso</option>
+                    <option value="PAUSE">Pausada</option>
+                    <option value="DONE">Terminada</option>
+                </select>
+            </div>
+
+        </div>
+
+        <!-- BOTÓN GUARDAR -->
         <div class="d-flex justify-content-end mt-3">
             <button class="btn bg-p-b p-3">
                 <i class='bx bx-send'></i>
                 <label>GUARDAR</label>
             </button>
         </div>
+
     </form>
 
 </p-dialog>

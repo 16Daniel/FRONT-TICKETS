@@ -16,7 +16,7 @@ import { Tarea } from '../../../models/tarea.model';
     CommonModule,
     NewTaskComponent,
     TaskCardComponent,
-    TaskDetailComponent
+    
   ],
   templateUrl: './dashboard-tasks.component.html',
   styleUrl: './dashboard-tasks.component.scss'
@@ -26,13 +26,12 @@ export class DashboardTasksComponent {
   dropListIds = ['todoList', 'workingList', 'pauseList', 'doneList'];
 
   mostrarModalNuevaTarea = false;
-  mostrarModalDetalleTarea = false;
 
   // Datos mock iniciales
   toDo: Tarea[] = [
     {
       id: '1',
-      titulo: 'Tarea 1',
+      titulo: 'BAJAR LA CANTIDAD DE MERMAS',
       fecha: new Date(),
       fechaFin: null,
       idCategoria: '',
@@ -45,7 +44,7 @@ export class DashboardTasksComponent {
     },
     {
       id: '2',
-      titulo: 'Tarea 2',
+      titulo: 'CONTROLAR LAS FALTAS EN SUCURSALES',
       fecha: new Date(),
       fechaFin: null,
       idCategoria: '',
@@ -61,7 +60,7 @@ export class DashboardTasksComponent {
   working: Tarea[] = [
     {
       id: '3',
-      titulo: 'Tarea en progreso',
+      titulo: '25 PUNTOS ESTA MUY ALTO',
       fecha: new Date(),
       fechaFin: null,
       idCategoria: '',
@@ -94,11 +93,6 @@ export class DashboardTasksComponent {
 
   abrirModalAgregarTarea() {
     this.mostrarModalNuevaTarea = true;
-  }
-
-  abrirDetalleTarea(tarea: Tarea) {
-    console.log('Tarea seleccionada:', tarea);
-    this.mostrarModalDetalleTarea = true;
   }
 
   drop(event: CdkDragDrop<Tarea[]>) {
