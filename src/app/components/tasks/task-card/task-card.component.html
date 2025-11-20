@@ -1,4 +1,4 @@
-<div class="task-card" cdkDrag (click)="onClick()">
+<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
     <div class="titulo">{{ tarea.titulo }}</div>
     <div>MERMAS</div>
 

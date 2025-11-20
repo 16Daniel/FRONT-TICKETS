@@ -43,13 +43,24 @@ export class DashboardTasksComponent implements OnInit {
     this.mostrarModalNuevaTarea = true;
   }
 
-  drop(event: CdkDragDrop<Tarea[]>, idEstatus: string) {
-    console.log(event)
-    console.log(event.item.data)
-    console.log(event.container.data)
+  async drop(event: CdkDragDrop<Tarea[]>) {
+    console.log("ORIGEN:", event.previousContainer.id, event.previousContainer.data);
+    console.log("DESTINO:", event.container.id, event.container.data);
+
+    const tareaMovida = event.item.data as Tarea;
+    console.log("TAREA MOVIDA:", tareaMovida);
+
+    if (!tareaMovida) {
+      console.warn("No se pudo obtener la tarea movida");
+      return;
+    }
 
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -58,7 +69,32 @@ export class DashboardTasksComponent implements OnInit {
         event.currentIndex
       );
     }
+
+    switch (event.container.id) {
+      case 'todoList':
+        tareaMovida.idEstatus = '1';
+        break;
+      case 'workingList':
+        tareaMovida.idEstatus = '2';
+        break;
+      case 'pauseList':
+        tareaMovida.idEstatus = '3';
+        break;
+      case 'doneList':
+        tareaMovida.idEstatus = '4';
+        break;
+
+    }
+
+    // 🔹 3. Llamar servicio (Ejemplo)
+    console.log(tareaMovida)
+    debugger
+    await this.tareasService.update(tareaMovida, tareaMovida.id!);
+    // this.tareasService.actualizarEstado(tareaMovida.id, nuevoEstado)
+    //   .then(() => console.log("Estado actualizado correctamente"))
+    //   .catch(err => console.error("Error al actualizar estado:", err));
   }
+
 
   initData() {
     this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
