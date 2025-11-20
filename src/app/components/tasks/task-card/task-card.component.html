@@ -1,0 +1,13 @@
+<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
+    <div class="titulo">{{ tarea.titulo }}</div>
+    <div>MERMAS</div>
+
+    <div class="meta">
+        <span class="fecha">{{ tarea.fecha | date:'dd/MM/yyyy' }}</span>
+        <span class="estatus estatus-{{ tarea.idEstatus }}"></span>
+    </div>
+</div>
+
+<app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
+    (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tarea">
+</app-task-detail>

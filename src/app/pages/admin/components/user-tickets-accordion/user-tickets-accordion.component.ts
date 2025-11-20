@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { Usuario } from '../../../../models/usuario.model';
 import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
+import { GraficaTickets30DiasComponent } from '../../../../components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 @Component({
   selector: 'app-user-tickets-accordion',
@@ -18,7 +19,8 @@ import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-t
     FormsModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TpvsDevicesTableComponent
+    TpvsDevicesTableComponent,
+    GraficaTickets30DiasComponent
   ],
   templateUrl: './user-tickets-accordion.component.html',
   styleUrl: './user-tickets-accordion.component.scss',
@@ -29,14 +31,14 @@ export class UserTicketsAccordionComponent {
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
   usuario: Usuario | any;
-  mostrarTPVsMap: { [idSucursal: string]: boolean } = {};
+  mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 
   constructor() { }
 
   activeIndex: number = -1;
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursales.forEach(s => this.mostrarTPVsMap[s.id] = false);
+    this.sucursales.forEach(s => this.mostrarRadiografiaMap[s.id] = false);
   }
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {

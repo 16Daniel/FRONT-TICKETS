@@ -31,7 +31,6 @@ export class TablaRadiografiaComponent {
     this.mantenimientos = await servicio.obtenerMantenimientosEntreFechas(hace30Dias, hoy);
     this.mantenimientos = this.mantenimientos.filter(x => x.idSucursal == this.idSucursal);
     this.mantenimientos = this.mantenimientos.filter(x => x.estatus == false);
-    console.log(this.mantenimientos)
 
     this.calcularResumen();
   }

@@ -79,6 +79,8 @@ export class MaintenanceMtooService implements IMantenimientoService {
   }
 
   calcularPorcentaje(mantenimiento: MantenimientoMtto) {
+    if(!mantenimiento) return 0;
+
     let porcentaje = 0;
     mantenimiento.mantenimientoTermostato ? (porcentaje += 12.5) : porcentaje;
     mantenimiento.mantenimientoPerillas ? (porcentaje += 12.5) : porcentaje;

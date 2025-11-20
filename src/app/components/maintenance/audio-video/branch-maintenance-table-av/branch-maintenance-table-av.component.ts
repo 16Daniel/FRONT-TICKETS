@@ -153,4 +153,51 @@ export class BranchMaintenanceTableAvComponent {
 
     return false;
   }
+
+  onEliminarImagen(event: any) {
+    this.actualizarImagenesPorTitulo(event.titulo, event.url)
+  }
+
+  async actualizarImagenesPorTitulo(titulo: string, url: string) {
+    if (!this.mantenimientoSeleccionado) return;
+
+    switch (titulo) {
+
+      case 'CONEXIONES':
+        this.mantenimientoSeleccionado.mantenimientoConexionesEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoConexionesEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'CABLEADO':
+        this.mantenimientoSeleccionado.mantenimientoCableadoEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoCableadoEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'RACK':
+        this.mantenimientoSeleccionado.mantenimientoRackEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoRackEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'CONTROLES':
+        this.mantenimientoSeleccionado.mantenimientoControlesEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoControlesEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'NIVEL AUDIO':
+        this.mantenimientoSeleccionado.mantenimientoNivelAudioEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoNivelAudioEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'CANALES':
+        this.mantenimientoSeleccionado.mantenimientoCanalesEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoCanalesEvidenciaUrls || []).filter(u => u !== url);
+        break;
+    }
+
+    await this.maintenance6x6AvService.update(
+      this.mantenimientoSeleccionado.id,
+      this.mantenimientoSeleccionado
+    );
+  }
+
 }

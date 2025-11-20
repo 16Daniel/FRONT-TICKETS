@@ -37,6 +37,8 @@ export class Maintenance6x6AvService implements IMantenimientoService {
   }
 
   calcularPorcentaje(mantenimiento: Mantenimiento6x6AV) {
+    if (!mantenimiento) return 0;
+
     let porcentaje = 0;
     mantenimiento.mantenimientoConexiones ? (porcentaje += 16.67) : porcentaje;
     mantenimiento.mantenimientoCableado ? (porcentaje += 16.67) : porcentaje;

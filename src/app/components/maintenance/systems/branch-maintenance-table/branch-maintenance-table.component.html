@@ -95,8 +95,9 @@
     [mantenimiento]="mantenimientoSeleccionado"></app-modal-sys-mtto-imguploader>
 
 <app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
-    [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false"
-    [imagenes]="imagenes"></app-modal-visor-varias-imagenes>
+    [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"
+    (imagenEliminadaEvent)="onEliminarImagen($event)"
+    [mostrarBotonEliminar]="usuario.idRol == '4' || usuario.idRol == '1' || usuario.idRol == '5'"></app-modal-visor-varias-imagenes>
 
 <app-modal-maintenance-chat *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
     (closeEvent)="mostrarModalChat = false" [idMnatenimiento]="mantenimientoSeleccionado?.id"

@@ -14,6 +14,7 @@ import { BranchesService } from '../../../../services/branches.service';
 import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
 import { BranchesOilTabComponent } from "../branches-oil-tab/branches-oil-tab.component";
 import { Sucursal } from '../../../../models/sucursal.model';
+import { DashboardTasksComponent } from '../../../../components/tasks/dashboard-tasks/dashboard-tasks.component';
 
 @Component({
   selector: 'app-branches-tabs',
@@ -27,6 +28,7 @@ import { Sucursal } from '../../../../models/sucursal.model';
     MultiSelectModule,
     BranchesMaintenanceTabComponent,
     BranchesOilTabComponent,
+    DashboardTasksComponent
   ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',

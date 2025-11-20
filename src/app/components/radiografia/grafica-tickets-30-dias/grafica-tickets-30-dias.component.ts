@@ -26,7 +26,8 @@ export class GraficaTickets30DiasComponent implements OnInit {
     domain: ['#007bff']
   };
 
-  curve: any = shape.curveBasis;
+  // curve: any = shape.curveBasis;
+  curve: any = shape.curveCatmullRom.alpha(0.5);
   // curve: any = shape.curveLinear;
   loading = true;
 
@@ -37,45 +38,63 @@ export class GraficaTickets30DiasComponent implements OnInit {
 
   async ngOnInit() {
     await this.cargarDatos();
-
-    // setTimeout(() => {
-    //   this.loading = false;
-    //   this.cdr.detectChanges();
-    // }, 2000);
   }
 
   async cargarDatos() {
     this.tickets = await this.ticketsService.getTicketsUltimos30Dias(this.idSucursal, this.idArea);
 
-    // Crear un mapa de días → cantidad
     const conteoPorDia = new Map<string, number>();
 
     const hoy = new Date();
+
+    // Crear los 30 días anteriores
     for (let i = 0; i < 30; i++) {
       const d = new Date(hoy);
       d.setDate(hoy.getDate() - i);
-      const clave = d.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit' });
-      conteoPorDia.set(clave, 0);
+
+      const dia = d.toLocaleDateString('es-MX', { weekday: 'long' });
+      const diaNumero = d.getDate();
+
+      const claveNormalizada =
+        `${dia.charAt(0).toUpperCase() + dia.slice(1)} ${diaNumero}`;
+
+      conteoPorDia.set(claveNormalizada, 0);
     }
 
+    // Contar los tickets
     this.tickets.forEach(t => {
       const fecha = (t.fecha?.toDate?.() || new Date(t.fecha));
-      const clave = fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit' });
-      if (conteoPorDia.has(clave)) {
-        conteoPorDia.set(clave, (conteoPorDia.get(clave) || 0) + 1);
+
+      const dia = fecha.toLocaleDateString('es-MX', { weekday: 'long' });
+      const diaNumero = fecha.getDate();
+
+      const claveNormalizada =
+        `${dia.charAt(0).toUpperCase() + dia.slice(1)} ${diaNumero}`;
+
+      if (conteoPorDia.has(claveNormalizada)) {
+        conteoPorDia.set(
+          claveNormalizada,
+          (conteoPorDia.get(claveNormalizada) || 0) + 1
+        );
       }
     });
 
+    // Pasar a la gráfica
     this.data = [
       {
         name: 'TICKETS',
         series: Array.from(conteoPorDia.entries())
           .reverse()
-          .map(([dia, cantidad]) => ({ name: dia, value: cantidad }))
+          .map(([dia, cantidad]) => ({
+            name: dia,
+            value: cantidad
+          }))
       }
     ];
 
     this.loading = false;
     this.cdr.detectChanges();
   }
+
+
 }

@@ -158,4 +158,58 @@ export class BranchMaintenanceTableMttoComponent {
 
     return false;
   }
+
+  onEliminarImagen(event: any) {
+    this.actualizarImagenesPorTitulo(event.titulo, event.url)
+  }
+
+  async actualizarImagenesPorTitulo(titulo: string, url: string) {
+    if (!this.mantenimientoSeleccionado) return;
+
+    switch (titulo) {
+
+      case 'TERMOSTATO':
+        this.mantenimientoSeleccionado.mantenimientoTermostatoEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoTermostatoEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'PERILLAS':
+        this.mantenimientoSeleccionado.mantenimientoPerillasEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoPerillasEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'TORNILLERIA':
+        this.mantenimientoSeleccionado.mantenimientoTornilleriaEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoTornilleriaEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'RUEDAS':
+        this.mantenimientoSeleccionado.mantenimientoRuedasEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoRuedasEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'CABLEADO':
+        this.mantenimientoSeleccionado.mantenimientoCableadoEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoCableadoEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'TINAS':
+        this.mantenimientoSeleccionado.mantenimientoTinaEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoTinaEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'MANGUERAS':
+        this.mantenimientoSeleccionado.mantenimientoManguerasEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoManguerasEvidenciaUrls || []).filter(u => u !== url);
+        break;
+
+      case 'LLAVES':
+        this.mantenimientoSeleccionado.mantenimientoLlavesDePasoEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoLlavesDePasoEvidenciaUrls || []).filter(u => u !== url);
+        break;
+    }
+
+    await this.maintenanceMtooService.update(this.mantenimientoSeleccionado.id, this.mantenimientoSeleccionado);
+  }
+
 }
