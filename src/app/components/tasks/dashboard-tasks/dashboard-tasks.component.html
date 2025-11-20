@@ -1,79 +1,51 @@
 <div class="acciones">
-    <button (click)="abrirModalAgregarTarea()">Agregar</button>
+  <button (click)="abrirModalAgregarTarea()">Agregar</button>
 </div>
 
 <div class="tablero-tareas">
 
   <!-- TODO -->
-  <div class="columna"
-       style="background-color: #fecbcb;"
-       cdkDropList
-       id="todoList"
-       [cdkDropListData]="toDo"
-       [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
+  <div class="columna" style="background-color: #fecbcb;" cdkDropList id="todoList" [cdkDropListData]="toDo"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
     <h3>TO DO</h3>
 
-    <app-task-card
-      *ngFor="let t of toDo"
-      [tarea]="t">
+    <app-task-card *ngFor="let t of toDo" [tarea]="t">
     </app-task-card>
 
   </div>
 
   <!-- WORKING -->
-  <div class="columna"
-       style="background-color: #fef9cb;"
-       cdkDropList
-       id="workingList"
-       [cdkDropListData]="working"
-       [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
+  <div class="columna" style="background-color: #fef9cb;" cdkDropList id="workingList" [cdkDropListData]="working"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
     <h3>WORKING</h3>
 
-    <app-task-card
-      *ngFor="let t of working"
-      [tarea]="t">
+    <app-task-card *ngFor="let t of working" [tarea]="t">
     </app-task-card>
 
   </div>
 
 
   <!-- DONE -->
-  <div class="columna"
-       style="background-color: #e4fecb;"
-       cdkDropList
-       id="doneList"
-       [cdkDropListData]="done"
-       [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
+  <div class="columna" style="background-color: #e4fecb;" cdkDropList id="doneList" [cdkDropListData]="done"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
     <h3>DONE</h3>
 
-    <app-task-card
-      *ngFor="let t of done"
-      [tarea]="t">
+    <app-task-card *ngFor="let t of done" [tarea]="t">
     </app-task-card>
 
   </div>
 
-  
+
   <!-- PAUSE -->
-  <div class="columna"
-       style="background-color: #f4cbfe;"
-       cdkDropList
-       id="pauseList"
-       [cdkDropListData]="pause"
-       [cdkDropListConnectedTo]="dropListIds"
-       (cdkDropListDropped)="drop($event)">
+  <div class="columna" style="background-color: #f4cbfe;" cdkDropList id="pauseList" [cdkDropListData]="pause"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
     <h3>PAUSE</h3>
 
-    <app-task-card
-      *ngFor="let t of pause"
-      [tarea]="t">
+    <app-task-card *ngFor="let t of pause" [tarea]="t">
     </app-task-card>
 
   </div>
@@ -82,5 +54,9 @@
 
 
 <app-new-task *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
-    (closeEvent)="mostrarModalNuevaTarea = false">
+  (closeEvent)="mostrarModalNuevaTarea = false">
 </app-new-task>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>

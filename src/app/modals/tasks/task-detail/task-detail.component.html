@@ -2,8 +2,13 @@
     [maximizable]="true" (onHide)="onHide()">
 
     <div class="d-flex justify-content-end mt-3">
-        <button class="btn btn-primary btn-notification" style="margin: 2px">
+        <button class="btn btn-primary" style="margin: 2px">
             <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
+                tooltipPosition="top"></i>
+        </button>
+
+        <button class="btn btn-primary" style="margin: 2px">
+            <i class="bx bx-paperclip bx-sm" style="color: rgb(255, 255, 255)" pTooltip="ARCHIVOS"
                 tooltipPosition="top"></i>
         </button>
     </div>
@@ -13,31 +18,63 @@
 
             <!-- ID / Título -->
             <div class="mb-3">
-                <label class="fw-bold">Título</label>
+                <label class="fw-bold">TÍTULO</label>
                 <input [(ngModel)]="tarea.titulo" name="titulo" class="form-control" placeholder="Título de la tarea">
             </div>
 
-            <!-- DESCRIPCION -->
-            <div class="mb-3">
-                <label class="fw-bold">Descripción</label>
-                <textarea [(ngModel)]="tarea.descripcion" name="descripcion" class="form-control" rows="3"></textarea>
-            </div>
-
             <!-- SUCURSAL (MOSTRAR POR AHORA FICTICIA) -->
+            <p class="fw-bold">SUCURSAL</p>
+            <p-dropdown [options]="sucursales" [(ngModel)]="tarea.idSucursal" name="sucursal" [optionValue]="'id'"
+                optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true" #formSucursalCtrl="ngModel"
+                placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}" [disabled]="false"
+                [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required="true">
+                <ng-template pTemplate="selectedItem" let-selectedOption>
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ selectedOption.nombre }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-dep pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ dep.nombre }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+            <small *ngIf="formSucursalCtrl.invalid && formSucursalCtrl.touched" class="p-error">Campo requerido.</small>
+            <p></p>
+
+            <!-- CATEGORÍAS -->
+            <p class="fw-bold">CATEGORÍA</p>
+            <p-dropdown [options]="categorias" [(ngModel)]="tarea.idCategoria" name="categoria" [optionValue]="'id'"
+                optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+                placeholder="SELECCIONA LA CATEGORÍA" [style]="{width:'100%'}" #formCategoriaCtrl="ngModel"
+                [ngClass]="{'p-invalid': formCategoriaCtrl.invalid && formCategoriaCtrl.touched}" required="true">
+                <ng-template pTemplate="selectedItem" let-selectedOption>
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ selectedOption.nombre }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-dep pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ dep.nombre }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+            <small *ngIf="formCategoriaCtrl.invalid && formCategoriaCtrl.touched" class="p-error">Campo
+                requerido.</small>
+            <p></p>
+
+            <!-- COMENTARIO GERENCIA -->
             <div class="mb-3">
-                <label class="fw-bold">Sucursal</label>
-                <input class="form-control" [value]="tarea.sucursal || 'SUCURSAL DEMO (FICTICIA)'" disabled>
+                <label class="fw-bold">COMENTARIO GERENCIA</label>
+                <textarea [(ngModel)]="tarea.comentariosGerencia" name="comentarioGerencia" class="form-control"
+                    rows="3" disabled></textarea>
             </div>
 
-            <!-- ESTADO -->
+            <!-- COMENTARIO RESPONSABLE -->
             <div class="mb-3">
-                <label class="fw-bold">Estado</label>
-                <select [(ngModel)]="tarea.estado" name="estado" class="form-control">
-                    <option value="TODO">Por hacer</option>
-                    <option value="WORKING">En progreso</option>
-                    <option value="PAUSE">Pausada</option>
-                    <option value="DONE">Terminada</option>
-                </select>
+                <label class="fw-bold">COMENTARIO RESPONSABLE</label>
+                <textarea [(ngModel)]="tarea.comentariosResponsable" name="comentarioResponsable" class="form-control"
+                    rows="3"></textarea>
             </div>
 
         </div>
@@ -53,3 +90,7 @@
     </form>
 
 </p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+    [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+    [showTransformOptions]="'translateX(100%)'"></p-toast>

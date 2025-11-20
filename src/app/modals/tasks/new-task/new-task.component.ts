@@ -56,14 +56,14 @@ export class NewTaskComponent implements OnInit {
         control.markAsTouched();
       });
 
-      Swal.fire({
-        title: "ATENCIÓN!",
-        text: "COMPLETA TODOS LOS CAMPOS DEL FORMULARIO",
-        icon: "warning",
-        customClass: {
-          container: 'swal-topmost'
-        }
-      });
+      // Swal.fire({
+      //   title: "ATENCIÓN!",
+      //   text: "COMPLETA TODOS LOS CAMPOS DEL FORMULARIO",
+      //   icon: "warning",
+      //   customClass: {
+      //     container: 'swal-topmost'
+      //   }
+      // });
 
       return;
     }
