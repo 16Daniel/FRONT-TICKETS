@@ -11,6 +11,7 @@ import { CategoriaTarea } from '../../../models/categoria-tarea.model';
 import { BranchesService } from '../../../services/branches.service';
 import { CategoriasTareasService } from '../../../services/categorias-tareas.service';
 import { TareasService } from '../../../services/tareas.service';
+import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 
 @Component({
   selector: 'app-new-task',
@@ -40,7 +41,8 @@ export class NewTaskComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private categoriasService: CategoriasTareasService,
-    private tareasService: TareasService
+    private tareasService: TareasService,
+    private firebaseStorage: FirebaseStorageService
   ) { }
 
   ngOnInit(): void {
@@ -68,16 +70,37 @@ export class NewTaskComponent implements OnInit {
       return;
     }
 
-    await this.tareasService.create({ ...this.tarea });
-    Swal.fire({
-      title: "OK",
-      text: "TAREA CREADA!",
-      icon: "success",
-      customClass: {
-        container: 'swal-topmost'
-      }
-    });
-    this.closeEvent.emit();
+    this.firebaseStorage.cargarImagenesEvidenciasTareas(this.archivos)
+      .then(async urls => {
+        this.tarea.evidenciaUrls = urls;
+        await this.tareasService.create({ ...this.tarea });
+        Swal.fire({
+          title: "OK",
+          text: "TAREA CREADA!",
+          icon: "success",
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+        this.closeEvent.emit();
+      })
+      .catch(async err => {
+        console.error('Error al subir una o más imágenes:', err);
+        Swal.fire({
+          title: "ERROR",
+          text: "ERROR AL SUBIR LAS IMÁGENES!",
+          icon: "error",
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+        await this.tareasService.create({ ...this.tarea });
+        Swal.fire("OK", "TICKET CREADO!", "success");
+        // this.showMessage('success', 'Success', 'Enviado correctamente');
+        this.closeEvent.emit();
+      });
+
+
 
   }
 

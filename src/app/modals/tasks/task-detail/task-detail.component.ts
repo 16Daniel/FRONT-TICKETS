@@ -14,6 +14,8 @@ import { BranchesService } from '../../../services/branches.service';
 import { TareasService } from '../../../services/tareas.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ModalVisorVariasImagenesComponent } from '../../modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { TaskImguploaderComponent } from '../task-imguploader/task-imguploader.component';
 
 @Component({
   selector: 'app-task-detail',
@@ -24,7 +26,9 @@ import { ToastModule } from 'primeng/toast';
     DropdownModule,
     CommonModule,
     TooltipModule,
-    ToastModule
+    ToastModule,
+    ModalVisorVariasImagenesComponent,
+    TaskImguploaderComponent
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -36,6 +40,13 @@ export class TaskDetailComponent implements OnInit {
 
   categorias: CategoriaTarea[] = [];
   sucursales: Sucursal[] = [];
+  mostrarModalVisorImagen: boolean = false;
+  mostrarModalSubirImagen: boolean = false;
+  imagenes: string[] = [];
+
+  // imagenesEvidencia: string[] = [];
+  // imagenesBase64: string[] = [];
+  // archivos: File[] = [];
 
   constructor(
     private categoriasService: CategoriasTareasService,
@@ -78,4 +89,42 @@ export class TaskDetailComponent implements OnInit {
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
+
+  onEliminarImagen(event: any) {
+    // this.actualizarImagenesPorTitulo(event.titulo, event.url)
+  }
+
+  abrirModalImagenes() {
+    this.imagenes = this.tarea.evidenciaUrls;
+    this.mostrarModalVisorImagen = true;
+  }
+
+  // onFileChange(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (!input.files?.length) return;
+
+  //   this.archivos = Array.from(input.files);
+
+  //   this.imagenesBase64 = [];
+
+  //   this.archivos.forEach(file => {
+  //     const reader = new FileReader();
+
+  //     reader.onload = () => {
+  //       if (typeof reader.result === 'string') {
+  //         this.imagenesBase64.push(reader.result);
+  //         this.cdr.detectChanges();
+  //       }
+  //     };
+
+  //     reader.readAsDataURL(file);
+  //   });
+  // }
+
+  // onSeleccionarImagenes() {
+  //   const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  //   if (fileInput) {
+  //     fileInput.click();
+  //   }
+  // }
 }
