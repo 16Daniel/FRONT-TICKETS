@@ -2,18 +2,22 @@
 
     <h3 class="titulo">COMENTARIOS</h3>
 
-    <div *ngIf="comentarios.length === 0" class="sin-comentarios">
+    <div *ngIf="tarea.comentarios.length === 0" class="sin-comentarios">
         No hay comentarios aún.
     </div>
 
     <!-- Tarjetas de comentarios -->
-    <div class="tarjeta" *ngFor="let c of comentarios">
+    <div class="tarjeta" *ngFor="let c of tarea.comentarios">
         <div class="tarjeta-encabezado">
-            <strong>{{ c.nombre }}</strong>
-            <span class="fecha">
-                {{ c.fecha | date:'short' }}
-            </span>
+            <div class="nombre">
+                <strong>{{ c.nombre }}</strong>
+            </div>
+
+            <div class="fecha">
+                {{ c.fecha | date:'dd/MM/yyyy, hh:mm a' }}
+            </div>
         </div>
+
 
         <div class="tarjeta-cuerpo">
             {{ c.comentario }}

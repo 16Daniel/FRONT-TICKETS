@@ -16,6 +16,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ModalVisorVariasImagenesComponent } from '../../modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { TaskImguploaderComponent } from '../task-imguploader/task-imguploader.component';
+import { TaskCommentBoxComponent } from '../../../components/tasks/task-comment-box/task-comment-box.component';
 
 @Component({
   selector: 'app-task-detail',
@@ -28,7 +29,8 @@ import { TaskImguploaderComponent } from '../task-imguploader/task-imguploader.c
     TooltipModule,
     ToastModule,
     ModalVisorVariasImagenesComponent,
-    TaskImguploaderComponent
+    TaskImguploaderComponent,
+    TaskCommentBoxComponent
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
