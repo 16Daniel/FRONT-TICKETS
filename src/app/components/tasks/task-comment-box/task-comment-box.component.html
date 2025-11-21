@@ -1,0 +1,33 @@
+<div class="contenedor">
+
+    <h3 class="titulo">COMENTARIOS</h3>
+
+    <div *ngIf="comentarios.length === 0" class="sin-comentarios">
+        No hay comentarios aún.
+    </div>
+
+    <!-- Tarjetas de comentarios -->
+    <div class="tarjeta" *ngFor="let c of comentarios">
+        <div class="tarjeta-encabezado">
+            <strong>{{ c.nombre }}</strong>
+            <span class="fecha">
+                {{ c.fecha | date:'short' }}
+            </span>
+        </div>
+
+        <div class="tarjeta-cuerpo">
+            {{ c.comentario }}
+        </div>
+    </div>
+
+    <!-- Caja para escribir un nuevo comentario -->
+    <div class="ingresar-comentario">
+        <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..." rows="3">
+    </textarea>
+
+        <button class="btn-enviar" (click)="enviarComentario()">
+            Enviar
+        </button>
+    </div>
+
+</div>
