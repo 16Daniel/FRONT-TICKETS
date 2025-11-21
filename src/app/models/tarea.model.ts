@@ -1,3 +1,5 @@
+import { Comentario } from "./comentario-chat.model";
+
 export class Tarea {
     id?: string;
     titulo: string = '';
@@ -9,6 +11,6 @@ export class Tarea {
     comentariosGerencia: string = '';
     comentariosResponsable: string = '';
     idEstatus: string = '1';
-    chat: string[] = [];
+    comentarios: Comentario[] = [];
     evidenciaUrls: string[] = [];
 }
