@@ -1,7 +1,11 @@
 .contenedor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     padding: 1rem;
 }
 
+/* Título */
 .titulo {
     margin-bottom: 1rem;
     text-align: center;
@@ -9,12 +13,22 @@
     font-weight: bold;
 }
 
+/* Lista de comentarios con scroll */
+.lista-comentarios {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+    /* para que no tape el scroll */
+}
+
+/* Si no hay comentarios */
 .sin-comentarios {
     text-align: center;
     color: #777;
     margin-bottom: 1rem;
 }
 
+/* Tarjeta */
 .tarjeta {
     background: #fff;
     border-radius: 8px;
@@ -38,10 +52,12 @@
     font-size: 1rem;
 }
 
+/* Caja fija abajo */
 .ingresar-comentario {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-direction: column;
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+    background: #fafafa;
 }
 
 .texto {
@@ -68,6 +84,15 @@
     background: #155a9c;
 }
 
+.fecha {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.nombre {
+    font-size: 0.95rem;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -78,13 +103,4 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.fecha {
-    font-size: 0.8rem;
-    color: #666;
-}
-
-.nombre {
-    font-size: 0.95rem;
 }

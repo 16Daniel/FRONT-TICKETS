@@ -6,11 +6,6 @@
         <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
 
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-primary" style="margin: 2px">
-                    <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
-                        tooltipPosition="top"></i>
-                </button>
-
                 <button class="btn btn-primary" style="margin: 2px" (click)="abrirModalImagenes()">
                     <i class="bx bx-paperclip bx-sm" style="color: rgb(255, 255, 255)" pTooltip="VER IMÁGENES"
                         tooltipPosition="top"></i>
@@ -50,10 +45,10 @@
 
                     <p></p>
 
-                    <!-- COMENTARIO RESPONSABLE -->
+                    <!-- DESCRIPCIÓN -->
                     <div class="mb-3">
-                        <label class="fw-bold">COMENTARIO RESPONSABLE</label>
-                        <textarea [(ngModel)]="tarea.comentariosResponsable" name="comentarioResponsable"
+                        <label class="fw-bold">DESCRIPCIÓN</label>
+                        <textarea [(ngModel)]="tarea.descripcion" name="comentarioResponsable"
                             class="form-control" rows="7">
                         </textarea>
                     </div>
