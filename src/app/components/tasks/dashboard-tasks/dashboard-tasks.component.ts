@@ -2,12 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import { MessageService } from 'primeng/api';
 
 import { NewTaskComponent } from '../../../modals/tasks/new-task/new-task.component';
 import { TaskDetailComponent } from '../../../modals/tasks/task-detail/task-detail.component';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import { Tarea } from '../../../models/tarea.model';
 import { TareasService } from '../../../services/tareas.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-dashboard-tasks',
@@ -17,7 +19,7 @@ import { TareasService } from '../../../services/tareas.service';
     CommonModule,
     NewTaskComponent,
     TaskCardComponent,
-
+    ToastModule
   ],
   templateUrl: './dashboard-tasks.component.html',
   styleUrl: './dashboard-tasks.component.scss'
@@ -25,7 +27,10 @@ import { TareasService } from '../../../services/tareas.service';
 export class DashboardTasksComponent implements OnInit {
   @Input() idSucursal!: string;
 
-  constructor(private tareasService: TareasService) { }
+  constructor(
+    private tareasService: TareasService,
+    private messageService: MessageService,
+  ) { }
 
   ngOnInit(): void {
     this.initData();
@@ -86,13 +91,8 @@ export class DashboardTasksComponent implements OnInit {
 
     }
 
-    // 🔹 3. Llamar servicio (Ejemplo)
-    console.log(tareaMovida)
-    debugger
     await this.tareasService.update(tareaMovida, tareaMovida.id!);
-    // this.tareasService.actualizarEstado(tareaMovida.id, nuevoEstado)
-    //   .then(() => console.log("Estado actualizado correctamente"))
-    //   .catch(err => console.error("Error al actualizar estado:", err));
+    this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
 
@@ -104,5 +104,9 @@ export class DashboardTasksComponent implements OnInit {
       this.pause = tareas.filter(x => x.idEstatus == '3');
       this.done = tareas.filter(x => x.idEstatus == '4');
     })
+  }
+
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 }

@@ -1,0 +1,35 @@
+<div class="contenedor">
+
+    <h3 class="titulo">COMENTARIOS</h3>
+
+    <!-- Lista de comentarios con scroll -->
+    <div class="lista-comentarios">
+
+        <div *ngIf="tarea.comentarios.length === 0" class="sin-comentarios">
+            No hay comentarios aún.
+        </div>
+
+        <div class="tarjeta" *ngFor="let c of tarea.comentarios">
+            <div class="tarjeta-encabezado">
+                <div class="nombre"><strong>{{ c.nombre }}</strong></div>
+                <div class="fecha">{{ c.fecha | date:'dd/MM/yyyy, hh:mm a' }}</div>
+            </div>
+
+            <div class="tarjeta-cuerpo">
+                {{ c.comentario }}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Caja fija abajo -->
+    <div class="ingresar-comentario">
+        <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..."
+            rows="3"></textarea>
+
+        <button class="btn-enviar" (click)="enviarComentario()">
+            Enviar
+        </button>
+    </div>
+
+</div>

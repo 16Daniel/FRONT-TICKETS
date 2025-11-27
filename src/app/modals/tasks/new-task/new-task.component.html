@@ -37,7 +37,8 @@
         <p class="fw-bold">CATEGORÍA</p>
         <p-dropdown [options]="categorias" [(ngModel)]="tarea.idCategoria" name="categoria" [optionValue]="'id'"
             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
-            placeholder="SELECCIONA LA CATEGORÍA" [style]="{width:'100%'}" required>
+            placeholder="SELECCIONA LA CATEGORÍA" [style]="{width:'100%'}" #formCategoriaCtrl="ngModel"
+            [ngClass]="{'p-invalid': formCategoriaCtrl.invalid && formCategoriaCtrl.touched}" required="true">
             <ng-template pTemplate="selectedItem" let-selectedOption>
                 <div class="flex align-items-center gap-2">
                     <div>{{ selectedOption.nombre }}</div>
@@ -49,12 +50,13 @@
                 </div>
             </ng-template>
         </p-dropdown>
+        <small *ngIf="formCategoriaCtrl.invalid && formCategoriaCtrl.touched" class="p-error">Campo requerido.</small>
         <p></p>
 
-        <P>COMENTARIOS</P>
-        <textarea [(ngModel)]="tarea.comentariosGerencia" name="comentarios" rows="10" class="form-control"
+        <P>DESCRIPCIÓN</P>
+        <textarea [(ngModel)]="tarea.descripcion" name="comentarios" rows="10" class="form-control"
             [ngClass]="{'is-invalid': formComentariosCtrl.invalid && formComentariosCtrl.touched}"
-            #formComentariosCtrl="ngModel" required>
+            #formComentariosCtrl="ngModel">
         </textarea>
 
         <br>
