@@ -104,3 +104,48 @@
         transform: translateY(0);
     }
 }
+
+.imagenes {
+    margin-top: 0.7rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.imagen-comentario {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.imagen-comentario:hover {
+    transform: scale(1.05);
+}
+
+.btn-adjuntar {
+    position: relative;
+    margin-top: 0.5rem;
+    background: #555;
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #d32f2f;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}

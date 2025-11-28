@@ -1,4 +1,4 @@
-<p-dialog [header]="'DETALLE DE TAREA'" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '95vw', 'height': '95vh' }"
+<p-dialog [header]="'ACTIVIDAD PRINCIPAL'" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '95vw', 'height': '95vh' }"
     [maximizable]="true" (onHide)="onHide()">
 
     <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
@@ -47,7 +47,7 @@
 
                     <!-- DESCRIPCIÓN -->
                     <div class="mb-3">
-                        <label class="fw-bold">DESCRIPCIÓN</label>
+                        <label class="fw-bold">DESCRIPCIÓN GENERAL</label>
                         <textarea [(ngModel)]="tarea.descripcion" name="comentarioResponsable"
                             class="form-control" rows="7">
                         </textarea>

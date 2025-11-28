@@ -1,6 +1,6 @@
 <div class="contenedor">
 
-    <h3 class="titulo">COMENTARIOS</h3>
+    <h3 class="titulo">HISTÓRICO / COMENTARIOS</h3>
 
     <!-- Lista de comentarios con scroll -->
     <div class="lista-comentarios">
@@ -17,6 +17,12 @@
 
             <div class="tarjeta-cuerpo">
                 {{ c.comentario }}
+
+                <!-- Mostrar imágenes del comentario -->
+                <div *ngIf="c.imagenesEvidencia?.length" class="imagenes">
+                    <img *ngFor="let img of c.imagenesEvidencia" [src]="img" class="imagen-comentario"
+                        (click)="verImagen(img)">
+                </div>
             </div>
         </div>
 
@@ -27,9 +33,22 @@
         <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..."
             rows="3"></textarea>
 
+        <input type="file" accept="image/*" multiple (change)="cargarImagenComentario($event)" hidden #fileInput>
+
+        <button class="btn-adjuntar" (click)="fileInput.click()">
+            📎 Imagen
+            <span *ngIf="imagenesComentario.length > 0" class="badge">
+                {{ imagenesComentario.length }}
+            </span>
+
+        </button>
+
         <button class="btn-enviar" (click)="enviarComentario()">
             Enviar
         </button>
     </div>
 
 </div>
+
+<app-modal-visor-imagenes *ngIf="mostrarModalImagen" [mostrarModal]="mostrarModalImagen"
+    (closeEvent)="mostrarModalImagen = false" [imagenUrl]="urlImagen"></app-modal-visor-imagenes>

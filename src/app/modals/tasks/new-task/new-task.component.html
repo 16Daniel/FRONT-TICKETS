@@ -53,7 +53,7 @@
         <small *ngIf="formCategoriaCtrl.invalid && formCategoriaCtrl.touched" class="p-error">Campo requerido.</small>
         <p></p>
 
-        <P>DESCRIPCIÓN</P>
+        <P>DESCRIPCIÓN GENERAL</P>
         <textarea [(ngModel)]="tarea.descripcion" name="comentarios" rows="10" class="form-control"
             [ngClass]="{'is-invalid': formComentariosCtrl.invalid && formComentariosCtrl.touched}"
             #formComentariosCtrl="ngModel">
