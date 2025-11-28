@@ -3,6 +3,7 @@
     flex-direction: column;
     height: 100%;
     padding: 1rem;
+    // background: #f5f5f5;
 }
 
 /* Título */
@@ -58,10 +59,15 @@
     border-top: 1px solid #ddd;
     padding-top: 1rem;
     background: #fafafa;
+
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
 }
 
+/* Caja de texto a la izquierda */
 .texto {
-    width: 100%;
+    flex: 1;
     border-radius: 6px;
     padding: 0.7rem;
     border: 1px solid #ccc;
@@ -69,9 +75,16 @@
     font-size: 1rem;
 }
 
+/* Contenedor de acciones a la derecha */
+.acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Botón enviar */
 .btn-enviar {
-    margin-top: 0.5rem;
-    padding: 0.7rem;
+    padding: 0.7rem 1rem;
     border: none;
     width: 120px;
     background: #1976d2;
@@ -126,9 +139,9 @@
     transform: scale(1.05);
 }
 
+/* Botón adjuntar */
 .btn-adjuntar {
     position: relative;
-    margin-top: 0.5rem;
     background: #555;
     color: white;
     border: none;

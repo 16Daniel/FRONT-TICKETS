@@ -30,23 +30,27 @@
 
     <!-- Caja fija abajo -->
     <div class="ingresar-comentario">
+
         <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..."
             rows="3"></textarea>
 
-        <input type="file" accept="image/*" multiple (change)="cargarImagenComentario($event)" hidden #fileInput>
+        <div class="acciones">
+            <input type="file" accept="image/*" multiple (change)="cargarImagenComentario($event)" hidden #fileInput>
 
-        <button class="btn-adjuntar" (click)="fileInput.click()">
-            📎 Imagen
-            <span *ngIf="imagenesComentario.length > 0" class="badge">
-                {{ imagenesComentario.length }}
-            </span>
+            <button class="btn-adjuntar" (click)="fileInput.click()">
+                📎 Imágenes
+                <span *ngIf="imagenesComentario.length > 0" class="badge">
+                    {{ imagenesComentario.length }}
+                </span>
+            </button>
 
-        </button>
+            <button class="btn-enviar" (click)="enviarComentario()">
+                Enviar
+            </button>
+        </div>
 
-        <button class="btn-enviar" (click)="enviarComentario()">
-            Enviar
-        </button>
     </div>
+
 
 </div>
 
