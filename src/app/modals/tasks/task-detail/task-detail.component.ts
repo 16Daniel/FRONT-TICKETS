@@ -17,6 +17,11 @@ import { ToastModule } from 'primeng/toast';
 import { ModalVisorVariasImagenesComponent } from '../../modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { TaskImguploaderComponent } from '../task-imguploader/task-imguploader.component';
 import { TaskCommentBoxComponent } from '../../../components/tasks/task-comment-box/task-comment-box.component';
+import { EstatusEisenhower } from '../../../models/estatus-eisenhower.model';
+import { StatusTaskService } from '../../../services/status-task.service';
+import { EstatusTarea } from '../../../models/estatus-tarea.model';
+import { StatusEisenhowerService } from '../../../services/status-eisenhower.service';
+import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
 
 @Component({
   selector: 'app-task-detail',
@@ -30,7 +35,8 @@ import { TaskCommentBoxComponent } from '../../../components/tasks/task-comment-
     ToastModule,
     ModalVisorVariasImagenesComponent,
     TaskImguploaderComponent,
-    TaskCommentBoxComponent
+    TaskCommentBoxComponent,
+    EisenhowerPriorityChecksComponent
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -45,10 +51,8 @@ export class TaskDetailComponent implements OnInit {
   mostrarModalVisorImagen: boolean = false;
   mostrarModalSubirImagen: boolean = false;
   imagenes: string[] = [];
-
-  // imagenesEvidencia: string[] = [];
-  // imagenesBase64: string[] = [];
-  // archivos: File[] = [];
+  estatusTeras: EstatusTarea[] = [];
+  catalogoEstatus: EstatusEisenhower[] = []
 
   constructor(
     private categoriasService: CategoriasTareasService,
@@ -56,11 +60,15 @@ export class TaskDetailComponent implements OnInit {
     private branchesService: BranchesService,
     private tareasService: TareasService,
     private messageService: MessageService,
+    private statusTaskService: StatusTaskService,
+    private statusEisenhowerService: StatusEisenhowerService
   ) { }
 
   ngOnInit(): void {
     this.obtenerSucursales();
     this.categoriasService.categorias$.subscribe(categorias => this.categorias = categorias);
+    this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
+    this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
   }
 
   onHide = () => this.closeEvent.emit(false);
@@ -74,6 +82,7 @@ export class TaskDetailComponent implements OnInit {
       return;
     }
 
+    console.log(this.tarea);
     await this.tareasService.update(this.tarea, this.tarea.id);
     this.showMessage('success', 'Success', 'Enviado correctamente');
   }
@@ -101,32 +110,10 @@ export class TaskDetailComponent implements OnInit {
     this.mostrarModalVisorImagen = true;
   }
 
-  // onFileChange(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-  //   if (!input.files?.length) return;
+  recibirPrioridad(event: any) {
+    this.tarea.urgente = event.urgente;
+    this.tarea.importante = event.importante;
+    this.tarea.idEisenhower = event.idEisenhower;
+  }
 
-  //   this.archivos = Array.from(input.files);
-
-  //   this.imagenesBase64 = [];
-
-  //   this.archivos.forEach(file => {
-  //     const reader = new FileReader();
-
-  //     reader.onload = () => {
-  //       if (typeof reader.result === 'string') {
-  //         this.imagenesBase64.push(reader.result);
-  //         this.cdr.detectChanges();
-  //       }
-  //     };
-
-  //     reader.readAsDataURL(file);
-  //   });
-  // }
-
-  // onSeleccionarImagenes() {
-  //   const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-  //   if (fileInput) {
-  //     fileInput.click();
-  //   }
-  // }
 }

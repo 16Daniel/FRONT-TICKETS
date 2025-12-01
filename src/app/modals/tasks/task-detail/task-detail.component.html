@@ -1,21 +1,33 @@
-<p-dialog [header]="'ACTIVIDAD PRINCIPAL'" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '95vw', 'height': '95vh' }"
-    [maximizable]="true" (onHide)="onHide()">
+<p-dialog [header]="'ACTIVIDAD PRINCIPAL'" [(visible)]="mostrarModal" [modal]="true"
+    [style]="{ 'width': '95vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
 
     <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
 
         <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
 
-            <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-primary" style="margin: 2px" (click)="abrirModalImagenes()">
-                    <i class="bx bx-paperclip bx-sm" style="color: rgb(255, 255, 255)" pTooltip="VER IMÁGENES"
-                        tooltipPosition="top"></i>
-                </button>
+            <div class="d-flex justify-content-between mt-3 align-items-center">
 
-                <button class="btn btn-primary" style="margin: 2px" (click)="mostrarModalSubirImagen = true">
-                    <i class="bx bx-image-add bx-sm" style="color: white" pTooltip="SUBIR IMÁGEN"
-                        tooltipPosition="top"></i>
-                </button>
+                <div style="width: 250px; margin-left: 15px;">
+                    <label class="fw-bold">ESTATUS</label>
+                    <p-dropdown [options]="estatusTeras" [(ngModel)]="tarea.idEstatus" name="estatusTeras"
+                        [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre"
+                        placeholder="SELECCIONA ESTATUS DE LA TAREA" [style]="{ width:'100%' }" required="true">
+                    </p-dropdown>
+                </div>
+
+                <div class="d-flex">
+                    <button class="btn btn-primary" style="margin: 2px" (click)="abrirModalImagenes()">
+                        <i class="bx bx-paperclip bx-sm" style="color: white" pTooltip="VER IMÁGENES"
+                            tooltipPosition="top"></i>
+                    </button>
+
+                    <button class="btn btn-primary" style="margin: 2px" (click)="mostrarModalSubirImagen = true">
+                        <i class="bx bx-image-add bx-sm" style="color: white" pTooltip="SUBIR IMÁGEN"
+                            tooltipPosition="top"></i>
+                    </button>
+                </div>
             </div>
+
 
             <form #form="ngForm" (ngSubmit)="enviar(form)">
                 <div class="p-3">
@@ -48,10 +60,13 @@
                     <!-- DESCRIPCIÓN -->
                     <div class="mb-3">
                         <label class="fw-bold">DESCRIPCIÓN GENERAL</label>
-                        <textarea [(ngModel)]="tarea.descripcion" name="comentarioResponsable"
-                            class="form-control" rows="7">
+                        <textarea [(ngModel)]="tarea.descripcion" name="comentarioResponsable" class="form-control"
+                            rows="7">
                         </textarea>
                     </div>
+
+                    <app-eisenhower-priority-checks [modelo]="tarea" (cambio)="recibirPrioridad($event)">
+                    </app-eisenhower-priority-checks>
 
                 </div>
 

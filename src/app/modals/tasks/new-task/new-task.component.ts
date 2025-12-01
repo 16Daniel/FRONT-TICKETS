@@ -99,9 +99,6 @@ export class NewTaskComponent implements OnInit {
         // this.showMessage('success', 'Success', 'Enviado correctamente');
         this.closeEvent.emit();
       });
-
-
-
   }
 
   obtenerSucursales() {
@@ -140,6 +137,27 @@ export class NewTaskComponent implements OnInit {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.click();
+    }
+  }
+
+
+  calcularEisenhower() {
+    const urgente = this.tarea.urgente;
+    const importante = this.tarea.importante;
+
+    if (!urgente || !importante) return;
+
+    if (urgente === 'URGENTE' && importante === 'IMPORTANTE') {
+      this.tarea.idEisenhower = '1';
+    }
+    else if (urgente === 'NO URGENTE' && importante === 'IMPORTANTE') {
+      this.tarea.idEisenhower = '2';
+    }
+    else if (urgente === 'URGENTE' && importante === 'NO IMPORTANTE') {
+      this.tarea.idEisenhower = '3';
+    }
+    else if (urgente === 'NO URGENTE' && importante === 'NO IMPORTANTE') {
+      this.tarea.idEisenhower = '4';
     }
   }
 }
