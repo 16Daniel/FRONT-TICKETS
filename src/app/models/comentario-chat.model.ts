@@ -5,4 +5,5 @@ export interface Comentario {
   idUsuario: string;
   nombre: string;
   fecha: Date;
+  imagenesEvidencia?: string[];
 }
