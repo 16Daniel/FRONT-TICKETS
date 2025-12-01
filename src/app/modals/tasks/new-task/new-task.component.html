@@ -1,5 +1,6 @@
 <p-dialog [header]="'CREAR TAREA'" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '95vh' }"
     [maximizable]="true" (onHide)="onHide()">
+
     <form #form="ngForm" (ngSubmit)="enviar(form)">
 
         <p class="fw-bold">TÍTULO</p>
@@ -18,18 +19,8 @@
         <p class="fw-bold">SUCURSAL</p>
         <p-dropdown [options]="sucursales" [(ngModel)]="tarea.idSucursal" name="sucursal" [optionValue]="'id'"
             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true" #formSucursalCtrl="ngModel"
-            placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}" [disabled]="false"
+            placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}"
             [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required="true">
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre }}</div>
-                </div>
-            </ng-template>
-            <ng-template let-dep pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ dep.nombre }}</div>
-                </div>
-            </ng-template>
         </p-dropdown>
         <small *ngIf="formSucursalCtrl.invalid && formSucursalCtrl.touched" class="p-error">Campo requerido.</small>
         <p></p>
@@ -39,72 +30,17 @@
             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
             placeholder="SELECCIONA LA CATEGORÍA" [style]="{width:'100%'}" #formCategoriaCtrl="ngModel"
             [ngClass]="{'p-invalid': formCategoriaCtrl.invalid && formCategoriaCtrl.touched}" required="true">
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre }}</div>
-                </div>
-            </ng-template>
-            <ng-template let-dep pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ dep.nombre }}</div>
-                </div>
-            </ng-template>
         </p-dropdown>
         <small *ngIf="formCategoriaCtrl.invalid && formCategoriaCtrl.touched" class="p-error">Campo requerido.</small>
         <p></p>
 
-        <P>DESCRIPCIÓN GENERAL</P>
+        <p>DESCRIPCIÓN GENERAL</p>
         <textarea [(ngModel)]="tarea.descripcion" name="comentarios" rows="10" class="form-control"
             [ngClass]="{'is-invalid': formComentariosCtrl.invalid && formComentariosCtrl.touched}"
-            #formComentariosCtrl="ngModel">
-        </textarea>
+            #formComentariosCtrl="ngModel"></textarea>
 
-
-        <div class="mt-4">
-            <p class="fw-bold">SELECCIONA LA PRIORIDAD</p>
-
-            <div class="d-flex gap-4 align-items-center mb-2">
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="grupo1" [(ngModel)]="tarea.urgente"
-                        value="URGENTE" required #grupo1Ctrl="ngModel" (change)="calcularEisenhower()">
-                    <label class="form-check-label">URGENTE</label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="grupo1" [(ngModel)]="tarea.urgente"
-                        value="NO URGENTE" required #grupo1Ctrl="ngModel" (change)="calcularEisenhower()">
-                    <label class="form-check-label">NO URGENTE</label>
-                </div>
-
-            </div>
-
-            <small *ngIf="grupo1Ctrl.invalid && grupo1Ctrl.touched" class="p-error">
-                Campo requerido.
-            </small>
-
-
-            <div class="d-flex gap-4 align-items-center mt-3 mb-2">
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="grupo2" [(ngModel)]="tarea.importante"
-                        value="IMPORTANTE" required #grupo2Ctrl="ngModel" (change)="calcularEisenhower()">
-                    <label class="form-check-label">IMPORTANTE</label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="grupo2" [(ngModel)]="tarea.importante"
-                        value="NO IMPORTANTE" required #grupo2Ctrl="ngModel" (change)="calcularEisenhower()">
-                    <label class="form-check-label">NO IMPORTANTE</label>
-                </div>
-
-            </div>
-
-            <small *ngIf="grupo2Ctrl.invalid && grupo2Ctrl.touched" class="p-error">
-                Campo requerido.
-            </small>
-
-        </div>
+        <app-eisenhower-priority-checks [modelo]="tarea" (cambio)="recibirPrioridad($event)">
+        </app-eisenhower-priority-checks>
 
         <br>
 
@@ -123,7 +59,6 @@
                         <p class="text-center">Imagen {{ i + 1 }}</p>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -133,6 +68,7 @@
                 <label>ENVIAR</label>
             </button>
         </div>
+
     </form>
 
 </p-dialog>

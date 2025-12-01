@@ -12,6 +12,7 @@ import { BranchesService } from '../../../services/branches.service';
 import { CategoriasTareasService } from '../../../services/categorias-tareas.service';
 import { TareasService } from '../../../services/tareas.service';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
+import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
 
 @Component({
   selector: 'app-new-task',
@@ -20,7 +21,8 @@ import { FirebaseStorageService } from '../../../services/firebase-storage.servi
     DialogModule,
     FormsModule,
     CommonModule,
-    DropdownModule
+    DropdownModule,
+    EisenhowerPriorityChecksComponent
   ],
   templateUrl: './new-task.component.html',
   styleUrl: './new-task.component.scss'
@@ -160,4 +162,11 @@ export class NewTaskComponent implements OnInit {
       this.tarea.idEisenhower = '4';
     }
   }
+
+  recibirPrioridad(event: any) {
+    this.tarea.urgente = event.urgente;
+    this.tarea.importante = event.importante;
+    this.tarea.idEisenhower = event.idEisenhower;
+  }
+
 }
