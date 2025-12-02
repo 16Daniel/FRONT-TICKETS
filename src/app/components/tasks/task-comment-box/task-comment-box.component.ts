@@ -77,7 +77,7 @@ export class TaskCommentBoxComponent implements OnInit {
   }
 
   verImagen(url: string) {
-    // this.mostrarModalImagen = true;
-    // this.urlImagen = url;
+    this.mostrarModalImagen = true;
+    this.urlImagen = url;
   }
 }
