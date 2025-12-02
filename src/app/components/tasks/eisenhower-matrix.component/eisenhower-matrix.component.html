@@ -1,0 +1,78 @@
+
+<div class="d-flex justify-content-center" *ngIf="loading">
+                    <div class="lds-ring">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  </div>
+
+<div class="parent text-center" *ngIf="!loading">
+<div class="div1 p-3 bg-black fs-3"> C1 </div>
+<div class="div2 p-3 bg-green fs-3"> IMPORTANTE </div>
+<div class="div3 p-3 bg-black fs-3"> C2 </div>
+<div class="div4 p-3 bg-red d-flex justify-content-center align-items-center"> <div class="fs-3">URGENTE</div></div>
+<div class="div5 p-3 bg-black fs-3"> C3 </div>
+<div class="div6 p-3 bg-yellow fs-3"> NO IMPORTANTE </div>
+<div class="div7 p-3 bg-black fs-3"> C4 </div>
+<div class="div8 p-3 bg-blue d-flex justify-content-center align-items-center"> <div class="fs-3">NO URGENTE</div> </div>
+
+<div class="div11 p-3 bg-c-red"> 
+    <p class="m-0 fs-5">IMPORTANTE / URGENTE</p>
+    <p class="m-0 fw-bold fs-5">REALIZALO YA!</p> 
+
+     <div class="columna" cdkDropList id="c1" [cdkDropListData]="tc1" style="max-height: 300px; overflow: auto;"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
+
+    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc1" [tarea]="t">
+    </app-task-eisenhower-card>
+
+  </div>
+
+</div>
+
+
+<div class="div10 p-3 bg-c-green" >
+     <p class="m-0 fs-5">IMPORTANTE / NO URGENTE</p>
+    <p class="m-0 fw-bold fs-5">AGENDALO Y PLANIFICALO...</p> 
+
+     <div class="columna" cdkDropList id="c2" [cdkDropListData]="tc2" style="max-height: 300px; overflow: auto;"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
+    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc2" [tarea]="t">
+    </app-task-eisenhower-card>
+
+  </div>
+
+</div>
+
+<div class="div12 p-3 bg-c-yellow" >  
+     <p class="m-0 fs-5">URGENTE / NO IMPORTANTE</p>
+    <p class="m-0 fw-bold fs-5">DELEGALO...</p> 
+
+     <div class="columna" cdkDropList id="c3" [cdkDropListData]="tc3" style="max-height: 300px; overflow: auto;"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
+
+    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc3" [tarea]="t">
+    </app-task-eisenhower-card>
+
+  </div>
+
+</div>
+
+<div class="div9 p-3 bg-c-blue" >
+     <p class="m-0 fs-5">NO URGENTE / NO IMPORTANTE</p>
+    <p class="m-0 fw-bold fs-5">PUEDE ESPERAR..</p> 
+
+      <div class="columna" cdkDropList id="c4" [cdkDropListData]="tc4" style="max-height: 300px; overflow: auto;"
+    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
+
+    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc4" [tarea]="t">
+    </app-task-eisenhower-card>
+
+  </div>
+
+</div>
+
+
+</div>

@@ -37,14 +37,15 @@
                 {{ item.intentos }}
                </div>
             </td> -->
+             <td>
+                <button class="btn btn-primary" (click)="abrirModalUbicaciones(item.codarticulo,item.descripcion,item.unidadmedida)"><i class='bx bxs-edit bx-sm'></i></button>
+            </td>
             <td>
                 <!-- <button class="btn btn-warning" (click)="validar(item,getCaptura(item.codarticulo))" *ngIf="item.validado==false && item.intentos != 3">VALIDAR</button>
                 <button class="btn bg-p-b" *ngIf="item.validado==true || item.intentos == 3">GUARDAR</button> -->
-                 <button class="btn bg-p-b" (click)="ConfirmarGuardar(item)">GUARDAR</button>
+                 <button class="btn btn-success" (click)="ConfirmarGuardar(item)"><i class='bx bx-save bx-sm'></i>&nbsp;GUARDAR</button>
             </td>
-            <td>
-                <button class="btn btn-primary" (click)="abrirModalUbicaciones(item.codarticulo,item.descripcion,item.unidadmedida)"><i class='bx bxs-edit bx-sm'></i></button>
-            </td>
+           
         </tr>
     </ng-template>
 </p-table>
