@@ -1,1 +1,22 @@
-<p>task-eisenhower-card works!</p>,
+<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
+    <div class="titulo">{{ tarea.titulo }}</div>
+    <!-- <div>{{getCategoriaNombre(tarea.idCategoria)}}</div> -->
+<div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+  <div class="progress-bar" style="width: 25%">25%</div>
+</div>
+    <!-- <div class="meta">
+        <span class="fecha">{{ tarea.fecha | date:'dd/MM/yyyy' }}</span>
+        <span class="estatus estatus-{{ tarea.idEstatus }}"></span>
+    </div> -->
+
+    <div class="row mt-1">
+<div class="col-4"><span class="fecha">CREACIÓN: {{ tarea.fecha | date:'dd/MM/yyyy' }}</span></div>
+<div class="col-4"> <div class="estatus-{{ tarea.idEstatus }} rounded-3" style="width: auto;">{{obtenerNombreEstatus(tarea.idEstatus)}}</div> </div>
+<div class="col-4"><span class="fecha">FINALIZAR: {{ tarea.fecha | date:'dd/MM/yyyy' }}</span></div>
+</div>
+
+</div>
+
+<app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
+    (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tarea">
+</app-task-detail>

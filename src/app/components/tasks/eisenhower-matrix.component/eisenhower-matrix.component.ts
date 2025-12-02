@@ -5,11 +5,12 @@ import { MessageService } from 'primeng/api';
 import { Tarea } from '../../../models/tarea.model';
 import { TaskCardComponent } from "../task-card/task-card.component";
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { TaskEisenhowerCard } from "../task-eisenhower-card/task-eisenhower-card";
 
 @Component({
   selector: 'app-eisenhower-matrix',
   standalone: true,
-  imports: [CommonModule, TaskCardComponent,DragDropModule],
+  imports: [CommonModule, DragDropModule, TaskEisenhowerCard],
   templateUrl: './eisenhower-matrix.component.html',
   styleUrl: './eisenhower-matrix.component.scss',
 })
@@ -33,10 +34,10 @@ dropListIds = ['c1', 'c2', 'c3', 'c4'];
     initData() {
       this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
         console.log(tareas)
-        this.tc1 = tareas.filter( x=> x.idEstatus != '4' && x.idEstatusEisenhower == '1');
-        this.tc2 = tareas.filter( x=> x.idEstatus != '4' && x.idEstatusEisenhower == '2');
-        this.tc3 = tareas.filter( x=> x.idEstatus != '4' && x.idEstatusEisenhower == '3');
-        this.tc4 = tareas.filter( x=> x.idEstatus != '4' && x.idEstatusEisenhower == '4'); 
+        this.tc1 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '1');
+        this.tc2 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '2');
+        this.tc3 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '3');
+        this.tc4 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '4'); 
       })
     }
 
@@ -69,16 +70,16 @@ dropListIds = ['c1', 'c2', 'c3', 'c4'];
 
     switch (event.container.id) {
       case 'c1':
-        tareaMovida.idEstatusEisenhower = '1';
+        tareaMovida.idEisenhower = '1';
         break;
       case 'c2':
-        tareaMovida.idEstatusEisenhower = '2';
+        tareaMovida.idEisenhower = '2';
         break;
       case 'c3':
-        tareaMovida.idEstatusEisenhower = '3';
+        tareaMovida.idEisenhower = '3';
         break;
       case 'c4':
-        tareaMovida.idEstatusEisenhower = '4';
+        tareaMovida.idEisenhower = '4';
         break;
 
     }
