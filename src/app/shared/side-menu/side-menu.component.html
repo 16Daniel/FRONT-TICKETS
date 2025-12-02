@@ -40,10 +40,10 @@
             *ngIf="usuario.idRol == '1' || usuario.idRol == '5'"><i
               class='bx bx-objects-horizontal-left'></i>Categorias</a>
         </li>
-        <li (click)="closemenu()" *ngIf="usuario?.idRol == '1' || usuario?.idRol == '5' "><a
+        <li (click)="closemenu()" *ngIf="usuario!.idRol == '1' || usuario!.idRol == '5' "><a
             [routerLink]="'/main/calendar-builder'"><i class='bx bx-calendar-plus'></i>Registrar visita</a></li>
         <li (click)="closemenu()"
-          *ngIf="usuario?.idRol == '4' || usuario?.idRol == '2'|| usuario?.idRol == '7' || usuario?.idRol == '5' || usuario?.idRol == '1'">
+          *ngIf="usuario!.idRol == '4' || usuario!.idRol == '2'|| usuario!.idRol == '7' || usuario!.idRol == '5' || usuario!.idRol == '1'">
           <a [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
         <li (click)="closemenu()"><a [routerLink]="'/main/version-control'" *ngIf="usuario.idRol == '1'"><i
               class='bx bxs-dashboard'></i>Control de versiones</a></li>

@@ -13,4 +13,5 @@ export class Tarea {
     idEstatus: string = '1';
     comentarios: Comentario[] = [];
     evidenciaUrls: string[] = [];
+    idEstatusEisenhower:string = ''; 
 }
