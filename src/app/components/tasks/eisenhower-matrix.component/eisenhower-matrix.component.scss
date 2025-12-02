@@ -1,0 +1,83 @@
+.parent {
+display: grid;
+grid-template-columns: repeat(12, 1fr);
+grid-template-rows: repeat(12, 1fr);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+min-height: 90vh;
+}
+
+.div1 { grid-area: 1 / 1 / 2 / 2; }
+.div2 { grid-area: 1 / 2 / 2 / 12; }
+.div3 { grid-area: 1 / 12 / 2 / 13; }
+.div4 { grid-area: 2 / 1 / 12 / 2; }
+.div5 { grid-area: 12 / 1 / 13 / 2; }
+.div6 { grid-area: 12 / 2 / 13 / 12; }
+.div7 { grid-area: 12 / 12 / 13 / 13; }
+.div8 { grid-area: 2 / 12 / 12 / 13; }
+.div9 { grid-area: 7 / 7 / 12 / 12; }
+.div10 { grid-area: 2 / 7 / 7 / 12; }
+.div11 { grid-area: 2 / 2 / 7 / 7; }
+.div12 { grid-area: 7 / 2 / 12 / 7; }
+
+.bg-black
+{
+    background-color: black;
+    color: yellow;
+}
+
+.bg-green
+{
+    background-color: rgb(81, 255, 96);
+    color: black;
+}
+
+.bg-red
+{
+    background-color: rgb(216, 0, 0);
+    color: white;
+}
+
+.bg-blue
+{
+    background-color: rgb(0, 60, 255);
+    color: white;
+}
+
+.bg-yellow
+{
+    background-color: yellow;
+    color: black;
+}
+
+.bg-c-yellow
+{
+    background-color: rgb(255, 255, 211);
+    color: black;
+}
+
+.bg-c-blue
+{
+    background-color: rgb(191, 206, 255);
+    color: rgb(0, 0, 0);
+}
+
+.bg-c-red
+{
+    background-color: rgb(255, 225, 225);
+    color: rgb(0, 0, 0);
+}
+
+.bg-c-green
+{
+    background-color: rgb(212, 255, 215);
+    color: black;
+}
+
+.columna {
+  flex: 1;
+  min-height: 200px;
+  // background: #f5f5f5;
+  padding: 10px;
+  border-radius: 8px;
+}
