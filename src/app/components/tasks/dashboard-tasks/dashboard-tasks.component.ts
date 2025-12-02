@@ -19,13 +19,15 @@ import { ToastModule } from 'primeng/toast';
     CommonModule,
     NewTaskComponent,
     TaskCardComponent,
-    ToastModule
+    ToastModule,
+    TaskDetailComponent
   ],
   templateUrl: './dashboard-tasks.component.html',
   styleUrl: './dashboard-tasks.component.scss'
 })
 export class DashboardTasksComponent implements OnInit {
   @Input() idSucursal!: string;
+  mostrarModalDetalleTarea: boolean = false;
 
   constructor(
     private tareasService: TareasService,
@@ -36,12 +38,13 @@ export class DashboardTasksComponent implements OnInit {
     this.initData();
   }
 
-  dropListIds = ['todoList', 'workingList', 'doneList', 'pauseList'];
+  dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
   mostrarModalNuevaTarea = false;
+  tareaSeleccionada!: Tarea;
 
   toDo: Tarea[] = [];
   working: Tarea[] = [];
-  pause: Tarea[] = [];
+  check: Tarea[] = [];
   done: Tarea[] = [];
 
   abrirModalAgregarTarea() {
@@ -82,7 +85,7 @@ export class DashboardTasksComponent implements OnInit {
       case 'workingList':
         tareaMovida.idEstatus = '2';
         break;
-      case 'pauseList':
+      case 'checkList':
         tareaMovida.idEstatus = '3';
         break;
       case 'doneList':
@@ -101,12 +104,17 @@ export class DashboardTasksComponent implements OnInit {
       console.log(tareas)
       this.toDo = tareas.filter(x => x.idEstatus == '1');
       this.working = tareas.filter(x => x.idEstatus == '2');
-      this.pause = tareas.filter(x => x.idEstatus == '3');
+      this.check = tareas.filter(x => x.idEstatus == '3');
       this.done = tareas.filter(x => x.idEstatus == '4');
     })
   }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+  abrirDetalle(tarea: Tarea) {
+    this.tareaSeleccionada = { ...tarea };
+    this.mostrarModalDetalleTarea = true;
   }
 }

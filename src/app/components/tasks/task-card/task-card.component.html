@@ -7,7 +7,3 @@
         <span class="estatus estatus-{{ tarea.idEstatus }}"></span>
     </div>
 </div>
-
-<app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
-    (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tarea">
-</app-task-detail>
