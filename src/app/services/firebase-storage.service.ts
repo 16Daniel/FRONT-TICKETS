@@ -121,7 +121,7 @@ export class FirebaseStorageService {
     });
   }
 
-    async cargarImagenesEvidenciasTareas(archivos: File[]): Promise<string[]> {
+  async cargarImagenesEvidenciasTareas(archivos: File[]): Promise<string[]> {
     const storage = getStorage();
 
     // Obtener año y mes actual en formato "YYYY-MM"

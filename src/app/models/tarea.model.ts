@@ -8,10 +8,10 @@ export class Tarea {
     fechaFin: Date | null = null;
     idCategoria: string = '';
     idSucursal: string = '';
-    // comentariosGerencia: string = '';
-    // comentariosResponsable: string = '';
     idEstatus: string = '1';
     comentarios: Comentario[] = [];
     evidenciaUrls: string[] = [];
-    idEstatusEisenhower:string = ''; 
+    urgente: string = '';
+    importante: string = '';
+    idEisenhower: string = '';
 }

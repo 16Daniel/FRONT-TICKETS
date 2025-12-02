@@ -55,7 +55,6 @@ export class TareasService {
     ) as Observable<Tarea[]>;
   }
 
-
   getByEstatus(idEstatus: string): Observable<Tarea[]> {
     const ref = collection(this.firestore, this.pathName);
     const q = query(
