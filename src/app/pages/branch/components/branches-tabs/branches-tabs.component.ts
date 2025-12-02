@@ -30,7 +30,8 @@ import { EisenhowerMatrixComponent } from "../../../../components/tasks/eisenhow
     BranchesMaintenanceTabComponent,
     BranchesOilTabComponent,
     // DashboardTasksComponent,
-    EisenhowerMatrixComponent
+    EisenhowerMatrixComponent,
+    DashboardTasksComponent
 ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',

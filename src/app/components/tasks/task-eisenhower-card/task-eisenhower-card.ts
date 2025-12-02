@@ -21,12 +21,10 @@ export class TaskEisenhowerCard implements OnInit {
  @Input() tarea!: Tarea;
   mostrarModalDetalleTarea = false;
   categorias: CategoriaTarea[] = [];
-  catEstatusTareas: EstatusTarea[] = []; 
-  constructor(private categoriasService: CategoriasTareasService, private statustaskService:StatusTaskService) { }
+  @Input() catEstatusTareas: EstatusTarea[] = []; 
 
   ngOnInit(): void {
-    this.categoriasService.categorias$.subscribe(categorias => this.categorias = categorias);
-    this.statustaskService.estatus$.subscribe(catEstatus => this.catEstatusTareas = catEstatus)
+    
   }
 
   onClick() {
