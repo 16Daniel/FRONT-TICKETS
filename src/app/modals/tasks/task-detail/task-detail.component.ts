@@ -22,6 +22,7 @@ import { StatusTaskService } from '../../../services/status-task.service';
 import { EstatusTarea } from '../../../models/estatus-tarea.model';
 import { StatusEisenhowerService } from '../../../services/status-eisenhower.service';
 import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
+import { SubtasksBoxComponent } from '../../../components/tasks/subtasks-box/subtasks-box.component';
 
 @Component({
   selector: 'app-task-detail',
@@ -36,7 +37,8 @@ import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eis
     ModalVisorVariasImagenesComponent,
     TaskImguploaderComponent,
     TaskCommentBoxComponent,
-    EisenhowerPriorityChecksComponent
+    EisenhowerPriorityChecksComponent,
+    SubtasksBoxComponent
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -53,6 +55,8 @@ export class TaskDetailComponent implements OnInit {
   imagenes: string[] = [];
   estatusTeras: EstatusTarea[] = [];
   catalogoEstatus: EstatusEisenhower[] = []
+  mostrarSubtareas: boolean = false;
+  nuevaSubtarea: string = '';
 
   constructor(
     private categoriasService: CategoriasTareasService,
@@ -115,5 +119,40 @@ export class TaskDetailComponent implements OnInit {
     this.tarea.importante = event.importante;
     this.tarea.idEisenhower = event.idEisenhower;
   }
+
+  toggleSubtareas() {
+    this.mostrarSubtareas = !this.mostrarSubtareas;
+
+    // Inicializar arreglo si viene undefined
+    if (!this.tarea.subtareas) {
+      this.tarea.subtareas = [];
+    }
+  }
+
+  agregarSubtarea(texto: string) {
+    this.tarea.subtareas = this.tarea.subtareas || [];
+    this.tarea.subtareas.push({
+      titulo: texto,
+      terminado: false
+    });
+  }
+
+  validarPorcentaje(event: any) {
+    let valor = event.target.value;
+
+    if (valor.length > 3) {
+      valor = valor.substring(0, 3);
+    }
+
+    valor = valor.replace(/^0+(?!$)/, '');
+
+    let num = Number(valor);
+
+    if (num > 100) num = 100;
+    if (num < 0 || isNaN(num)) num = 0;
+
+    this.tarea.porcentaje = num;
+  }
+
 
 }
