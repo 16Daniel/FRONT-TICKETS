@@ -14,4 +14,7 @@ export class Tarea {
     urgente: string = '';
     importante: string = '';
     idEisenhower: string = '';
+    subtareas?: { terminado: boolean, titulo: string }[] = [];
+    porcentaje: number = 0;
+    deathline: Date | null = null;
 }

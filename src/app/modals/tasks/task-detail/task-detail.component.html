@@ -1,12 +1,8 @@
 <p-dialog [header]="'ACTIVIDAD PRINCIPAL'" [(visible)]="mostrarModal" [modal]="true"
     [style]="{ 'width': '95vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
-
     <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
-
         <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
-
             <div class="d-flex justify-content-between mt-3 align-items-center">
-
                 <div style="width: 250px; margin-left: 15px;">
                     <label class="fw-bold">ESTATUS</label>
                     <p-dropdown [options]="estatusTeras" [(ngModel)]="tarea.idEstatus" name="estatusTeras"
@@ -39,23 +35,46 @@
                             placeholder="Título de la tarea">
                     </div>
 
-                    <!-- SUCURSAL -->
-                    <p class="fw-bold">SUCURSAL</p>
-                    <p-dropdown [options]="sucursales" [(ngModel)]="tarea.idSucursal" name="sucursal"
-                        [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
-                        placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}" required="true">
-                    </p-dropdown>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- SUCURSAL -->
+                            <p class="fw-bold">SUCURSAL</p>
+                            <p-dropdown [options]="sucursales" [(ngModel)]="tarea.idSucursal" name="sucursal"
+                                [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre"
+                                placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}"
+                                required="true">
+                            </p-dropdown>
 
-                    <p></p>
+                            <p></p>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- CATEGORÍAS -->
+                            <p class="fw-bold">CATEGORÍA</p>
+                            <p-dropdown [options]="categorias" [(ngModel)]="tarea.idCategoria" name="categoria"
+                                [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre"
+                                placeholder="SELECCIONA LA CATEGORÍA" [style]="{width:'100%'}" required="true">
+                            </p-dropdown>
 
-                    <!-- CATEGORÍAS -->
-                    <p class="fw-bold">CATEGORÍA</p>
-                    <p-dropdown [options]="categorias" [(ngModel)]="tarea.idCategoria" name="categoria"
-                        [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
-                        placeholder="SELECCIONA LA CATEGORÍA" [style]="{width:'100%'}" required="true">
-                    </p-dropdown>
+                            <p></p>
+                        </div>
+                    </div>
 
-                    <p></p>
+                    <div class="row">
+                        <!-- PORCENTAJE -->
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold">PORCENTAJE (%)</label>
+                            <input type="number" min="0" max="100" class="form-control" [(ngModel)]="tarea.porcentaje"
+                                (input)="validarPorcentaje($event)" name="porcentaje" placeholder="0 - 100">
+                        </div>
+
+                        <!-- DEADLINE / FECHA LÍMITE -->
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold">FECHA LÍMITE (DEADLINE)</label>
+                            <input type="date" class="form-control" [(ngModel)]="tarea.deathline" name="deathline">
+                        </div>
+                    </div>
+
+
 
                     <!-- DESCRIPCIÓN -->
                     <div class="mb-3">
@@ -69,6 +88,17 @@
                     </app-eisenhower-priority-checks>
 
                 </div>
+
+                <div class="d-flex justify-content-start mt-4 mb-3">
+                    <button type="button" class="btn btn-outline-secondary d-flex align-items-center"
+                        (click)="toggleSubtareas()">
+                        <i class='bx bx-check-square bx-sm me-2'></i> SUBTAREAS
+                    </button>
+                </div>
+
+                <app-subtasks-box [tarea]="tarea" [mostrarSubtareas]="mostrarSubtareas"
+                    (subtareaAgregada)="agregarSubtarea($event)">
+                </app-subtasks-box>
 
                 <!-- BOTÓN GUARDAR -->
                 <div class="d-flex justify-content-end mt-3">

@@ -1,0 +1,27 @@
+<div *ngIf="mostrarSubtareas || tarea.subtareas?.length > 0" class="p-2 border rounded" style="background: #fafafa;">
+
+    <div class="mb-2">
+        <label class="fw-bold">Agregar subtarea</label>
+        <div class="d-flex gap-2">
+            <input class="form-control" [(ngModel)]="nuevaSubtarea" placeholder="Escribe una subtarea...">
+
+            <button type="button" class="btn btn-success" (click)="agregarSubtarea()">
+                <i class="bx bx-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="tarea.subtareas?.length">
+        <p class="fw-bold mt-3">Subtareas agregadas</p>
+
+        <ul class="list-group">
+            <li *ngFor="let st of tarea.subtareas" class="list-group-item d-flex align-items-center">
+
+                <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="st.terminado"
+                    class="form-check-input me-2">
+
+                {{ st.titulo }}
+            </li>
+        </ul>
+    </div>
+</div>
