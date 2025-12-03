@@ -32,7 +32,7 @@ import { EisenhowerMatrixComponent } from "../../../../components/tasks/eisenhow
     // DashboardTasksComponent,
     EisenhowerMatrixComponent,
     DashboardTasksComponent
-],
+  ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',
 })
@@ -49,6 +49,7 @@ export class BranchesTabsComponent implements OnDestroy {
   todosLosTickets: Ticket[] = [];
   ticket: Ticket | undefined;
 
+  verEisenhower: boolean = false;
   esEspectadorActivo: boolean = false;
   sucursalesSeleccionadas: Sucursal[] = [];
   public tabindex: number = 0;
@@ -56,9 +57,8 @@ export class BranchesTabsComponent implements OnDestroy {
 
   constructor(
     private ticketsService: TicketsService,
-    private cdr: ChangeDetectorRef,
-    private sucursalesService: BranchesService,
-  ) {
+    public cdr: ChangeDetectorRef,
+    private sucursalesService: BranchesService,) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
     this.obtenerTicketsPorSucursal(this.sucursal?.id);
@@ -219,5 +219,11 @@ export class BranchesTabsComponent implements OnDestroy {
 
     this.espectadorEmitter.emit(this.esEspectadorActivo);
 
+  }
+
+  onToggleEisenhower() {
+    setTimeout(() => {
+      this.cdr.detectChanges();
+    }, 500);
   }
 }
