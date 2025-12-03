@@ -1,4 +1,6 @@
-<div *ngIf="mostrarSubtareas || tarea.subtareas?.length > 0" class="p-2 border rounded" style="background: #fafafa;">
+<div *ngIf="mostrarSubtareas || tarea.subtareas?.length > 0" 
+     class="p-2 border rounded" 
+     style="background: #fafafa;">
 
     <div class="mb-2">
         <label class="fw-bold">Agregar subtarea</label>
@@ -15,12 +17,19 @@
         <p class="fw-bold mt-3">Subtareas agregadas</p>
 
         <ul class="list-group">
-            <li *ngFor="let st of tarea.subtareas" class="list-group-item d-flex align-items-center">
+            <li *ngFor="let st of tarea.subtareas" 
+                class="list-group-item d-flex align-items-center">
 
-                <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="st.terminado"
-                    class="form-check-input me-2">
+                <input type="checkbox"
+                       [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="st.terminado"
+                       class="form-check-input me-2">
 
-                {{ st.titulo }}
+                <!-- Texto con subrayado si está terminado -->
+                <span [ngClass]="{'text-decoration-line-through': st.terminado}">
+                    {{ st.titulo }}
+                </span>
+
             </li>
         </ul>
     </div>
