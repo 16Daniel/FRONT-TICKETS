@@ -73,6 +73,8 @@ export class TaskDetailComponent implements OnInit {
     this.categoriasService.categorias$.subscribe(categorias => this.categorias = categorias);
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
     this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
+
+    this.mostrarSubtareas = this.tarea?.subtareas.length > 0;
   }
 
   onHide = () => this.closeEvent.emit(false);

@@ -1,9 +1,7 @@
-<div *ngIf="mostrarSubtareas || tarea.subtareas?.length > 0" 
-     class="p-2 border rounded" 
-     style="background: #fafafa;">
+<div *ngIf="mostrarSubtareas || tarea.subtareas?.length > 0" class="p-2 border rounded" style="background: #fafafa;">
 
     <div class="mb-2">
-        <label class="fw-bold">Agregar subtarea</label>
+        <label class="fw-bold subtareas-text">Agregar subtarea</label>
         <div class="d-flex gap-2">
             <input class="form-control" [(ngModel)]="nuevaSubtarea" placeholder="Escribe una subtarea...">
 
@@ -14,21 +12,25 @@
     </div>
 
     <div *ngIf="tarea.subtareas?.length">
-        <p class="fw-bold mt-3">Subtareas agregadas</p>
+        <p class="fw-bold mt-3 subtareas-text">Subtareas agregadas</p>
 
         <ul class="list-group">
-            <li *ngFor="let st of tarea.subtareas" 
-                class="list-group-item d-flex align-items-center">
+            <li *ngFor="let st of tarea.subtareas; let i = index"
+                class="list-group-item d-flex align-items-center justify-content-between subtarea-item">
 
-                <input type="checkbox"
-                       [ngModelOptions]="{standalone: true}"
-                       [(ngModel)]="st.terminado"
-                       class="form-check-input me-2">
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="st.terminado"
+                        class="form-check-input me-2">
 
-                <!-- Texto con subrayado si está terminado -->
-                <span [ngClass]="{'text-decoration-line-through': st.terminado}">
-                    {{ st.titulo }}
-                </span>
+                    <span [ngClass]="{'text-decoration-line-through': st.terminado}">
+                        {{ st.titulo }}
+                    </span>
+                </div>
+
+                <!-- BOTÓN ELIMINAR -->
+                <button type="button" class="btn btn-danger btn-sm" (click)="eliminarSubtarea(i)">
+                    <i class="bx bx-trash"></i>
+                </button>
 
             </li>
         </ul>

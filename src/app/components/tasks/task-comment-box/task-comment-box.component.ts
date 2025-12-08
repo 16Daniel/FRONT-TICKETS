@@ -25,6 +25,7 @@ export class TaskCommentBoxComponent implements OnInit {
   imagenesComentario: File[] = [];
   urlImagen!: string;
   mostrarModalImagen: boolean = false;
+  enviando = false;
 
   constructor(
     private tareasService: TareasService,
@@ -45,26 +46,36 @@ export class TaskCommentBoxComponent implements OnInit {
   }
 
   async enviarComentario() {
+    if (this.enviando) return;      // ⛔ evita doble clic
+    this.enviando = true;           // 🔒 bloquea el botón temporalmente
+
     const texto = this.nuevoComentario.trim();
-    if (!texto && this.imagenesComentario.length === 0) return;
+    if (!texto && this.imagenesComentario.length === 0) {
+      this.enviando = false;
+      return;
+    }
 
-    const comentario: Comentario = {
-      comentario: texto,
-      fecha: new Date(),
-      idUsuario: this.usuario.id,
-      nombre: this.usuario.nombre,
-      imagenesEvidencia: []
-    };
+    try {
+      const comentario: Comentario = {
+        comentario: texto,
+        fecha: new Date(),
+        idUsuario: this.usuario.id,
+        nombre: this.usuario.nombre,
+        imagenesEvidencia: []
+      };
 
-    const url = await this.firebaseStorageService.cargarImagenesEvidenciasTareas(this.imagenesComentario);
-    comentario.imagenesEvidencia = [...url];
+      const url = await this.firebaseStorageService.cargarImagenesEvidenciasTareas(this.imagenesComentario);
+      comentario.imagenesEvidencia = [...url];
 
-    this.tarea.comentarios.push(comentario);
-    await this.tareasService.update(this.tarea, this.tarea.id!);
+      this.tarea.comentarios.push(comentario);
+      await this.tareasService.update(this.tarea, this.tarea.id!);
 
-    this.nuevoComentario = '';
-    this.imagenesComentario = [];
-    this.cdr.detectChanges();
+      this.nuevoComentario = '';
+      this.imagenesComentario = [];
+      this.cdr.detectChanges();
+    } finally {
+      this.enviando = false;  // 🔓 desbloquea incluso si hubo error
+    }
   }
 
   async cargarImagenComentario(event: any) {

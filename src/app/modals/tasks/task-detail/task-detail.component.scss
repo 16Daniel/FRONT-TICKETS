@@ -37,3 +37,25 @@
     border-radius: 8px;
     border: 1px solid #ccc;
 }
+
+
+/* CÍRCULO GENERAL */
+.estatus-dot {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+}
+
+/* To Do */
+.estatus-1 { background-color: #f31212 !important; }
+
+/* Working */
+.estatus-2 { background-color: #f2ff00 !important; }
+
+/* Pause */
+.estatus-3 { background-color: #5448f7 !important; }
+
+/* Done */
+.estatus-4 { background-color: #30e91f !important; }

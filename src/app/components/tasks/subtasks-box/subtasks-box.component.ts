@@ -25,4 +25,9 @@ export class SubtasksBoxComponent {
     this.subtareaAgregada.emit(this.nuevaSubtarea);
     this.nuevaSubtarea = '';
   }
+
+  eliminarSubtarea(index: number) {
+    this.tarea.subtareas.splice(index, 1);
+  }
+
 }
