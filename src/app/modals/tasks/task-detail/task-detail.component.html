@@ -9,7 +9,6 @@
                         optionValue="id" optionLabel="nombre" [filter]="true" filterBy="nombre"
                         placeholder="SELECCIONA ESTATUS DE LA TAREA" required>
 
-                        <!-- ITEM SELECCIONADO -->
                         <ng-template pTemplate="selectedItem" let-selected>
                             <div class="flex align-items-center gap-2" *ngIf="selected">
                                 <span class="estatus-dot" [ngClass]="'estatus-' + selected.id">
@@ -18,7 +17,6 @@
                             </div>
                         </ng-template>
 
-                        <!-- ITEMS DE LA LISTA -->
                         <ng-template pTemplate="item" let-item>
                             <div class="flex align-items-center gap-2">
                                 <span class="estatus-dot" [ngClass]="'estatus-' + item.id">
@@ -42,24 +40,6 @@
             <form #form="ngForm" (ngSubmit)="enviar(form)">
                 <div class="p-3">
 
-                    <!-- VISOR DE MINIATURAS -->
-                    <div class="mt-3">
-                        <label class="fw-bold d-block mb-2">EVIDENCIAS</label>
-
-                        <div *ngIf="tarea.evidenciaUrls.length === 0" class="text-muted">
-                            No hay imágenes aún.
-                        </div>
-
-                        <div class="miniaturas-container" *ngIf="tarea.evidenciaUrls.length > 0">
-                            <div class="thumb" *ngFor="let img of tarea.evidenciaUrls; let i = index"
-                                (click)="abrirVisor(i)">
-                                <img [src]="img" alt="evidencia">
-                            </div>
-                        </div>
-                    </div>
-
-                    <br>
-
                     <!-- ID / TÍTULO -->
                     <div class="mb-3">
                         <label class="fw-bold">TÍTULO</label>
@@ -70,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <!-- SUCURSAL -->
-                            <p class="fw-bold">SUCURSAL</p>
+                            <p class="fw-bold">RESPONSABLE</p>
                             <p-dropdown [options]="sucursales" [(ngModel)]="tarea.idSucursal" name="sucursal"
                                 [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre"
                                 placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}"
@@ -115,6 +95,24 @@
                             rows="7">
                         </textarea>
                     </div>
+
+                    <!-- VISOR DE MINIATURAS -->
+                    <div class="mt-3">
+                        <label class="fw-bold d-block mb-2">EVIDENCIAS</label>
+
+                        <div *ngIf="tarea.evidenciaUrls.length === 0" class="text-muted">
+                            No hay imágenes aún.
+                        </div>
+
+                        <div class="miniaturas-container" *ngIf="tarea.evidenciaUrls.length > 0">
+                            <div class="thumb" *ngFor="let img of tarea.evidenciaUrls; let i = index"
+                                (click)="abrirVisor(i)">
+                                <img [src]="img" alt="evidencia">
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
 
                     <app-eisenhower-priority-checks [modelo]="tarea" (cambio)="recibirPrioridad($event)">
                     </app-eisenhower-priority-checks>
