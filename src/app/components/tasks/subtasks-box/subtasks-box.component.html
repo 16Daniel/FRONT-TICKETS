@@ -1,9 +1,9 @@
 <div *ngIf="mostrarSubtareas || tarea.subtareas?.length > 0" class="p-2 border rounded" style="background: #fafafa;">
 
     <div class="mb-2">
-        <label class="fw-bold subtareas-text">Agregar subtarea</label>
+        <label class="fw-bold subtareas-text">AGREGAR SUBTAREA</label>
         <div class="d-flex gap-2">
-            <input class="form-control" [(ngModel)]="nuevaSubtarea" placeholder="Escribe una subtarea...">
+            <input class="form-control" [(ngModel)]="nuevaSubtarea" placeholder="ESCRIBE UNA SUBTAREA...">
 
             <button type="button" class="btn btn-success" (click)="agregarSubtarea()">
                 <i class="bx bx-plus"></i>
@@ -12,7 +12,21 @@
     </div>
 
     <div *ngIf="tarea.subtareas?.length">
-        <p class="fw-bold mt-3 subtareas-text">Subtareas agregadas</p>
+        <p class="fw-bold mt-3 subtareas-text">SUBTAREAS AGREGADAS</p>
+
+        <!-- PROGRESS BAR -->
+        <div *ngIf="tarea.subtareas?.length" class="mt-3">
+            <label class="fw-bold subtareas-text">PROGRESO</label>
+
+            <div class="progress" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" [ngClass]="getProgressColor()"
+                    [style.width.%]="calcularProgreso()" style="transition: width 0.4s ease;">
+                    {{ calcularProgreso() }}%
+                </div>
+            </div>
+        </div>
+
+        <br>
 
         <ul class="list-group">
             <li *ngFor="let st of tarea.subtareas; let i = index"

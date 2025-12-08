@@ -156,5 +156,9 @@ export class TaskDetailComponent implements OnInit {
     this.tarea.porcentaje = num;
   }
 
+  abrirVisor(index: number) {
+    this.imagenes = this.tarea.evidenciaUrls;
+    this.mostrarModalVisorImagen = true;
+  }
 
 }
