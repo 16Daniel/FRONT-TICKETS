@@ -17,4 +17,5 @@ export class Tarea {
     subtareas?: { terminado: boolean, titulo: string }[] = [];
     porcentaje: number = 0;
     deathline: Date | null = null;
+    responsables: any[] = []
 }
