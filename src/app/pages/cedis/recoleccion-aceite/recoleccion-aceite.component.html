@@ -1,7 +1,10 @@
 <div class="p-3 bg-white">
 <h3 class="text-center mt-3 mb-3">RECOLECCIÓN DE ACEITE</h3>
 
-   <p-table [value]="entregas" [tableStyle]="{ 'min-width': '50rem' }">
+
+<p-tabView>
+    <p-tabPanel header="RECOLECCIÓN DE ACEITE">
+          <p-table [value]="entregas" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
         <tr>
           <th>SUCURSAL</th>
@@ -34,11 +37,53 @@
           <td>{{ record.diferencia || '' }}</td>
           <td>{{ record.comentariosCedis || '' }}</td>
           <td>{{ record.comentariosSucursal || '' }}</td>
-          <td><button class="btn btn-success" (click)="abrirmodalValidacion(record,1)"><i class='bx bx-check-circle bx-sm'></i></button></td>
-           <td><button class="btn btn-danger" (click)="abrirmodalValidacion(record,2)"><i class='bx bx-x-circle bx-sm' ></i></button></td>
+          <td><button class="btn btn-success" (click)="abrirmodalValidacion(record,1,false)"><i class='bx bx-check-circle bx-sm'></i></button></td>
+           <td><button class="btn btn-danger" (click)="abrirmodalValidacion(record,2,false)"><i class='bx bx-x-circle bx-sm' ></i></button></td>
         </tr>
     </ng-template>
 </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="RECOLECCIÓN TRAMPA DE ACEITE">
+          <p-table [value]="entregasTA" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+          <th>SUCURSAL</th>
+          <th>FECHA</th>
+          <th>ENTREGA CEDIS</th>
+          <th>ENTREGA SUCURSAL</th>
+          <th>75%</th>
+          <th>ESTATUS</th>
+          <th>DIFERENCIA</th>
+          <th>COMENTARIOS CEDIS</th>
+          <th>COMENTARIOS SUCURSAL</th>
+          <th></th>
+           <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-record>
+         <tr class="bg-opacity-25" [ngClass]="{
+        'bg-danger': record.intercambio == 1,
+        'bg-success': record.intercambio == 2,
+        'bg-warning': record.intercambio == 3
+        }">
+            <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
+            <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+          <td>{{ record.entregaCedis || '' }}</td>
+          <td>{{ record.entregaSucursal || '' }}</td>
+          <td>{{ record.porcentaje75*100  | number:'1.0-0' }}%</td>
+                         <td *ngIf="record.intercambio == 1"><i class='bx bx-minus-circle bx-sm' style="color:red"></i></td>
+                 <td *ngIf="record.intercambio == 2"><i class='bx bx-check-circle bx-sm' style="color:rgb(44, 189, 0)"></i></td>
+                  <td *ngIf="record.intercambio == 3"><i class='bx bx-plus-circle bx-sm' style="color:rgb(255, 153, 0)"></i></td>
+          <td>{{ record.diferencia || '' }}</td>
+          <td>{{ record.comentariosCedis || '' }}</td>
+          <td>{{ record.comentariosSucursal || '' }}</td>
+          <td><button class="btn btn-success" (click)="abrirmodalValidacion(record,1,true)"><i class='bx bx-check-circle bx-sm'></i></button></td>
+           <td><button class="btn btn-danger" (click)="abrirmodalValidacion(record,2,true)"><i class='bx bx-x-circle bx-sm' ></i></button></td>
+        </tr>
+    </ng-template>
+</p-table>
+    </p-tabPanel>
+</p-tabView>
 
 <p *ngIf="entregas.length == 0" class="mt-3 text-center">SIN REGISTROS</p>
 
@@ -48,13 +93,15 @@
 <p-dialog [header]="tipoActualizacion == 1? 'VALIDAR RECOLECCIÓN':'RECHAZAR RECOLECCIÓN'" [modal]="true" [(visible)]="mostrarModalValidacion" [style]="{ width: '70rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
     <div class="p-3" style="min-height: 400px;">
-      
+       <p *ngIf="!esTrampadeAceite" >ACEITE</p>
+       <p *ngIf="esTrampadeAceite" >TRAMPA DE ACEITE</p>
         <div class="col-12 mt-3">
           <p>COMENTARIOS</p>
           <textarea class="form-control p-3" [(ngModel)]="formcomentarios"></textarea>
         </div>
         <div class="col-12 mt-3">
-          <button class="btn btn-success" (click)="actualizarEntrega()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+          <button *ngIf="!esTrampadeAceite" class="btn btn-success" (click)="actualizarEntrega()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+          <button *ngIf="esTrampadeAceite" class="btn btn-success" (click)="actualizarEntregaTA()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
         </div>
     </div>
 </p-dialog>

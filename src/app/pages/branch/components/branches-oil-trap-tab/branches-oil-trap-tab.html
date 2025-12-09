@@ -1,5 +1,5 @@
 <div class="p-3">
-<h3 class="text-center">RECOLECCIÓN DE ACEITE</h3>
+<h3 class="text-center">RECOLECCIÓN TRAMPA DE ACEITE</h3>
 
 <div class="d-flex justify-content-center p-3" *ngIf="loading">
      <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
@@ -13,7 +13,6 @@
                 <tr>
                   <th>SUCURSAL</th>
                   <th>FECHA</th>
-                  <th>ENTREGA CEDIS</th>
                    <th>COMENTARIOS CEDIS</th>
                    <th>ESTATUS</th>
                   <th></th>
@@ -23,7 +22,6 @@
                 <tr>
                     <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
                      <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
-                  <td>{{ record.entregaCedis || '' }}</td>
                   <td>{{ record.comentariosCedis || '' }}</td>
                   <td *ngIf="record.comentariosCedis == null"><i class='bx bx-time bx-sm text-primary'></i>&nbsp;POR VALIDAR</td>
                   <td *ngIf="record.comentariosCedis != null"><i class='bx bx-x-circle bx-sm text-danger' ></i>&nbsp;RECHAZADO</td>
@@ -50,7 +48,7 @@
     [showIcon]="true" 
     inputId="icondisplay" [style]="{width:'100%'}" />
         </div>
-        <div class="col-md-3"><p>&nbsp;</p><button class="btn btn-warning p-2" (click)="consultarEntregasH()"><i class='bx bx-search'></i>&nbsp;BUSCAR</button></div> 
+        <div class="col-md-3"><p>&nbsp;</p><button class="btn btn-warning p-2" (click)="consultarEntregasTAH()"><i class='bx bx-search'></i>&nbsp;BUSCAR</button></div> 
       
       </div>
         <div class="mt-3 mb-3">
@@ -61,7 +59,6 @@
               <tr>
                 <th>SUCURSAL</th>
                 <th>FECHA</th>
-                <th>ENTREGA CEDIS</th>
                 <th>RECOLECCIÓN</th>
                 <th>75%</th>
                 <th>ESTATUS</th>
@@ -80,7 +77,6 @@
                   <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
                   <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
                      <!-- <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td> -->
-                <td>{{ record.entregaCedis || '' }}</td>
                 <td>{{ record.entregaSucursal || '' }}</td>
                 <td>{{ record.porcentaje75*100 |number:'1.0-0'}}%</td>
                       <td *ngIf="record.intercambio == 1"><i class='bx bx-minus-circle bx-sm' style="color:red"></i></td>
@@ -100,9 +96,8 @@
 
 </div>
 
-<app-branches-oil-trap-tab></app-branches-oil-trap-tab>
 
-<p-dialog header="REGISTRAR DEVOLUCIÓN" [modal]="true" [(visible)]="mostrarModalDevolucion" [style]="{ width: '70rem' }"
+<p-dialog header="REGISTRAR ENTREGA TRAMPA DE ACEITE" [modal]="true" [(visible)]="mostrarModalDevolucion" [style]="{ width: '70rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
     <div class="p-3" style="min-height: 400px;">
         <div class="col-12">
@@ -123,7 +118,6 @@
         </div>
     </div>
 </p-dialog>
-
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

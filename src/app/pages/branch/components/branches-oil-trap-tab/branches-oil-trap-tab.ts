@@ -1,31 +1,30 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
-import { Timestamp } from '@angular/fire/firestore';
-import { AceiteService } from '../../../../services/aceite.service';
-import { BranchesService } from '../../../../services/branches.service';
-import { Sucursal } from '../../../../models/sucursal.model';
 import { EntregaAceite } from '../../../../models/aceite.model';
+import { Sucursal } from '../../../../models/sucursal.model';
+import { Usuario } from '../../../../models/usuario.model';
+import { AceiteService } from '../../../../services/aceite.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { BranchesService } from '../../../../services/branches.service';
+import { Timestamp } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
-import { Usuario } from '../../../../models/usuario.model';
-import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
-import { BranchesOilTrapTab } from "../branches-oil-trap-tab/branches-oil-trap-tab";
 @Component({
-  selector: 'app-branches-oil-tab',
+  selector: 'app-branches-oil-trap-tab',
   standalone: true,
-   imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, ConfirmDialogModule, InputNumberModule, TriStateCheckboxModule, BranchesOilTrapTab],
-   providers:[MessageService,ConfirmationService],
-  templateUrl: './branches-oil-tab.component.html',
-  styleUrl: './branches-oil-tab.component.scss',
+  imports: [CommonModule, FormsModule, TableModule,TabViewModule,ToastModule,DialogModule,CalendarModule,ConfirmDialogModule,InputNumberModule,TriStateCheckboxModule],
+     providers:[MessageService,ConfirmationService],
+  templateUrl: './branches-oil-trap-tab.html',
+  styleUrl: './branches-oil-trap-tab.scss',
 })
-export class BranchesOilTabComponent implements OnInit {
+export class BranchesOilTrapTab implements OnInit {
 public entregas:EntregaAceite[] = []; 
 public entregasH:EntregaAceite[] = []; 
 public entregasHTodas:EntregaAceite[] = []; 
@@ -41,7 +40,8 @@ public formcomentarios:string = "";
 public loading:boolean = true;
 value: boolean | null = null;
 estatusfiltro:string = "TODO"; 
-constructor(public aceiteService:AceiteService,private confirmationService: ConfirmationService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
+constructor(public aceiteService:AceiteService,private confirmationService: ConfirmationService,public cdr:ChangeDetectorRef,
+  private branchesService: BranchesService,private messageService: MessageService)
 {
   this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 }
@@ -60,7 +60,7 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
 
   consultarEntregas()
   {
-    this.aceiteService.getEntregas(this.sucursal!.idFront!).subscribe({
+    this.aceiteService.getEntregasTrampaAceite(this.sucursal!.idFront!).subscribe({
       next: (data) => {
         this.entregas= data;
         console.log(this.entregas);
@@ -88,6 +88,21 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
     });
   }
   
+     consultarEntregasTAH()
+  {
+    this.loading = true; 
+    this.aceiteService.getEntregasTAH(this.sucursal!.idFront!,this.fechaini,this.fechafin).subscribe({
+      next: (data) => {
+        this.entregasH= data;
+        this.entregasHTodas = data; 
+        this.loading = false; 
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
 
  abrirModalDevolucion(item:EntregaAceite)
 {
@@ -168,7 +183,7 @@ constructor(public aceiteService:AceiteService,private confirmationService: Conf
   {
     
       this.loading = true; 
-      this.aceiteService.ActualizarEntrega(this.itemEntrega!.id,this.formCantidad,this.formcomentarios).subscribe({
+      this.aceiteService.ActualizarEntregaTrampaAceite(this.itemEntrega!.id,this.formCantidad,this.formcomentarios).subscribe({
       next: (data) => {
         this.mostrarModalDevolucion = false; 
         this.showMessage('success','Success','Guardado correctamente');

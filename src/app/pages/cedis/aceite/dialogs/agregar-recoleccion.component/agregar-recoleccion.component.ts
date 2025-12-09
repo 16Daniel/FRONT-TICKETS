@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
+import { Component, EventEmitter, input, Input, Output, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -22,6 +22,7 @@ export class AgregarRecoleccionComponent implements OnInit {
 public sucursal: Sucursal|undefined;
 public fecha:Date = new Date(); 
 public loading:boolean = false; 
+@Input() trampaDeAceite:boolean = false;  
 constructor(public aceiteService:AceiteService)
 {
 
@@ -36,6 +37,29 @@ ngOnInit(): void { }
   { 
        this.loading = true; 
        this.aceiteService.agregarEntregaManual(this.sucursal!.idFront!,this.fecha).subscribe({
+            next: (data) => {
+              this.loading = false;
+                Swal.fire({
+              title: "Success",
+              text: "Agregado correctamente",
+              icon: "success",
+              customClass: {
+        container: 'swal-topmost'
+      }
+                });
+            },
+            error: (error) => {
+              console.log(error);
+              this.loading = false;
+               Swal.fire("Oops...", "Error al procesar la solicitud", "error");
+            },
+          });
+  } 
+
+   guardarTA()
+  { 
+       this.loading = true; 
+       this.aceiteService.agregarEntregaManualTrampaAceite(this.sucursal!.idFront!,this.fecha).subscribe({
             next: (data) => {
               this.loading = false;
                 Swal.fire({

@@ -16,18 +16,19 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import ControlAceiteTabComponent from '../../branch/components/control-aceite-tab/control-aceite-tab.component';
 import { AgregarRecoleccionComponent } from "./dialogs/agregar-recoleccion.component/agregar-recoleccion.component";
+import { HistorialAceite } from "./components/historial-aceite/historial-aceite";
 
 @Component({
   selector: 'app-aceite',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule, ControlAceiteTabComponent, AgregarRecoleccionComponent],
+  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule, ControlAceiteTabComponent, AgregarRecoleccionComponent, HistorialAceite],
     providers:[MessageService],
   templateUrl: './aceite.component.html',
   styleUrl: './aceite.component.scss',
 })
 export default class AceiteComponent implements OnInit {
 public entregas:EntregaAceite[] = []; 
-public entregasH:EntregaAceite[] = []; 
+
 public mostrarModalValidacion:boolean = false; 
 public sucursales: Sucursal[] = [];
 public sucursalSel: Sucursal|undefined;
@@ -36,8 +37,8 @@ public itemEntrega:EntregaAceite|undefined;
 public tipoActualizacion:number = 0;  
 public loading:boolean = false; 
 public modalAgregarRecoleccion:boolean = false; 
-fechaini:Date = new Date(); 
-fechafin:Date = new Date(); 
+
+trampadeAceite:boolean = false; 
 constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
 {
 
@@ -156,77 +157,17 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
     
   }
 
-  buscarRegistros()
-  {
-    this.loading = true
-    let idf = -2;
-    if(this.sucursalSel?.idFront != undefined)
-      {
-        idf = this.sucursalSel!.idFront;
-      }
-    this.aceiteService.getEntregasCedisH(idf,this.fechaini,this.fechafin).subscribe({
-      next: (data) => {
-        this.entregasH= data;
-        this.loading = false, 
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      },
-    });
-  }
-
-  exportarExcel()
-{ 
-  this.loading = true;
-  let data = JSON.stringify(this.entregasH);
-  this.aceiteService.exportarHistorialEntregas(this.entregasH).subscribe({
-    next: data => {
-      this.loading = false;
-      this.cdr.detectChanges();
-      const base64String = data.archivoBase64; // Aquí debes colocar tu cadena base64 del archivo Excel
-
-      // Decodificar la cadena base64
-      const binaryString = window.atob(base64String);
-  
-      // Convertir a un array de bytes
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-  
-      // Crear un Blob con los datos binarios
-      const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  
-      // Crear una URL para el Blob
-      const url = window.URL.createObjectURL(blob);
-  
-      // Crear un enlace para la descarga
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'HISTORIAL ENTREGAS DE ACEITE.xlsx'; // Establecer el nombre del archivo
-      document.body.appendChild(link);
-  
-      // Hacer clic en el enlace para iniciar la descarga
-      link.click();
-  
-      // Limpiar la URL y el enlace después de la descarga
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-    },
-    error: error => {
-      this.loading = false; 
-      this.showMessage('error','Error','Error al generar el archivo de excel');
-      console.log(error);
-     
-    }
-});
-}
 
 abrirModalagregarRecoleccion()
 {
+  this.modalAgregarRecoleccion = true;
+  this.trampadeAceite = false;  
+}
+
+abrirModalagregarRecoleccionTA()
+{
   this.modalAgregarRecoleccion = true; 
+  this.trampadeAceite = true
 }
 
 }

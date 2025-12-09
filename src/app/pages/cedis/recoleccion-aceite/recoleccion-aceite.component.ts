@@ -24,7 +24,9 @@ import { Usuario } from '../../../models/usuario.model';
 })
 export default class RecoleccionAceiteComponent implements OnInit {
 public TodasLasEntregas:EntregaAceite[] = []; 
+public TodasLasEntregasTA:EntregaAceite[] = []; 
 public entregas:EntregaAceite[] = []; 
+public entregasTA:EntregaAceite[] = []; 
 public mostrarModalValidacion:boolean = false; 
 public sucursales: Sucursal[] = [];
 public sucursalSel: Sucursal[] = [];
@@ -35,6 +37,7 @@ public loading:boolean = false;
 fechaini:Date = new Date(); 
 fechafin:Date = new Date(); 
 usuario: Usuario;
+esTrampadeAceite:boolean = false; 
 constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
 {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -68,6 +71,7 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
             this.entregas = [...this.entregas,...temp];  
           }
            this.loading = false;
+           this.consultarEntregasTA(); 
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -76,10 +80,36 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       },
     });
   }
-  abrirmodalValidacion(item:EntregaAceite,tipo:number)
+
+   consultarEntregasTA()
+  {
+    this.loading = true; 
+    this.aceiteService.getEntregasCedisTA().subscribe({
+      next: (data) => {
+        this.entregasTA = []; 
+        this.TodasLasEntregasTA = data; 
+        let sucursalesusuario = this.usuario.sucursales; 
+        for(let item of sucursalesusuario)
+          {
+            let suc = this.sucursales.filter(x => x.id == item.id)[0]; 
+            let temp = this.TodasLasEntregasTA.filter(x => x.idSucursal == suc.idFront); 
+            this.entregasTA = [...this.entregasTA,...temp];  
+          }
+           this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.loading = false; 
+        console.log(error);
+      },
+    });
+  }
+
+  abrirmodalValidacion(item:EntregaAceite,tipo:number,trampadeaceite:boolean)
   {
     this.tipoActualizacion = tipo; 
     this.itemEntrega = item; 
+    this.esTrampadeAceite = trampadeaceite; 
     this.mostrarModalValidacion = true; 
   }
 
@@ -158,4 +188,46 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       }
     
   }
+
+    actualizarEntregaTA()
+  {   
+    if(this.formcomentarios == "")
+      {
+        this.showMessage('info','info','Favor de agregar un comentario');
+        return; 
+      }
+    if(this.tipoActualizacion == 1)
+      {
+                    this.loading = true; 
+              this.aceiteService.ValidacionCedisTA(this.itemEntrega!.id,this.formcomentarios).subscribe({
+              next: (data) => {
+                this.mostrarModalValidacion = false; 
+                this.showMessage('success','Success','Guardado correctamente');
+                this.formcomentarios = ""; 
+                this.consultarEntregas(); 
+                this.cdr.detectChanges();
+              },
+              error: (error) => {
+                
+              },
+            });
+      } else
+      {
+               this.loading = true; 
+              this.aceiteService.RechazoCedisTA(this.itemEntrega!.id,this.formcomentarios).subscribe({
+              next: (data) => {
+                this.mostrarModalValidacion = false; 
+                this.showMessage('success','Success','Guardado correctamente');
+                this.formcomentarios = ""; 
+                this.consultarEntregas(); 
+                this.cdr.detectChanges();
+              },
+              error: (error) => {
+                
+              },
+            });
+      }
+    
+  }
+
 }
