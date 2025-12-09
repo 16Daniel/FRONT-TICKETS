@@ -4,54 +4,56 @@
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
 
         <!-- GRUPO URGENCIA -->
-        <div class="d-flex align-items-center gap-4">
+        <div>
+            <div class="d-flex align-items-center gap-4">
 
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="grupoUrgencia" [(ngModel)]="modelo.urgente"
-                    value="URGENTE" required #urgenteCtrl="ngModel" (change)="emitirCambio()">
-                <label class="form-check-label">URGENTE</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoUrgencia" [(ngModel)]="modelo.urgente"
+                        value="URGENTE" required #urgenteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">URGENTE</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoUrgencia" [(ngModel)]="modelo.urgente"
+                        value="NO URGENTE" required #urgenteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">NO URGENTE</label>
+                </div>
+
             </div>
 
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="grupoUrgencia" [(ngModel)]="modelo.urgente"
-                    value="NO URGENTE" required #urgenteCtrl="ngModel" (change)="emitirCambio()">
-                <label class="form-check-label">NO URGENTE</label>
-            </div>
-
+            <!-- Error de urgencia debajo -->
+            <small *ngIf="urgenteCtrl.invalid && urgenteCtrl.touched" class="p-error d-block mt-1">
+                Debes seleccionar la urgencia.
+            </small>
         </div>
 
         <!-- SEPARADOR -->
         <div class="fw-bold text-secondary" style="font-size: 20px;">|</div>
 
         <!-- GRUPO IMPORTANCIA -->
-        <div class="d-flex align-items-center gap-4">
+        <div>
+            <div class="d-flex align-items-center gap-4">
 
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="grupoImportancia" [(ngModel)]="modelo.importante"
-                    value="IMPORTANTE" required #importanteCtrl="ngModel" (change)="emitirCambio()">
-                <label class="form-check-label">IMPORTANTE</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoImportancia" [(ngModel)]="modelo.importante"
+                        value="IMPORTANTE" required #importanteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">IMPORTANTE</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoImportancia" [(ngModel)]="modelo.importante"
+                        value="NO IMPORTANTE" required #importanteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">NO IMPORTANTE</label>
+                </div>
+
             </div>
 
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="grupoImportancia" [(ngModel)]="modelo.importante"
-                    value="NO IMPORTANTE" required #importanteCtrl="ngModel" (change)="emitirCambio()">
-                <label class="form-check-label">NO IMPORTANTE</label>
-            </div>
-
+            <!-- Error de importancia debajo -->
+            <small *ngIf="importanteCtrl.invalid && importanteCtrl.touched" class="p-error d-block mt-1">
+                Debes seleccionar la importancia.
+            </small>
         </div>
 
     </div>
 
-    <!-- ERRORES -->
-    <div class="mt-2">
-        <small *ngIf="urgenteCtrl.invalid && urgenteCtrl.touched" class="p-error">
-            Debes seleccionar la urgencia.
-        </small>
-
-        <br>
-
-        <small *ngIf="importanteCtrl.invalid && importanteCtrl.touched" class="p-error">
-            Debes seleccionar la importancia.
-        </small>
-    </div>
 </div>
