@@ -27,7 +27,7 @@ constructor(public aceiteService:AceiteService)
 {
 
 }
-ngOnInit(): void { }
+ngOnInit(): void {  this.sucursales = this.sucursales.filter(x=> x.id != '-1');}
 
    onHide() {
     this.closeEvent.emit(false); // Cerrar modal

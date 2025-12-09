@@ -43,7 +43,7 @@
     </ng-template>
 </p-table>
     </p-tabPanel>
-    <p-tabPanel header="RECOLECCIÓN TRAMPA DE ACEITE">
+    <p-tabPanel header="RECOLECCIÓN TRAMPA DE GRASA">
           <p-table [value]="entregasTA" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
         <tr>
@@ -94,7 +94,7 @@
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
     <div class="p-3" style="min-height: 400px;">
        <p *ngIf="!esTrampadeAceite" >ACEITE</p>
-       <p *ngIf="esTrampadeAceite" >TRAMPA DE ACEITE</p>
+       <p *ngIf="esTrampadeAceite" >TRAMPA DE GRASA</p>
         <div class="col-12 mt-3">
           <p>COMENTARIOS</p>
           <textarea class="form-control p-3" [(ngModel)]="formcomentarios"></textarea>
