@@ -6,9 +6,7 @@ import {
   Firestore,
   query,
   where,
-  getDocs,
   orderBy,
-  limit,
   doc,
   updateDoc,
   docData,
@@ -32,7 +30,11 @@ export class TareasService {
 
   getAll(): Observable<Tarea[]> {
     const ref = collection(this.firestore, this.pathName);
-    const q = query(ref, orderBy('fecha', 'desc'));
+    const q = query(
+      ref,
+      where('eliminado', '==', false),
+      orderBy('fecha', 'desc')
+    );
     return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
   }
 
@@ -40,6 +42,7 @@ export class TareasService {
     const ref = collection(this.firestore, this.pathName);
     const q = query(
       ref,
+      where('eliminado', '==', false),
       where('idSucursal', '==', idSucursal),
       orderBy('fecha', 'desc')
     );
@@ -59,17 +62,8 @@ export class TareasService {
     const ref = collection(this.firestore, this.pathName);
     const q = query(
       ref,
+      where('eliminado', '==', false),
       where('idEstatus', '==', idEstatus),
-      orderBy('fecha', 'desc')
-    );
-    return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
-  }
-
-  getByCategoria(idCategoria: string): Observable<Tarea[]> {
-    const ref = collection(this.firestore, this.pathName);
-    const q = query(
-      ref,
-      where('idCategoria', '==', idCategoria),
       orderBy('fecha', 'desc')
     );
     return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;

@@ -62,11 +62,24 @@
                         <div class="col-md-6">
                             <!-- CATEGORÍAS -->
                             <p class="fw-bold">CATEGORÍA</p>
-                            <p-dropdown [options]="categorias" [(ngModel)]="tarea.idCategoria" name="categoria"
-                                [optionValue]="'id'" optionLabel="nombre" [filter]="true" filterBy="nombre"
-                                placeholder="SELECCIONA LA CATEGORÍA" [style]="{width:'100%'}" required="true">
-                            </p-dropdown>
+                            <input class="form-control" style="height: 48px;" type="text"
+                                placeholder="ESCRIBE LA CATEGORÍA" [(ngModel)]="tarea.categoria" name="categoria"
+                                #formCategoriaCtrl="ngModel" required minlength="3" maxlength="50"
+                                [ngClass]="{'p-invalid': formCategoriaCtrl.invalid && formCategoriaCtrl.touched}">
 
+                            <!-- Mensajes de validación -->
+                            <small *ngIf="formCategoriaCtrl.errors?.['required'] && formCategoriaCtrl.touched"
+                                class="p-error">
+                                Campo requerido.
+                            </small>
+                            <small *ngIf="formCategoriaCtrl.errors?.['minlength'] && formCategoriaCtrl.touched"
+                                class="p-error">
+                                Mínimo 3 caracteres.
+                            </small>
+                            <small *ngIf="formCategoriaCtrl.errors?.['maxlength'] && formCategoriaCtrl.touched"
+                                class="p-error">
+                                Máximo 50 caracteres.
+                            </small>
                             <p></p>
                         </div>
                     </div>

@@ -54,14 +54,14 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<Tarea[]>) {
-    console.log("ORIGEN:", event.previousContainer.id, event.previousContainer.data);
-    console.log("DESTINO:", event.container.id, event.container.data);
+    // console.log("ORIGEN:", event.previousContainer.id, event.previousContainer.data);
+    // console.log("DESTINO:", event.container.id, event.container.data);
 
     const tareaMovida = event.item.data as Tarea;
-    console.log("TAREA MOVIDA:", tareaMovida);
+    // console.log("TAREA MOVIDA:", tareaMovida);
 
     if (!tareaMovida) {
-      console.warn("No se pudo obtener la tarea movida");
+      // console.warn("No se pudo obtener la tarea movida");
       return;
     }
 
@@ -103,7 +103,6 @@ export class DashboardTasksComponent implements OnInit {
 
   initData() {
     this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
-      console.log(tareas)
       this.toDo = tareas.filter(x => x.idEstatus == '1');
       this.working = tareas.filter(x => x.idEstatus == '2');
       this.check = tareas.filter(x => x.idEstatus == '3');

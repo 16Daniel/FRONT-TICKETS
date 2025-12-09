@@ -1,7 +1,5 @@
 import { Component, Input, type OnInit } from '@angular/core';
 import { Tarea } from '../../../models/tarea.model';
-import { CategoriaTarea } from '../../../models/categoria-tarea.model';
-import { CategoriasTareasService } from '../../../services/categorias-tareas.service';
 import { TaskDetailComponent } from "../../../modals/tasks/task-detail/task-detail.component";
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -20,7 +18,7 @@ import { EstatusTarea } from '../../../models/estatus-tarea.model';
 export class TaskEisenhowerCard implements OnInit {
  @Input() tarea!: Tarea;
   mostrarModalDetalleTarea = false;
-  categorias: CategoriaTarea[] = [];
+  categorias: any[] = [];
   @Input() catEstatusTareas: EstatusTarea[] = []; 
 
   ngOnInit(): void {

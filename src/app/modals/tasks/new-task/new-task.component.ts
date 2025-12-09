@@ -7,9 +7,7 @@ import Swal from 'sweetalert2';
 
 import { Sucursal } from '../../../models/sucursal.model';
 import { Tarea } from '../../../models/tarea.model';
-import { CategoriaTarea } from '../../../models/categoria-tarea.model';
 import { BranchesService } from '../../../services/branches.service';
-import { CategoriasTareasService } from '../../../services/categorias-tareas.service';
 import { TareasService } from '../../../services/tareas.service';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
@@ -37,19 +35,16 @@ export class NewTaskComponent implements OnInit {
 
   tarea: Tarea = new Tarea();
   sucursales: Sucursal[] = [];
-  categorias: CategoriaTarea[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
-    private categoriasService: CategoriasTareasService,
     private tareasService: TareasService,
     private firebaseStorage: FirebaseStorageService
   ) { }
 
   ngOnInit(): void {
     this.obtenerSucursales();
-    this.categoriasService.categorias$.subscribe(categorias => this.categorias = categorias);
   }
 
   onHide = () => this.closeEvent.emit(false);

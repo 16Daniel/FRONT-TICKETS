@@ -1,9 +1,30 @@
 <div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
-    <div class="titulo">{{ tarea.titulo }}</div>
-    <div>{{getCategoriaNombre(tarea.idCategoria)}}</div>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="titulo">{{ tarea.titulo }}</div>
+
+        <!-- <button class="btn btn-sm btn-outline-danger" (click)="eliminarTarea(tarea); $event.stopPropagation()"
+            style="padding: 2px 6px;">
+            <i class="bx bx-trash"></i>
+        </button> -->
+
+        <button class="btn btn-link p-0 m-0" (click)="eliminarTarea(tarea); $event.stopPropagation()"
+            style="color: #d9534f; text-decoration: none;">
+            <i class="bx bx-trash"></i>
+        </button>
+
+    </div>
+
+    <div>{{ tarea.categoria }}</div>
 
     <div class="meta">
         <span class="fecha">{{ tarea.fecha | date:'dd/MM/yyyy' }}</span>
         <span class="estatus estatus-{{ tarea.idEstatus }}"></span>
     </div>
+
+    <button *ngIf="tarea.idEstatus === '4'" class="btn btn-sm btn-outline-secondary mt-2"
+        (click)="archivarTarea(tarea); $event.stopPropagation()">
+        <i class="bx bx-archive"></i> Archivar
+    </button>
+
 </div>

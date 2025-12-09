@@ -6,7 +6,7 @@ export class Tarea {
     descripcion?: string;
     fecha: Date = new Date();
     fechaFin: Date | null = null;
-    idCategoria: string = '';
+    categoria: string = '';
     idSucursal: string = '';
     idEstatus: string = '1';
     comentarios: Comentario[] = [];
@@ -18,4 +18,5 @@ export class Tarea {
     porcentaje: number = 0;
     deathline: Date | null = null;
     responsables: any[] = []
+    eliminado: boolean = false;
 }
