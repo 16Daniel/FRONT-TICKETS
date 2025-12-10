@@ -44,9 +44,10 @@
                 </span>
             </button>
 
-            <button class="btn-enviar" (click)="enviarComentario()">
+            <button class="btn-enviar" (click)="enviarComentario()" [disabled]="enviando">
                 Enviar
             </button>
+
         </div>
 
     </div>

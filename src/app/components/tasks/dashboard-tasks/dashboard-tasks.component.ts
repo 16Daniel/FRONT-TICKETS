@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
@@ -22,6 +22,7 @@ import { ToastModule } from 'primeng/toast';
     ToastModule,
     TaskDetailComponent
   ],
+  providers: [MessageService],
   templateUrl: './dashboard-tasks.component.html',
   styleUrl: './dashboard-tasks.component.scss'
 })
@@ -32,6 +33,7 @@ export class DashboardTasksComponent implements OnInit {
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -52,14 +54,14 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<Tarea[]>) {
-    console.log("ORIGEN:", event.previousContainer.id, event.previousContainer.data);
-    console.log("DESTINO:", event.container.id, event.container.data);
+    // console.log("ORIGEN:", event.previousContainer.id, event.previousContainer.data);
+    // console.log("DESTINO:", event.container.id, event.container.data);
 
     const tareaMovida = event.item.data as Tarea;
-    console.log("TAREA MOVIDA:", tareaMovida);
+    // console.log("TAREA MOVIDA:", tareaMovida);
 
     if (!tareaMovida) {
-      console.warn("No se pudo obtener la tarea movida");
+      // console.warn("No se pudo obtener la tarea movida");
       return;
     }
 
@@ -101,11 +103,13 @@ export class DashboardTasksComponent implements OnInit {
 
   initData() {
     this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
-      console.log(tareas)
       this.toDo = tareas.filter(x => x.idEstatus == '1');
       this.working = tareas.filter(x => x.idEstatus == '2');
       this.check = tareas.filter(x => x.idEstatus == '3');
       this.done = tareas.filter(x => x.idEstatus == '4');
+
+      this.cdr.detectChanges();
+
     })
   }
 

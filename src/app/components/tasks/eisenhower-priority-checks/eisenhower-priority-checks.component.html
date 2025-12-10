@@ -1,67 +1,59 @@
 <div class="mt-4">
-    <p class="fw-bold">SELECCIONA LA PRIORIDAD</p>
+    <p class="fw-bold mb-3">SELECCIONA LA PRIORIDAD</p>
 
-    <!-- GRUPO 1 -->
-    <div class="d-flex gap-4 align-items-center mb-2">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
 
-        <div class="form-check">
-            <input class="form-check-input" 
-                   type="radio" 
-                   name="grupo1"
-                   [(ngModel)]="modelo.urgente"
-                   value="URGENTE"
-                   required 
-                   #urgenteCtrl="ngModel"
-                   (change)="emitirCambio()">
-            <label class="form-check-label">URGENTE</label>
+        <!-- GRUPO URGENCIA -->
+        <div>
+            <div class="d-flex align-items-center gap-4">
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoUrgencia" [(ngModel)]="modelo.urgente"
+                        value="URGENTE" required #urgenteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">URGENTE</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoUrgencia" [(ngModel)]="modelo.urgente"
+                        value="NO URGENTE" required #urgenteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">NO URGENTE</label>
+                </div>
+
+            </div>
+
+            <!-- Error de urgencia debajo -->
+            <small *ngIf="urgenteCtrl.invalid && urgenteCtrl.touched" class="p-error d-block mt-1">
+                Debes seleccionar la urgencia.
+            </small>
         </div>
 
-        <div class="form-check">
-            <input class="form-check-input"
-                   type="radio"
-                   name="grupo1"
-                   [(ngModel)]="modelo.urgente"
-                   value="NO URGENTE"
-                   required
-                   #urgenteCtrl="ngModel"
-                   (change)="emitirCambio()">
-            <label class="form-check-label">NO URGENTE</label>
+        <!-- SEPARADOR -->
+        <div class="fw-bold text-secondary" style="font-size: 20px;">|</div>
+
+        <!-- GRUPO IMPORTANCIA -->
+        <div>
+            <div class="d-flex align-items-center gap-4">
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoImportancia" [(ngModel)]="modelo.importante"
+                        value="IMPORTANTE" required #importanteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">IMPORTANTE</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="grupoImportancia" [(ngModel)]="modelo.importante"
+                        value="NO IMPORTANTE" required #importanteCtrl="ngModel" (change)="emitirCambio()">
+                    <label class="form-check-label">NO IMPORTANTE</label>
+                </div>
+
+            </div>
+
+            <!-- Error de importancia debajo -->
+            <small *ngIf="importanteCtrl.invalid && importanteCtrl.touched" class="p-error d-block mt-1">
+                Debes seleccionar la importancia.
+            </small>
         </div>
+
     </div>
 
-    <small *ngIf="urgenteCtrl.invalid && urgenteCtrl.touched" class="p-error">
-        Campo requerido.
-    </small>
-
-    <!-- GRUPO 2 -->
-    <div class="d-flex gap-4 align-items-center mt-3 mb-2">
-
-        <div class="form-check">
-            <input class="form-check-input"
-                   type="radio"
-                   name="grupo2"
-                   [(ngModel)]="modelo.importante"
-                   value="IMPORTANTE"
-                   required
-                   #importanteCtrl="ngModel"
-                   (change)="emitirCambio()">
-            <label class="form-check-label">IMPORTANTE</label>
-        </div>
-
-        <div class="form-check">
-            <input class="form-check-input"
-                   type="radio"
-                   name="grupo2"
-                   [(ngModel)]="modelo.importante"
-                   value="NO IMPORTANTE"
-                   required
-                   #importanteCtrl="ngModel"
-                   (change)="emitirCambio()">
-            <label class="form-check-label">NO IMPORTANTE</label>
-        </div>
-    </div>
-
-    <small *ngIf="importanteCtrl.invalid && importanteCtrl.touched" class="p-error">
-        Campo requerido.
-    </small>
 </div>

@@ -4,16 +4,14 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import Swal from 'sweetalert2';
 
 import { Tarea } from '../../../models/tarea.model';
-import { CategoriaTarea } from '../../../models/categoria-tarea.model';
-import { CategoriasTareasService } from '../../../services/categorias-tareas.service';
 import { Sucursal } from '../../../models/sucursal.model';
 import { BranchesService } from '../../../services/branches.service';
 import { TareasService } from '../../../services/tareas.service';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { ModalVisorVariasImagenesComponent } from '../../modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { TaskImguploaderComponent } from '../task-imguploader/task-imguploader.component';
 import { TaskCommentBoxComponent } from '../../../components/tasks/task-comment-box/task-comment-box.component';
@@ -48,7 +46,6 @@ export class TaskDetailComponent implements OnInit {
   @Input() tarea!: Tarea | any;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  categorias: CategoriaTarea[] = [];
   sucursales: Sucursal[] = [];
   mostrarModalVisorImagen: boolean = false;
   mostrarModalSubirImagen: boolean = false;
@@ -59,7 +56,6 @@ export class TaskDetailComponent implements OnInit {
   nuevaSubtarea: string = '';
 
   constructor(
-    private categoriasService: CategoriasTareasService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private tareasService: TareasService,
@@ -70,9 +66,10 @@ export class TaskDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerSucursales();
-    this.categoriasService.categorias$.subscribe(categorias => this.categorias = categorias);
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
     this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
+
+    this.mostrarSubtareas = this.tarea?.subtareas.length > 0;
   }
 
   onHide = () => this.closeEvent.emit(false);
@@ -154,5 +151,9 @@ export class TaskDetailComponent implements OnInit {
     this.tarea.porcentaje = num;
   }
 
+  abrirVisor(index: number) {
+    this.imagenes = this.tarea.evidenciaUrls;
+    this.mostrarModalVisorImagen = true;
+  }
 
 }

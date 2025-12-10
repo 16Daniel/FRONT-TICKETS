@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
 import { TareasService } from '../../../services/tareas.service';
 import { MessageService } from 'primeng/api';
 import { Tarea } from '../../../models/tarea.model';
@@ -13,38 +13,42 @@ import { EstatusTarea } from '../../../models/estatus-tarea.model';
   selector: 'app-eisenhower-matrix',
   standalone: true,
   imports: [CommonModule, DragDropModule, TaskEisenhowerCard],
+  providers: [MessageService],
   templateUrl: './eisenhower-matrix.component.html',
   styleUrl: './eisenhower-matrix.component.scss',
 })
 export class EisenhowerMatrixComponent implements OnInit {
-@Input() idSucursal!: string;
-tc1:Tarea[] = [];
-tc2:Tarea[] = [];
-tc3:Tarea[] = [];
-tc4:Tarea[] = []; 
-loading:boolean = true; 
-dropListIds = ['c1', 'c2', 'c3', 'c4'];
- catEstatusTareas: EstatusTarea[] = []; 
+  @Input() idSucursal!: string;
+  tc1: Tarea[] = [];
+  tc2: Tarea[] = [];
+  tc3: Tarea[] = [];
+  tc4: Tarea[] = [];
+  loading: boolean = true;
+  dropListIds = ['c1', 'c2', 'c3', 'c4'];
+  catEstatusTareas: EstatusTarea[] = [];
 
-   constructor(
-      private tareasService: TareasService,
-      private messageService: MessageService,
-      private statustaskService:StatusTaskService
-    ) { 
-      this.statustaskService.estatus$.subscribe(catEstatus => this.catEstatusTareas = catEstatus)
-     }
+  constructor(
+    private tareasService: TareasService,
+    private messageService: MessageService,
+    private statustaskService: StatusTaskService,
+    private cdr: ChangeDetectorRef,
+  ) {
+    this.statustaskService.estatus$.subscribe(catEstatus => this.catEstatusTareas = catEstatus)
+  }
 
   ngOnInit(): void { this.initData() }
 
-    initData() {
-      this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
-        this.tc1 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '1');
-        this.tc2 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '2');
-        this.tc3 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '3');
-        this.tc4 = tareas.filter( x=> x.idEstatus != '4' && x.idEisenhower == '4'); 
-        this.loading = false; 
-      })
-    }
+  initData() {
+    this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
+      this.tc1 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
+      this.tc2 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
+      this.tc3 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
+      this.tc4 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
+      this.loading = false;
+
+      this.cdr.detectChanges();
+    })
+  }
 
   async drop(event: CdkDragDrop<Tarea[]>) {
 
@@ -95,11 +99,11 @@ dropListIds = ['c1', 'c2', 'c3', 'c4'];
 
     }
 
-   await this.tareasService.update(tareaMovida, tareaMovida.id!);
+    await this.tareasService.update(tareaMovida, tareaMovida.id!);
     this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
-   showMessage(sev: string, summ: string, det: string) {
+  showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 }
