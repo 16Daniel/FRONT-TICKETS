@@ -134,21 +134,10 @@ export class TaskDetailComponent implements OnInit {
     });
   }
 
-  validarPorcentaje(event: any) {
-    let valor = event.target.value;
-
-    if (valor.length > 3) {
-      valor = valor.substring(0, 3);
-    }
-
-    valor = valor.replace(/^0+(?!$)/, '');
-
-    let num = Number(valor);
-
-    if (num > 100) num = 100;
-    if (num < 0 || isNaN(num)) num = 0;
-
-    this.tarea.porcentaje = num;
+  getProgressColor(porcentaje: number) {
+    if (porcentaje < 40) return 'bg-danger';
+    if (porcentaje < 70) return 'bg-warning';
+    return 'bg-success';
   }
 
   abrirVisor(index: number) {
@@ -156,4 +145,30 @@ export class TaskDetailComponent implements OnInit {
     this.mostrarModalVisorImagen = true;
   }
 
+  async eliminarTarea(tarea: Tarea) {
+    const result = await Swal.fire({
+      title: '¿Eliminar tarea?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+    if (!result.isConfirmed) return;
+
+    tarea.eliminado = true;
+    this.onHide();
+    try {
+      await this.tareasService.update(tarea, tarea.id!);
+      this.showMessage('success', 'Eliminada', 'La tarea fue eliminada correctamente');
+    } catch (error) {
+      this.showMessage('error', 'Error', 'No se pudo eliminar la tarea');
+    }
+  }
 }

@@ -59,27 +59,10 @@ export class TaskCardComponent implements OnInit {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  async eliminarTarea(tarea: Tarea) {
-    const result = await Swal.fire({
-      title: '¿Eliminar tarea?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#6c757d'
-    });
-
-    if (!result.isConfirmed) return;
-
-    tarea.eliminado = true;
-    try {
-      await this.tareasService.update(tarea, tarea.id!);
-      this.showMessage('success', 'Eliminada', 'La tarea fue eliminada correctamente');
-    } catch (error) {
-      this.showMessage('error', 'Error', 'No se pudo eliminar la tarea');
-    }
+  getProgressColor(porcentaje: number) {
+    if (porcentaje < 40) return 'bg-danger';
+    if (porcentaje < 70) return 'bg-warning';
+    return 'bg-success';
   }
 
 }

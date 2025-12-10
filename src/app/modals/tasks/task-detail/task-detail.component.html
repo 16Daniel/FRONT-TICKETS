@@ -87,10 +87,25 @@
                     <div class="row">
                         <!-- PORCENTAJE -->
                         <div class="col-md-6 mb-3">
-                            <label class="fw-bold">PORCENTAJE (%)</label>
-                            <input type="number" min="0" max="100" class="form-control" [(ngModel)]="tarea.porcentaje"
-                                (input)="validarPorcentaje($event)" name="porcentaje" placeholder="0 - 100">
+
+                            <label class="fw-bold subtareas-text">PROGRESO</label>
+
+                            <!-- SLIDER -->
+                            <input type="range" class="form-range mt-2" min="0" max="100" [(ngModel)]="tarea.porcentaje"
+                                name="porcentaje" style="height: 6px; cursor: pointer;">
+
+                            <!-- BARRA DE PROGRESO -->
+                            <div class="progress mt-2" style="height: 20px;">
+                                <div class="progress-bar" role="progressbar"
+                                    [ngClass]="getProgressColor(tarea.porcentaje)" [style.width.%]="tarea.porcentaje"
+                                    style="transition: width 0.4s ease;">
+                                    {{ tarea.porcentaje }}%
+                                </div>
+                            </div>
+
                         </div>
+
+
 
                         <!-- DEADLINE / FECHA LÍMITE -->
                         <div class="col-md-6 mb-3">
@@ -143,12 +158,19 @@
                     (subtareaAgregada)="agregarSubtarea($event)">
                 </app-subtasks-box>
 
-                <!-- BOTÓN GUARDAR -->
-                <div class="d-flex justify-content-end mt-3">
-                    <button class="btn bg-p-b p-3">
-                        <i class='bx bx-send'></i>
+                <div class="d-flex justify-content-between mt-3">
+
+                    <button type="button" class="btn btn-danger p-3 d-flex align-items-center"
+                        (click)="eliminarTarea(tarea)">
+                        <i class='bx bx-trash me-2'></i>
+                        <label>ELIMINAR</label>
+                    </button>
+
+                    <button class="btn bg-p-b p-3 d-flex align-items-center">
+                        <i class='bx bx-send me-2'></i>
                         <label>GUARDAR</label>
                     </button>
+
                 </div>
 
             </form>
