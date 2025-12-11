@@ -19,4 +19,5 @@ export class Tarea {
     deathline: Date | null = null;
     responsables: any[] = []
     eliminado: boolean = false;
+    idEtiqueta: string = '';
 }

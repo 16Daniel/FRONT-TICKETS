@@ -1,1 +1,9 @@
-<p>modal-labels-task works!</p>
+<p-dialog [header]="'CREAR ETIQUETA'" [(visible)]="mostrarModal" [modal]="true" [style]="{ 'width': '95vh' }"
+    [maximizable]="true" (onHide)="onHide()">
+
+    <form #form="ngForm" (ngSubmit)="enviar(form)">
+
+
+    </form>
+
+</p-dialog>
