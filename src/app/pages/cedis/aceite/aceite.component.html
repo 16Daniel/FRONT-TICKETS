@@ -10,7 +10,34 @@
 <button class="btn bg-p-b m-3 p-3" (click)="abrirModalagregarRecoleccionTA()">AGREGAR RECOLECCIÓN RESIDUO TRAMPA DE GRASA</button>
 
 <p-tabView>
+
+  <p-tabPanel header="PENDIENTES">
+       <app-registros-pendientes *ngIf="sucursalesFiltro.length>0" [sucursales]="sucursalesFiltro"></app-registros-pendientes>
+  </p-tabPanel>
+
   <p-tabPanel header="POR VALIDAR">
+
+     <div class="row justify-content-center mb-3">
+        <div>
+           <div class="d-flex flex-column justify-items-center align-items-center h-100">
+             <p>SUCURSALES&nbsp;</p>
+           </div>
+        </div>
+        <div class="col-6">
+             <p-multiSelect 
+                [options]="sucursalesFiltro" 
+                [(ngModel)]="sucursalesSel" 
+                [filter]="true" 
+                optionLabel="nombre" 
+                placeholder="SELECCIONAR SUCURSALES"
+                [style]="{width:'100%'}"
+                />
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-warning h-42" (click)="filtrar()"><i class='bx bx-search'></i>&nbsp;filtrar</button>
+        </div>
+   </div>
+
     <p-table [value]="entregas" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
         <tr>

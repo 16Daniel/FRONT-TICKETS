@@ -17,20 +17,26 @@ import { DropdownModule } from 'primeng/dropdown';
 import ControlAceiteTabComponent from '../../branch/components/control-aceite-tab/control-aceite-tab.component';
 import { AgregarRecoleccionComponent } from "./dialogs/agregar-recoleccion.component/agregar-recoleccion.component";
 import { HistorialAceite } from "./components/historial-aceite/historial-aceite";
+import { RegistrosPendientes } from "./components/registros-pendientes/registros-pendientes";
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-aceite',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule, ControlAceiteTabComponent, AgregarRecoleccionComponent, HistorialAceite],
+  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule,
+     DropdownModule, ControlAceiteTabComponent, AgregarRecoleccionComponent, HistorialAceite, RegistrosPendientes
+    ,MultiSelectModule],
     providers:[MessageService],
   templateUrl: './aceite.component.html',
   styleUrl: './aceite.component.scss',
 })
 export default class AceiteComponent implements OnInit {
 public entregas:EntregaAceite[] = []; 
-
+public entregasTodo:EntregaAceite[] = []; 
 public mostrarModalValidacion:boolean = false; 
 public sucursales: Sucursal[] = [];
+public sucursalesSel: Sucursal[] = [];
+public sucursalesFiltro:Sucursal[] = []; 
 public sucursalSel: Sucursal|undefined;
 public formcomentarios:string = ""; 
 public itemEntrega:EntregaAceite|undefined; 
@@ -62,6 +68,8 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
     this.aceiteService.getEntregasCedis().subscribe({
       next: (data) => {
         this.entregas= data;
+        this.entregasTodo = [...data]; 
+        this.filtrar(); 
         this.loading = false; 
         this.cdr.detectChanges();
       },
@@ -102,10 +110,12 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       this.loading = true; 
     this.branchesService.get().subscribe({
       next: (data) => {
+        this.sucursalesFiltro = [...data];
+        this.sucursalesFiltro = this.sucursalesFiltro.filter(x=> x.idFront);
         let sucursalTodas:Sucursal = { id:'-1',nombre:'TODAS',idFront:-1,eliminado:false}
         this.sucursales = data;
         this.sucursales.unshift(sucursalTodas); 
-        this.sucursalSel = sucursalTodas; 
+        this.sucursalesSel = [...this.sucursalesFiltro];  
         this.loading = false; 
         this.consultarEntregas(); 
         this.cdr.detectChanges();
@@ -168,6 +178,18 @@ abrirModalagregarRecoleccionTA()
 {
   this.modalAgregarRecoleccion = true; 
   this.trampadeAceite = true
+}
+
+filtrar()
+{ 
+
+  this.entregas = []; 
+  for(let item of this.sucursalesSel)
+    {
+      let data = this.entregasTodo.filter(x=> x.idSucursal == item.idFront!);
+      this.entregas.push(...data);  
+    }
+
 }
 
 }

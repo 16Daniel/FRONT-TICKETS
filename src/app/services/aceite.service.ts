@@ -25,6 +25,15 @@ export class AceiteService {
       return this.http.get<EntregaAceite[]>(this.url+'Aceite/getEntregasAceitePendientes/'+idFront,{headers:this.headers})
     }
     
+     getEntregasAdmin(): Observable<EntregaAceite[]> {
+      return this.http.get<EntregaAceite[]>(this.url+'Aceite/getEntregasAceitePendientesAdmin/',{headers:this.headers})
+    }
+
+     getEntregasAdminTA(): Observable<EntregaAceite[]> {
+      return this.http.get<EntregaAceite[]>(this.url+'Aceite/getEntregasAceitePendientesAdminTA/',{headers:this.headers})
+    }
+
+
      getEntregasTrampaAceite(idFront:number): Observable<EntregaAceite[]> {
       return this.http.get<EntregaAceite[]>(this.url+'Aceite/getEntregasTrampaAceitePendientes/'+idFront,{headers:this.headers})
     }
@@ -134,4 +143,11 @@ export class AceiteService {
       return this.http.post<any>(this.url+'Aceite/agregarRecoleccionTrampaAceite',data,{headers:this.headers});
     }
 
+     eliminarEntrega(id:number): Observable<any> {
+      return this.http.delete<any>(this.url+'Aceite/eliminarLineaAceite/'+id,{headers:this.headers})
+    }
+
+     eliminarEntregaTA(id:number): Observable<any> {
+      return this.http.delete<any>(this.url+'Aceite/eliminarLineaAceiteTA/'+id,{headers:this.headers})
+    }
 }
