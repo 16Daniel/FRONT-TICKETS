@@ -16,28 +16,35 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import ControlAceiteTabComponent from '../../branch/components/control-aceite-tab/control-aceite-tab.component';
 import { AgregarRecoleccionComponent } from "./dialogs/agregar-recoleccion.component/agregar-recoleccion.component";
+import { HistorialAceite } from "./components/historial-aceite/historial-aceite";
+import { RegistrosPendientes } from "./components/registros-pendientes/registros-pendientes";
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-aceite',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule, ControlAceiteTabComponent, AgregarRecoleccionComponent],
+  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule,
+     DropdownModule, ControlAceiteTabComponent, AgregarRecoleccionComponent, HistorialAceite, RegistrosPendientes
+    ,MultiSelectModule],
     providers:[MessageService],
   templateUrl: './aceite.component.html',
   styleUrl: './aceite.component.scss',
 })
 export default class AceiteComponent implements OnInit {
 public entregas:EntregaAceite[] = []; 
-public entregasH:EntregaAceite[] = []; 
+public entregasTodo:EntregaAceite[] = []; 
 public mostrarModalValidacion:boolean = false; 
 public sucursales: Sucursal[] = [];
+public sucursalesSel: Sucursal[] = [];
+public sucursalesFiltro:Sucursal[] = []; 
 public sucursalSel: Sucursal|undefined;
 public formcomentarios:string = ""; 
 public itemEntrega:EntregaAceite|undefined; 
 public tipoActualizacion:number = 0;  
 public loading:boolean = false; 
 public modalAgregarRecoleccion:boolean = false; 
-fechaini:Date = new Date(); 
-fechafin:Date = new Date(); 
+
+trampadeAceite:boolean = false; 
 constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,private branchesService: BranchesService,private messageService: MessageService)
 {
 
@@ -61,6 +68,8 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
     this.aceiteService.getEntregasCedis().subscribe({
       next: (data) => {
         this.entregas= data;
+        this.entregasTodo = [...data]; 
+        this.filtrar(); 
         this.loading = false; 
         this.cdr.detectChanges();
       },
@@ -101,10 +110,12 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       this.loading = true; 
     this.branchesService.get().subscribe({
       next: (data) => {
+        this.sucursalesFiltro = [...data];
+        this.sucursalesFiltro = this.sucursalesFiltro.filter(x=> x.idFront);
         let sucursalTodas:Sucursal = { id:'-1',nombre:'TODAS',idFront:-1,eliminado:false}
         this.sucursales = data;
         this.sucursales.unshift(sucursalTodas); 
-        this.sucursalSel = sucursalTodas; 
+        this.sucursalesSel = [...this.sucursalesFiltro];  
         this.loading = false; 
         this.consultarEntregas(); 
         this.cdr.detectChanges();
@@ -156,77 +167,29 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
     
   }
 
-  buscarRegistros()
-  {
-    this.loading = true
-    let idf = -2;
-    if(this.sucursalSel?.idFront != undefined)
-      {
-        idf = this.sucursalSel!.idFront;
-      }
-    this.aceiteService.getEntregasCedisH(idf,this.fechaini,this.fechafin).subscribe({
-      next: (data) => {
-        this.entregasH= data;
-        this.loading = false, 
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      },
-    });
-  }
-
-  exportarExcel()
-{ 
-  this.loading = true;
-  let data = JSON.stringify(this.entregasH);
-  this.aceiteService.exportarHistorialEntregas(this.entregasH).subscribe({
-    next: data => {
-      this.loading = false;
-      this.cdr.detectChanges();
-      const base64String = data.archivoBase64; // Aquí debes colocar tu cadena base64 del archivo Excel
-
-      // Decodificar la cadena base64
-      const binaryString = window.atob(base64String);
-  
-      // Convertir a un array de bytes
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-  
-      // Crear un Blob con los datos binarios
-      const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  
-      // Crear una URL para el Blob
-      const url = window.URL.createObjectURL(blob);
-  
-      // Crear un enlace para la descarga
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'HISTORIAL ENTREGAS DE ACEITE.xlsx'; // Establecer el nombre del archivo
-      document.body.appendChild(link);
-  
-      // Hacer clic en el enlace para iniciar la descarga
-      link.click();
-  
-      // Limpiar la URL y el enlace después de la descarga
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-    },
-    error: error => {
-      this.loading = false; 
-      this.showMessage('error','Error','Error al generar el archivo de excel');
-      console.log(error);
-     
-    }
-});
-}
 
 abrirModalagregarRecoleccion()
 {
+  this.modalAgregarRecoleccion = true;
+  this.trampadeAceite = false;  
+}
+
+abrirModalagregarRecoleccionTA()
+{
   this.modalAgregarRecoleccion = true; 
+  this.trampadeAceite = true
+}
+
+filtrar()
+{ 
+
+  this.entregas = []; 
+  for(let item of this.sucursalesSel)
+    {
+      let data = this.entregasTodo.filter(x=> x.idSucursal == item.idFront!);
+      this.entregas.push(...data);  
+    }
+
 }
 
 }
