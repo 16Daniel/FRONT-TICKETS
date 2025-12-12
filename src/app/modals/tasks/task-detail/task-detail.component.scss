@@ -96,3 +96,12 @@
     height: 100%;
     object-fit: cover;
 }
+
+.label-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}

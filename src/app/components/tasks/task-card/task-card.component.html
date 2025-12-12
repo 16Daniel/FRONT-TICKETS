@@ -4,6 +4,14 @@
         <div class="titulo">{{ tarea.titulo }}</div>
     </div>
 
+    <!-- ETIQUETA DE LA TAREA -->
+    <div class="fila-etiqueta" *ngIf="tarea.idEtiqueta">
+        <div class="etiqueta-contenedor">
+            <span class="etiqueta-icono" [style.background]="getEtiquetaColor(tarea.idEtiqueta)"></span>
+            <span class="etiqueta-texto">{{ getEtiquetaNombre(tarea.idEtiqueta) }}</span>
+        </div>
+    </div>
+
     <div>{{ tarea.categoria }}</div>
 
     <div class="meta">

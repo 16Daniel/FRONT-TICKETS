@@ -16,6 +16,8 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { ModalLabelsTaskComponent } from '../../../modals/tasks/modal-labels-task/modal-labels-task.component';
 import { BranchesService } from '../../../services/branches.service';
 import { Usuario } from '../../../models/usuario.model';
+import { LabelsTasksService } from '../../../services/labels-tasks.service';
+import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 
 @Component({
   selector: 'app-dashboard-tasks',
@@ -42,14 +44,16 @@ export class DashboardTasksComponent implements OnInit {
   sucursales: Sucursal[] = [];
   idSucursalSeleccionada: string = '';
   usuario: Usuario;
-  etiquetas: any[] = [];
+  etiquetas: EtiquetaTarea[] = [];
   etiquetaSeleccionada: string = '';
+  allTasks: Tarea[] = [];
 
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private labelsTasksService: LabelsTasksService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
@@ -58,6 +62,10 @@ export class DashboardTasksComponent implements OnInit {
   ngOnInit(): void {
     this.initData();
     this.obtenerSucursales();
+
+    this.labelsTasksService.etiquetas$.subscribe(et => {
+      this.etiquetas = et;
+    });
   }
 
   dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
@@ -132,14 +140,16 @@ export class DashboardTasksComponent implements OnInit {
 
   initData() {
     this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
+
+      this.allTasks = tareas;
+
       this.toDo = tareas.filter(x => x.idEstatus == '1');
       this.working = tareas.filter(x => x.idEstatus == '2');
       this.check = tareas.filter(x => x.idEstatus == '3');
       this.done = tareas.filter(x => x.idEstatus == '4');
 
       this.cdr.detectChanges();
-
-    })
+    });
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -153,16 +163,25 @@ export class DashboardTasksComponent implements OnInit {
 
   onSucursalChange() {
     this.initData();
-    // this.mostrarComponentes = false;
-
-    // setTimeout(() => {
-    //   this.mostrarComponentes = true;
-    //   this.cdr.detectChanges();
-
-    // }, 500);
   }
 
   onEtiquetaChange() {
 
+    if (!this.etiquetaSeleccionada || this.etiquetaSeleccionada === '') {
+      this.initData();
+      return;
+    }
+
+    const filtradas = this.allTasks.filter(t =>
+      t.idEtiqueta && t.idEtiqueta === this.etiquetaSeleccionada
+    );
+
+    this.toDo = filtradas.filter(x => x.idEstatus == '1');
+    this.working = filtradas.filter(x => x.idEstatus == '2');
+    this.check = filtradas.filter(x => x.idEstatus == '3');
+    this.done = filtradas.filter(x => x.idEstatus == '4');
+
+    this.cdr.detectChanges();
   }
+
 }

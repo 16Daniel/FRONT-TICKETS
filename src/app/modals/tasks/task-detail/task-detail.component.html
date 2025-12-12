@@ -3,11 +3,11 @@
     <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
         <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
             <div class="d-flex justify-content-between mt-3 align-items-center">
-                <div style="width: 250px; margin-left: 15px;">
+                <div>
                     <label class="fw-bold d-block mb-1">ESTATUS</label>
                     <p-dropdown [options]="estatusTeras" [(ngModel)]="tarea.idEstatus" name="estatusTeras"
                         optionValue="id" optionLabel="nombre" [filter]="true" filterBy="nombre"
-                        placeholder="SELECCIONA ESTATUS DE LA TAREA" required>
+                        [style]="{width:'250px'}" placeholder="SELECCIONA ESTATUS DE LA TAREA" required>
 
                         <ng-template pTemplate="selectedItem" let-selected>
                             <div class="flex align-items-center gap-2" *ngIf="selected">
@@ -27,6 +27,37 @@
 
                     </p-dropdown>
 
+                </div>
+
+                <div>
+                    <label class="fw-bold d-block mb-1">ETIQUETA</label>
+                    <p-dropdown [options]="etiquetas" [(ngModel)]="tarea.idEtiqueta" name="etiquetas" optionValue="id"
+                        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS"
+                        placeholder="SELECCIONA ETIQUETA DE LA TAREA" [style]="{width:'250px'}">
+
+                        <ng-template pTemplate="selectedItem" let-selected>
+                            <div class="flex align-items-center gap-2" *ngIf="selected">
+
+                                <!-- círculo de color -->
+                                <span class="label-dot" [style.background]="selected.color">
+                                </span>
+
+                                <span>{{ selected.nombre }}</span>
+                            </div>
+                        </ng-template>
+
+                        <ng-template pTemplate="item" let-item>
+                            <div class="flex align-items-center gap-2">
+
+                                <!-- círculo de color -->
+                                <span class="label-dot" [style.background]="item.color">
+                                </span>
+
+                                <span>{{ item.nombre }}</span>
+                            </div>
+                        </ng-template>
+
+                    </p-dropdown>
                 </div>
 
                 <div class="d-flex">

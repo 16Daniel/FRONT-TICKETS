@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 
 import { TareasService } from '../../../services/tareas.service';
 import { Tarea } from '../../../models/tarea.model';
+import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
+import { LabelsTasksService } from '../../../services/labels-tasks.service';
 
 @Component({
   selector: 'app-task-card',
@@ -19,13 +21,18 @@ export class TaskCardComponent implements OnInit {
 
   @Input() tarea!: Tarea;
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
+  etiquetas: EtiquetaTarea[] = [];
 
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
+    private labelsTasksService: LabelsTasksService
   ) { }
 
   ngOnInit(): void {
+    this.labelsTasksService.etiquetas$.subscribe(et => {
+      this.etiquetas = et;
+    });
   }
 
   onClick() {
@@ -63,6 +70,16 @@ export class TaskCardComponent implements OnInit {
     if (porcentaje < 40) return 'bg-danger';
     if (porcentaje < 70) return 'bg-warning';
     return 'bg-success';
+  }
+
+  getEtiquetaColor(id: string) {
+    const et = this.etiquetas.find(e => e.id === id);
+    return et ? et.color : '#ccc';
+  }
+
+  getEtiquetaNombre(id: string) {
+    const et = this.etiquetas.find(e => e.id === id);
+    return et ? et.nombre : '';
   }
 
 }
