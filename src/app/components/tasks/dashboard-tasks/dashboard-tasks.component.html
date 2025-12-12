@@ -1,5 +1,55 @@
-<div class="acciones">
-  <button (click)="abrirModalAgregarTarea()">Agregar</button>
+<div class="d-flex align-items-center gap-2">
+
+  <!-- <label class="fw-bold d-block mb-1">FILTRAR POR SUCURSAL</label> -->
+  <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" name="sucursal" [optionValue]="'id'"
+    optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
+    [style]="{width:'260px'}" required="true" (onChange)="onSucursalChange()">
+  </p-dropdown>
+
+  <!-- <label class="fw-bold d-block mb-1">FILTRAR POR ETIQUETA</label> -->
+  <p-dropdown [options]="etiquetas" [(ngModel)]="etiquetaSeleccionada" name="etiquetas" optionValue="id"
+    optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS" [style]="{width:'220px'}"
+    (onChange)="onEtiquetaChange()" [showClear]="true">
+
+    <ng-template pTemplate="selectedItem" let-selected>
+      <div class="flex align-items-center gap-2" *ngIf="selected">
+
+        <!-- círculo de color -->
+        <span class="label-dot" [style.background]="selected.color">
+        </span>
+
+        <span>{{ selected.nombre }}</span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="item" let-item>
+      <div class="flex align-items-center gap-2">
+
+        <!-- círculo de color -->
+        <span class="label-dot" [style.background]="item.color">
+        </span>
+
+        <span>{{ item.nombre }}</span>
+      </div>
+    </ng-template>
+
+  </p-dropdown>
+
+
+</div>
+
+<p></p>
+
+<div class="acciones d-flex gap-2">
+
+  <button (click)="abrirModalAgregarTarea()">
+    Agregar
+  </button>
+
+  <button class="btn-etiquetas" (click)="mostrarModalEtiquetas = true">
+    Etiquetas
+  </button>
+
 </div>
 
 <div class="tablero-tareas">
@@ -57,6 +107,9 @@
   (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada">
 </app-task-detail>
 
+<app-modal-labels-task *ngIf="mostrarModalEtiquetas" [mostrarModal]="mostrarModalEtiquetas"
+  (closeEvent)="mostrarModalEtiquetas = false">
+</app-modal-labels-task>
 
 <app-new-task *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
   (closeEvent)="mostrarModalNuevaTarea = false">

@@ -21,6 +21,8 @@ import { EstatusTarea } from '../../../models/estatus-tarea.model';
 import { StatusEisenhowerService } from '../../../services/status-eisenhower.service';
 import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
 import { SubtasksBoxComponent } from '../../../components/tasks/subtasks-box/subtasks-box.component';
+import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
+import { LabelsTasksService } from '../../../services/labels-tasks.service';
 
 @Component({
   selector: 'app-task-detail',
@@ -54,6 +56,7 @@ export class TaskDetailComponent implements OnInit {
   catalogoEstatus: EstatusEisenhower[] = []
   mostrarSubtareas: boolean = false;
   nuevaSubtarea: string = '';
+  etiquetas: EtiquetaTarea[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -61,7 +64,8 @@ export class TaskDetailComponent implements OnInit {
     private tareasService: TareasService,
     private messageService: MessageService,
     private statusTaskService: StatusTaskService,
-    private statusEisenhowerService: StatusEisenhowerService
+    private statusEisenhowerService: StatusEisenhowerService,
+    private labelsTasksService: LabelsTasksService
   ) { }
 
   ngOnInit(): void {
@@ -69,7 +73,12 @@ export class TaskDetailComponent implements OnInit {
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
     this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
 
-    this.mostrarSubtareas = this.tarea?.subtareas.length > 0;
+    this.mostrarSubtareas = this.tarea?.subtareas?.length > 0;
+
+    this.labelsTasksService.etiquetas$.subscribe(et => {
+      debugger
+      this.etiquetas = et;
+    });
   }
 
   onHide = () => this.closeEvent.emit(false);
@@ -134,21 +143,10 @@ export class TaskDetailComponent implements OnInit {
     });
   }
 
-  validarPorcentaje(event: any) {
-    let valor = event.target.value;
-
-    if (valor.length > 3) {
-      valor = valor.substring(0, 3);
-    }
-
-    valor = valor.replace(/^0+(?!$)/, '');
-
-    let num = Number(valor);
-
-    if (num > 100) num = 100;
-    if (num < 0 || isNaN(num)) num = 0;
-
-    this.tarea.porcentaje = num;
+  getProgressColor(porcentaje: number) {
+    if (porcentaje < 40) return 'bg-danger';
+    if (porcentaje < 70) return 'bg-warning';
+    return 'bg-success';
   }
 
   abrirVisor(index: number) {
@@ -156,4 +154,30 @@ export class TaskDetailComponent implements OnInit {
     this.mostrarModalVisorImagen = true;
   }
 
+  async eliminarTarea(tarea: Tarea) {
+    const result = await Swal.fire({
+      title: '¿Eliminar tarea?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+    if (!result.isConfirmed) return;
+
+    tarea.eliminado = true;
+    this.onHide();
+    try {
+      await this.tareasService.update(tarea, tarea.id!);
+      this.showMessage('success', 'Eliminada', 'La tarea fue eliminada correctamente');
+    } catch (error) {
+      this.showMessage('error', 'Error', 'No se pudo eliminar la tarea');
+    }
+  }
 }

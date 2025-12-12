@@ -41,7 +41,7 @@
 
 /* Working */
 .estatus-2 {
-    background: #f2ff00;
+    background: #ffaa00bf;
 }
 
 /* Pause */
@@ -52,4 +52,38 @@
 /* Done */
 .estatus-4 {
     background: #30e91f;
+}
+
+
+
+
+
+.fila-etiqueta {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; // 👈 ahora a la izquierda
+    margin-top: 4px;
+    margin-bottom: 6px;
+}
+
+.etiqueta-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    background: #f1f1f1;
+    padding: 4px 10px;
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+.etiqueta-icono {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    display: inline-block;
+    border: 1px solid #c7c7c7;
 }

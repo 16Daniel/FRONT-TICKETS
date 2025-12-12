@@ -2,6 +2,9 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 
 import { NewTaskComponent } from '../../../modals/tasks/new-task/new-task.component';
@@ -9,7 +12,12 @@ import { TaskDetailComponent } from '../../../modals/tasks/task-detail/task-deta
 import { TaskCardComponent } from '../task-card/task-card.component';
 import { Tarea } from '../../../models/tarea.model';
 import { TareasService } from '../../../services/tareas.service';
-import { ToastModule } from 'primeng/toast';
+import { Sucursal } from '../../../models/sucursal.model';
+import { ModalLabelsTaskComponent } from '../../../modals/tasks/modal-labels-task/modal-labels-task.component';
+import { BranchesService } from '../../../services/branches.service';
+import { Usuario } from '../../../models/usuario.model';
+import { LabelsTasksService } from '../../../services/labels-tasks.service';
+import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 
 @Component({
   selector: 'app-dashboard-tasks',
@@ -20,24 +28,44 @@ import { ToastModule } from 'primeng/toast';
     NewTaskComponent,
     TaskCardComponent,
     ToastModule,
-    TaskDetailComponent
+    TaskDetailComponent,
+    DropdownModule,
+    FormsModule,
+    ModalLabelsTaskComponent
   ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks.component.html',
   styleUrl: './dashboard-tasks.component.scss'
 })
 export class DashboardTasksComponent implements OnInit {
-  @Input() idSucursal!: string;
   mostrarModalDetalleTarea: boolean = false;
+  mostrarModalEtiquetas: boolean = false;
+
+  sucursales: Sucursal[] = [];
+  idSucursalSeleccionada: string = '';
+  usuario: Usuario;
+  etiquetas: EtiquetaTarea[] = [];
+  etiquetaSeleccionada: string = '';
+  allTasks: Tarea[] = [];
 
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-  ) { }
+    private branchesService: BranchesService,
+    private labelsTasksService: LabelsTasksService
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+  }
 
   ngOnInit(): void {
     this.initData();
+    this.obtenerSucursales();
+
+    this.labelsTasksService.etiquetas$.subscribe(et => {
+      this.etiquetas = et;
+    });
   }
 
   dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
@@ -51,6 +79,16 @@ export class DashboardTasksComponent implements OnInit {
 
   abrirModalAgregarTarea() {
     this.mostrarModalNuevaTarea = true;
+  }
+
+  obtenerSucursales() {
+    this.branchesService.get().subscribe({
+      next: (data) => {
+        this.sucursales = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => { },
+    });
   }
 
   async drop(event: CdkDragDrop<Tarea[]>) {
@@ -100,17 +138,18 @@ export class DashboardTasksComponent implements OnInit {
     this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
-
   initData() {
-    this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
+    this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
+
+      this.allTasks = tareas;
+
       this.toDo = tareas.filter(x => x.idEstatus == '1');
       this.working = tareas.filter(x => x.idEstatus == '2');
       this.check = tareas.filter(x => x.idEstatus == '3');
       this.done = tareas.filter(x => x.idEstatus == '4');
 
       this.cdr.detectChanges();
-
-    })
+    });
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -121,4 +160,28 @@ export class DashboardTasksComponent implements OnInit {
     this.tareaSeleccionada = { ...tarea };
     this.mostrarModalDetalleTarea = true;
   }
+
+  onSucursalChange() {
+    this.initData();
+  }
+
+  onEtiquetaChange() {
+
+    if (!this.etiquetaSeleccionada || this.etiquetaSeleccionada === '') {
+      this.initData();
+      return;
+    }
+
+    const filtradas = this.allTasks.filter(t =>
+      t.idEtiqueta && t.idEtiqueta === this.etiquetaSeleccionada
+    );
+
+    this.toDo = filtradas.filter(x => x.idEstatus == '1');
+    this.working = filtradas.filter(x => x.idEstatus == '2');
+    this.check = filtradas.filter(x => x.idEstatus == '3');
+    this.done = filtradas.filter(x => x.idEstatus == '4');
+
+    this.cdr.detectChanges();
+  }
+
 }

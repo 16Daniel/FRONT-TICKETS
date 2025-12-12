@@ -55,7 +55,7 @@
 
 /* Working */
 .estatus-2 {
-    background-color: #f2ff00 !important;
+    background-color: #ffaa00bf !important;
 }
 
 /* Pause */
@@ -95,4 +95,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.label-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #ccc;
+    margin-right: 5px;
 }

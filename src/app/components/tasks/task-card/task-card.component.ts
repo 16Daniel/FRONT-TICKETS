@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 
 import { TareasService } from '../../../services/tareas.service';
 import { Tarea } from '../../../models/tarea.model';
+import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
+import { LabelsTasksService } from '../../../services/labels-tasks.service';
 
 @Component({
   selector: 'app-task-card',
@@ -19,13 +21,18 @@ export class TaskCardComponent implements OnInit {
 
   @Input() tarea!: Tarea;
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
+  etiquetas: EtiquetaTarea[] = [];
 
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
+    private labelsTasksService: LabelsTasksService
   ) { }
 
   ngOnInit(): void {
+    this.labelsTasksService.etiquetas$.subscribe(et => {
+      this.etiquetas = et;
+    });
   }
 
   onClick() {
@@ -59,27 +66,20 @@ export class TaskCardComponent implements OnInit {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  async eliminarTarea(tarea: Tarea) {
-    const result = await Swal.fire({
-      title: '¿Eliminar tarea?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#6c757d'
-    });
+  getProgressColor(porcentaje: number) {
+    if (porcentaje < 40) return 'bg-danger';
+    if (porcentaje < 70) return 'bg-warning';
+    return 'bg-success';
+  }
 
-    if (!result.isConfirmed) return;
+  getEtiquetaColor(id: string) {
+    const et = this.etiquetas.find(e => e.id === id);
+    return et ? et.color : '#ccc';
+  }
 
-    tarea.eliminado = true;
-    try {
-      await this.tareasService.update(tarea, tarea.id!);
-      this.showMessage('success', 'Eliminada', 'La tarea fue eliminada correctamente');
-    } catch (error) {
-      this.showMessage('error', 'Error', 'No se pudo eliminar la tarea');
-    }
+  getEtiquetaNombre(id: string) {
+    const et = this.etiquetas.find(e => e.id === id);
+    return et ? et.nombre : '';
   }
 
 }

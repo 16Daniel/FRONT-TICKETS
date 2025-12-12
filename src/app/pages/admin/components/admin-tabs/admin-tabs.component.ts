@@ -35,10 +35,6 @@ import { BranchesService } from '../../../../services/branches.service';
 })
 
 export class AdminTabsComponent {
-  sucursales: Sucursal[] = [];
-  idSucursalSeleccionada: string = '';
-  mostrarComponentes: boolean = true;
-
   sucursal: Sucursal;
   usuario: Usuario;
   subscripcionTicket: Subscription | undefined;
@@ -55,9 +51,6 @@ export class AdminTabsComponent {
   constructor(private cdr: ChangeDetectorRef, private branchesService: BranchesService) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
-
-    this.obtenerSucursales();
 
     this.activeIndex = 0;
     if (this.usuario.idArea == '1')
@@ -91,28 +84,6 @@ export class AdminTabsComponent {
   onToggleEisenhower() {
     setTimeout(() => {
       this.cdr.detectChanges();
-    }, 500);
-  }
-
-  obtenerSucursales() {
-    this.branchesService.get().subscribe({
-      next: (data) => {
-        this.sucursales = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => { },
-    });
-  }
-
-
-  onSucursalChange() {
-
-    this.mostrarComponentes = false;
-
-    setTimeout(() => {
-      this.mostrarComponentes = true;
-      this.cdr.detectChanges();
-
     }, 500);
   }
 }
