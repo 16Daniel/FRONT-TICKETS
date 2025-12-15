@@ -21,7 +21,7 @@
 
     <!-- BARRA DE PROGRESO -->
     <div *ngIf="tarea.porcentaje !== undefined" class="mt-3">
-        <label class="fw-bold subtareas-text">PROGRESO</label>
+        <!-- <label class="fw-bold subtareas-text">PROGRESO</label> -->
 
         <div class="progress" style="height: 20px;">
             <div class="progress-bar" role="progressbar" [ngClass]="getProgressColor(tarea.porcentaje)"
