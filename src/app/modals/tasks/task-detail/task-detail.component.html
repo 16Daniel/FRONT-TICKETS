@@ -137,14 +137,48 @@
             </div>
           </div>
 
-
-
           <!-- DESCRIPCIÓN -->
           <div class="mb-3">
-            <label class="fw-bold">DESCRIPCIÓN GENERAL</label>
-            <textarea [(ngModel)]="tarea.descripcion" name="comentarioResponsable" class="form-control" rows="7">
-                        </textarea>
+            <div class="d-flex justify-content-between align-items-center">
+              <label class="fw-bold mb-0">DESCRIPCIÓN GENERAL</label>
+
+              <!-- BOTÓN EDITAR -->
+              <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="!editandoDescripcion"
+                (click)="editarDescripcion()">
+
+                <i class="bx bx-edit"></i> Editar
+              </button>
+            </div>
+
+            <!-- MODO VISTA -->
+            <div class="descripcion-vista mt-2" *ngIf="!editandoDescripcion">
+
+              <div *ngIf="!tarea.descripcion" class="text-muted">
+                Sin descripción
+              </div>
+
+              <!-- LINKIFY AQUÍ -->
+              <div *ngIf="tarea.descripcion" [innerHTML]="tarea.descripcion | linkify">
+              </div>
+            </div>
+
+            <!-- MODO EDICIÓN -->
+            <div *ngIf="editandoDescripcion" class="mt-2">
+              <textarea [(ngModel)]="descripcionEditada" name="comentarioResponsable" class="form-control" rows="7">
+    </textarea>
+
+              <div class="d-flex justify-content-end gap-2 mt-2">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="cancelarEdicionDescripcion()">
+                  Cancelar
+                </button>
+
+                <button type="button" class="btn btn-sm btn-primary" (click)="guardarDescripcion()">
+                  Guardar
+                </button>
+              </div>
+            </div>
           </div>
+
 
           <!-- VISOR DE MINIATURAS -->
           <div class="mt-3">

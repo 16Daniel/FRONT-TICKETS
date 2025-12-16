@@ -23,6 +23,7 @@ import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eis
 import { SubtasksBoxComponent } from '../../../components/tasks/subtasks-box/subtasks-box.component';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
+import { LinkifyPipe } from '../../../pipes/linkify.pipe';
 
 @Component({
   selector: 'app-task-detail',
@@ -38,7 +39,8 @@ import { LabelsTasksService } from '../../../services/labels-tasks.service';
     TaskImguploaderComponent,
     TaskCommentBoxComponent,
     EisenhowerPriorityChecksComponent,
-    SubtasksBoxComponent
+    SubtasksBoxComponent,
+    LinkifyPipe
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -57,6 +59,9 @@ export class TaskDetailComponent implements OnInit {
   mostrarSubtareas: boolean = false;
   nuevaSubtarea: string = '';
   etiquetas: EtiquetaTarea[] = [];
+
+  editandoDescripcion = false;
+  descripcionEditada = '';
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -213,6 +218,21 @@ export class TaskDetailComponent implements OnInit {
     if (!this.tarea.subtareas) {
       this.tarea.subtareas = [];
     }
+  }
+
+  editarDescripcion() {
+    this.editandoDescripcion = true;
+    this.descripcionEditada = this.tarea.descripcion || '';
+  }
+
+  cancelarEdicionDescripcion() {
+    this.editandoDescripcion = false;
+    this.descripcionEditada = '';
+  }
+
+  guardarDescripcion() {
+    this.tarea.descripcion = this.descripcionEditada;
+    this.editandoDescripcion = false;
   }
 
 }
