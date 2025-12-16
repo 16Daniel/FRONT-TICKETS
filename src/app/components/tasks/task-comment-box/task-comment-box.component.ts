@@ -152,5 +152,23 @@ export class TaskCommentBoxComponent implements OnInit {
     }
   }
 
+  editarComentario(c: any) {
+    c.editando = true;
+    c.comentarioEditado = c.comentario;
+  }
+
+  cancelarEdicion(c: any) {
+    c.editando = false;
+    c.comentarioEditado = '';
+  }
+
+  guardarEdicion(c: any) {
+    if (!c.comentarioEditado?.trim()) return;
+
+    c.comentario = c.comentarioEditado;
+    c.editando = false;
+
+    this.tareasService.update(this.tarea, this.tarea.id!);
+  }
 
 }

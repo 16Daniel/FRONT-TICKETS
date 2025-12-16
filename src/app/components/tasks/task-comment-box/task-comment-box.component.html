@@ -20,7 +20,10 @@
             {{ c.fecha | date:'dd/MM/yyyy, hh:mm a' }}
           </div>
 
-          <!-- Botón eliminar -->
+          <button class="btn-editar-comentario" (click)="editarComentario(c)">
+            ✏️
+          </button>
+
           <button class="btn-eliminar-comentario" (click)="eliminarComentario(c)">
             🗑️
           </button>
@@ -28,19 +31,37 @@
       </div>
 
 
-      <!-- <div class="tarjeta-cuerpo">
-                {{ c.comentario }} -->
       <div class="tarjeta-cuerpo">
 
-        <!-- Texto del comentario con links -->
-        <div [innerHTML]="c.comentario | linkify"></div>
+        <!-- MODO VISTA -->
+        <div *ngIf="!c.editando">
+          <div [innerHTML]="c.comentario | linkify"></div>
 
-        <!-- Imágenes desde Firestore -->
-        <div *ngIf="c.imagenesEvidencia?.length" class="imagenes">
-          <img *ngFor="let img of c.imagenesEvidencia" [src]="img" class="imagen-comentario" (click)="verImagen(img)">
+          <div *ngIf="c.imagenesEvidencia?.length" class="imagenes">
+            <img *ngFor="let img of c.imagenesEvidencia" [src]="img" class="imagen-comentario" (click)="verImagen(img)">
+          </div>
+        </div>
+
+        <!-- MODO EDICIÓN -->
+        <div *ngIf="c.editando" class="edicion-comentario">
+
+          <textarea class="textarea-editar" [(ngModel)]="c.comentarioEditado" rows="4">
+    </textarea>
+
+          <div class="acciones-edicion">
+            <button class="btn-guardar" (click)="guardarEdicion(c)">
+              💾 Guardar
+            </button>
+
+            <button class="btn-cancelar" (click)="cancelarEdicion(c)">
+              ✖ Cancelar
+            </button>
+          </div>
+
         </div>
 
       </div>
+
 
     </div>
 
