@@ -27,6 +27,7 @@ export class LabelsTasksService {
 
   private _unsubscribe: (() => void) | null = null;
   private _loaded: boolean = false;
+  private _idAreaActual: string | null = null;
 
   public get etiquetas(): EtiquetaTarea[] {
     return this._etiquetas;
@@ -95,4 +96,13 @@ export class LabelsTasksService {
       this._unsubscribe = null;
     }
   }
+
+  public filtrarPorArea(idArea: string | null): EtiquetaTarea[] {
+    if (!idArea) return [];
+
+    return this._etiquetas.filter(
+      et => et.idArea === idArea && et.eliminado === false
+    );
+  }
+
 }

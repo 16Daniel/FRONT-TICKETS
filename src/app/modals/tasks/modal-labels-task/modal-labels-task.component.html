@@ -21,6 +21,22 @@
         </small>
       </div>
 
+      <!-- DROPDOWN ÁREAS -->
+      <div class="col-md-6">
+        <p class="fw-bold mb-1">ÁREA</p>
+
+        <p-dropdown [options]="areas" optionLabel="nombre" optionValue="id" placeholder="SELECCIONA UN ÁREA"
+          [(ngModel)]="nuevaEtiqueta.idArea" name="idArea" required #areaCtrl="ngModel"
+          (onChange)="onAreaChange($event.value)" [style]="{ width: '100%', height: '48px' }"
+          [ngClass]="{ 'p-invalid': areaCtrl.invalid && areaCtrl.touched }">
+        </p-dropdown>
+
+        <small *ngIf="areaCtrl.errors?.['required'] && areaCtrl.touched" class="p-error">
+          Selecciona un área.
+        </small>
+      </div>
+
+
       <!-- COLOR PICKER -->
       <div class="col-auto">
         <p class="fw-bold mb-1">COLOR</p>
@@ -53,7 +69,6 @@
         <tr>
           <th>Nombre</th>
           <th>Color</th>
-          <!-- <th>Vista</th> -->
           <th>Eliminar</th>
         </tr>
       </ng-template>
@@ -69,14 +84,6 @@
               class="form-control form-control-color">
           </td>
 
-
-          <!-- VISTA DEL COLOR -->
-          <!-- <td>
-            <div [style.background]="et.color"
-              style="width: 35px; height: 35px; border-radius: 6px; border: 1px solid #ccc;">
-            </div>
-          </td> -->
-
           <!-- BOTON ELIMINAR -->
           <td>
             <p-button icon="pi pi-trash" severity="danger" (onClick)="eliminarEtiqueta(et)">
@@ -89,3 +96,7 @@
   </div>
 
 </p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>

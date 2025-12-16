@@ -76,7 +76,6 @@ export class TaskDetailComponent implements OnInit {
     this.mostrarSubtareas = this.tarea?.subtareas?.length > 0;
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
-      debugger
       this.etiquetas = et;
     });
   }
@@ -191,8 +190,8 @@ export class TaskDetailComponent implements OnInit {
         confirmButtonColor: '#d33',
         cancelButtonColor: '#6c757d',
         customClass: {
-        container: 'swal-topmost'
-      }
+          container: 'swal-topmost'
+        }
       });
 
       // Si cancela → solo ocultar
