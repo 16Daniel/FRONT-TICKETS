@@ -126,15 +126,6 @@ export class TaskDetailComponent implements OnInit {
     this.tarea.idEisenhower = event.idEisenhower;
   }
 
-  toggleSubtareas() {
-    this.mostrarSubtareas = !this.mostrarSubtareas;
-
-    // Inicializar arreglo si viene undefined
-    if (!this.tarea.subtareas) {
-      this.tarea.subtareas = [];
-    }
-  }
-
   agregarSubtarea(texto: string) {
     this.tarea.subtareas = this.tarea.subtareas || [];
     this.tarea.subtareas.push({
@@ -180,4 +171,49 @@ export class TaskDetailComponent implements OnInit {
       this.showMessage('error', 'Error', 'No se pudo eliminar la tarea');
     }
   }
+
+  async toggleSubtareas() {
+
+    // Si están visibles y existen subtareas → preguntar
+    if (
+      this.mostrarSubtareas &&
+      this.tarea.subtareas &&
+      this.tarea.subtareas.length > 0
+    ) {
+
+      const result = await Swal.fire({
+        title: '¿Eliminar subtareas?',
+        text: 'Esta tarea tiene subtareas. ¿Deseas eliminarlas?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'No, conservar',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        customClass: {
+        container: 'swal-topmost'
+      }
+      });
+
+      // Si cancela → solo ocultar
+      if (!result.isConfirmed) {
+        this.mostrarSubtareas = false;
+        return;
+      }
+
+      // Si confirma → eliminar subtareas
+      this.tarea.subtareas = [];
+      this.mostrarSubtareas = false;
+      return;
+    }
+
+    // Mostrar subtareas normalmente
+    this.mostrarSubtareas = !this.mostrarSubtareas;
+
+    // Inicializar arreglo si no existe
+    if (!this.tarea.subtareas) {
+      this.tarea.subtareas = [];
+    }
+  }
+
 }
