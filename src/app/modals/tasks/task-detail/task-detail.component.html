@@ -47,15 +47,21 @@
             </ng-template>
 
             <ng-template pTemplate="item" let-item>
-              <div class="flex align-items-center gap-2">
+              <div class="label-item">
 
-                <!-- círculo de color -->
-                <span class="label-dot" [style.background]="item.color">
-                </span>
+                <div class="label-row">
+                  <span class="label-dot" [style.background]="item.color"></span>
+                  <span class="label-title">{{ item.nombre }}</span>
+                </div>
 
-                <span>{{ item.nombre }}</span>
+                <small class="label-subtext" *ngIf="item.idArea">
+                  {{ areasMap[item.idArea] || 'Área sin asignar' }}
+                </small>
+
+
               </div>
             </ng-template>
+
 
           </p-dropdown>
         </div>

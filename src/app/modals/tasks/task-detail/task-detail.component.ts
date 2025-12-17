@@ -24,6 +24,8 @@ import { SubtasksBoxComponent } from '../../../components/tasks/subtasks-box/sub
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { AreasService } from '../../../services/areas.service';
+import { Area } from '../../../models/area.model';
 
 @Component({
   selector: 'app-task-detail',
@@ -59,9 +61,11 @@ export class TaskDetailComponent implements OnInit {
   mostrarSubtareas: boolean = false;
   nuevaSubtarea: string = '';
   etiquetas: EtiquetaTarea[] = [];
-
+  areas: Area[] = [];
   editandoDescripcion = false;
   descripcionEditada = '';
+
+  areasMap: Record<string, string> = {};
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -70,7 +74,8 @@ export class TaskDetailComponent implements OnInit {
     private messageService: MessageService,
     private statusTaskService: StatusTaskService,
     private statusEisenhowerService: StatusEisenhowerService,
-    private labelsTasksService: LabelsTasksService
+    private labelsTasksService: LabelsTasksService,
+    private areasService: AreasService
   ) { }
 
   ngOnInit(): void {
@@ -82,6 +87,13 @@ export class TaskDetailComponent implements OnInit {
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetas = et;
+    });
+
+    this.areasService.areas$.subscribe(areas => {
+      this.areasMap = {};
+      areas.forEach(a => {
+        this.areasMap[a.id] = a.nombre;
+      });
     });
   }
 
