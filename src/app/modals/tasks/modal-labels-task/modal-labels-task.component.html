@@ -12,13 +12,6 @@
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
           [(ngModel)]="nuevaEtiqueta.nombre" name="nombre" required minlength="3" maxlength="40" #nombreCtrl="ngModel"
           [ngClass]="{'p-invalid': nombreCtrl.invalid && nombreCtrl.touched}" />
-
-        <small *ngIf="nombreCtrl.errors?.['required'] && nombreCtrl.touched" class="p-error">
-          Campo requerido.
-        </small>
-        <small *ngIf="nombreCtrl.errors?.['minlength'] && nombreCtrl.touched" class="p-error">
-          Mínimo 3 caracteres.
-        </small>
       </div>
 
       <!-- DROPDOWN ÁREAS -->
@@ -30,10 +23,6 @@
           (onChange)="onAreaChange($event.value)" [style]="{ width: '100%', height: '48px' }"
           [ngClass]="{ 'p-invalid': areaCtrl.invalid && areaCtrl.touched }">
         </p-dropdown>
-
-        <small *ngIf="areaCtrl.errors?.['required'] && areaCtrl.touched" class="p-error">
-          Selecciona un área.
-        </small>
       </div>
 
 
@@ -76,7 +65,13 @@
       <ng-template pTemplate="body" let-et>
         <tr>
           <!-- NOMBRE -->
-          <td>{{ et.nombre }}</td>
+          <!-- <td>{{ et.nombre }}</td> -->
+          <td>
+            <input type="text" class="form-control" [(ngModel)]="et.nombre" [readonly]="!et.editando"
+              (click)="activarEdicion(et)" (blur)="guardarNombre(et)" (keydown.enter)="guardarNombre(et)"
+              style="height: 38px;" />
+          </td>
+
 
           <!-- COLOR PICKER -->
           <td>

@@ -156,4 +156,19 @@ export class ModalLabelsTaskComponent {
     this.etiquetas = this.labelsTasksService.filtrarPorArea(this.idAreaSeleccionada);
   }
 
+  activarEdicion(etiqueta: any) {
+    etiqueta.editando = true;
+  }
+
+  async guardarNombre(etiqueta: any) {
+    etiqueta.editando = false;
+
+    if (!etiqueta.nombre || etiqueta.nombre.trim().length < 3) {
+      return;
+    }
+
+    await this.labelsTasksService.update(etiqueta, etiqueta.id);
+    this.showMessage('success', 'Success', 'Enviado correctamente');
+  }
+
 }
