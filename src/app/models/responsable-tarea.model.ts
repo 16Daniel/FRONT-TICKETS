@@ -1,7 +1,7 @@
-export interface EtiquetaTarea {
+export interface ResponsableTarea {
     id?: string;
     idSucursal: string;
     nombre: string;
-    color: string;
+    posicion: string;
     eliminado: boolean;
 }

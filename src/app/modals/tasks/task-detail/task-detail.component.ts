@@ -23,6 +23,12 @@ import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eis
 import { SubtasksBoxComponent } from '../../../components/tasks/subtasks-box/subtasks-box.component';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
+import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { AreasService } from '../../../services/areas.service';
+import { Area } from '../../../models/area.model';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TaskResponsibleService } from '../../../services/task-responsible.service';
+import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 
 @Component({
   selector: 'app-task-detail',
@@ -38,7 +44,9 @@ import { LabelsTasksService } from '../../../services/labels-tasks.service';
     TaskImguploaderComponent,
     TaskCommentBoxComponent,
     EisenhowerPriorityChecksComponent,
-    SubtasksBoxComponent
+    SubtasksBoxComponent,
+    LinkifyPipe,
+    MultiSelectModule
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -57,6 +65,11 @@ export class TaskDetailComponent implements OnInit {
   mostrarSubtareas: boolean = false;
   nuevaSubtarea: string = '';
   etiquetas: EtiquetaTarea[] = [];
+  areas: Area[] = [];
+  editandoDescripcion = false;
+  descripcionEditada = '';
+  responsables: ResponsableTarea[] = [];
+  areasMap: Record<string, string> = {};
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -65,7 +78,9 @@ export class TaskDetailComponent implements OnInit {
     private messageService: MessageService,
     private statusTaskService: StatusTaskService,
     private statusEisenhowerService: StatusEisenhowerService,
-    private labelsTasksService: LabelsTasksService
+    private labelsTasksService: LabelsTasksService,
+    private areasService: AreasService,
+    private taskResponsibleService: TaskResponsibleService
   ) { }
 
   ngOnInit(): void {
@@ -76,8 +91,21 @@ export class TaskDetailComponent implements OnInit {
     this.mostrarSubtareas = this.tarea?.subtareas?.length > 0;
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
-      debugger
       this.etiquetas = et;
+      this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.tarea.idSucursal);
+
+    });
+
+    this.taskResponsibleService.responsables$.subscribe(responsable => {
+      this.responsables = responsable;
+      this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
+    });
+
+    this.areasService.areas$.subscribe(areas => {
+      this.areasMap = {};
+      areas.forEach(a => {
+        this.areasMap[a.id] = a.nombre;
+      });
     });
   }
 
@@ -126,15 +154,6 @@ export class TaskDetailComponent implements OnInit {
     this.tarea.idEisenhower = event.idEisenhower;
   }
 
-  toggleSubtareas() {
-    this.mostrarSubtareas = !this.mostrarSubtareas;
-
-    // Inicializar arreglo si viene undefined
-    if (!this.tarea.subtareas) {
-      this.tarea.subtareas = [];
-    }
-  }
-
   agregarSubtarea(texto: string) {
     this.tarea.subtareas = this.tarea.subtareas || [];
     this.tarea.subtareas.push({
@@ -180,4 +199,64 @@ export class TaskDetailComponent implements OnInit {
       this.showMessage('error', 'Error', 'No se pudo eliminar la tarea');
     }
   }
+
+  async toggleSubtareas() {
+
+    // Si están visibles y existen subtareas → preguntar
+    if (
+      this.mostrarSubtareas &&
+      this.tarea.subtareas &&
+      this.tarea.subtareas.length > 0
+    ) {
+
+      const result = await Swal.fire({
+        title: '¿Eliminar subtareas?',
+        text: 'Esta tarea tiene subtareas. ¿Deseas eliminarlas?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'No, conservar',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        customClass: {
+          container: 'swal-topmost'
+        }
+      });
+
+      // Si cancela → solo ocultar
+      if (!result.isConfirmed) {
+        this.mostrarSubtareas = false;
+        return;
+      }
+
+      // Si confirma → eliminar subtareas
+      this.tarea.subtareas = [];
+      this.mostrarSubtareas = false;
+      return;
+    }
+
+    // Mostrar subtareas normalmente
+    this.mostrarSubtareas = !this.mostrarSubtareas;
+
+    // Inicializar arreglo si no existe
+    if (!this.tarea.subtareas) {
+      this.tarea.subtareas = [];
+    }
+  }
+
+  editarDescripcion() {
+    this.editandoDescripcion = true;
+    this.descripcionEditada = this.tarea.descripcion || '';
+  }
+
+  cancelarEdicionDescripcion() {
+    this.editandoDescripcion = false;
+    this.descripcionEditada = '';
+  }
+
+  guardarDescripcion() {
+    this.tarea.descripcion = this.descripcionEditada;
+    this.editandoDescripcion = false;
+  }
+
 }

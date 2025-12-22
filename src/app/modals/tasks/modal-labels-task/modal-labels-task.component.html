@@ -1,90 +1,102 @@
 <p-dialog header="CREAR ETIQUETA" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '60vw'}"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
 
-    <!-- FORMULARIO REAL -->
-    <form #f="ngForm" (ngSubmit)="enviar(f)">
-        <div class="row align-items-center">
+  <!-- FORMULARIO REAL -->
+  <form #f="ngForm" (ngSubmit)="enviar(f)">
+    <div class="row align-items-center">
 
-            <!-- INPUT NOMBRE -->
-            <div class="col-md-6">
-                <p class="fw-bold mb-1">NOMBRE DE LA ETIQUETA</p>
+      <!-- INPUT NOMBRE -->
+      <div class="col-md-5">
+        <p class="fw-bold mb-1">NOMBRE DE LA ETIQUETA</p>
 
-                <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
-                    [(ngModel)]="nuevaEtiqueta.nombre" name="nombre" required minlength="3" maxlength="40"
-                    #nombreCtrl="ngModel" [ngClass]="{'p-invalid': nombreCtrl.invalid && nombreCtrl.touched}" />
+        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
+          [(ngModel)]="nuevaEtiqueta.nombre" name="nombre" required minlength="3" maxlength="40" #nombreCtrl="ngModel"
+          [ngClass]="{'p-invalid': nombreCtrl.invalid && nombreCtrl.touched}" />
+      </div>
 
-                <small *ngIf="nombreCtrl.errors?.['required'] && nombreCtrl.touched" class="p-error">
-                    Campo requerido.
-                </small>
-                <small *ngIf="nombreCtrl.errors?.['minlength'] && nombreCtrl.touched" class="p-error">
-                    Mínimo 3 caracteres.
-                </small>
+      <!-- DROPDOWN SUCURSAL -->
+      <div class="col-md-5">
+        <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
+
+        <p-dropdown [options]="sucursales" [(ngModel)]="nuevaEtiqueta.idSucursal" name="sucursal" [optionValue]="'id'"
+          optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+          placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}" (onChange)="onSucursalChange(nuevaEtiqueta.idSucursal!)">
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              <div>{{ selectedOption.nombre }}</div>
             </div>
-
-            <!-- COLOR PICKER -->
-            <div class="col-auto">
-                <p class="fw-bold mb-1">COLOR</p>
-
-                <p-colorPicker [(ngModel)]="nuevaEtiqueta.color" name="color" required #colorCtrl="ngModel"
-                    [ngClass]="{'p-invalid': colorCtrl.invalid && colorCtrl.touched}">
-                </p-colorPicker>
-
-                <small *ngIf="colorCtrl.errors?.['required'] && colorCtrl.touched" class="p-error">
-                    Selecciona un color.
-                </small>
+          </ng-template>
+          <ng-template let-dep pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div>{{ dep.nombre }}</div>
             </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
 
-            <!-- BOTON AGREGAR -->
-            <div class="col-auto mt-4 pt-2">
+      <!-- COLOR PICKER -->
+      <div class="col-md-2 text-end">
+        <p class="fw-bold mb-1">COLOR</p>
 
-                <button pButton type="submit" label="Agregar" [disabled]="f.invalid || cargando">
-                </button>
+        <input type="color" class="form-control form-control-color ms-auto" [(ngModel)]="nuevaEtiqueta.color"
+          name="color" required #colorCtrl="ngModel">
+      </div>
 
-            </div>
 
-        </div>
-    </form>
 
-    <!-- TABLA -->
-    <div class="mt-4" style="min-height: 300px;">
-        <p-table [value]="etiquetas" [tableStyle]="{ 'min-width': '50rem', 'min-height': '20rem' }">
+      <!-- BOTON AGREGAR -->
+      <div class="d-flex justify-content-end mt-3">
 
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Color</th>
-                    <!-- <th>Vista</th> -->
-                    <th>Eliminar</th>
-                </tr>
-            </ng-template>
+        <button pButton type="submit" label="Agregar" [disabled]="f.invalid || cargando">
+        </button>
 
-            <ng-template pTemplate="body" let-et>
-                <tr>
-                    <!-- NOMBRE -->
-                    <td>{{ et.nombre }}</td>
+      </div>
 
-                    <!-- COLOR PICKER (editable) -->
-                    <td>
-                        <p-colorPicker [(ngModel)]="et.color" (onChange)="actualizarColor(et)">
-                        </p-colorPicker>
-                    </td>
-
-                    <!-- VISTA DEL COLOR -->
-                    <!-- <td>
-                        <div [style.background]="et.color"
-                            style="width: 35px; height: 35px; border-radius: 6px; border: 1px solid #ccc;">
-                        </div>
-                    </td> -->
-
-                    <!-- BOTON ELIMINAR -->
-                    <td>
-                        <p-button icon="pi pi-trash" severity="danger" (onClick)="eliminarEtiqueta(et)">
-                        </p-button>
-                    </td>
-                </tr>
-            </ng-template>
-
-        </p-table>
     </div>
+  </form>
+
+  <!-- TABLA -->
+  <div class="mt-4" style="min-height: 300px;">
+    <p-table [value]="etiquetas" [tableStyle]="{ 'min-width': '50rem', 'min-height': '20rem' }">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Color</th>
+          <th>Eliminar</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-et>
+        <tr>
+          <!-- NOMBRE -->
+          <!-- <td>{{ et.nombre }}</td> -->
+          <td>
+            <input type="text" class="form-control" [(ngModel)]="et.nombre" [readonly]="!et.editando"
+              (click)="activarEdicion(et)" (blur)="guardarNombre(et)" (keydown.enter)="guardarNombre(et)"
+              style="height: 38px;" />
+          </td>
+
+
+          <!-- COLOR PICKER -->
+          <td>
+            <input type="color" [(ngModel)]="et.color" (change)="actualizarColor(et)"
+              class="form-control form-control-color">
+          </td>
+
+          <!-- BOTON ELIMINAR -->
+          <td>
+            <p-button icon="pi pi-trash" severity="danger" (onClick)="eliminarEtiqueta(et)">
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
 
 </p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>

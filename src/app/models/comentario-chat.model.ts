@@ -6,4 +6,7 @@ export interface Comentario {
   nombre: string;
   fecha: Date;
   imagenesEvidencia?: string[];
+
+  editando?: boolean;
+  comentarioEditado?: string;
 }

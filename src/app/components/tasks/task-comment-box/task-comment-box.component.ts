@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
+import Swal from 'sweetalert2';
 
 import { Comentario } from '../../../models/comentario-chat.model';
 import { Tarea } from '../../../models/tarea.model';
@@ -9,11 +10,12 @@ import { Usuario } from '../../../models/usuario.model';
 import { TareasService } from '../../../services/tareas.service';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 import { ModalVisorImagenesComponent } from '../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
+import { LinkifyPipe } from '../../../pipes/linkify.pipe';
 
 @Component({
   selector: 'app-task-comment-box',
   standalone: true,
-  imports: [FormsModule, CommonModule, ModalVisorImagenesComponent],
+  imports: [FormsModule, CommonModule, ModalVisorImagenesComponent, LinkifyPipe],
   templateUrl: './task-comment-box.component.html',
   styleUrl: './task-comment-box.component.scss'
 })
@@ -67,14 +69,14 @@ export class TaskCommentBoxComponent implements OnInit {
       const url = await this.firebaseStorageService.cargarImagenesEvidenciasTareas(this.imagenesComentario);
       comentario.imagenesEvidencia = [...url];
 
-      this.tarea.comentarios.push(comentario);
+      this.tarea.comentarios.unshift(comentario);
       await this.tareasService.update(this.tarea, this.tarea.id!);
 
       this.nuevoComentario = '';
       this.imagenesComentario = [];
       this.cdr.detectChanges();
     } finally {
-      this.enviando = false;  // 🔓 desbloquea incluso si hubo error
+      this.enviando = false;
     }
   }
 
@@ -91,4 +93,82 @@ export class TaskCommentBoxComponent implements OnInit {
     this.mostrarModalImagen = true;
     this.urlImagen = url;
   }
+
+  onPaste(event: ClipboardEvent) {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    Array.from(items).forEach(item => {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          this.imagenesComentario.push(file);
+        }
+      }
+    });
+
+    event.preventDefault();
+  }
+
+  async eliminarComentario(comentario: Comentario) {
+
+    const result = await Swal.fire({
+      title: '¿Eliminar comentario?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      this.tarea.comentarios = this.tarea.comentarios.filter(c => c !== comentario);
+
+      await this.tareasService.update(this.tarea, this.tarea.id!);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Comentario eliminado',
+        timer: 1200,
+        showConfirmButton: false,
+        customClass: {
+          container: 'swal-topmost'
+        }
+      });
+
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el comentario'
+      });
+    }
+  }
+
+  editarComentario(c: any) {
+    c.editando = true;
+    c.comentarioEditado = c.comentario;
+  }
+
+  cancelarEdicion(c: any) {
+    c.editando = false;
+    c.comentarioEditado = '';
+  }
+
+  guardarEdicion(c: any) {
+    if (!c.comentarioEditado?.trim()) return;
+
+    c.comentario = c.comentarioEditado;
+    c.editando = false;
+
+    this.tareasService.update(this.tarea, this.tarea.id!);
+  }
+
 }

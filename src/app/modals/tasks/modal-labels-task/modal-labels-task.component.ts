@@ -1,14 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ColorPickerModule } from 'primeng/colorpicker';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import Swal from 'sweetalert2';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { Sucursal } from '../../../models/sucursal.model';
+import { BranchesService } from '../../../services/branches.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-modal-labels-task',
@@ -19,33 +25,59 @@ import Swal from 'sweetalert2';
     CommonModule,
     ButtonModule,
     TableModule,
-    ColorPickerModule
+    ColorPickerModule,
+    DropdownModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './modal-labels-task.component.html',
   styleUrl: './modal-labels-task.component.scss'
 })
-export class ModalLabelsTaskComponent {
+export class ModalLabelsTaskComponent implements OnDestroy, OnInit {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  idAreaSeleccionada: any;
+  sucursales: Sucursal[] = [];
+  idSucursalSeleccionada: string | null = null;
+
+  private subs = new Subscription();
 
   nuevaEtiqueta = {
     nombre: '',
-    color: ''
+    color: '',
+    idSucursal: null
   };
 
   etiquetas: EtiquetaTarea[] = [];
-
   cargando: boolean = false;
 
-  constructor(private labelsTasksService: LabelsTasksService) { }
+  constructor(
+    private labelsTasksService: LabelsTasksService,
+    private branchesService: BranchesService,
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
-    this.labelsTasksService.etiquetas$.subscribe(et => {
-      this.etiquetas = et;
-    });
+    this.subs.add(
+      this.branchesService.get().subscribe(sucursales => {
+        this.sucursales = sucursales;
+      })
+    );
+
+    this.subs.add(
+      this.labelsTasksService.etiquetas$.subscribe(etiquetas => {
+        this.etiquetas = etiquetas;
+        this.aplicarFiltroSucursal();
+      })
+    );
+
   }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
 
   onHide = () => this.closeEvent.emit(false);
 
@@ -54,11 +86,11 @@ export class ModalLabelsTaskComponent {
 
     this.cargando = true;
 
-    const id = crypto.randomUUID();
+    // const id = crypto.randomUUID();
+
 
     const nueva: EtiquetaTarea = {
-      id,
-      idArea: this.idAreaSeleccionada ?? '',
+      idSucursal: this.nuevaEtiqueta.idSucursal!,
       nombre: this.nuevaEtiqueta.nombre,
       color: this.nuevaEtiqueta.color,
       eliminado: false
@@ -67,19 +99,21 @@ export class ModalLabelsTaskComponent {
     try {
       await this.labelsTasksService.create(nueva);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Etiqueta creada',
-        text: `La etiqueta "${nueva.nombre}" se creó correctamente`,
-        timer: 1500,
-        showConfirmButton: false,
-        customClass: {
-          container: 'swal-topmost'
-        }
-      });
+      this.showMessage('success', 'Success', 'Enviado correctamente');
+
+      // Swal.fire({
+      //   icon: 'success',
+      //   title: 'Etiqueta creada',
+      //   text: `La etiqueta "${nueva.nombre}" se creó correctamente`,
+      //   timer: 1500,
+      //   showConfirmButton: false,
+      //   customClass: {
+      //     container: 'swal-topmost'
+      //   }
+      // });
 
       form.resetForm();
-      this.nuevaEtiqueta = { nombre: '', color: '' };
+      this.nuevaEtiqueta = { nombre: '', color: '', idSucursal: this.nuevaEtiqueta.idSucursal };
 
     } catch (err) {
       console.error(err);
@@ -123,6 +157,34 @@ export class ModalLabelsTaskComponent {
       { color: et.color },
       et.id
     );
+  }
+
+  onSucursalChange(idSucursal: string) {
+    this.idSucursalSeleccionada = idSucursal;
+    this.aplicarFiltroSucursal();
+  }
+
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+  private aplicarFiltroSucursal() {
+    this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  }
+
+  activarEdicion(etiqueta: any) {
+    etiqueta.editando = true;
+  }
+
+  async guardarNombre(etiqueta: any) {
+    etiqueta.editando = false;
+
+    if (!etiqueta.nombre || etiqueta.nombre.trim().length < 3) {
+      return;
+    }
+
+    await this.labelsTasksService.update(etiqueta, etiqueta.id);
+    this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
 }

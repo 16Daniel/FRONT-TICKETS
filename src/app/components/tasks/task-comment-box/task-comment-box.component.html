@@ -1,59 +1,103 @@
 <div class="contenedor">
 
-    <h3 class="titulo">HISTÓRICO / COMENTARIOS</h3>
+  <h3 class="titulo">HISTÓRICO / COMENTARIOS</h3>
 
-    <!-- Lista de comentarios con scroll -->
-    <div class="lista-comentarios">
+  <!-- Lista de comentarios con scroll -->
+  <div class="lista-comentarios">
 
-        <div *ngIf="tarea.comentarios.length === 0" class="sin-comentarios">
-            No hay comentarios aún.
+    <div *ngIf="tarea.comentarios.length === 0" class="sin-comentarios">
+      No hay comentarios aún.
+    </div>
+
+    <div class="tarjeta" *ngFor="let c of tarea.comentarios">
+      <div class="tarjeta-encabezado">
+        <div class="nombre">
+          <strong>{{ c.nombre }}</strong>
         </div>
 
-        <div class="tarjeta" *ngFor="let c of tarea.comentarios">
-            <div class="tarjeta-encabezado">
-                <div class="nombre"><strong>{{ c.nombre }}</strong></div>
-                <div class="fecha">{{ c.fecha | date:'dd/MM/yyyy, hh:mm a' }}</div>
-            </div>
+        <div class="d-flex align-items-center gap-2">
+          <div class="fecha">
+            {{ c.fecha | date:'dd/MM/yyyy, hh:mm a' }}
+          </div>
 
-            <div class="tarjeta-cuerpo">
-                {{ c.comentario }}
+          <button class="btn-editar-comentario" (click)="editarComentario(c)">
+            ✏️
+          </button>
 
-                <!-- Mostrar imágenes del comentario -->
-                <div *ngIf="c.imagenesEvidencia?.length" class="imagenes">
-                    <img *ngFor="let img of c.imagenesEvidencia" [src]="img" class="imagen-comentario"
-                        (click)="verImagen(img)">
-                </div>
-            </div>
+          <button class="btn-eliminar-comentario" (click)="eliminarComentario(c)">
+            🗑️
+          </button>
         </div>
+      </div>
+
+
+      <div class="tarjeta-cuerpo">
+
+        <!-- MODO VISTA -->
+        <div *ngIf="!c.editando">
+          <div [innerHTML]="c.comentario | linkify"></div>
+
+          <div *ngIf="c.imagenesEvidencia?.length" class="imagenes">
+            <img *ngFor="let img of c.imagenesEvidencia" [src]="img" class="imagen-comentario" (click)="verImagen(img)">
+          </div>
+        </div>
+
+        <!-- MODO EDICIÓN -->
+        <div *ngIf="c.editando" class="edicion-comentario">
+
+          <textarea class="textarea-editar" [(ngModel)]="c.comentarioEditado" rows="4">
+    </textarea>
+
+          <div class="acciones-edicion">
+            <button class="btn-guardar" (click)="guardarEdicion(c)">
+              💾 Guardar
+            </button>
+
+            <button class="btn-cancelar" (click)="cancelarEdicion(c)">
+              ✖ Cancelar
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
 
     </div>
 
-    <!-- Caja fija abajo -->
-    <div class="ingresar-comentario">
+  </div>
 
-        <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..."
-            rows="3"></textarea>
+  <!-- Caja fija abajo -->
+  <div class="ingresar-comentario">
 
-        <div class="acciones">
-            <input type="file" accept="image/*" multiple (change)="cargarImagenComentario($event)" hidden #fileInput>
+    <!-- <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..."
+            rows="3"></textarea> -->
 
-            <button class="btn-adjuntar" (click)="fileInput.click()">
-                📎 Imágenes
-                <span *ngIf="imagenesComentario.length > 0" class="badge">
-                    {{ imagenesComentario.length }}
-                </span>
-            </button>
+    <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..." rows="3"
+      (paste)="onPaste($event)">
+    </textarea>
 
-            <button class="btn-enviar" (click)="enviarComentario()" [disabled]="enviando">
-                Enviar
-            </button>
 
-        </div>
+    <div class="acciones">
+      <input type="file" accept="image/*" multiple (change)="cargarImagenComentario($event)" hidden #fileInput>
+
+      <button class="btn-adjuntar" (click)="fileInput.click()">
+        📎 Imágenes
+        <span *ngIf="imagenesComentario.length > 0" class="badge">
+          {{ imagenesComentario.length }}
+        </span>
+      </button>
+
+      <button class="btn-enviar" (click)="enviarComentario()" [disabled]="enviando">
+        Enviar
+      </button>
 
     </div>
+
+  </div>
 
 
 </div>
 
 <app-modal-visor-imagenes *ngIf="mostrarModalImagen" [mostrarModal]="mostrarModalImagen"
-    (closeEvent)="mostrarModalImagen = false" [imagenUrl]="urlImagen"></app-modal-visor-imagenes>
+  (closeEvent)="mostrarModalImagen = false" [imagenUrl]="urlImagen"></app-modal-visor-imagenes>
