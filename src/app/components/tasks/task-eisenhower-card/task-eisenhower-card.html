@@ -11,7 +11,7 @@
 
     <div class="row mt-1">
 <div class="col-4"><span class="fecha">CREACIÓN: {{ tarea.fecha | date:'dd/MM/yyyy' }}</span></div>
-<div class="col-4"> <div class="estatus-{{ tarea.idEstatus }} rounded-3" style="width: auto;">{{obtenerNombreEstatus(tarea.idEstatus)}}</div> </div>
+<div class="col-4 text-center"> <div class="estatus-{{ tarea.idEstatus }} rounded-3" style="width: auto;">{{obtenerNombreEstatus(tarea.idEstatus)}}</div> </div>
 <div class="col-4"><span class="fecha">FINALIZAR: {{ tarea.deathline | date:'dd/MM/yyyy' }}</span></div>
 </div>
 
