@@ -18,7 +18,7 @@ export class Tarea {
     subtareas?: { terminado: boolean, titulo: string }[] = [];
     porcentaje: number = 0;
     deathline: Date | null = null;
-    responsables: ResponsableTarea[] = []
+    idsResponsables: string[] = []
     eliminado: boolean = false;
     idEtiqueta: string = '';
 }

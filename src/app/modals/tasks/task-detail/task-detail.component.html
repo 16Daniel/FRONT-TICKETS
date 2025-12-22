@@ -86,10 +86,11 @@
             <div class="col-md-4">
               <label class="fw-bold d-block mb-1">RESPONSABLES</label>
 
-              <p-multiSelect [options]="responsables" [(ngModel)]="tarea.responsables" name="responsables"
-                optionLabel="nombre" display="chip" [filter]="true" filterBy="nombre"
+              <p-multiSelect [options]="responsables" [(ngModel)]="tarea.idsResponsables" name="idsResponsables"
+                optionLabel="nombre" optionValue="id" display="chip" [filter]="true" filterBy="nombre"
                 placeholder="SELECCIONA RESPONSABLES" [style]="{ width: '250px' }">
-                <!-- ITEM -->
+
+                <!-- ITEM EN LISTA -->
                 <ng-template let-item pTemplate="item">
                   <div class="flex align-items-center gap-2">
                     <span>{{ item.nombre }}</span>
@@ -99,12 +100,14 @@
                   </div>
                 </ng-template>
 
-                <!-- SELECTED -->
+                <!-- ITEM SELECCIONADO -->
                 <ng-template let-item pTemplate="selectedItem">
                   <span>{{ item.nombre }}</span>
                 </ng-template>
+
               </p-multiSelect>
             </div>
+
           </div>
 
           <div class="row mb3">

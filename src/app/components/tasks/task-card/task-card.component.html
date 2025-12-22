@@ -32,6 +32,13 @@
     <span class="estatus estatus-{{ tarea.idEstatus }}"></span>
   </div>
 
+  <div class="avatars-container" *ngIf="tarea.idsResponsables?.length">
+    <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30" class="avatar-item"
+      pTooltip="{{r.nombre }}">
+    </ngx-avatars>
+  </div>
+
+
 
   <!-- PROGRESO -->
   <div *ngIf="tarea.porcentaje !== undefined" class="mt-3">

@@ -9,11 +9,15 @@ import { Tarea } from '../../../models/tarea.model';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { AvatarModule } from 'ngx-avatars';
+import { TooltipModule } from 'primeng/tooltip';
+import { TaskResponsibleService } from '../../../services/task-responsible.service';
+import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, DragDropModule, NgxChartsModule],
+  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule],
   providers: [MessageService],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss'
@@ -23,16 +27,23 @@ export class TaskCardComponent implements OnInit {
   @Input() tarea!: Tarea;
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
   etiquetas: EtiquetaTarea[] = [];
+  responsables: ResponsableTarea[] = [];
 
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
-    private labelsTasksService: LabelsTasksService
+    private labelsTasksService: LabelsTasksService,
+    private taskResponsibleService: TaskResponsibleService
   ) { }
 
   ngOnInit(): void {
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetas = et;
+    });
+
+    this.taskResponsibleService.responsables$.subscribe(responsable => {
+      this.responsables = responsable;
+      this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
     });
   }
 
@@ -129,6 +140,12 @@ export class TaskCardComponent implements OnInit {
       (fin.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24);
 
     return Math.max(Math.ceil(diff), 0);
+  }
+
+  getResponsablesDeTarea(tarea: Tarea) {
+    return this.responsables.filter(r =>
+      tarea.idsResponsables?.includes(r.id!)
+    );
   }
 
 }
