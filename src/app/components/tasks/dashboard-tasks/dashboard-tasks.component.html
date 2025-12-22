@@ -40,34 +40,28 @@
     </div>
     <div class="col-md-4">
       <p class="fw-bold mb-1">RESPONSABLES</p>
-      <p-dropdown [options]="etiquetasFiltradas" [(ngModel)]="etiquetaSeleccionada" name="etiquetas" optionValue="id"
-        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS" [style]="{width:'100%'}"
-        (onChange)="onEtiquetaChange()" [showClear]="true">
 
+      <p-dropdown [options]="responsablesFiltrados" [(ngModel)]="responsableSeleccionado" name="responsables"
+        optionValue="id" optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="RESPONSABLES"
+        [style]="{ width: '100%' }" (onChange)="onResponsableChange()" [showClear]="true">
+
+        <!-- ITEM SELECCIONADO -->
         <ng-template pTemplate="selectedItem" let-selected>
           <div class="flex align-items-center gap-2" *ngIf="selected">
-
-            <!-- círculo de color -->
-            <span class="label-dot" [style.background]="selected.color">
-            </span>
-
             <span>{{ selected.nombre }}</span>
           </div>
         </ng-template>
 
+        <!-- ITEM LISTA -->
         <ng-template pTemplate="item" let-item>
           <div class="flex align-items-center gap-2">
-
-            <!-- círculo de color -->
-            <span class="label-dot" [style.background]="item.color">
-            </span>
-
             <span>{{ item.nombre }}</span>
           </div>
         </ng-template>
 
       </p-dropdown>
     </div>
+
   </div>
 
   <p></p>
@@ -78,11 +72,11 @@
       <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-primary" (click)="abrirModalAgregarTarea()">
       </p-button>
 
-      <p-button label="ETIQUETAS" icon="pi pi-tags" styleClass="p-button-danger"
-        (click)="mostrarModalEtiquetas = true">
+      <p-button label="ETIQUETAS" icon="pi pi-tags" styleClass="p-button-danger" (click)="mostrarModalEtiquetas = true">
       </p-button>
 
-      <p-button label="RESPONSABLES" icon="pi pi-users" styleClass="p-button-secondary"></p-button>
+      <p-button label="RESPONSABLES" icon="pi pi-users" styleClass="p-button-secondary"
+        (click)="mostrarModalResponsables = true"></p-button>
     </div>
 
   </div>
@@ -147,6 +141,10 @@
 <app-modal-labels-task *ngIf="mostrarModalEtiquetas" [mostrarModal]="mostrarModalEtiquetas"
   (closeEvent)="mostrarModalEtiquetas = false">
 </app-modal-labels-task>
+
+<app-modal-task-responsible *ngIf="mostrarModalResponsables" [mostrarModal]="mostrarModalResponsables"
+  (closeEvent)="mostrarModalEtiquetas = false">
+</app-modal-task-responsible>
 
 <app-new-task *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
   (closeEvent)="mostrarModalNuevaTarea = false">

@@ -19,6 +19,9 @@ import { Usuario } from '../../../models/usuario.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { ButtonModule } from 'primeng/button';
+import { ModalTaskResponsibleComponent } from '../../../modals/tasks/modal-task-responsible/modal-task-responsible.component';
+import { TaskResponsibleService } from '../../../services/task-responsible.service';
+import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 
 @Component({
   selector: 'app-dashboard-tasks',
@@ -33,7 +36,8 @@ import { ButtonModule } from 'primeng/button';
     DropdownModule,
     FormsModule,
     ModalLabelsTaskComponent,
-    ButtonModule
+    ButtonModule,
+    ModalTaskResponsibleComponent
   ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks.component.html',
@@ -42,6 +46,7 @@ import { ButtonModule } from 'primeng/button';
 export class DashboardTasksComponent implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
   mostrarModalEtiquetas: boolean = false;
+  mostrarModalResponsables: boolean = false;
 
   sucursales: Sucursal[] = [];
   idSucursalSeleccionada: string = '';
@@ -52,12 +57,17 @@ export class DashboardTasksComponent implements OnInit {
   etiquetaSeleccionada: string = '';
   allTasks: Tarea[] = [];
 
+  responsablesTodos: ResponsableTarea[] = [];
+  responsablesFiltrados: ResponsableTarea[] = [];
+  responsableSeleccionado: string = '';
+
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
-    private labelsTasksService: LabelsTasksService
+    private labelsTasksService: LabelsTasksService,
+    private raskResponsibleService: TaskResponsibleService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
@@ -70,7 +80,11 @@ export class DashboardTasksComponent implements OnInit {
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetasTodas = et;
       this.filtrarEtiquetas();
-      // this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
+    });
+
+    this.raskResponsibleService.responsables$.subscribe(responsable => {
+      this.responsablesTodos = responsable;
+      this.filtrarResponsables();
     });
   }
 
@@ -205,6 +219,36 @@ export class DashboardTasksComponent implements OnInit {
 
     this.etiquetasFiltradas =
       this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  }
+
+  filtrarResponsables(): void {
+    if (!this.idSucursalSeleccionada) {
+      this.responsablesFiltrados = this.responsablesTodos;
+      return;
+    }
+
+    this.responsablesFiltrados =
+      this.raskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  }
+
+  onResponsableChange() {
+
+    if (!this.responsableSeleccionado || this.responsableSeleccionado === '') {
+      this.initData();
+      return;
+    }
+
+    const filtradas = this.allTasks.filter(t =>
+      Array.isArray(t.responsables) &&
+      t.responsables.some(r => r.id === this.responsableSeleccionado)
+    );
+
+    this.toDo = filtradas.filter(x => x.idEstatus === '1');
+    this.working = filtradas.filter(x => x.idEstatus === '2');
+    this.check = filtradas.filter(x => x.idEstatus === '3');
+    this.done = filtradas.filter(x => x.idEstatus === '4');
+
+    this.cdr.detectChanges();
   }
 
 }

@@ -1,4 +1,5 @@
 import { Comentario } from "./comentario-chat.model";
+import { ResponsableTarea } from "./responsable-tarea.model";
 
 export class Tarea {
     id?: string;
@@ -17,7 +18,7 @@ export class Tarea {
     subtareas?: { terminado: boolean, titulo: string }[] = [];
     porcentaje: number = 0;
     deathline: Date | null = null;
-    responsables: any[] = []
+    responsables: ResponsableTarea[] = []
     eliminado: boolean = false;
     idEtiqueta: string = '';
 }

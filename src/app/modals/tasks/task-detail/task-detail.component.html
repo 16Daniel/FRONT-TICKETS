@@ -208,11 +208,8 @@
 
         </div>
 
+        <!-- SUBTAREAS -->
         <div class="d-flex justify-content-start mt-4 mb-3">
-          <!-- <button type="button" class="btn btn-outline-secondary d-flex align-items-center"
-                        (click)="toggleSubtareas()" [disabled]="mostrarSubtareas">
-                        <i class='bx bx-check-square bx-sm me-2'></i> SUBTAREAS
-                    </button> -->
           <button type="button" class="btn btn-outline-secondary d-flex align-items-center" (click)="toggleSubtareas()">
             <i class='bx bx-check-square bx-sm me-2'></i> SUBTAREAS
           </button>
@@ -223,6 +220,7 @@
           (subtareaAgregada)="agregarSubtarea($event)">
         </app-subtasks-box>
 
+        <!-- BOTONES -->
         <div class="d-flex justify-content-between mt-3">
 
           <button type="button" class="btn btn-danger p-3 d-flex align-items-center" (click)="eliminarTarea(tarea)">
@@ -240,6 +238,7 @@
       </form>
     </div>
 
+    <!-- COMENTARIOS -->
     <div style="width: 40%; border-left: 1px solid #ddd; padding-left: 10px; overflow-y: auto;">
       <app-task-comment-box [tarea]="tarea"></app-task-comment-box>
     </div>
