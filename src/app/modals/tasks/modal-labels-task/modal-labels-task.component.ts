@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -10,10 +10,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import Swal from 'sweetalert2';
-import { Area } from '../../../models/area.model';
-import { AreasService } from '../../../services/areas.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { Sucursal } from '../../../models/sucursal.model';
+import { BranchesService } from '../../../services/branches.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-modal-labels-task',
@@ -32,17 +33,19 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './modal-labels-task.component.html',
   styleUrl: './modal-labels-task.component.scss'
 })
-export class ModalLabelsTaskComponent {
+export class ModalLabelsTaskComponent implements OnDestroy, OnInit {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  areas: Area[] = [];
-  idAreaSeleccionada: string | null = null;
+  sucursales: Sucursal[] = [];
+  idSucursalSeleccionada: string | null = null;
+
+  private subs = new Subscription();
 
   nuevaEtiqueta = {
     nombre: '',
     color: '',
-    idArea: null
+    idSucursal: null
   };
 
   etiquetas: EtiquetaTarea[] = [];
@@ -50,18 +53,31 @@ export class ModalLabelsTaskComponent {
 
   constructor(
     private labelsTasksService: LabelsTasksService,
-    private areasService: AreasService,
+    private branchesService: BranchesService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService
   ) { }
 
   ngOnInit() {
-    this.areasService.areas$.subscribe(areas => this.areas = areas);
-    this.labelsTasksService.etiquetas$.subscribe(() => {
-      this.aplicarFiltroArea();
-    });
+    this.subs.add(
+      this.branchesService.get().subscribe(sucursales => {
+        this.sucursales = sucursales;
+      })
+    );
+
+    this.subs.add(
+      this.labelsTasksService.etiquetas$.subscribe(etiquetas => {
+        this.etiquetas = etiquetas;
+        this.aplicarFiltroSucursal();
+      })
+    );
 
   }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
 
   onHide = () => this.closeEvent.emit(false);
 
@@ -70,11 +86,11 @@ export class ModalLabelsTaskComponent {
 
     this.cargando = true;
 
-    const id = crypto.randomUUID();
+    // const id = crypto.randomUUID();
+
 
     const nueva: EtiquetaTarea = {
-      id,
-      idArea: this.nuevaEtiqueta.idArea!,
+      idSucursal: this.nuevaEtiqueta.idSucursal!,
       nombre: this.nuevaEtiqueta.nombre,
       color: this.nuevaEtiqueta.color,
       eliminado: false
@@ -97,7 +113,7 @@ export class ModalLabelsTaskComponent {
       // });
 
       form.resetForm();
-      this.nuevaEtiqueta = { nombre: '', color: '', idArea: this.nuevaEtiqueta.idArea };
+      this.nuevaEtiqueta = { nombre: '', color: '', idSucursal: this.nuevaEtiqueta.idSucursal };
 
     } catch (err) {
       console.error(err);
@@ -143,17 +159,17 @@ export class ModalLabelsTaskComponent {
     );
   }
 
-  onAreaChange(idArea: string) {
-    this.idAreaSeleccionada = idArea;
-    this.aplicarFiltroArea();
+  onSucursalChange(idSucursal: string) {
+    this.idSucursalSeleccionada = idSucursal;
+    this.aplicarFiltroSucursal();
   }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  private aplicarFiltroArea() {
-    this.etiquetas = this.labelsTasksService.filtrarPorArea(this.idAreaSeleccionada);
+  private aplicarFiltroSucursal() {
+    this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
   }
 
   activarEdicion(etiqueta: any) {

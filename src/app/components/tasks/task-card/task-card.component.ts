@@ -83,43 +83,37 @@ export class TaskCardComponent implements OnInit {
     return et ? et.nombre : '';
   }
 
-  getPorcentajeRestante(tarea: Tarea): number {
-    if (!tarea.fecha || !tarea.deathline) return 0;
-
-    const inicio = new Date(tarea.fecha).getTime();
-    const fin = new Date(tarea.deathline).getTime();
-    const ahora = Date.now();
-
-    const total = fin - inicio;
-    if (total <= 0) return 0;
-
-    const restante = Math.max(fin - ahora, 0);
-
-    return Math.round((restante / total) * 100);
-  }
-
   getPorcentajeUsado(tarea: Tarea): number {
     if (!tarea.fecha || !tarea.deathline) return 0;
 
-    // Normalizamos a inicio de día
     const inicio = new Date(tarea.fecha);
     inicio.setHours(0, 0, 0, 0);
 
-    const fin = new Date(tarea.deathline);
+    const fin = this.parseFechaLocal(tarea.deathline);
     fin.setHours(0, 0, 0, 0);
 
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    const totalDias = (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24);
+    const totalDias =
+      (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24);
+
     if (totalDias <= 0) return 100;
 
     const diasUsados = Math.min(
-      Math.max((hoy.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24), 0),
+      Math.max(
+        (hoy.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24),
+        0
+      ),
       totalDias
     );
 
     return Math.round((diasUsados / totalDias) * 100);
+  }
+
+  parseFechaLocal(fecha: any): Date {
+    const [year, month, day] = fecha.split('-').map(Number);
+    return new Date(year, month - 1, day);
   }
 
   getDiasRestantes(tarea: Tarea): number {
@@ -128,13 +122,13 @@ export class TaskCardComponent implements OnInit {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    const fin = new Date(tarea.deathline);
+    const fin = this.parseFechaLocal(tarea.deathline);
     fin.setHours(0, 0, 0, 0);
 
-    const diff = (fin.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24);
+    const diff =
+      (fin.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24);
 
     return Math.max(Math.ceil(diff), 0);
   }
-
 
 }

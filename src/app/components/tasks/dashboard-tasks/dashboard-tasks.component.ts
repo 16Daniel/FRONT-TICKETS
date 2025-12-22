@@ -18,6 +18,7 @@ import { BranchesService } from '../../../services/branches.service';
 import { Usuario } from '../../../models/usuario.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-dashboard-tasks',
@@ -31,7 +32,8 @@ import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
     TaskDetailComponent,
     DropdownModule,
     FormsModule,
-    ModalLabelsTaskComponent
+    ModalLabelsTaskComponent,
+    ButtonModule
   ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks.component.html',
@@ -44,7 +46,9 @@ export class DashboardTasksComponent implements OnInit {
   sucursales: Sucursal[] = [];
   idSucursalSeleccionada: string = '';
   usuario: Usuario;
-  etiquetas: EtiquetaTarea[] = [];
+  // etiquetas: EtiquetaTarea[] = [];
+  etiquetasTodas: EtiquetaTarea[] = [];
+  etiquetasFiltradas: EtiquetaTarea[] = [];
   etiquetaSeleccionada: string = '';
   allTasks: Tarea[] = [];
 
@@ -64,7 +68,9 @@ export class DashboardTasksComponent implements OnInit {
     this.obtenerSucursales();
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
-      this.etiquetas = et;
+      this.etiquetasTodas = et;
+      this.filtrarEtiquetas();
+      // this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
     });
   }
 
@@ -141,7 +147,12 @@ export class DashboardTasksComponent implements OnInit {
   initData() {
     this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
 
-      this.allTasks = tareas;
+      this.allTasks = tareas.filter(x =>
+        x.idEstatus == '1'
+        || x.idEstatus == '2'
+        || x.idEstatus == '3'
+        || x.idEstatus == '4'
+      );
 
       this.toDo = tareas.filter(x => x.idEstatus == '1');
       this.working = tareas.filter(x => x.idEstatus == '2');
@@ -163,6 +174,8 @@ export class DashboardTasksComponent implements OnInit {
 
   onSucursalChange() {
     this.initData();
+    this.filtrarEtiquetas();
+
   }
 
   onEtiquetaChange() {
@@ -182,6 +195,16 @@ export class DashboardTasksComponent implements OnInit {
     this.done = filtradas.filter(x => x.idEstatus == '4');
 
     this.cdr.detectChanges();
+  }
+
+  filtrarEtiquetas(): void {
+    if (!this.idSucursalSeleccionada) {
+      this.etiquetasFiltradas = this.etiquetasTodas;
+      return;
+    }
+
+    this.etiquetasFiltradas =
+      this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
   }
 
 }

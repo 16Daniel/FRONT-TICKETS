@@ -21,9 +21,17 @@
 
   <!-- META -->
   <div class="meta">
-    <span class="fecha">{{ tarea.fecha | date:'dd/MM/yyyy' }}</span>
+    <span class="fecha">
+      {{ tarea.fecha | date:'dd/MM/yyyy' }}
+
+      <ng-container *ngIf="tarea.deathline">
+        · ⏰ {{ tarea.deathline | date:'dd/MM/yyyy' }}
+      </ng-container>
+    </span>
+
     <span class="estatus estatus-{{ tarea.idEstatus }}"></span>
   </div>
+
 
   <!-- PROGRESO -->
   <div *ngIf="tarea.porcentaje !== undefined" class="mt-3">

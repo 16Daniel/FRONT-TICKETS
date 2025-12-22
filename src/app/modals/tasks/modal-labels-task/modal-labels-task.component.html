@@ -6,7 +6,7 @@
     <div class="row align-items-center">
 
       <!-- INPUT NOMBRE -->
-      <div class="col-md-6">
+      <div class="col-md-5">
         <p class="fw-bold mb-1">NOMBRE DE LA ETIQUETA</p>
 
         <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
@@ -14,33 +14,38 @@
           [ngClass]="{'p-invalid': nombreCtrl.invalid && nombreCtrl.touched}" />
       </div>
 
-      <!-- DROPDOWN ÁREAS -->
-      <div class="col-md-6">
-        <p class="fw-bold mb-1">ÁREA</p>
+      <!-- DROPDOWN SUCURSAL -->
+      <div class="col-md-5">
+        <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
 
-        <p-dropdown [options]="areas" optionLabel="nombre" optionValue="id" placeholder="SELECCIONA UN ÁREA"
-          [(ngModel)]="nuevaEtiqueta.idArea" name="idArea" required #areaCtrl="ngModel"
-          (onChange)="onAreaChange($event.value)" [style]="{ width: '100%', height: '48px' }"
-          [ngClass]="{ 'p-invalid': areaCtrl.invalid && areaCtrl.touched }">
+        <p-dropdown [options]="sucursales" [(ngModel)]="nuevaEtiqueta.idSucursal" name="sucursal" [optionValue]="'id'"
+          optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
+          placeholder="SELECCIONAR SUCURSAL / DEPARTAMENTO" [style]="{width:'100%'}" (onChange)="onSucursalChange(nuevaEtiqueta.idSucursal!)">
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              <div>{{ selectedOption.nombre }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-dep pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div>{{ dep.nombre }}</div>
+            </div>
+          </ng-template>
         </p-dropdown>
       </div>
 
-
       <!-- COLOR PICKER -->
-      <div class="col-auto">
+      <div class="col-md-2 text-end">
         <p class="fw-bold mb-1">COLOR</p>
 
-        <input type="color" class="form-control form-control-color" [(ngModel)]="nuevaEtiqueta.color" name="color"
-          required #colorCtrl="ngModel">
-
-        <small *ngIf="colorCtrl.errors?.['required'] && colorCtrl.touched" class="p-error">
-          Selecciona un color.
-        </small>
+        <input type="color" class="form-control form-control-color ms-auto" [(ngModel)]="nuevaEtiqueta.color"
+          name="color" required #colorCtrl="ngModel">
       </div>
 
 
+
       <!-- BOTON AGREGAR -->
-      <div class="col-auto mt-4 pt-2">
+      <div class="d-flex justify-content-end mt-3">
 
         <button pButton type="submit" label="Agregar" [disabled]="f.invalid || cargando">
         </button>

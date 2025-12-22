@@ -1,6 +1,6 @@
 export interface EtiquetaTarea {
     id?: string;
-    idArea: string;
+    idSucursal: string;
     nombre: string;
     color: string;
     eliminado: boolean;

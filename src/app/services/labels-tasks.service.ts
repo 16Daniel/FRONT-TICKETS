@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { EtiquetaTarea } from '../models/etiqueta-tarea.model';
 
 import {
+  addDoc,
   collection,
   doc,
   Firestore,
@@ -54,15 +55,10 @@ export class LabelsTasksService {
     });
   }
 
-  async create(etiqueta: EtiquetaTarea): Promise<void> {
-    const documentRef = doc(this.firestore, `${this.pathName}/${etiqueta.id}`);
-    const snapshot = await getDoc(documentRef);
-
-    if (snapshot.exists()) {
-      throw new Error(`La etiqueta con id ${etiqueta.id} ya existe.`);
-    }
-
-    await setDoc(documentRef, etiqueta);
+  async create(etiqueta: EtiquetaTarea) {
+    const ref = collection(this.firestore, this.pathName);
+    const docRef = await addDoc(ref, etiqueta);
+    return docRef.id;
   }
 
   async update(etiqueta: Partial<EtiquetaTarea>, idEtiqueta: string): Promise<void> {
@@ -97,11 +93,11 @@ export class LabelsTasksService {
     }
   }
 
-  public filtrarPorArea(idArea: string | null): EtiquetaTarea[] {
-    if (!idArea) return [];
+  public filtrarPorSucursal(idSucursal: string | null): EtiquetaTarea[] {
+    if (!idSucursal) return [];
 
     return this._etiquetas.filter(
-      et => et.idArea === idArea && et.eliminado === false
+      et => et.idSucursal === idSucursal && et.eliminado === false
     );
   }
 

@@ -1,56 +1,93 @@
-<div class="d-flex align-items-center gap-2">
+<div class="row align-items-center">
 
-  <!-- <label class="fw-bold d-block mb-1">FILTRAR POR SUCURSAL</label> -->
-  <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" name="sucursal" [optionValue]="'id'"
-    optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
-    [style]="{width:'260px'}" required="true" (onChange)="onSucursalChange()">
-  </p-dropdown>
+  <div class="row">
+    <div class="col-md-4">
+      <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
+      <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" name="sucursal" [optionValue]="'id'"
+        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
+        [style]="{width:'100%'}" required="true" (onChange)="onSucursalChange()">
+      </p-dropdown>
+    </div>
+    <div class="col-md-4">
+      <p class="fw-bold mb-1">ETIQUETAS</p>
+      <p-dropdown [options]="etiquetasFiltradas" [(ngModel)]="etiquetaSeleccionada" name="etiquetas" optionValue="id"
+        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS" [style]="{width:'100%'}"
+        (onChange)="onEtiquetaChange()" [showClear]="true">
 
-  <!-- <label class="fw-bold d-block mb-1">FILTRAR POR ETIQUETA</label> -->
-  <p-dropdown [options]="etiquetas" [(ngModel)]="etiquetaSeleccionada" name="etiquetas" optionValue="id"
-    optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS" [style]="{width:'220px'}"
-    (onChange)="onEtiquetaChange()" [showClear]="true">
+        <ng-template pTemplate="selectedItem" let-selected>
+          <div class="flex align-items-center gap-2" *ngIf="selected">
 
-    <ng-template pTemplate="selectedItem" let-selected>
-      <div class="flex align-items-center gap-2" *ngIf="selected">
+            <!-- círculo de color -->
+            <span class="label-dot" [style.background]="selected.color">
+            </span>
 
-        <!-- círculo de color -->
-        <span class="label-dot" [style.background]="selected.color">
-        </span>
+            <span>{{ selected.nombre }}</span>
+          </div>
+        </ng-template>
 
-        <span>{{ selected.nombre }}</span>
-      </div>
-    </ng-template>
+        <ng-template pTemplate="item" let-item>
+          <div class="flex align-items-center gap-2">
 
-    <ng-template pTemplate="item" let-item>
-      <div class="flex align-items-center gap-2">
+            <!-- círculo de color -->
+            <span class="label-dot" [style.background]="item.color">
+            </span>
 
-        <!-- círculo de color -->
-        <span class="label-dot" [style.background]="item.color">
-        </span>
+            <span>{{ item.nombre }}</span>
+          </div>
+        </ng-template>
 
-        <span>{{ item.nombre }}</span>
-      </div>
-    </ng-template>
+      </p-dropdown>
+    </div>
+    <div class="col-md-4">
+      <p class="fw-bold mb-1">RESPONSABLES</p>
+      <p-dropdown [options]="etiquetasFiltradas" [(ngModel)]="etiquetaSeleccionada" name="etiquetas" optionValue="id"
+        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS" [style]="{width:'100%'}"
+        (onChange)="onEtiquetaChange()" [showClear]="true">
 
-  </p-dropdown>
+        <ng-template pTemplate="selectedItem" let-selected>
+          <div class="flex align-items-center gap-2" *ngIf="selected">
 
+            <!-- círculo de color -->
+            <span class="label-dot" [style.background]="selected.color">
+            </span>
 
+            <span>{{ selected.nombre }}</span>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="item" let-item>
+          <div class="flex align-items-center gap-2">
+
+            <!-- círculo de color -->
+            <span class="label-dot" [style.background]="item.color">
+            </span>
+
+            <span>{{ item.nombre }}</span>
+          </div>
+        </ng-template>
+
+      </p-dropdown>
+    </div>
+  </div>
+
+  <p></p>
+
+  <div class="d-flex justify-content-end mt-3">
+
+    <div class="acciones">
+      <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-primary" (click)="abrirModalAgregarTarea()">
+      </p-button>
+
+      <p-button label="ETIQUETAS" icon="pi pi-tags" styleClass="p-button-danger"
+        (click)="mostrarModalEtiquetas = true">
+      </p-button>
+
+      <p-button label="RESPONSABLES" icon="pi pi-users" styleClass="p-button-secondary"></p-button>
+    </div>
+
+  </div>
 </div>
 
-<p></p>
-
-<div class="acciones d-flex gap-2">
-
-  <button (click)="abrirModalAgregarTarea()">
-    Agregar
-  </button>
-
-  <button class="btn-etiquetas" (click)="mostrarModalEtiquetas = true">
-    Etiquetas
-  </button>
-
-</div>
 
 <div class="tablero-tareas">
 

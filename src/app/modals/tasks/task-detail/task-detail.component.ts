@@ -87,6 +87,8 @@ export class TaskDetailComponent implements OnInit {
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetas = et;
+      this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.tarea.idSucursal);
+
     });
 
     this.areasService.areas$.subscribe(areas => {
