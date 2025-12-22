@@ -189,6 +189,7 @@ export class DashboardTasksComponent implements OnInit {
   onSucursalChange() {
     this.initData();
     this.filtrarEtiquetas();
+    this.filtrarResponsables();
 
   }
 

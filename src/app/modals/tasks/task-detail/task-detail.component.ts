@@ -26,6 +26,9 @@ import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { LinkifyPipe } from '../../../pipes/linkify.pipe';
 import { AreasService } from '../../../services/areas.service';
 import { Area } from '../../../models/area.model';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TaskResponsibleService } from '../../../services/task-responsible.service';
+import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 
 @Component({
   selector: 'app-task-detail',
@@ -42,7 +45,8 @@ import { Area } from '../../../models/area.model';
     TaskCommentBoxComponent,
     EisenhowerPriorityChecksComponent,
     SubtasksBoxComponent,
-    LinkifyPipe
+    LinkifyPipe,
+    MultiSelectModule
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -64,7 +68,7 @@ export class TaskDetailComponent implements OnInit {
   areas: Area[] = [];
   editandoDescripcion = false;
   descripcionEditada = '';
-
+  responsables: ResponsableTarea[] = [];
   areasMap: Record<string, string> = {};
 
   constructor(
@@ -75,7 +79,8 @@ export class TaskDetailComponent implements OnInit {
     private statusTaskService: StatusTaskService,
     private statusEisenhowerService: StatusEisenhowerService,
     private labelsTasksService: LabelsTasksService,
-    private areasService: AreasService
+    private areasService: AreasService,
+    private taskResponsibleService: TaskResponsibleService
   ) { }
 
   ngOnInit(): void {
@@ -89,6 +94,11 @@ export class TaskDetailComponent implements OnInit {
       this.etiquetas = et;
       this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.tarea.idSucursal);
 
+    });
+
+    this.taskResponsibleService.responsables$.subscribe(responsable => {
+      this.responsables = responsable;
+      this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
     });
 
     this.areasService.areas$.subscribe(areas => {

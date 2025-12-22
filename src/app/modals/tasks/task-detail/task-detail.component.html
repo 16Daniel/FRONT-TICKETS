@@ -3,69 +3,6 @@
   <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
     <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
       <div class="d-flex justify-content-between mt-3 align-items-center">
-        <div>
-          <label class="fw-bold d-block mb-1">ESTATUS</label>
-          <p-dropdown [options]="estatusTeras" [(ngModel)]="tarea.idEstatus" name="estatusTeras" optionValue="id"
-            optionLabel="nombre" [filter]="true" filterBy="nombre" [style]="{width:'250px'}"
-            placeholder="SELECCIONA ESTATUS DE LA TAREA" required>
-
-            <ng-template pTemplate="selectedItem" let-selected>
-              <div class="flex align-items-center gap-2" *ngIf="selected">
-                <span class="estatus-dot" [ngClass]="'estatus-' + selected.id">
-                </span>
-                <span style="margin-left: 5px;">{{ selected.nombre }}</span>
-              </div>
-            </ng-template>
-
-            <ng-template pTemplate="item" let-item>
-              <div class="flex align-items-center gap-2">
-                <span class="estatus-dot" [ngClass]="'estatus-' + item.id">
-                </span>
-                <span style="margin-left: 5px;">{{ item.nombre }}</span>
-              </div>
-            </ng-template>
-
-          </p-dropdown>
-
-        </div>
-
-        <div>
-          <label class="fw-bold d-block mb-1">ETIQUETA</label>
-          <p-dropdown [options]="etiquetas" [(ngModel)]="tarea.idEtiqueta" name="etiquetas" optionValue="id"
-            optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS"
-            placeholder="SELECCIONA ETIQUETA DE LA TAREA" [style]="{width:'250px'}">
-
-            <ng-template pTemplate="selectedItem" let-selected>
-              <div class="flex align-items-center gap-2" *ngIf="selected">
-
-                <!-- círculo de color -->
-                <span class="label-dot" [style.background]="selected.color">
-                </span>
-
-                <span>{{ selected.nombre }}</span>
-              </div>
-            </ng-template>
-
-            <ng-template pTemplate="item" let-item>
-              <div class="label-item">
-
-                <div class="label-row">
-                  <span class="label-dot" [style.background]="item.color"></span>
-                  <span class="label-title">{{ item.nombre }}</span>
-                </div>
-
-                <small class="label-subtext" *ngIf="item.idArea">
-                  {{ areasMap[item.idArea] || 'Área sin asignar' }}
-                </small>
-
-
-              </div>
-            </ng-template>
-
-
-          </p-dropdown>
-        </div>
-
         <div class="d-flex">
           <button class="btn btn-primary" style="margin: 2px" (click)="mostrarModalSubirImagen = true">
             <i class="bx bx-image-add bx-sm" style="color: white" pTooltip="SUBIR IMÁGEN" tooltipPosition="top"></i>
@@ -82,7 +19,95 @@
             <input [(ngModel)]="tarea.titulo" name="titulo" class="form-control" placeholder="Título de la tarea">
           </div>
 
-          <div class="row">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="fw-bold d-block mb-1">ESTATUS</label>
+              <p-dropdown [options]="estatusTeras" [(ngModel)]="tarea.idEstatus" name="estatusTeras" optionValue="id"
+                optionLabel="nombre" [filter]="true" filterBy="nombre" [style]="{width:'250px'}"
+                placeholder="SELECCIONA ESTATUS DE LA TAREA" required>
+
+                <ng-template pTemplate="selectedItem" let-selected>
+                  <div class="flex align-items-center gap-2" *ngIf="selected">
+                    <span class="estatus-dot" [ngClass]="'estatus-' + selected.id">
+                    </span>
+                    <span style="margin-left: 5px;">{{ selected.nombre }}</span>
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="item" let-item>
+                  <div class="flex align-items-center gap-2">
+                    <span class="estatus-dot" [ngClass]="'estatus-' + item.id">
+                    </span>
+                    <span style="margin-left: 5px;">{{ item.nombre }}</span>
+                  </div>
+                </ng-template>
+
+              </p-dropdown>
+
+            </div>
+
+            <div class="col-md-4">
+              <label class="fw-bold d-block mb-1">ETIQUETA</label>
+              <p-dropdown [options]="etiquetas" [(ngModel)]="tarea.idEtiqueta" name="etiquetas" optionValue="id"
+                optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS"
+                placeholder="SELECCIONA ETIQUETA DE LA TAREA" [style]="{width:'250px'}">
+
+                <ng-template pTemplate="selectedItem" let-selected>
+                  <div class="flex align-items-center gap-2" *ngIf="selected">
+
+                    <!-- círculo de color -->
+                    <span class="label-dot" [style.background]="selected.color">
+                    </span>
+
+                    <span>{{ selected.nombre }}</span>
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="item" let-item>
+                  <div class="label-item">
+
+                    <div class="label-row">
+                      <span class="label-dot" [style.background]="item.color"></span>
+                      <span class="label-title">{{ item.nombre }}</span>
+                    </div>
+
+                    <small class="label-subtext" *ngIf="item.idArea">
+                      {{ areasMap[item.idArea] || 'Área sin asignar' }}
+                    </small>
+
+
+                  </div>
+                </ng-template>
+
+
+              </p-dropdown>
+            </div>
+
+            <div class="col-md-4">
+              <label class="fw-bold d-block mb-1">RESPONSABLES</label>
+
+              <p-multiSelect [options]="responsables" [(ngModel)]="tarea.responsables" name="responsables"
+                optionLabel="nombre" display="chip" [filter]="true" filterBy="nombre"
+                placeholder="SELECCIONA RESPONSABLES" [style]="{ width: '250px' }">
+                <!-- ITEM -->
+                <ng-template let-item pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <span>{{ item.nombre }}</span>
+                    <small class="text-muted ms-1" *ngIf="item.posicion">
+                      ({{ item.posicion }})
+                    </small>
+                  </div>
+                </ng-template>
+
+                <!-- SELECTED -->
+                <ng-template let-item pTemplate="selectedItem">
+                  <span>{{ item.nombre }}</span>
+                </ng-template>
+              </p-multiSelect>
+            </div>
+          </div>
+
+          <div class="row mb3">
             <div class="col-md-6">
               <!-- SUCURSAL -->
               <p class="fw-bold">RESPONSABLE</p>
