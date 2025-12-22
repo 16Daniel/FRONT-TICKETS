@@ -8,6 +8,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 import { TaskEisenhowerCard } from "../task-eisenhower-card/task-eisenhower-card";
 import { StatusTaskService } from '../../../services/status-task.service';
 import { EstatusTarea } from '../../../models/estatus-tarea.model';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-eisenhower-matrix',
@@ -18,7 +19,7 @@ import { EstatusTarea } from '../../../models/estatus-tarea.model';
   styleUrl: './eisenhower-matrix.component.scss',
 })
 export class EisenhowerMatrixComponent implements OnInit {
-  @Input() idSucursal!: string;
+  idSucursal: string ='';
   tc1: Tarea[] = [];
   tc2: Tarea[] = [];
   tc3: Tarea[] = [];
@@ -26,7 +27,7 @@ export class EisenhowerMatrixComponent implements OnInit {
   loading: boolean = true;
   dropListIds = ['c1', 'c2', 'c3', 'c4'];
   catEstatusTareas: EstatusTarea[] = [];
-
+  usuario: Usuario;
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
@@ -34,6 +35,8 @@ export class EisenhowerMatrixComponent implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {
     this.statustaskService.estatus$.subscribe(catEstatus => this.catEstatusTareas = catEstatus)
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.idSucursal = this.usuario.sucursales[0].id;
   }
 
   ngOnInit(): void { this.initData() }
@@ -45,7 +48,7 @@ export class EisenhowerMatrixComponent implements OnInit {
       this.tc3 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
       this.tc4 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
       this.loading = false;
-
+      console.log(tareas);
       this.cdr.detectChanges();
     })
   }
