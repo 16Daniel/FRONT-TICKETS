@@ -42,7 +42,7 @@ export class EisenhowerMatrixComponent implements OnInit {
   etiquetasFiltradas: EtiquetaTarea[] = [];
   etiquetaSeleccionada: string = '';
   allTasks: Tarea[] = [];
-  
+
   responsablesTodos: ResponsableTarea[] = [];
   responsablesFiltrados: ResponsableTarea[] = [];
   responsableSeleccionado: string = '';
@@ -75,7 +75,7 @@ export class EisenhowerMatrixComponent implements OnInit {
     this.raskResponsibleService.responsables$.subscribe(responsable => {
       this.responsablesTodos = responsable;
       this.filtrarResponsables();
-    });  
+    });
   }
 
    obtenerSucursales() {
@@ -211,8 +211,8 @@ export class EisenhowerMatrixComponent implements OnInit {
     }
 
     const filtradas = this.allTasks.filter(t =>
-      Array.isArray(t.responsables) &&
-      t.responsables.some(r => r.id === this.responsableSeleccionado)
+      Array.isArray(t.idsResponsables) &&
+      t.idsResponsables.includes(this.responsableSeleccionado)
     );
 
      this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');

@@ -240,9 +240,10 @@ export class DashboardTasksComponent implements OnInit {
     }
 
     const filtradas = this.allTasks.filter(t =>
-      Array.isArray(t.responsables) &&
-      t.responsables.some(r => r.id === this.responsableSeleccionado)
+      Array.isArray(t.idsResponsables) &&
+      t.idsResponsables.includes(this.responsableSeleccionado)
     );
+
 
     this.toDo = filtradas.filter(x => x.idEstatus === '1');
     this.working = filtradas.filter(x => x.idEstatus === '2');
