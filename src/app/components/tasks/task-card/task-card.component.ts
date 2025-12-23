@@ -148,4 +148,8 @@ export class TaskCardComponent implements OnInit {
     );
   }
 
+  getSubtareasCompletadas(tarea: any): number {
+    return tarea.subtareas?.filter((s: any) => s.terminado).length ?? 0;
+  }
+
 }
