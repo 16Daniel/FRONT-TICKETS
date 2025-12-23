@@ -9,17 +9,24 @@ import { TaskEisenhowerCard } from "../task-eisenhower-card/task-eisenhower-card
 import { StatusTaskService } from '../../../services/status-task.service';
 import { EstatusTarea } from '../../../models/estatus-tarea.model';
 import { Usuario } from '../../../models/usuario.model';
+import { DropdownModule } from 'primeng/dropdown';
+import { Sucursal } from '../../../models/sucursal.model';
+import { FormsModule } from '@angular/forms';
+import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
+import { ResponsableTarea } from '../../../models/responsable-tarea.model';
+import { LabelsTasksService } from '../../../services/labels-tasks.service';
+import { TaskResponsibleService } from '../../../services/task-responsible.service';
+import { BranchesService } from '../../../services/branches.service';
 
 @Component({
   selector: 'app-eisenhower-matrix',
   standalone: true,
-  imports: [CommonModule, DragDropModule, TaskEisenhowerCard],
+  imports: [CommonModule, DragDropModule, TaskEisenhowerCard,DropdownModule,FormsModule],
   providers: [MessageService],
   templateUrl: './eisenhower-matrix.component.html',
   styleUrl: './eisenhower-matrix.component.scss',
 })
 export class EisenhowerMatrixComponent implements OnInit {
-  idSucursal: string ='';
   tc1: Tarea[] = [];
   tc2: Tarea[] = [];
   tc3: Tarea[] = [];
@@ -28,21 +35,62 @@ export class EisenhowerMatrixComponent implements OnInit {
   dropListIds = ['c1', 'c2', 'c3', 'c4'];
   catEstatusTareas: EstatusTarea[] = [];
   usuario: Usuario;
+  sucursales: Sucursal[] = [];
+  idSucursalSeleccionada: string = '';
+
+  etiquetasTodas: EtiquetaTarea[] = [];
+  etiquetasFiltradas: EtiquetaTarea[] = [];
+  etiquetaSeleccionada: string = '';
+  allTasks: Tarea[] = [];
+  
+  responsablesTodos: ResponsableTarea[] = [];
+  responsablesFiltrados: ResponsableTarea[] = [];
+  responsableSeleccionado: string = '';
+
+
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
     private statustaskService: StatusTaskService,
+    private labelsTasksService: LabelsTasksService,
+    private raskResponsibleService: TaskResponsibleService,
+    private branchesService: BranchesService,
     private cdr: ChangeDetectorRef,
   ) {
     this.statustaskService.estatus$.subscribe(catEstatus => this.catEstatusTareas = catEstatus)
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.idSucursal = this.usuario.sucursales[0].id;
+    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
   }
 
-  ngOnInit(): void { this.initData() }
+  ngOnInit(): void
+  {
+     this.initData()
+     this.obtenerSucursales();
+
+    this.labelsTasksService.etiquetas$.subscribe(et => {
+      this.etiquetasTodas = et;
+      this.filtrarEtiquetas();
+    });
+
+    this.raskResponsibleService.responsables$.subscribe(responsable => {
+      this.responsablesTodos = responsable;
+      this.filtrarResponsables();
+    });  
+  }
+
+   obtenerSucursales() {
+    this.branchesService.get().subscribe({
+      next: (data) => {
+        this.sucursales = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => { },
+    });
+  }
+
 
   initData() {
-    this.tareasService.getBySucursal(this.idSucursal).subscribe((tareas: Tarea[]) => {
+    this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
       this.tc1 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
       this.tc2 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
       this.tc3 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
@@ -108,5 +156,70 @@ export class EisenhowerMatrixComponent implements OnInit {
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+    onSucursalChange() {
+    this.initData();
+    this.filtrarEtiquetas();
+    this.filtrarResponsables();
+
+  }
+
+  onEtiquetaChange() {
+
+    if (!this.etiquetaSeleccionada || this.etiquetaSeleccionada === '') {
+      this.initData();
+      return;
+    }
+
+    const filtradas = this.allTasks.filter(t =>
+      t.idEtiqueta && t.idEtiqueta === this.etiquetaSeleccionada
+    );
+
+      this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
+      this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
+      this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
+      this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
+    this.cdr.detectChanges();
+  }
+
+  filtrarEtiquetas(): void {
+    if (!this.idSucursalSeleccionada) {
+      this.etiquetasFiltradas = this.etiquetasTodas;
+      return;
+    }
+
+    this.etiquetasFiltradas =
+      this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  }
+
+  filtrarResponsables(): void {
+    if (!this.idSucursalSeleccionada) {
+      this.responsablesFiltrados = this.responsablesTodos;
+      return;
+    }
+
+    this.responsablesFiltrados =
+      this.raskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  }
+
+  onResponsableChange() {
+
+    if (!this.responsableSeleccionado || this.responsableSeleccionado === '') {
+      this.initData();
+      return;
+    }
+
+    const filtradas = this.allTasks.filter(t =>
+      Array.isArray(t.responsables) &&
+      t.responsables.some(r => r.id === this.responsableSeleccionado)
+    );
+
+     this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
+     this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
+     this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
+     this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
+
+    this.cdr.detectChanges();
   }
 }
