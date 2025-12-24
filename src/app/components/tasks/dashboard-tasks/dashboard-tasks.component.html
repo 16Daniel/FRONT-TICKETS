@@ -93,8 +93,11 @@
       <h3>TO DO</h3>
       <span class="contador">{{ toDo.length }}</span>
     </div>
-    <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
-    </app-task-card>
+
+    <div class="scroll">
+      <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      </app-task-card>
+    </div>
 
   </div>
 
@@ -107,8 +110,10 @@
       <span class="contador">{{ working.length }}</span>
     </div>
 
-    <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
-    </app-task-card>
+    <div class="scroll">
+      <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      </app-task-card>
+    </div>
 
   </div>
 
@@ -118,13 +123,14 @@
     [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
     <div class="titulo-columna">
-      <h3>WORKING</h3>
-      <span class="contador">{{ working.length }}</span>
+      <h3>CHECK</h3>
+      <span class="contador">{{ check.length }}</span>
     </div>
 
-    <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
-    </app-task-card>
-
+    <div class="scroll">
+      <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      </app-task-card>
+    </div>
   </div>
 
 
@@ -137,9 +143,10 @@
       <span class="contador">{{ done.length }}</span>
     </div>
 
-    <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
-    </app-task-card>
-
+    <div class="scroll">
+      <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      </app-task-card>
+    </div>
   </div>
 
 

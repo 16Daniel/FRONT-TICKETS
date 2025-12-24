@@ -9,7 +9,14 @@
   padding: 10px;
   border-radius: 8px;
 
-  max-height: 500px;
+  // max-height: 500px;
+  // /* o height */
+  // overflow-y: auto;
+  // /* scroll vertical */
+}
+
+.scroll {
+  max-height: 600px;
   /* o height */
   overflow-y: auto;
   /* scroll vertical */
