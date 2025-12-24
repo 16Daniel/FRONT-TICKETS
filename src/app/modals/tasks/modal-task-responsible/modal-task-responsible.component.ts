@@ -14,6 +14,7 @@ import { Sucursal } from '../../../models/sucursal.model';
 import { BranchesService } from '../../../services/branches.service';
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
+import { AvatarModule } from 'ngx-avatars';
 
 @Component({
   selector: 'app-modal-task-responsible',
@@ -25,7 +26,8 @@ import { TaskResponsibleService } from '../../../services/task-responsible.servi
     ButtonModule,
     TableModule,
     DropdownModule,
-    ToastModule
+    ToastModule,
+    AvatarModule
   ],
   providers: [MessageService],
   templateUrl: './modal-task-responsible.component.html',
@@ -47,6 +49,7 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
     nombre: '',
     posicion: '',
     idSucursal: '',
+    color: '#000000',
     eliminado: false
   };
 

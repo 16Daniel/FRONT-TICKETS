@@ -8,6 +8,18 @@
   min-height: 300px;
   padding: 10px;
   border-radius: 8px;
+
+  // max-height: 500px;
+  // /* o height */
+  // overflow-y: auto;
+  // /* scroll vertical */
+}
+
+.scroll {
+  max-height: 600px;
+  /* o height */
+  overflow-y: auto;
+  /* scroll vertical */
 }
 
 .columna.cdk-drop-list-dragging app-task-card {
@@ -36,4 +48,25 @@
 
 :host ::ng-deep .acciones .p-button {
   border-radius: 6px;
+}
+
+
+.titulo-columna {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.titulo-columna h3 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.contador {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }

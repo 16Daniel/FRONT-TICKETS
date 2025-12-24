@@ -13,19 +13,37 @@
       </div>
 
       <!-- POSICIÓN -->
-      <div class="col-md-4">
+      <div class="col-md-3">
         <p class="fw-bold mb-1">POSICIÓN / PUESTO</p>
         <input class="form-control" style="height: 48px" type="text" placeholder="EJ. GERENTE, SUPERVISOR"
           [(ngModel)]="nuevoResponsable.posicion" name="posicion" required />
       </div>
 
       <!-- SUCURSAL -->
-      <div class="col-md-4">
+      <div class="col-md-3">
         <p class="fw-bold mb-1">SUCURSAL / DEPARTAMENTO</p>
         <p-dropdown [options]="sucursales" [(ngModel)]="nuevoResponsable.idSucursal" name="sucursal" optionValue="id"
           optionLabel="nombre" [filter]="true" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
           [style]="{ width: '100%' }" (onChange)="onSucursalChange($event.value)"></p-dropdown>
       </div>
+
+      <!-- COLOR + AVATAR PREVIEW -->
+      <div class="col-md-2 text-end">
+        <p class="fw-bold mb-1">COLOR</p>
+
+        <div class="d-flex align-items-center justify-content-end gap-2">
+
+          <!-- AVATAR PREVIEW -->
+          <ngx-avatars [name]="nuevoResponsable.nombre || ' '" [size]="30" [bgColor]="nuevoResponsable.color">
+          </ngx-avatars>
+
+          <!-- COLOR PICKER -->
+          <input type="color" class="form-control form-control-color" [(ngModel)]="nuevoResponsable.color" name="color"
+            required>
+        </div>
+      </div>
+
+
 
       <!-- BOTÓN -->
       <div class="d-flex justify-content-end mt-3">
@@ -43,6 +61,7 @@
         <tr>
           <th>Nombre</th>
           <th>Posición</th>
+          <th>Color</th>
           <th>Eliminar</th>
         </tr>
       </ng-template>
@@ -61,6 +80,13 @@
             <input type="text" class="form-control" [(ngModel)]="res.posicion" [readonly]="!res.editando"
               (click)="activarEdicion(res)" (blur)="guardarCambios(res)" (keydown.enter)="guardarCambios(res)" />
           </td>
+
+          <!-- COLOR -->
+          <td>
+            <input type="color" class="form-control form-control-color" [(ngModel)]="res.color"
+              (change)="guardarCambios(res)">
+          </td>
+
 
           <!-- ELIMINAR -->
           <td>
