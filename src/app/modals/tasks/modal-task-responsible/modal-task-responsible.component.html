@@ -24,7 +24,7 @@
         <p class="fw-bold mb-1">SUCURSAL / DEPARTAMENTO</p>
         <p-dropdown [options]="sucursales" [(ngModel)]="nuevoResponsable.idSucursal" name="sucursal" optionValue="id"
           optionLabel="nombre" [filter]="true" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
-          [style]="{ width: '100%' }" (onChange)="onSucursalChange($event.value)"></p-dropdown>
+          [style]="{ width: '100%' }" (onChange)="onSucursalChange($event.value)" required></p-dropdown>
       </div>
 
       <!-- COLOR + AVATAR PREVIEW -->
