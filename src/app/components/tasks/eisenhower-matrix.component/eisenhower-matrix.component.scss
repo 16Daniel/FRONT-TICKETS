@@ -72,3 +72,12 @@ grid-row-gap: 20px;
   padding: 10px;
   border-radius: 8px;
 }
+
+.label-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+}

@@ -17,11 +17,13 @@ import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { BranchesService } from '../../../services/branches.service';
+import { TaskDetailComponent } from "../../../modals/tasks/task-detail/task-detail.component";
+import { ToastModule } from "primeng/toast";
 
 @Component({
   selector: 'app-eisenhower-matrix',
   standalone: true,
-  imports: [CommonModule, DragDropModule, TaskEisenhowerCard,DropdownModule,FormsModule],
+  imports: [CommonModule, DragDropModule, TaskEisenhowerCard, DropdownModule, FormsModule, TaskDetailComponent, ToastModule],
   providers: [MessageService],
   templateUrl: './eisenhower-matrix.component.html',
   styleUrl: './eisenhower-matrix.component.scss',
@@ -47,6 +49,8 @@ export class EisenhowerMatrixComponent implements OnInit {
   responsablesFiltrados: ResponsableTarea[] = [];
   responsableSeleccionado: string = '';
 
+  mostrarModalDetalleTarea: boolean = false;
+  tareaSeleccionada!: Tarea;
 
   constructor(
     private tareasService: TareasService,
@@ -91,13 +95,18 @@ export class EisenhowerMatrixComponent implements OnInit {
 
   initData() {
     this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
+
+      this.allTasks = tareas.filter(x => x.idEstatus != '4');
+      
       this.tc1 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
       this.tc2 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
       this.tc3 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
       this.tc4 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
       this.loading = false;
-      console.log(tareas);
       this.cdr.detectChanges();
+
+      this.filtrarEtiquetas(); 
+      this.filtrarResponsables(); 
     })
   }
 
@@ -166,7 +175,7 @@ export class EisenhowerMatrixComponent implements OnInit {
   }
 
   onEtiquetaChange() {
-
+debugger
     if (!this.etiquetaSeleccionada || this.etiquetaSeleccionada === '') {
       this.initData();
       return;
@@ -222,4 +231,10 @@ export class EisenhowerMatrixComponent implements OnInit {
 
     this.cdr.detectChanges();
   }
+
+  abrirDetalle(tarea: Tarea) {
+    this.tareaSeleccionada = { ...tarea };
+    this.mostrarModalDetalleTarea = true;
+  } 
+
 }
