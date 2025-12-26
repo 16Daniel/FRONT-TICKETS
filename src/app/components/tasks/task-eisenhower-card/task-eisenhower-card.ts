@@ -1,4 +1,4 @@
-import { Component, Input, type OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
 import { Tarea } from '../../../models/tarea.model';
 import { TaskDetailComponent } from "../../../modals/tasks/task-detail/task-detail.component";
 import { CommonModule } from '@angular/common';
@@ -11,13 +11,13 @@ import { EstatusTarea } from '../../../models/estatus-tarea.model';
 @Component({
   selector: 'app-task-eisenhower-card',
   standalone: true,
-  imports: [CommonModule, TaskDetailComponent, DragDropModule, ProgressBarModule,TagModule],
+  imports: [CommonModule, DragDropModule, ProgressBarModule,TagModule],
   templateUrl: './task-eisenhower-card.html',
   styleUrl: './task-eisenhower-card.scss',
 })
 export class TaskEisenhowerCard implements OnInit {
  @Input() tarea!: Tarea;
-  mostrarModalDetalleTarea = false;
+  @Output() seleccionarTarea = new EventEmitter<Tarea>();
   categorias: any[] = [];
   @Input() catEstatusTareas: EstatusTarea[] = []; 
 
@@ -26,8 +26,7 @@ export class TaskEisenhowerCard implements OnInit {
   }
 
   onClick() {
-    console.log('Tarea seleccionada:', this.tarea);
-    this.mostrarModalDetalleTarea = true;
+    this.seleccionarTarea.emit(this.tarea);
   }
 
   getCategoriaNombre(idCategoria: string | number): string {
