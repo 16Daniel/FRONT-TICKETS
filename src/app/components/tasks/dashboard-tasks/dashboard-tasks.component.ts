@@ -74,6 +74,8 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.tareasService.normalizarOrden();
+
     this.initData();
     this.obtenerSucursales();
 
@@ -151,16 +153,26 @@ export class DashboardTasksComponent implements OnInit {
       case 'doneList':
         tareaMovida.idEstatus = '4';
         break;
-
     }
 
-    await this.tareasService.update(tareaMovida, tareaMovida.id!);
+    // await this.tareasService.update(tareaMovida, tareaMovida.id!);
+
+    // debugger
+    this.actualizarOrdenColumna(event.container.data);
+
+    if (event.previousContainer !== event.container) {
+      this.actualizarOrdenColumna(event.previousContainer.data);
+    }
+
+    await this.tareasService.update({ idEstatus: tareaMovida.idEstatus }, tareaMovida.id!);
+
     this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
   initData() {
     this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
 
+      console.log(tareas)
       this.allTasks = tareas.filter(x =>
         x.idEstatus == '1'
         || x.idEstatus == '2'
@@ -251,6 +263,15 @@ export class DashboardTasksComponent implements OnInit {
     this.done = filtradas.filter(x => x.idEstatus === '4');
 
     this.cdr.detectChanges();
+  }
+
+  private actualizarOrdenColumna(tareas: Tarea[]) {
+    tareas.forEach((tarea, index) => {
+      if (tarea.orden !== index) {
+        tarea.orden = index;
+        this.tareasService.update({ orden: index }, tarea.id!);
+      }
+    });
   }
 
 }

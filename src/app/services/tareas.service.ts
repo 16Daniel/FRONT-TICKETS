@@ -10,6 +10,7 @@ import {
   doc,
   updateDoc,
   docData,
+  getDocs,
 } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { Tarea } from '../models/tarea.model';
@@ -33,7 +34,8 @@ export class TareasService {
     const q = query(
       ref,
       where('eliminado', '==', false),
-      orderBy('fecha', 'desc')
+      // orderBy('fecha', 'desc')
+      orderBy('orden', 'asc')
     );
     return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
   }
@@ -44,7 +46,8 @@ export class TareasService {
       ref,
       where('eliminado', '==', false),
       where('idSucursal', '==', idSucursal),
-      orderBy('fecha', 'desc')
+      // orderBy('fecha', 'desc')
+      orderBy('orden', 'asc')
     );
 
     return collectionData(q, { idField: 'id' }).pipe(
@@ -64,7 +67,8 @@ export class TareasService {
       ref,
       where('eliminado', '==', false),
       where('idEstatus', '==', idEstatus),
-      orderBy('fecha', 'desc')
+      // orderBy('fecha', 'desc')
+      orderBy('orden', 'asc')
     );
     return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
   }
@@ -78,4 +82,20 @@ export class TareasService {
     const documentRef = doc(this.firestore, `${this.pathName}/${idTarea}`);
     return updateDoc(documentRef, tarea);
   }
+
+  async normalizarOrden(): Promise<void> {
+    const ref = collection(this.firestore, this.pathName);
+    const q = query(ref, where('eliminado', '==', false));
+
+    const snapshot = await getDocs(q);
+
+    for (const docSnap of snapshot.docs) {
+      const data = docSnap.data() as Tarea;
+
+      if (data.orden === undefined) {
+        await updateDoc(docSnap.ref, { orden: 0 });
+      }
+    }
+  }
+
 }
