@@ -10,7 +10,8 @@ export const environment = {
     appId: '1:650592207362:web:44a222eb13766364fc9d1b',
     measurementId: 'G-ZSNCNBN2KL',
   },
-  apiURL: "https://localhost:7165/api/",
+  // apiURL: "https://localhost:7165/api/",
+  apiURL: "https://operamx.no-ip.net/back/api_tickets/api/",
   idAdministracion: "QvSLmxLZjJnaGPPsA7zi",
   idServicio: "hHqyRWm306Zmb5XADbbR",
   idDireccion: "Mcaolq7LySn81CSX4n5L"

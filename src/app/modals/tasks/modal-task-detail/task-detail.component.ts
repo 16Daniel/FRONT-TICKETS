@@ -18,7 +18,7 @@ import { TaskCommentBoxComponent } from '../../../components/tasks/task-comment-
 import { EstatusEisenhower } from '../../../models/estatus-eisenhower.model';
 import { StatusTaskService } from '../../../services/status-task.service';
 import { EstatusTarea } from '../../../models/estatus-tarea.model';
-import { StatusEisenhowerService } from '../../../services/status-eisenhower.service';
+// import { StatusEisenhowerService } from '../../../services/status-eisenhower.service';
 import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
 import { SubtasksBoxComponent } from '../../../components/tasks/subtasks-box/subtasks-box.component';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
@@ -29,6 +29,7 @@ import { Area } from '../../../models/area.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
+import { EnviarCorreoRequest, MailService } from '../../../services/mail.service';
 
 @Component({
   selector: 'app-task-detail',
@@ -53,7 +54,7 @@ import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 })
 export class TaskDetailComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
-  @Input() tarea!: Tarea | any;
+  @Input() tarea!: Tarea;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
@@ -71,24 +72,27 @@ export class TaskDetailComponent implements OnInit {
   responsables: ResponsableTarea[] = [];
   areasMap: Record<string, string> = {};
 
+  idsResponsablesAuxEmail: string[] = [];
+
   constructor(
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private tareasService: TareasService,
     private messageService: MessageService,
     private statusTaskService: StatusTaskService,
-    private statusEisenhowerService: StatusEisenhowerService,
+    // private statusEisenhowerService: StatusEisenhowerService,
     private labelsTasksService: LabelsTasksService,
     private areasService: AreasService,
-    private taskResponsibleService: TaskResponsibleService
+    private taskResponsibleService: TaskResponsibleService,
+    private mailService: MailService
   ) { }
 
   ngOnInit(): void {
     this.obtenerSucursales();
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
-    this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
+    // this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
 
-    this.mostrarSubtareas = this.tarea?.subtareas?.length > 0;
+    this.mostrarSubtareas = this.tarea?.subtareas?.length! > 0;
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetas = et;
@@ -96,8 +100,8 @@ export class TaskDetailComponent implements OnInit {
 
     });
 
-    this.taskResponsibleService.responsables$.subscribe(responsable => {
-      this.responsables = responsable;
+    this.taskResponsibleService.responsables$.subscribe(responsables => {
+      this.responsables = responsables;
       this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
     });
 
@@ -107,6 +111,8 @@ export class TaskDetailComponent implements OnInit {
         this.areasMap[a.id] = a.nombre;
       });
     });
+
+    this.idsResponsablesAuxEmail = this.tarea.idsResponsables;
   }
 
   onHide = () => this.closeEvent.emit(false);
@@ -120,9 +126,19 @@ export class TaskDetailComponent implements OnInit {
       return;
     }
 
-    console.log(this.tarea);
-    await this.tareasService.update(this.tarea, this.tarea.id);
+    await this.tareasService.update(this.tarea, this.tarea.id!);
     this.showMessage('success', 'Success', 'Enviado correctamente');
+
+    this.tarea.idsResponsables.forEach((idResponsable: string) => {
+      if (!this.idsResponsablesAuxEmail.find(x => x == idResponsable)) {
+        const responasble = this.responsables.find(x => x.id == idResponsable);
+
+        if (responasble?.correo) {
+          this.enviarCorreo(responasble);
+          this.idsResponsablesAuxEmail.push(idResponsable);
+        }
+      }
+    });
   }
 
   obtenerSucursales() {
@@ -257,6 +273,86 @@ export class TaskDetailComponent implements OnInit {
   guardarDescripcion() {
     this.tarea.descripcion = this.descripcionEditada;
     this.editandoDescripcion = false;
+  }
+
+  enviarCorreo(responsable: ResponsableTarea) {
+
+    const request: EnviarCorreoRequest = {
+      titulo: `Nueva tarea asignada: ${this.tarea.titulo}`,
+      body: this.generarBodyCorreo(responsable),
+      destinatario: responsable.correo
+    };
+
+    this.mailService.enviarCorreo(request).subscribe({
+      next: res => {
+        this.showMessage('success', 'Success', 'Email enviado');
+        console.log('Correo enviado correctamente', res);
+      },
+      error: err => {
+        console.error('Error al enviar correo', err);
+      }
+    });
+  }
+
+  private generarBodyCorreo(responsable: ResponsableTarea): string {
+    return `
+    <div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #333; line-height: 1.4;">
+
+      <h3 style="color: #2c3e50; margin-bottom: 8px;">
+        📌 Nueva tarea asignada
+      </h3>
+
+      <p style="margin: 0 0 8px 0;">
+        Hola <strong>${responsable.nombre}</strong>,
+      </p>
+
+      <p style="margin: 0 0 12px 0;">
+        Se te ha asignado una nueva tarea:
+      </p>
+
+      <div style="padding: 10px 12px; background-color: #f8f9fa; border-radius: 6px;">
+
+        <p style="margin: 4px 0;">
+          <strong>Título:</strong> ${this.tarea.titulo}
+        </p>
+
+        <p style="margin: 4px 0;">
+          <strong>Descripción:</strong> ${this.tarea.descripcion || 'Sin descripción'}
+        </p>
+
+        <p style="margin: 4px 0;">
+          <strong>Sucursal:</strong> ${this.sucursales.find(x => x.id == this.tarea.idSucursal)?.nombre || 'N/A'}
+        </p>
+
+        <p style="margin: 4px 0;">
+          <strong>Fecha creación:</strong>
+          ${this.tarea.fecha ? new Date(this.tarea.fecha).toLocaleDateString() : 'N/A'}
+        </p>
+
+        ${this.tarea.deathline
+        ? `
+              <p style="margin: 4px 0; color: #c0392b;">
+                <strong>Fecha límite:</strong>
+                ${new Date(this.tarea.deathline).toLocaleDateString()}
+              </p>
+            `
+        : ''
+      }
+
+      </div>
+
+      <p style="margin-top: 14px;">
+        Por favor ingresa al sistema para revisar la tarea y darle seguimiento.
+      </p>
+
+      <hr style="margin: 16px 0;" />
+
+      <p style="font-size: 12px; color: #777; margin: 0;">
+        Este correo fue generado automáticamente por el sistema de tickets.
+      </p>
+
+    </div>
+  `;
   }
 
 }

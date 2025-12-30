@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
 import { Tarea } from '../../../models/tarea.model';
-import { TaskDetailComponent } from "../../../modals/tasks/task-detail/task-detail.component";
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
-import { StatusTaskService } from '../../../services/status-task.service';
 import { EstatusTarea } from '../../../models/estatus-tarea.model';
 
 @Component({
@@ -19,10 +17,10 @@ export class TaskEisenhowerCard implements OnInit {
  @Input() tarea!: Tarea;
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
   categorias: any[] = [];
-  @Input() catEstatusTareas: EstatusTarea[] = []; 
+  @Input() catEstatusTareas: EstatusTarea[] = [];
 
   ngOnInit(): void {
-    
+
   }
 
   onClick() {
@@ -35,8 +33,8 @@ export class TaskEisenhowerCard implements OnInit {
   }
 
   obtenerNombreEstatus(idEstatusTarea:string):string
-  { 
-    let nombre = this.catEstatusTareas.filter(x=> x.id == idEstatusTarea).length >0 ? this.catEstatusTareas.filter(x=> x.id == idEstatusTarea)[0].nombre : '';  
-    return nombre;  
+  {
+    let nombre = this.catEstatusTareas.filter(x=> x.id == idEstatusTarea).length >0 ? this.catEstatusTareas.filter(x=> x.id == idEstatusTarea)[0].nombre : '';
+    return nombre;
   }
 }
