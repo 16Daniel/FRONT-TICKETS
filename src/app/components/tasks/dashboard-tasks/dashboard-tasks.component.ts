@@ -172,7 +172,6 @@ export class DashboardTasksComponent implements OnInit {
   initData() {
     this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
 
-      console.log(tareas)
       this.allTasks = tareas.filter(x =>
         x.idEstatus == '1'
         || x.idEstatus == '2'

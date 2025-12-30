@@ -69,7 +69,7 @@
   </button>
 
   <!-- DEADLINE -->
-  <div class="deadline-indicator" *ngIf="tarea.deathline" (click)="$event.stopPropagation()">
+  <div class="deadline-indicator" *ngIf="tarea.deathline && tarea.idEstatus !== '4'" (click)="$event.stopPropagation()">
 
     <div class="mini-pie" [style.--progress]="getPorcentajeUsado(tarea)">
     </div>

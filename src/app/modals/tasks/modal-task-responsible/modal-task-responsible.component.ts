@@ -15,6 +15,7 @@ import { BranchesService } from '../../../services/branches.service';
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { AvatarModule } from 'ngx-avatars';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @Component({
   selector: 'app-modal-task-responsible',
@@ -27,7 +28,8 @@ import { AvatarModule } from 'ngx-avatars';
     TableModule,
     DropdownModule,
     ToastModule,
-    AvatarModule
+    AvatarModule,
+    InputSwitchModule
   ],
   providers: [MessageService],
   templateUrl: './modal-task-responsible.component.html',
@@ -45,13 +47,7 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
   cargando = false;
   private subs = new Subscription();
 
-  nuevoResponsable: ResponsableTarea = {
-    nombre: '',
-    posicion: '',
-    idSucursal: '',
-    color: '#000000',
-    eliminado: false
-  };
+  nuevoResponsable: ResponsableTarea = new ResponsableTarea;
 
   constructor(
     private branchesService: BranchesService,

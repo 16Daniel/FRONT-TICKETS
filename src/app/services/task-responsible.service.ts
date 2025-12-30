@@ -97,7 +97,7 @@ export class TaskResponsibleService {
     if (!idSucursal) return [];
 
     return this._responsables.filter(
-      r => r.idSucursal === idSucursal && r.eliminado === false
+      r => (r.idSucursal === idSucursal || r.esGlobal) && r.eliminado === false
     );
   }
 }
