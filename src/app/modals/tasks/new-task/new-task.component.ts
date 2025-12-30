@@ -70,6 +70,10 @@ export class NewTaskComponent implements OnInit {
     this.firebaseStorage.cargarImagenesEvidenciasTareas(this.archivos)
       .then(async urls => {
         this.tarea.evidenciaUrls = urls;
+
+        const cantidad = await this.getCantidadPorEstatus(this.tarea.idEstatus);
+        this.tarea.orden = cantidad;
+
         await this.tareasService.create({ ...this.tarea });
         Swal.fire({
           title: "OK",
@@ -92,7 +96,7 @@ export class NewTaskComponent implements OnInit {
           }
         });
         await this.tareasService.create({ ...this.tarea });
-        Swal.fire("OK", "TICKET CREADO!", "success");
+        Swal.fire("OK", "TAREA CREADA!", "success");
         // this.showMessage('success', 'Success', 'Enviado correctamente');
         this.closeEvent.emit();
       });
@@ -137,7 +141,6 @@ export class NewTaskComponent implements OnInit {
     }
   }
 
-
   calcularEisenhower() {
     const urgente = this.tarea.urgente;
     const importante = this.tarea.importante;
@@ -162,6 +165,15 @@ export class NewTaskComponent implements OnInit {
     this.tarea.urgente = event.urgente;
     this.tarea.importante = event.importante;
     this.tarea.idEisenhower = event.idEisenhower;
+  }
+
+  getCantidadPorEstatus(idEstatus: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.tareasService.getByEstatus(idEstatus).subscribe({
+        next: tareas => resolve(tareas.length),
+        error: err => reject(err)
+      });
+    });
   }
 
 }

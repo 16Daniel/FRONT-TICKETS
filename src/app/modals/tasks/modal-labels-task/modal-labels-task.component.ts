@@ -132,6 +132,23 @@ export class ModalLabelsTaskComponent implements OnDestroy, OnInit {
   async eliminarEtiqueta(et: EtiquetaTarea) {
     if (!et.id) return;
 
+    const result = await Swal.fire({
+      title: '¿Eliminar etiqueta?',
+      text: `La etiqueta "${et.nombre}" será movida a eliminados`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      reverseButtons: true,
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       await this.labelsTasksService.delete(et.id);
 
