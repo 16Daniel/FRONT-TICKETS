@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, Firestore, orderBy, query } from '@angular/fire/firestore';
-import { EntregaAceite } from '../models/aceite.model';
+import { EntregaAceite, ReporteRA } from '../models/aceite.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -109,7 +109,7 @@ export class AceiteService {
     }
 
 
-      getEntregasCedisH(idFront:number,fechaIni:Date,fechafin:Date): Observable<EntregaAceite[]> {
+      getEntregasCedisH(idFront:string,fechaIni:Date,fechafin:Date): Observable<EntregaAceite[]> {
          let formdata = new FormData();
       formdata.append("ids",idFront.toString());
       formdata.append("fechaini",fechaIni.toISOString());
@@ -117,7 +117,7 @@ export class AceiteService {
       return this.http.post<EntregaAceite[]>(this.url+'Aceite/getEntregasAceiteCedisH',formdata,{headers:this.headers})
     }
 
-    getEntregasCedisTAH(idFront:number,fechaIni:Date,fechafin:Date): Observable<EntregaAceite[]> {
+    getEntregasCedisTAH(idFront:string,fechaIni:Date,fechafin:Date): Observable<EntregaAceite[]> {
          let formdata = new FormData();
       formdata.append("ids",idFront.toString());
       formdata.append("fechaini",fechaIni.toISOString());
@@ -149,5 +149,14 @@ export class AceiteService {
 
      eliminarEntregaTA(id:number): Observable<any> {
       return this.http.delete<any>(this.url+'Aceite/eliminarLineaAceiteTA/'+id,{headers:this.headers})
+    } 
+
+     getReporteRecoleccionAceite(idFront:string,fechaIni:Date,fechafin:Date): Observable<ReporteRA[]> {
+         let formdata = new FormData();
+      formdata.append("ids",idFront.toString());
+      formdata.append("fechaini",fechaIni.toISOString());
+      formdata.append("fechafin",fechafin.toISOString());
+      return this.http.post<ReporteRA[]>(this.url+'Aceite/getReporteRecoleccionAceite',formdata,{headers:this.headers})
     }
+
 }

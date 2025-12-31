@@ -12,7 +12,7 @@
 <p-tabView>
 
   <p-tabPanel header="PENDIENTES">
-       <app-registros-pendientes *ngIf="sucursalesFiltro.length>0" [sucursales]="sucursalesFiltro"></app-registros-pendientes>
+       <app-registros-pendientes *ngIf="sucursales.length>0" [sucursales]="sucursales"></app-registros-pendientes>
   </p-tabPanel>
 
   <p-tabPanel header="POR VALIDAR">
@@ -25,7 +25,7 @@
         </div>
         <div class="col-6">
              <p-multiSelect 
-                [options]="sucursalesFiltro" 
+                [options]="sucursales" 
                 [(ngModel)]="sucursalesSel" 
                 [filter]="true" 
                 optionLabel="nombre" 

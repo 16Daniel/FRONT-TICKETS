@@ -13,3 +13,10 @@ export interface EntregaAceite {
   manual:boolean; 
   fechaRecoleccion:Date|null; 
 }
+
+export interface ReporteRA {
+  idf: number;
+  entregaCedis: number;
+  recoleccion: number;
+  recoleccionConfirmada: number;
+}

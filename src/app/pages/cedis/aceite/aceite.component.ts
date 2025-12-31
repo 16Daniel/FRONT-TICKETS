@@ -36,7 +36,6 @@ public entregasTodo:EntregaAceite[] = [];
 public mostrarModalValidacion:boolean = false; 
 public sucursales: Sucursal[] = [];
 public sucursalesSel: Sucursal[] = [];
-public sucursalesFiltro:Sucursal[] = []; 
 public sucursalSel: Sucursal|undefined;
 public formcomentarios:string = ""; 
 public itemEntrega:EntregaAceite|undefined; 
@@ -110,12 +109,9 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
       this.loading = true; 
     this.branchesService.get().subscribe({
       next: (data) => {
-        this.sucursalesFiltro = [...data];
-        this.sucursalesFiltro = this.sucursalesFiltro.filter(x=> x.idFront);
-        let sucursalTodas:Sucursal = { id:'-1',nombre:'TODAS',idFront:-1,eliminado:false}
-        this.sucursales = data;
-        this.sucursales.unshift(sucursalTodas); 
-        this.sucursalesSel = [...this.sucursalesFiltro];  
+        this.sucursales = data;  
+        this.sucursales = this.sucursales.filter(x=> x.idFront && x.idFront>-1);
+        this.sucursalesSel = [...this.sucursales];  
         this.loading = false; 
         this.consultarEntregas(); 
         this.cdr.detectChanges();
