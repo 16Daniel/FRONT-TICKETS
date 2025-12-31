@@ -10,10 +10,12 @@ import { AceiteService } from '../../../../../services/aceite.service';
 import { MessageService } from 'primeng/api';
 import { EntregaAceite } from '../../../../../models/aceite.model';
 import { Timestamp } from '@angular/fire/firestore';
+import { MultiSelectModule } from "primeng/multiselect";
+import { ReporteAceiteTab } from "../reporte-aceite-tab/reporte-aceite-tab";
 @Component({
   selector: 'app-historial-aceite',
   standalone: true,
-  imports: [CommonModule,TabViewModule, TableModule, CalendarModule, DropdownModule, FormsModule],
+  imports: [CommonModule, TabViewModule, TableModule, CalendarModule, DropdownModule, FormsModule, MultiSelectModule, ReporteAceiteTab],
   templateUrl: './historial-aceite.html',
   styleUrl: './historial-aceite.scss',
 })
@@ -21,7 +23,7 @@ export class HistorialAceite implements OnInit {
 fechaini:Date = new Date(); 
 fechafin:Date = new Date(); 
 @Input() sucursales: Sucursal[] = [];
-public sucursalSel: Sucursal|undefined;
+public sucursalesSel: Sucursal[] = [];
 public loading:boolean = false; 
 public entregasH:EntregaAceite[] = []; 
 public entregasTAH:EntregaAceite[] = []; 
@@ -41,11 +43,12 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
    buscarRegistros()
   {
     this.loading = true
-    let idf = -2;
-    if(this.sucursalSel?.idFront != undefined)
+    let temp:number[] = []; 
+    for(let item of this.sucursalesSel)
       {
-        idf = this.sucursalSel!.idFront;
+        temp.push(item.idFront!); 
       }
+     let idf = JSON.stringify(temp); 
     this.aceiteService.getEntregasCedisH(idf,this.fechaini,this.fechafin).subscribe({
       next: (data) => {
         this.entregasH= data;
@@ -62,11 +65,12 @@ constructor(public aceiteService:AceiteService,public cdr:ChangeDetectorRef,priv
   buscarRegistrosTA()
   {
     this.loading = true
-    let idf = -2;
-    if(this.sucursalSel?.idFront != undefined)
+    let temp:number[] = []; 
+    for(let item of this.sucursalesSel)
       {
-        idf = this.sucursalSel!.idFront;
+        temp.push(item.idFront!); 
       }
+     let idf = JSON.stringify(temp); 
     this.aceiteService.getEntregasCedisTAH(idf,this.fechaini,this.fechafin).subscribe({
       next: (data) => {
         this.entregasTAH= data;
