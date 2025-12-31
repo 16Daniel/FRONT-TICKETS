@@ -7,8 +7,6 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 
-import { NewTaskComponent } from '../../../modals/tasks/new-task/new-task.component';
-import { TaskDetailComponent } from '../../../modals/tasks/task-detail/task-detail.component';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import { Tarea } from '../../../models/tarea.model';
 import { TareasService } from '../../../services/tareas.service';
@@ -22,6 +20,8 @@ import { ButtonModule } from 'primeng/button';
 import { ModalTaskResponsibleComponent } from '../../../modals/tasks/modal-task-responsible/modal-task-responsible.component';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
+import { NewTaskComponent } from '../../../modals/tasks/modal-new-task/new-task.component';
+import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/task-detail.component';
 
 @Component({
   selector: 'app-dashboard-tasks',

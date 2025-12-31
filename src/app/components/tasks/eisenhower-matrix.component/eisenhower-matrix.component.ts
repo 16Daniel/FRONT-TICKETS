@@ -17,8 +17,8 @@ import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { BranchesService } from '../../../services/branches.service';
-import { TaskDetailComponent } from "../../../modals/tasks/task-detail/task-detail.component";
 import { ToastModule } from "primeng/toast";
+import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/task-detail.component';
 
 @Component({
   selector: 'app-eisenhower-matrix',
@@ -97,7 +97,7 @@ export class EisenhowerMatrixComponent implements OnInit {
     this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
 
       this.allTasks = tareas.filter(x => x.idEstatus != '4');
-      
+
       this.tc1 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
       this.tc2 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
       this.tc3 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
@@ -105,8 +105,8 @@ export class EisenhowerMatrixComponent implements OnInit {
       this.loading = false;
       this.cdr.detectChanges();
 
-      this.filtrarEtiquetas(); 
-      this.filtrarResponsables(); 
+      this.filtrarEtiquetas();
+      this.filtrarResponsables();
     })
   }
 
@@ -235,6 +235,6 @@ debugger
   abrirDetalle(tarea: Tarea) {
     this.tareaSeleccionada = { ...tarea };
     this.mostrarModalDetalleTarea = true;
-  } 
+  }
 
 }

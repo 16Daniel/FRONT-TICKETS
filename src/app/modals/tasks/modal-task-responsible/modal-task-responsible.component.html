@@ -30,8 +30,8 @@
       <!-- CORREO -->
       <div class="col-md-4 mt-3">
         <p class="fw-bold mb-1">CORREO</p>
-        <input type="email" class="form-control" placeholder="correo@ejemplo.com" [(ngModel)]="nuevoResponsable.correo"
-          name="correo" required />
+        <input type="email" class="form-control" placeholder="correo@operamx.com" [(ngModel)]="nuevoResponsable.correo"
+          name="correo" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
       </div>
 
       <!-- ES GLOBAL -->
