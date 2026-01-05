@@ -98,4 +98,24 @@ export class TareasService {
     }
   }
 
+  getTareasPorResponsableGlobal(idResponsable: string): Observable<Tarea[]> {
+    const ref = collection(this.firestore, this.pathName);
+    const q = query(
+      ref,
+      where('eliminado', '==', false),
+      where('idsResponsables', 'array-contains', idResponsable),
+      orderBy('orden', 'asc')
+    );
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((tareas: any[]) =>
+        tareas.map(t => ({
+          ...t,
+          fecha: t.fecha?.toDate ? t.fecha.toDate() : t.fecha,
+          fechaFin: t.fechaFin?.toDate ? t.fechaFin.toDate() : t.fechaFin
+        }))
+      )
+    ) as Observable<Tarea[]>;
+  }
+
 }

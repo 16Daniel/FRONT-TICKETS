@@ -1,5 +1,4 @@
 import { Comentario } from "./comentario-chat.model";
-import { ResponsableTarea } from "./responsable-tarea.model";
 
 export class Tarea {
   id?: string;

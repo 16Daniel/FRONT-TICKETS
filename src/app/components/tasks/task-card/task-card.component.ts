@@ -13,6 +13,8 @@ import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
+import { Sucursal } from '../../../models/sucursal.model';
+import { BranchesService } from '../../../services/branches.service';
 
 @Component({
   selector: 'app-task-card',
@@ -26,17 +28,23 @@ export class TaskCardComponent implements OnInit {
 
   @Input() tarea!: Tarea;
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
+  @Input() nombreSucursal: string = '';
+  @Input() esOtraSucursal: boolean = false;
   etiquetas: EtiquetaTarea[] = [];
   responsables: ResponsableTarea[] = [];
+  sucursales: Sucursal[] = [];
 
   constructor(
     private tareasService: TareasService,
     private messageService: MessageService,
     private labelsTasksService: LabelsTasksService,
-    private taskResponsibleService: TaskResponsibleService
+    private taskResponsibleService: TaskResponsibleService,
+    private sucursalesService: BranchesService
   ) { }
 
   ngOnInit(): void {
+    this.sucursalesService.get().subscribe(sucursales => this.sucursales = sucursales);
+
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetas = et;
     });
@@ -150,6 +158,11 @@ export class TaskCardComponent implements OnInit {
 
   getSubtareasCompletadas(tarea: any): number {
     return tarea.subtareas?.filter((s: any) => s.terminado).length ?? 0;
+  }
+
+  obtenerNombreSucursal(idSucursal?: string): string {
+    if (!idSucursal) return '';
+    return this.sucursales.find(x => x.id == idSucursal)?.nombre ?? '';
   }
 
 }

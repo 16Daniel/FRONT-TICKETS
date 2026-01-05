@@ -5,6 +5,14 @@
     <div class="titulo">{{ tarea.titulo }}</div>
   </div>
 
+  <!-- SUCURSAL -->
+  <div class="sucursal-info" *ngIf="nombreSucursal">
+    <span class="sucursal-badge" [class.global]="esOtraSucursal">
+      <i *ngIf="esOtraSucursal" class="pi pi-globe"></i>
+      {{ nombreSucursal }}
+    </span>
+  </div>
+
   <!-- ETIQUETA -->
   <div class="fila-etiqueta" *ngIf="tarea.idEtiqueta">
     <div class="etiqueta-contenedor">

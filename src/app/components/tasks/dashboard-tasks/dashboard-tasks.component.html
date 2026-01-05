@@ -43,19 +43,28 @@
 
       <p-dropdown [options]="responsablesFiltrados" [(ngModel)]="responsableSeleccionado" name="responsables"
         optionValue="id" optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="RESPONSABLES"
-        [style]="{ width: '100%' }" (onChange)="onResponsableChange()" [showClear]="true">
+        [style]="{ width: '100%' }" (onChange)="onResponsableChange()" [showClear]="true"
+        class="custom-responsable-dropdown">
 
-        <!-- ITEM SELECCIONADO -->
         <ng-template pTemplate="selectedItem" let-selected>
           <div class="flex align-items-center gap-2" *ngIf="selected">
+            <i *ngIf="selected.esGlobal" class="pi pi-globe global-icon"></i>
             <span>{{ selected.nombre }}</span>
           </div>
         </ng-template>
 
-        <!-- ITEM LISTA -->
         <ng-template pTemplate="item" let-item>
-          <div class="flex align-items-center gap-2">
-            <span>{{ item.nombre }}</span>
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <div class="d-flex flex-column">
+              <span class="fw-medium">{{ item.nombre }}</span>
+              <small *ngIf="item.esGlobal" class="text-muted position-subtitle">
+                {{ item.posicion }}
+              </small>
+            </div>
+
+            <span *ngIf="item.esGlobal" class="badge-global">
+              GLOBAL
+            </span>
           </div>
         </ng-template>
 
@@ -95,7 +104,9 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
+        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>
     </div>
 
@@ -111,7 +122,9 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
+        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>
     </div>
 
@@ -128,7 +141,9 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
+        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>
     </div>
   </div>
@@ -144,7 +159,9 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)">
+      <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
+        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>
     </div>
   </div>
