@@ -49,6 +49,7 @@ export class DashboardTasksComponent implements OnInit {
   mostrarModalResponsables: boolean = false;
 
   sucursales: Sucursal[] = [];
+  sucursalesMap = new Map<string, string>();
   idSucursalSeleccionada: string = '';
   usuario: Usuario;
   // etiquetas: EtiquetaTarea[] = [];
@@ -107,9 +108,14 @@ export class DashboardTasksComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+
+        this.sucursalesMap.clear();
+        data.forEach(s =>
+          this.sucursalesMap.set(s.id!, s.nombre)
+        );
+
         this.cdr.detectChanges();
-      },
-      error: (error) => { },
+      }
     });
   }
 
@@ -198,6 +204,9 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   onSucursalChange() {
+    this.etiquetaSeleccionada = '';
+    this.responsableSeleccionado = '';
+
     this.initData();
     this.filtrarEtiquetas();
     this.filtrarResponsables();

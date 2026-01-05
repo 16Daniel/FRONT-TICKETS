@@ -70,3 +70,27 @@
   font-size: 0.85rem;
   font-weight: 600;
 }
+
+.custom-responsable-dropdown {
+  .global-icon {
+    color: #3b82f6; // Azul primario para identificar lo global rápidamente
+    margin-right: 8px;
+  }
+
+  .position-subtitle {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+
+  .badge-global {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: #e3f2fd;
+    color: #1e40af;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #bfdbfe;
+    letter-spacing: 0.5px;
+  }
+}
