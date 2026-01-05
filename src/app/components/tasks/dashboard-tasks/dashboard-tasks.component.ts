@@ -243,24 +243,37 @@ export class DashboardTasksComponent implements OnInit {
       this.raskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
   }
 
-  onResponsableChange() {
-
-    if (!this.responsableSeleccionado || this.responsableSeleccionado === '') {
+  async onResponsableChange() {
+    // 1. Si se limpia el filtro (clear), volvemos al estado inicial de la sucursal
+    if (!this.responsableSeleccionado) {
       this.initData();
       return;
     }
 
-    const filtradas = this.allTasks.filter(t =>
-      Array.isArray(t.idsResponsables) &&
-      t.idsResponsables.includes(this.responsableSeleccionado)
-    );
+    // 2. Buscamos el objeto completo para verificar si es global
+    const resp = this.responsablesTodos.find(r => r.id === this.responsableSeleccionado);
 
+    if (resp?.esGlobal) {
+      // ESCENARIO GLOBAL: Consultamos a Firestore todas las tareas que tengan este responsable
+      // sin importar la sucursal.
+      this.tareasService.getTareasPorResponsableGlobal(resp.id!).subscribe((tareas: Tarea[]) => {
+        this.distribuirTareas(tareas);
+      });
+    } else {
+      // ESCENARIO LOCAL: initData ya trajo las tareas de la sucursal seleccionada
+      const filtradas = this.allTasks.filter(t =>
+        Array.isArray(t.idsResponsables) &&
+        t.idsResponsables.includes(this.responsableSeleccionado)
+      );
+      this.distribuirTareas(filtradas);
+    }
+  }
 
-    this.toDo = filtradas.filter(x => x.idEstatus === '1');
-    this.working = filtradas.filter(x => x.idEstatus === '2');
-    this.check = filtradas.filter(x => x.idEstatus === '3');
-    this.done = filtradas.filter(x => x.idEstatus === '4');
-
+  private distribuirTareas(tareas: Tarea[]) {
+    this.toDo = tareas.filter(x => x.idEstatus === '1');
+    this.working = tareas.filter(x => x.idEstatus === '2');
+    this.check = tareas.filter(x => x.idEstatus === '3');
+    this.done = tareas.filter(x => x.idEstatus === '4');
     this.cdr.detectChanges();
   }
 
