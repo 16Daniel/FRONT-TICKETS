@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -41,6 +41,7 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
   @Output() closeEvent = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
+  sucursalesMap = new Map<string, string>();
   responsables: ResponsableTarea[] = [];
   idSucursalSeleccionada: string | null = null;
 
@@ -52,12 +53,24 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
   constructor(
     private branchesService: BranchesService,
     private responsablesService: TaskResponsibleService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.subs.add(
-      this.branchesService.get().subscribe(s => this.sucursales = s)
+      this.branchesService.get().subscribe({
+        next: (data) => {
+          this.sucursales = data;
+
+          this.sucursalesMap.clear();
+          data.forEach(s =>
+            this.sucursalesMap.set(s.id!, s.nombre)
+          );
+
+          this.cdr.detectChanges();
+        }
+      })
     );
 
     this.subs.add(
@@ -78,9 +91,9 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
     if (form.invalid || this.cargando) return;
 
     this.cargando = true;
-
+console.log({...this.nuevoResponsable})
     try {
-      await this.responsablesService.create(this.nuevoResponsable);
+      await this.responsablesService.create({...this.nuevoResponsable});
       this.messageService.add({
         severity: 'success',
         summary: 'Correcto',
