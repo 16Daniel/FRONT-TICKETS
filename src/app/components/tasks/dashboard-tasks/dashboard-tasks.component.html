@@ -58,7 +58,7 @@
             <div class="d-flex flex-column">
               <span class="fw-medium">{{ item.nombre }}</span>
               <small *ngIf="item.esGlobal" class="text-muted position-subtitle">
-                {{ item.posicion }}
+                {{ item.posicion }} • {{ sucursalesMap.get(item.idSucursal )}}
               </small>
             </div>
 
@@ -86,6 +86,11 @@
 
       <p-button label="RESPONSABLES" icon="pi pi-users" styleClass="p-button-secondary"
         (click)="mostrarModalResponsables = true"></p-button>
+
+      <p-button label="ARCHIVADOS" icon="pi pi-folder-open" styleClass="p-button-outlined p-button-secondary"
+        (click)="mostrarModalArchivados = true">
+      </p-button>
+
     </div>
 
   </div>
@@ -184,6 +189,9 @@
 <app-new-task *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
   (closeEvent)="mostrarModalNuevaTarea = false">
 </app-new-task>
+
+<app-modal-archived-tasks *ngIf="mostrarModalArchivados" [mostrarModal]="mostrarModalArchivados"
+  (closeEvent)="mostrarModalArchivados = false"></app-modal-archived-tasks>
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

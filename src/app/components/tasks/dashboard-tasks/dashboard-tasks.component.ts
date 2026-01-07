@@ -22,6 +22,7 @@ import { TaskResponsibleService } from '../../../services/task-responsible.servi
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 import { NewTaskComponent } from '../../../modals/tasks/modal-new-task/new-task.component';
 import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/task-detail.component';
+import { ModalArchivedTasksComponent } from '../../../modals/tasks/modal-archived-tasks/modal-archived-tasks.component';
 
 @Component({
   selector: 'app-dashboard-tasks',
@@ -37,7 +38,8 @@ import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/tas
     FormsModule,
     ModalLabelsTaskComponent,
     ButtonModule,
-    ModalTaskResponsibleComponent
+    ModalTaskResponsibleComponent,
+    ModalArchivedTasksComponent
   ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks.component.html',
@@ -47,6 +49,7 @@ export class DashboardTasksComponent implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
   mostrarModalEtiquetas: boolean = false;
   mostrarModalResponsables: boolean = false;
+  mostrarModalArchivados: boolean = false;
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();

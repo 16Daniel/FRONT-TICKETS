@@ -1,0 +1,105 @@
+<p-dialog header="TICKETS ARCHIVADOS" [modal]="true" [(visible)]="mostrarModal"
+  [style]="{ width: '60vw', height: '80vh' }"
+  [contentStyle]="{ 'max-height': 'calc(80vh - 120px)', 'overflow': 'auto' }"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+
+  <!-- FILTROS -->
+  <div class="row mb-3 align-items-end">
+
+    <div class="col-md-3">
+      <label class="fw-bold d-block mb-1">FECHA INICIO</label>
+      <p-calendar dateFormat="dd/mm/yy" showIcon="true" styleClass="w-100"></p-calendar>
+    </div>
+
+    <div class="col-md-3">
+      <label class="fw-bold d-block mb-1">FECHA FIN</label>
+      <p-calendar dateFormat="dd/mm/yy" showIcon="true" styleClass="w-100"></p-calendar>
+    </div>
+
+    <div class="col-md-3">
+      <label class="fw-bold d-block mb-1">SUCURSAL</label>
+      <p-dropdown placeholder="Todas" [filter]="true" [showClear]="true" styleClass="w-100"></p-dropdown>
+    </div>
+
+    <div class="col-md-3">
+      <p-button label="BUSCAR" icon="pi pi-search" class="w-100 p-button-primary">
+      </p-button>
+    </div>
+
+  </div>
+
+  <!-- TABLA NORMAL -->
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+
+      <thead class="table-light">
+        <tr>
+          <th>TICKET</th>
+          <th>SUCURSAL</th>
+          <th>FECHA</th>
+          <th>RESPONSABLES</th>
+          <th class="text-center">ACCIÓN</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <!-- FILA 1 -->
+        <tr>
+          <td>
+            <div class="fw-semibold">Falla en sistema</div>
+            <small class="text-muted">#TK-2031</small>
+          </td>
+          <td>Sucursal Centro</td>
+          <td>12/11/2025</td>
+          <td>
+            <!-- <ngx-avatars name="Juan Pérez" size="28" class="me-1"></ngx-avatars>
+            <ngx-avatars name="Ana López" size="28"></ngx-avatars> -->
+          </td>
+          <td class="text-center">
+            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar">
+            </p-button>
+          </td>
+        </tr>
+
+        <!-- FILA 2 -->
+        <tr>
+          <td>
+            <div class="fw-semibold">Error de impresora</div>
+            <small class="text-muted">#TK-1984</small>
+          </td>
+          <td>Sucursal Norte</td>
+          <td>05/11/2025</td>
+          <td>
+            <!-- <ngx-avatars name="Carlos Méndez" size="28"></ngx-avatars> -->
+          </td>
+          <td class="text-center">
+            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar">
+            </p-button>
+          </td>
+        </tr>
+
+        <!-- FILA 3 -->
+        <tr>
+          <td>
+            <div class="fw-semibold">Actualización de software</div>
+            <small class="text-muted">#TK-1902</small>
+          </td>
+          <td>Sucursal Sur</td>
+          <td>28/10/2025</td>
+          <td>
+            <!-- <ngx-avatars name="Laura Gómez" size="28" class="me-1"></ngx-avatars>
+            <ngx-avatars name="Miguel Ruiz" size="28"></ngx-avatars> -->
+          </td>
+          <td class="text-center">
+            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar">
+            </p-button>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+  </div>
+
+</p-dialog>
