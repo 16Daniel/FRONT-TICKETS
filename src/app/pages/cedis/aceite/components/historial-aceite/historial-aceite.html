@@ -30,24 +30,12 @@
 
           <div class="col-md-3">
             <p>SUCURSAL</p>
-          <p-dropdown [options]="sucursales" [(ngModel)]="sucursalSel" name="sucursal" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR SUCURSAL"
-            [style]="{width:'100%'}">
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre }}</div>
-                </div>
-            </ng-template>
-            <ng-template let-dep pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ dep.nombre }}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
+          <p-multiSelect [options]="sucursales" [(ngModel)]="sucursalesSel" [filter]="true" optionLabel="nombre"
+        placeholder="SELECCIONAR SUCURSALES" [style]="{width:'100%'}" />
         </div>
 
         <div class="col-md-3"><p>&nbsp;</p><button class="btn btn-warning p-2" (click)="buscarRegistros()"><i class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
-        <button class="btn btn-success" (click)="exportarExcel(false)"><img width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
+        <button class="btn btn-success" [disabled]="entregasH.length == 0" (click)="exportarExcel(false)"><img width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
         </div>
       </div>
 
@@ -116,24 +104,12 @@
 
           <div class="col-md-3">
             <p>SUCURSAL</p>
-          <p-dropdown [options]="sucursales" [(ngModel)]="sucursalSel" name="sucursal" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR SUCURSAL"
-            [style]="{width:'100%'}">
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre }}</div>
-                </div>
-            </ng-template>
-            <ng-template let-dep pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ dep.nombre }}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
+        <p-multiSelect [options]="sucursales" [(ngModel)]="sucursalesSel" [filter]="true" optionLabel="nombre"
+        placeholder="SELECCIONAR SUCURSALES" [style]="{width:'100%'}" />
         </div>
 
         <div class="col-md-3"><p>&nbsp;</p><button class="btn btn-warning p-2" (click)="buscarRegistrosTA()"><i class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
-        <button class="btn btn-success" (click)="exportarExcel(true)"><img width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
+        <button class="btn btn-success" [disabled]="entregasTAH.length == 0" (click)="exportarExcel(true)"><img width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
         </div>
       </div>
 
@@ -177,6 +153,10 @@
         </tr>
     </ng-template>
 </p-table>
+</p-tabPanel>
 
-    </p-tabPanel>
+<p-tabPanel header="REPORTE RECOLECCIÓN ACEITE">
+ <app-reporte-aceite-tab [sucursales]="sucursales"></app-reporte-aceite-tab>
+</p-tabPanel>
+
 </p-tabView>
