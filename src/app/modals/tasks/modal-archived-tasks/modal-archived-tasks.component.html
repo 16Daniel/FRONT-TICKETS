@@ -1,30 +1,46 @@
 <p-dialog header="TICKETS ARCHIVADOS" [modal]="true" [(visible)]="mostrarModal"
-  [style]="{ width: '60vw', height: '80vh' }"
+  [style]="{ width: '80vw', height: '80vh' }"
   [contentStyle]="{ 'max-height': 'calc(80vh - 120px)', 'overflow': 'auto' }"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
 
   <!-- FILTROS -->
   <div class="row mb-3 align-items-end">
+    <input class="invisible">
 
-    <div class="col-md-3">
-      <label class="fw-bold d-block mb-1">FECHA INICIO</label>
-      <p-calendar dateFormat="dd/mm/yy" showIcon="true" styleClass="w-100"></p-calendar>
+
+    <div class="col-md-4">
+      <p class="fw-bold">FECHA INICIAL</p>
+      <p-calendar [(ngModel)]="fechaInicio" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
+    </div>
+    <div class="col-md-4">
+      <p class="fw-bold">FECHA FINAL</p>
+      <p-calendar [(ngModel)]="fechaFin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
     </div>
 
-    <div class="col-md-3">
-      <label class="fw-bold d-block mb-1">FECHA FIN</label>
-      <p-calendar dateFormat="dd/mm/yy" showIcon="true" styleClass="w-100"></p-calendar>
+
+    <div class="col-md-4">
+      <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
+      <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" name="sucursal" [optionValue]="'id'"
+        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
+        [style]="{width:'100%'}" required="true">
+      </p-dropdown>
     </div>
 
-    <div class="col-md-3">
-      <label class="fw-bold d-block mb-1">SUCURSAL</label>
-      <p-dropdown placeholder="Todas" [filter]="true" [showClear]="true" styleClass="w-100"></p-dropdown>
+    <div class="col-md-12">
+      <p class="fw-bold mb-1">BUSCAR POR TÍTULO</p>
+      <span class="p-input-icon-left w-100">
+        <input type="text" class="form-control" placeholder="Escribe el título..." [(ngModel)]="textoBusqueda"
+          (input)="onBuscarTitulo()" />
+      </span>
     </div>
+  </div>
 
-    <div class="col-md-3">
-      <p-button label="BUSCAR" icon="pi pi-search" class="w-100 p-button-primary">
-      </p-button>
-    </div>
+  <div class="d-flex justify-content-end mt-3 mb-3">
+    <!-- <button class="btn bg-p-b p-3" (click)="buscarTickets()">Buscar</button> -->
+    <p-button label="BUSCAR" icon="pi pi-search" styleClass="p-button-primary" (click)="buscarTickets()">
+    </p-button>
 
   </div>
 
@@ -34,7 +50,7 @@
 
       <thead class="table-light">
         <tr>
-          <th>TICKET</th>
+          <th>TAREA</th>
           <th>SUCURSAL</th>
           <th>FECHA</th>
           <th>RESPONSABLES</th>
@@ -44,58 +60,28 @@
 
       <tbody>
 
-        <!-- FILA 1 -->
-        <tr>
+        @for (
+        tarea of (tareas | searchFilter: { titulo: textoBusqueda });
+        track tarea.id
+        ) { <tr>
+          <td pTooltip="{{tarea.descripcion ?? 'SIN DESCRIPCIÓN' }}">{{tarea.titulo}}</td>
+          <td pTooltip="{{tarea.descripcion ?? 'SIN DESCRIPCIÓN' }}">{{sucursalesMap.get(tarea.idSucursal)}}</td>
+          <td pTooltip="{{tarea.descripcion ?? 'SIN DESCRIPCIÓN' }}">{{datesHelper.getDate(tarea.fecha) |
+            date:'dd/MM/yyyy'}}</td>
           <td>
-            <div class="fw-semibold">Falla en sistema</div>
-            <small class="text-muted">#TK-2031</small>
-          </td>
-          <td>Sucursal Centro</td>
-          <td>12/11/2025</td>
-          <td>
-            <!-- <ngx-avatars name="Juan Pérez" size="28" class="me-1"></ngx-avatars>
-            <ngx-avatars name="Ana López" size="28"></ngx-avatars> -->
+            <div class="avatars-container" *ngIf="tarea.idsResponsables?.length">
+              <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30"
+                class="avatar-item" pTooltip="{{r.nombre }}" [bgColor]="r.color">
+              </ngx-avatars>
+            </div>
           </td>
           <td class="text-center">
-            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar">
+            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar"
+              (click)="onClickDesarchivar(tarea)">
             </p-button>
           </td>
         </tr>
-
-        <!-- FILA 2 -->
-        <tr>
-          <td>
-            <div class="fw-semibold">Error de impresora</div>
-            <small class="text-muted">#TK-1984</small>
-          </td>
-          <td>Sucursal Norte</td>
-          <td>05/11/2025</td>
-          <td>
-            <!-- <ngx-avatars name="Carlos Méndez" size="28"></ngx-avatars> -->
-          </td>
-          <td class="text-center">
-            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar">
-            </p-button>
-          </td>
-        </tr>
-
-        <!-- FILA 3 -->
-        <tr>
-          <td>
-            <div class="fw-semibold">Actualización de software</div>
-            <small class="text-muted">#TK-1902</small>
-          </td>
-          <td>Sucursal Sur</td>
-          <td>28/10/2025</td>
-          <td>
-            <!-- <ngx-avatars name="Laura Gómez" size="28" class="me-1"></ngx-avatars>
-            <ngx-avatars name="Miguel Ruiz" size="28"></ngx-avatars> -->
-          </td>
-          <td class="text-center">
-            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar">
-            </p-button>
-          </td>
-        </tr>
+        }
 
       </tbody>
 

@@ -11,6 +11,7 @@ import {
   updateDoc,
   docData,
   getDocs,
+  QueryConstraint,
 } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { Tarea } from '../models/tarea.model';
@@ -72,6 +73,36 @@ export class TareasService {
     );
     return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
   }
+
+  getArchivedTasks(
+    idSucursal: string,
+    fechaInicio?: Date,
+    fechaFin?: Date
+  ): Observable<Tarea[]> {
+    const ref = collection(this.firestore, this.pathName);
+
+    const constraints: QueryConstraint[] = [
+      where('eliminado', '==', false),
+      where('idEstatus', '==', '5'),
+      where('idSucursal', '==', idSucursal),
+    ];
+
+    if (fechaInicio) {
+      constraints.push(where('fecha', '>=', fechaInicio));
+    }
+
+    if (fechaFin) {
+      constraints.push(where('fecha', '<=', fechaFin));
+    }
+
+    constraints.push(orderBy('fecha', 'desc'));
+    constraints.push(orderBy('orden', 'asc'));
+
+    const q = query(ref, ...constraints);
+
+    return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
+  }
+
 
   getById(idTarea: string): Observable<Tarea> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idTarea}`);
