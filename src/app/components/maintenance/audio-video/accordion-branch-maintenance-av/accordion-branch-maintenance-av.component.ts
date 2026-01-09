@@ -10,6 +10,7 @@ import { Usuario } from '../../../../models/usuario.model';
 import { BranchMaintenanceTableAvComponent } from '../branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
 import { UsersService } from '../../../../services/users.service';
+import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-av',
@@ -29,7 +30,8 @@ export class AccordionBranchMaintenanceAvComponent {
 
   constructor(
     private usersService: UsersService,
-    private maintenance6x6AvService: Maintenance6x6AvService
+    private maintenance6x6AvService: Maintenance6x6AvService,
+    private datesHelper: DatesHelperService
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
@@ -148,15 +150,13 @@ export class AccordionBranchMaintenanceAvComponent {
       (x) => x.idSucursal == idSucursal
     );
     if (registro.length > 0) {
-      let fechaM: Date;
 
-      const valorIncierto: Date | Timestamp = registro[0].timestamp!;
-      fechaM = valorIncierto instanceof Date ? valorIncierto : valorIncierto.toDate();
+      const fecha: Date | Timestamp = this.datesHelper.getDate(registro[0].fecha!);
 
       const hoy = new Date();
       // Ajustar ambas fechas a UTC para evitar problemas con horario de verano
       const utc1 = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-      const utc2 = Date.UTC(fechaM.getFullYear(), fechaM.getMonth(), fechaM.getDate());
+      const utc2 = Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
 
       dias = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24));
 
