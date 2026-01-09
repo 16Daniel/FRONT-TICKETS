@@ -10,6 +10,7 @@ import { Usuario } from '../../../../models/usuario.model';
 import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
 import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { UsersService } from '../../../../services/users.service';
+import { DatesHelperService } from '../../../../helpers/dates-helper.service';
 
 @Component({
   selector: 'app-accordion-branch-maintenance10x10',
@@ -33,6 +34,7 @@ export class AccordionBranchMaintenance10x10Component {
   constructor(
     private usersService: UsersService,
     private maintenance10x10Service: Maintenance10x10Service,
+    private datesHelper: DatesHelperService
 
   ) { this.obtenerUsuariosHelp(); }
 
@@ -103,32 +105,21 @@ export class AccordionBranchMaintenance10x10Component {
 
   obtenerDiasPasados(idSucursal: string): number {
     let dias = 0;
-    const registro = this.mantenimientos.filter(x => x.idSucursal == idSucursal);
+    let registro = this.mantenimientos.filter(
+      (x) => x.idSucursal == idSucursal
+    );
+    if (registro.length > 0) {
 
-    if (registro.length > 0 && registro[0].fecha) {
-
-      let fechaM: Date;
-
-      const rawFecha = registro[0].fecha;
-
-      if (rawFecha instanceof Date) {
-        fechaM = rawFecha;
-      }
-      else if ('seconds' in rawFecha) {
-        const ts = rawFecha as { seconds: number; nanoseconds: number };
-        fechaM = new Date(ts.seconds * 1000);
-      } else {
-        console.warn('Formato de fecha desconocido:', rawFecha);
-        return 0;
-      }
+      const fecha: Date | Timestamp = this.datesHelper.getDate(registro[0].fecha!);
 
       const hoy = new Date();
+      // Ajustar ambas fechas a UTC para evitar problemas con horario de verano
       const utc1 = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-      const utc2 = Date.UTC(fechaM.getFullYear(), fechaM.getMonth(), fechaM.getDate());
+      const utc2 = Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
 
       dias = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24));
-    }
 
+    }
     return dias;
   }
 
