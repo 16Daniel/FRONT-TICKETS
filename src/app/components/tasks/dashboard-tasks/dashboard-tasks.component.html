@@ -1,197 +1,24 @@
-<div class="row align-items-center">
+<app-tasks-filter-component
+  [sucursales]="sucursales"
+  [etiquetas]="etiquetasFiltradas"
+  [responsables]="responsablesFiltrados"
+  [idSucursalSeleccionada]="idSucursalSeleccionada"
+  [etiquetaSeleccionada]="etiquetaSeleccionada"
+  [responsableSeleccionado]="responsableSeleccionado"
+  (sucursalChange)="idSucursalSeleccionada = $event; onSucursalChange()"
+  (etiquetaChange)="etiquetaSeleccionada = $event; onEtiquetaChange()"
+  (responsableChange)="responsableSeleccionado = $event; onResponsableChange()">
+</app-tasks-filter-component>
 
-  <div class="row">
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
-      <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" name="sucursal" [optionValue]="'id'"
-        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
-        [style]="{width:'100%'}" required="true" (onChange)="onSucursalChange()">
-      </p-dropdown>
-    </div>
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">ETIQUETAS</p>
-      <p-dropdown [options]="etiquetasFiltradas" [(ngModel)]="etiquetaSeleccionada" name="etiquetas" optionValue="id"
-        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS" [style]="{width:'100%'}"
-        (onChange)="onEtiquetaChange()" [showClear]="true">
+<p></p>
 
-        <ng-template pTemplate="selectedItem" let-selected>
-          <div class="flex align-items-center gap-2" *ngIf="selected">
-
-            <!-- círculo de color -->
-            <span class="label-dot" [style.background]="selected.color">
-            </span>
-
-            <span>{{ selected.nombre }}</span>
-          </div>
-        </ng-template>
-
-        <ng-template pTemplate="item" let-item>
-          <div class="flex align-items-center gap-2">
-
-            <!-- círculo de color -->
-            <span class="label-dot" [style.background]="item.color">
-            </span>
-
-            <span>{{ item.nombre }}</span>
-          </div>
-        </ng-template>
-
-      </p-dropdown>
-    </div>
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">RESPONSABLES</p>
-
-      <p-dropdown [options]="responsablesFiltrados" [(ngModel)]="responsableSeleccionado" name="responsables"
-        optionValue="id" optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="RESPONSABLES"
-        [style]="{ width: '100%' }" (onChange)="onResponsableChange()" [showClear]="true"
-        class="custom-responsable-dropdown">
-
-        <ng-template pTemplate="selectedItem" let-selected>
-          <div class="flex align-items-center gap-2" *ngIf="selected">
-            <i *ngIf="selected.esGlobal" class="pi pi-globe global-icon"></i>
-            <span>{{ selected.nombre }}</span>
-          </div>
-        </ng-template>
-
-        <ng-template pTemplate="item" let-item>
-          <div class="d-flex justify-content-between align-items-center w-100">
-            <div class="d-flex flex-column">
-              <span class="fw-medium">{{ item.nombre }}</span>
-              <small class="text-muted position-subtitle">
-                {{ item.posicion }} • {{ sucursalesMap.get(item.idSucursal )}}
-              </small>
-            </div>
-
-            <span *ngIf="item.esGlobal" class="badge-global">
-              GLOBAL
-            </span>
-          </div>
-        </ng-template>
-
-      </p-dropdown>
-    </div>
-
-  </div>
-
-  <p></p>
-
-  <div class="d-flex justify-content-end mt-3">
-
-    <div class="acciones">
-      <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-primary" (click)="abrirModalAgregarTarea()">
-      </p-button>
-
-      <p-button label="ETIQUETAS" icon="pi pi-tags" styleClass="p-button-danger" (click)="mostrarModalEtiquetas = true">
-      </p-button>
-
-      <p-button label="RESPONSABLES" icon="pi pi-users" styleClass="p-button-secondary"
-        (click)="mostrarModalResponsables = true"></p-button>
-
-      <p-button label="ARCHIVADOS" icon="pi pi-folder-open" styleClass="p-button-outlined p-button-secondary"
-        (click)="mostrarModalArchivados = true">
-      </p-button>
-
-    </div>
-
-  </div>
-</div>
-
-
-<div class="tablero-tareas">
-
-  <!-- TODO -->
-  <div class="columna" style="background-color: #fecbcb;" cdkDropList id="todoList" [cdkDropListData]="toDo"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
-
-    <div class="titulo-columna">
-      <h3>TO DO</h3>
-      <span class="contador">{{ toDo.length }}</span>
-    </div>
-
-    <div class="scroll">
-      <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
-    </div>
-
-  </div>
-
-  <!-- WORKING -->
-  <div class="columna" style="background-color: #fef9cb;" cdkDropList id="workingList" [cdkDropListData]="working"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
-
-    <div class="titulo-columna">
-      <h3>WORKING</h3>
-      <span class="contador">{{ working.length }}</span>
-    </div>
-
-    <div class="scroll">
-      <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
-    </div>
-
-  </div>
-
-
-  <!-- CHECK -->
-  <div class="columna" style="background-color: #cbcdfe;" cdkDropList id="checkList" [cdkDropListData]="check"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
-
-    <div class="titulo-columna">
-      <h3>CHECK</h3>
-      <span class="contador">{{ check.length }}</span>
-    </div>
-
-    <div class="scroll">
-      <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
-    </div>
-  </div>
-
-
-  <!-- DONE -->
-  <div class="columna" style="background-color: #e4fecb;" cdkDropList id="doneList" [cdkDropListData]="done"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
-
-    <div class="titulo-columna">
-      <h3>DONE</h3>
-      <span class="contador">{{ done.length }}</span>
-    </div>
-
-    <div class="scroll">
-      <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="abrirDetalle($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
-    </div>
-  </div>
-
-
-</div>
+<app-tasks-board [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"
+  [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)">
+</app-tasks-board>
 
 <app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
   (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada">
 </app-task-detail>
-
-<app-modal-labels-task *ngIf="mostrarModalEtiquetas" [mostrarModal]="mostrarModalEtiquetas"
-  (closeEvent)="mostrarModalEtiquetas = false">
-</app-modal-labels-task>
-
-<app-modal-task-responsible *ngIf="mostrarModalResponsables" [mostrarModal]="mostrarModalResponsables"
-  (closeEvent)="mostrarModalResponsables = false">
-</app-modal-task-responsible>
-
-<app-new-task *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
-  (closeEvent)="mostrarModalNuevaTarea = false">
-</app-new-task>
-
-<app-modal-archived-tasks *ngIf="mostrarModalArchivados" [mostrarModal]="mostrarModalArchivados"
-  (closeEvent)="mostrarModalArchivados = false"></app-modal-archived-tasks>
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

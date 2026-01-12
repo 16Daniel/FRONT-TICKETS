@@ -7,22 +7,19 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 
-import { TaskCardComponent } from '../task-card/task-card.component';
 import { Tarea } from '../../../models/tarea.model';
 import { TareasService } from '../../../services/tareas.service';
 import { Sucursal } from '../../../models/sucursal.model';
-import { ModalLabelsTaskComponent } from '../../../modals/tasks/modal-labels-task/modal-labels-task.component';
 import { BranchesService } from '../../../services/branches.service';
 import { Usuario } from '../../../models/usuario.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
 import { ButtonModule } from 'primeng/button';
-import { ModalTaskResponsibleComponent } from '../../../modals/tasks/modal-task-responsible/modal-task-responsible.component';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
-import { NewTaskComponent } from '../../../modals/tasks/modal-new-task/new-task.component';
 import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/task-detail.component';
-import { ModalArchivedTasksComponent } from '../../../modals/tasks/modal-archived-tasks/modal-archived-tasks.component';
+import { TasksFilterComponentComponent } from '../tasks-filter-component/tasks-filter-component.component';
+import { TasksBoardComponent } from '../tasks-board/tasks-board.component';
 
 @Component({
   selector: 'app-dashboard-tasks',
@@ -30,16 +27,13 @@ import { ModalArchivedTasksComponent } from '../../../modals/tasks/modal-archive
   imports: [
     DragDropModule,
     CommonModule,
-    NewTaskComponent,
-    TaskCardComponent,
     ToastModule,
     TaskDetailComponent,
     DropdownModule,
     FormsModule,
-    ModalLabelsTaskComponent,
     ButtonModule,
-    ModalTaskResponsibleComponent,
-    ModalArchivedTasksComponent
+    TasksFilterComponentComponent,
+    TasksBoardComponent
   ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks.component.html',
@@ -47,15 +41,11 @@ import { ModalArchivedTasksComponent } from '../../../modals/tasks/modal-archive
 })
 export class DashboardTasksComponent implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
-  mostrarModalEtiquetas: boolean = false;
-  mostrarModalResponsables: boolean = false;
-  mostrarModalArchivados: boolean = false;
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
   idSucursalSeleccionada: string = '';
   usuario: Usuario;
-  // etiquetas: EtiquetaTarea[] = [];
   etiquetasTodas: EtiquetaTarea[] = [];
   etiquetasFiltradas: EtiquetaTarea[] = [];
   etiquetaSeleccionada: string = '';
@@ -64,6 +54,8 @@ export class DashboardTasksComponent implements OnInit {
   responsablesTodos: ResponsableTarea[] = [];
   responsablesFiltrados: ResponsableTarea[] = [];
   responsableSeleccionado: string = '';
+
+  sucursalSeleccionadaNombre?: string;
 
   constructor(
     private tareasService: TareasService,
@@ -95,17 +87,12 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
-  mostrarModalNuevaTarea = false;
   tareaSeleccionada!: Tarea;
 
   toDo: Tarea[] = [];
   working: Tarea[] = [];
   check: Tarea[] = [];
   done: Tarea[] = [];
-
-  abrirModalAgregarTarea() {
-    this.mostrarModalNuevaTarea = true;
-  }
 
   obtenerSucursales() {
     this.branchesService.get().subscribe({
@@ -116,6 +103,12 @@ export class DashboardTasksComponent implements OnInit {
         data.forEach(s =>
           this.sucursalesMap.set(s.id!, s.nombre)
         );
+
+        // Nombre inicial (modo local)
+        if (this.idSucursalSeleccionada) {
+          this.sucursalSeleccionadaNombre =
+            this.sucursalesMap.get(this.idSucursalSeleccionada);
+        }
 
         this.cdr.detectChanges();
       }
@@ -179,27 +172,28 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   initData() {
-    this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
+    if (!this.idSucursalSeleccionada) {
+      // GLOBAL
+      this.tareasService.getAll().subscribe(tareas => {
+        this.allTasks = tareas;
+        this.distribuirTareas(tareas);
+      });
+      return;
+    }
 
-      this.allTasks = tareas.filter(x =>
-        x.idEstatus == '1'
-        || x.idEstatus == '2'
-        || x.idEstatus == '3'
-        || x.idEstatus == '4'
-      );
-
-      this.toDo = tareas.filter(x => x.idEstatus == '1');
-      this.working = tareas.filter(x => x.idEstatus == '2');
-      this.check = tareas.filter(x => x.idEstatus == '3');
-      this.done = tareas.filter(x => x.idEstatus == '4');
-
-      this.cdr.detectChanges();
-    });
+    // LOCAL
+    this.tareasService
+      .getBySucursal(this.idSucursalSeleccionada)
+      .subscribe(tareas => {
+        this.allTasks = tareas.filter(x =>
+          ['1', '2', '3', '4'].includes(x.idEstatus)
+        );
+        this.distribuirTareas(this.allTasks);
+      });
   }
 
-  showMessage(sev: string, summ: string, det: string) {
+  showMessage = (sev: string, summ: string, det: string) =>
     this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
 
   abrirDetalle(tarea: Tarea) {
     this.tareaSeleccionada = { ...tarea };
@@ -207,13 +201,15 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   onSucursalChange() {
+    this.sucursalSeleccionadaNombre =
+      this.sucursalesMap.get(this.idSucursalSeleccionada);
+
     this.etiquetaSeleccionada = '';
     this.responsableSeleccionado = '';
 
     this.initData();
     this.filtrarEtiquetas();
     this.filtrarResponsables();
-
   }
 
   onEtiquetaChange() {
