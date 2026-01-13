@@ -50,12 +50,20 @@ export class DashboardTasksComponent implements OnInit {
   etiquetasFiltradas: EtiquetaTarea[] = [];
   idEtiquetaSeleccionada: string = '';
   allTasks: Tarea[] = [];
-
+  esGlobal: boolean = false;
   responsablesTodos: ResponsableTarea[] = [];
   idResponsableSeleccionado: string = '';
   idsResponsablesGlobales: string[] = [];
   sucursalSeleccionadaNombre?: string;
   textoBusqueda!: string;
+
+  dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
+  tareaSeleccionada!: Tarea;
+
+  toDo: Tarea[] = [];
+  working: Tarea[] = [];
+  check: Tarea[] = [];
+  done: Tarea[] = [];
 
   constructor(
     private tareasService: TareasService,
@@ -85,14 +93,6 @@ export class DashboardTasksComponent implements OnInit {
       // this.filtrarResponsables();
     });
   }
-
-  dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
-  tareaSeleccionada!: Tarea;
-
-  toDo: Tarea[] = [];
-  working: Tarea[] = [];
-  check: Tarea[] = [];
-  done: Tarea[] = [];
 
   obtenerSucursales() {
     this.branchesService.get().subscribe({
@@ -172,9 +172,9 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   initData() {
-    if (!this.idSucursalSeleccionada) {
+    if (this.esGlobal) {
       // GLOBAL
-      this.tareasService.getAll().subscribe(tareas => {
+      this.tareasService.getByResponsables(this.idsResponsablesGlobales).subscribe(tareas => {
         this.allTasks = tareas;
         this.distribuirTareas(tareas);
       });
@@ -242,16 +242,9 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   async onResponsableChange() {
-    if (!this.idResponsableSeleccionado) {
-      this.initData();
-      return;
-    }
-
-    const filtradas = this.allTasks.filter(t =>
-      Array.isArray(t.idsResponsables) &&
-      t.idsResponsables.includes(this.idResponsableSeleccionado)
-    );
-    this.distribuirTareas(filtradas);
+    // debugger
+    // this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+    this.initData();
   }
 
   private distribuirTareas(tareas: Tarea[]) {
@@ -272,19 +265,8 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   onResponsablesGlobalesChange(): void {
-    if (!this.idsResponsablesGlobales || this.idsResponsablesGlobales.length === 0) {
-      // this.initData();
-      return;
-    }
-
-    const filtradas = this.allTasks.filter(t =>
-      Array.isArray(t.idsResponsables) &&
-      t.idsResponsables.some(id =>
-        this.idsResponsablesGlobales.includes(id)
-      )
-    );
-
-    this.distribuirTareas(filtradas);
+    // debugger
+    this.initData();
   }
 
 }

@@ -34,12 +34,13 @@ export class TasksFilterComponentComponent {
   @Input() etiquetas: any[] = [];
 
   @Input() idSucursalSeleccionada!: string;
-  @Input() idEtiquetaSeleccionada!: string;
-  @Input() idResponsableSeleccionado!: string;
-  @Input() idsResponsablesGlobalesSeleccionados: string[] = [];
+  idEtiquetaSeleccionada!: string;
+  idResponsableSeleccionado!: string;
+  idsResponsablesGlobalesSeleccionados: string[] = [];
 
   @Input() sucursalSeleccionadaNombre?: string;
 
+  @Output() esGlobal = new EventEmitter<boolean>();
   @Output() textoBusquedaChange = new EventEmitter<string>();
   @Output() sucursalChange = new EventEmitter<string>();
   @Output() etiquetaChange = new EventEmitter<string>();
@@ -60,15 +61,18 @@ export class TasksFilterComponentComponent {
   constructor(private taskResponsibleService: TaskResponsibleService) { }
 
   ngOnInit(): void {
-    this.actualizarResponsables();
+    this.taskResponsibleService.responsables$.subscribe(() => {
+      this.actualizarResponsables();
+    });
   }
 
   onToggleModo(global: boolean): void {
     this.mostrarFiltrosGlobales = global;
 
-    // this.idResponsableSeleccionado = undefined!;
-    // this.idsResponsablesGlobalesSeleccionados = [];
+    // if (global)
+    //   this.sucursalChange.emit(undefined as any)
 
+    this.esGlobal.emit(global);
     this.responsableChange.emit(undefined as any);
     this.responsablesGlobalesChange.emit([]);
 

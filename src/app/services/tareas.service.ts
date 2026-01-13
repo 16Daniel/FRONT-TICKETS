@@ -13,7 +13,7 @@ import {
   getDocs,
   QueryConstraint,
 } from '@angular/fire/firestore';
-import { map, Observable, of } from 'rxjs';
+import { combineLatest, map, Observable, of } from 'rxjs';
 import { Tarea } from '../models/tarea.model';
 
 @Injectable({
@@ -128,28 +128,44 @@ export class TareasService {
     }
   }
 
-  // getTareasPorResponsablesGlobales(idsResponsables: string[]): Observable<Tarea[]> {
-  //   if (!idsResponsables.length) {
-  //     return of([] as Tarea[]);
-  //   }
+  getByResponsables(idsResponsables: string[]): Observable<Tarea[]> {
+    if (!idsResponsables.length) {
+      return of([]);
+    }
 
-  //   const ref = collection(this.firestore, this.pathName);
-  //   const q = query(
-  //     ref,
-  //     where('eliminado', '==', false),
-  //     where('idsResponsables', 'array-contains-any', idsResponsables),
-  //     orderBy('orden', 'asc')
-  //   );
+    const ref = collection(this.firestore, this.pathName);
+    const estatusValidos = ['1', '2', '3', '4'];
 
-  //   return collectionData(q, { idField: 'id' }).pipe(
-  //     map((tareas: any[]) =>
-  //       tareas.map(t => ({
-  //         ...t,
-  //         fecha: t.fecha?.toDate ? t.fecha.toDate() : t.fecha,
-  //         fechaFin: t.fechaFin?.toDate ? t.fechaFin.toDate() : t.fechaFin
-  //       }))
-  //     )
-  //   ) as Observable<Tarea[]>;
-  // }
+    const queries$ = estatusValidos.map(idEstatus => {
+      const q = query(
+        ref,
+        where('eliminado', '==', false),
+        where('idEstatus', '==', idEstatus),
+        where('idsResponsables', 'array-contains-any', idsResponsables),
+        orderBy('orden', 'asc')
+      );
+
+      return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
+    });
+
+    return combineLatest(queries$).pipe(
+      map(results => {
+        const mapTareas = new Map<string, Tarea>();
+
+        results.flat().forEach(t => {
+          mapTareas.set(t.id!, {
+            ...t,
+            fecha: (t as any).fecha?.toDate?.() ?? t.fecha,
+            fechaFin: (t as any).fechaFin?.toDate?.() ?? t.fechaFin
+          });
+        });
+
+        return Array.from(mapTareas.values()).sort(
+          (a, b) => (a.orden ?? 0) - (b.orden ?? 0)
+        );
+      })
+    );
+  }
+
 
 }
