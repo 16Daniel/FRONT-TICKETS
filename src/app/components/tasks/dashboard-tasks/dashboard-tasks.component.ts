@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 
 import { Tarea } from '../../../models/tarea.model';
 import { TareasService } from '../../../services/tareas.service';
@@ -14,7 +15,6 @@ import { BranchesService } from '../../../services/branches.service';
 import { Usuario } from '../../../models/usuario.model';
 import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
-import { ButtonModule } from 'primeng/button';
 import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/task-detail.component';
@@ -48,14 +48,14 @@ export class DashboardTasksComponent implements OnInit {
   usuario: Usuario;
   etiquetasTodas: EtiquetaTarea[] = [];
   etiquetasFiltradas: EtiquetaTarea[] = [];
-  etiquetaSeleccionada: string = '';
+  idEtiquetaSeleccionada: string = '';
   allTasks: Tarea[] = [];
 
   responsablesTodos: ResponsableTarea[] = [];
-  responsablesFiltrados: ResponsableTarea[] = [];
-  responsableSeleccionado: string = '';
-
+  idResponsableSeleccionado: string = '';
+  idsResponsablesGlobales: string[] = [];
   sucursalSeleccionadaNombre?: string;
+  textoBusqueda!: string;
 
   constructor(
     private tareasService: TareasService,
@@ -80,9 +80,9 @@ export class DashboardTasksComponent implements OnInit {
       this.filtrarEtiquetas();
     });
 
-    this.raskResponsibleService.responsables$.subscribe(responsable => {
-      this.responsablesTodos = responsable;
-      this.filtrarResponsables();
+    this.raskResponsibleService.responsables$.subscribe(responsables => {
+      this.responsablesTodos = responsables;
+      // this.filtrarResponsables();
     });
   }
 
@@ -204,23 +204,23 @@ export class DashboardTasksComponent implements OnInit {
     this.sucursalSeleccionadaNombre =
       this.sucursalesMap.get(this.idSucursalSeleccionada);
 
-    this.etiquetaSeleccionada = '';
-    this.responsableSeleccionado = '';
+    this.idEtiquetaSeleccionada = '';
+    this.idResponsableSeleccionado = '';
 
     this.initData();
     this.filtrarEtiquetas();
-    this.filtrarResponsables();
+    // this.filtrarResponsables();
   }
 
   onEtiquetaChange() {
 
-    if (!this.etiquetaSeleccionada || this.etiquetaSeleccionada === '') {
+    if (!this.idEtiquetaSeleccionada || this.idEtiquetaSeleccionada === '') {
       this.initData();
       return;
     }
 
     const filtradas = this.allTasks.filter(t =>
-      t.idEtiqueta && t.idEtiqueta === this.etiquetaSeleccionada
+      t.idEtiqueta && t.idEtiqueta === this.idEtiquetaSeleccionada
     );
 
     this.toDo = filtradas.filter(x => x.idEstatus == '1');
@@ -241,40 +241,17 @@ export class DashboardTasksComponent implements OnInit {
       this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
   }
 
-  filtrarResponsables(): void {
-    if (!this.idSucursalSeleccionada) {
-      this.responsablesFiltrados = this.responsablesTodos;
-      return;
-    }
-
-    this.responsablesFiltrados =
-      this.raskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
-  }
-
   async onResponsableChange() {
-    // 1. Si se limpia el filtro (clear), volvemos al estado inicial de la sucursal
-    if (!this.responsableSeleccionado) {
+    if (!this.idResponsableSeleccionado) {
       this.initData();
       return;
     }
 
-    // 2. Buscamos el objeto completo para verificar si es global
-    const resp = this.responsablesTodos.find(r => r.id === this.responsableSeleccionado);
-
-    if (resp?.esGlobal) {
-      // ESCENARIO GLOBAL: Consultamos a Firestore todas las tareas que tengan este responsable
-      // sin importar la sucursal.
-      this.tareasService.getTareasPorResponsableGlobal(resp.id!).subscribe((tareas: Tarea[]) => {
-        this.distribuirTareas(tareas);
-      });
-    } else {
-      // ESCENARIO LOCAL: initData ya trajo las tareas de la sucursal seleccionada
-      const filtradas = this.allTasks.filter(t =>
-        Array.isArray(t.idsResponsables) &&
-        t.idsResponsables.includes(this.responsableSeleccionado)
-      );
-      this.distribuirTareas(filtradas);
-    }
+    const filtradas = this.allTasks.filter(t =>
+      Array.isArray(t.idsResponsables) &&
+      t.idsResponsables.includes(this.idResponsableSeleccionado)
+    );
+    this.distribuirTareas(filtradas);
   }
 
   private distribuirTareas(tareas: Tarea[]) {
@@ -292,6 +269,22 @@ export class DashboardTasksComponent implements OnInit {
         this.tareasService.update({ orden: index }, tarea.id!);
       }
     });
+  }
+
+  onResponsablesGlobalesChange(): void {
+    if (!this.idsResponsablesGlobales || this.idsResponsablesGlobales.length === 0) {
+      // this.initData();
+      return;
+    }
+
+    const filtradas = this.allTasks.filter(t =>
+      Array.isArray(t.idsResponsables) &&
+      t.idsResponsables.some(id =>
+        this.idsResponsablesGlobales.includes(id)
+      )
+    );
+
+    this.distribuirTareas(filtradas);
   }
 
 }

@@ -4,15 +4,13 @@
   <div class="col-12 mb-3">
     <div class="d-flex gap-2">
 
-      <!-- FILTROS LOCALES -->
-      <button type="button" class="btn" (click)="mostrarFiltrosGlobales = false"
-        [class.btn-primary]="!mostrarFiltrosGlobales" [class.btn-outline-primary]="mostrarFiltrosGlobales">
+      <button type="button" class="btn" (click)="onToggleModo(false)" [class.btn-primary]="!mostrarFiltrosGlobales"
+        [class.btn-outline-primary]="mostrarFiltrosGlobales">
         Filtros locales
       </button>
 
-      <!-- FILTROS GLOBALES -->
-      <button type="button" class="btn" (click)="mostrarFiltrosGlobales = true"
-        [class.btn-primary]="mostrarFiltrosGlobales" [class.btn-outline-primary]="!mostrarFiltrosGlobales">
+      <button type="button" class="btn" (click)="onToggleModo(true)" [class.btn-primary]="mostrarFiltrosGlobales"
+        [class.btn-outline-primary]="!mostrarFiltrosGlobales">
         Filtros globales
       </button>
 
@@ -29,16 +27,16 @@
       <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
       <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" optionLabel="nombre" optionValue="id"
         [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO" [style]="{ width: '100%' }"
-        (onChange)="sucursalChange.emit(idSucursalSeleccionada)">
+        (onChange)="onSucursalChange()">
       </p-dropdown>
     </div>
 
     <!-- ETIQUETAS -->
     <div class="col-md-4">
       <p class="fw-bold mb-1">ETIQUETAS</p>
-      <p-dropdown [options]="etiquetas" [(ngModel)]="etiquetaSeleccionada" optionLabel="nombre" optionValue="id"
+      <p-dropdown [options]="etiquetas" [(ngModel)]="idEtiquetaSeleccionada" optionLabel="nombre" optionValue="id"
         [filter]="true" placeholder="ETIQUETAS" [showClear]="true" [style]="{ width: '100%' }"
-        (onChange)="etiquetaChange.emit(etiquetaSeleccionada)">
+        (onChange)="etiquetaChange.emit(idEtiquetaSeleccionada)">
 
         <ng-template pTemplate="selectedItem" let-selected>
           <div class="flex align-items-center gap-2" *ngIf="selected">
@@ -59,9 +57,9 @@
     <!-- RESPONSABLES -->
     <div class="col-md-4">
       <p class="fw-bold mb-1">RESPONSABLES</p>
-      <p-dropdown [options]="responsables" [(ngModel)]="responsableSeleccionado" optionLabel="nombre" optionValue="id"
+      <p-dropdown [options]="responsables" [(ngModel)]="idResponsableSeleccionado" optionLabel="nombre" optionValue="id"
         [filter]="true" [showClear]="true" placeholder="RESPONSABLES" class="custom-responsable-dropdown"
-        [style]="{ width: '100%' }" (onChange)="responsableChange.emit(responsableSeleccionado)">
+        [style]="{ width: '100%' }" (onChange)="onResponsableChange($event.value)">
 
         <ng-template pTemplate="selectedItem" let-selected>
           <div class="flex align-items-center gap-2" *ngIf="selected">
@@ -81,6 +79,7 @@
         </ng-template>
 
       </p-dropdown>
+
     </div>
   </div>
 
@@ -89,34 +88,39 @@
   <!-- ========================= -->
   <div class="row" *ngIf="mostrarFiltrosGlobales">
 
+    <!-- RESPONSABLES GLOBALES -->
+    <div class="col-md-6">
+      <p class="fw-bold mb-1">RESPONSABLES</p>
+      <p-multiSelect [options]="responsables" [(ngModel)]="idsResponsablesGlobalesSeleccionados" optionLabel="nombre"
+        optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES GLOBALES"
+        class="custom-responsable-dropdown" [style]="{ width: '100%' }"
+        (onChange)="onResponsablesGlobalesChange($event.value)">
+
+        <ng-template pTemplate="item" let-item>
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <div class="d-flex flex-column">
+              <span class="fw-medium">{{ item.nombre }}</span>
+              <small class="text-muted">{{ item.posicion }}</small>
+            </div>
+            <span *ngIf="item.esGlobal" class="badge-global">GLOBAL</span>
+          </div>
+        </ng-template>
+
+      </p-multiSelect>
+
+    </div>
+
     <!-- BUSQUEDA GLOBAL -->
-    <div class="col-md-4">
+    <div class="col-md-6">
       <p class="fw-bold mb-1">BÚSQUEDA GLOBAL</p>
       <span class="p-input-icon-left w-100">
-        <input type="text" class="form-control" style="height: 45px;"
-          placeholder="Buscar por título, descripción, folio..." />
+        <input type="text" class="form-control" style="height: 45px;" (input)="onBuscarText()"
+          [(ngModel)]="textoBusqueda" placeholder="Buscar por título, descripción, folio..." />
       </span>
-    </div>
-
-    <!-- RESPONSABLES GLOBALES -->
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">RESPONSABLES</p>
-      <p-dropdown [options]="responsables" optionLabel="nombre" optionValue="id" [filter]="true" [showClear]="true"
-        placeholder="RESPONSABLES" [style]="{ width: '100%' }">
-      </p-dropdown>
-    </div>
-
-    <!-- SUCURSALES GLOBALES -->
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">SUCURSALES</p>
-      <p-dropdown [options]="sucursales" optionLabel="nombre" optionValue="id" [filter]="true" placeholder="SUCURSALES"
-        [style]="{ width: '100%' }">
-      </p-dropdown>
     </div>
 
   </div>
 
-  <!-- CONTEXTO + ACCIONES -->
   <div class="d-flex justify-content-between align-items-center mt-3">
 
     <div class="d-flex align-items-center gap-3">
@@ -173,7 +177,6 @@
     </div>
 
   </div>
-
 
 </div>
 

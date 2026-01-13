@@ -13,7 +13,7 @@ import {
   getDocs,
   QueryConstraint,
 } from '@angular/fire/firestore';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { Tarea } from '../models/tarea.model';
 
 @Injectable({
@@ -103,7 +103,6 @@ export class TareasService {
     return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
   }
 
-
   getById(idTarea: string): Observable<Tarea> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idTarea}`);
     return docData(documentRef, { idField: 'id' }) as Observable<Tarea>;
@@ -129,24 +128,28 @@ export class TareasService {
     }
   }
 
-  getTareasPorResponsableGlobal(idResponsable: string): Observable<Tarea[]> {
-    const ref = collection(this.firestore, this.pathName);
-    const q = query(
-      ref,
-      where('eliminado', '==', false),
-      where('idsResponsables', 'array-contains', idResponsable),
-      orderBy('orden', 'asc')
-    );
+  // getTareasPorResponsablesGlobales(idsResponsables: string[]): Observable<Tarea[]> {
+  //   if (!idsResponsables.length) {
+  //     return of([] as Tarea[]);
+  //   }
 
-    return collectionData(q, { idField: 'id' }).pipe(
-      map((tareas: any[]) =>
-        tareas.map(t => ({
-          ...t,
-          fecha: t.fecha?.toDate ? t.fecha.toDate() : t.fecha,
-          fechaFin: t.fechaFin?.toDate ? t.fechaFin.toDate() : t.fechaFin
-        }))
-      )
-    ) as Observable<Tarea[]>;
-  }
+  //   const ref = collection(this.firestore, this.pathName);
+  //   const q = query(
+  //     ref,
+  //     where('eliminado', '==', false),
+  //     where('idsResponsables', 'array-contains-any', idsResponsables),
+  //     orderBy('orden', 'asc')
+  //   );
+
+  //   return collectionData(q, { idField: 'id' }).pipe(
+  //     map((tareas: any[]) =>
+  //       tareas.map(t => ({
+  //         ...t,
+  //         fecha: t.fecha?.toDate ? t.fecha.toDate() : t.fecha,
+  //         fechaFin: t.fechaFin?.toDate ? t.fechaFin.toDate() : t.fechaFin
+  //       }))
+  //     )
+  //   ) as Observable<Tarea[]>;
+  // }
 
 }

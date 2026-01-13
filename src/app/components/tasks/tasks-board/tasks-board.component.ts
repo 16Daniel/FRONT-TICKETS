@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import { Tarea } from '../../../models/tarea.model';
+import { SearchFilterPipe } from '../../../pipes/search-filter.pipe';
 
 @Component({
   selector: 'app-tasks-board',
@@ -10,7 +11,8 @@ import { Tarea } from '../../../models/tarea.model';
   imports: [
     CommonModule,
     DragDropModule,
-    TaskCardComponent
+    TaskCardComponent,
+    SearchFilterPipe
   ],
   templateUrl: './tasks-board.component.html',
   styleUrl: './tasks-board.component.scss'
@@ -25,6 +27,7 @@ export class TasksBoardComponent {
 
   @Input() sucursalesMap = new Map<string, string>();
   @Input() idSucursalSeleccionada!: string;
+  @Input() textoBusqueda!: string;
 
   /** Eventos */
   @Output() dropTask = new EventEmitter<CdkDragDrop<Tarea[]>>();

@@ -1,19 +1,19 @@
-<app-tasks-filter-component
-  [sucursales]="sucursales"
-  [etiquetas]="etiquetasFiltradas"
-  [responsables]="responsablesFiltrados"
-  [idSucursalSeleccionada]="idSucursalSeleccionada"
-  [etiquetaSeleccionada]="etiquetaSeleccionada"
-  [responsableSeleccionado]="responsableSeleccionado"
+<app-tasks-filter-component [sucursales]="sucursales" [etiquetas]="etiquetasFiltradas"
+  [idSucursalSeleccionada]="idSucursalSeleccionada" [idEtiquetaSeleccionada]="idEtiquetaSeleccionada"
+  [idResponsableSeleccionado]="idResponsableSeleccionado"
+  [idsResponsablesGlobalesSeleccionados]="idsResponsablesGlobales"
   (sucursalChange)="idSucursalSeleccionada = $event; onSucursalChange()"
-  (etiquetaChange)="etiquetaSeleccionada = $event; onEtiquetaChange()"
-  (responsableChange)="responsableSeleccionado = $event; onResponsableChange()">
+  (etiquetaChange)="idEtiquetaSeleccionada = $event; onEtiquetaChange()"
+  (responsableChange)="idResponsableSeleccionado = $event; onResponsableChange()"
+  (responsablesGlobalesChange)="idsResponsablesGlobales = $event; onResponsablesGlobalesChange()"
+  (textoBusquedaChange)="textoBusqueda = $event">
 </app-tasks-filter-component>
+
 
 <p></p>
 
 <app-tasks-board [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"
-  [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)">
+  [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)" [textoBusqueda]="textoBusqueda">
 </app-tasks-board>
 
 <app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
