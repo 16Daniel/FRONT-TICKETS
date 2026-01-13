@@ -241,10 +241,23 @@ export class DashboardTasksComponent implements OnInit {
       this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
   }
 
+  // async onResponsableChange() {
+  //   // debugger
+  //   // this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+  //   this.initData();
+  // }
+
   async onResponsableChange() {
-    // debugger
-    // this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
-    this.initData();
+    if (!this.idResponsableSeleccionado) {
+      this.initData();
+      return;
+    }
+
+    const filtradas = this.allTasks.filter(t =>
+      Array.isArray(t.idsResponsables) &&
+      t.idsResponsables.includes(this.idResponsableSeleccionado)
+    );
+    this.distribuirTareas(filtradas);
   }
 
   private distribuirTareas(tareas: Tarea[]) {
