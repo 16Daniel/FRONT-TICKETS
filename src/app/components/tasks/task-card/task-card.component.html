@@ -1,5 +1,12 @@
 <div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
 
+  <div class="priority-badge">
+    <span *ngIf="tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
+    <span *ngIf="tarea.idEisenhower == '2'" pTooltip="VALOR! Planifícalo ya">C2:💎</span>
+    <span *ngIf="tarea.idEisenhower == '3'" pTooltip="RUIDO! Si puedes, delégalo">C3:📢</span>
+    <span *ngIf="tarea.idEisenhower == '4'" pTooltip="TRANQUILO.. Puede esperar">C4:⏳</span>
+  </div>
+
   <!-- TÍTULO -->
   <div class="d-flex justify-content-between align-items-center">
     <div class="titulo">{{ tarea.titulo }}</div>

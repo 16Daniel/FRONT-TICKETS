@@ -11,6 +11,7 @@ import { BranchesService } from '../../../services/branches.service';
 import { TareasService } from '../../../services/tareas.service';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-new-task',
@@ -29,6 +30,8 @@ export class NewTaskComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
+  usuario: Usuario;
+
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
   archivos: File[] = [];
@@ -41,7 +44,10 @@ export class NewTaskComponent implements OnInit {
     private branchesService: BranchesService,
     private tareasService: TareasService,
     private firebaseStorage: FirebaseStorageService
-  ) { }
+  ) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.tarea.idSucursal = this.usuario.sucursales[0].id;
+  }
 
   ngOnInit(): void {
     this.obtenerSucursales();
