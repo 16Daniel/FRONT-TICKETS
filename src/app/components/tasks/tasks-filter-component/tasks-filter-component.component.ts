@@ -31,14 +31,15 @@ import { ResponsableTarea } from '../../../models/responsable-tarea.model';
 export class TasksFilterComponentComponent {
 
   @Input() sucursales: any[] = [];
+  @Input() sucursalesMap = new Map<string, string>();
   @Input() etiquetas: any[] = [];
-
+  @Input() sucursalSeleccionadaNombre?: string;
   @Input() idSucursalSeleccionada!: string;
+
   idEtiquetaSeleccionada!: string;
   idResponsableSeleccionado!: string;
   idsResponsablesGlobalesSeleccionados: string[] = [];
-
-  @Input() sucursalSeleccionadaNombre?: string;
+  textoBusqueda?: string;
 
   @Output() esGlobal = new EventEmitter<boolean>();
   @Output() textoBusquedaChange = new EventEmitter<string>();
@@ -48,15 +49,13 @@ export class TasksFilterComponentComponent {
   @Output() responsablesGlobalesChange = new EventEmitter<string[]>();
 
   mostrarFiltrosGlobales = false;
-
   responsables: ResponsableTarea[] = [];
+  responsablesGlobalesOrdenados: ResponsableTarea[] = [];
 
   mostrarModalEtiquetas = false;
   mostrarModalResponsables = false;
   mostrarModalArchivados = false;
   mostrarModalNuevaTarea = false;
-
-  textoBusqueda?: string;
 
   constructor(private taskResponsibleService: TaskResponsibleService) { }
 
@@ -67,10 +66,17 @@ export class TasksFilterComponentComponent {
   }
 
   onToggleModo(global: boolean): void {
-    this.mostrarFiltrosGlobales = global;
 
-    // if (global)
-    //   this.sucursalChange.emit(undefined as any)
+    if (global) {
+      this.ordenarResponsablesGlobales();
+    }
+
+    this.idEtiquetaSeleccionada = '';
+    this.idResponsableSeleccionado = '';
+    this.idsResponsablesGlobalesSeleccionados = [];
+    this.textoBusqueda = '';
+
+    this.mostrarFiltrosGlobales = global;
 
     this.esGlobal.emit(global);
     this.responsableChange.emit(undefined as any);
@@ -103,5 +109,15 @@ export class TasksFilterComponentComponent {
   onBuscarText() {
     this.textoBusquedaChange.emit(this.textoBusqueda);
   }
+
+  private ordenarResponsablesGlobales(): void {
+    this.responsablesGlobalesOrdenados = [...this.responsables].sort((a, b) => {
+      if (a.idSucursal === b.idSucursal) {
+        return a.nombre.localeCompare(b.nombre);
+      }
+      return a.idSucursal.localeCompare(b.idSucursal);
+    });
+  }
+
 }
 

@@ -10,7 +10,7 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of toDo | searchFilter: { titulo: textoBusqueda }" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+      <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
         [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
         [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>
@@ -27,7 +27,7 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of working | searchFilter: { titulo: textoBusqueda }" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+      <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
         [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
         [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>
@@ -44,7 +44,7 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of check | searchFilter: { titulo: textoBusqueda }" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+      <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
         [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
         [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>
@@ -61,7 +61,7 @@
     </div>
 
     <div class="scroll">
-      <app-task-card *ngFor="let t of done | searchFilter: { titulo: textoBusqueda }" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+      <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
         [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
         [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
       </app-task-card>

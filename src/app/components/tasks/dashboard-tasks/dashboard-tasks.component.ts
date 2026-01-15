@@ -241,12 +241,6 @@ export class DashboardTasksComponent implements OnInit {
       this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
   }
 
-  // async onResponsableChange() {
-  //   // debugger
-  //   // this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
-  //   this.initData();
-  // }
-
   async onResponsableChange() {
     if (!this.idResponsableSeleccionado) {
       this.initData();

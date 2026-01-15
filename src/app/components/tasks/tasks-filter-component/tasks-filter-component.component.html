@@ -72,7 +72,7 @@
           <div class="d-flex justify-content-between align-items-center w-100">
             <div class="d-flex flex-column">
               <span class="fw-medium">{{ item.nombre }}</span>
-              <small class="text-muted">{{ item.posicion }}</small>
+              <small class="text-muted">{{ item.posicion }} • {{ sucursalesMap.get(item.idSucursal) }}</small>
             </div>
             <span *ngIf="item.esGlobal" class="badge-global">GLOBAL</span>
           </div>
@@ -91,7 +91,7 @@
     <!-- RESPONSABLES GLOBALES -->
     <div class="col-md-6">
       <p class="fw-bold mb-1">RESPONSABLES</p>
-      <p-multiSelect [options]="responsables" [(ngModel)]="idsResponsablesGlobalesSeleccionados" optionLabel="nombre"
+      <p-multiSelect [options]="responsablesGlobalesOrdenados" [(ngModel)]="idsResponsablesGlobalesSeleccionados" optionLabel="nombre"
         optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES GLOBALES"
         class="custom-responsable-dropdown" [style]="{ width: '100%' }"
         (onChange)="onResponsablesGlobalesChange($event.value)">
@@ -100,7 +100,7 @@
           <div class="d-flex justify-content-between align-items-center w-100">
             <div class="d-flex flex-column">
               <span class="fw-medium">{{ item.nombre }}</span>
-              <small class="text-muted">{{ item.posicion }}</small>
+              <small class="text-muted">{{ item.posicion }} • {{ sucursalesMap.get(item.idSucursal) }}</small>
             </div>
             <span *ngIf="item.esGlobal" class="badge-global">GLOBAL</span>
           </div>
