@@ -255,10 +255,13 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   private distribuirTareas(tareas: Tarea[]) {
-    this.toDo = tareas.filter(x => x.idEstatus === '1');
-    this.working = tareas.filter(x => x.idEstatus === '2');
-    this.check = tareas.filter(x => x.idEstatus === '3');
-    this.done = tareas.filter(x => x.idEstatus === '4');
+    const filtradas = this.aplicarBusqueda(tareas);
+
+    this.toDo = filtradas.filter(x => x.idEstatus === '1');
+    this.working = filtradas.filter(x => x.idEstatus === '2');
+    this.check = filtradas.filter(x => x.idEstatus === '3');
+    this.done = filtradas.filter(x => x.idEstatus === '4');
+
     this.cdr.detectChanges();
   }
 
@@ -272,8 +275,23 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   onResponsablesGlobalesChange(): void {
-    // debugger
     this.initData();
   }
 
+  onBuscarText() {
+    this.distribuirTareas(this.allTasks);
+  }
+
+  private aplicarBusqueda(tareas: Tarea[]): Tarea[] {
+    if (!this.textoBusqueda || !this.textoBusqueda.trim()) {
+      return tareas;
+    }
+
+    const texto = this.textoBusqueda.toLowerCase().trim();
+
+    return tareas.filter(t =>
+      t.titulo?.toLowerCase().includes(texto) ||
+      t.descripcion?.toLowerCase().includes(texto)
+    );
+  }
 }

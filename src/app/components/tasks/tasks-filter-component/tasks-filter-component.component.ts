@@ -116,7 +116,7 @@ export class TasksFilterComponentComponent {
         return a.nombre.localeCompare(b.nombre);
       }
       return a.idSucursal.localeCompare(b.idSucursal);
-    });
+    }).filter(x => x.esGlobal);
   }
 
 }
