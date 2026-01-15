@@ -1,4 +1,4 @@
-<p-dialog header="CREAR RESPONSABLE" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '65vw' }"
+<p-dialog header="CREAR RESPONSABLE" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '85vw' }"
   [breakpoints]="{ '1199px': '80vw', '575px': '95vw' }" [maximizable]="true" (onHide)="onHide()">
 
   <!-- FORMULARIO -->
@@ -31,7 +31,7 @@
       <div class="col-md-4 mt-3">
         <p class="fw-bold mb-1">CORREO</p>
         <input type="email" class="form-control" placeholder="correo@operamx.com" [(ngModel)]="nuevoResponsable.correo"
-          name="correo" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
+          name="correo" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
       </div>
 
       <!-- ES GLOBAL -->
@@ -81,6 +81,7 @@
           <th>Nombre</th>
           <th>Posición</th>
           <th>Correo</th>
+          <th>Sucursal</th>
           <th>Color</th>
           <th>Global</th>
           <th>Eliminar</th>
@@ -106,6 +107,13 @@
           <td>
             <input type="email" class="form-control" [(ngModel)]="res.correo" [readonly]="!res.editando"
               (click)="activarEdicion(res)" (blur)="guardarCambios(res)" (keydown.enter)="guardarCambios(res)" />
+          </td>
+
+          <!-- SUCURSAL -->
+          <td>
+            <label for="">
+              {{sucursalesMap.get(res.idSucursal)}}
+            </label>
           </td>
 
           <!-- COLOR -->

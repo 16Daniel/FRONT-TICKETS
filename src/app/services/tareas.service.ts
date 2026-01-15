@@ -11,8 +11,9 @@ import {
   updateDoc,
   docData,
   getDocs,
+  QueryConstraint,
 } from '@angular/fire/firestore';
-import { map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, of } from 'rxjs';
 import { Tarea } from '../models/tarea.model';
 
 @Injectable({
@@ -73,6 +74,35 @@ export class TareasService {
     return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
   }
 
+  getArchivedTasks(
+    idSucursal: string,
+    fechaInicio?: Date,
+    fechaFin?: Date
+  ): Observable<Tarea[]> {
+    const ref = collection(this.firestore, this.pathName);
+
+    const constraints: QueryConstraint[] = [
+      where('eliminado', '==', false),
+      where('idEstatus', '==', '5'),
+      where('idSucursal', '==', idSucursal),
+    ];
+
+    if (fechaInicio) {
+      constraints.push(where('fecha', '>=', fechaInicio));
+    }
+
+    if (fechaFin) {
+      constraints.push(where('fecha', '<=', fechaFin));
+    }
+
+    constraints.push(orderBy('fecha', 'desc'));
+    constraints.push(orderBy('orden', 'asc'));
+
+    const q = query(ref, ...constraints);
+
+    return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
+  }
+
   getById(idTarea: string): Observable<Tarea> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idTarea}`);
     return docData(documentRef, { idField: 'id' }) as Observable<Tarea>;
@@ -98,24 +128,44 @@ export class TareasService {
     }
   }
 
-  getTareasPorResponsableGlobal(idResponsable: string): Observable<Tarea[]> {
-    const ref = collection(this.firestore, this.pathName);
-    const q = query(
-      ref,
-      where('eliminado', '==', false),
-      where('idsResponsables', 'array-contains', idResponsable),
-      orderBy('orden', 'asc')
-    );
+  getByResponsables(idsResponsables: string[]): Observable<Tarea[]> {
+    if (!idsResponsables.length) {
+      return of([]);
+    }
 
-    return collectionData(q, { idField: 'id' }).pipe(
-      map((tareas: any[]) =>
-        tareas.map(t => ({
-          ...t,
-          fecha: t.fecha?.toDate ? t.fecha.toDate() : t.fecha,
-          fechaFin: t.fechaFin?.toDate ? t.fechaFin.toDate() : t.fechaFin
-        }))
-      )
-    ) as Observable<Tarea[]>;
+    const ref = collection(this.firestore, this.pathName);
+    const estatusValidos = ['1', '2', '3', '4'];
+
+    const queries$ = estatusValidos.map(idEstatus => {
+      const q = query(
+        ref,
+        where('eliminado', '==', false),
+        where('idEstatus', '==', idEstatus),
+        where('idsResponsables', 'array-contains-any', idsResponsables),
+        orderBy('orden', 'asc')
+      );
+
+      return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
+    });
+
+    return combineLatest(queries$).pipe(
+      map(results => {
+        const mapTareas = new Map<string, Tarea>();
+
+        results.flat().forEach(t => {
+          mapTareas.set(t.id!, {
+            ...t,
+            fecha: (t as any).fecha?.toDate?.() ?? t.fecha,
+            fechaFin: (t as any).fechaFin?.toDate?.() ?? t.fechaFin
+          });
+        });
+
+        return Array.from(mapTareas.values()).sort(
+          (a, b) => (a.orden ?? 0) - (b.orden ?? 0)
+        );
+      })
+    );
   }
+
 
 }

@@ -1,0 +1,42 @@
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+:host ::ng-deep .acciones .p-button {
+  border-radius: 6px;
+}
+
+.label-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+}
+
+.custom-responsable-dropdown {
+  .global-icon {
+    color: #3b82f6;
+    margin-right: 8px;
+  }
+
+  .position-subtitle {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+
+  .badge-global {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: #e3f2fd;
+    color: #1e40af;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #bfdbfe;
+    letter-spacing: 0.5px;
+  }
+}

@@ -75,6 +75,7 @@ export class TaskCardComponent implements OnInit {
 
     try {
       tarea.idEstatus = '5';
+      tarea.fechaFin = new Date;
       await this.tareasService.update(tarea, tarea.id!);
       this.showMessage('success', 'Success', 'Archivado correctamente');
     } catch (error) {

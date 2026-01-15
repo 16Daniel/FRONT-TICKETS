@@ -58,6 +58,7 @@ export class TaskDetailComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
+  sucursalesMap = new Map<string, string>();
   mostrarModalVisorImagen: boolean = false;
   mostrarModalSubirImagen: boolean = false;
   imagenes: string[] = [];
@@ -145,9 +146,14 @@ export class TaskDetailComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+
+        this.sucursalesMap.clear();
+        data.forEach(s =>
+          this.sucursalesMap.set(s.id!, s.nombre)
+        );
+
         this.cdr.detectChanges();
-      },
-      error: (error) => { },
+      }
     });
   }
 

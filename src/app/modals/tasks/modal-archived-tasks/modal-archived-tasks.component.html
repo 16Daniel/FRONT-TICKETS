@@ -1,0 +1,91 @@
+<p-dialog header="TAREAS ARCHIVADAS" [modal]="true" [(visible)]="mostrarModal"
+  [style]="{ width: '80vw', height: '80vh' }"
+  [contentStyle]="{ 'max-height': 'calc(80vh - 120px)', 'overflow': 'auto' }"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+
+  <!-- FILTROS -->
+  <div class="row mb-3 align-items-end">
+    <input class="invisible">
+
+
+    <div class="col-md-4">
+      <p class="fw-bold">FECHA INICIAL</p>
+      <p-calendar [(ngModel)]="fechaInicio" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
+    </div>
+    <div class="col-md-4">
+      <p class="fw-bold">FECHA FINAL</p>
+      <p-calendar [(ngModel)]="fechaFin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        [style]="{width:'100%'}" />
+    </div>
+
+
+    <div class="col-md-4">
+      <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
+      <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" name="sucursal" [optionValue]="'id'"
+        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
+        [style]="{width:'100%'}" required="true">
+      </p-dropdown>
+    </div>
+
+    <div class="col-md-12 mt-3">
+      <p class="fw-bold mb-1">BUSCAR POR TÍTULO</p>
+      <span class="p-input-icon-left w-100">
+        <input type="text" class="form-control" style="height: 45px;" placeholder="Escribe el título..." [(ngModel)]="textoBusqueda"
+          (input)="onBuscarTitulo()" />
+      </span>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3 mb-3">
+    <!-- <button class="btn bg-p-b p-3" (click)="buscarTickets()">Buscar</button> -->
+    <p-button label="BUSCAR" icon="pi pi-search" styleClass="p-button-primary" (click)="buscarTickets()">
+    </p-button>
+
+  </div>
+
+  <!-- TABLA NORMAL -->
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+
+      <thead class="table-light">
+        <tr>
+          <th>TAREA</th>
+          <th>SUCURSAL</th>
+          <th>FECHA</th>
+          <th>RESPONSABLES</th>
+          <th class="text-center">ACCIÓN</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @for (
+        tarea of (tareas | searchFilter: { titulo: textoBusqueda });
+        track tarea.id
+        ) { <tr>
+          <td pTooltip="{{tarea.descripcion ?? 'SIN DESCRIPCIÓN' }}">{{tarea.titulo}}</td>
+          <td pTooltip="{{tarea.descripcion ?? 'SIN DESCRIPCIÓN' }}">{{sucursalesMap.get(tarea.idSucursal)}}</td>
+          <td pTooltip="{{tarea.descripcion ?? 'SIN DESCRIPCIÓN' }}">{{datesHelper.getDate(tarea.fecha) |
+            date:'dd/MM/yyyy'}}</td>
+          <td>
+            <div class="avatars-container" *ngIf="tarea.idsResponsables?.length">
+              <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30"
+                class="avatar-item" pTooltip="{{r.nombre }}" [bgColor]="r.color">
+              </ngx-avatars>
+            </div>
+          </td>
+          <td class="text-center">
+            <p-button icon="pi pi-undo" class="p-button-rounded p-button-text p-button-success" pTooltip="Desarchivar"
+              (click)="onClickDesarchivar(tarea)">
+            </p-button>
+          </td>
+        </tr>
+        }
+
+      </tbody>
+
+    </table>
+  </div>
+
+</p-dialog>
