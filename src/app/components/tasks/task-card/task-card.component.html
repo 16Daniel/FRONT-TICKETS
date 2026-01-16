@@ -14,8 +14,11 @@
 
   <!-- SUCURSAL -->
   <div class="sucursal-info" *ngIf="nombreSucursal">
-    <span class="sucursal-badge" [class.global]="esOtraSucursal">
+    <!-- <span class="sucursal-badge" [class.global]="esOtraSucursal">
       <i *ngIf="esOtraSucursal" class="pi pi-globe"></i>
+      {{ nombreSucursal }}
+    </span> -->
+    <span class="sucursal-badge">
       {{ nombreSucursal }}
     </span>
   </div>

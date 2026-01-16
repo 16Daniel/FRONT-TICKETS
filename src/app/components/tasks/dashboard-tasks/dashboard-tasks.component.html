@@ -4,7 +4,7 @@
   (etiquetaChange)="idEtiquetaSeleccionada = $event; onEtiquetaChange()"
   (responsableChange)="idResponsableSeleccionado = $event; onResponsableChange()"
   (responsablesGlobalesChange)="idsResponsablesGlobales = $event; onResponsablesGlobalesChange()"
-  (textoBusquedaChange)="textoBusqueda = $event; onBuscarText()" (esGlobal)="esGlobal = $event">
+  (textoBusquedaChange)="onBuscarText($event)" (esGlobal)="esGlobal = $event">
 </app-tasks-filter-component>
 
 <p></p>

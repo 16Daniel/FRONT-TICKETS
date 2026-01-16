@@ -81,6 +81,7 @@ export class TasksFilterComponentComponent {
     this.esGlobal.emit(global);
     this.responsableChange.emit(undefined as any);
     this.responsablesGlobalesChange.emit([]);
+    this.textoBusquedaChange.emit(undefined as any);
 
     this.actualizarResponsables();
   }

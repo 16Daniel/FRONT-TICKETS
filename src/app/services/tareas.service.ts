@@ -30,24 +30,58 @@ export class TareasService {
     return docRef.id;
   }
 
-  getAll(): Observable<Tarea[]> {
+  getByTexto(texto: string): Observable<Tarea[]> {
     const ref = collection(this.firestore, this.pathName);
+
     const q = query(
       ref,
       where('eliminado', '==', false),
-      // orderBy('fecha', 'desc')
+      where('idEstatus', 'in', ['1', '2', '3', '4']),
       orderBy('orden', 'asc')
     );
-    return collectionData(q, { idField: 'id' }) as Observable<Tarea[]>;
+
+    const termino = texto.trim().toLowerCase();
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((tareas: any[]) =>
+        tareas.filter(t =>
+          t.titulo?.toLowerCase().includes(termino) ||
+          t.descripcion?.toLowerCase().includes(termino)
+        )
+      )
+    ) as Observable<Tarea[]>;
+  }
+
+  getAll(): Observable<Tarea[]> {
+    const ref = collection(this.firestore, this.pathName);
+
+    const q = query(
+      ref,
+      where('eliminado', '==', false),
+      where('idEstatus', 'in', ['1', '2', '3', '4']),
+      orderBy('orden', 'asc')
+    );
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((tareas: any[]) =>
+        tareas.map(t => ({
+          ...t,
+          fecha: t.fecha?.toDate ? t.fecha.toDate() : t.fecha,
+          fechaFin: t.fechaFin?.toDate ? t.fechaFin.toDate() : t.fechaFin,
+          deathline: t.deathline?.toDate ? t.deathline.toDate() : t.deathline
+        }))
+      )
+    ) as Observable<Tarea[]>;
   }
 
   getBySucursal(idSucursal: string): Observable<Tarea[]> {
     const ref = collection(this.firestore, this.pathName);
+
     const q = query(
       ref,
       where('eliminado', '==', false),
       where('idSucursal', '==', idSucursal),
-      // orderBy('fecha', 'desc')
+      where('idEstatus', 'in', ['1', '2', '3', '4']),
       orderBy('orden', 'asc')
     );
 
@@ -166,6 +200,4 @@ export class TareasService {
       })
     );
   }
-
-
 }

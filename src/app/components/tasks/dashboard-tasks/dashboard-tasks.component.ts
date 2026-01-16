@@ -80,7 +80,7 @@ export class DashboardTasksComponent implements OnInit {
   ngOnInit(): void {
     // this.tareasService.normalizarOrden();
 
-    this.initData();
+    this.obtenerTareas();
     this.obtenerSucursales();
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
@@ -171,13 +171,36 @@ export class DashboardTasksComponent implements OnInit {
     this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
-  initData() {
+  obtenerTareas() {
+    this.allTasks = [];
+
+    // GLOBAL
     if (this.esGlobal) {
-      // GLOBAL
-      this.tareasService.getByResponsables(this.idsResponsablesGlobales).subscribe(tareas => {
+      this.tareasService.getAll().subscribe(tareas => {
         this.allTasks = tareas;
-        this.distribuirTareas(tareas);
+
+        let tareasFiltradas = [...this.allTasks];
+        const texto = this.textoBusqueda?.trim().toLowerCase();
+
+        // FILTRO POR TEXTO (titulo + descripcion)
+        if (texto) {
+          tareasFiltradas = tareasFiltradas.filter(t =>
+            t.titulo?.toLowerCase().includes(texto) ||
+            t.descripcion?.toLowerCase().includes(texto)
+          );
+        }
+        // 👥 FILTRO POR RESPONSABLES
+        else if (this.idsResponsablesGlobales.length > 0) {
+          tareasFiltradas = tareasFiltradas.filter(t =>
+            t.idsResponsables?.some(id =>
+              this.idsResponsablesGlobales.includes(id)
+            )
+          );
+        }
+
+        this.distribuirTareas(tareasFiltradas);
       });
+
       return;
     }
 
@@ -185,11 +208,10 @@ export class DashboardTasksComponent implements OnInit {
     this.tareasService
       .getBySucursal(this.idSucursalSeleccionada)
       .subscribe(tareas => {
-        this.allTasks = tareas.filter(x =>
-          ['1', '2', '3', '4'].includes(x.idEstatus)
-        );
+        this.allTasks = tareas;
         this.distribuirTareas(this.allTasks);
       });
+
   }
 
   showMessage = (sev: string, summ: string, det: string) =>
@@ -207,7 +229,7 @@ export class DashboardTasksComponent implements OnInit {
     this.idEtiquetaSeleccionada = '';
     this.idResponsableSeleccionado = '';
 
-    this.initData();
+    this.obtenerTareas();
     this.filtrarEtiquetas();
     // this.filtrarResponsables();
   }
@@ -215,7 +237,7 @@ export class DashboardTasksComponent implements OnInit {
   onEtiquetaChange() {
 
     if (!this.idEtiquetaSeleccionada || this.idEtiquetaSeleccionada === '') {
-      this.initData();
+      this.obtenerTareas();
       return;
     }
 
@@ -243,7 +265,7 @@ export class DashboardTasksComponent implements OnInit {
 
   async onResponsableChange() {
     if (!this.idResponsableSeleccionado) {
-      this.initData();
+      this.obtenerTareas();
       return;
     }
 
@@ -255,12 +277,11 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   private distribuirTareas(tareas: Tarea[]) {
-    const filtradas = this.aplicarBusqueda(tareas);
 
-    this.toDo = filtradas.filter(x => x.idEstatus === '1');
-    this.working = filtradas.filter(x => x.idEstatus === '2');
-    this.check = filtradas.filter(x => x.idEstatus === '3');
-    this.done = filtradas.filter(x => x.idEstatus === '4');
+    this.toDo = tareas.filter(x => x.idEstatus === '1');
+    this.working = tareas.filter(x => x.idEstatus === '2');
+    this.check = tareas.filter(x => x.idEstatus === '3');
+    this.done = tareas.filter(x => x.idEstatus === '4');
 
     this.cdr.detectChanges();
   }
@@ -275,23 +296,11 @@ export class DashboardTasksComponent implements OnInit {
   }
 
   onResponsablesGlobalesChange(): void {
-    this.initData();
+    this.obtenerTareas();
   }
 
-  onBuscarText() {
-    this.distribuirTareas(this.allTasks);
-  }
-
-  private aplicarBusqueda(tareas: Tarea[]): Tarea[] {
-    if (!this.textoBusqueda || !this.textoBusqueda.trim()) {
-      return tareas;
-    }
-
-    const texto = this.textoBusqueda.toLowerCase().trim();
-
-    return tareas.filter(t =>
-      t.titulo?.toLowerCase().includes(texto) ||
-      t.descripcion?.toLowerCase().includes(texto)
-    );
+  onBuscarText(texto: string) {
+    this.textoBusqueda = texto;
+    this.obtenerTareas();
   }
 }
