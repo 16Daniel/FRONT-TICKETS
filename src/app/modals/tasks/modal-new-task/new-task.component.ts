@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
 import { Sucursal } from '../../../models/sucursal.model';
@@ -12,6 +13,8 @@ import { TareasService } from '../../../services/tareas.service';
 import { FirebaseStorageService } from '../../../services/firebase-storage.service';
 import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
 import { Usuario } from '../../../models/usuario.model';
+import { ResponsableTarea } from '../../../models/responsable-tarea.model';
+import { TaskResponsibleService } from '../../../services/task-responsible.service';
 
 @Component({
   selector: 'app-new-task',
@@ -21,7 +24,8 @@ import { Usuario } from '../../../models/usuario.model';
     FormsModule,
     CommonModule,
     DropdownModule,
-    EisenhowerPriorityChecksComponent
+    EisenhowerPriorityChecksComponent,
+    MultiSelectModule
   ],
   templateUrl: './new-task.component.html',
   styleUrl: './new-task.component.scss'
@@ -38,15 +42,19 @@ export class NewTaskComponent implements OnInit {
 
   tarea: Tarea = new Tarea();
   sucursales: Sucursal[] = [];
+  sucursalesMap = new Map<string, string>();
+  responsables: ResponsableTarea[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private tareasService: TareasService,
-    private firebaseStorage: FirebaseStorageService
+    private firebaseStorage: FirebaseStorageService,
+    private taskResponsibleService: TaskResponsibleService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.tarea.idSucursal = this.usuario.sucursales[0].id;
+
   }
 
   ngOnInit(): void {
@@ -60,15 +68,6 @@ export class NewTaskComponent implements OnInit {
       Object.values(form.controls).forEach((control) => {
         control.markAsTouched();
       });
-
-      // Swal.fire({
-      //   title: "ATENCIÓN!",
-      //   text: "COMPLETA TODOS LOS CAMPOS DEL FORMULARIO",
-      //   icon: "warning",
-      //   customClass: {
-      //     container: 'swal-topmost'
-      //   }
-      // });
 
       return;
     }
@@ -112,9 +111,15 @@ export class NewTaskComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+
+        this.sucursalesMap.clear();
+        data.forEach(s =>
+          this.sucursalesMap.set(s.id!, s.nombre)
+        );
+
+        this.actualizarResponsables();
         this.cdr.detectChanges();
-      },
-      error: (error) => { },
+      }
     });
   }
 
@@ -182,4 +187,11 @@ export class NewTaskComponent implements OnInit {
     });
   }
 
+  private actualizarResponsables(): void {
+    this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
+  }
+
+  onSucursalesChange() {
+    this.actualizarResponsables();
+  }
 }

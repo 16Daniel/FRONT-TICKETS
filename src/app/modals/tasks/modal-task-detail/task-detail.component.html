@@ -20,10 +20,11 @@
           </div>
 
           <div class="row mb-3">
-            <div class="col-md-4">
+
+            <div class="col-md-6">
               <label class="fw-bold d-block mb-1">ESTATUS</label>
               <p-dropdown [options]="estatusTeras" [(ngModel)]="tarea.idEstatus" name="estatusTeras" optionValue="id"
-                optionLabel="nombre" [filter]="true" filterBy="nombre" [style]="{width:'250px'}"
+                optionLabel="nombre" [filter]="true" filterBy="nombre" [style]="{width:'100%'}"
                 placeholder="SELECCIONA ESTATUS DE LA TAREA" required>
 
                 <ng-template pTemplate="selectedItem" let-selected>
@@ -46,11 +47,11 @@
 
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
               <label class="fw-bold d-block mb-1">ETIQUETA</label>
               <p-dropdown [options]="etiquetas" [(ngModel)]="tarea.idEtiqueta" name="etiquetas" optionValue="id"
                 optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS"
-                placeholder="SELECCIONA ETIQUETA DE LA TAREA" [style]="{width:'250px'}">
+                placeholder="SELECCIONA ETIQUETA DE LA TAREA" [style]="{width:'100%'}">
 
                 <ng-template pTemplate="selectedItem" let-selected>
                   <div class="flex align-items-center gap-2" *ngIf="selected">
@@ -82,44 +83,28 @@
 
               </p-dropdown>
             </div>
+          </div>
 
-            <div class="col-md-4">
+          <div class="row mb-3">
+            <div class="col-md-12">
               <label class="fw-bold d-block mb-1">RESPONSABLES</label>
 
-              <p-multiSelect [options]="responsables" [(ngModel)]="tarea.idsResponsables" name="idsResponsables"
-                optionLabel="nombre" optionValue="id" display="chip" [filter]="true"
-                filterBy="nombre,posicion,sucursalNombre" placeholder="SELECCIONA RESPONSABLES"
-                [style]="{ width: '250px' }">
+              <p-multiSelect [options]="responsables" [(ngModel)]="tarea.idsResponsables" optionLabel="nombre"
+                name="idsResponsables" optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES"
+                class="custom-responsable-dropdown" [style]="{ width: '100%' }">
 
-                <!-- ITEM EN LISTA -->
-                <ng-template let-item pTemplate="item">
-                  <div class="d-flex flex-column">
-                    <div class="fw-semibold">
-                      {{ item.nombre }}
+                <ng-template pTemplate="item" let-item>
+                  <div class="d-flex justify-content-between align-items-center w-100">
+                    <div class="d-flex flex-column">
+                      <span class="fw-medium">{{ item.nombre }}</span>
+                      <small class="text-muted">{{ item.posicion }} • {{ sucursalesMap.get(item.idSucursal) }}</small>
                     </div>
-
-                    <small class="text-muted">
-                      <span *ngIf="item.posicion">{{ item.posicion }}</span>
-                      <span *ngIf="item.posicion && item.sucursalNombre"> · </span>
-                      <!-- <span *ngIf="item.sucursalNombre">{{ item.sucursalNombre }}</span> -->
-                    </small>
+                    <span *ngIf="item.esGlobal" class="badge-global">GLOBAL</span>
                   </div>
-                </ng-template>
-
-                <!-- ITEM SELECCIONADO (CHIP) -->
-                <ng-template let-item pTemplate="selectedItem">
-                  <span>
-                    {{ item.nombre }}
-                    <small class="text-muted ms-1" *ngIf="item.posicion || item.sucursalNombre">
-                      ( {{ item.posicion }} • {{ sucursalesMap.get(item.idSucursal)}})
-                    </small>
-                  </span>
                 </ng-template>
 
               </p-multiSelect>
             </div>
-
-
           </div>
 
           <div class="row mb3">

@@ -1,39 +1,63 @@
 //boton
 .btn-upload {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn-upload:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .mt-3 {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 //imagenes
 .contenedor-thumbs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .thumb {
-    width: 120px;
-    text-align: center;
+  width: 120px;
+  text-align: center;
 }
 
 .thumb-img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.custom-responsable-dropdown {
+  .global-icon {
+    color: #3b82f6;
+    margin-right: 8px;
+  }
+
+  .position-subtitle {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+
+  .badge-global {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: #e3f2fd;
+    color: #1e40af;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #bfdbfe;
+    letter-spacing: 0.5px;
+  }
 }
