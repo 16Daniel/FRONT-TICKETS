@@ -30,28 +30,6 @@ export class TareasService {
     return docRef.id;
   }
 
-  getByTexto(texto: string): Observable<Tarea[]> {
-    const ref = collection(this.firestore, this.pathName);
-
-    const q = query(
-      ref,
-      where('eliminado', '==', false),
-      where('idEstatus', 'in', ['1', '2', '3', '4']),
-      orderBy('orden', 'asc')
-    );
-
-    const termino = texto.trim().toLowerCase();
-
-    return collectionData(q, { idField: 'id' }).pipe(
-      map((tareas: any[]) =>
-        tareas.filter(t =>
-          t.titulo?.toLowerCase().includes(termino) ||
-          t.descripcion?.toLowerCase().includes(termino)
-        )
-      )
-    ) as Observable<Tarea[]>;
-  }
-
   getAll(): Observable<Tarea[]> {
     const ref = collection(this.firestore, this.pathName);
 
