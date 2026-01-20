@@ -7,10 +7,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { AccordionModule } from 'primeng/accordion';
 
-import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
-import { ProgressBar80Component } from '../../../../components/progress-bar-80/progress-bar-80.component';
+import { ProgressBar80Component } from '../../../components/progress-bar-80/progress-bar-80.component';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
 
 @Component({
   selector: 'app-modal-mateinance-mtto-check',

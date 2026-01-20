@@ -12,16 +12,16 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { EstatusTicket } from '../../../models/estatus-ticket.model';
-import { Categoria } from '../../../models/categoria.mdoel';
-import { Ticket } from '../../../models/ticket.model';
-import { CategoriesService } from '../../../services/categories.service';
-import { StatusTicketService } from '../../../services/status-ticket.service';
-import { Area } from '../../../models/area.model';
-import { TicketsPriorityService } from '../../../services/tickets-priority.service';
-import { PrioridadTicket } from '../../../models/prioridad-ticket.model';
-import { Sucursal } from '../../../models/sucursal.model';
-import { AreasService } from '../../../services/areas.service';
+import { Ticket } from '../../models/ticket.model';
+import { PrioridadTicket } from '../../models/prioridad-ticket.model';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
+import { Categoria } from '../../models/categoria.mdoel';
+import { CategoriesService } from '../../services/categories.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { TicketsPriorityService } from '../../services/tickets-priority.service';
+import { Area } from '../../../areas/models/area.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-modal-filter-tickets',

@@ -3,18 +3,18 @@ import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
-
-import { TareasService } from '../../../services/tareas.service';
-import { Tarea } from '../../../models/tarea.model';
-import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
-import { LabelsTasksService } from '../../../services/labels-tasks.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
-import { TaskResponsibleService } from '../../../services/task-responsible.service';
-import { ResponsableTarea } from '../../../models/responsable-tarea.model';
-import { Sucursal } from '../../../models/sucursal.model';
-import { BranchesService } from '../../../services/branches.service';
+
+import { TareasService } from '../../services/tareas.service';
+import { LabelsTasksService } from '../../services/labels-tasks.service';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Tarea } from '../../interfaces/tarea.model';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-task-card',

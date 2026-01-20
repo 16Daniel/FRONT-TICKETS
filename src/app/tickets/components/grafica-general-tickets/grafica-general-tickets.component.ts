@@ -1,16 +1,17 @@
 import { Component, Input, input, RendererFactory2, type OnInit } from '@angular/core';
-import { Ticket } from '../../../../models/ticket.model';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Area } from '../../../../models/area.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Categoria } from '../../../../models/categoria.mdoel';
-import { EstatusTicket } from '../../../../models/estatus-ticket.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { Timestamp } from '@angular/fire/firestore';
 import { TagModule } from 'primeng/tag';
+
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Categoria } from '../../models/categoria.mdoel';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
+import { Ticket } from '../../models/ticket.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-grafica-general-tickets',
@@ -22,18 +23,18 @@ import { TagModule } from 'primeng/tag';
   templateUrl: './grafica-general-tickets.component.html',
 })
 export class GraficaGeneralTicketsComponent implements OnInit {
-@Input() todosLosTickets: Ticket[] = []; 
+@Input() todosLosTickets: Ticket[] = [];
 @Input() areas: Area[] = [];
-@Input() usuarios:Usuario[] = []; 
-@Input() categorias:Categoria[] = []; 
-@Input() catEstatusTicket:EstatusTicket[] = []; 
+@Input() usuarios:Usuario[] = [];
+@Input() categorias:Categoria[] = [];
+@Input() catEstatusTicket:EstatusTicket[] = [];
 @Input() meses:string[] = [];
 @Input() sucursalesSel: Sucursal[] = [];
-@Input() mantenimientos:Mantenimiento10x10[] = []; 
-public usuariosSoporte:Usuario[] = []; 
-gCategorias:any[] = []; 
-public tabTickets:any[] = []; 
-public tabMantenimientos:any[] = []; 
+@Input() mantenimientos:Mantenimiento10x10[] = [];
+public usuariosSoporte:Usuario[] = [];
+gCategorias:any[] = [];
+public tabTickets:any[] = [];
+public tabMantenimientos:any[] = [];
   // options
   showXAxis = true;
   showYAxis = true;
@@ -74,73 +75,73 @@ colorSchemeCategorias: any = {
     '#B0C4DE'  // Azul grisáceo claro
   ]
 };
-public coloresEstatus:any; 
-  ngOnInit(): void 
+public coloresEstatus:any;
+  ngOnInit(): void
   {
-    let domainCatEst:string[] = []; 
+    let domainCatEst:string[] = [];
     for(let estatus of this.catEstatusTicket)
       {
-        domainCatEst.push(estatus.color); 
+        domainCatEst.push(estatus.color);
       }
 
-      this.coloresEstatus = {domain: domainCatEst}; 
+      this.coloresEstatus = {domain: domainCatEst};
 
     this.usuariosSoporte = this.usuarios.filter(x=>x.idRol == '4');
-     this.generarGraficaPorCategoria();  
+     this.generarGraficaPorCategoria();
 
      for(let item of this.areas)
       {
-        let total = this.todosLosTickets.filter(x => x.idArea == item.id).length; 
+        let total = this.todosLosTickets.filter(x => x.idArea == item.id).length;
         this.tabTickets.push({nombre:item.nombre,total:total});
 
         if(item.id == '1')
           {
-             this.tabMantenimientos.push({nombre:item.nombre,total:this.mantenimientos.length}); 
+             this.tabMantenimientos.push({nombre:item.nombre,total:this.mantenimientos.length});
           }
       }
-   }  
+   }
 
    generarGraficaGeneral():any[]
    {
-      
-         let data:any[] = []; 
-         
+
+         let data:any[] = [];
+
     for(let mesanio of this.meses)
-      { 
-        let series:any[] = []; 
+      {
+        let series:any[] = [];
         for(let area of this.areas)
           {
-            let ticketsmes = this.todosLosTickets.filter(x => x.fecha.toDate().getMonth()+1 == parseInt(mesanio.split('/')[0]) 
+            let ticketsmes = this.todosLosTickets.filter(x => x.fecha.toDate().getMonth()+1 == parseInt(mesanio.split('/')[0])
             && x.fecha.toDate().getFullYear() == parseInt(mesanio.split('/')[1])
             && x.idArea == area.id
-          ).length; 
+          ).length;
 
-          series.push({name: area.nombre,value:ticketsmes}); 
-          }         
-          data.push({name:this.obtenerMesYAnioEspanol(mesanio).nombreMes,series:series}); 
+          series.push({name: area.nombre,value:ticketsmes});
+          }
+          data.push({name:this.obtenerMesYAnioEspanol(mesanio).nombreMes,series:series});
       }
           return data
    }
- 
+
      generarGraficaPorCategoria()
    {
        let areasdistintas = [...new Set(this.todosLosTickets.map(x => x.idArea))];
-         this.gCategorias = []; 
+         this.gCategorias = [];
          for(let ida of areasdistintas)
           {
-            let series:any[] = []; 
+            let series:any[] = [];
             let nombrearea = this.areas.filter(x=> x.id == ida)[0].nombre;
-              let tkarea = this.todosLosTickets.filter(x=> x.idArea == ida); 
-              
+              let tkarea = this.todosLosTickets.filter(x=> x.idArea == ida);
+
                let categoriasdistintas = [...new Set(tkarea.map(x => x.idCategoria))];
                for(let cat of categoriasdistintas)
                 {
-                  let nombrecat = this.categorias.filter(x=> x.id == cat)[0].nombre; 
-                  let total = tkarea.filter(x => x.idCategoria == cat).length; 
-                  series.push({name:nombrecat,value:total}); 
+                  let nombrecat = this.categorias.filter(x=> x.id == cat)[0].nombre;
+                  let total = tkarea.filter(x => x.idCategoria == cat).length;
+                  series.push({name:nombrecat,value:total});
                 }
 
-                this.gCategorias.push({name:nombrearea,series:series}); 
+                this.gCategorias.push({name:nombrearea,series:series});
           }
    }
 
@@ -150,27 +151,27 @@ public coloresEstatus:any;
 }
 
    generarGraficaPorTurnos():any[]
-   {    
-        let gTurnos:any[] = []; 
-        let tabTurnos:any[] = []; 
+   {
+        let gTurnos:any[] = [];
+        let tabTurnos:any[] = [];
 
-        let ticketsmes = this.todosLosTickets; 
+        let ticketsmes = this.todosLosTickets;
         let areasdistintas = [...new Set(ticketsmes.map(x => x.idArea))];
-        
+
              // Filtrar elementos entre 9 AM y 6 PM
         const ticketsmetutinos = ticketsmes.filter(item => {
-            let fecha:Date = item.fecha.toDate(); 
+            let fecha:Date = item.fecha.toDate();
           const horas = fecha.getHours();
           const minutos = fecha.getMinutes();
           const totalHoras = horas + (minutos / 60);
           let esFin:boolean = this.esfinDeSemana(fecha);
-          
+
           return totalHoras >= 9 && totalHoras < 19 && esFin == false;
         });
 
         // Filtrar elementos fuera del horario
         const ticketsVespertinos = ticketsmes.filter(item => {
-          let fecha:Date = item.fecha.toDate(); 
+          let fecha:Date = item.fecha.toDate();
           const horas = fecha.getHours();
           const minutos = fecha.getMinutes();
           const totalHoras = horas + (minutos / 60);
@@ -181,40 +182,40 @@ public coloresEstatus:any;
          for(let ida of areasdistintas)
           {
             let nombrearea = this.areas.filter(x=> x.id == ida)[0].nombre;
-  
-            let tkm = ticketsmetutinos.filter(x=> x.idArea == ida).length;  
-            let tkg = ticketsVespertinos.filter(x=> x.idArea == ida).length; 
 
-              let series:any[] = []; 
+            let tkm = ticketsmetutinos.filter(x=> x.idArea == ida).length;
+            let tkg = ticketsVespertinos.filter(x=> x.idArea == ida).length;
+
+              let series:any[] = [];
              series.push({name:'MATUTINO',value:tkm});
              series.push({name:'GUARDIA',value:tkg});
              gTurnos.push({name:nombrearea,series:series});
-             tabTurnos.push({nombre:nombrearea,total:tkm+tkg}); 
+             tabTurnos.push({nombre:nombrearea,total:tkm+tkg});
           }
 
-          return [{data:gTurnos,totales:tabTurnos}]; 
+          return [{data:gTurnos,totales:tabTurnos}];
    }
-   
+
 
    datosGraficaUsuario(usuario:Usuario):any[]
    {
       let dataGU:any[] = []
-      let totaltickets = 0; 
-      let sucursales = usuario.sucursales; 
+      let totaltickets = 0;
+      let sucursales = usuario.sucursales;
 
       for(let suc of sucursales)
         {
-          let series:any[] = []; 
+          let series:any[] = [];
           for(let estatus of this.catEstatusTicket)
             {
                let tickets =  this.todosLosTickets.filter(x=> x.idSucursal == suc.id && x.idEstatusTicket == estatus.id && x.idArea == usuario.idArea).length;
-               series.push({name:estatus.nombre,value:tickets});  
-               totaltickets = totaltickets + tickets; 
+               series.push({name:estatus.nombre,value:tickets});
+               totaltickets = totaltickets + tickets;
             }
 
-            // series.sort((a, b) => b.value - a.value); 
-          dataGU.push({name:suc.nombre,series:series}); 
-        } 
+            // series.sort((a, b) => b.value - a.value);
+          dataGU.push({name:suc.nombre,series:series});
+        }
 
                   dataGU = dataGU
             .map(group => ({
@@ -223,19 +224,19 @@ public coloresEstatus:any;
             }))
             .sort((a, b) => b.total - a.total) // Ordenar de mayor a menor
             .map(({ total, ...rest }) => rest);
-              
-      return [{data:dataGU,total:totaltickets}]; 
-   } 
+
+      return [{data:dataGU,total:totaltickets}];
+   }
 
    esCoporporativo(idUsuario:string):boolean
    {
-    let value:boolean = false; 
-    let usuario:Usuario = this.usuarios.filter(X=>X.id == idUsuario)[0]; 
+    let value:boolean = false;
+    let usuario:Usuario = this.usuarios.filter(X=>X.id == idUsuario)[0];
     if(usuario != undefined)
       {
               if(usuario.idRol == '3' )
               {
-                value = true; 
+                value = true;
               }
       }
     return value
@@ -251,9 +252,9 @@ public coloresEstatus:any;
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
-  
+
   const [mes, anio] = mesAnio.split('/').map(Number);
-  
+
   return {
     nombreMes: meses[mes - 1],
     anio: anio
@@ -262,27 +263,27 @@ public coloresEstatus:any;
 
 generarGraficaMantenimientos():any[]
 {
-  let sucursales = this.sucursalesSel.filter(x => x.idFront != undefined || x.idFront != null); 
+  let sucursales = this.sucursalesSel.filter(x => x.idFront != undefined || x.idFront != null);
   sucursales = sucursales.filter(x => x.activoMantenimientos);
-  sucursales = sucursales.filter(x=> x.activoMantenimientos!.length>0);  
+  sucursales = sucursales.filter(x=> x.activoMantenimientos!.length>0);
   let data:any[] = [];
-  
+
   for(let sucursal of sucursales)
-    {   
-      let series:any[] = []; 
+    {
+      let series:any[] = [];
       for(let mes of this.meses)
         {
-          let totalm = this.mantenimientos.filter(x => this.obtenerDate(x.fecha!).getMonth()+1 == parseInt(mes.split('/')[0]) 
+          let totalm = this.mantenimientos.filter(x => this.obtenerDate(x.fecha!).getMonth()+1 == parseInt(mes.split('/')[0])
             && this.obtenerDate(x.fecha!).getFullYear() == parseInt(mes.split('/')[1])
             && x.idSucursal == sucursal.id
           );
-          let total = totalm.length;  
+          let total = totalm.length;
           series.push({name:this.obtenerMesYAnioEspanol(mes).nombreMes,value:total});
         }
-      data.push({name:sucursal.nombre,series:series}); 
+      data.push({name:sucursal.nombre,series:series});
 
     }
-  
+
         data = data
             .map(group => ({
               ...group,
@@ -291,16 +292,16 @@ generarGraficaMantenimientos():any[]
             .sort((a, b) => b.total - a.total) // Ordenar de mayor a menor
             .map(({ total, ...rest }) => rest);
 
-  return data; 
+  return data;
 }
 
 obtenerDate(fecha:Timestamp|Date):Date
-{ 
+{
    // Si es un Timestamp de Firebase (o similar)
   if (typeof fecha === 'object' && 'toDate' in fecha) {
     return fecha.toDate();
   }
-  
+
   // Si ya es un objeto Date o puede convertirse directamente
   const date = fecha instanceof Date ? fecha : new Date(fecha);
   // Verificar si la fecha es válida

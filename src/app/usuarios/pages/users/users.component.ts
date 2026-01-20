@@ -9,12 +9,12 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 
-import { Rol } from '../../../../models/rol.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { DocumentsService } from '../../../../services/documents.service';
-import { RolesService } from '../../../../services/roles.service';
-import { ModalUserCreateComponent } from '../../../../modals/users/modal-user-create/modal-user-create.component';
-import { UsersService } from '../../../../services/users.service';
+import { ModalUserCreateComponent } from '../../dialogs/modal-user-create/modal-user-create.component';
+import { Usuario } from '../../models/usuario.model';
+import { DocumentsService } from '../../../shared/services/documents.service';
+import { UsersService } from '../../services/users.service';
+import { RolesService } from '../../../roles/services/roles.service';
+import { Rol } from '../../../roles/interfaces/rol.model';
 
 @Component({
   selector: 'app-users',

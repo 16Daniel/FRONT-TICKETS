@@ -5,11 +5,11 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
-import { Mantenimiento10x10 } from '../../../models/mantenimiento-10x10.model';
-import { Usuario } from '../../../models/usuario.model';
-import { DatesHelperService } from '../../../helpers/dates-helper.service';
-import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
-import { MensajesPendientesService } from '../../../services/mensajes-pendientes.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
+import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-modal-maintenance-chat',

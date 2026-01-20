@@ -14,23 +14,23 @@ import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import Swal from 'sweetalert2';
 
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Categoria } from '../../../../models/categoria.mdoel';
-import { Ticket } from '../../../../models/ticket.model';
-import { BranchesService } from '../../../../services/branches.service';
-import { CategoriesService } from '../../../../services/categories.service';
-import { Area } from '../../../../models/area.model';
-import { TicketsService } from '../../../../services/tickets.service';
-import { FolioGeneratorService } from '../../../../services/folio-generator.service';
-import { TicketsPriorityService } from '../../../../services/tickets-priority.service';
-import { PrioridadTicket } from '../../../../models/prioridad-ticket.model';
-import { ParticipanteChat } from '../../../../models/participante-chat.model';
-import { Subcategoria } from '../../../../models/subcategoria.model';
-import { ActivoFijo } from '../../../../models/activo-fijo.model';
-import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
-import { AreasService } from '../../../../services/areas.service';
-import { UsersService } from '../../../../services/users.service';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Categoria } from '../../../tickets/models/categoria.mdoel';
+import { PrioridadTicket } from '../../../tickets/models/prioridad-ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { FolioGeneratorService } from '../../../tickets/services/folio-generator.service';
+import { CategoriesService } from '../../../tickets/services/categories.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { TicketsPriorityService } from '../../../tickets/services/tickets-priority.service';
+import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
+import { Subcategoria } from '../../../tickets/models/subcategoria.model';
+import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',

@@ -3,10 +3,10 @@ import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 
-import { VersionControlService } from '../../services/version-control.service';
-import { ControlVersion } from '../../models/control-version.model';
-import { VersionUsuarioService } from '../../services/version-usuario.service';
-import { Usuario } from '../../models/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { VersionControlService } from '../../../versiones/services/version-control.service';
+import { VersionUsuarioService } from '../../../versiones/services/version-usuario.service';
+import { ControlVersion } from '../../../versiones/interfaces/control-version.model';
 
 @Component({
   selector: 'app-version-button',

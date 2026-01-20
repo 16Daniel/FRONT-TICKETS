@@ -17,8 +17,8 @@ import {
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
 import { combineLatest, Observable } from 'rxjs';
-import { Mantenimiento10x10 } from '../models/mantenimiento-10x10.model';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
+import { Mantenimiento10x10 } from '../interfaces/mantenimiento-10x10.model';
 
 @Injectable({
   providedIn: 'root',

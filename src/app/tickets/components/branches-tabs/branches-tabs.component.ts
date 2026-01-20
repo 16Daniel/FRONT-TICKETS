@@ -2,20 +2,20 @@ import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output } from '@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabViewModule } from 'primeng/tabview';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { Subscription } from 'rxjs';
 
-import { BranchesSysTabComponent } from '../branches-sys-tab/branches-sys-tab.component';
-import { BranchesAudioVideoTabComponent } from '../branches-audio-video-tab/branches-audio-video-tab.component';
-import { Usuario } from '../../../../models/usuario.model';
-import { TicketsService } from '../../../../services/tickets.service';
-import { Ticket } from '../../../../models/ticket.model';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { BranchesService } from '../../../../services/branches.service';
-import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
-import { BranchesOilTabComponent } from "../branches-oil-tab/branches-oil-tab.component";
-import { Sucursal } from '../../../../models/sucursal.model';
-import { DashboardTasksComponent } from '../../../../components/tasks/dashboard-tasks/dashboard-tasks.component';
-import { EisenhowerMatrixComponent } from "../../../../components/tasks/eisenhower-matrix.component/eisenhower-matrix.component";
+import { BranchesSysTabComponent } from '../../../mantenimientos/components/branches-sys-tab/branches-sys-tab.component';
+import { BranchesAudioVideoTabComponent } from '../../../mantenimientos/components/branches-audio-video-tab/branches-audio-video-tab.component';
+import { BranchesMaintenanceTabComponent } from '../../../mantenimientos/components/branches-maintenance-tab/branches-maintenance-tab.component';
+import { BranchesOilTabComponent } from '../../../cedis/components/branches-oil-tab/branches-oil-tab.component';
+import { EisenhowerMatrixComponent } from '../../../tareas/components/eisenhower-matrix.component/eisenhower-matrix.component';
+import { DashboardTasksComponent } from '../../../tareas/components/dashboard-tasks/dashboard-tasks.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../models/ticket.model';
+import { TicketsService } from '../../services/tickets.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-branches-tabs',

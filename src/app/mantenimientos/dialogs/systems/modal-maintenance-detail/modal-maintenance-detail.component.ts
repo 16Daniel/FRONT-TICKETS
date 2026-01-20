@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-modal-maintenance-detail',

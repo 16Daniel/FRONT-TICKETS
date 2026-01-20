@@ -8,15 +8,15 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
-import { BranchesService } from '../../../services/branches.service';
-import { Sucursal } from '../../../models/sucursal.model';
-import { Usuario } from '../../../models/usuario.model';
-import { TareasService } from '../../../services/tareas.service';
-import { Tarea } from '../../../models/tarea.model';
-import { DatesHelperService } from '../../../helpers/dates-helper.service';
-import { ResponsableTarea } from '../../../models/responsable-tarea.model';
-import { TaskResponsibleService } from '../../../services/task-responsible.service';
-import { SearchFilterPipe } from '../../../pipes/search-filter.pipe';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { TareasService } from '../../services/tareas.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { SearchFilterPipe } from '../../../shared/pipes/search-filter.pipe';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Tarea } from '../../interfaces/tarea.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
 
 @Component({
   selector: 'app-modal-archived-tasks',

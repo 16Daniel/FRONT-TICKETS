@@ -10,10 +10,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../models/usuario.model';
-import { ColorUsuario } from '../../../models/color-usuario';
-import { DocumentsService } from '../../../services/documents.service';
-import { CalendarColorsService } from '../../../services/calendar-colors.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { CalendarColorsService } from '../../services/calendar-colors.service';
+import { ColorUsuario } from '../../interfaces/color-usuario';
 
 @Component({
   selector: 'app-modal-colors',

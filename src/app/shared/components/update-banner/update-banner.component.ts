@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
-import { VersionUsuarioService } from '../../services/version-usuario.service';
-import { Usuario } from '../../models/usuario.model';
-import { ControlVersion } from '../../models/control-version.model';
-import { VersionControlService } from '../../services/version-control.service';
-import { VersionUsuario } from '../../models/version-usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { VersionUsuarioService } from '../../../versiones/services/version-usuario.service';
+import { VersionControlService } from '../../../versiones/services/version-control.service';
+import { ControlVersion } from '../../../versiones/interfaces/control-version.model';
+import { VersionUsuario } from '../../../versiones/interfaces/version-usuario.model';
 
 @Component({
   selector: 'app-update-banner',

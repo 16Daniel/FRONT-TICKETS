@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, doc, docData, Firestore, orderBy, query, QueryConstraint, Timestamp, updateDoc, where } from '@angular/fire/firestore';
-import { from, map, Observable, switchMap } from 'rxjs';
-import { AdministracionCompra, PagoAdicional, Proveedor } from '../models/AdministracionCompra';
+import { from, map, Observable } from 'rxjs';
 import {
   Storage,
   ref,
@@ -10,6 +9,7 @@ import {
   deleteObject,
   listAll,
 } from '@angular/fire/storage';
+import { AdministracionCompra, PagoAdicional } from '../interfaces/AdministracionCompra';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,6 @@ export class ShoppingService {
 
     return collectionData(comprasQuery, { idField: 'id' });
   }
-
 
   getComprasServicio(): Observable<any> {
     const comprasCollection = collection(this.firestore, this.comprastab);
@@ -90,7 +89,6 @@ export class ShoppingService {
     const ref = collection(this.firestore, this.comprastab);
     const docRef = await addDoc(ref, item);
   }
-
 
   getComprasFiltro(
     fechaini: Date | undefined,
@@ -267,7 +265,6 @@ export class ShoppingService {
     }
   }
 
-
   async AgregarPago(item: PagoAdicional): Promise<void> {
     const ref = collection(this.firestore, this.pagosAdicionalesTab);
     const docRef = await addDoc(ref, item);
@@ -368,4 +365,4 @@ export class ShoppingService {
     return docData(ticketDoc, { idField: 'id' }) as Observable<any>;
   }
 
-} 
+}

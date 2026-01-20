@@ -8,10 +8,9 @@ import {
   doc,
   writeBatch,
   getDocs,
-  serverTimestamp
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { MensajePendiente } from '../models/mensajes-pendientes.model';
+import { MensajePendiente } from '../interfaces/mensajes-pendientes.model';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, Firestore, getDocs, limit, orderBy, query, where } from '@angular/fire/firestore';
-import { VersionUsuario } from '../models/version-usuario.model';
 import { Observable } from 'rxjs';
+import { VersionUsuario } from '../interfaces/version-usuario.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class VersionUsuarioService {
   pathName: string = 'version_usuario';
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   async updateUserVersion(versionUsuario: VersionUsuario): Promise<void> {
     const versionesRef = collection(this.firestore, this.pathName);

@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 
-import { Comentario } from '../../../models/comentario-chat.model';
-import { Tarea } from '../../../models/tarea.model';
-import { Usuario } from '../../../models/usuario.model';
-import { TareasService } from '../../../services/tareas.service';
-import { FirebaseStorageService } from '../../../services/firebase-storage.service';
-import { ModalVisorImagenesComponent } from '../../../modals/modal-visor-imagenes/modal-visor-imagenes.component';
-import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
+import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
+import { TareasService } from '../../services/tareas.service';
+import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
+import { Tarea } from '../../interfaces/tarea.model';
+import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 
 @Component({
   selector: 'app-task-comment-box',

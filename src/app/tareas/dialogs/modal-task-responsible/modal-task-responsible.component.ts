@@ -9,13 +9,13 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-
-import { Sucursal } from '../../../models/sucursal.model';
-import { BranchesService } from '../../../services/branches.service';
-import { ResponsableTarea } from '../../../models/responsable-tarea.model';
-import { TaskResponsibleService } from '../../../services/task-responsible.service';
 import { AvatarModule } from 'ngx-avatars';
 import { InputSwitchModule } from 'primeng/inputswitch';
+
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
 
 @Component({
   selector: 'app-modal-task-responsible',

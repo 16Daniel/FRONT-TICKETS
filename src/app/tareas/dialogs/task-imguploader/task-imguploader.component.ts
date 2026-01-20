@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
-import { Tarea } from '../../../models/tarea.model';
-import { FirebaseStorageService } from '../../../services/firebase-storage.service';
-import { TareasService } from '../../../services/tareas.service';
+
+import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
+import { TareasService } from '../../services/tareas.service';
+import { Tarea } from '../../interfaces/tarea.model';
 
 @Component({
   selector: 'app-task-imguploader',

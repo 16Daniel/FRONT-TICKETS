@@ -3,14 +3,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../../models/usuario.model';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
-import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
-import { ModalMaintenanceMttoImguploaderComponent } from '../../../../modals/maintenance/manteinance/modal-maintenance-mtto-imguploader/modal-maintenance-mtto-imguploader.component';
-import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
-import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
-import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalMaintenanceMttoImguploaderComponent } from '../../../dialogs/manteinance/modal-maintenance-mtto-imguploader/modal-maintenance-mtto-imguploader.component';
+import { ModalVisorVariasImagenesComponent } from '../../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalFinalCommentsComponent } from '../../../dialogs/modal-final-comments/modal-final-comments.component';
+import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
 
 @Component({
   selector: 'app-branch-maintenance-table-mtto',

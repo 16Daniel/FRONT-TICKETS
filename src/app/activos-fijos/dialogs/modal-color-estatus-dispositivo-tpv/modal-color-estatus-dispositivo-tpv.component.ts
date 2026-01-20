@@ -6,11 +6,11 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
-import { EstatusTPV } from '../../models/estatus-tpv';
 import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.service';
-import { DispositivoTPV } from '../../models/dispositivo-tpv';
-import { Sucursal } from '../../models/sucursal.model';
-import { BranchesService } from '../../services/branches.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { DispositivoTPV } from '../../interfaces/dispositivo-tpv';
+import { EstatusTPV } from '../../interfaces/estatus-tpv';
 
 @Component({
   selector: 'app-modal-color-estatus-dispositivo-tpv',

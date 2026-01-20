@@ -10,19 +10,19 @@ import esLocale from '@fullcalendar/core/locales/es'; // Importar idioma españo
 import Swal from 'sweetalert2';
 
 import { VisitasService } from '../../services/visitas.service';
-import { GuardiasService } from '../../services/guardias.service';
-import { Usuario } from '../../models/usuario.model';
-import { Ticket } from '../../models/ticket.model';
-import ModalEventDetailComponent from "../../modals/calendar/modal-event-detail/modal-event-detail.component";
-import { Sucursal } from '../../models/sucursal.model';
-import { DocumentsService } from '../../services/documents.service';
-import { ColorUsuario } from '../../models/color-usuario';
-import { TicketsService } from '../../services/tickets.service';
-import { SucursalProgramada } from '../../models/sucursal-programada.model';
-import { BranchesService } from '../../services/branches.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
-import { DatesHelperService } from '../../helpers/dates-helper.service';
-import { UsersService } from '../../services/users.service';
+import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { GuardiasService } from '../../../tickets/services/guardias.service';
+import { DocumentsService } from '../../../shared/services/documents.service';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { SucursalProgramada } from '../../interfaces/sucursal-programada.model';
+import { ColorUsuario } from '../../interfaces/color-usuario';
 
 @Component({
   selector: 'app-calendar',

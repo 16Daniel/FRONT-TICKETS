@@ -9,12 +9,11 @@ import {
   getDocs,
   orderBy,
   limit,
-  getDocsFromServer,
   doc,
   updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { ControlVersion } from '../models/control-version.model';
+import { ControlVersion } from '../interfaces/control-version.model';
 
 @Injectable({
   providedIn: 'root',

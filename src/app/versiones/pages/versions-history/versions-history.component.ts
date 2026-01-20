@@ -4,12 +4,12 @@ import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
 
 import { VersionControlService } from '../../services/version-control.service';
-import { ControlVersion } from '../../models/control-version.model';
-import { VersionUsuario } from '../../models/version-usuario.model';
-import { Usuario } from '../../models/usuario.model';
 import { VersionUsuarioService } from '../../services/version-usuario.service';
-import { DatesHelperService } from '../../helpers/dates-helper.service';
-import { ModalVersionEditComponent } from '../admin/dialogs/modal-version-edit/modal-version-edit.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { ModalVersionEditComponent } from '../../dialogs/modal-version-edit/modal-version-edit.component';
+import { ControlVersion } from '../../interfaces/control-version.model';
+import { VersionUsuario } from '../../interfaces/version-usuario.model';
 
 @Component({
   selector: 'app-versions-history',

@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
-import { DashboardTasksComponent } from '../../../../components/tasks/dashboard-tasks/dashboard-tasks.component';
-import { EisenhowerMatrixComponent } from '../../../../components/tasks/eisenhower-matrix.component/eisenhower-matrix.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
 import { TicketsTabComponent } from '../tickets-tab/tickets-tab.component';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Usuario } from '../../../../models/usuario.model';
+import { DashboardTasksComponent } from '../../../tareas/components/dashboard-tasks/dashboard-tasks.component';
+import { EisenhowerMatrixComponent } from '../../../tareas/components/eisenhower-matrix.component/eisenhower-matrix.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-analyst-tabs',

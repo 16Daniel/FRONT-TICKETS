@@ -7,11 +7,11 @@ import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 
-import { environment } from '../../../environments/environments';
 import { DocumentsService } from '../../services/documents.service';
 import { VersionButtonComponent } from '../version-button/version-button.component';
-import { Usuario } from '../../models/usuario.model';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { environment } from '../../../../environments/environments';
 
 @Component({
   selector: 'app-side-menu',

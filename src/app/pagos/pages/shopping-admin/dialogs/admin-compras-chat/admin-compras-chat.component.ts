@@ -7,11 +7,11 @@ import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 import { CardModule } from 'primeng/card';
 
-import { AdministracionCompra, PagoAdicional } from '../../../../../models/AdministracionCompra';
-import { Usuario } from '../../../../../models/usuario.model';
-import { ShoppingService } from '../../../../../services/shopping.service';
-import { DatesHelperService } from '../../../../../helpers/dates-helper.service';
-import { MensajesPendientesService } from '../../../../../services/mensajes-pendientes.service';
+import { Usuario } from '../../../../../usuarios/models/usuario.model';
+import { ShoppingService } from '../../../../services/shopping.service';
+import { DatesHelperService } from '../../../../../shared/helpers/dates-helper.service';
+import { MensajesPendientesService } from '../../../../../shared/services/mensajes-pendientes.service';
+import { AdministracionCompra, PagoAdicional } from '../../../../interfaces/AdministracionCompra';
 
 @Component({
   selector: 'app-admin-compras-chat',

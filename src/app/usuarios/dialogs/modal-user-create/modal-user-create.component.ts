@@ -6,15 +6,15 @@ import { MessageService } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { Usuario } from '../../../models/usuario.model';
-import { Sucursal } from '../../../models/sucursal.model';
-import { Rol } from '../../../models/rol.model';
-import { BranchesService } from '../../../services/branches.service';
-import { RolesService } from '../../../services/roles.service';
-import { DocumentsService } from '../../../services/documents.service';
-import { Area } from '../../../models/area.model';
-import { AreasService } from '../../../services/areas.service';
-import { UsersService } from '../../../services/users.service';
+import { Usuario } from '../../models/usuario.model';
+import { Area } from '../../../areas/models/area.model';
+import { UsersService } from '../../services/users.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { RolesService } from '../../../roles/services/roles.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { DocumentsService } from '../../../shared/services/documents.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Rol } from '../../../roles/interfaces/rol.model';
 
 @Component({
   selector: 'app-modal-user-create',
@@ -77,7 +77,7 @@ export class ModalUserCreateComponent implements OnInit {
 
   /**
  * Guarda al usuario en la autenticaciond e firebase
- * @returns 
+ * @returns
  */
   async guardarAutenticacionFb() {
     try {
@@ -96,7 +96,7 @@ export class ModalUserCreateComponent implements OnInit {
 
   /**
    * Guardar al usuario en la tabla de usuarios
-   * @param uid 
+   * @param uid
    */
   async guardarUsuario(uid: string) {
     this.usuario.uid = uid;

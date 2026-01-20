@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Ticket } from '../../../../models/ticket.model';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
-import { RequesterTicketsListComponent } from '../../../../components/requester-tickets-list/requester-tickets-list.component';
-import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { BranchesService } from '../../../../services/branches.service';
+
+import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
+import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
+import { Ticket } from '../../models/ticket.model';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-priority-tickets-accordion',

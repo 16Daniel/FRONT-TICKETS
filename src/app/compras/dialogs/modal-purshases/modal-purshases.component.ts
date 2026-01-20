@@ -6,20 +6,19 @@ import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
-
-import { Compra } from '../../../../models/compra.model';
-import { Area } from '../../../../models/area.model';
-import { EstatusCompra } from '../../../../models/estatus-compras.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { PurchaseService } from '../../../../services/purchase.service';
-import { StatusPurchaseService } from '../../../../services/status-purchase.service';
-import { BranchesService } from '../../../../services/branches.service';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { Usuario } from '../../../../models/usuario.model';
-import { AreasService } from '../../../../services/areas.service';
-import { UsersService } from '../../../../services/users.service';
-import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { ModalPurchasesImgsUploaderComponent } from '../../../../modals/modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
+import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { Compra } from '../../models/compra.model';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { PurchaseService } from '../../services/purchase.service';
+import { StatusPurchaseService } from '../../services/status-purchase.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
+import { EstatusCompra } from '../../../pagos/interfaces/estatus-compras.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-modal-purshases',

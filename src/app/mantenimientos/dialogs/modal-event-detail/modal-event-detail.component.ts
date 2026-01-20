@@ -5,18 +5,18 @@ import localeEs from '@angular/common/locales/es';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 
-import { Ticket } from '../../../models/ticket.model';
-import { Usuario } from '../../../models/usuario.model';
-import { ModalTicketDetailComponent } from "../../tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { TicketsService } from '../../../services/tickets.service';
-import { SucursalProgramada } from '../../../models/sucursal-programada.model';
-import { BranchMaintenanceTableComponent } from '../../../components/maintenance/systems/branch-maintenance-table/branch-maintenance-table.component';
-import { ModalMaintenanceDetailComponent } from '../../maintenance/systems/modal-maintenance-detail/modal-maintenance-detail.component';
-import { BranchMaintenanceTableAvComponent } from '../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { BranchMaintenanceTableMttoComponent } from '../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
-import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
-import { RequesterTicketsListComponent } from '../../../components/requester-tickets-list/requester-tickets-list.component';
-import { DatesHelperService } from '../../../helpers/dates-helper.service';
+import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
+import { BranchMaintenanceTableComponent } from '../../components/systems/branch-maintenance-table/branch-maintenance-table.component';
+import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { ModalMaintenanceDetailComponent } from '../systems/modal-maintenance-detail/modal-maintenance-detail.component';
+import { BranchMaintenanceTableAvComponent } from '../../components/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
+import { BranchMaintenanceTableMttoComponent } from '../../components/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { SucursalProgramada } from '../../interfaces/sucursal-programada.model';
 
 @Component({
   selector: 'app-modal-event-detail',

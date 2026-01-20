@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
-import { Sucursal } from '../../models/sucursal.model';
-import { SucursalProgramada } from '../../models/sucursal-programada.model';
-import { Ticket } from '../../models/ticket.model';
-import ModalEventDetailComponent from '../../modals/calendar/modal-event-detail/modal-event-detail.component';
-import { Usuario } from '../../models/usuario.model';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { SucursalProgramada } from '../../interfaces/sucursal-programada.model';
 
 @Component({
   selector: 'app-branch-visit-item',

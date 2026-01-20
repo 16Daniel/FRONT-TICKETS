@@ -6,11 +6,11 @@ import { MessageService } from 'primeng/api';
 import { AccordionModule } from 'primeng/accordion';
 import { CardModule } from 'primeng/card';
 
-import { Usuario } from '../../../models/usuario.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { Ticket } from '../../../models/ticket.model';
-import { ModalVisorImagenesComponent } from '../../modal-visor-imagenes/modal-visor-imagenes.component';
-import { ModalSelectSpecialistUserComponent } from '../../users/modal-select-specialist-user/modal-select-specialist-user.component';
+import { ModalSelectSpecialistUserComponent } from '../../../usuarios/dialogs/modal-select-specialist-user/modal-select-specialist-user.component';
+import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
+import { Ticket } from '../../models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { TicketsService } from '../../services/tickets.service';
 
 @Component({
   selector: 'app-modal-ticket-detail',

@@ -1,42 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+
 import { AgregarPagoComponent } from '../components/agregar-pago/agregar-pago.component';
 import { AdminPagosAdicionalesTableComponent } from "../../../shopping-admin/components/admin-pagos-adicionales-table/admin-pagos-adicionales-table.component";
-import { PagoAdicional } from '../../../../../models/AdministracionCompra';
-import { ShoppingService } from '../../../../../services/shopping.service';
 import { FiltroPagosAdicionalesComponent } from "../../../shopping-admin/components/filtro-pagos-adicionales/filtro-pagos-adicionales.component";
 import { GraficaPagosAdicionalesComponent } from "../../../shopping-admin/components/grafica-pagos-adicionales/grafica-pagos-adicionales.component";
+import { PagoAdicional } from '../../../../interfaces/AdministracionCompra';
 
 @Component({
   selector: 'app-fondeo-tarjeta-tab',
   standalone: true,
-    imports: [CommonModule, AgregarPagoComponent, AdminPagosAdicionalesTableComponent, FiltroPagosAdicionalesComponent, GraficaPagosAdicionalesComponent],
+  imports: [CommonModule, AgregarPagoComponent, AdminPagosAdicionalesTableComponent, FiltroPagosAdicionalesComponent, GraficaPagosAdicionalesComponent],
   templateUrl: './fondeo-tarjeta-tab.component.html',
   styleUrl: './fondeo-tarjeta-tab.component.scss',
 })
-export class FondeoTarjetaTabComponent implements OnInit {
-public modalAgregar:boolean = false; 
-public data:PagoAdicional[] = []; 
-public vergrafica:boolean = false; 
-constructor( private shopServ:ShoppingService, private cdr: ChangeDetectorRef)
-{
+export class FondeoTarjetaTabComponent {
+  public modalAgregar: boolean = false;
+  public data: PagoAdicional[] = [];
+  public vergrafica: boolean = false;
 
-}  
-ngOnInit(): void { }
-
-  abrirModalAgregar()
-  {
-    this.modalAgregar = true; 
+  abrirModalAgregar() {
+    this.modalAgregar = true;
   }
 
-   onResultReceived(datos: PagoAdicional[]) {
-      this.vergrafica = false; 
+  onResultReceived(datos: PagoAdicional[]) {
+    this.vergrafica = false;
     this.data = datos;
-    if(this.data.length > 0){ 
+    if (this.data.length > 0) {
       setTimeout(() => {
-       this.vergrafica = true;   
+        this.vergrafica = true;
       }, 500);
-      }
+    }
   }
 
 }

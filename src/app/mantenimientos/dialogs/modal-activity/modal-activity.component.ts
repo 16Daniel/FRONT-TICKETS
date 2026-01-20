@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({

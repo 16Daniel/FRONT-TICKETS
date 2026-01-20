@@ -5,8 +5,8 @@ import { EditorModule } from 'primeng/editor';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { ControlVersion } from '../../../../models/control-version.model';
-import { VersionControlService } from '../../../../services/version-control.service';
+import { VersionControlService } from '../../services/version-control.service';
+import { ControlVersion } from '../../interfaces/control-version.model';
 
 @Component({
   selector: 'app-version-control',
@@ -22,7 +22,7 @@ export default class VersionControlComponent {
   constructor(
     private versionControlService: VersionControlService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   async enviar(form: NgForm) {
     if (form.form.status == 'INVALID') {
@@ -40,7 +40,7 @@ export default class VersionControlComponent {
       });
       this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
       this.controlVersion = new ControlVersion();
-    } catch(error: any) {
+    } catch (error: any) {
       this.showMessage('error', 'Error', error);
     }
   }

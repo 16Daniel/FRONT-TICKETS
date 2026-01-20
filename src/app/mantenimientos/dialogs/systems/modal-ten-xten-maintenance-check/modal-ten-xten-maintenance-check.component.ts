@@ -6,15 +6,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
 import { MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
 import { TooltipModule } from 'primeng/tooltip';
-import { ProgressBarComponent } from '../../../../components/progress-bar/progress-bar.component';
+
+import { ProgressBarComponent } from '../../../components/progress-bar/progress-bar.component';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-check',

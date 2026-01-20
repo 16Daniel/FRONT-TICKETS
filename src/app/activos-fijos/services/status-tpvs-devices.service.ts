@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { EstatusTPV } from '../models/estatus-tpv';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { collection, doc, Firestore, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
+import { EstatusTPV } from '../interfaces/estatus-tpv';
 
 @Injectable({
   providedIn: 'root'

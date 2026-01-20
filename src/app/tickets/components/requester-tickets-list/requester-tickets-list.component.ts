@@ -21,18 +21,18 @@ import { DropdownModule } from 'primeng/dropdown';
 
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { ModalFinalizeTicketComponent } from '../../modals/tickets/modal-finalize-ticket/modal-finalize-ticket.component';
-import { ModalTicketChatComponent } from '../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
-import { Usuario } from '../../models/usuario.model';
-import { Area } from '../../models/area.model';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
-import { ModalValidateTicketComponent } from '../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component';
-import { Sucursal } from '../../models/sucursal.model';
-import { BranchesService } from '../../services/branches.service';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
-import { AreasService } from '../../services/areas.service';
-import { UsersService } from '../../services/users.service';
+import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticket/modal-finalize-ticket.component';
+import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
+import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-requester-tickets-list',

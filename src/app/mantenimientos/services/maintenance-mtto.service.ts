@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
+
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
-import { MantenimientoMtto } from '../models/mantenimiento-mtto.model';
-import { ParticipanteChat } from '../models/participante-chat.model';
+import { MantenimientoMtto } from '../interfaces/mantenimiento-mtto.model';
+import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
 
 @Injectable({
   providedIn: 'root'

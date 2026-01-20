@@ -5,11 +5,11 @@ import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Ticket } from '../../../../models/ticket.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { RequesterTicketsListComponent } from '../../../../components/requester-tickets-list/requester-tickets-list.component';
-import { GraficaTickets30DiasComponent } from '../../../../components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
+import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { Ticket } from '../../models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',

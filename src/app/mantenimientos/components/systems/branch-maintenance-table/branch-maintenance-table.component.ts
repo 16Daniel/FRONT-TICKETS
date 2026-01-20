@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
-import { ModalSysMttoImguploaderComponent } from '../../../../modals/maintenance/systems/modal-sys-mtto-imguploader/modal-sys-mtto-imguploader.component';
-import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
-import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
-import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalFinalCommentsComponent } from '../../../dialogs/modal-final-comments/modal-final-comments.component';
+import { ModalSysMttoImguploaderComponent } from '../../../dialogs/systems/modal-sys-mtto-imguploader/modal-sys-mtto-imguploader.component';
+import { ModalVisorVariasImagenesComponent } from '../../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-branch-maintenance-table',
@@ -54,7 +54,6 @@ export class BranchMaintenanceTableComponent {
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   obtenerMantenimientos(idsSucursales: string[]) {
-    debugger
     const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
     servicio

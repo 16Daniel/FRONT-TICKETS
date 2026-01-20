@@ -12,21 +12,21 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { DropdownModule } from 'primeng/dropdown';
 
-import { TicketsService } from '../../../services/tickets.service';
-import { Ticket } from '../../../models/ticket.model';
 import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
-import { Usuario } from '../../../models/usuario.model';
-import { RequesterTicketsListComponent } from '../../../components/requester-tickets-list/requester-tickets-list.component';
-import { DropdownModule } from 'primeng/dropdown';
-import { Categoria } from '../../../models/categoria.mdoel';
-import { CategoriesService } from '../../../services/categories.service';
-import { Area } from '../../../models/area.model';
-import { AreasService } from '../../../services/areas.service';
-import { BranchesService } from '../../../services/branches.service';
-import { Sucursal } from '../../../models/sucursal.model';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Categoria } from '../../models/categoria.mdoel';
+import { Area } from '../../../areas/models/area.model';
+import { Ticket } from '../../models/ticket.model';
+import { TicketsService } from '../../services/tickets.service';
+import { CategoriesService } from '../../services/categories.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-modal-tickets-history',

@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
+
 import { TablaRadiografiaComponent } from '../tabla-radiografia/tabla-radiografia.component';
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
+import { Ticket } from '../../../../tickets/models/ticket.model';
+import { TicketsService } from '../../../../tickets/services/tickets.service';
 
 @Component({
   selector: 'app-grafica-tickets-30-dias',

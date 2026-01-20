@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, type OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { PagoAdicional } from '../../../../../models/AdministracionCompra';
-import { doc, Timestamp } from '@angular/fire/firestore'
+import { Timestamp } from '@angular/fire/firestore'
+
 import { SubirDocumentoPagoAdicionalComponent } from "../../dialogs/subir-documento-pago-adicional/subir-documento-pago-adicional.component";
 import { ArchivosComponent } from "../../dialogs/Archivos/Archivos.component";
 import { AdminComprasChatComponent } from "../../dialogs/admin-compras-chat/admin-compras-chat.component";
-import { Usuario } from '../../../../../models/usuario.model';
 import { PagoAdicionalDetallesComponent } from "../../dialogs/pago-adicional-detalles/pago-adicional-detalles.component";
 import { environment } from '../../../../../../environments/environments';
+import { Usuario } from '../../../../../usuarios/models/usuario.model';
+import { PagoAdicional } from '../../../../interfaces/AdministracionCompra';
+
 @Component({
   selector: 'app-admin-pagos-adicionales-table',
   standalone: true,
@@ -16,47 +18,43 @@ import { environment } from '../../../../../../environments/environments';
   templateUrl: './admin-pagos-adicionales-table.component.html',
   styleUrl: './admin-pagos-adicionales-table.component.scss',
 })
-export class AdminPagosAdicionalesTableComponent implements OnInit {
- @Input() data:PagoAdicional[] = [];  
- @Input() tipoPago:number = 1; 
-public modalSubirDocumentos:boolean = false; 
-public itemReg:PagoAdicional|undefined;  
-public modalArchivos:boolean = false; 
-public docs:string = ""; 
-public modalChat:boolean = false; 
-public usuario:Usuario;
-public modalDetalles:boolean = false; 
-public idAdmin:string = environment.idAdministracion; 
-constructor()
-{
-  this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-}
-ngOnInit(): void { }
-  obtenerFecha(value:Timestamp):Date
-  {
-    return value.toDate(); 
+export class AdminPagosAdicionalesTableComponent {
+  @Input() data: PagoAdicional[] = [];
+  @Input() tipoPago: number = 1;
+  public modalSubirDocumentos: boolean = false;
+  public itemReg: PagoAdicional | undefined;
+  public modalArchivos: boolean = false;
+  public docs: string = "";
+  public modalChat: boolean = false;
+  public usuario: Usuario;
+  public modalDetalles: boolean = false;
+  public idAdmin: string = environment.idAdministracion;
+
+  constructor() {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
-abrirModalSubirDoc(item:PagoAdicional)
-{
-  this.itemReg = item; 
-  this.modalSubirDocumentos = true; 
-}  
+  obtenerFecha(value: Timestamp): Date {
+    return value.toDate();
+  }
 
-abrirModalVerDocs(item:PagoAdicional)
-{
-  this.itemReg = item; 
-  this.docs = item.documentos; 
-  this.modalArchivos = true; 
-}  
+  abrirModalSubirDoc(item: PagoAdicional) {
+    this.itemReg = item;
+    this.modalSubirDocumentos = true;
+  }
 
-abrirModalChat(item:PagoAdicional)
-{
-  this.itemReg = item; 
-  this.modalChat = true; 
-}
+  abrirModalVerDocs(item: PagoAdicional) {
+    this.itemReg = item;
+    this.docs = item.documentos;
+    this.modalArchivos = true;
+  }
 
-  verificarChatNoLeido(ticket:PagoAdicional) {
+  abrirModalChat(item: PagoAdicional) {
+    this.itemReg = item;
+    this.modalChat = true;
+  }
+
+  verificarChatNoLeido(ticket: PagoAdicional) {
     const participantes = ticket.participantesChat.sort(
       (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
     );
@@ -72,16 +70,15 @@ abrirModalChat(item:PagoAdicional)
 
       // Si el último comentario leído es menor que la longitud actual de los comentarios
       return comentarios.length > ultimoComentarioLeido;
-      
+
     }
 
     return false;
   }
 
-   abrirModalDetalles(item:PagoAdicional)
-    { 
-      this.itemReg = item; 
-      this.modalDetalles = true; 
-    }
+  abrirModalDetalles(item: PagoAdicional) {
+    this.itemReg = item;
+    this.modalDetalles = true;
+  }
 
 }

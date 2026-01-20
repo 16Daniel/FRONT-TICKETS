@@ -6,11 +6,11 @@ import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
-import { Usuario } from '../../../../models/usuario.model';
-import { BranchMaintenanceTableMttoComponent } from '../../../../components/maintenance/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
-import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
-import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
-import { UsersService } from '../../../../services/users.service';
+import { BranchMaintenanceTableMttoComponent } from '../../../components/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { UsersService } from '../../../../usuarios/services/users.service';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
 
 @Component({
   selector: 'app-modal-maintenance-mtto-history',

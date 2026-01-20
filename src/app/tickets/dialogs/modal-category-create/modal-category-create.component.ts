@@ -5,11 +5,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 
-import { Categoria } from '../../../../models/categoria.mdoel';
-import { CategoriesService } from '../../../../services/categories.service';
-import { Usuario } from '../../../../models/usuario.model';
-import { Subcategoria } from '../../../../models/subcategoria.model';
 import { ModalSubcategoryCreateComponent } from '../modal-subcategory-create/modal-subcategory-create.component';
+import { Categoria } from '../../models/categoria.mdoel';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Subcategoria } from '../../models/subcategoria.model';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-modal-category-create',

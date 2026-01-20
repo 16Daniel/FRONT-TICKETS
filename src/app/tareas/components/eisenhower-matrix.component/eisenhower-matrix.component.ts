@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
-import { TareasService } from '../../../services/tareas.service';
-import { MessageService } from 'primeng/api';
-import { Tarea } from '../../../models/tarea.model';
-import { TaskCardComponent } from "../task-card/task-card.component";
-import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { TaskEisenhowerCard } from "../task-eisenhower-card/task-eisenhower-card";
-import { StatusTaskService } from '../../../services/status-task.service';
-import { EstatusTarea } from '../../../models/estatus-tarea.model';
-import { Usuario } from '../../../models/usuario.model';
-import { DropdownModule } from 'primeng/dropdown';
-import { Sucursal } from '../../../models/sucursal.model';
 import { FormsModule } from '@angular/forms';
-import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
-import { ResponsableTarea } from '../../../models/responsable-tarea.model';
-import { LabelsTasksService } from '../../../services/labels-tasks.service';
-import { TaskResponsibleService } from '../../../services/task-responsible.service';
-import { BranchesService } from '../../../services/branches.service';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from "primeng/toast";
-import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/task-detail.component';
+
+import { TaskEisenhowerCard } from "../task-eisenhower-card/task-eisenhower-card";
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { TareasService } from '../../services/tareas.service';
+import { StatusTaskService } from '../../services/status-task.service';
+import { LabelsTasksService } from '../../services/labels-tasks.service';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
+import { Tarea } from '../../interfaces/tarea.model';
+import { EstatusTarea } from '../../interfaces/estatus-tarea.model';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
 
 @Component({
   selector: 'app-eisenhower-matrix',

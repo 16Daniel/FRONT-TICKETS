@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Timestamp } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -9,28 +8,28 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import Swal from 'sweetalert2';
 
-import { Ticket } from '../../../../models/ticket.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
-import { EstatusTicket } from '../../../../models/estatus-ticket.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { TicketsService } from '../../../../services/tickets.service';
-import { BranchesService } from '../../../../services/branches.service';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
-import { ModalFilterTicketsComponent } from '../../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalGenerateTicketComponent } from '../../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { ModalTicketsHistoryComponent } from '../../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { UserTicketsAccordionComponent } from '../user-tickets-accordion/user-tickets-accordion.component';
-import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { AccordionBranchMaintenanceAvComponent } from '../../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { ModalPurshasesComponent } from '../../dialogs/modal-purshases/modal-purshases.component';
-import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
-import { PurchaseService } from '../../../../services/purchase.service';
-import { Compra } from '../../../../models/compra.model';
-import { BranchesTicketsAccordionComponent } from '../branches-tickets-accordion/branches-tickets-accordion.component';
-import { UsersService } from '../../../../services/users.service';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
+import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
+import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
+import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
+import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
+import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { AccordionBranchMaintenanceAvComponent } from '../audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Compra } from '../../../compras/models/compra.model';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
+import { PurchaseService } from '../../../compras/services/purchase.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.model';
 
 @Component({
   selector: 'app-admin-audio-video-tab',

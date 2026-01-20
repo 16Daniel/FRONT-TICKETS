@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Timestamp } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -9,33 +8,32 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Ticket } from '../../../../models/ticket.model';
-import { TicketsService } from '../../../../services/tickets.service';
-import { ModalGenerateTicketComponent } from '../../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalFilterTicketsComponent } from '../../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
-import { Usuario } from '../../../../models/usuario.model';
-import { Area } from '../../../../models/area.model';
-import { BranchesService } from '../../../../services/branches.service';
-import { NotificationService } from '../../../../services/notification.service';
-import { AccordionBranchMaintenance10x10Component } from '../../../../components/maintenance/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
-import { ModalTenXtenMaintenanceCheckComponent } from '../../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
-import { ModalTenXtenMaintenanceHistoryComponent } from '../../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
-import { ModalTenXtenMaintenanceNewComponent } from '../../../../modals/maintenance/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
-import { AccordionBranchMaintenanceAvComponent } from '../../../../components/maintenance/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { AccordionBranchMaintenanceMttoComponent } from '../../../../components/maintenance/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
-import { MantenimientoFactoryService } from '../../../../services/maintenance-factory.service';
-import { PriorityTicketsAccordionAnalystComponent } from '../../components/priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
-import { ModalRequestPurchaseComponent } from '../../../../modals/modal-request-purchase/modal-request-purchase.component';
-import { PurchaseService } from '../../../../services/purchase.service';
-import { Compra } from '../../../../models/compra.model';
-import { IconosNotificacionesTicketsComponent } from '../../../../components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { UsersService } from '../../../../services/users.service';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
+import { ModalGenerateTicketComponent } from '../../dialogs/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { ModalFilterTicketsComponent } from '../../dialogs/modal-filter-tickets/modal-filter-tickets.component';
+import { ModalTicketsHistoryComponent } from '../../dialogs/modal-tickets-history/modal-tickets-history.component';
+import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
+import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
+import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
+import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { ModalTenXtenMaintenanceNewComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
+import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
+import { Ticket } from '../../models/ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Compra } from '../../../compras/models/compra.model';
+import { TicketsService } from '../../services/tickets.service';
+import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { NotificationService } from '../../../shared/services/notification.service';
+import { MantenimientoFactoryService } from '../../../mantenimientos/services/maintenance-factory.service';
+import { PurchaseService } from '../../../compras/services/purchase.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -59,7 +57,6 @@ import { DatesHelperService } from '../../../../helpers/dates-helper.service';
     AccordionBranchMaintenanceAvComponent,
     AccordionBranchMaintenanceMttoComponent,
     ModalRequestPurchaseComponent,
-    IconosNotificacionesTicketsComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',

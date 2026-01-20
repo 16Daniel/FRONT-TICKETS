@@ -5,19 +5,19 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
-import { Ticket } from '../../../../models/ticket.model';
-import { ModalGenerateTicketComponent } from '../../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalTicketsHistoryComponent } from '../../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Area } from '../../../../models/area.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { ModalMateinanceMttoCheckComponent } from '../../../../modals/maintenance/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
-import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
-import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
-import { ModalMaintenanceMttoHistoryComponent } from '../../../../modals/maintenance/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
-import { ModalBranchRatingComponent } from '../../dialogs/modal-branch-rating/modal-branch-rating.component';
+import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
+import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
+import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
+import { ModalMateinanceMttoCheckComponent } from '../../dialogs/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
+import { ModalMaintenanceMttoHistoryComponent } from '../../dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.model';
 
 @Component({
   selector: 'app-branches-maintenance-tab',

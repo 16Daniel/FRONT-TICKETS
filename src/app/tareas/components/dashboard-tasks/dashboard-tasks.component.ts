@@ -8,18 +8,18 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
-import { Tarea } from '../../../models/tarea.model';
-import { TareasService } from '../../../services/tareas.service';
-import { Sucursal } from '../../../models/sucursal.model';
-import { BranchesService } from '../../../services/branches.service';
-import { Usuario } from '../../../models/usuario.model';
-import { LabelsTasksService } from '../../../services/labels-tasks.service';
-import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
-import { TaskResponsibleService } from '../../../services/task-responsible.service';
-import { ResponsableTarea } from '../../../models/responsable-tarea.model';
-import { TaskDetailComponent } from '../../../modals/tasks/modal-task-detail/task-detail.component';
 import { TasksFilterComponentComponent } from '../tasks-filter-component/tasks-filter-component.component';
 import { TasksBoardComponent } from '../tasks-board/tasks-board.component';
+import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { TareasService } from '../../services/tareas.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { LabelsTasksService } from '../../services/labels-tasks.service';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
+import { Tarea } from '../../interfaces/tarea.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
 
 @Component({
   selector: 'app-dashboard-tasks',

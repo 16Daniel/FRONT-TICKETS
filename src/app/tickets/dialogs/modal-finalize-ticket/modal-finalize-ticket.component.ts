@@ -6,9 +6,9 @@ import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 import { MessageService } from 'primeng/api';
 
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { RatingStarsComponent } from '../../../components/rating-stars/rating-stars.component';
+import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
+import { Ticket } from '../../models/ticket.model';
+import { TicketsService } from '../../services/tickets.service';
 
 @Component({
   selector: 'app-modal-finalize-ticket',
@@ -35,7 +35,7 @@ export class ModalFinalizeTicketComponent {
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   finalizarTicket() {
     this.ticket!.idEstatusTicket = '3';

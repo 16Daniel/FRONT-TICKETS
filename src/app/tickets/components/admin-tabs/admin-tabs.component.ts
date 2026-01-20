@@ -2,19 +2,18 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabViewModule } from 'primeng/tabview';
+import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Ticket } from '../../../../models/ticket.model';
-import { AdminSysTabComponent } from "../admin-sys-tab/admin-sys-tab.component";
-import { AdminAudioVideoTabComponent } from "../admin-audio-video-tab/admin-audio-video-tab.component";
-import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-maintenance-tab.component';
-import AdminReportsTabComponent from '../admin-reports-tab/admin-reports-tab.component';
-import { DashboardTasksComponent } from '../../../../components/tasks/dashboard-tasks/dashboard-tasks.component';
-import { EisenhowerMatrixComponent } from '../../../../components/tasks/eisenhower-matrix.component/eisenhower-matrix.component';
-import { DropdownModule } from 'primeng/dropdown';
-import { BranchesService } from '../../../../services/branches.service';
+import { AdminSysTabComponent } from '../../../mantenimientos/components/admin-sys-tab/admin-sys-tab.component';
+import { AdminAudioVideoTabComponent } from '../../../mantenimientos/components/admin-audio-video-tab/admin-audio-video-tab.component';
+import { AdminMaintenanceTabComponent } from '../../../mantenimientos/components/admin-maintenance-tab/admin-maintenance-tab.component';
+import AdminReportsTabComponent from '../../../cedis/pages/admin-reports-tab/admin-reports-tab.component';
+import { EisenhowerMatrixComponent } from '../../../tareas/components/eisenhower-matrix.component/eisenhower-matrix.component';
+import { DashboardTasksComponent } from '../../../tareas/components/dashboard-tasks/dashboard-tasks.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../models/ticket.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-admin-tabs',
@@ -48,7 +47,7 @@ export class AdminTabsComponent {
   private unsubscribe!: () => void;
   verEisenhower: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef, private branchesService: BranchesService) {
+  constructor(private cdr: ChangeDetectorRef) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
 

@@ -5,22 +5,22 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
-import { ActivoFijo } from '../../../../models/activo-fijo.model';
-import { FixedAssetsService } from '../../../../services/fixed-assets.service';
-import { BranchesService } from '../../../../services/branches.service';
-import { AreasFixedAssetsService } from '../../../../services/areas-fixed-assets.service';
-import { CategoriesFixedAssetsService } from '../../../../services/categories-activos-fijos.service';
-import { StatusFixedAssetsService } from '../../../../services/status-fixed-assets.service';
-import { LocationsFixedAssetsService } from '../../../../services/locations-fixed-assets.service';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { AreaActivoFijo } from '../../../../models/area-activo-fijo.model';
-import { CategoriaActivoFijo } from '../../../../models/categoria-activo-fijo.model';
-import { UbicacionActivoFijo } from '../../../../models/ubicacion-activo-fijo.model';
-import { EstatusActivoFijo } from '../../../../models/estatus-activo-fijo.model';
-import { ModalFixedAssetTicketsComponent } from '../../../../modals/fixed-assets/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
-import { ModalFixedAssetMaintenanceComponent } from '../../../../modals/fixed-assets/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { ModalFaGenerateTicketComponent } from '../../dialogs/modal-fa-generate-ticket/modal-fa-generate-ticket.component';
-import { AreasService } from '../../../../services/areas.service';
+import { ModalFixedAssetTicketsComponent } from '../../dialogs/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
+import { ModalFixedAssetMaintenanceComponent } from '../../dialogs/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
+import { FixedAssetsService } from '../../services/fixed-assets.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { AreasFixedAssetsService } from '../../services/areas-fixed-assets.service';
+import { CategoriesFixedAssetsService } from '../../services/categories-activos-fijos.service';
+import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
+import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
+import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.model';
+import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.model';
+import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.model';
+import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
 
 @Component({
   selector: 'app-detail',

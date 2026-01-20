@@ -6,15 +6,15 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
-import { Sucursal } from '../../../models/sucursal.model';
-import { Tarea } from '../../../models/tarea.model';
-import { BranchesService } from '../../../services/branches.service';
-import { TareasService } from '../../../services/tareas.service';
-import { FirebaseStorageService } from '../../../services/firebase-storage.service';
-import { EisenhowerPriorityChecksComponent } from '../../../components/tasks/eisenhower-priority-checks/eisenhower-priority-checks.component';
-import { Usuario } from '../../../models/usuario.model';
-import { ResponsableTarea } from '../../../models/responsable-tarea.model';
-import { TaskResponsibleService } from '../../../services/task-responsible.service';
+import { EisenhowerPriorityChecksComponent } from '../../components/eisenhower-priority-checks/eisenhower-priority-checks.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { TareasService } from '../../services/tareas.service';
+import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { Tarea } from '../../interfaces/tarea.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
 
 @Component({
   selector: 'app-new-task',

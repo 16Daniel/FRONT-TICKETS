@@ -6,19 +6,26 @@ import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { ActivoFijo } from '../../../models/activo-fijo.model';
-import { MantenimientoActivoFijo } from '../../../models/mantenimiento-activo-fijo.model';
-import { FixedAssetsService } from '../../../services/fixed-assets.service';
-import { DatesHelperService } from '../../../helpers/dates-helper.service';
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { Usuario } from '../../../models/usuario.model';
-import { ModalFixedAssetSelectTicketComponent } from '../../../pages/admin/dialogs/modal-fixed-asset-select-ticket/modal-fixed-asset-select-ticket.component';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { FixedAssetsService } from '../../services/fixed-assets.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { ModalFixedAssetSelectTicketComponent } from '../modal-fixed-asset-select-ticket/modal-fixed-asset-select-ticket.component';
+import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { MantenimientoActivoFijo } from '../../../mantenimientos/interfaces/mantenimiento-activo-fijo.model';
 
 @Component({
   selector: 'app-modal-fixed-asset-maintenance',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, TableModule, ModalFixedAssetSelectTicketComponent, TooltipModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    TableModule,
+    ModalFixedAssetSelectTicketComponent,
+    TooltipModule
+  ],
   templateUrl: './modal-fixed-asset-maintenance.component.html',
   styleUrl: './modal-fixed-asset-maintenance.component.scss'
 })

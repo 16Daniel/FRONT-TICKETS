@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../models/usuario.model';
 import { TooltipModule } from 'primeng/tooltip';
-import { Compra } from '../../models/compra.model';
+
+import { Ticket } from '../../models/ticket.model';
+import { Compra } from '../../../compras/models/compra.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 
 @Component({
   selector: 'app-iconos-notificaciones-tickets',

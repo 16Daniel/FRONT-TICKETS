@@ -11,28 +11,27 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
 
-import { Ticket } from '../../../../models/ticket.model';
-import { TicketsService } from '../../../../services/tickets.service';
-import { Usuario } from '../../../../models/usuario.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Area } from '../../../../models/area.model';
-import { BranchesService } from '../../../../services/branches.service';
-import { Categoria } from '../../../../models/categoria.mdoel';
-import { CategoriesService } from '../../../../services/categories.service';
-import { SupportTypesService } from '../../../../services/support-types.service';
-import { TipoSoporte } from '../../../../models/tipo-soporte.model';
-import { TicketsPriorityService } from '../../../../services/tickets-priority.service';
-import { PrioridadTicket } from '../../../../models/prioridad-ticket.model';
-import { StatusTicketService } from '../../../../services/status-ticket.service';
-import { EstatusTicket } from '../../../../models/estatus-ticket.model';
-import { ModalValidateTicketComponent } from "../../../../modals/tickets/modal-validate-ticket/modal-validate-ticket.component";
-import { ModalTicketChatComponent } from "../../../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component";
-import { ModalTicketDetailComponent } from "../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component";
-import { AreasService } from '../../../../services/areas.service';
-import { UsersService } from '../../../../services/users.service';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { MensajesPendientesService } from '../../../../services/mensajes-pendientes.service';
-
+import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
+import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
+import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
+import { TipoSoporte } from '../../models/tipo-soporte.model';
+import { PrioridadTicket } from '../../models/prioridad-ticket.model';
+import { Categoria } from '../../models/categoria.mdoel';
+import { Ticket } from '../../models/ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { TicketsService } from '../../services/tickets.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { CategoriesService } from '../../services/categories.service';
+import { SupportTypesService } from '../../services/support-types.service';
+import { TicketsPriorityService } from '../../services/tickets-priority.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-admin-tickets-list',

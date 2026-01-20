@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -6,15 +6,15 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { DropdownModule } from 'primeng/dropdown';
-
-import { EtiquetaTarea } from '../../../models/etiqueta-tarea.model';
-import { LabelsTasksService } from '../../../services/labels-tasks.service';
-import Swal from 'sweetalert2';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { Sucursal } from '../../../models/sucursal.model';
-import { BranchesService } from '../../../services/branches.service';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+
+import { LabelsTasksService } from '../../services/labels-tasks.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
 
 @Component({
   selector: 'app-modal-labels-task',
@@ -54,7 +54,6 @@ export class ModalLabelsTaskComponent implements OnDestroy, OnInit {
   constructor(
     private labelsTasksService: LabelsTasksService,
     private branchesService: BranchesService,
-    private cdr: ChangeDetectorRef,
     private messageService: MessageService
   ) { }
 

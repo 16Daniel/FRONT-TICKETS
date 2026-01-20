@@ -9,12 +9,12 @@ import { TooltipModule } from 'primeng/tooltip';
 
 
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
-import { Ticket } from '../../../../models/ticket.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Area } from '../../../../models/area.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
-import { GraficaTickets30DiasComponent } from '../../../../components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
+import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { Ticket } from '../../models/ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-branches-tickets-accordion',

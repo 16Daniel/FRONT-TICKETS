@@ -3,10 +3,9 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef, Input } from '@angular
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
-import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../models/usuario.model';
-import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
-import { MensajePendiente } from '../../models/mensajes-pendientes.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
+import { MensajePendiente } from '../../../shared/interfaces/mensajes-pendientes.model';
 
 @Component({
   selector: 'app-notificacion-nuevo-mensaje-chat',
@@ -44,7 +43,7 @@ export class NotificacionNuevoMensajeChatComponent implements OnInit, OnDestroy 
 
     this.mensajesPendientesService
       .obtenerPendientesPorUsuario(this.usuario.id)
-      .subscribe(pendientes => {        
+      .subscribe(pendientes => {
         this.pendientes = pendientes;
         if (this.pendientes.length > 0) {
           this.tiposOrigen = Array.from(new Set(this.pendientes.map(p => p.tipoOrigen)));

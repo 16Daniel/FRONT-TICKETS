@@ -1,62 +1,67 @@
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import esLocale from '@fullcalendar/core/locales/es'; // Importar idioma español
-import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { PuestoNomina, EmpleadoNomina, TurnodbNomina, TurnoNomina, UbicacionNomina, GuardarTurnoRequest } from '../../../models/Nomina';
-import { NominaService } from '../../../services/nomina.service';
-import { TurnosComponent } from "../../../modals/Nomina/Turnos/Turnos.component";
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ColorRandomService } from '../../../services/ColorRandom.service';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import * as XLSX from 'xlsx';
+import { TurnosComponent } from '../../dialogs/Turnos/Turnos.component';
+import { NominaService } from '../../services/nomina.service';
+import { ColorRandomService } from '../../../shared/services/ColorRandom.service';
+import { EmpleadoNomina, GuardarTurnoRequest, PuestoNomina, TurnodbNomina, UbicacionNomina } from '../../interfaces/Nomina';
+
 @Component({
   selector: 'app-work-shift-calendar',
   standalone: true,
-  styleUrl:'./styles.scss',
-  imports: [FullCalendarModule, CommonModule, DropdownModule, FormsModule, TurnosComponent,ToastModule,ColorPickerModule,ConfirmDialogModule],
-  providers:[MessageService,ConfirmationService],
+  styleUrl: './styles.scss',
+  imports: [FullCalendarModule, CommonModule, DropdownModule, FormsModule, TurnosComponent, ToastModule, ColorPickerModule, ConfirmDialogModule],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './work-shift-calendar.component.html',
 })
 export default class WorkShiftCalendarComponent {
- @ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
   @ViewChild('divform') div1!: ElementRef<HTMLElement>;
   @ViewChild('divCalendar') div2!: ElementRef<HTMLElement>;
   @ViewChild('divEventos') divEv!: ElementRef<HTMLElement>;
 
-public colorevento:string = "#009bd8"; 
-public departamentos:PuestoNomina[] = []; 
- public empleados:EmpleadoNomina[] = []; 
- public empleadosFiltro:EmpleadoNomina[] = []; 
- public ubicaciones:UbicacionNomina[] = []; 
- public turnos:TurnodbNomina[] = []; 
- public empleadosel:EmpleadoNomina|undefined;
- public ubicacionSel:UbicacionNomina|undefined; 
-public mostrarModalTurnos:boolean = false; 
-public departamentoSel:PuestoNomina = {idpuesto:-1,nombre:'TODO'};
-public loading:boolean = false; 
- public data: Horario[] = [];
+  public colorevento: string = "#009bd8";
+  public departamentos: PuestoNomina[] = [];
+  public empleados: EmpleadoNomina[] = [];
+  public empleadosFiltro: EmpleadoNomina[] = [];
+  public ubicaciones: UbicacionNomina[] = [];
+  public turnos: TurnodbNomina[] = [];
+  public empleadosel: EmpleadoNomina | undefined;
+  public ubicacionSel: UbicacionNomina | undefined;
+  public mostrarModalTurnos: boolean = false;
+  public departamentoSel: PuestoNomina = { idpuesto: -1, nombre: 'TODO' };
+  public loading: boolean = false;
+  public data: Horario[] = [];
 
-  constructor( public cdr: ChangeDetectorRef,public apiserv:NominaService,private messageService: MessageService,private colorService: ColorRandomService, private confirmationService: ConfirmationService){}
+  constructor(
+    public cdr: ChangeDetectorRef,
+    public apiserv: NominaService,
+    private messageService: MessageService,
+    private colorService: ColorRandomService,
+    private confirmationService: ConfirmationService) { }
 
   // Eventos externos (arrastrables)
   externalEvents: ExternalEvent[] = [];
-  
+
   ngOnInit(): void {
-    this.getUbicaciones(); 
+    this.getUbicaciones();
     this.getDepartamentos();
-    this.getTurnos(); 
+    this.getTurnos();
   }
 
-   showMessage(sev: string, summ: string, det: string) {
+  showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
@@ -74,69 +79,64 @@ public loading:boolean = false;
     this.div2.nativeElement.style.height = `${div2Height}px`;
   }
 
-    getDepartamentos()
-  {
-     this.apiserv.getDepartamentos().subscribe({
+  getDepartamentos() {
+    this.apiserv.getDepartamentos().subscribe({
       next: data => {
-         this.departamentos = data;
-         this.departamentos.unshift({idpuesto:-1,nombre:'TODO'})
-         this.cdr.detectChanges();
+        this.departamentos = data;
+        this.departamentos.unshift({ idpuesto: -1, nombre: 'TODO' })
+        this.cdr.detectChanges();
       },
       error: error => {
-         console.log(error);
+        console.log(error);
       }
-  });
+    });
   }
 
-   getUbicaciones()
-  {
-     this.apiserv.getUbicaciones().subscribe({
+  getUbicaciones() {
+    this.apiserv.getUbicaciones().subscribe({
       next: data => {
-         this.ubicaciones = data;
-         
-         this.cdr.detectChanges();
+        this.ubicaciones = data;
+
+        this.cdr.detectChanges();
       },
       error: error => {
-         console.log(error);
+        console.log(error);
       }
-  });
-
-  }
-
-   getTurnos()
-  {
-     this.apiserv.getTurnosdb().subscribe({
-      next: data => {
-         this.turnos = data;
-         
-         this.externalEvents = []; 
-         for(let item of this.turnos)
-          {
-            this.externalEvents.push({id:item.idTurno.toString(),title:item.alias})
-          }
-
-          this.habilitarArrastre(); 
-         this.cdr.detectChanges();
-      },
-      error: error => {
-         console.log(error);
-      }
-  });
+    });
 
   }
 
-   getEmpleados(idUbicacion:number)
-  {
-     this.apiserv.getEmpleados(idUbicacion).subscribe({
+  getTurnos() {
+    this.apiserv.getTurnosdb().subscribe({
       next: data => {
-         this.empleados=data;
-         this.empleadosFiltro = [...this.empleados]; 
-         this.cdr.detectChanges();
+        this.turnos = data;
+
+        this.externalEvents = [];
+        for (let item of this.turnos) {
+          this.externalEvents.push({ id: item.idTurno.toString(), title: item.alias })
+        }
+
+        this.habilitarArrastre();
+        this.cdr.detectChanges();
       },
       error: error => {
-         console.log(error);
+        console.log(error);
       }
-  });
+    });
+
+  }
+
+  getEmpleados(idUbicacion: number) {
+    this.apiserv.getEmpleados(idUbicacion).subscribe({
+      next: data => {
+        this.empleados = data;
+        this.empleadosFiltro = [...this.empleados];
+        this.cdr.detectChanges();
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
 
   }
 
@@ -153,55 +153,53 @@ public loading:boolean = false;
     eventOrder: 'id',
     firstDay: 0,
     dropAccept: (draggedEl) => {
-    return this.empleadosel !== undefined; // Solo acepta si hay empleado seleccionado
-  },
+      return this.empleadosel !== undefined; // Solo acepta si hay empleado seleccionado
+    },
     eventReceive: (info) => {
-    // Cancela el evento para evitar que se renderice automáticamente
-    info.event.remove(); // Elimina el evento que FullCalendar agregó por defecto
-     let id = info.draggedEl.getAttribute('data-id');
-    if(!this.TurnoUnico(this.empleadosel!.id,info.event.start!))
-      {
-          this.showMessage('info','Error','Solo se puede agregar un turno por día a un empleado');
-          return;
+      // Cancela el evento para evitar que se renderice automáticamente
+      info.event.remove(); // Elimina el evento que FullCalendar agregó por defecto
+      let id = info.draggedEl.getAttribute('data-id');
+      if (!this.TurnoUnico(this.empleadosel!.id, info.event.start!)) {
+        this.showMessage('info', 'Error', 'Solo se puede agregar un turno por día a un empleado');
+        return;
       }
 
-      if(this.turnosSemanalesCompletos(this.empleadosel!.id,parseInt(id!)))
-        {
-           this.showMessage('info','Error','Solo se pueden agregar 6 turnos y un descanso por semama a cada empleado');
-           return;
-        } 
+      if (this.turnosSemanalesCompletos(this.empleadosel!.id, parseInt(id!))) {
+        this.showMessage('info', 'Error', 'Solo se pueden agregar 6 turnos y un descanso por semama a cada empleado');
+        return;
+      }
 
-    let nombreturno = info.event.title
-    debugger
-    let posicion:number =  this.calendarComponent!.getApi().getEvents().length == 0 ? 0: parseInt(this.calendarComponent!.getApi().getEvents()[this.calendarComponent!.getApi().getEvents().length-1].id); 
-    posicion++;
-    // Ahora manejas tú el evento manualmente
-    const newEvent:EventInput = {
-      id:posicion.toString(),
-      title: nombreturno,
-      start: info.event.start!,
-      allDay: true,
-      backgroundColor: this.colorevento,
-      textColor: this.getLuminance(this.colorevento) > 0.6 ? '#000000' : '#FFFFFF',
-       extendedProps: {
-        idEmp: this.empleadosel!.id,
-        nombreEmpleado: this.empleadosel!.nombre,
-        idTurno: id,
-        plantilla: false,
-        idPuesto: this.empleadosel!.departamento
-      },
-      borderColor:'#ffffff00',
-    };
-    this.calendarComponent!.getApi().addEvent(newEvent);
-    this.reemplazareventoPlantilla(parseInt(id!),this.empleadosel!.departamento,info.event.start!)
-  }
+      let nombreturno = info.event.title
+      debugger
+      let posicion: number = this.calendarComponent!.getApi().getEvents().length == 0 ? 0 : parseInt(this.calendarComponent!.getApi().getEvents()[this.calendarComponent!.getApi().getEvents().length - 1].id);
+      posicion++;
+      // Ahora manejas tú el evento manualmente
+      const newEvent: EventInput = {
+        id: posicion.toString(),
+        title: nombreturno,
+        start: info.event.start!,
+        allDay: true,
+        backgroundColor: this.colorevento,
+        textColor: this.getLuminance(this.colorevento) > 0.6 ? '#000000' : '#FFFFFF',
+        extendedProps: {
+          idEmp: this.empleadosel!.id,
+          nombreEmpleado: this.empleadosel!.nombre,
+          idTurno: id,
+          plantilla: false,
+          idPuesto: this.empleadosel!.departamento
+        },
+        borderColor: '#ffffff00',
+      };
+      this.calendarComponent!.getApi().addEvent(newEvent);
+      this.reemplazareventoPlantilla(parseInt(id!), this.empleadosel!.departamento, info.event.start!)
+    }
   };
 
   habilitarArrastre() {
     // Habilita el arrastre para los eventos externos
     new Draggable(document.getElementById('external-events')!, {
       itemSelector: '.external-event',
-      eventData: function(eventEl) {
+      eventData: function (eventEl) {
         return {
           title: eventEl.innerText
         };
@@ -211,32 +209,29 @@ public loading:boolean = false;
     this.updateDiv2Height();
   }
 
-    clearAllEvents() {
-     let file = document.getElementById("excelFile") as HTMLInputElement;
-     file.value = ''; 
+  clearAllEvents() {
+    let file = document.getElementById("excelFile") as HTMLInputElement;
+    file.value = '';
     const calendarApi = this.calendarComponent!.getApi();
     calendarApi.removeAllEvents();
   }
 
-  CambioDeUbicacion()
-  {
-    this.departamentoSel = {idpuesto:-1,nombre:'TODO'};
-    this.empleados = []; 
-    this.empleadosel = undefined; 
+  CambioDeUbicacion() {
+    this.departamentoSel = { idpuesto: -1, nombre: 'TODO' };
+    this.empleados = [];
+    this.empleadosel = undefined;
     this.getEmpleados(this.ubicacionSel!.idUbicacion);
   }
-  
-  cambioDeEmpleado()
-  {
-       this.colorevento = this.colorService.generarColor(); 
+
+  cambioDeEmpleado() {
+    this.colorevento = this.colorService.generarColor();
   }
 
-  abrirModalturnos()
-  {
-    this.mostrarModalTurnos = true; 
+  abrirModalturnos() {
+    this.mostrarModalTurnos = true;
   }
 
-getLuminance(hexColor: string): number {
+  getLuminance(hexColor: string): number {
     if (hexColor == '') {
       return 0;
     } else {
@@ -250,22 +245,18 @@ getLuminance(hexColor: string): number {
     }
   }
 
-  filtrarUsuarios()
-  {
-    this.empleadosel = undefined; 
-      if(this.departamentoSel.idpuesto == -1)
-        {
-          this.empleadosFiltro = [...this.empleados]; 
-        }else
-        {
-          let filtro = this.empleados.filter(x => x.departamento == this.departamentoSel.idpuesto);
-          this.empleadosFiltro = [...filtro]; 
-        }
+  filtrarUsuarios() {
+    this.empleadosel = undefined;
+    if (this.departamentoSel.idpuesto == -1) {
+      this.empleadosFiltro = [...this.empleados];
+    } else {
+      let filtro = this.empleados.filter(x => x.departamento == this.departamentoSel.idpuesto);
+      this.empleadosFiltro = [...filtro];
+    }
   }
 
 
-  confirmarGuardarTurnos()
-  {
+  confirmarGuardarTurnos() {
     this.confirmationService.confirm({
       header: 'Confirmación',
       message: `Se guardará toda la información del calenderio ¿Está seguro que desea continuar?`,
@@ -277,110 +268,104 @@ getLuminance(hexColor: string): number {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-            this.GuardarTurnos(); 
+        this.GuardarTurnos();
       },
       reject: () => { },
     });
   }
-  GuardarTurnos()
-  {
-     let turnos:GuardarTurnoRequest[] = []; 
-     let eventos = this.calendarComponent!.getApi().getEvents(); 
-     
-     eventos = eventos.filter(x=> x.extendedProps['plantilla'] == false); 
+  GuardarTurnos() {
+    let turnos: GuardarTurnoRequest[] = [];
+    let eventos = this.calendarComponent!.getApi().getEvents();
 
-     if(eventos.length == 0)
+    eventos = eventos.filter(x => x.extendedProps['plantilla'] == false);
+
+    if (eventos.length == 0) {
+      this.showMessage('info', 'Info', 'El calendario está vacío')
+      return
+    }
+    this.loading = true;
+    for (let evento of eventos) {
+      let idemp = evento.extendedProps['idEmp'];
+      let idturno = evento.extendedProps['idTurno'];
+      let fecha: Date = evento.start!;
+      fecha.setHours(0, 0, 0, 0);
+
+      let item: GuardarTurnoRequest =
       {
-        this.showMessage('info','Info','El calendario está vacío')
-        return
-      }
-      this.loading = true; 
-     for(let evento of eventos)
-      {
-        let idemp = evento.extendedProps['idEmp'];
-        let idturno = evento.extendedProps['idTurno'];
-        let fecha:Date = evento.start!; 
-        fecha.setHours(0,0,0,0); 
-
-         let item:GuardarTurnoRequest = 
-         {
-          claTrab: idemp,
-          claEmpresa: 1,
-          claTurno: idturno,
-          fecha: fecha
-         }
-
-         turnos.push(item);
-
+        claTrab: idemp,
+        claEmpresa: 1,
+        claTurno: idturno,
+        fecha: fecha
       }
 
-      this.apiserv.guardarTurnosCalendario(turnos).subscribe({
+      turnos.push(item);
+
+    }
+
+    this.apiserv.guardarTurnosCalendario(turnos).subscribe({
       next: data => {
-         this.showMessage('success', 'Success', 'Guardado correctamente'); 
-         setTimeout(() => {
-          window.location.reload(); 
-         }, 1500);
-         this.cdr.detectChanges();
+        this.showMessage('success', 'Success', 'Guardado correctamente');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+        this.cdr.detectChanges();
       },
       error: error => {
-        this.loading = false; 
+        this.loading = false;
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-         console.log(error);
+        console.log(error);
       }
-  });
+    });
   }
 
-   TurnoUnico(idEmpleado:number, fecha:Date):boolean
-  {
-      let estatus:boolean = true;
-      
-      let eventos = this.calendarComponent!.getApi().getEvents(); 
-      let filtro = eventos.filter(x=>x.start?.getFullYear() == fecha.getFullYear() && x.start.getMonth() == fecha.getMonth() && x.start.getDate() == fecha.getDate() && x.extendedProps['idEmp'] == idEmpleado); 
-      estatus = filtro.length > 0 ? false:true;  
-      return estatus
+  TurnoUnico(idEmpleado: number, fecha: Date): boolean {
+    let estatus: boolean = true;
+
+    let eventos = this.calendarComponent!.getApi().getEvents();
+    let filtro = eventos.filter(x => x.start?.getFullYear() == fecha.getFullYear() && x.start.getMonth() == fecha.getMonth() && x.start.getDate() == fecha.getDate() && x.extendedProps['idEmp'] == idEmpleado);
+    estatus = filtro.length > 0 ? false : true;
+    return estatus
+  }
+
+  turnosSemanalesCompletos(idEmp: number, idTurno: number): boolean {
+    let estatus: boolean = false;
+    const calendarApi = this.calendarComponent!.getApi();
+    const view = calendarApi.view;
+    const firstDate: Date = view.activeStart;
+    let lastDate: Date = view.activeEnd;
+    lastDate = new Date(lastDate.getTime() - (24 * 60 * 60 * 1000));
+    let eventos = this.calendarComponent!.getApi().getEvents();
+
+    let filtro = eventos.filter(x => x.extendedProps['idTurno'] != 0 && x.extendedProps['idEmp'] == idEmp && x.start! >= firstDate && x.start! <= lastDate);
+    estatus = filtro.length < 6 ? false : true;
+
+    if (idTurno == 0) {
+      filtro = eventos.filter(x => x.extendedProps['idTurno'] == 0 && x.extendedProps['idEmp'] == idEmp && x.start! >= firstDate && x.start! <= lastDate);
+      estatus = filtro.length > 0 ? true : false;
     }
 
-    turnosSemanalesCompletos(idEmp:number,idTurno:number):boolean
-    {
-      let estatus:boolean = false; 
-            const calendarApi = this.calendarComponent!.getApi();
-        const view = calendarApi.view;
-        const firstDate:Date = view.activeStart;
-        let lastDate:Date = view.activeEnd;
-        lastDate = new Date(lastDate.getTime() - (24 * 60 * 60 * 1000));
-        let eventos = this.calendarComponent!.getApi().getEvents(); 
+    return estatus;
+  }
 
-        let filtro = eventos.filter(x => x.extendedProps['idTurno'] != 0 && x.extendedProps['idEmp'] == idEmp && x.start!>=firstDate && x.start!<=lastDate);
-         estatus = filtro.length <6 ? false:true; 
-        
-         if(idTurno == 0)
-          {
-             filtro = eventos.filter(x => x.extendedProps['idTurno'] == 0 && x.extendedProps['idEmp'] == idEmp && x.start!>=firstDate && x.start!<=lastDate);
-             estatus = filtro.length > 0? true:false; 
-          }
-
-        return estatus; 
-    }
-
-      onFileChange(evt: any) {
+  onFileChange(evt: any) {
     const target: DataTransfer = <DataTransfer>(evt.target);
     if (target.files.length !== 1) throw new Error('No se puede usar múltiples archivos');
-    
+
     const reader: FileReader = new FileReader();
     reader.onload = (e: any) => {
       const bstr: string = e.target.result;
       const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-      
+
       // Asume que el nombre de la hoja es 'SIMPLEX' como en tu ejemplo
       const wsname: string = wb.SheetNames[0];
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-      
+
       // Convertir a JSON
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      
+
       // Procesar los datos según tu formato específico
       this.data = this.processExcelData(data);
-      this.cargarPlantilla(); 
+      this.cargarPlantilla();
     };
     reader.readAsBinaryString(target.files[0]);
   }
@@ -392,12 +377,12 @@ getLuminance(hexColor: string): number {
     // Empezar desde la fila 2 para omitir los encabezados
     for (let i = 2; i < data.length; i++) {
       const row = data[i];
-      
+
       // Si la columna A tiene valor, es un nuevo día
       if (row[0]) {
         currentDia = row[0];
       }
-      
+
       // Verificar que todas las columnas necesarias tengan valores
       if (currentDia && row[1] && row[2] !== undefined && row[3] !== undefined) {
         result.push({
@@ -412,120 +397,108 @@ getLuminance(hexColor: string): number {
     return result;
   }
 
-  cargarPlantilla()
-  {
+  cargarPlantilla() {
     debugger
     this.clearAllEvents();
-     const calendarApi = this.calendarComponent!.getApi();
-        const view = calendarApi.view;
-        let firstDate:Date = view.activeStart;
-    let indice = 0; 
-      for(let i=0; i<7; i++)
-        {  
-          let cocinerosMat = this.data[indice].cocineros;
-           let vendedoresMat = this.data[indice].vendedores;
-          indice++;
-          let cocinerosInter = this.data[indice].cocineros;
-          let vendedoresInter = this.data[indice].vendedores;
-          indice++;
-          let cocinerosVes = this.data[indice].cocineros;
-          let vendedoresVes = this.data[indice].vendedores;
-          indice++;
-          
-          for(let cm = 0; cm<cocinerosMat; cm++)
-            {
-              let id= 'p-c-m-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+cm; 
-              let titulo = '🟡 COCINERO';
-              let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4003); 
-               this.calendarComponent!.getApi().addEvent(newEvent);
-            }
+    const calendarApi = this.calendarComponent!.getApi();
+    const view = calendarApi.view;
+    let firstDate: Date = view.activeStart;
+    let indice = 0;
+    for (let i = 0; i < 7; i++) {
+      let cocinerosMat = this.data[indice].cocineros;
+      let vendedoresMat = this.data[indice].vendedores;
+      indice++;
+      let cocinerosInter = this.data[indice].cocineros;
+      let vendedoresInter = this.data[indice].vendedores;
+      indice++;
+      let cocinerosVes = this.data[indice].cocineros;
+      let vendedoresVes = this.data[indice].vendedores;
+      indice++;
 
-            for(let cm = 0; cm<cocinerosInter; cm++)
-            {
-              let id= 'p-c-i-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+cm; 
-              let titulo = '🟢 COCINERO';
-              let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4003); 
-               this.calendarComponent!.getApi().addEvent(newEvent);
-            }
-
-            for(let cm = 0; cm<cocinerosVes; cm++)
-            {
-              let id= 'p-c-v-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+cm; 
-              let titulo = '🟣 COCINERO';
-              let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4003); 
-               this.calendarComponent!.getApi().addEvent(newEvent);
-            }
-
-            //  ---------------------- VENDEDORES ------------------
-             for(let v = 0; v<vendedoresMat; v++)
-            {
-              let id= 'p-v-m-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+v; 
-              let titulo = '🟡 VENDEDOR';
-              let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4005); 
-               this.calendarComponent!.getApi().addEvent(newEvent);
-            }
-
-              for(let v = 0; v<vendedoresInter; v++)
-            {
-              let id= 'p-v-i-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+v; 
-              let titulo = '🟢 VENDEDOR';
-              let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4005); 
-               this.calendarComponent!.getApi().addEvent(newEvent);
-            }
-
-              for(let v = 0; v<vendedoresVes; v++)
-            {
-              let id= 'p-v-v-'+firstDate.getFullYear()+firstDate.getMonth()+firstDate.getDate()+v; 
-              let titulo = '🟣 VENDEDOR';
-              let newEvent = this.getEventoPlantilla(id,titulo,firstDate,4005); 
-               this.calendarComponent!.getApi().addEvent(newEvent);
-            }
-
-
-           firstDate = new Date(firstDate.getTime() + (24 * 60 * 60 * 1000));
-        
-        }
-  }
- 
-  getEventoPlantilla(id:string,titulo:string,fecha:Date,idPuesto:number):EventInput
-  {
-     const newEvent:EventInput = {
-                  id:id,
-                  title: titulo,
-                  start: fecha,
-                  allDay: true,
-                  backgroundColor: '#c8d5de',
-                  textColor:'#000000',
-                  extendedProps: {
-                    plantilla: true,
-                    idPuesto: idPuesto
-                  },
-                  borderColor:'#ffffff00',
-                };
-    return newEvent; 
-  }
-
-  reemplazareventoPlantilla(idTurno:number,idPuesto:number,fecha:Date)
-  {
-    if(this.data.length>0)
-      {
-        if(idTurno>0 && (idPuesto == 4003 || idPuesto == 4005))
-          {
-             const calendarApi = this.calendarComponent!.getApi();
-             let eventos =  calendarApi.getEvents(); 
-             let filtro = eventos.filter(x=>x.extendedProps['idPuesto'] == idPuesto && x.extendedProps['plantilla'] == true && x.start!.getFullYear() == fecha.getFullYear() &&  x.start!.getMonth() == fecha.getMonth() && x.start!.getDate() == fecha.getDate()); 
-             if(filtro.length>0){  this.removeEventById(filtro[0].id);  }
-          }
+      for (let cm = 0; cm < cocinerosMat; cm++) {
+        let id = 'p-c-m-' + firstDate.getFullYear() + firstDate.getMonth() + firstDate.getDate() + cm;
+        let titulo = '🟡 COCINERO';
+        let newEvent = this.getEventoPlantilla(id, titulo, firstDate, 4003);
+        this.calendarComponent!.getApi().addEvent(newEvent);
       }
+
+      for (let cm = 0; cm < cocinerosInter; cm++) {
+        let id = 'p-c-i-' + firstDate.getFullYear() + firstDate.getMonth() + firstDate.getDate() + cm;
+        let titulo = '🟢 COCINERO';
+        let newEvent = this.getEventoPlantilla(id, titulo, firstDate, 4003);
+        this.calendarComponent!.getApi().addEvent(newEvent);
+      }
+
+      for (let cm = 0; cm < cocinerosVes; cm++) {
+        let id = 'p-c-v-' + firstDate.getFullYear() + firstDate.getMonth() + firstDate.getDate() + cm;
+        let titulo = '🟣 COCINERO';
+        let newEvent = this.getEventoPlantilla(id, titulo, firstDate, 4003);
+        this.calendarComponent!.getApi().addEvent(newEvent);
+      }
+
+      //  ---------------------- VENDEDORES ------------------
+      for (let v = 0; v < vendedoresMat; v++) {
+        let id = 'p-v-m-' + firstDate.getFullYear() + firstDate.getMonth() + firstDate.getDate() + v;
+        let titulo = '🟡 VENDEDOR';
+        let newEvent = this.getEventoPlantilla(id, titulo, firstDate, 4005);
+        this.calendarComponent!.getApi().addEvent(newEvent);
+      }
+
+      for (let v = 0; v < vendedoresInter; v++) {
+        let id = 'p-v-i-' + firstDate.getFullYear() + firstDate.getMonth() + firstDate.getDate() + v;
+        let titulo = '🟢 VENDEDOR';
+        let newEvent = this.getEventoPlantilla(id, titulo, firstDate, 4005);
+        this.calendarComponent!.getApi().addEvent(newEvent);
+      }
+
+      for (let v = 0; v < vendedoresVes; v++) {
+        let id = 'p-v-v-' + firstDate.getFullYear() + firstDate.getMonth() + firstDate.getDate() + v;
+        let titulo = '🟣 VENDEDOR';
+        let newEvent = this.getEventoPlantilla(id, titulo, firstDate, 4005);
+        this.calendarComponent!.getApi().addEvent(newEvent);
+      }
+
+
+      firstDate = new Date(firstDate.getTime() + (24 * 60 * 60 * 1000));
+
+    }
+  }
+
+  getEventoPlantilla(id: string, titulo: string, fecha: Date, idPuesto: number): EventInput {
+    const newEvent: EventInput = {
+      id: id,
+      title: titulo,
+      start: fecha,
+      allDay: true,
+      backgroundColor: '#c8d5de',
+      textColor: '#000000',
+      extendedProps: {
+        plantilla: true,
+        idPuesto: idPuesto
+      },
+      borderColor: '#ffffff00',
+    };
+    return newEvent;
+  }
+
+  reemplazareventoPlantilla(idTurno: number, idPuesto: number, fecha: Date) {
+    if (this.data.length > 0) {
+      if (idTurno > 0 && (idPuesto == 4003 || idPuesto == 4005)) {
+        const calendarApi = this.calendarComponent!.getApi();
+        let eventos = calendarApi.getEvents();
+        let filtro = eventos.filter(x => x.extendedProps['idPuesto'] == idPuesto && x.extendedProps['plantilla'] == true && x.start!.getFullYear() == fecha.getFullYear() && x.start!.getMonth() == fecha.getMonth() && x.start!.getDate() == fecha.getDate());
+        if (filtro.length > 0) { this.removeEventById(filtro[0].id); }
+      }
+    }
 
   }
 
   removeEventById(eventId: string) {
     debugger
     const calendarApi = this.calendarComponent!.getApi();
-    let eventos = calendarApi.getEvents(); 
+    let eventos = calendarApi.getEvents();
     const event = calendarApi.getEventById(eventId);
-    
+
     if (event) {
       event.remove();
       //console.log(`Evento con ID ${eventId} eliminado`);

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Correonotificacion } from '../models/Nomina';
 import { collection, collectionData, doc, docData, Firestore } from '@angular/fire/firestore';
 
 @Injectable({
@@ -15,5 +14,5 @@ pathname = "correos_notificacion"
      const correosRef = collection(this.firestore, 'correos_notificacion');
     return collectionData(correosRef, { idField: 'id' });
   }
-  
+
 }

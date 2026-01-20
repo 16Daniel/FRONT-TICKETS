@@ -5,20 +5,20 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 
-import { TicketsService } from '../../services/tickets.service';
-import { Usuario } from '../../models/usuario.model';
-import { VisitaProgramada } from '../../models/visita-programada';
-import ModalEventDetailComponent from "../../modals/calendar/modal-event-detail/modal-event-detail.component";
-import { Sucursal } from '../../models/sucursal.model';
-import { Ticket } from '../../models/ticket.model';
-import { Mantenimiento10x10 } from '../../models/mantenimiento-10x10.model';
-import { ColorUsuario } from '../../models/color-usuario';
-import { DocumentsService } from '../../services/documents.service';
-import { CalendarComponent } from '../../components/calendar/calendar.component';
-import { UsersService } from '../../services/users.service';
-import { Area } from '../../models/area.model';
 import { FormsModule } from '@angular/forms';
-import { AreasService } from '../../services/areas.service';
+import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
+import { CalendarComponent } from '../../components/calendar/calendar.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { DocumentsService } from '../../../shared/services/documents.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { ColorUsuario } from '../../interfaces/color-usuario';
+import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.model';
+import { VisitaProgramada } from '../../interfaces/visita-programada';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-branch-visit-schedule',

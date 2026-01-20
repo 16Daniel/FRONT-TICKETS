@@ -5,14 +5,14 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Ticket } from '../../../../models/ticket.model';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { TicketsService } from '../../../../services/tickets.service';
-import { ActivoFijo } from '../../../../models/activo-fijo.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { AreasService } from '../../../../services/areas.service';
-import { UsersService } from '../../../../services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { ActivoFijo } from '../../interfaces/activo-fijo.model';
 
 @Component({
   selector: 'app-modal-fixed-asset-select-ticket',

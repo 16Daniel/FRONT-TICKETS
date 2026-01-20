@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Ticket } from '../../../models/ticket.model';
+
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
+import { Ticket } from '../../../../tickets/models/ticket.model';
 
 @Component({
   selector: 'app-tabla-radiografia',

@@ -6,7 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 import { BranchesTabsComponent } from '../../components/branches-tabs/branches-tabs.component';
-import { NotificacionNuevoMensajeChatComponent } from '../../../../components/notificacion-nuevo-mensaje-chat/notificacion-nuevo-mensaje-chat.component';
+import { NotificacionNuevoMensajeChatComponent } from '../../components/notificacion-nuevo-mensaje-chat/notificacion-nuevo-mensaje-chat.component';
 
 @Component({
   selector: 'app-home',

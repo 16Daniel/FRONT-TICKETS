@@ -1,25 +1,25 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Ticket } from '../../../../models/ticket.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Area } from '../../../../models/area.model';
-import { ModalGenerateTicketComponent } from '../../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalFilterTicketsComponent } from '../../../../modals/tickets/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
-import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
-import { ModalTenXtenMaintenanceCheckComponent } from '../../../../modals/maintenance/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
-import { ModalTenXtenMaintenanceHistoryComponent } from '../../../../modals/maintenance/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
-import { ModalBranchRatingComponent } from '../../dialogs/modal-branch-rating/modal-branch-rating.component';
-import { FormsModule } from '@angular/forms';
+import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
+import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
+import { ModalTenXtenMaintenanceCheckComponent } from '../../dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
+import { ModalTenXtenMaintenanceHistoryComponent } from '../../dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
+import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
+import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-branches-sys-tab',

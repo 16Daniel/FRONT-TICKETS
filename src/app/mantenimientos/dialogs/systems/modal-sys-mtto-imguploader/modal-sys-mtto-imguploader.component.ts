@@ -3,9 +3,9 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angu
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
-import { FirebaseStorageService } from '../../../../services/firebase-storage.service';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
+import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
+import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
 
 @Component({
   selector: 'app-modal-sys-mtto-imguploader',

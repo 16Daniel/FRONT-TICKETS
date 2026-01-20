@@ -5,13 +5,14 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Usuario } from '../../../../models/usuario.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Maintenance10x10Service } from '../../../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../../../models/mantenimiento-10x10.model';
-import { TicketsService } from '../../../../services/tickets.service';
-import { Ticket } from '../../../../models/ticket.model';
-import { RatingStarsComponent } from '../../../../components/rating-stars/rating-stars.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { TicketsService } from '../../services/tickets.service';
+import { Ticket } from '../../models/ticket.model';
+import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.model';
+
 
 @Component({
   selector: 'app-modal-branch-rating',
@@ -31,7 +32,10 @@ export class ModalBranchRatingComponent {
   calificacion30TicketsAnalista: number = 0;
   calificacion30TicketsSupervisor: number = 0;
 
-  constructor(private maintenance10x10Service: Maintenance10x10Service, private ticketsService: TicketsService) {
+  constructor(
+    private maintenance10x10Service: Maintenance10x10Service,
+    private ticketsService: TicketsService
+  ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
     if (this.sucursal) {

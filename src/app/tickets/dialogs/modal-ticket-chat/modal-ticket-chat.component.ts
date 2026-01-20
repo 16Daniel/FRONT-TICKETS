@@ -15,13 +15,13 @@ import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { Usuario } from '../../../models/usuario.model';
-import { DatesHelperService } from '../../../helpers/dates-helper.service';
-import { MensajesPendientesService } from '../../../services/mensajes-pendientes.service';
-import { BranchesService } from '../../../services/branches.service';
-import { Sucursal } from '../../../models/sucursal.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { TicketsService } from '../../services/tickets.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Ticket } from '../../models/ticket.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-modal-ticket-chat',

@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
-import { Usuario } from '../../models/usuario.model';
-import { MensajePendiente } from '../../models/mensajes-pendientes.model';
-import { ModalTicketChatComponent } from '../../modals/tickets/modal-ticket-chat/modal-ticket-chat.component';
-import { TicketsService } from '../../services/tickets.service';
-import { Ticket } from '../../models/ticket.model';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
-import { ModalMaintenanceChatComponent } from '../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
-import { ShoppingService } from '../../services/shopping.service';
-import { AdminComprasChatComponent } from '../../pages/shopping-tickets/shopping-admin/dialogs/admin-compras-chat/admin-compras-chat.component';
+
+import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
+import { ModalTicketChatComponent } from '../../../tickets/dialogs/modal-ticket-chat/modal-ticket-chat.component';
+import { ModalMaintenanceChatComponent } from '../../../mantenimientos/dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
+import { AdminComprasChatComponent } from '../../../pagos/pages/shopping-admin/dialogs/admin-compras-chat/admin-compras-chat.component';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { MantenimientoFactoryService } from '../../../mantenimientos/services/maintenance-factory.service';
+import { ShoppingService } from '../../../pagos/services/shopping.service';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
 
 @Component({
   selector: 'app-chat-notifications-button',
@@ -130,7 +131,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
         break;
     }
     const servicio = this.mantenimientoFactory.getService(this.idArea);
-    this.mantenimientoSub = servicio.getById(id).subscribe(mantenimiento => {
+    this.mantenimientoSub = servicio.getById(id).subscribe((mantenimiento: any) => {
       this.mantenimiento = mantenimiento;
       this.mostrarModalChatMantenimiento = true;
       this.cdr.detectChanges();

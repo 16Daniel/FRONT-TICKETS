@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
+import { ModalFinalCommentsComponent } from '../../../dialogs/modal-final-comments/modal-final-comments.component';
+import { ModalAvMttoImguploaderComponent } from '../../../dialogs/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
+import { ModalVisorVariasImagenesComponent } from '../../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
+import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
+import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.model';
 
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
-import { ModalFinalCommentsComponent } from '../../../../modals/maintenance/modal-final-comments/modal-final-comments.component';
-import { ModalAvMttoImguploaderComponent } from '../../../../modals/maintenance/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
-import { ModalMaintenanceChatComponent } from '../../../../modals/maintenance/modal-maintenance-chat/modal-maintenance-chat.component';
-import { ModalVisorVariasImagenesComponent } from '../../../../modals/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 
 @Component({
   selector: 'app-branch-maintenance-table-av',

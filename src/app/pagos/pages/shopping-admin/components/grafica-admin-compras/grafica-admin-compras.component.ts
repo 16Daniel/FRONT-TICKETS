@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { Sucursal } from '../../../../../models/sucursal.model';
-import { AdministracionCompra } from '../../../../../models/AdministracionCompra';
-import { Area } from '../../../../../models/area.model';
-import { Usuario } from '../../../../../models/usuario.model';
+import { Area } from '../../../../../areas/models/area.model';
+import { Usuario } from '../../../../../usuarios/models/usuario.model';
+import { Sucursal } from '../../../../../sucursales/interfaces/sucursal.model';
+import { AdministracionCompra } from '../../../../interfaces/AdministracionCompra';
 
 @Component({
   selector: 'app-grafica-admin-compras',
@@ -74,8 +74,8 @@ export class GraficaAdminComprasComponent implements OnInit {
         this.gproveedor.push({ name: this.obtenerNombreArea(ida!), value: total })
       }
     }
-    
-    this.single.sort((a, b) => b.value - a.value);  
+
+    this.single.sort((a, b) => b.value - a.value);
     this.gproveedor.sort((a, b) => b.value - a.value);
 
   }

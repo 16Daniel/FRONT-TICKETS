@@ -5,21 +5,21 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { ActivoFijo } from '../../../../models/activo-fijo.model';
-import { FixedAssetsService } from '../../../../services/fixed-assets.service';
-import { Usuario } from '../../../../models/usuario.model';
-import { Area } from '../../../../models/area.model';
-import { Sucursal } from '../../../../models/sucursal.model';
-import { BranchesService } from '../../../../services/branches.service';
-import { AreasFixedAssetsService } from '../../../../services/areas-fixed-assets.service';
-import { CategoriesFixedAssetsService } from '../../../../services/categories-activos-fijos.service';
-import { AreaActivoFijo } from '../../../../models/area-activo-fijo.model';
-import { CategoriaActivoFijo } from '../../../../models/categoria-activo-fijo.model';
-import { UbicacionActivoFijo } from '../../../../models/ubicacion-activo-fijo.model';
-import { EstatusActivoFijo } from '../../../../models/estatus-activo-fijo.model';
-import { StatusFixedAssetsService } from '../../../../services/status-fixed-assets.service';
-import { LocationsFixedAssetsService } from '../../../../services/locations-fixed-assets.service';
-import { AreasService } from '../../../../services/areas.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Area } from '../../../areas/models/area.model';
+import { FixedAssetsService } from '../../services/fixed-assets.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { AreasFixedAssetsService } from '../../services/areas-fixed-assets.service';
+import { CategoriesFixedAssetsService } from '../../services/categories-activos-fijos.service';
+import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
+import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
+import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.model';
+import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.model';
+import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.model';
+import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
 
 @Component({
   selector: 'app-modal-fixed-assets-create',

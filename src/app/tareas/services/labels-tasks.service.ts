@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { EtiquetaTarea } from '../models/etiqueta-tarea.model';
 
 import {
   addDoc,
@@ -15,6 +14,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
+import { EtiquetaTarea } from '../interfaces/etiqueta-tarea.model';
 
 @Injectable({
   providedIn: 'root',

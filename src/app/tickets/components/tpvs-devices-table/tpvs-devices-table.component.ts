@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { Sucursal } from '../../models/sucursal.model';
-import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.service';
-import { EstatusTPV } from '../../models/estatus-tpv';
-import { ModalColorEstatusDispositivoTpvComponent } from '../../modals/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
-import { DispositivoTPV } from '../../models/dispositivo-tpv';
-import { Usuario } from '../../models/usuario.model';
+
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { StatusTpvsDevicesService } from '../../../activos-fijos/services/status-tpvs-devices.service';
+import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos/dialogs/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { DispositivoTPV } from '../../../activos-fijos/interfaces/dispositivo-tpv';
+import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv';
 
 @Component({
   selector: 'app-tpvs-devices-table',

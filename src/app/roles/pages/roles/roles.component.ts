@@ -1,19 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
-import { Component, ChangeDetectorRef, destroyPlatform } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Dialog, DialogModule } from 'primeng/dialog';
+import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
-import { PrimeNGConfig } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, ConfirmEventType } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 
-import { Rol } from '../../../../models/rol.model';
-import { Ruta } from '../../../../models/ruta.model';
-import { RolesService } from '../../../../services/roles.service';
+import { RolesService } from '../../services/roles.service';
+import { Rol } from '../../interfaces/rol.model';
+import { Ruta } from '../../interfaces/ruta.model';
 
 @Component({
   selector: 'app-roles',
@@ -45,7 +44,6 @@ export default class RolesComponent {
   constructor(
     private messageService: MessageService,
     public cdr: ChangeDetectorRef,
-    private config: PrimeNGConfig,
     private confirmationService: ConfirmationService,
     private rolesService: RolesService
   ) {

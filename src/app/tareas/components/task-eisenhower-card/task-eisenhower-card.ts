@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
-import { Tarea } from '../../../models/tarea.model';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
-import { EstatusTarea } from '../../../models/estatus-tarea.model';
+import { Tarea } from '../../interfaces/tarea.model';
+import { EstatusTarea } from '../../interfaces/estatus-tarea.model';
+
 
 @Component({
   selector: 'app-task-eisenhower-card',

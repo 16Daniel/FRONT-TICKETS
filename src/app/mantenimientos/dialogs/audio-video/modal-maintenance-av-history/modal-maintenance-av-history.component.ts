@@ -6,11 +6,12 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
-import { BranchMaintenanceTableAvComponent } from '../../../../components/maintenance/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { UsersService } from '../../../../services/users.service';
+import { BranchMaintenanceTableAvComponent } from '../../../components/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
+import { UsersService } from '../../../../usuarios/services/users.service';
+import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.model';
+;
 
 @Component({
   selector: 'app-modal-maintenance-av-history',

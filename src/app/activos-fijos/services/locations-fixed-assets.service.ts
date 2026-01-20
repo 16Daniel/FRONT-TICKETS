@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UbicacionActivoFijo } from '../models/ubicacion-activo-fijo.model';
 import {
   collection,
   doc,
@@ -12,6 +11,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
+import { UbicacionActivoFijo } from '../interfaces/ubicacion-activo-fijo.model';
 
 @Injectable({
   providedIn: 'root'

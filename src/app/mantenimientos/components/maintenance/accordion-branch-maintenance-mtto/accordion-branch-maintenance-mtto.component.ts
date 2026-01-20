@@ -4,13 +4,13 @@ import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Usuario } from '../../../../models/usuario.model';
 import { BranchMaintenanceTableMttoComponent } from '../branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
-import { MantenimientoMtto } from '../../../../models/mantenimiento-mtto.model';
-import { MaintenanceMtooService } from '../../../../services/maintenance-mtto.service';
-import { UsersService } from '../../../../services/users.service';
-import { DatesHelperService } from '../../../../helpers/dates-helper.service';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { UsersService } from '../../../../usuarios/services/users.service';
+import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
+import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
+import { Sucursal } from '../../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-mtto',

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
+
 import { TaskCardComponent } from '../task-card/task-card.component';
-import { Tarea } from '../../../models/tarea.model';
-import { SearchFilterPipe } from '../../../pipes/search-filter.pipe';
+import { Tarea } from '../../interfaces/tarea.model';
 
 @Component({
   selector: 'app-tasks-board',
@@ -12,7 +12,6 @@ import { SearchFilterPipe } from '../../../pipes/search-filter.pipe';
     CommonModule,
     DragDropModule,
     TaskCardComponent,
-    SearchFilterPipe
   ],
   templateUrl: './tasks-board.component.html',
   styleUrl: './tasks-board.component.scss'

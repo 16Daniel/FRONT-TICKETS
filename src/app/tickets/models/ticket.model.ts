@@ -1,6 +1,6 @@
 import { Timestamp } from '@angular/fire/firestore';
-import { Comentario } from './comentario-chat.model';
-import { ParticipanteChat } from './participante-chat.model';
+import { Comentario } from '../../shared/interfaces/comentario-chat.model';
+import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
 
 export class Ticket {
   id?: string | any;

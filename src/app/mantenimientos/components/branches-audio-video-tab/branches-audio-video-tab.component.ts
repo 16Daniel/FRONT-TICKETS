@@ -6,19 +6,19 @@ import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
-import { Sucursal } from '../../../../models/sucursal.model';
-import { Ticket } from '../../../../models/ticket.model';
-import { Usuario } from '../../../../models/usuario.model';
-import { Area } from '../../../../models/area.model';
-import { ModalGenerateTicketComponent } from '../../../../modals/tickets/modal-generate-ticket/modal-generate-ticket.component';
-import { ModalTicketDetailComponent } from '../../../../modals/tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalTicketsHistoryComponent } from '../../../../modals/tickets/modal-tickets-history/modal-tickets-history.component';
-import { PriorityTicketsAccordionComponent } from '../priority-tickets-accordion/priority-tickets-accordion.component';
-import { Mantenimiento6x6AV } from '../../../../models/mantenimiento-av.model';
-import { Maintenance6x6AvService } from '../../../../services/maintenance-av.service';
-import { ModalMaintenanceAvHistoryComponent } from '../../../../modals/maintenance/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
-import { ModalMaintenanceAvCheckComponent } from '../../../../modals/maintenance/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
-import { ModalBranchRatingComponent } from '../../dialogs/modal-branch-rating/modal-branch-rating.component';
+import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
+import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
+import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
+import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
+import { ModalMaintenanceAvHistoryComponent } from '../../dialogs/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
+import { ModalMaintenanceAvCheckComponent } from '../../dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Area } from '../../../areas/models/area.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
+import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-branches-audio-video-tab',

@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { ModalArchivedTasksComponent } from '../../../modals/tasks/modal-archived-tasks/modal-archived-tasks.component';
-import { ModalTaskResponsibleComponent } from '../../../modals/tasks/modal-task-responsible/modal-task-responsible.component';
-import { ModalLabelsTaskComponent } from '../../../modals/tasks/modal-labels-task/modal-labels-task.component';
-import { NewTaskComponent } from '../../../modals/tasks/modal-new-task/new-task.component';
-import { TaskResponsibleService } from '../../../services/task-responsible.service';
-import { ResponsableTarea } from '../../../models/responsable-tarea.model';
+
+import { ModalTaskResponsibleComponent } from '../../dialogs/modal-task-responsible/modal-task-responsible.component';
+import { ModalArchivedTasksComponent } from '../../dialogs/modal-archived-tasks/modal-archived-tasks.component';
+import { ModalLabelsTaskComponent } from '../../dialogs/modal-labels-task/modal-labels-task.component';
+import { NewTaskComponent } from '../../dialogs/modal-new-task/new-task.component';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
 
 @Component({
   selector: 'app-tasks-filter-component',

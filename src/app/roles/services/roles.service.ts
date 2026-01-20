@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { collection, collectionData, doc, Firestore, setDoc } from '@angular/fire/firestore';
-import { Rol } from '../models/rol.model';
+import { Rol } from '../interfaces/rol.model';
 
 @Injectable({
   providedIn: 'root',

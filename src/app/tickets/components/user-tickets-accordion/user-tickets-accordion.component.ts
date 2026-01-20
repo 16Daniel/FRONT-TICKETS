@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Ticket } from '../../../../models/ticket.model';
+import { Component, Input } from '@angular/core';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
-import { Sucursal } from '../../../../models/sucursal.model';
 import { BadgeModule } from 'primeng/badge';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
-import { Usuario } from '../../../../models/usuario.model';
-import { TpvsDevicesTableComponent } from '../../../../components/tpvs-devices-table/tpvs-devices-table.component';
-import { GraficaTickets30DiasComponent } from '../../../../components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
+import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { Ticket } from '../../models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
   selector: 'app-user-tickets-accordion',

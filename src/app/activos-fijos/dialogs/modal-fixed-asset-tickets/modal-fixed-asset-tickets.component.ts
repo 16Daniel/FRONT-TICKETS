@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 
-import { Ticket } from '../../../models/ticket.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { ActivoFijo } from '../../../models/activo-fijo.model';
-import { ModalTicketDetailComponent } from '../../tickets/modal-ticket-detail/modal-ticket-detail.component';
-import { RequesterTicketsListComponent } from '../../../components/requester-tickets-list/requester-tickets-list.component';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
+import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { ActivoFijo } from '../../interfaces/activo-fijo.model';
 
 @Component({
   selector: 'app-modal-fixed-asset-tickets',

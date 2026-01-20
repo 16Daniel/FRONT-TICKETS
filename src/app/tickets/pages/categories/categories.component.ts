@@ -8,10 +8,10 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
-import { Categoria } from '../../../../models/categoria.mdoel';
-import { CategoriesService } from '../../../../services/categories.service';
-import { Usuario } from '../../../../models/usuario.model';
 import { ModalCategoryCreateComponent } from '../../dialogs/modal-category-create/modal-category-create.component';
+import { Categoria } from '../../models/categoria.mdoel';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-categories',

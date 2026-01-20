@@ -12,74 +12,90 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import * as XLSX from 'xlsx';
 
-import { ShoppingService } from '../../../services/shopping.service';
 import { ProveedoresComponent } from "./dialogs/proveedores/proveedores.component";
-import { BranchesService } from '../../../services/branches.service';
-import { Sucursal } from '../../../models/sucursal.model';
-import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../../models/AdministracionCompra';
 import { AgregarCompraComponent } from "./dialogs/agregar-compra/agregar-compra.component";
-import { SideMenuComponent } from "../../../shared/side-menu/side-menu.component";
-import { Usuario } from '../../../models/usuario.model';
 import { GraficaAdminComprasComponent } from "./components/grafica-admin-compras/grafica-admin-compras.component";
-import { Area } from '../../../models/area.model';
 import { environment } from '../../../../environments/environments';
 import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
-import { AreasService } from '../../../services/areas.service';
-import { UsersService } from '../../../services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Area } from '../../../areas/models/area.model';
+import { ShoppingService } from '../../services/shopping.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+
+type NewType = AdministracionCompra;
+
 @Component({
   selector: 'app-shopping-admin',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, ProveedoresComponent,
-    DropdownModule, AgregarCompraComponent, CalendarModule, GraficaAdminComprasComponent,
-    MessagesModule, TooltipModule, TabViewModule, AdminComprasTablaComponent, MultiSelectModule, InputSwitchModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    ProveedoresComponent,
+    DropdownModule,
+    AgregarCompraComponent,
+    CalendarModule,
+    GraficaAdminComprasComponent,
+    MessagesModule,
+    TooltipModule,
+    TabViewModule,
+    AdminComprasTablaComponent,
+    MultiSelectModule,
+    InputSwitchModule
+  ],
   templateUrl: './shopping-admin.component.html',
   styleUrl: './shopping-admin.component.scss'
 })
 
 export default class ShoppingAdminComponent implements OnInit {
-public visible:boolean = false; 
-public catTipoCompra:any[] = []; 
-public catProveedores:Proveedor[] = [];  
-public modalProveedores:boolean = false; 
-public modalFactura:boolean = false; 
-public modalDetalles:boolean = false; 
-public sucursales: Sucursal[] = [];
-public sucursalesSel: Sucursal[] = [];
-public catStatusCompra:any[] = [{id:'1',nombre:'EN GESTIÓN'},{id:'0',nombre:'CANCELADO'},{id:'2',nombre:'COMPRADO'},{id:'3',nombre:'ENTREGADO'},{id:'4',nombre:'EN DEVOLUCIÓN'},{id:'5',nombre:'OTRO'}]
-public catStatusPago:any[] = [{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO'}]
-public filtrocatStatusCompra:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'EN GESTIÓN'},{id:'0',nombre:'CANCELADO'},{id:'2',nombre:'COMPRADO'},{id:'3',nombre:'ENTREGADO'},{id:'4',nombre:'EN DEVOLUCIÓN'},{id:'5',nombre:'OTRO'}]
-public filtrocatStatusPago:any[] = [{id:'-1',nombre:'TODO'},{id:'1',nombre:'POR PAGAR'},{id:'2',nombre:'PAGADO'}]
-public filtroCatRazonSocial:any[] = [{id:'-1',nombre:'TODO'},{id:'REBEL W1',nombre:'REBEL W1'},{id:'REBEL W2',nombre:'REBEL W2'},{id:'REBEL W3',nombre:'REBEL W3'},{id:'RW CENTRO',nombre:'RW CENTRO'}]; 
-public regcompras:AdministracionCompra[] = []; 
-public regcomprasTodo: AdministracionCompra[] = []; 
-public facturasPendientes:AdministracionCompra[] = []; 
-public itemReg:AdministracionCompra|undefined; 
-public fechaReg:Date = new Date(); 
-public modalArchivos:boolean = false;
-public modalChat:boolean = false;
-public usuario:Usuario;
-public idAdmin:string = environment.idAdministracion;
-public idServicio:string = environment.idServicio;
-public idDireccion:string = environment.idDireccion; 
-public filtroFechaIni:Date|undefined = this.getFirstDayOfMonth();
-public filtroFechaFin:Date|undefined = new Date();
-public filtroStatus:string = "-1";
-public filtroStatusPago:string = "1"; 
-public filtroSucursal: Sucursal|undefined;
-public filtroTipo:string = "-1"; 
-public filtroRegion:string = '-1'; 
-public filtroRazonSocial:string = "-1"; 
-public filtrocatTipoCompra:any[] = [];
-public filtroArea:Area|undefined; 
-public filtroMetodoPago:string = ""; 
-public filtroSolicitante:string = ""; 
-public catareas: Area[] = []; 
-public catMetodosPago:any[] = [{id:'1',nombre:'EFECTIVO'},{id:'2',nombre:'TRANSFERENCIA'}];
-public messages:any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }]; 
-public verServicio:boolean = false; 
-public verGrafica:boolean = false; 
-constructor(
-    private shopServ:ShoppingService,
+  public visible: boolean = false;
+  public catTipoCompra: any[] = [];
+  public catProveedores: Proveedor[] = [];
+  public modalProveedores: boolean = false;
+  public modalFactura: boolean = false;
+  public modalDetalles: boolean = false;
+  public sucursales: Sucursal[] = [];
+  public sucursalesSel: Sucursal[] = [];
+  public catStatusCompra: any[] = [{ id: '1', nombre: 'EN GESTIÓN' }, { id: '0', nombre: 'CANCELADO' }, { id: '2', nombre: 'COMPRADO' }, { id: '3', nombre: 'ENTREGADO' }, { id: '4', nombre: 'EN DEVOLUCIÓN' }, { id: '5', nombre: 'OTRO' }]
+  public catStatusPago: any[] = [{ id: '1', nombre: 'POR PAGAR' }, { id: '2', nombre: 'PAGADO' }]
+  public filtrocatStatusCompra: any[] = [{ id: '-1', nombre: 'TODO' }, { id: '1', nombre: 'EN GESTIÓN' }, { id: '0', nombre: 'CANCELADO' }, { id: '2', nombre: 'COMPRADO' }, { id: '3', nombre: 'ENTREGADO' }, { id: '4', nombre: 'EN DEVOLUCIÓN' }, { id: '5', nombre: 'OTRO' }]
+  public filtrocatStatusPago: any[] = [{ id: '-1', nombre: 'TODO' }, { id: '1', nombre: 'POR PAGAR' }, { id: '2', nombre: 'PAGADO' }]
+  public filtroCatRazonSocial: any[] = [{ id: '-1', nombre: 'TODO' }, { id: 'REBEL W1', nombre: 'REBEL W1' }, { id: 'REBEL W2', nombre: 'REBEL W2' }, { id: 'REBEL W3', nombre: 'REBEL W3' }, { id: 'RW CENTRO', nombre: 'RW CENTRO' }];
+  public regcompras: AdministracionCompra[] = [];
+  public regcomprasTodo: NewType[] = [];
+  public facturasPendientes: AdministracionCompra[] = [];
+  public itemReg: AdministracionCompra | undefined;
+  public fechaReg: Date = new Date();
+  public modalArchivos: boolean = false;
+  public modalChat: boolean = false;
+  public usuario: Usuario;
+  public idAdmin: string = environment.idAdministracion;
+  public idServicio: string = environment.idServicio;
+  public idDireccion: string = environment.idDireccion;
+  public filtroFechaIni: Date | undefined = this.getFirstDayOfMonth();
+  public filtroFechaFin: Date | undefined = new Date();
+  public filtroStatus: string = "-1";
+  public filtroStatusPago: string = "1";
+  public filtroSucursal: Sucursal | undefined;
+  public filtroTipo: string = "-1";
+  public filtroRegion: string = '-1';
+  public filtroRazonSocial: string = "-1";
+  public filtrocatTipoCompra: any[] = [];
+  public filtroArea: Area | undefined;
+  public filtroMetodoPago: string = "";
+  public filtroSolicitante: string = "";
+  public catareas: Area[] = [];
+  public catMetodosPago: any[] = [{ id: '1', nombre: 'EFECTIVO' }, { id: '2', nombre: 'TRANSFERENCIA' }];
+  public messages: any[] = [{ severity: 'error', detail: 'Tiene facturas pendientes por subir con más de 7 días posteriores a la fecha de pago. Favor de cargar los documentos para poder generar nuevas solicitudes' }];
+  public verServicio: boolean = false;
+  public verGrafica: boolean = false;
+
+  constructor(
+    private shopServ: ShoppingService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private areasService: AreasService,
@@ -87,7 +103,6 @@ constructor(
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void {
-    debugger
     this.actualizarInfoUsuario();
     this.areasService.areas$.subscribe({
       next: (data) => {
@@ -114,12 +129,12 @@ constructor(
   }
 
   obtenerCompras() {
-    this.verGrafica = false; 
+    this.verGrafica = false;
     this.shopServ.getCompras().subscribe({
       next: (data) => {
         this.regcompras = data;
-        this.regcomprasTodo = data; 
-        this.mostrarGrafica(); 
+        this.regcomprasTodo = data;
+        this.mostrarGrafica();
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -129,12 +144,12 @@ constructor(
   }
 
   obtenerComprasServicio() {
-    this.verGrafica = false; 
+    this.verGrafica = false;
     this.shopServ.getComprasServicio().subscribe({
       next: (data) => {
         this.regcompras = data;
-        this.regcomprasTodo = data; 
-         this.mostrarGrafica(); 
+        this.regcomprasTodo = data;
+        this.mostrarGrafica();
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -175,8 +190,8 @@ constructor(
     this.shopServ.getComprasUsuario(this.usuario.id).subscribe({
       next: (data) => {
         this.regcompras = data;
-        this.regcomprasTodo = data; 
-         this.mostrarGrafica(); 
+        this.regcomprasTodo = data;
+        this.mostrarGrafica();
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -186,7 +201,7 @@ constructor(
   }
 
   obtenerComprasFiltro() {
-    this.verGrafica = false; 
+    this.verGrafica = false;
     this.regcompras = [];
     Swal.showLoading();
     this.cdr.detectChanges();
@@ -200,33 +215,31 @@ constructor(
       idusuario = '';
     }
 
-        let sucursalesids:string[] = []; 
-       for(let suc of this.sucursalesSel)
-        {
-          sucursalesids.push(suc.id);
-        }
-        
-        if(this.filtroArea != undefined)
-          {
-            idArea = this.filtroArea.id; 
-          }
+    let sucursalesids: string[] = [];
+    for (let suc of this.sucursalesSel) {
+      sucursalesids.push(suc.id);
+    }
 
-        let esServicio = this.usuario.id == this.idServicio ? true:false; 
-        if(this.verServicio){ esServicio = true; }
-        this.shopServ.getComprasFiltro(this.filtroFechaIni,this.filtroFechaFin,this.filtroStatus,this.filtroStatusPago,
-          idsuc,idusuario,this.filtroTipo,this.filtroRegion,idArea,sucursalesids,esServicio,this.filtroRazonSocial,this.filtroMetodoPago).subscribe({
-      next: (data) => {
-        this.regcompras = data;
-        this.regcomprasTodo = data; 
-        Swal.close();
-         this.mostrarGrafica(); 
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        Swal.close();
-        console.log(error);
-      },
-    });
+    if (this.filtroArea != undefined) {
+      idArea = this.filtroArea.id;
+    }
+
+    let esServicio = this.usuario.id == this.idServicio ? true : false;
+    if (this.verServicio) { esServicio = true; }
+    this.shopServ.getComprasFiltro(this.filtroFechaIni, this.filtroFechaFin, this.filtroStatus, this.filtroStatusPago,
+      idsuc, idusuario, this.filtroTipo, this.filtroRegion, idArea, sucursalesids, esServicio, this.filtroRazonSocial, this.filtroMetodoPago).subscribe({
+        next: (data) => {
+          this.regcompras = data;
+          this.regcomprasTodo = data;
+          Swal.close();
+          this.mostrarGrafica();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          Swal.close();
+          console.log(error);
+        },
+      });
   }
 
   abrirModal() {
@@ -272,7 +285,6 @@ constructor(
     });
   }
 
-
   abrirModalProveedores() {
     this.modalProveedores = true;
     this.cdr.detectChanges();
@@ -289,14 +301,14 @@ constructor(
   obtenerNombreEstatus(id: string): string {
     return this.catStatusCompra.filter(x => x.id == id).length > 0 ? this.catStatusCompra.filter(x => x.id == id)[0].nombre : '';
   }
+
   obtenerNombreEstatusPago(id: string): string {
     return this.catStatusPago.filter(x => x.id == id).length > 0 ? this.catStatusPago.filter(x => x.id == id)[0].nombre : '';
   }
+
   obtenerNombreMetodoPago(id: string): string {
     return this.catMetodosPago.filter(x => x.id == id).length > 0 ? this.catMetodosPago.filter(x => x.id == id)[0].nombre : '';
   }
-
-
 
   verificarChatNoLeido(ticket: AdministracionCompra) {
     const participantes = ticket.participantesChat.sort(
@@ -328,7 +340,6 @@ constructor(
     return total;
   }
 
-
   hanPasado7Dias(fecha: Date): boolean {
     const hoy = new Date();
     const fechaLimite = new Date(fecha);
@@ -336,7 +347,6 @@ constructor(
 
     return hoy >= fechaLimite;
   }
-
 
   exportToExcel(compras: AdministracionCompra[], filename: string = 'compras.xlsx'): void {
     // Transformar los datos para tener una fila por artículo
@@ -425,7 +435,6 @@ constructor(
     return nombre;
   }
 
-
   obtenerSolicitudes(tipo: number): AdministracionCompra[] {
 
     if (tipo == 0) {
@@ -459,22 +468,18 @@ constructor(
     }
   }
 
-mostrarGrafica()
-{
-   setTimeout(() => {
-          this.verGrafica = true;
-        }, 200);
-}
+  mostrarGrafica() {
+    setTimeout(() => {
+      this.verGrafica = true;
+    }, 200);
+  }
 
-filtrarSolicitante()
-{
-    if(this.filtroSolicitante == "")
-      {
-        this.regcompras = this.regcomprasTodo;
-      } else
-        {
-          this.regcompras = this.regcomprasTodo.filter(x => x.solicitante.toLocaleLowerCase().includes(this.filtroSolicitante.toLocaleLowerCase())); 
-        }
-}
+  filtrarSolicitante() {
+    if (this.filtroSolicitante == "") {
+      this.regcompras = this.regcomprasTodo;
+    } else {
+      this.regcompras = this.regcomprasTodo.filter(x => x.solicitante.toLocaleLowerCase().includes(this.filtroSolicitante.toLocaleLowerCase()));
+    }
+  }
 
 }

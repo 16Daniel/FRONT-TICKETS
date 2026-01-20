@@ -4,11 +4,11 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { Usuario } from '../../../models/usuario.model';
-import { TicketsService } from '../../../services/tickets.service';
-import { Ticket } from '../../../models/ticket.model';
-import { Comentario } from '../../../models/comentario-chat.model';
-import { UsersService } from '../../../services/users.service';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Usuario } from '../../models/usuario.model';
+import { UsersService } from '../../services/users.service';
+import { TicketsService } from '../../../tickets/services/tickets.service';
+import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 
 @Component({
   selector: 'app-modal-select-specialist-user',
