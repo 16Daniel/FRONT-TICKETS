@@ -34,9 +34,7 @@ export const routes: Routes = [
       // },
       {
         path: '',
-        loadChildren: () =>
-          import('./tickets/tickets.routes')
-            //.then(m => m.TICKETS_ROUTES),
+        loadChildren: () => import('./tickets/tickets.routes')
       },
       {
         path: '',
@@ -99,7 +97,7 @@ export const routes: Routes = [
         path: 'kpis',
         title: 'KPIS',
         loadComponent: () =>
-          import('./aceite/pages/admin-reports-tab/admin-reports-tab.component')
+          import('./aceites/pages/admin-reports-tab/admin-reports-tab.component')
       },
       {
         path: 'version-history',
@@ -148,17 +146,17 @@ export const routes: Routes = [
   },
   {
     path: 'cedis',
-    loadComponent: () => import('./aceite/pages/cedis/cedis.component'),
+    loadComponent: () => import('./aceites/pages/cedis/cedis.component'),
     children: [
       {
         path: 'recoleccion',
         title: 'Control de aceite',
-        loadComponent: () => import('./aceite/pages/recoleccion-aceite/recoleccion-aceite.component'),
+        loadComponent: () => import('./aceites/pages/recoleccion-aceite/recoleccion-aceite.component'),
       },
       {
         path: 'control-aceite',
         title: 'Control de aceite',
-        loadComponent: () => import('./aceite/pages/aceite/aceite.component'),
+        loadComponent: () => import('./aceites/pages/aceite/aceite.component'),
       },
       {
         path: '',
@@ -215,7 +213,7 @@ export const routes: Routes = [
       {
         path: 'captura',
         title: 'Captura de inventario',
-        loadComponent: () => import('./aceite/pages/captura-inventario-diario/captura-inventario-diario.component'),
+        loadComponent: () => import('./aceites/pages/captura-inventario-diario/captura-inventario-diario.component'),
       }
     ]
   },

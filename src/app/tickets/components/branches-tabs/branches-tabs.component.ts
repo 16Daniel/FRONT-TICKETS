@@ -15,7 +15,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
-import { BranchesOilTabComponent } from '../../../aceite/components/branches-oil-tab/branches-oil-tab.component';
+import { BranchesOilTabComponent } from '../../../aceites/components/branches-oil-tab/branches-oil-tab.component';
 
 @Component({
   selector: 'app-branches-tabs',
