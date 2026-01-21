@@ -12,14 +12,14 @@ import { ControlVersion } from '../../interfaces/control-version.model';
 import { VersionUsuario } from '../../interfaces/version-usuario.model';
 
 @Component({
-  selector: 'app-versions-history',
+  selector: 'app-versions-history-page',
   standalone: true,
   imports: [TableModule, CommonModule, ModalVersionEditComponent],
   templateUrl: './versions-history.component.html',
   styleUrl: './versions-history.component.scss',
 })
 
-export default class VersionsHistoryComponent {
+export default class VersionsHistoryPage {
   versionActual: ControlVersion | any;
   versiones: ControlVersion[] = [];
   versionSeleccionada: any;
