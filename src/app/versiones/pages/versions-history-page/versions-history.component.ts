@@ -19,7 +19,7 @@ import { VersionUsuario } from '../../interfaces/version-usuario.model';
   styleUrl: './versions-history.component.scss',
 })
 
-export default class VersionsHistoryPage {
+export default class VersionsHistoryPageComponent {
   versionActual: ControlVersion | any;
   versiones: ControlVersion[] = [];
   versionSeleccionada: any;

@@ -39,7 +39,7 @@ import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
   styleUrl: './specialist-home-page.scss'
 })
 
-export default class SpecialistHomePage implements OnInit, OnChanges {
+export default class SpecialistHomePageComponent implements OnInit, OnChanges {
   usuario: Usuario;
   tickets: Ticket[] = [];
   ticketSeleccionado: Ticket = new Ticket;

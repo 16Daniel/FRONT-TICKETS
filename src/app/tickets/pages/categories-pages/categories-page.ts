@@ -29,7 +29,7 @@ import { CategoriesService } from '../../services/categories.service';
   templateUrl: './categories-page.html',
   styleUrl: './categories-page.scss'
 })
-export default class CategoriesPage {
+export default class CategoriesPageComponent {
   esNuevaCategoria: boolean = false;
   mostrarModalCategoria: boolean = false;
   categorias: Categoria[] = [];

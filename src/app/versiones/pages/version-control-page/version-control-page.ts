@@ -16,7 +16,7 @@ import { ControlVersion } from '../../interfaces/control-version.model';
   templateUrl: './version-control-page.html',
   styleUrl: './version-control-page.scss',
 })
-export default class VersionControlPage {
+export default class VersionControlPageComponent {
   controlVersion: ControlVersion = new ControlVersion();
 
   constructor(

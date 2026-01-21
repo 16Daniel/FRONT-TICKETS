@@ -13,8 +13,8 @@ import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
-import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
+import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
+import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import { BranchesOilTabComponent } from '../../../aceites/components/branches-oil-tab/branches-oil-tab.component';
 
 @Component({
@@ -29,9 +29,8 @@ import { BranchesOilTabComponent } from '../../../aceites/components/branches-oi
     MultiSelectModule,
     BranchesMaintenanceTabComponent,
     BranchesOilTabComponent,
-    // DashboardTasksComponent,
-    EisenhowerMatrixPage,
-    DashboardTasksPage
+    EisenhowerMatrixPageComponent,
+    DashboardTasksPageComponent
   ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',

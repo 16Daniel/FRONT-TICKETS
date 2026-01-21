@@ -39,7 +39,7 @@ import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.co
   templateUrl: './dashboard-tasks-page.html',
   styleUrl: './dashboard-tasks-page.scss'
 })
-export class DashboardTasksPage implements OnInit {
+export class DashboardTasksPageComponent implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
 
   sucursales: Sucursal[] = [];

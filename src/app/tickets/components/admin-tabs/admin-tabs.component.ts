@@ -11,8 +11,8 @@ import { AdminMaintenanceTabComponent } from '../../../mantenimientos/components
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../models/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
-import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
+import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
+import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/admin-reports-tab.component';
 
 @Component({
@@ -26,8 +26,8 @@ import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/
     AdminAudioVideoTabComponent,
     AdminMaintenanceTabComponent,
     AdminReportsTabComponent,
-    EisenhowerMatrixPage,
-    DashboardTasksPage,
+    EisenhowerMatrixPageComponent,
+    DashboardTasksPageComponent,
     DropdownModule
   ],
   templateUrl: './admin-tabs.component.html',

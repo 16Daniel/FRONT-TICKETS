@@ -32,7 +32,7 @@ import { Rol } from '../../../roles/interfaces/rol.model';
   templateUrl: './users-page.html',
 })
 
-export default class UsersPage implements OnDestroy, OnInit {
+export default class UsersPageComponent implements OnDestroy, OnInit {
   mostrarModalUsuario: boolean = false;
   actualizar: boolean = false;
   usuarios: Usuario[] = [];

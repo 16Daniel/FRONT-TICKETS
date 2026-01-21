@@ -28,7 +28,7 @@ import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-e
   templateUrl: './eisenhower-matrix-page.html',
   styleUrl: './eisenhower-matrix-page.scss',
 })
-export class EisenhowerMatrixPage implements OnInit {
+export class EisenhowerMatrixPageComponent implements OnInit {
   tc1: Tarea[] = [];
   tc2: Tarea[] = [];
   tc3: Tarea[] = [];

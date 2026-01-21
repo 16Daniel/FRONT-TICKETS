@@ -29,7 +29,7 @@ import { Sucursal } from '../../interfaces/sucursal.model';
   styleUrl: './branches-page.scss'
 })
 
-export default class BranchesPage implements OnInit {
+export default class BranchesPageComponent implements OnInit {
   esNuevaSucursal: boolean = false;
   mostrarModalSucursal: boolean = false;
   sucursales: Sucursal[] = [];
