@@ -1,0 +1,101 @@
+<div class="pt-5">
+  <h3 class="text-center">MERMAS</h3>
+
+  <div class="row m-0 mt-3">
+    <div class="col-auto">
+      <p>FECHA INICIO</p>
+      <p-calendar [(ngModel)]="fechaini" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        dateFormat="dd/mm/yy" [style]="{width:'100%'}" />
+    </div>
+    <div class="col-auto">
+      <p>FECHA FIN</p>
+      <p-calendar [(ngModel)]="fechafin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        dateFormat="dd/mm/yy" [style]="{width:'100%'}" />
+    </div>
+    <div class="col-auto" *ngIf="this.usuario.idRol != '2' || this.usuario.id == this.idServicio">
+      <p>SUCURSALES</p>
+      <p-multiSelect [options]="sucursales" [(ngModel)]="sucursalesSel" [filter]="true" optionLabel="nombre"
+        placeholder="SELECCIONAR SUCURSALES" [style]="{width:'100%'}" />
+    </div>
+
+    <div class="col-auto">
+      <p>RESUMEN</p>
+      <div class=" h-42 p-2"> <p-inputSwitch [(ngModel)]="resumido" /></div>
+    </div>
+
+    <div class="col-auto">
+      <p>&nbsp;</p>
+      <button class="btn bg-p-b h-42" (click)="obtenerMermas()"><i class='bx bx-search'></i>&nbsp;CONSULTAR</button>
+    </div>
+
+    <div class="col-auto">
+      <p>&nbsp;</p>
+      <button class="btn btn-success" [disabled]="mermas.length == 0" (click)="exportToExcel()"><img width="26"
+          height="26" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png"
+          alt="microsoft-excel-2019" />&nbsp;EXCEL</button>
+    </div>
+
+  </div>
+
+  <div class="m-3" *ngIf="!resumido">
+    <p-table [value]="dataTabD" id="tablaD" [tableStyle]="{'min-width': '60rem', 'padding':'10px'}" [scrollable]="true"
+      scrollHeight="700px" styleClass="p-datatable-gridlines" [paginator]="false" [rows]="100">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="bg-primary bg-opacity-50">SUCURSAL</th>
+          <th class="bg-primary bg-opacity-50">ARTÍCULO</th>
+          <th class="bg-primary bg-opacity-50">PRECIO</th>
+
+          <th class="bg-warning bg-opacity-50">$ MERMA OPERATIVA</th>
+          <th class="bg-warning bg-opacity-50">UNIDADES</th>
+          <th class="bg-warning bg-opacity-50">%</th>
+          <th class="bg-danger bg-opacity-50">$ MERMA PROVEEDOR</th>
+          <th class="bg-danger bg-opacity-50">UNIDADES</th>
+          <th class="bg-danger bg-opacity-50">%</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{ product.sucursal }}</td>
+          <td>{{ product.articulo }}</td>
+          <td>{{ product.precio | number:'1.0-2' }}</td>
+          <td>${{ product.mermaoperativa | number:'1.0-2'}}</td>
+          <td>{{ product.umo | number:'1.0-2'}}</td>
+          <td>{{ product.pmo | number:'1.0-0'}}%</td>
+          <td>${{ product.mermaproveedor | number:'1.0-2'}}</td>
+          <td>{{ product.ump | number:'1.0-2'}}</td>
+          <td>{{ product.pmp | number:'1.0-0'}}%</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+
+  <div class="m-3" *ngIf="resumido">
+    <p-table [value]="dataTabR" id="tablaR" [tableStyle]="{'min-width': '60rem', 'padding':'10px'}" [scrollable]="true"
+      scrollHeight="700px" styleClass="p-datatable-gridlines" [paginator]="false" [rows]="100">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="bg-primary bg-opacity-50">SUCURSAL</th>
+          <th class="bg-warning bg-opacity-50">$ MERMA OPERATIVA</th>
+          <th class="bg-warning bg-opacity-50">%</th>
+          <th class="bg-danger bg-opacity-50">$ MERMA PROVEEDOR</th>
+          <th class="bg-danger bg-opacity-50">%</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{ product.sucursal }}</td>
+          <td>${{ product.mermaoperativa | number:'1.0-2'}}</td>
+          <td>{{ product.pmo | number:'1.0-0'}}%</td>
+          <td>${{ product.mermaproveedor | number:'1.0-2'}}</td>
+          <td>{{ product.pmp | number:'1.0-0'}}%</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+
+</div>

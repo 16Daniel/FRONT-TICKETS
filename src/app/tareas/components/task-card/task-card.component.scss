@@ -1,0 +1,202 @@
+.task-card {
+  background: #fff;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.task-card:hover {
+  background: #f1f5ff;
+}
+
+.titulo {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fecha {
+  font-size: 12px;
+  color: #666;
+}
+
+.estatus {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* To Do */
+.estatus-1 {
+  background: #f31212;
+}
+
+/* Working */
+.estatus-2 {
+  background: #ffaa00bf;
+}
+
+/* Pause */
+.estatus-3 {
+  background: #5448f7;
+}
+
+/* Done */
+.estatus-4 {
+  background: #30e91f;
+}
+
+
+
+
+
+.fila-etiqueta {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.etiqueta-contenedor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #f1f1f1;
+  padding: 4px 10px;
+  border-radius: 6px;
+
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+}
+
+.etiqueta-icono {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+  border: 1px solid #c7c7c7;
+}
+
+
+
+
+
+/* Contenedor del deadline */
+.deadline-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Texto */
+.mini-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+}
+
+/* Donut chart */
+.mini-pie {
+  --size: 25px;
+  --thickness: 6px;
+
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+
+  flex-shrink: 0;
+
+  background: conic-gradient(#0d6efd calc(var(--progress, 0) * 1%),
+      #e9ecef 0);
+
+  /* Hueco central */
+  -webkit-mask: radial-gradient(farthest-side,
+      transparent calc(100% - var(--thickness)),
+      #000 0);
+
+  mask: radial-gradient(farthest-side,
+      transparent calc(100% - var(--thickness)),
+      #000 0);
+}
+
+
+
+.avatars-container {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.subtareas-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 6px;
+}
+
+.sucursal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: #f1f3f5;
+  color: #495057;
+  width: fit-content;
+}
+
+.sucursal-badge.global {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+.task-card {
+  position: relative;
+  /* Obligatorio para el posicionamiento del badge */
+  padding: 1rem;
+  /* ... tus estilos actuales ... */
+}
+
+.priority-badge {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(218, 236, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.priority-badge span {
+  pointer-events: auto;
+  cursor: default;
+}
+
+.titulo {
+  word-break: break-word;
+  line-height: 1.2;
+}

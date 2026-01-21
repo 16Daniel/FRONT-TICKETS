@@ -1,0 +1,21 @@
+import { Pipe, PipeTransform } from '@angular/core';
+import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.model';
+
+@Pipe({
+  name: 'buscarPorReferencia',
+  standalone: true
+})
+export class BuscarPorReferenciaPipe implements PipeTransform {
+
+  transform(activos: ActivoFijo[], texto: string): ActivoFijo[] {
+    if (!activos || !texto) {
+      return activos;
+    }
+
+    texto = texto.toLowerCase().trim();
+    return activos.filter(activo =>
+      activo.referencia?.toLowerCase().includes(texto)
+    );
+  }
+
+}

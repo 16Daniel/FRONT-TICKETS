@@ -1,0 +1,74 @@
+<div class="d-flex" style="margin-right: 10px;">
+
+  <div class="d-flex align-items-center gap-3 ms-auto">
+    <p-multiSelect *ngIf="esEspectadorActivo" [style]="{ 'width': '300px' }" [options]="sucursales" name="sucursales"
+      [(ngModel)]="sucursalesSeleccionadas" optionLabel="nombre" #formsucursalesCtrl="ngModel"
+      placeholder="SELECCIONA LAS SUCURSALES">
+      >
+    </p-multiSelect>
+
+    <label class="form-check-label fs-4 mb-0" for="activarGuardia">MODO ESPECTADOR</label>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
+        style="width: 3rem; height: 2rem;" [(ngModel)]="esEspectadorActivo" (change)="onToggleEspectador()">
+    </div>
+  </div>
+</div>
+
+<p-tabView [(activeIndex)]="tabindex">
+
+  <p-tabPanel header="SISTEMAS">
+    <app-branches-sys-tab [esEspectadorActivo]="esEspectadorActivo" [tickets]="filtrarTicketsPorArea('1')"
+      [todosLosTickets]="todosLosTickets"></app-branches-sys-tab>
+  </p-tabPanel>
+
+  <p-tabPanel header="AUDIO Y VIDEO">
+    <app-branches-audio-video-tab [esEspectadorActivo]="esEspectadorActivo" [tickets]="filtrarTicketsPorArea('2')"
+      [todosLosTickets]="todosLosTickets"></app-branches-audio-video-tab>
+  </p-tabPanel>
+
+  <p-tabPanel header="MANTENIMIENTO">
+    <app-branches-maintenance-tab [esEspectadorActivo]="esEspectadorActivo" [tickets]="filtrarTicketsPorArea('4')"
+      [todosLosTickets]="todosLosTickets"></app-branches-maintenance-tab>
+  </p-tabPanel>
+
+  <p-tabPanel header="ADMINISTRACIÓN ">
+    <p>Contenido de la tercera pestaña.</p>
+  </p-tabPanel>
+  <p-tabPanel header="COMPRAS">
+    <p>Contenido de la tercera pestaña.</p>
+  </p-tabPanel>
+
+  <p-tabPanel header="ACEITE" *ngIf="sucursal.controlDeAceite">
+    <app-branches-oil-tab></app-branches-oil-tab>
+  </p-tabPanel>
+
+  <p-tabPanel header="TAREAS">
+
+    <div class="d-flex justify-content-end align-items-center gap-3">
+      <label class="form-check-label fs-4 mb-0" for="activarGuardia">EISENHOWER</label>
+
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
+          style="width: 3rem; height: 2rem;" [(ngModel)]="verEisenhower" (change)="onToggleEisenhower()">
+      </div>
+    </div>
+
+    <br>
+
+    <app-dashboard-tasks-page *ngIf="!verEisenhower"></app-dashboard-tasks-page>
+    <app-eisenhower-matrix-page *ngIf="verEisenhower"></app-eisenhower-matrix-page>
+  </p-tabPanel>
+
+
+</p-tabView>
+
+<div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+  *ngIf="tickets.length == 0 && tabindex !=5">
+  @if (loading) {
+  <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+  }@else {
+  <i class="bx bx-file-blank bx-md" style="color: rgb(43, 92, 226)"></i>
+  <p>SIN TICKETS PENDIENTES</p>
+  }
+</div>

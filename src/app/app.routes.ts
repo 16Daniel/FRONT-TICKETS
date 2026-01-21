@@ -1,36 +1,19 @@
 import { Routes } from '@angular/router';
-import { HomeGuard } from './guards/home.guard';
-import { AdminGuard } from './guards/admin.guard';
+import { AdminGuard } from './shared/guards/admin.guard';
 
 export const routes: Routes = [
   {
     path: 'main',
-    loadComponent: () => import('./pages/main/main.component'),
-    // canActivateChild:[authGuard],
+    loadComponent: () => import('./shared/layout/main/main.component'),
     children: [
       {
-        path: 'home',
-        title: 'Inicio',
-        loadComponent: () => import('./pages/branch/pages/home/home.component'),
-        canActivate: [HomeGuard],
+        path: '',
+        loadChildren: () => import('./tickets/tickets.routes')
       },
       {
-        path: 'home-s',
-        title: 'Inicio',
-        loadComponent: () => import('./pages/analyst/pages/analyst-home/analyst-home.component'),
-        canActivate: [HomeGuard],
-      },
-      {
-        path: 'home-a',
-        title: 'Inicio',
-        loadComponent: () => import('./pages/admin/pages/admin-home/admin-home.component'),
-        canActivate: [HomeGuard],
-      },
-      {
-        path: 'home-specialist',
-        title: 'Inicio',
-        loadComponent: () => import('./pages/specialist/pages/specialist-home/specialist-home.component'),
-        canActivate: [HomeGuard],
+        path: '',
+        loadChildren: () => import('./versiones/versiones.routes')
+        // sacar
       },
       {
         path: '',
@@ -40,72 +23,50 @@ export const routes: Routes = [
       {
         path: 'roles',
         title: 'Roles de usuarios',
-        loadComponent: () => import('./pages/admin/pages/roles/roles.component'),
+        loadComponent: () => import('./roles/pages/roles/roles.component'),
+        // sacar
       },
       {
         path: 'users',
         title: 'Usuarios',
-        loadComponent: () => import('./pages/admin/pages/users/users.component'),
+        loadComponent: () => import('./usuarios/pages/users-page/users-page'),
+        // sacar
       },
       {
         path: 'calendar-builder',
         title: 'Constructor de calendarios',
         loadComponent: () =>
-          import('./pages/admin/pages/calendar-builder/calendar-builder.component'),
+          import('./mantenimientos/pages/calendar-builder/calendar-builder.component'),
       },
       {
         path: 'branch-visit-schedule',
         title: 'Visitas programadas',
         loadComponent: () =>
           import(
-            './pages/branch-visit-schedule/branch-visit-schedule.component'
+            './mantenimientos/pages/branch-visit-schedule/branch-visit-schedule.component'
           ),
-      },
-      {
-        path: 'version-control',
-        title: 'Control de versiones',
-        loadComponent: () =>
-          import('./pages/admin/pages/version-control/version-control.component'),
-        canActivate: [AdminGuard],
       },
       {
         path: 'branches',
         title: 'Sucursales',
         loadComponent: () =>
-          import('./pages/admin/pages/branches/branches.component'),
+          import('./sucursales/pages/branches-page/branches-page'),
         canActivate: [],
-      },
-      {
-        path: 'categories',
-        title: 'Categorias',
-        loadComponent: () =>
-          import('./pages/admin/pages/categories/categories.component'),
-        canActivate: [],
+        // sacar
       },
       {
         path: 'areas',
         title: 'Areas',
         loadComponent: () =>
-          import('./pages/admin/pages/areas/areas.component'),
+          import('./areas/pages/areas/areas.component'),
         canActivate: [AdminGuard],
+        // sacar
       },
-        {
+      {
         path: 'kpis',
         title: 'KPIS',
         loadComponent: () =>
-          import('./pages/admin/components/admin-reports-tab/admin-reports-tab.component')
-      },
-      {
-        path: 'version-history',
-        title: 'Historial de versiones',
-        loadComponent: () =>
-          import('./pages/versions-history/versions-history.component'),
-      },
-      {
-        path: 'fixed-assets',
-        title: 'Activos fijos',
-        loadComponent: () =>
-          import('./pages/admin/pages/fixed-assets/fixed-assets.component'),
+          import('./aceites/pages/admin-reports-tab/admin-reports-tab.component')
       },
     ],
   },
@@ -115,51 +76,20 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'nomina',
-    loadComponent: () => import('./pages/Nomina/nomina.component'),
-    children: [
-      {
-        path: 'constructor-de-calendarios',
-        title: 'Constructor de calendarios',
-        loadComponent: () => import('./pages/Nomina/work-shift-calendar/work-shift-calendar.component'),
-      },
-      {
-        path: 'control-de-personal',
-        title: 'Control del personal',
-        loadComponent: () => import('./pages/Nomina/staff-control/staff-control.component'),
-      },
-       {
-        path: 'historial-del-personal',
-        title: 'Historial del personal',
-        loadComponent: () => import('./pages/Nomina/historial-personal/historial-personal.component'),
-      },
-      {
-        path: '',
-        redirectTo: '/nomina/constructor-de-calendarios',
-        pathMatch: 'full',
-      },
-    ]
-  }, 
+    path: '',
+    loadChildren: () => import('./nomina/nomina.routes')
+  },
   {
-    path: 'cedis',
-    loadComponent: () => import('./pages/cedis/cedis.component'),
-    children: [
-      {
-        path: 'recoleccion',
-        title: 'Control de aceite',
-        loadComponent: () => import('./pages/cedis/recoleccion-aceite/recoleccion-aceite.component'),
-      },
-      {
-        path: 'control-aceite',
-        title: 'Control de aceite',
-        loadComponent: () => import('./pages/cedis/aceite/aceite.component'),
-      },
-      {
-        path: '',
-        redirectTo: '/cedis/recoleccion',
-        pathMatch: 'full',
-      },
-    ]
+    path: '',
+    loadChildren: () => import('./activos-fijos/activos-fijos.routes')
+  },
+  {
+    path: '',
+    loadChildren: () => import('./pagos/pagos.routes')
+  },
+  {
+    path: '',
+    loadChildren: () => import('./planeacion/planeacion.routes')
   },
   {
     path: 'auth',
@@ -167,7 +97,7 @@ export const routes: Routes = [
       {
         path: 'login',
         title: 'Login',
-        loadComponent: () => import('./auth/login/login.component'),
+        loadComponent: () => import('./auth/pages/login/login.component'),
       },
       {
         path: '',
@@ -175,60 +105,5 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
     ],
-  },
-  {
-    path: 'fixed-assets/detail/:referencia',
-    title: 'Detalle del activos fijo',
-    loadComponent: () =>
-      import('./pages/fixed-assets/pages/detail/detail.component'),
-  },
-  {
-    path: 'administracion',
-    children: [
-      { path:'',
-        redirectTo: '/administracion/compras',
-        pathMatch: 'full',
-      },
-      {
-        path: 'compras',
-        title: 'Compras',
-        loadComponent: () => import('./pages/shopping-tickets/pagos-tabs/pagos-tabs.component'),
-      }
-    ]
-  },
-  {
-    path: 'inventario',
-    loadComponent: () => import('./pages/stock/stock.component'),
-    children: [
-      { path:'',
-        redirectTo: '/inventario/captura',
-        pathMatch: 'full',
-      },
-      {
-        path: 'captura',
-        title: 'Captura de inventario',
-        loadComponent: () => import('./pages/stock/captura-inventario-diario/captura-inventario-diario.component'),
-      }
-    ]
-  },
-   {
-    path: 'planeacion',
-    loadComponent: () => import('./pages/Planeacion/Planeacion.component'),
-    children: [
-      { path:'',
-        redirectTo: '/planeacion/diccionario',
-        pathMatch: 'full',
-      },
-      {
-        path: 'diccionario',
-        title: 'Diccionario',
-        loadComponent: () => import('./pages/Planeacion/Diccionario/Diccionario.component'),
-      },
-       {
-        path: 'mermas',
-        title: 'Mermas',
-        loadComponent: () => import('./pages/Planeacion/mermas/mermas.component'),
-      }
-    ]
   },
 ];
