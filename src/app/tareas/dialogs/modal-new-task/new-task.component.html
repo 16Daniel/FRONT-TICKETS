@@ -3,6 +3,12 @@
 
   <form #form="ngForm" (ngSubmit)="enviar(form)">
 
+    <div class="avatars-container d-flex justify-content-end" *ngIf="tarea.idsResponsables?.length">
+      <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30" class="avatar-item"
+        pTooltip="{{ r.nombre }}" [bgColor]="r.color">
+      </ngx-avatars>
+    </div>
+
     <p class="fw-bold">TÍTULO</p>
     <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL TÍTULO DE LA TAREA"
       [(ngModel)]="tarea.titulo" name="titulo"
@@ -26,9 +32,9 @@
     <p></p>
 
     <p class="fw-bold mb-1">RESPONSABLES</p>
-    <p-multiSelect [options]="responsables" [(ngModel)]="tarea.idsResponsables" optionLabel="nombre" name="idsResponsables"
-      optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES" class="custom-responsable-dropdown"
-      [style]="{ width: '100%' }">
+    <p-multiSelect [options]="responsables" [(ngModel)]="tarea.idsResponsables" optionLabel="nombre"
+      name="idsResponsables" optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES"
+      class="custom-responsable-dropdown" [style]="{ width: '100%' }">
 
       <ng-template pTemplate="item" let-item>
         <div class="d-flex justify-content-between align-items-center w-100">

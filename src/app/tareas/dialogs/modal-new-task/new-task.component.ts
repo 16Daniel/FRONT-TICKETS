@@ -15,6 +15,8 @@ import { TaskResponsibleService } from '../../services/task-responsible.service'
 import { Tarea } from '../../interfaces/tarea.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { AvatarModule } from 'ngx-avatars';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-new-task',
@@ -25,7 +27,9 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
     CommonModule,
     DropdownModule,
     EisenhowerPriorityChecksComponent,
-    MultiSelectModule
+    MultiSelectModule,
+    AvatarModule,
+    TooltipModule
   ],
   templateUrl: './new-task.component.html',
   styleUrl: './new-task.component.scss'
@@ -193,5 +197,11 @@ export class NewTaskComponent implements OnInit {
 
   onSucursalesChange() {
     this.actualizarResponsables();
+  }
+
+  getResponsablesDeTarea(tarea: Tarea) {
+    return this.responsables.filter(r =>
+      tarea.idsResponsables?.includes(r.id!)
+    );
   }
 }

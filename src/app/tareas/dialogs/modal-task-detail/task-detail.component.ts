@@ -29,6 +29,7 @@ import { EstatusTarea } from '../../interfaces/estatus-tarea.model';
 import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.model';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { AvatarModule } from 'ngx-avatars';
 
 @Component({
   selector: 'app-task-detail',
@@ -46,7 +47,8 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
     EisenhowerPriorityChecksComponent,
     SubtasksBoxComponent,
     LinkifyPipe,
-    MultiSelectModule
+    MultiSelectModule,
+    AvatarModule
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -360,4 +362,9 @@ export class TaskDetailComponent implements OnInit {
   `;
   }
 
+  getResponsablesDeTarea(tarea: Tarea) {
+    return this.responsables.filter(r =>
+      tarea.idsResponsables?.includes(r.id!)
+    );
+  }
 }

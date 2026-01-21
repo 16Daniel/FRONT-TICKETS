@@ -17,6 +17,12 @@ export const routes: Routes = [
       },
       {
         path: '',
+        loadChildren: () =>
+          import('./activos-fijos/activos-fijos.routes')
+            .then(m => m.ACTIVOS_FIJOS_MAIN_ROUTES),
+      },
+      {
+        path: '',
         redirectTo: '/main/home',
         pathMatch: 'full',
       },
@@ -82,6 +88,8 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./activos-fijos/activos-fijos.routes')
+      .then(m => m.ACTIVOS_FIJOS_ROOT_ROUTES),
+
   },
   {
     path: '',

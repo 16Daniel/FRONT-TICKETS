@@ -3,12 +3,21 @@
   <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
     <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
       <div class="d-flex justify-content-between mt-3 align-items-center">
-        <div class="d-flex">
+
+        <div>
           <button class="btn btn-primary" style="margin: 2px" (click)="mostrarModalSubirImagen = true">
             <i class="bx bx-image-add bx-sm" style="color: white" pTooltip="SUBIR IMÁGEN" tooltipPosition="top"></i>
           </button>
         </div>
+
+        <div class="avatars-container d-flex" *ngIf="tarea.idsResponsables?.length">
+          <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30" class="avatar-item"
+            pTooltip="{{ r.nombre }}" [bgColor]="r.color">
+          </ngx-avatars>
+        </div>
+
       </div>
+
 
       <form #form="ngForm" (ngSubmit)="enviar(form)">
         <div class="p-3">
