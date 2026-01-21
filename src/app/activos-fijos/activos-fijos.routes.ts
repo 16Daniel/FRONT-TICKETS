@@ -1,12 +1,21 @@
 import { Routes } from '@angular/router';
 
-export const FIXED_ASSETS_ROUTES: Routes = [
+/**
+ * Rutas que viven dentro de /main
+ */
+export const ACTIVOS_FIJOS_MAIN_ROUTES: Routes = [
   {
     path: 'fixed-assets',
     title: 'Activos fijos',
     loadComponent: () =>
       import('./pages/fixed-assets/fixed-assets.component'),
   },
+];
+
+/**
+ * Rutas globales (fuera de /main)
+ */
+export const ACTIVOS_FIJOS_ROOT_ROUTES: Routes = [
   {
     path: 'fixed-assets/detail/:referencia',
     title: 'Detalle del activo fijo',
@@ -15,4 +24,7 @@ export const FIXED_ASSETS_ROUTES: Routes = [
   },
 ];
 
-export default FIXED_ASSETS_ROUTES;
+export default {
+  ACTIVOS_FIJOS_MAIN_ROUTES,
+  ACTIVOS_FIJOS_ROOT_ROUTES,
+};
