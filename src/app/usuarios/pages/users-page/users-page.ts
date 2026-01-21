@@ -17,7 +17,7 @@ import { RolesService } from '../../../roles/services/roles.service';
 import { Rol } from '../../../roles/interfaces/rol.model';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-users-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,10 +29,10 @@ import { Rol } from '../../../roles/interfaces/rol.model';
     ModalUserCreateComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './users.component.html',
+  templateUrl: './users-page.html',
 })
 
-export default class UsersComponent implements OnDestroy, OnInit {
+export default class UsersPage implements OnDestroy, OnInit {
   mostrarModalUsuario: boolean = false;
   actualizar: boolean = false;
   usuarios: Usuario[] = [];

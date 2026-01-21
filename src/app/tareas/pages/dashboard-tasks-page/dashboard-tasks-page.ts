@@ -8,8 +8,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
-import { TasksFilterComponentComponent } from '../tasks-filter-component/tasks-filter-component.component';
-import { TasksBoardComponent } from '../tasks-board/tasks-board.component';
 import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TareasService } from '../../services/tareas.service';
@@ -20,9 +18,11 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
 import { Tarea } from '../../interfaces/tarea.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { TasksFilterComponentComponent } from '../../components/tasks-filter-component/tasks-filter-component.component';
+import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.component';
 
 @Component({
-  selector: 'app-dashboard-tasks',
+  selector: 'app-dashboard-tasks-page',
   standalone: true,
   imports: [
     DragDropModule,
@@ -36,10 +36,10 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
     TasksBoardComponent
   ],
   providers: [MessageService],
-  templateUrl: './dashboard-tasks.component.html',
-  styleUrl: './dashboard-tasks.component.scss'
+  templateUrl: './dashboard-tasks-page.html',
+  styleUrl: './dashboard-tasks-page.scss'
 })
-export class DashboardTasksComponent implements OnInit {
+export class DashboardTasksPage implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
 
   sucursales: Sucursal[] = [];

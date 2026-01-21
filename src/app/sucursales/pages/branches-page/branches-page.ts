@@ -13,7 +13,7 @@ import { ModalBranchCreateComponent } from '../../dialogs/modal-branch-create/mo
 import { Sucursal } from '../../interfaces/sucursal.model';
 
 @Component({
-  selector: 'app-branches',
+  selector: 'app-branches-page',
   standalone: true,
   imports: [
     FormsModule,
@@ -25,11 +25,11 @@ import { Sucursal } from '../../interfaces/sucursal.model';
     ModalBranchCreateComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './branches.component.html',
-  styleUrl: './branches.component.scss'
+  templateUrl: './branches-page.html',
+  styleUrl: './branches-page.scss'
 })
 
-export default class BranchesComponent implements OnInit {
+export default class BranchesPage implements OnInit {
   esNuevaSucursal: boolean = false;
   mostrarModalSucursal: boolean = false;
   sucursales: Sucursal[] = [];

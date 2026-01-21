@@ -9,14 +9,14 @@ import { VersionControlService } from '../../services/version-control.service';
 import { ControlVersion } from '../../interfaces/control-version.model';
 
 @Component({
-  selector: 'app-version-control',
+  selector: 'app-version-control-page',
   standalone: true,
   imports: [FormsModule, EditorModule, CommonModule, ToastModule],
   providers: [MessageService],
-  templateUrl: './version-control.component.html',
-  styleUrl: './version-control.component.scss',
+  templateUrl: './version-control-page.html',
+  styleUrl: './version-control-page.scss',
 })
-export default class VersionControlComponent {
+export default class VersionControlPage {
   controlVersion: ControlVersion = new ControlVersion();
 
   constructor(

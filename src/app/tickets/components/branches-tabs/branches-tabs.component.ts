@@ -9,13 +9,13 @@ import { BranchesSysTabComponent } from '../../../mantenimientos/components/bran
 import { BranchesAudioVideoTabComponent } from '../../../mantenimientos/components/branches-audio-video-tab/branches-audio-video-tab.component';
 import { BranchesMaintenanceTabComponent } from '../../../mantenimientos/components/branches-maintenance-tab/branches-maintenance-tab.component';
 import { BranchesOilTabComponent } from '../../../cedis/components/branches-oil-tab/branches-oil-tab.component';
-import { EisenhowerMatrixComponent } from '../../../tareas/components/eisenhower-matrix.component/eisenhower-matrix.component';
-import { DashboardTasksComponent } from '../../../tareas/components/dashboard-tasks/dashboard-tasks.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
+import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 
 @Component({
   selector: 'app-branches-tabs',
@@ -30,8 +30,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
     BranchesMaintenanceTabComponent,
     BranchesOilTabComponent,
     // DashboardTasksComponent,
-    EisenhowerMatrixComponent,
-    DashboardTasksComponent
+    EisenhowerMatrixPage,
+    DashboardTasksPage
   ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',

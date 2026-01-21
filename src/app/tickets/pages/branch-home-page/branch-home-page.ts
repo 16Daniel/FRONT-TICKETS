@@ -9,7 +9,7 @@ import { BranchesTabsComponent } from '../../components/branches-tabs/branches-t
 import { NotificacionNuevoMensajeChatComponent } from '../../components/notificacion-nuevo-mensaje-chat/notificacion-nuevo-mensaje-chat.component';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-branch-home-page',
   standalone: true,
   imports: [
     DialogModule,
@@ -17,12 +17,11 @@ import { NotificacionNuevoMensajeChatComponent } from '../../components/notifica
     ConfirmDialogModule,
     CommonModule,
     BranchesTabsComponent,
-    NotificacionNuevoMensajeChatComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './home.component.html',
+  templateUrl: './branch-home-page.html',
 })
-export default class HomeComponent {
+export default class BranchHomePage {
   esEspectadorActivo: boolean = false;
 
   constructor() { }

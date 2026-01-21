@@ -51,8 +51,8 @@
 
     <br>
 
-    <app-dashboard-tasks *ngIf="!verEisenhower && sucursal.id"></app-dashboard-tasks>
-    <app-eisenhower-matrix *ngIf="verEisenhower && sucursal.id"></app-eisenhower-matrix>
+    <app-dashboard-tasks-page *ngIf="!verEisenhower && sucursal.id"></app-dashboard-tasks-page>
+    <app-eisenhower-matrix-page *ngIf="verEisenhower && sucursal.id"></app-eisenhower-matrix-page>
 
   </p-tabPanel>
 

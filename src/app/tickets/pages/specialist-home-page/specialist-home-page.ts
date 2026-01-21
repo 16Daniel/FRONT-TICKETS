@@ -23,7 +23,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 
 @Component({
-  selector: 'app-specialist-home',
+  selector: 'app-specialist-home-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -35,11 +35,11 @@ import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
     ModalTicketChatComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './specialist-home.component.html',
-  styleUrl: './specialist-home.component.scss'
+  templateUrl: './specialist-home-page.html',
+  styleUrl: './specialist-home-page.scss'
 })
 
-export default class SpecialistHomeComponent implements OnInit, OnChanges {
+export default class SpecialistHomePage implements OnInit, OnChanges {
   usuario: Usuario;
   tickets: Ticket[] = [];
   ticketSeleccionado: Ticket = new Ticket;

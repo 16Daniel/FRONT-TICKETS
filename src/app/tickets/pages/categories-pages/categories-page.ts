@@ -14,7 +14,7 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { CategoriesService } from '../../services/categories.service';
 
 @Component({
-  selector: 'app-categories',
+  selector: 'app-categories-page',
   standalone: true,
   imports: [
     FormsModule,
@@ -25,10 +25,11 @@ import { CategoriesService } from '../../services/categories.service';
     ConfirmDialogModule,
     ModalCategoryCreateComponent
   ],
-  providers: [ConfirmationService, MessageService], templateUrl: './categories.component.html',
-  styleUrl: './categories.component.scss'
+  providers: [ConfirmationService, MessageService],
+  templateUrl: './categories-page.html',
+  styleUrl: './categories-page.scss'
 })
-export default class CategoriesComponent {
+export default class CategoriesPage {
   esNuevaCategoria: boolean = false;
   mostrarModalCategoria: boolean = false;
   categorias: Categoria[] = [];

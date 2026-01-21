@@ -6,7 +6,6 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from "primeng/toast";
 
-import { TaskEisenhowerCard } from "../task-eisenhower-card/task-eisenhower-card";
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';
@@ -19,16 +18,17 @@ import { EstatusTarea } from '../../interfaces/estatus-tarea.model';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-eisenhower-card';
 
 @Component({
-  selector: 'app-eisenhower-matrix',
+  selector: 'app-eisenhower-matrix-page',
   standalone: true,
   imports: [CommonModule, DragDropModule, TaskEisenhowerCard, DropdownModule, FormsModule, TaskDetailComponent, ToastModule],
   providers: [MessageService],
-  templateUrl: './eisenhower-matrix.component.html',
-  styleUrl: './eisenhower-matrix.component.scss',
+  templateUrl: './eisenhower-matrix-page.html',
+  styleUrl: './eisenhower-matrix-page.scss',
 })
-export class EisenhowerMatrixComponent implements OnInit {
+export class EisenhowerMatrixPage implements OnInit {
   tc1: Tarea[] = [];
   tc2: Tarea[] = [];
   tc3: Tarea[] = [];
@@ -66,10 +66,9 @@ export class EisenhowerMatrixComponent implements OnInit {
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
   }
 
-  ngOnInit(): void
-  {
-     this.initData()
-     this.obtenerSucursales();
+  ngOnInit(): void {
+    this.initData()
+    this.obtenerSucursales();
 
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetasTodas = et;
@@ -82,7 +81,7 @@ export class EisenhowerMatrixComponent implements OnInit {
     });
   }
 
-   obtenerSucursales() {
+  obtenerSucursales() {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
@@ -167,7 +166,7 @@ export class EisenhowerMatrixComponent implements OnInit {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-    onSucursalChange() {
+  onSucursalChange() {
     this.initData();
     this.filtrarEtiquetas();
     this.filtrarResponsables();
@@ -175,7 +174,7 @@ export class EisenhowerMatrixComponent implements OnInit {
   }
 
   onEtiquetaChange() {
-debugger
+    debugger
     if (!this.etiquetaSeleccionada || this.etiquetaSeleccionada === '') {
       this.initData();
       return;
@@ -185,10 +184,10 @@ debugger
       t.idEtiqueta && t.idEtiqueta === this.etiquetaSeleccionada
     );
 
-      this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
-      this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
-      this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
-      this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
+    this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
+    this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
+    this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
+    this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
     this.cdr.detectChanges();
   }
 
@@ -224,10 +223,10 @@ debugger
       t.idsResponsables.includes(this.responsableSeleccionado)
     );
 
-     this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
-     this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
-     this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
-     this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
+    this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
+    this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
+    this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
+    this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
 
     this.cdr.detectChanges();
   }

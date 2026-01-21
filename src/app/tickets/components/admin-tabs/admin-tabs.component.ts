@@ -9,11 +9,11 @@ import { AdminSysTabComponent } from '../../../mantenimientos/components/admin-s
 import { AdminAudioVideoTabComponent } from '../../../mantenimientos/components/admin-audio-video-tab/admin-audio-video-tab.component';
 import { AdminMaintenanceTabComponent } from '../../../mantenimientos/components/admin-maintenance-tab/admin-maintenance-tab.component';
 import AdminReportsTabComponent from '../../../cedis/pages/admin-reports-tab/admin-reports-tab.component';
-import { EisenhowerMatrixComponent } from '../../../tareas/components/eisenhower-matrix.component/eisenhower-matrix.component';
-import { DashboardTasksComponent } from '../../../tareas/components/dashboard-tasks/dashboard-tasks.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../models/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
+import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 
 @Component({
   selector: 'app-admin-tabs',
@@ -26,8 +26,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
     AdminAudioVideoTabComponent,
     AdminMaintenanceTabComponent,
     AdminReportsTabComponent,
-    EisenhowerMatrixComponent,
-    DashboardTasksComponent,
+    EisenhowerMatrixPage,
+    DashboardTasksPage,
     DropdownModule
   ],
   templateUrl: './admin-tabs.component.html',

@@ -8,29 +8,35 @@ export const routes: Routes = [
     loadComponent: () => import('./shared/layout/main/main.component'),
     // canActivateChild:[authGuard],
     children: [
+      // {
+      //   path: 'home',
+      //   title: 'Inicio',
+      //   loadComponent: () => import('./tickets/pages/branch-home-page/branch-home-page'),
+      //   canActivate: [HomeGuard],
+      // },
+      // {
+      //   path: 'home-s',
+      //   title: 'Inicio',
+      //   loadComponent: () => import('./tickets/pages/analyst-home-page/analyst-home-page'),
+      //   canActivate: [HomeGuard],
+      // },
+      // {
+      //   path: 'home-a',
+      //   title: 'Inicio',
+      //   loadComponent: () => import('./tickets/pages/admin-home-page/admin-home-page'),
+      //   canActivate: [HomeGuard],
+      // },
+      // {
+      //   path: 'home-specialist',
+      //   title: 'Inicio',
+      //   loadComponent: () => import('./tickets/pages/specialist-home-page/specialist-home-page'),
+      //   canActivate: [HomeGuard],
+      // },
       {
-        path: 'home',
-        title: 'Inicio',
-        loadComponent: () => import('./tickets/pages/home/home.component'),
-        canActivate: [HomeGuard],
-      },
-      {
-        path: 'home-s',
-        title: 'Inicio',
-        loadComponent: () => import('./tickets/pages/analyst-home/analyst-home.component'),
-        canActivate: [HomeGuard],
-      },
-      {
-        path: 'home-a',
-        title: 'Inicio',
-        loadComponent: () => import('./tickets/pages/admin-home/admin-home.component'),
-        canActivate: [HomeGuard],
-      },
-      {
-        path: 'home-specialist',
-        title: 'Inicio',
-        loadComponent: () => import('./tickets/pages/specialist-home/specialist-home.component'),
-        canActivate: [HomeGuard],
+        path: '',
+        loadChildren: () =>
+          import('./tickets/tickets.routes')
+            //.then(m => m.TICKETS_ROUTES),
       },
       {
         path: '',
@@ -45,7 +51,7 @@ export const routes: Routes = [
       {
         path: 'users',
         title: 'Usuarios',
-        loadComponent: () => import('./usuarios/pages/users/users.component'),
+        loadComponent: () => import('./usuarios/pages/users-page/users-page'),
       },
       {
         path: 'calendar-builder',
@@ -65,21 +71,21 @@ export const routes: Routes = [
         path: 'version-control',
         title: 'Control de versiones',
         loadComponent: () =>
-          import('./versiones/pages/version-control/version-control.component'),
+          import('./versiones/pages/version-control-page/version-control-page'),
         canActivate: [AdminGuard],
       },
       {
         path: 'branches',
         title: 'Sucursales',
         loadComponent: () =>
-          import('./sucursales/pages/branches/branches.component'),
+          import('./sucursales/pages/branches-page/branches-page'),
         canActivate: [],
       },
       {
         path: 'categories',
         title: 'Categorias',
         loadComponent: () =>
-          import('./tickets/pages/categories/categories.component'),
+          import('./tickets/pages/categories-pages/categories-page'),
         canActivate: [],
       },
       {
@@ -99,7 +105,7 @@ export const routes: Routes = [
         path: 'version-history',
         title: 'Historial de versiones',
         loadComponent: () =>
-          import('./versiones/pages/versions-history/versions-history.component'),
+          import('./versiones/pages/versions-history-page/versions-history.component'),
       },
       {
         path: 'fixed-assets',
