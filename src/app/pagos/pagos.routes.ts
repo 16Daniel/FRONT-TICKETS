@@ -13,7 +13,7 @@ export const PAGOS_ROUTES: Routes = [
         path: 'compras',
         title: 'Compras',
         loadComponent: () =>
-          import('./pages/pagos-tabs/pagos-tabs.component'),
+          import('./layout/pagos-tabs/pagos-tabs.component'),
       },
     ],
   },

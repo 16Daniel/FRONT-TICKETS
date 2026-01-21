@@ -72,7 +72,7 @@ export const routes: Routes = [
         path: 'kpis',
         title: 'KPIS',
         loadComponent: () =>
-          import('./aceites/pages/admin-reports-tab/admin-reports-tab.component')
+          import('./aceites/layout/admin-reports-tab/admin-reports-tab.component')
       },
     ],
   },
