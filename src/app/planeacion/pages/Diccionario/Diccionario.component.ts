@@ -8,8 +8,8 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { ModalAgregarMedidaComponent } from '../../dialog/Modal-agregar-medida/Modal-agregar-medida.component';
-import { PlaneacionService } from '../../../cedis/services/Planeacion.service';
 import { ITproducto } from '../../interfaces/Planecion';
+import { PlaneacionService } from '../../services/Planeacion.service';
 
 @Component({
   selector: 'app-diccionario',

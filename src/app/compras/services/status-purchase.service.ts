@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { collection, collectionData, Firestore, orderBy, query } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EstatusCompra } from '../../pagos/interfaces/estatus-compras.model';
+import { EstatusCompra } from '../interfaces/estatus-compras.model';
 
 @Injectable({
   providedIn: 'root'

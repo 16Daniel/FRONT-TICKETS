@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 import { BranchesSysTabComponent } from '../../../mantenimientos/components/branches-sys-tab/branches-sys-tab.component';
 import { BranchesAudioVideoTabComponent } from '../../../mantenimientos/components/branches-audio-video-tab/branches-audio-video-tab.component';
 import { BranchesMaintenanceTabComponent } from '../../../mantenimientos/components/branches-maintenance-tab/branches-maintenance-tab.component';
-import { BranchesOilTabComponent } from '../../../cedis/components/branches-oil-tab/branches-oil-tab.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
@@ -16,6 +15,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
+import { BranchesOilTabComponent } from '../../../aceite/components/branches-oil-tab/branches-oil-tab.component';
 
 @Component({
   selector: 'app-branches-tabs',

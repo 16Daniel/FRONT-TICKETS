@@ -11,9 +11,9 @@ import * as XLSX from 'xlsx';
 import { environment } from '../../../../environments/environments';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { PlaneacionService } from '../../../cedis/services/Planeacion.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Merma } from '../../../cedis/interfaces/Merma';
+import { Merma } from '../../interfaces/Merma';
+import { PlaneacionService } from '../../services/Planeacion.service';
 
 @Component({
   selector: 'app-mermas',

@@ -17,8 +17,8 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
-import { EstatusCompra } from '../../../pagos/interfaces/estatus-compras.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 
 @Component({
   selector: 'app-modal-purshases',

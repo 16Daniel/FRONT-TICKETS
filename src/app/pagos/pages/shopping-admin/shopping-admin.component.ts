@@ -12,11 +12,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import * as XLSX from 'xlsx';
 
-import { ProveedoresComponent } from "./dialogs/proveedores/proveedores.component";
-import { AgregarCompraComponent } from "./dialogs/agregar-compra/agregar-compra.component";
-import { GraficaAdminComprasComponent } from "./components/grafica-admin-compras/grafica-admin-compras.component";
 import { environment } from '../../../../environments/environments';
-import { AdminComprasTablaComponent } from "./components/admin-compras-tabla/admin-compras-tabla.component";
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/models/area.model';
 import { ShoppingService } from '../../services/shopping.service';
@@ -25,6 +21,10 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { ProveedoresComponent } from '../../dialogs/proveedores/proveedores.component';
+import { AgregarCompraComponent } from '../../dialogs/agregar-compra/agregar-compra.component';
+import { GraficaAdminComprasComponent } from '../../components/grafica-admin-compras/grafica-admin-compras.component';
+import { AdminComprasTablaComponent } from '../../components/admin-compras-tabla/admin-compras-tabla.component';
 
 type NewType = AdministracionCompra;
 

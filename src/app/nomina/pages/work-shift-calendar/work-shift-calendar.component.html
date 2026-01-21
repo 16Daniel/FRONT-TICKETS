@@ -1,137 +1,120 @@
 <div class="p-3">
 
-    <div class="row mt-3 mb-3" #divform>
+  <div class="row mt-3 mb-3" #divform>
     <div class="col-3">
-      <p-dropdown 
-    [options]="ubicaciones"
-    [(ngModel)]="ubicacionSel"
-    optionLabel="nombre"
-    [filter]="true"
-    filterBy="nombre" 
-    [showClear]="false"
-    placeholder="SELECCIONAR UBICACIÓN"
-    [style]="{'width':'100%'}"
-    (onChange)="CambioDeUbicacion()"
-    >
+      <p-dropdown [options]="ubicaciones" [(ngModel)]="ubicacionSel" optionLabel="nombre" [filter]="true"
+        filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR UBICACIÓN" [style]="{'width':'100%'}"
+        (onChange)="CambioDeUbicacion()">
         <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.nombre }}</div>
+          </div>
         </ng-template>
         <ng-template let-item pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ item.nombre }}</div>
-            </div>
+          <div class="flex align-items-center gap-2">
+            <div>{{ item.nombre }}</div>
+          </div>
         </ng-template>
-</p-dropdown>
-
-    </div>
-       <div class="col-3">
-      <p-dropdown 
-    [options]="departamentos"
-    [(ngModel)]="departamentoSel"
-    optionLabel="nombre"
-    [filter]="true"
-    filterBy="nombre" 
-    [showClear]="false"
-    placeholder="PUESTO"
-    [style]="{'width':'100%'}"
-    (onChange)="filtrarUsuarios()"
-     [disabled]="ubicacionSel == undefined"
-    >
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
-        </ng-template>
-        <ng-template let-item pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ item.nombre }}</div>
-            </div>
-        </ng-template>
-</p-dropdown>
+      </p-dropdown>
 
     </div>
     <div class="col-3">
-      <p-dropdown 
-    [options]="empleadosFiltro"
-    [(ngModel)]="empleadosel"
-    optionLabel="nombre"
-    [filter]="true"
-    filterBy="nombre" 
-    [showClear]="false"
-    placeholder="SELECCIONAR EMPLEADO"
-    [style]="{'width':'100%'}"
-    (onChange)="cambioDeEmpleado()"
-    [disabled]="ubicacionSel == undefined"
-    >
+      <p-dropdown [options]="departamentos" [(ngModel)]="departamentoSel" optionLabel="nombre" [filter]="true"
+        filterBy="nombre" [showClear]="false" placeholder="PUESTO" [style]="{'width':'100%'}"
+        (onChange)="filtrarUsuarios()" [disabled]="ubicacionSel == undefined">
         <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-                <div>{{ selectedOption.nombre }}</div>
-            </div>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.nombre }}</div>
+          </div>
         </ng-template>
         <ng-template let-item pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ item.nombre }}</div>
-            </div>
+          <div class="flex align-items-center gap-2">
+            <div>{{ item.nombre }}</div>
+          </div>
         </ng-template>
-</p-dropdown>
+      </p-dropdown>
 
     </div>
     <div class="col-3">
-        <button class="btn bg-p-b p-3 rounded-3" (click)="confirmarGuardarTurnos()" [disabled]="empleadosel == undefined"> <i class='bx bx-save' ></i> GUARDAR</button>
-        &nbsp;
-        <button class="btn bg-p-b p-3 rounded-3" (click)="clearAllEvents()"><i class='bx bx-brush-alt'></i> LIMPIAR</button>
+      <p-dropdown [options]="empleadosFiltro" [(ngModel)]="empleadosel" optionLabel="nombre" [filter]="true"
+        filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR EMPLEADO" [style]="{'width':'100%'}"
+        (onChange)="cambioDeEmpleado()" [disabled]="ubicacionSel == undefined">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.nombre }}</div>
+          </div>
+        </ng-template>
+        <ng-template let-item pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>{{ item.nombre }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+    </div>
+    <div class="col-3">
+      <button class="btn bg-p-b p-3 rounded-3" (click)="confirmarGuardarTurnos()" [disabled]="empleadosel == undefined">
+        <i class='bx bx-save'></i> GUARDAR</button>
+      &nbsp;
+      <button class="btn bg-p-b p-3 rounded-3" (click)="clearAllEvents()"><i class='bx bx-brush-alt'></i>
+        LIMPIAR</button>
     </div>
   </div>
 
-<div class="d-flex justify-content-center p-3" *ngIf="loading">
-     <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
-</div>
+  <div class="d-flex justify-content-center p-3" *ngIf="loading">
+    <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+  </div>
 
-<div class="parent">
+  <div class="parent">
 
-<div class="div1" style="overflow: auto;" #divEventos>
-  <div class="bg-white shadow-sm rounded-3 p-3">
+    <div class="div1" style="overflow: auto;" #divEventos>
+      <div class="bg-white shadow-sm rounded-3 p-3">
 
-     <div class="m-3">
-      <p class="text-center fw-bold"> <img width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;CARGAR SIMPLEX</p>
-          <p> <input id="excelFile" type="file" class="form-control" (change)="onFileChange($event)" accept=".xlsx, .xls" />    </p>  
+        <div class="m-3">
+          <p class="text-center fw-bold"> <img width="24" height="24"
+              src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019" />&nbsp;CARGAR
+            SIMPLEX</p>
+          <p> <input id="excelFile" type="file" class="form-control" (change)="onFileChange($event)"
+              accept=".xlsx, .xls" /> </p>
         </div>
-    <h3>
-      <p-colorPicker 
-    [(ngModel)]="colorevento" />&nbsp;
-      TURNOS&nbsp;<button class="btn btn-light" style="background-color: #ddd;" (click)="abrirModalturnos()"><i class='bx bx-cog bx-sm'></i></button>
-    </h3>
+        <h3>
+          <p-colorPicker [(ngModel)]="colorevento" />&nbsp;
+          TURNOS&nbsp;<button class="btn btn-light" style="background-color: #ddd;" (click)="abrirModalturnos()"><i
+              class='bx bx-cog bx-sm'></i></button>
+        </h3>
 
-    <div id="external-events">
-      <div *ngFor="let event of externalEvents" [ngStyle]="{'background-color':colorevento,'color':getLuminance(colorevento) > 0.6 ? '#000000' : '#FFFFFF'}"
-           class="external-event p-1 m-1"
-           [attr.data-id]="event.id">
-        {{event.title}}
+        <div id="external-events">
+          <div *ngFor="let event of externalEvents"
+            [ngStyle]="{'background-color':colorevento,'color':getLuminance(colorevento) > 0.6 ? '#000000' : '#FFFFFF'}"
+            class="external-event p-1 m-1" [attr.data-id]="event.id">
+            {{event.title}}
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="div2 ps-3" style="overflow: auto;" #divCalendar>
+      <full-calendar #calendar [options]="calendarOptions">
+        <ng-template #eventContent let-arg>
+          <div class="p-1" *ngIf="!arg.event.extendedProps.plantilla">
+            <div class="p-0 text-event fw-bold"><i class='bx bx-x-circle'
+                (click)="removeEventById(arg.event.id)"></i>&nbsp;{{arg.event.title}}</div>
+            <p class="mt-1 mb-1 text-event" style="font-size: small;" *ngIf="!arg.event.extendedProps.plantilla">
+              {{arg.event.extendedProps.nombreEmpleado}}</p>
+          </div>
+          <div class="p-1" *ngIf="arg.event.extendedProps.plantilla">
+            <div class="p-0 text-event fw-bold text-danger" *ngIf="arg.event.extendedProps.idPuesto == 4003">
+              {{arg.event.title}}</div>
+            <div class="p-0 text-event fw-bold text-primary" *ngIf="arg.event.extendedProps.idPuesto == 4005">
+              {{arg.event.title}}</div>
+          </div>
+        </ng-template>
+      </full-calendar>
+    </div>
+
   </div>
-</div>
-
-<div class="div2 ps-3" style="overflow: auto;" #divCalendar>
-   <full-calendar #calendar [options]="calendarOptions">
-    <ng-template #eventContent let-arg>
-      <div class="p-1" *ngIf="!arg.event.extendedProps.plantilla">
-        <div class="p-0 text-event fw-bold"><i class='bx bx-x-circle' (click)="removeEventById(arg.event.id)"></i>&nbsp;{{arg.event.title}}</div>
-        <p class="mt-1 mb-1 text-event" style="font-size: small;" *ngIf="!arg.event.extendedProps.plantilla">{{arg.event.extendedProps.nombreEmpleado}}</p>
-      </div>
-      <div class="p-1" *ngIf="arg.event.extendedProps.plantilla">
-        <div class="p-0 text-event fw-bold text-danger" *ngIf="arg.event.extendedProps.idPuesto == 4003">{{arg.event.title}}</div>
-        <div class="p-0 text-event fw-bold text-primary" *ngIf="arg.event.extendedProps.idPuesto == 4005">{{arg.event.title}}</div>
-      </div>
-    </ng-template>
-   </full-calendar>
-</div>
 
 </div>
-
-</div> 
 
 <app-turnos [mostrarModalTurnos]="mostrarModalTurnos" (closeEvent)="mostrarModalTurnos = false"></app-turnos>
 
@@ -139,7 +122,7 @@
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
   [showTransformOptions]="'translateX(100%)'"></p-toast>
 
-    <p-confirmDialog>
+<p-confirmDialog>
   <ng-template pTemplate="message" let-message>
     <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
       <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>

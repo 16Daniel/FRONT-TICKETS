@@ -8,12 +8,12 @@ import { Subscription } from 'rxjs';
 import { AdminSysTabComponent } from '../../../mantenimientos/components/admin-sys-tab/admin-sys-tab.component';
 import { AdminAudioVideoTabComponent } from '../../../mantenimientos/components/admin-audio-video-tab/admin-audio-video-tab.component';
 import { AdminMaintenanceTabComponent } from '../../../mantenimientos/components/admin-maintenance-tab/admin-maintenance-tab.component';
-import AdminReportsTabComponent from '../../../cedis/pages/admin-reports-tab/admin-reports-tab.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../models/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
+import AdminReportsTabComponent from '../../../aceite/pages/admin-reports-tab/admin-reports-tab.component';
 
 @Component({
   selector: 'app-admin-tabs',

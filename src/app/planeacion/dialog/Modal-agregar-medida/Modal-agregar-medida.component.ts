@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { InputSwitchModule } from 'primeng/inputswitch';
 
-import { PlaneacionService } from '../../../cedis/services/Planeacion.service';
 import { ITproducto } from '../../interfaces/Planecion';
+import { PlaneacionService } from '../../services/Planeacion.service';
 
 @Component({
   selector: 'app-modal-agregar-medida',

@@ -15,8 +15,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import * as XLSX from 'xlsx';
 import { TurnosComponent } from '../../dialogs/Turnos/Turnos.component';
 import { NominaService } from '../../services/nomina.service';
-import { ColorRandomService } from '../../../shared/services/ColorRandom.service';
 import { EmpleadoNomina, GuardarTurnoRequest, PuestoNomina, TurnodbNomina, UbicacionNomina } from '../../interfaces/Nomina';
+import { ColorRandomService } from '../../../mantenimientos/services/ColorRandom.service';
 
 @Component({
   selector: 'app-work-shift-calendar',
