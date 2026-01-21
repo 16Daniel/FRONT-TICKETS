@@ -13,7 +13,7 @@ import { Ticket } from '../../models/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
-import AdminReportsTabComponent from '../../../aceites/pages/admin-reports-tab/admin-reports-tab.component';
+import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/admin-reports-tab.component';
 
 @Component({
   selector: 'app-admin-tabs',
