@@ -1,7 +1,11 @@
 import { Routes } from '@angular/router';
-import { AdminGuard } from './shared/guards/admin.guard';
 
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/main/home-a',
+    pathMatch: 'full',
+  },
   {
     path: 'main',
     loadComponent: () => import('./shared/layout/main/main.component'),
@@ -13,73 +17,41 @@ export const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('./versiones/versiones.routes')
-        // sacar
       },
       {
         path: '',
-        loadChildren: () =>
-          import('./activos-fijos/activos-fijos.routes')
-            .then(m => m.ACTIVOS_FIJOS_MAIN_ROUTES),
+        loadChildren: () => import('./activos-fijos/activos-fijos.routes').then(m => m.ACTIVOS_FIJOS_MAIN_ROUTES),
+      },
+      {
+        path: '',
+        loadChildren: () => import('./mantenimientos/mantenimientos.routes')
+      },
+      {
+        path: '',
+        loadChildren: () => import('./roles/roles.routes'),
+      },
+      {
+        path: '',
+        loadChildren: () => import('./usuarios/usuarios.routes'),
+      },
+      {
+        path: '',
+        loadChildren: () => import('./sucursales/sucursales.routes'),
+      },
+      {
+        path: '',
+        loadChildren: () => import('./areas/areas.routes'),
+      },
+      {
+        path: '',
+        loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_MAIN_ROUTES),
       },
       {
         path: '',
         redirectTo: '/main/home',
         pathMatch: 'full',
       },
-      {
-        path: 'roles',
-        title: 'Roles de usuarios',
-        loadComponent: () => import('./roles/pages/roles/roles.component'),
-        // sacar
-      },
-      {
-        path: 'users',
-        title: 'Usuarios',
-        loadComponent: () => import('./usuarios/pages/users-page/users-page'),
-        // sacar
-      },
-      {
-        path: 'calendar-builder',
-        title: 'Constructor de calendarios',
-        loadComponent: () =>
-          import('./mantenimientos/pages/calendar-builder/calendar-builder.component'),
-      },
-      {
-        path: 'branch-visit-schedule',
-        title: 'Visitas programadas',
-        loadComponent: () =>
-          import(
-            './mantenimientos/pages/branch-visit-schedule/branch-visit-schedule.component'
-          ),
-      },
-      {
-        path: 'branches',
-        title: 'Sucursales',
-        loadComponent: () =>
-          import('./sucursales/pages/branches-page/branches-page'),
-        canActivate: [],
-        // sacar
-      },
-      {
-        path: 'areas',
-        title: 'Areas',
-        loadComponent: () =>
-          import('./areas/pages/areas/areas.component'),
-        canActivate: [AdminGuard],
-        // sacar
-      },
-      {
-        path: 'kpis',
-        title: 'KPIS',
-        loadComponent: () =>
-          import('./aceites/layout/admin-reports-tab/admin-reports-tab.component')
-      },
     ],
-  },
-  {
-    path: '',
-    redirectTo: '/main',
-    pathMatch: 'full',
   },
   {
     path: '',
@@ -87,9 +59,11 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./activos-fijos/activos-fijos.routes')
-      .then(m => m.ACTIVOS_FIJOS_ROOT_ROUTES),
-
+    loadChildren: () => import('./activos-fijos/activos-fijos.routes').then(m => m.ACTIVOS_FIJOS_ROOT_ROUTES),
+  },
+  {
+    path: '',
+    loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_ROOT_ROUTES),
   },
   {
     path: '',
@@ -100,18 +74,11 @@ export const routes: Routes = [
     loadChildren: () => import('./planeacion/planeacion.routes')
   },
   {
-    path: 'auth',
-    children: [
-      {
-        path: 'login',
-        title: 'Login',
-        loadComponent: () => import('./auth/pages/login/login.component'),
-      },
-      {
-        path: '',
-        redirectTo: '/auth/login',
-        pathMatch: 'full',
-      },
-    ],
+    path: '',
+    loadChildren: () => import('./auth/auth.routes'),
+  },
+  {
+    path: '**',
+    redirectTo: '/main/home-a',
   },
 ];

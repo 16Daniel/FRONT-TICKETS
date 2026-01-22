@@ -1,9 +1,30 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-export const ACEITES_ROUTES: Routes = [
+/**
+ * Rutas que viven dentro de /main
+ * Ej:
+ * /main/kpis
+ */
+export const ACEITES_MAIN_ROUTES: Routes = [
+  {
+    path: 'kpis',
+    title: 'KPIS',
+    loadComponent: () =>
+      import('./layout/admin-reports-tab/admin-reports-tab.component'),
+  },
+];
+
+/**
+ * Rutas globales (fuera de /main)
+ * Ej:
+ * /cedis
+ * /inventario
+ */
+export const ACEITES_ROOT_ROUTES: Routes = [
   {
     path: 'cedis',
-    loadComponent: () => import('./pages/cedis/cedis.component'),
+    loadComponent: () =>
+      import('./pages/cedis/cedis.component'),
     children: [
       {
         path: '',
@@ -22,7 +43,7 @@ export const ACEITES_ROUTES: Routes = [
         loadComponent: () =>
           import('./pages/aceite/aceite.component'),
       },
-    ]
+    ],
   },
   {
     path: 'inventario',
@@ -36,10 +57,13 @@ export const ACEITES_ROUTES: Routes = [
         path: 'captura',
         title: 'Captura de inventario',
         loadComponent: () =>
-          import(
-            './pages/captura-inventario-diario/captura-inventario-diario.component'
-          ),
-      }
-    ]
-  }
+          import('./pages/captura-inventario-diario/captura-inventario-diario.component'),
+      },
+    ],
+  },
 ];
+
+export default {
+  ACEITES_MAIN_ROUTES,
+  ACEITES_ROOT_ROUTES,
+};
