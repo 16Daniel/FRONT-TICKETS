@@ -16,7 +16,7 @@ import { PriorityTicketsAccordionComponent } from '../../../tickets/components/p
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.model';

@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { FixedAssetsService } from '../../services/fixed-assets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

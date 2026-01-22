@@ -13,7 +13,7 @@ import { AreasService } from '../../services/areas.service';
 import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-area-create.component';
 
 @Component({
-  selector: 'app-areas',
+  selector: 'app-areas-page',
   standalone: true,
   imports: [
     FormsModule,
@@ -25,11 +25,11 @@ import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-
     ModalAreaCreateComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './areas.component.html',
-  styleUrl: './areas.component.scss'
+  templateUrl: './areas-page.component.html',
+  styleUrl: './areas-page.component.scss'
 })
 
-export default class AreasComponent implements OnDestroy {
+export default class AreasPageComponent implements OnDestroy {
 
   esNuevaArea: boolean = false;
   mostrarModalArea: boolean = false;

@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 import { GraficaGeneralTicketsComponent } from '../../../tickets/components/grafica-general-tickets/grafica-general-tickets.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Categoria } from '../../../tickets/models/categoria.mdoel';
 import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
 import { AceiteService } from '../../services/aceite.service';

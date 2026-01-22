@@ -5,7 +5,7 @@ export const USUARIOS_MAIN_ROUTES: Routes = [
     path: 'users',
     title: 'Usuarios',
     loadComponent: () =>
-      import('./pages/users-page/users-page'),
+      import('./pages/users-page/users-page.component'),
   },
 ];
 

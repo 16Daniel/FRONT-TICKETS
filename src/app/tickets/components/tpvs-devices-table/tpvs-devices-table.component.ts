@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { StatusTpvsDevicesService } from '../../../activos-fijos/services/status-tpvs-devices.service';
 import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos/dialogs/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';

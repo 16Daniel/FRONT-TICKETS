@@ -15,7 +15,7 @@ import { EditorModule } from 'primeng/editor';
 import Swal from 'sweetalert2';
 
 import { Ticket } from '../../../tickets/models/ticket.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Categoria } from '../../../tickets/models/categoria.mdoel';
 import { PrioridadTicket } from '../../../tickets/models/prioridad-ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';

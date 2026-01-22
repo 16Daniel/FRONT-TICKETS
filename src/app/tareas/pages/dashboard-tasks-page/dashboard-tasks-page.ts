@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
 import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';

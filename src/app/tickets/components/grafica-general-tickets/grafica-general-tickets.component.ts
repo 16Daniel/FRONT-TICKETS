@@ -6,7 +6,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { TagModule } from 'primeng/tag';
 
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Categoria } from '../../models/categoria.mdoel';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { Ticket } from '../../models/ticket.model';

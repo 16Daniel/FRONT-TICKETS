@@ -15,7 +15,7 @@ import { ModalMaintenanceAvHistoryComponent } from '../../dialogs/audio-video/mo
 import { ModalMaintenanceAvCheckComponent } from '../../dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
 import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';

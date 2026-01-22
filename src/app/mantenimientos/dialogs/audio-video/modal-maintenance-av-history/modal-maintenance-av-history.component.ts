@@ -7,7 +7,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 
 import { BranchMaintenanceTableAvComponent } from '../../../components/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.model';

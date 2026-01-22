@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { VersionUsuarioService } from '../../../versiones/services/version-usuario.service';
 import { VersionControlService } from '../../../versiones/services/version-control.service';
 import { ControlVersion } from '../../../versiones/interfaces/control-version.model';

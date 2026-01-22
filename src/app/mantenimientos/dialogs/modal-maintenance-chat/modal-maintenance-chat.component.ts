@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';

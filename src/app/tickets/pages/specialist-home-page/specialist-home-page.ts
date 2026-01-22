@@ -9,7 +9,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalValidateTicketComponent } from '../../../tickets/dialogs/modal-validate-ticket/modal-validate-ticket.component';
 import { ModalTicketChatComponent } from '../../../tickets/dialogs/modal-ticket-chat/modal-ticket-chat.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';

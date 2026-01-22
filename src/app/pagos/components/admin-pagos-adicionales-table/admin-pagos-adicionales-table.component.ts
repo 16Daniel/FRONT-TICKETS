@@ -8,7 +8,7 @@ import { ArchivosComponent } from "../../dialogs/Archivos/Archivos.component";
 import { AdminComprasChatComponent } from "../../dialogs/admin-compras-chat/admin-compras-chat.component";
 import { PagoAdicionalDetallesComponent } from "../../dialogs/pago-adicional-detalles/pago-adicional-detalles.component";
 import { PagoAdicional } from '../../interfaces/AdministracionCompra';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
 
 @Component({

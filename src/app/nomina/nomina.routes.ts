@@ -4,7 +4,7 @@ export const NOMINA_ROUTES: Routes = [
   {
     path: 'nomina',
     loadComponent: () =>
-      import('./pages/nomina/nomina.component'),
+      import('./pages/nomina-page/nomina-page.component'),
     children: [
       {
         path: '',
@@ -15,19 +15,19 @@ export const NOMINA_ROUTES: Routes = [
         path: 'constructor-de-calendarios',
         title: 'Constructor de calendarios',
         loadComponent: () =>
-          import('./pages/work-shift-calendar/work-shift-calendar.component'),
+          import('./pages/work-shift-calendar-page/work-shift-calendar-page.component'),
       },
       {
         path: 'control-de-personal',
         title: 'Control del personal',
         loadComponent: () =>
-          import('./pages/staff-control/staff-control.component'),
+          import('./pages/staff-control-page/staff-control-page.component'),
       },
       {
         path: 'historial-del-personal',
         title: 'Historial del personal',
         loadComponent: () =>
-          import('./pages/historial-personal/historial-personal.component'),
+          import('./pages/historial-personal-page/historial-personal-page.component'),
       },
     ],
   },

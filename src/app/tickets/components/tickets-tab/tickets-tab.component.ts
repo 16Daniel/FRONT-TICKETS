@@ -21,7 +21,7 @@ import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/c
 import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';

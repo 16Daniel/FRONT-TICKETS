@@ -17,7 +17,7 @@ import { CalendarComponent } from '../../components/calendar/calendar.component'
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { BranchVisitItemComponent } from '../../components/branch-visit-item/branch-visit-item.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Guardia } from '../../../tickets/models/guardia';
 import { Area } from '../../../areas/interfaces/area.model';
@@ -39,7 +39,7 @@ import { VisitaProgramada } from '../../interfaces/visita-programada';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 
 @Component({
-  selector: 'app-calendar-builder',
+  selector: 'app-calendar-builder-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -56,10 +56,10 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
     ModalActivityComponent
   ],
   providers: [MessageService],
-  templateUrl: './calendar-builder.component.html',
+  templateUrl: './calendar-builder-page.component.html',
 })
 
-export default class CalendarBuilderComponent implements OnInit {
+export default class CalendarBuilderPageComponent implements OnInit {
   sucursales: Sucursal[] = [];
   sucursalesOrdenadas: Sucursal[] = [];
   sucursalesSeleccionadas: Sucursal[] = [];

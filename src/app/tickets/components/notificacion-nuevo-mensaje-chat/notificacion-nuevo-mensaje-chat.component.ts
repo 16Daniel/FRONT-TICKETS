@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef, Input } from '@angular
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { MensajePendiente } from '../../../shared/interfaces/mensajes-pendientes.model';
 

@@ -5,7 +5,7 @@ export const SUCURSALES_MAIN_ROUTES: Routes = [
     path: 'branches',
     title: 'Sucursales',
     loadComponent: () =>
-      import('./pages/branches-page/branches-page'),
+      import('./pages/branches-page/branches-page.component'),
   },
 ];
 

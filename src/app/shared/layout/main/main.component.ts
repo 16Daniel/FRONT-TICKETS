@@ -5,7 +5,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { SideMenuComponent } from '../../components/side-menu/side-menu.component';
 import { UpdateBannerComponent } from '../../components/update-banner/update-banner.component';
-import { UsuarioLogin } from '../../../usuarios/models/usuario-login.model';
+import { UsuarioLogin } from '../../../auth/interfaces/usuario-login.model';
 
 @Component({
   selector: 'app-main',

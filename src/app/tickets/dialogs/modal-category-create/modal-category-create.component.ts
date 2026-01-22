@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 
 import { ModalSubcategoryCreateComponent } from '../modal-subcategory-create/modal-subcategory-create.component';
 import { Categoria } from '../../models/categoria.mdoel';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Subcategoria } from '../../models/subcategoria.model';
 import { CategoriesService } from '../../services/categories.service';
 

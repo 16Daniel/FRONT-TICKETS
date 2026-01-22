@@ -5,14 +5,14 @@
      <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
 </div>
 
-<button class="btn bg-p-b m-3 p-3" (click)="abrirModalagregarRecoleccion()">AGREGAR RECOLECCIÓN DE ACEITE QUEMADO</button> 
+<button class="btn bg-p-b m-3 p-3" (click)="abrirModalagregarRecoleccion()">AGREGAR RECOLECCIÓN DE ACEITE QUEMADO</button>
 
 <button class="btn bg-p-b m-3 p-3" (click)="abrirModalagregarRecoleccionTA()">AGREGAR RECOLECCIÓN RESIDUO TRAMPA DE GRASA</button>
 
 <p-tabView>
 
   <p-tabPanel header="PENDIENTES">
-       <app-registros-pendientes *ngIf="sucursales.length>0" [sucursales]="sucursales"></app-registros-pendientes>
+       <app-registros-pendientes-page *ngIf="sucursales.length>0" [sucursales]="sucursales"></app-registros-pendientes-page>
   </p-tabPanel>
 
   <p-tabPanel header="POR VALIDAR">
@@ -24,11 +24,11 @@
            </div>
         </div>
         <div class="col-6">
-             <p-multiSelect 
-                [options]="sucursales" 
-                [(ngModel)]="sucursalesSel" 
-                [filter]="true" 
-                optionLabel="nombre" 
+             <p-multiSelect
+                [options]="sucursales"
+                [(ngModel)]="sucursalesSel"
+                [filter]="true"
+                optionLabel="nombre"
                 placeholder="SELECCIONAR SUCURSALES"
                 [style]="{width:'100%'}"
                 />
@@ -89,7 +89,7 @@
 <p-dialog [header]="tipoActualizacion == 1? 'VALIDAR RECOLECCIÓN':'RECHAZAR RECOLECCIÓN'" [modal]="true" [(visible)]="mostrarModalValidacion" [style]="{ width: '70rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
     <div class="p-3" style="min-height: 400px;">
-      
+
         <div class="col-12 mt-3">
           <p>COMENTARIOS</p>
           <textarea class="form-control p-3" [(ngModel)]="formcomentarios"></textarea>
@@ -101,7 +101,7 @@
 </p-dialog>
 
 
-<app-agregar-recoleccion *ngIf="modalAgregarRecoleccion" [visible]="modalAgregarRecoleccion" 
+<app-agregar-recoleccion *ngIf="modalAgregarRecoleccion" [visible]="modalAgregarRecoleccion"
 (closeEvent)="modalAgregarRecoleccion = false" [sucursales]="sucursales" [trampaDeAceite]="trampadeAceite"></app-agregar-recoleccion>
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"

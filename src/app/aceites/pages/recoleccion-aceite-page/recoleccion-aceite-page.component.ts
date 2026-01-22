@@ -1,67 +1,52 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
-import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Timestamp } from '@angular/fire/firestore';
+import { MessageService } from 'primeng/api';
+import { CalendarModule } from 'primeng/calendar';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
-import { DialogModule } from 'primeng/dialog';
-import { CalendarModule } from 'primeng/calendar';
-import { MessageService } from 'primeng/api';
-import { DropdownModule } from 'primeng/dropdown';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { Timestamp } from '@angular/fire/firestore';
 
-import ControlAceiteTabComponent from '../../components/control-aceite-tab/control-aceite-tab.component';
-import { AgregarRecoleccionComponent } from '../../dialogs/agregar-recoleccion.component/agregar-recoleccion.component';
-import { HistorialAceite } from '../../components/historial-aceite/historial-aceite';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { EntregaAceite } from '../../interfaces/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { RegistrosPendientes } from '../registros-pendientes/registros-pendientes';
 
 @Component({
-  selector: 'app-aceite',
+  selector: 'app-recoleccion-aceite-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TableModule,
-    TabViewModule,
-    ToastModule,
-    DialogModule,
-    CalendarModule,
-    DropdownModule,
-    ControlAceiteTabComponent,
-    AgregarRecoleccionComponent,
-    HistorialAceite,
-    RegistrosPendientes,
-    MultiSelectModule
-  ],
+  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule],
   providers: [MessageService],
-  templateUrl: './aceite.component.html',
-  styleUrl: './aceite.component.scss',
+  templateUrl: './recoleccion-aceite-page.component.html',
 })
-export default class AceiteComponent implements OnInit {
+export default class RecoleccionAceitePageComponent implements OnInit {
+  public TodasLasEntregas: EntregaAceite[] = [];
+  public TodasLasEntregasTA: EntregaAceite[] = [];
   public entregas: EntregaAceite[] = [];
-  public entregasTodo: EntregaAceite[] = [];
+  public entregasTA: EntregaAceite[] = [];
   public mostrarModalValidacion: boolean = false;
   public sucursales: Sucursal[] = [];
-  public sucursalesSel: Sucursal[] = [];
-  public sucursalSel: Sucursal | undefined;
+  public sucursalSel: Sucursal[] = [];
   public formcomentarios: string = "";
   public itemEntrega: EntregaAceite | undefined;
   public tipoActualizacion: number = 0;
   public loading: boolean = false;
-  public modalAgregarRecoleccion: boolean = false;
-
-  trampadeAceite: boolean = false;
+  fechaini: Date = new Date();
+  fechafin: Date = new Date();
+  usuario: Usuario;
+  esTrampadeAceite: boolean = false;
 
   constructor(
     public aceiteService: AceiteService,
     public cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
-    private messageService: MessageService) { }
+    private messageService: MessageService) {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   ngOnInit(): void {
     this.obtenerSucursales();
@@ -69,6 +54,7 @@ export default class AceiteComponent implements OnInit {
     setInterval(() => {
       this.consultarEntregas();
     }, 60000);
+
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -79,22 +65,51 @@ export default class AceiteComponent implements OnInit {
     this.loading = true;
     this.aceiteService.getEntregasCedis().subscribe({
       next: (data) => {
-        this.entregas = data;
-        this.entregasTodo = [...data];
-        this.filtrar();
+        this.entregas = [];
+        this.TodasLasEntregas = data;
+        let sucursalesusuario = this.usuario.sucursales;
+        for (let item of sucursalesusuario) {
+          let suc = this.sucursales.filter(x => x.id == item.id)[0];
+          let temp = this.TodasLasEntregas.filter(x => x.idSucursal == suc.idFront);
+          this.entregas = [...this.entregas, ...temp];
+        }
         this.loading = false;
+        this.consultarEntregasTA();
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.log(error);
         this.loading = false;
+        console.log(error);
       },
     });
   }
 
-  abrirmodalValidacion(item: EntregaAceite, tipo: number) {
+  consultarEntregasTA() {
+    this.loading = true;
+    this.aceiteService.getEntregasCedisTA().subscribe({
+      next: (data) => {
+        this.entregasTA = [];
+        this.TodasLasEntregasTA = data;
+        let sucursalesusuario = this.usuario.sucursales;
+        for (let item of sucursalesusuario) {
+          let suc = this.sucursales.filter(x => x.id == item.id)[0];
+          let temp = this.TodasLasEntregasTA.filter(x => x.idSucursal == suc.idFront);
+          this.entregasTA = [...this.entregasTA, ...temp];
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      },
+    });
+  }
+
+  abrirmodalValidacion(item: EntregaAceite, tipo: number, trampadeaceite: boolean) {
     this.tipoActualizacion = tipo;
     this.itemEntrega = item;
+    this.esTrampadeAceite = trampadeaceite;
     this.mostrarModalValidacion = true;
   }
 
@@ -123,8 +138,6 @@ export default class AceiteComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.sucursales = this.sucursales.filter(x => x.idFront && x.idFront > -1);
-        this.sucursalesSel = [...this.sucursales];
         this.loading = false;
         this.consultarEntregas();
         this.cdr.detectChanges();
@@ -172,22 +185,39 @@ export default class AceiteComponent implements OnInit {
 
   }
 
-  abrirModalagregarRecoleccion() {
-    this.modalAgregarRecoleccion = true;
-    this.trampadeAceite = false;
-  }
+  actualizarEntregaTA() {
+    if (this.formcomentarios == "") {
+      this.showMessage('info', 'info', 'Favor de agregar un comentario');
+      return;
+    }
+    if (this.tipoActualizacion == 1) {
+      this.loading = true;
+      this.aceiteService.ValidacionCedisTA(this.itemEntrega!.id, this.formcomentarios).subscribe({
+        next: (data) => {
+          this.mostrarModalValidacion = false;
+          this.showMessage('success', 'Success', 'Guardado correctamente');
+          this.formcomentarios = "";
+          this.consultarEntregas();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
 
-  abrirModalagregarRecoleccionTA() {
-    this.modalAgregarRecoleccion = true;
-    this.trampadeAceite = true
-  }
+        },
+      });
+    } else {
+      this.loading = true;
+      this.aceiteService.RechazoCedisTA(this.itemEntrega!.id, this.formcomentarios).subscribe({
+        next: (data) => {
+          this.mostrarModalValidacion = false;
+          this.showMessage('success', 'Success', 'Guardado correctamente');
+          this.formcomentarios = "";
+          this.consultarEntregas();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
 
-  filtrar() {
-
-    this.entregas = [];
-    for (let item of this.sucursalesSel) {
-      let data = this.entregasTodo.filter(x => x.idSucursal == item.idFront!);
-      this.entregas.push(...data);
+        },
+      });
     }
 
   }

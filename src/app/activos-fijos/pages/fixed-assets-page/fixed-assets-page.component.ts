@@ -15,7 +15,7 @@ import { ModalFixedAssetsCreateComponent } from '../../dialogs/modal-fixed-asset
 import { ModalFixedAssetTicketsComponent } from '../../dialogs/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../dialogs/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { BuscarPorReferenciaPipe } from '../../../shared/pipes/buscar-por-referencia.pipe';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { FixedAssetsService } from '../../services/fixed-assets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';

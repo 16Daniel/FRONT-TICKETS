@@ -20,7 +20,7 @@ import { PrioridadTicket } from '../../models/prioridad-ticket.model';
 import { Categoria } from '../../models/categoria.mdoel';
 import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

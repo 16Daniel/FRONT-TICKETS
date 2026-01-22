@@ -4,7 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { AdministracionCompra } from '../../interfaces/AdministracionCompra';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 
 @Component({
   selector: 'app-grafica-admin-compras',

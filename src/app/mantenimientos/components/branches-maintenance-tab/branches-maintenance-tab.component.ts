@@ -14,7 +14,7 @@ import { ModalMateinanceMttoCheckComponent } from '../../dialogs/manteinance/mod
 import { ModalMaintenanceMttoHistoryComponent } from '../../dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.model';

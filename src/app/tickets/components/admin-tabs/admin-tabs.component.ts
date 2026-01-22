@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { AdminSysTabComponent } from '../../../mantenimientos/components/admin-sys-tab/admin-sys-tab.component';
 import { AdminAudioVideoTabComponent } from '../../../mantenimientos/components/admin-audio-video-tab/admin-audio-video-tab.component';
 import { AdminMaintenanceTabComponent } from '../../../mantenimientos/components/admin-maintenance-tab/admin-maintenance-tab.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../models/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';

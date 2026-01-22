@@ -18,7 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Categoria } from '../../models/categoria.mdoel';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Ticket } from '../../models/ticket.model';

@@ -11,7 +11,7 @@ import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticke
 import { ModalMaintenanceDetailComponent } from '../systems/modal-maintenance-detail/modal-maintenance-detail.component';
 import { BranchMaintenanceTableAvComponent } from '../../components/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { BranchMaintenanceTableMttoComponent } from '../../components/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';

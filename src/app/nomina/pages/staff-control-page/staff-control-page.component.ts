@@ -10,7 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CorreosNotificacionService } from '../../../shared/services/correos-notificacion.service';
 import { NominaService } from '../../services/nomina.service';
@@ -18,14 +18,14 @@ import { Correonotificacion, EmpleadoHorario, Marcajes, PuestoNomina, TurnodbNom
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
-  selector: 'app-staff-control',
+  selector: 'app-staff-control-page',
   standalone: true,
   imports: [CommonModule, FormsModule, TableModule, KnobModule, ProgressBarModule, DropdownModule, ToastModule, DialogModule, ConfirmDialogModule],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './staff-control.component.html',
-  styleUrl: './staff-control.component.scss',
+  templateUrl: './staff-control-page.component.html',
+  styleUrl: './staff-control-page.component.scss',
 })
-export default class StaffControlComponent implements OnInit {
+export default class StaffControlPageComponent implements OnInit {
   public marcajes: Marcajes[] = [];
   public horarios: EmpleadoHorario[] = [];
   public puestosDeTrabajo: any[] = [];

@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 
 import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
 import { BranchMaintenanceTableComponent } from '../../../components/systems/branch-maintenance-table/branch-maintenance-table.component';
-import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';

@@ -5,7 +5,7 @@ import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
 import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
-import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';

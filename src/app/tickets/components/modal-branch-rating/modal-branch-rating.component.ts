@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
 import { TicketsService } from '../../services/tickets.service';
 import { Ticket } from '../../models/ticket.model';

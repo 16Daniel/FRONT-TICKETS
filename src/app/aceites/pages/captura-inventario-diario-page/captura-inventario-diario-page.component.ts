@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UbicacionesInventario } from '../../../planeacion/dialog/ubicaciones-inventario/ubicaciones-inventario.component';
 import { Inventario, InvModel } from '../../../planeacion/interfaces/inventario.model';
 import { InventarioService } from '../../../planeacion/services/inventario.service';
@@ -22,11 +22,11 @@ import { InventarioService } from '../../../planeacion/services/inventario.servi
     ConfirmDialogModule
   ],
   providers: [ConfirmationService, DatePipe],
-  templateUrl: './captura-inventario-diario.component.html',
-  styleUrl: './captura-inventario-diario.component.scss',
+  templateUrl: './captura-inventario-diario-page.component.html',
+  styleUrl: './captura-inventario-diario-page.component.scss',
 })
 
-export default class CapturaInventarioDiarioComponent implements OnInit {
+export default class CapturaInventarioDiarioPageComponent implements OnInit {
   public catArticulos: Inventario[] = [];
   public catArticulosTodo: Inventario[] = [];
   public filtroArticulo: string = '';

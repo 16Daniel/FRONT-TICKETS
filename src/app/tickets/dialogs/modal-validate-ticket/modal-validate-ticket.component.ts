@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 
 import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
 import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 
 @Component({

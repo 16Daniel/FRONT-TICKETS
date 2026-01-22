@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { BranchMaintenanceTableMttoComponent } from '../../../components/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
-import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';

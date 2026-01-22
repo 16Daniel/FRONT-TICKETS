@@ -3,7 +3,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { Ticket } from '../../models/ticket.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 
 @Component({
   selector: 'app-iconos-notificaciones-tickets',

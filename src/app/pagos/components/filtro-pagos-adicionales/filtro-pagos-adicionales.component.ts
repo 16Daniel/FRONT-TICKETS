@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 
 import { PagoAdicional } from '../../interfaces/AdministracionCompra';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
 import { ShoppingService } from '../../services/shopping.service';
 

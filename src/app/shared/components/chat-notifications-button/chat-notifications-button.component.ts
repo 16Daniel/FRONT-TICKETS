@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
 import { ModalTicketChatComponent } from '../../../tickets/dialogs/modal-ticket-chat/modal-ticket-chat.component';
 import { ModalMaintenanceChatComponent } from '../../../mantenimientos/dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../../mantenimientos/services/maintenance-factory.service';
 import { ShoppingService } from '../../../pagos/services/shopping.service';

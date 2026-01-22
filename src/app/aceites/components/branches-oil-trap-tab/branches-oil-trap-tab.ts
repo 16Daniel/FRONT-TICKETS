@@ -12,7 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { EntregaAceite } from '../../interfaces/aceite.model';

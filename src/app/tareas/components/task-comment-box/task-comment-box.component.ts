@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
 import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
 import { TareasService } from '../../services/tareas.service';

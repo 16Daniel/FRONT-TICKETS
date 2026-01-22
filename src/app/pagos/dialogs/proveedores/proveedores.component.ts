@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 
 import { Proveedor } from '../../interfaces/AdministracionCompra';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ProveedoresService } from '../../services/Proveedores.service';
 
 @Component({

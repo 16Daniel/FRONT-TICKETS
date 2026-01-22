@@ -10,7 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 
 import { ModalUserCreateComponent } from '../../dialogs/modal-user-create/modal-user-create.component';
-import { Usuario } from '../../models/usuario.model';
+import { Usuario } from '../../interfaces/usuario.model';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { UsersService } from '../../services/users.service';
 import { RolesService } from '../../../roles/services/roles.service';
@@ -29,7 +29,7 @@ import { Rol } from '../../../roles/interfaces/rol.model';
     ModalUserCreateComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './users-page.html',
+  templateUrl: './users-page.component.html',
 })
 
 export default class UsersPageComponent implements OnDestroy, OnInit {

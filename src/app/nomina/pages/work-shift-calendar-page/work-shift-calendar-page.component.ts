@@ -21,12 +21,12 @@ import { ColorRandomService } from '../../../mantenimientos/services/ColorRandom
 @Component({
   selector: 'app-work-shift-calendar',
   standalone: true,
-  styleUrl: './styles.scss',
+  styleUrl: './work-shift-calendar-page.component.scss',
   imports: [FullCalendarModule, CommonModule, DropdownModule, FormsModule, TurnosComponent, ToastModule, ColorPickerModule, ConfirmDialogModule],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './work-shift-calendar.component.html',
+  templateUrl: './work-shift-calendar-page.component.html',
 })
-export default class WorkShiftCalendarComponent {
+export default class WorkShiftCalendarPageComponent {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
   @ViewChild('divform') div1!: ElementRef<HTMLElement>;
   @ViewChild('divCalendar') div2!: ElementRef<HTMLElement>;

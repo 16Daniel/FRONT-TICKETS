@@ -5,7 +5,7 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';

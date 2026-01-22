@@ -6,13 +6,13 @@ import { SideMenuComponent } from '../../../shared/components/side-menu/side-men
 import { UpdateBannerComponent } from '../../../shared/components/update-banner/update-banner.component';
 
 @Component({
-  selector: 'app-cedis',
+  selector: 'app-cedis-page',
   standalone: true,
   imports: [SideMenuComponent, UpdateBannerComponent,CommonModule,RouterOutlet],
-  templateUrl: './cedis.component.html',
-  styleUrl: './cedis.component.scss',
+  templateUrl: './cedis-page.component.html',
+  styleUrl: './cedis-page.component.scss',
 })
-export default class CedisComponent implements OnInit {
+export default class CedisPageComponent implements OnInit {
 
   ngOnInit(): void { }
 

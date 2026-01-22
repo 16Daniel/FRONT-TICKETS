@@ -13,7 +13,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import * as XLSX from 'xlsx';
 
 import { environment } from '../../../../environments/environments';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

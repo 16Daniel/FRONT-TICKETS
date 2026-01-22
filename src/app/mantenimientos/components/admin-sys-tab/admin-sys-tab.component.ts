@@ -20,7 +20,7 @@ import { IconosNotificacionesTicketsComponent } from '../../../tickets/component
 import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';

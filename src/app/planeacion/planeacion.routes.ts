@@ -39,7 +39,7 @@ export const PLANEACION_ROUTES: Routes = [
         path: 'captura',
         title: 'Captura de inventario',
         loadComponent: () =>
-          import('../aceites/pages/captura-inventario-diario/captura-inventario-diario.component'),
+          import('../aceites/pages/captura-inventario-diario-page/captura-inventario-diario-page.component'),
       },
     ],
   },

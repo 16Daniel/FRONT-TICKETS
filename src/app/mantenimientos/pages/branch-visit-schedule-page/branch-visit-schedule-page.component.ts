@@ -4,11 +4,11 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
-
 import { FormsModule } from '@angular/forms';
+
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
@@ -21,14 +21,14 @@ import { VisitaProgramada } from '../../interfaces/visita-programada';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
-  selector: 'app-branch-visit-schedule',
+  selector: 'app-branch-visit-schedule-page',
   standalone: true,
   imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarComponent, DropdownModule, FormsModule],
   providers: [MessageService],
-  templateUrl: './branch-visit-schedule.component.html',
+  templateUrl: './branch-visit-schedule-page.component.html',
 })
 
-export default class BranchVisitScheduleComponent implements OnInit {
+export default class BranchVisitSchedulePageComponent implements OnInit {
   usuariosHelp: Usuario[] = [];
   colorUsuario: ColorUsuario | undefined;
   tickets: Ticket[] = [];

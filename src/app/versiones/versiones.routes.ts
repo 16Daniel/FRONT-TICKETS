@@ -6,7 +6,7 @@ export const VERSIONES_ROUTES: Routes = [
     path: 'version-control',
     title: 'Control de versiones',
     loadComponent: () =>
-      import('./pages/version-control-page/version-control-page'),
+      import('./pages/version-control-page/version-control-page.component'),
     canActivate: [AdminGuard],
   },
   {

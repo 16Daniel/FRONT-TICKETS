@@ -24,7 +24,7 @@ export const ACEITES_ROOT_ROUTES: Routes = [
   {
     path: 'cedis',
     loadComponent: () =>
-      import('./pages/cedis/cedis.component'),
+      import('./pages/cedis-page/cedis-page.component'),
     children: [
       {
         path: '',
@@ -35,13 +35,13 @@ export const ACEITES_ROOT_ROUTES: Routes = [
         path: 'recoleccion',
         title: 'Recolección de aceite',
         loadComponent: () =>
-          import('./pages/recoleccion-aceite/recoleccion-aceite.component'),
+          import('./pages/recoleccion-aceite-page/recoleccion-aceite-page.component'),
       },
       {
         path: 'control-aceite',
         title: 'Control de aceite',
         loadComponent: () =>
-          import('./pages/aceite/aceite.component'),
+          import('./pages/aceite-page/aceite-page.component'),
       },
     ],
   },
@@ -57,7 +57,7 @@ export const ACEITES_ROOT_ROUTES: Routes = [
         path: 'captura',
         title: 'Captura de inventario',
         loadComponent: () =>
-          import('./pages/captura-inventario-diario/captura-inventario-diario.component'),
+          import('./pages/captura-inventario-diario-page/captura-inventario-diario-page.component'),
       },
     ],
   },

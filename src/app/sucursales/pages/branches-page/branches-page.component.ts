@@ -25,8 +25,8 @@ import { Sucursal } from '../../interfaces/sucursal.model';
     ModalBranchCreateComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './branches-page.html',
-  styleUrl: './branches-page.scss'
+  templateUrl: './branches-page.component.html',
+  styleUrl: './branches-page.component.scss'
 })
 
 export default class BranchesPageComponent implements OnInit {

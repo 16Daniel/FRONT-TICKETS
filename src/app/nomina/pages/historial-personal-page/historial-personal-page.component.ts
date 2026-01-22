@@ -15,13 +15,13 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { HistorailPersonal, Marcajes, PuestoNomina } from '../../interfaces/Nomina';
 
 @Component({
-  selector: 'app-historial-personal',
+  selector: 'app-historial-personal-page',
   standalone: true,
   imports: [CommonModule, FormsModule, MultiSelectModule, CalendarModule, BarChartModule, TableModule, ToastModule, DropdownModule, RadioButtonModule],
   providers: [MessageService],
-  templateUrl: './historial-personal.component.html',
+  templateUrl: './historial-personal-page.component.html',
 })
-export default class HistorialPersonalComponent implements OnInit {
+export default class HistorialPersonalPageComponent implements OnInit {
   public sucursales: Sucursal[] = [];
   public sucursalSel: Sucursal | undefined;
   public loading: boolean = false;

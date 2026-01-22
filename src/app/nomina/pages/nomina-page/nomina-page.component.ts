@@ -5,7 +5,7 @@ import { SideMenuComponent } from '../../../shared/components/side-menu/side-men
 import { UpdateBannerComponent } from '../../../shared/components/update-banner/update-banner.component';
 
 @Component({
-  selector: 'app-nomina',
+  selector: 'app-nomina-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -13,10 +13,10 @@ import { UpdateBannerComponent } from '../../../shared/components/update-banner/
     SideMenuComponent,
     UpdateBannerComponent
   ],
-  templateUrl: './nomina.component.html',
-  styleUrl: './nomina.component.scss',
+  templateUrl: './nomina-page.component.html',
+  styleUrl: './nomina-page.component.scss',
 })
-export default class NominaComponent implements OnInit {
+export default class NominaPageComponent implements OnInit {
 
   ngOnInit(): void { }
 

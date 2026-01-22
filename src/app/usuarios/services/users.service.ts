@@ -9,7 +9,7 @@ import {
   query,
   updateDoc,
 } from '@angular/fire/firestore';
-import { Usuario } from '../models/usuario.model';
+import { Usuario } from '../interfaces/usuario.model';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 
 @Injectable({

@@ -10,21 +10,20 @@ import { Timestamp } from '@angular/fire/firestore';
 import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
 import { EntregaAceite } from '../../interfaces/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
-  selector: 'app-registros-pendientes',
+  selector: 'app-registros-pendientes-page',
   standalone: true,
   imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, ConfirmDialogModule, MultiSelectModule],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './registros-pendientes.html',
-  styleUrl: './registros-pendientes.scss',
+  templateUrl: './registros-pendientes-page.html',
+  styleUrl: './registros-pendientes-page.scss',
 })
-export class RegistrosPendientes implements OnInit {
+export class RegistrosPendientesPageComponent implements OnInit {
   usuario: Usuario;
   public entregas: EntregaAceite[] = [];
   public entregasTodo: EntregaAceite[] = [];
@@ -36,10 +35,7 @@ export class RegistrosPendientes implements OnInit {
 
   constructor(
     public aceiteService: AceiteService,
-    private confirmationService: ConfirmationService,
-    public cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
-    private messageService: MessageService) {
+    public cdr: ChangeDetectorRef,) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 

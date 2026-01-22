@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { Compra } from '../../interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { PurchaseService } from '../../services/purchase.service';
 import { StatusPurchaseService } from '../../services/status-purchase.service';
 import { AreasService } from '../../../areas/services/areas.service';

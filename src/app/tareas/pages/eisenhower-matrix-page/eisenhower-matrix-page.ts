@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from "primeng/toast";
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';

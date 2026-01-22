@@ -7,7 +7,7 @@ export const AREAS_MAIN_ROUTES: Routes = [
     title: 'Areas',
     canActivate: [AdminGuard],
     loadComponent: () =>
-      import('./pages/areas/areas.component'),
+      import('./pages/areas-page/areas-page.component'),
   },
 ];
 

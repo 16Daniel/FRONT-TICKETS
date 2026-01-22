@@ -13,8 +13,8 @@ import { ControlVersion } from '../../interfaces/control-version.model';
   standalone: true,
   imports: [FormsModule, EditorModule, CommonModule, ToastModule],
   providers: [MessageService],
-  templateUrl: './version-control-page.html',
-  styleUrl: './version-control-page.scss',
+  templateUrl: './version-control-page.component.html',
+  styleUrl: './version-control-page.component.scss',
 })
 export default class VersionControlPageComponent {
   controlVersion: ControlVersion = new ControlVersion();

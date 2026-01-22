@@ -28,7 +28,7 @@ import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticke
 import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
 import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

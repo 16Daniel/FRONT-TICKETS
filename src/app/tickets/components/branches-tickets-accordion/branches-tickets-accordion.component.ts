@@ -13,7 +13,7 @@ import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-ta
 import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({
