@@ -27,7 +27,7 @@ import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
 import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AreasService } from '../../../areas/services/areas.service';

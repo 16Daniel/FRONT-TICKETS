@@ -16,13 +16,13 @@ import { Merma } from '../../interfaces/Merma';
 import { PlaneacionService } from '../../services/Planeacion.service';
 
 @Component({
-  selector: 'app-mermas',
+  selector: 'app-mermas-page',
   standalone: true,
   imports: [CommonModule, FormsModule, CalendarModule, MultiSelectModule, TableModule, InputSwitchModule],
-  templateUrl: './mermas.component.html',
-  styleUrl: './mermas.component.css',
+  templateUrl: './mermas-page.component.html',
+  styleUrl: './mermas-page.component.css',
 })
-export default class MermasComponent implements OnInit {
+export default class MermasPageComponent implements OnInit {
   public fechaini: Date = new Date();
   public fechafin: Date = new Date();
   public sucursales: Sucursal[] = [];

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, doc, Firestore, getDoc, onSnapshot, query, updateDoc, where } from '@angular/fire/firestore';
-import { Compra } from '../models/compra.model';
+import { Compra } from '../interfaces/compra.model';
 import { Observable } from 'rxjs';
 
 @Injectable({

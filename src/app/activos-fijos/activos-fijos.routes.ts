@@ -8,7 +8,7 @@ export const ACTIVOS_FIJOS_MAIN_ROUTES: Routes = [
     path: 'fixed-assets',
     title: 'Activos fijos',
     loadComponent: () =>
-      import('./pages/fixed-assets/fixed-assets.component'),
+      import('./pages/fixed-assets-page/fixed-assets-page.component'),
   },
 ];
 
@@ -20,7 +20,7 @@ export const ACTIVOS_FIJOS_ROOT_ROUTES: Routes = [
     path: 'fixed-assets/detail/:referencia',
     title: 'Detalle del activo fijo',
     loadComponent: () =>
-      import('./pages/detail/detail.component'),
+      import('./pages/fixed-assets-detail-page/fixed-assets-detail-page.component'),
   },
 ];
 

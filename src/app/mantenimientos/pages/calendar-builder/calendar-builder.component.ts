@@ -20,7 +20,7 @@ import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activ
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Guardia } from '../../../tickets/models/guardia';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

@@ -18,7 +18,7 @@ import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Categoria } from '../../../tickets/models/categoria.mdoel';
 import { PrioridadTicket } from '../../../tickets/models/prioridad-ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { FolioGeneratorService } from '../../../tickets/services/folio-generator.service';
 import { CategoriesService } from '../../../tickets/services/categories.service';

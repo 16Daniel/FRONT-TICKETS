@@ -12,7 +12,7 @@ import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-l
 import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
 import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../models/ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 

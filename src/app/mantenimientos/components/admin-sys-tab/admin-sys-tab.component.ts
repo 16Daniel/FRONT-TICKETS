@@ -21,7 +21,7 @@ import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshase
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Compra } from '../../../compras/models/compra.model';
+import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

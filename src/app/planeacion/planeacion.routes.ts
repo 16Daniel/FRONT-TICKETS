@@ -4,7 +4,7 @@ export const PLANEACION_ROUTES: Routes = [
   {
     path: 'planeacion',
     loadComponent: () =>
-      import('./pages/planeacion/Planeacion.component'),
+      import('./pages/planeacion-page/planeacion-page.component'),
     children: [
       {
         path: '',
@@ -15,20 +15,20 @@ export const PLANEACION_ROUTES: Routes = [
         path: 'diccionario',
         title: 'Diccionario',
         loadComponent: () =>
-          import('./pages/Diccionario/Diccionario.component'),
+          import('./pages/diccionario-page/diccionario-page.component'),
       },
       {
         path: 'mermas',
         title: 'Mermas',
         loadComponent: () =>
-          import('./pages/mermas/mermas.component'),
+          import('./pages/mermas-page/mermas-page.component'),
       },
     ],
   },
   {
     path: 'inventario',
     loadComponent: () =>
-      import('./pages/stock/stock.component'),
+      import('./pages/stock-page/stock-page.component'),
     children: [
       {
         path: '',

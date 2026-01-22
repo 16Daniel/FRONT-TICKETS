@@ -19,7 +19,7 @@ import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { PrioridadTicket } from '../../models/prioridad-ticket.model';
 import { Categoria } from '../../models/categoria.mdoel';
 import { Ticket } from '../../models/ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';

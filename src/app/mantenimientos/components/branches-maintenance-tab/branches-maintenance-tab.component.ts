@@ -13,7 +13,7 @@ import { ModalBranchRatingComponent } from '../../../tickets/components/modal-br
 import { ModalMateinanceMttoCheckComponent } from '../../dialogs/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
 import { ModalMaintenanceMttoHistoryComponent } from '../../dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';

@@ -20,7 +20,7 @@ import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Categoria } from '../../models/categoria.mdoel';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { CategoriesService } from '../../services/categories.service';

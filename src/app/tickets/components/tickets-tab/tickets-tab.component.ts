@@ -20,9 +20,9 @@ import { ModalTenXtenMaintenanceNewComponent } from '../../../mantenimientos/dia
 import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { Ticket } from '../../models/ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Compra } from '../../../compras/models/compra.model';
+import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
 import { UsersService } from '../../../usuarios/services/users.service';

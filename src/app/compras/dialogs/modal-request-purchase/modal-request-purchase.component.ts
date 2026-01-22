@@ -8,8 +8,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
 import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
-import { Compra } from '../../../compras/models/compra.model';
-import { Area } from '../../../areas/models/area.model';
+import { Compra } from '../../../compras/interfaces/compra.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { StatusPurchaseService } from '../../../compras/services/status-purchase.service';

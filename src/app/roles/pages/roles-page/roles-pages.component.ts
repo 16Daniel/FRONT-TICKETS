@@ -15,7 +15,7 @@ import { Rol } from '../../interfaces/rol.model';
 import { Ruta } from '../../interfaces/ruta.model';
 
 @Component({
-  selector: 'app-roles',
+  selector: 'app-roles-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,9 +28,9 @@ import { Ruta } from '../../interfaces/ruta.model';
     MultiSelectModule,
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './roles.component.html',
+  templateUrl: './roles-page.component.html',
 })
-export default class RolesComponent {
+export default class RolesPageComponent {
   public catroles: Rol[] = [];
   public catrutas: Ruta[] = [];
   public foundData: boolean = true;

@@ -5,7 +5,7 @@ export const ROLES_MAIN_ROUTES: Routes = [
     path: 'roles',
     title: 'Roles de usuarios',
     loadComponent: () =>
-      import('./pages/roles/roles.component'),
+      import('./pages/roles-page/roles-pages.component'),
   },
 ];
 

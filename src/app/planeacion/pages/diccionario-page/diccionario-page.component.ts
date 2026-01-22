@@ -12,14 +12,14 @@ import { ITproducto } from '../../interfaces/Planecion';
 import { PlaneacionService } from '../../services/Planeacion.service';
 
 @Component({
-  selector: 'app-diccionario',
+  selector: 'app-diccionario-page',
   standalone: true,
   imports: [CommonModule, TableModule, ModalAgregarMedidaComponent, FormsModule, InputSwitchModule, ConfirmDialogModule],
   providers: [ConfirmationService],
-  templateUrl: './Diccionario.component.html',
-  styleUrl: './Diccionario.component.scss',
+  templateUrl: './diccionario-page.component.html',
+  styleUrl: './diccionario-page.component.scss',
 })
-export default class DiccionarioComponent implements OnInit {
+export default class DiccionarioPageComponent implements OnInit {
   public loading: boolean = false;
   public diccionario: ITproducto[] = [];
   public diccionarioFiltro: ITproducto[] = [];

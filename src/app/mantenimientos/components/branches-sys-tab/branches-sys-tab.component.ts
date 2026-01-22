@@ -15,7 +15,7 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../dialogs/systems/m
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';

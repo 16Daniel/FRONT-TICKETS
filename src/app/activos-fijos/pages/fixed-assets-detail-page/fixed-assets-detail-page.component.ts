@@ -23,7 +23,7 @@ import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.mode
 import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
 
 @Component({
-  selector: 'app-detail',
+  selector: 'app-fixed-assets-detail-page',
   standalone: true,
   imports: [
     ToastModule,
@@ -34,11 +34,11 @@ import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
     ModalFaGenerateTicketComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './detail.component.html',
-  styleUrl: './detail.component.scss'
+  templateUrl: './fixed-assets-detail-page.component.html',
+  styleUrl: './fixed-assets-detail-page.component.scss'
 })
 
-export default class DetailComponent implements OnInit {
+export default class FixedAssetsDetailPageComponent implements OnInit {
   activo: ActivoFijo = new ActivoFijo;
   mostrarModalMantenimientos: boolean = false;
   mostrarModalTickets: boolean = false;

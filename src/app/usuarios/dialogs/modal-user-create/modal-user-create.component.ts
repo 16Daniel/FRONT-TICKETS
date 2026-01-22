@@ -7,7 +7,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { Usuario } from '../../models/usuario.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { UsersService } from '../../services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { RolesService } from '../../../roles/services/roles.service';

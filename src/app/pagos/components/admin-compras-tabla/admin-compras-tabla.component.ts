@@ -10,7 +10,7 @@ import { DetallesComponent } from "../../dialogs/Detalles/Detalles.component";
 import { AdminComprasChatComponent } from "../../dialogs/admin-compras-chat/admin-compras-chat.component";
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 

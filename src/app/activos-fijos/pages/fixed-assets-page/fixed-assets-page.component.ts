@@ -31,7 +31,7 @@ import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.mode
 import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
 
 @Component({
-  selector: 'app-fixed-assets',
+  selector: 'app-fixed-assets-page',
   standalone: true,
   imports: [
     FormsModule,
@@ -48,11 +48,11 @@ import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
     BuscarPorReferenciaPipe
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './fixed-assets.component.html',
-  styleUrl: './fixed-assets.component.scss'
+  templateUrl: './fixed-assets-page.component.html',
+  styleUrl: './fixed-assets-page.component.scss'
 })
 
-export default class FixedAssetsComponent implements OnInit {
+export default class FixedAssetsPageComponent implements OnInit {
   esNuevoActivoFijo: boolean = false;
   mostrarModalActivoFijo: boolean = false;
   activosFijos: ActivoFijo[] = [];

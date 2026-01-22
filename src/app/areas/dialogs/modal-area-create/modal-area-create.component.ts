@@ -4,7 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({

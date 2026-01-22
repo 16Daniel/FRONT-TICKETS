@@ -14,7 +14,7 @@ import * as XLSX from 'xlsx';
 
 import { environment } from '../../../../environments/environments';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
@@ -29,7 +29,7 @@ import { AdminComprasTablaComponent } from '../../components/admin-compras-tabla
 type NewType = AdministracionCompra;
 
 @Component({
-  selector: 'app-shopping-admin',
+  selector: 'app-shopping-admin-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -47,11 +47,11 @@ type NewType = AdministracionCompra;
     MultiSelectModule,
     InputSwitchModule
   ],
-  templateUrl: './shopping-admin.component.html',
-  styleUrl: './shopping-admin.component.scss'
+  templateUrl: './shopping-admin-page.component.html',
+  styleUrl: './shopping-admin-page.component.scss'
 })
 
-export default class ShoppingAdminComponent implements OnInit {
+export default class ShoppingAdminPageComponent implements OnInit {
   public visible: boolean = false;
   public catTipoCompra: any[] = [];
   public catProveedores: Proveedor[] = [];

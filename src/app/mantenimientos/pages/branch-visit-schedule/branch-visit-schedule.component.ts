@@ -10,7 +10,7 @@ import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-ev
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { DocumentsService } from '../../../shared/services/documents.service';

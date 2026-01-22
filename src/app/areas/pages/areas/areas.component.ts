@@ -8,7 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { Area } from '../../models/area.model';
+import { Area } from '../../interfaces/area.model';
 import { AreasService } from '../../services/areas.service';
 import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-area-create.component';
 

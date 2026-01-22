@@ -20,7 +20,7 @@ import { CategoriesService } from '../../services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { TicketsPriorityService } from '../../services/tickets-priority.service';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({

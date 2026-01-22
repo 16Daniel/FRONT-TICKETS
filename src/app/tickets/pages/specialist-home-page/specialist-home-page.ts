@@ -12,7 +12,7 @@ import { ModalTicketChatComponent } from '../../../tickets/dialogs/modal-ticket-
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { StatusTicketService } from '../../../tickets/services/status-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';
