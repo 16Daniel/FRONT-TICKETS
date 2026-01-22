@@ -9,7 +9,7 @@ import { AdminSysTabComponent } from '../../../mantenimientos/components/admin-s
 import { AdminAudioVideoTabComponent } from '../../../mantenimientos/components/admin-audio-video-tab/admin-audio-video-tab.component';
 import { AdminMaintenanceTabComponent } from '../../../mantenimientos/components/admin-maintenance-tab/admin-maintenance-tab.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';

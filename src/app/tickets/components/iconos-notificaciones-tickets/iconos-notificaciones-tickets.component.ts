@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 

@@ -19,10 +19,10 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
-import { EstatusTicket } from '../../models/estatus-ticket.model';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticket/modal-finalize-ticket.component';
 import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';

@@ -9,7 +9,7 @@ import { BranchesSysTabComponent } from '../../../mantenimientos/components/bran
 import { BranchesAudioVideoTabComponent } from '../../../mantenimientos/components/branches-audio-video-tab/branches-audio-video-tab.component';
 import { BranchesMaintenanceTabComponent } from '../../../mantenimientos/components/branches-maintenance-tab/branches-maintenance-tab.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';

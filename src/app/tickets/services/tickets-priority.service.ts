@@ -8,7 +8,7 @@ import {
   setDoc,
 } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
-import { PrioridadTicket } from '../models/prioridad-ticket.model';
+import { PrioridadTicket } from '../interfaces/prioridad-ticket.model';
 
 @Injectable({
   providedIn: 'root',

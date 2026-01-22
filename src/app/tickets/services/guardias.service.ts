@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { addDoc, collection, Firestore, getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
-import { Guardia } from '../models/guardia';
+import { Guardia } from '../interfaces/guardia';
 import { Observable } from 'rxjs';
 
 @Injectable({

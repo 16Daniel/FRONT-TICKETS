@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
 import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 

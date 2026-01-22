@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TipoSoporte } from '../models/tipo-soporte.model';
+import { TipoSoporte } from '../interfaces/tipo-soporte.model';
 import {
   collection,
   collectionData,

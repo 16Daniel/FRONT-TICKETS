@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/models/ticket.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';

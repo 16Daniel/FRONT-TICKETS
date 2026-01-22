@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { Ticket } from '../../../tickets/models/ticket.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Usuario } from '../../interfaces/usuario.model';
 import { UsersService } from '../../services/users.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';

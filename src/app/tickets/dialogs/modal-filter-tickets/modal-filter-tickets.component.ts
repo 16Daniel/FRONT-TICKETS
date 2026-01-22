@@ -12,10 +12,10 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { Ticket } from '../../models/ticket.model';
-import { PrioridadTicket } from '../../models/prioridad-ticket.model';
-import { EstatusTicket } from '../../models/estatus-ticket.model';
-import { Categoria } from '../../models/categoria.mdoel';
+import { Ticket } from '../../interfaces/ticket.model';
+import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
+import { Categoria } from '../../interfaces/categoria.mdoel';
 import { CategoriesService } from '../../services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';

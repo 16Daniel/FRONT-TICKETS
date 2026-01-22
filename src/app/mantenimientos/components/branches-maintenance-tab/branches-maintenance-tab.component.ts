@@ -12,7 +12,7 @@ import { PriorityTicketsAccordionComponent } from '../../../tickets/components/p
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { ModalMateinanceMttoCheckComponent } from '../../dialogs/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
 import { ModalMaintenanceMttoHistoryComponent } from '../../dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
-import { Ticket } from '../../../tickets/models/ticket.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';

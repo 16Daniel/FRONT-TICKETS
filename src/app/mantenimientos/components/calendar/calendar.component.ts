@@ -13,7 +13,7 @@ import { VisitasService } from '../../services/visitas.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/models/ticket.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { GuardiasService } from '../../../tickets/services/guardias.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';

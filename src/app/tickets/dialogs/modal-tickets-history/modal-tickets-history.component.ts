@@ -19,9 +19,9 @@ import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filte
 import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../models/categoria.mdoel';
+import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { CategoriesService } from '../../services/categories.service';
 import { AreasService } from '../../../areas/services/areas.service';

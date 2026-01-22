@@ -13,7 +13,7 @@ import { PriorityTicketsAccordionComponent } from '../../../tickets/components/p
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { ModalMaintenanceAvHistoryComponent } from '../../dialogs/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
 import { ModalMaintenanceAvCheckComponent } from '../../dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
-import { Ticket } from '../../../tickets/models/ticket.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../services/maintenance-av.service';

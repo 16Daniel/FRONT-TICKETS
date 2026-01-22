@@ -9,7 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
 import { ModalCategoryCreateComponent } from '../../dialogs/modal-category-create/modal-category-create.component';
-import { Categoria } from '../../models/categoria.mdoel';
+import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { CategoriesService } from '../../services/categories.service';
 

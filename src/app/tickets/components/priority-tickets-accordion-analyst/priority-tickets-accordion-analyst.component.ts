@@ -7,7 +7,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 

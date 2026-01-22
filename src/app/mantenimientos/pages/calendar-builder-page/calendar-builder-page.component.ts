@@ -18,8 +18,8 @@ import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.co
 import { BranchVisitItemComponent } from '../../components/branch-visit-item/branch-visit-item.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/models/ticket.model';
-import { Guardia } from '../../../tickets/models/guardia';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Guardia } from '../../../tickets/interfaces/guardia';
 import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
