@@ -105,10 +105,15 @@ export class TasksFilterComponentComponent {
   }
 
   onResponsablesGlobalesChange(ids: string[]): void {
+    this.textoBusqueda = '';
+
     this.responsablesGlobalesChange.emit(ids);
   }
 
   onBuscarText() {
+    if (this.idsResponsablesGlobalesSeleccionados.length > 0)
+      this.idsResponsablesGlobalesSeleccionados = [];
+
     this.textoBusquedaChange.emit(this.textoBusqueda);
   }
 

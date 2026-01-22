@@ -48,7 +48,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/main/home',
+        redirectTo: '/main/home-a',
         pathMatch: 'full',
       },
     ],
