@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 
 /**
  * Rutas que viven dentro de /main
- * Ej:
- * /main/kpis
  */
 export const ACEITES_MAIN_ROUTES: Routes = [
   {
@@ -16,9 +14,6 @@ export const ACEITES_MAIN_ROUTES: Routes = [
 
 /**
  * Rutas globales (fuera de /main)
- * Ej:
- * /cedis
- * /inventario
  */
 export const ACEITES_ROOT_ROUTES: Routes = [
   {
