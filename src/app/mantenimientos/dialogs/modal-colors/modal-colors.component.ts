@@ -10,7 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { CalendarColorsService } from '../../services/calendar-colors.service';
 import { ColorUsuario } from '../../interfaces/color-usuario';
 

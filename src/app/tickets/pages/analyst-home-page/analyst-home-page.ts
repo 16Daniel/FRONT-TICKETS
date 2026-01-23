@@ -10,7 +10,7 @@ import { AnalystTabsComponent } from '../../components/analyst-tabs/analyst-tabs
   templateUrl: './analyst-home-page.html',
 })
 
-export default class AnalystHomePage {
+export default class AnalystHomePageComponent {
 
 
 }

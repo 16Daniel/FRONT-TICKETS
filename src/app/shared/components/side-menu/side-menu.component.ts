@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { DocumentsService } from '../../services/documents.service';
 import { VersionButtonComponent } from '../version-button/version-button.component';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
 
 @Component({

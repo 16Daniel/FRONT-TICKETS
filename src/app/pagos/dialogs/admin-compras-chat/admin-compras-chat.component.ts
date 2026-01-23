@@ -8,7 +8,7 @@ import { EditorModule } from 'primeng/editor';
 import { CardModule } from 'primeng/card';
 
 import { AdministracionCompra, PagoAdicional } from '../../interfaces/AdministracionCompra';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';

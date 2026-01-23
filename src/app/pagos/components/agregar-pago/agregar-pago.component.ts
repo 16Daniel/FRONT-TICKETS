@@ -10,7 +10,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 
 import { environment } from '../../../../environments/environments';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { PagoAdicional } from '../../interfaces/AdministracionCompra';

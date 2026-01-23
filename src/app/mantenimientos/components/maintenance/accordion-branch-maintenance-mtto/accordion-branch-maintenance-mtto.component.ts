@@ -5,7 +5,7 @@ import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
 import { BranchMaintenanceTableMttoComponent } from '../branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
-import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';

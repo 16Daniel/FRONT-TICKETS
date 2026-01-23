@@ -8,8 +8,8 @@ import { CardModule } from 'primeng/card';
 
 import { ModalSelectSpecialistUserComponent } from '../../../usuarios/dialogs/modal-select-specialist-user/modal-select-specialist-user.component';
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
-import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../interfaces/ticket.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 
 @Component({

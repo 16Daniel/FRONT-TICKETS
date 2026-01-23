@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { VersionControlService } from '../../../versiones/services/version-control.service';
 import { VersionUsuarioService } from '../../../versiones/services/version-usuario.service';
 import { ControlVersion } from '../../../versiones/interfaces/control-version.model';

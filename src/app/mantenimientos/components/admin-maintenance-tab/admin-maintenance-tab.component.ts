@@ -18,10 +18,10 @@ import { AccordionBranchMaintenanceMttoComponent } from '../maintenance/accordio
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Ticket } from '../../../tickets/models/ticket.model';
-import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Compra } from '../../../compras/models/compra.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

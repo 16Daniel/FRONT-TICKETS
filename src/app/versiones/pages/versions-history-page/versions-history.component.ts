@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { VersionControlService } from '../../services/version-control.service';
 import { VersionUsuarioService } from '../../services/version-usuario.service';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalVersionEditComponent } from '../../dialogs/modal-version-edit/modal-version-edit.component';
 import { ControlVersion } from '../../interfaces/control-version.model';
@@ -19,7 +19,7 @@ import { VersionUsuario } from '../../interfaces/version-usuario.model';
   styleUrl: './versions-history.component.scss',
 })
 
-export default class VersionsHistoryPage {
+export default class VersionsHistoryPageComponent {
   versionActual: ControlVersion | any;
   versiones: ControlVersion[] = [];
   versionSeleccionada: any;

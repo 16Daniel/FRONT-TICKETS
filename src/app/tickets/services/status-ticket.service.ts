@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EstatusTicket } from '../models/estatus-ticket.model';
+import { EstatusTicket } from '../interfaces/estatus-ticket.model';
 import { collection, collectionData, doc, Firestore, setDoc } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 

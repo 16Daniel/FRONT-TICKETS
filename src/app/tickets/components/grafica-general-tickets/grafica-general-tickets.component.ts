@@ -5,11 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { Timestamp } from '@angular/fire/firestore';
 import { TagModule } from 'primeng/tag';
 
-import { Area } from '../../../areas/models/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Categoria } from '../../models/categoria.mdoel';
-import { EstatusTicket } from '../../models/estatus-ticket.model';
-import { Ticket } from '../../models/ticket.model';
+import { Area } from '../../../areas/interfaces/area.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Categoria } from '../../interfaces/categoria.mdoel';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.model';
 

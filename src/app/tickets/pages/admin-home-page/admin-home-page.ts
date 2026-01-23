@@ -8,5 +8,5 @@ import { AdminTabsComponent } from '../../components/admin-tabs/admin-tabs.compo
   templateUrl: './admin-home-page.html',
 })
 
-export default class AdminHomePage {
+export default class AdminHomePageComponent {
 }

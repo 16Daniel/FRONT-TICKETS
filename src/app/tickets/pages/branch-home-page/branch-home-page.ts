@@ -21,7 +21,7 @@ import { NotificacionNuevoMensajeChatComponent } from '../../components/notifica
   providers: [MessageService, ConfirmationService],
   templateUrl: './branch-home-page.html',
 })
-export default class BranchHomePage {
+export default class BranchHomePageComponent {
   esEspectadorActivo: boolean = false;
 
   constructor() { }

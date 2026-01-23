@@ -94,7 +94,7 @@
       <p-multiSelect [options]="responsablesGlobalesOrdenados" [(ngModel)]="idsResponsablesGlobalesSeleccionados" optionLabel="nombre"
         optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES GLOBALES"
         class="custom-responsable-dropdown" [style]="{ width: '100%' }"
-        (onChange)="onResponsablesGlobalesChange($event.value)">
+        (onChange)="onResponsablesGlobalesChange($event.value)" [disabled]="textoBusqueda != ''">
 
         <ng-template pTemplate="item" let-item>
           <div class="d-flex justify-content-between align-items-center w-100">
@@ -115,7 +115,7 @@
       <p class="fw-bold mb-1">BÚSQUEDA GLOBAL</p>
       <span class="p-input-icon-left w-100">
         <input type="text" class="form-control" style="height: 45px;" (input)="onBuscarText()"
-          [(ngModel)]="textoBusqueda" placeholder="Buscar por título, descripción" />
+          [(ngModel)]="textoBusqueda" placeholder="Buscar por título, descripción" [disabled]="idsResponsablesGlobalesSeleccionados.length > 0" />
       </span>
     </div>
 

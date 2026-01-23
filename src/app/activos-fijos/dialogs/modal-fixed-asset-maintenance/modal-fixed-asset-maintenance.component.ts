@@ -6,8 +6,8 @@ import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Ticket } from '../../../tickets/models/ticket.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { FixedAssetsService } from '../../services/fixed-assets.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';

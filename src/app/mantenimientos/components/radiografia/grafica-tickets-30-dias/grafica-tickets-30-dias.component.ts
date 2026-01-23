@@ -3,7 +3,7 @@ import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
 
 import { TablaRadiografiaComponent } from '../tabla-radiografia/tabla-radiografia.component';
-import { Ticket } from '../../../../tickets/models/ticket.model';
+import { Ticket } from '../../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../../tickets/services/tickets.service';
 
 @Component({

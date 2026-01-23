@@ -9,7 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { RolesService } from '../../../roles/services/roles.service';

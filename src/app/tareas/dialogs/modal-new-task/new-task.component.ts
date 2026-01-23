@@ -7,7 +7,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
 import { EisenhowerPriorityChecksComponent } from '../../components/eisenhower-priority-checks/eisenhower-priority-checks.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';

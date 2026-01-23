@@ -10,7 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { Timestamp } from '@angular/fire/firestore';
 import { PagoAdicional } from '../../interfaces/AdministracionCompra';
 import { environment } from '../../../../environments/environments';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 
 

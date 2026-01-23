@@ -6,9 +6,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 
 import { ModalSubcategoryCreateComponent } from '../modal-subcategory-create/modal-subcategory-create.component';
-import { Categoria } from '../../models/categoria.mdoel';
-import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Subcategoria } from '../../models/subcategoria.model';
+import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { CategoriesService } from '../../services/categories.service';
 
 @Component({

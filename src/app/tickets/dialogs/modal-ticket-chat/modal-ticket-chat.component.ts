@@ -15,12 +15,12 @@ import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Ticket } from '../../models/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({

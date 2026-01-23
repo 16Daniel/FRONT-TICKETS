@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from "primeng/toast";
 
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
@@ -28,7 +28,7 @@ import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-e
   templateUrl: './eisenhower-matrix-page.html',
   styleUrl: './eisenhower-matrix-page.scss',
 })
-export class EisenhowerMatrixPage implements OnInit {
+export class EisenhowerMatrixPageComponent implements OnInit {
   tc1: Tarea[] = [];
   tc2: Tarea[] = [];
   tc3: Tarea[] = [];

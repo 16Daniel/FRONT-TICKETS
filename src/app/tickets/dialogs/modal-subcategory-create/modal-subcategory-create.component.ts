@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-import { Subcategoria } from '../../models/subcategoria.model';
+import { Subcategoria } from '../../interfaces/subcategoria.model';
 
 @Component({
   selector: 'app-modal-subcategory-create',

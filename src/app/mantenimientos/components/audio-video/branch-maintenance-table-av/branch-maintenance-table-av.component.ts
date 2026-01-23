@@ -6,7 +6,7 @@ import { ModalFinalCommentsComponent } from '../../../dialogs/modal-final-commen
 import { ModalAvMttoImguploaderComponent } from '../../../dialogs/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
 import { ModalVisorVariasImagenesComponent } from '../../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
-import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.model';

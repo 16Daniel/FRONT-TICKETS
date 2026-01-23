@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
-import { Compra } from '../../../compras/models/compra.model';
+import { Compra } from '../../../compras/interfaces/compra.model';
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 

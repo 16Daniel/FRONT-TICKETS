@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { TicketsTabComponent } from '../tickets-tab/tickets-tab.component';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { DashboardTasksPage } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
-import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
+import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
+import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 
 @Component({
   selector: 'app-analyst-tabs',
@@ -16,8 +16,8 @@ import { EisenhowerMatrixPage } from '../../../tareas/pages/eisenhower-matrix-pa
     FormsModule,
     CommonModule,
     TabViewModule,
-    DashboardTasksPage,
-    EisenhowerMatrixPage,
+    DashboardTasksPageComponent,
+    EisenhowerMatrixPageComponent,
     TicketsTabComponent
   ],
   templateUrl: './analyst-tabs.component.html',

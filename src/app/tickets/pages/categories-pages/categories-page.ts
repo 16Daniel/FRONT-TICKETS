@@ -9,8 +9,8 @@ import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
 import { ModalCategoryCreateComponent } from '../../dialogs/modal-category-create/modal-category-create.component';
-import { Categoria } from '../../models/categoria.mdoel';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { CategoriesService } from '../../services/categories.service';
 
 @Component({
@@ -29,7 +29,7 @@ import { CategoriesService } from '../../services/categories.service';
   templateUrl: './categories-page.html',
   styleUrl: './categories-page.scss'
 })
-export default class CategoriesPage {
+export default class CategoriesPageComponent {
   esNuevaCategoria: boolean = false;
   mostrarModalCategoria: boolean = false;
   categorias: Categoria[] = [];

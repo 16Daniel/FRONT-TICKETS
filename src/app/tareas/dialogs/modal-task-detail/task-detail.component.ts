@@ -15,7 +15,7 @@ import { TaskCommentBoxComponent } from '../../components/task-comment-box/task-
 import { EisenhowerPriorityChecksComponent } from '../../components/eisenhower-priority-checks/eisenhower-priority-checks.component';
 import { SubtasksBoxComponent } from '../../components/subtasks-box/subtasks-box.component';
 import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
-import { Area } from '../../../areas/models/area.model';
+import { Area } from '../../../areas/interfaces/area.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';

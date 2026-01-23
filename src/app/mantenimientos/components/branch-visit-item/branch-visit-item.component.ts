@@ -3,8 +3,8 @@ import { Component, Input } from '@angular/core';
 
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
-import { Ticket } from '../../../tickets/models/ticket.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.model';
 

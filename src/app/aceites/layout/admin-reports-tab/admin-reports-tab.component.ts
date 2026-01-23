@@ -9,11 +9,11 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { Subscription } from 'rxjs';
 
 import { GraficaGeneralTicketsComponent } from '../../../tickets/components/grafica-general-tickets/grafica-general-tickets.component';
-import { Ticket } from '../../../tickets/models/ticket.model';
-import { Area } from '../../../areas/models/area.model';
-import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Categoria } from '../../../tickets/models/categoria.mdoel';
-import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Area } from '../../../areas/interfaces/area.model';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Categoria } from '../../../tickets/interfaces/categoria.mdoel';
+import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';
