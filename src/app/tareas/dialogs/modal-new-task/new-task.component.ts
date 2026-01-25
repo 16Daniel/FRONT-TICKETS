@@ -12,9 +12,9 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
-import { Tarea } from '../../interfaces/tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
 

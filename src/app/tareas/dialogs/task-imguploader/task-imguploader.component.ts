@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { TareasService } from '../../services/tareas.service';
-import { Tarea } from '../../interfaces/tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
 
 @Component({
   selector: 'app-task-imguploader',

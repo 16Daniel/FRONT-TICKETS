@@ -15,9 +15,9 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
-import { Tarea } from '../../interfaces/tarea.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
+import { Tarea } from '../../interfaces/tarea.interface';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TasksFilterComponentComponent } from '../../components/tasks-filter-component/tasks-filter-component.component';
 import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.component';
 

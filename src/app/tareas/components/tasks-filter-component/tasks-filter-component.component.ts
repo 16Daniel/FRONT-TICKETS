@@ -10,7 +10,7 @@ import { ModalArchivedTasksComponent } from '../../dialogs/modal-archived-tasks/
 import { ModalLabelsTaskComponent } from '../../dialogs/modal-labels-task/modal-labels-task.component';
 import { NewTaskComponent } from '../../dialogs/modal-new-task/new-task.component';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 
 @Component({
   selector: 'app-tasks-filter-component',

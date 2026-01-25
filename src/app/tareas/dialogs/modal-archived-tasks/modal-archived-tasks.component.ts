@@ -15,8 +15,8 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { SearchFilterPipe } from '../../../shared/pipes/search-filter.pipe';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Tarea } from '../../interfaces/tarea.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 
 @Component({
   selector: 'app-modal-archived-tasks',
