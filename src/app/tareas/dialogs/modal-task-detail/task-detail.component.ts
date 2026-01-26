@@ -23,12 +23,12 @@ import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
-import { Tarea } from '../../interfaces/tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { EstatusTarea } from '../../interfaces/estatus-tarea.model';
-import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.model';
-import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
+import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.interface';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { AvatarModule } from 'ngx-avatars';
 
 @Component({

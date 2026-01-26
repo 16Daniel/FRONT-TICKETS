@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 
 @Component({
   selector: 'app-modal-labels-task',

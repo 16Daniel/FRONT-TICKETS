@@ -12,7 +12,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { ResponsableTarea } from '../interfaces/responsable-tarea.model';
+import { ResponsableTarea } from '../interfaces/responsable-tarea.interface';
 
 @Injectable({
   providedIn: 'root',

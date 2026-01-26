@@ -14,7 +14,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { EtiquetaTarea } from '../interfaces/etiqueta-tarea.model';
+import { EtiquetaTarea } from '../interfaces/etiqueta-tarea.interface';
 
 @Injectable({
   providedIn: 'root',

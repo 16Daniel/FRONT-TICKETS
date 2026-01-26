@@ -15,7 +15,11 @@ export class Tarea {
   urgente: string = '';
   importante: string = '';
   idEisenhower: string = '';
-  subtareas?: { terminado: boolean, titulo: string }[] = [];
+  subtareas?: {
+    titulo: string;
+    terminado: boolean;
+    idResponsable?: string | null;
+  }[] = [];
   porcentaje: number = 0;
   deathline: Date | null = null;
   idsResponsables: string[] = []

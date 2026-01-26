@@ -15,7 +15,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 
 @Component({
   selector: 'app-modal-task-responsible',
