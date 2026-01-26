@@ -74,11 +74,6 @@ export class SubtasksBoxComponent implements OnInit {
 
   onResponsableSubtareaClear(st: any) {
     st.idResponsable = null;
-
-    // opcional: si quieres forzar refresco visual
-    // st = { ...st };
-
-    console.log('Responsable limpiado en subtarea:', st.titulo);
   }
 
 }
