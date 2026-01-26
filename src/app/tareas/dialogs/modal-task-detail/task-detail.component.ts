@@ -367,4 +367,9 @@ export class TaskDetailComponent implements OnInit {
       tarea.idsResponsables?.includes(r.id!)
     );
   }
+
+  onSeleccionarLider(responsable: ResponsableTarea) {
+    console.log(responsable);
+    this.tarea.idResponsablePrincipal = responsable.id;
+   }
 }

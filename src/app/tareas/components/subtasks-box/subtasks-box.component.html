@@ -34,8 +34,8 @@
 
         <!-- IZQUIERDA -->
         <div class="d-flex align-items-center gap-2">
-          <ngx-avatars [name]="getResponsablesDeTarea(st.idResponsable)?.nombre" [size]="30" class="avatar-item"
-            pTooltip="{{getResponsablesDeTarea(st.idResponsable)?.nombre }}"
+          <ngx-avatars *ngIf="st.idResponsable" [name]="getResponsablesDeTarea(st.idResponsable)?.nombre" [size]="30"
+            class="avatar-item" pTooltip="{{ getResponsablesDeTarea(st.idResponsable)?.nombre }}"
             [bgColor]="getResponsablesDeTarea(st.idResponsable)?.color">
           </ngx-avatars>
 
@@ -53,7 +53,7 @@
           <!-- RESPONSABLE -->
           <p-dropdown [options]="responsables" optionLabel="nombre" optionValue="id" [(ngModel)]="st.idResponsable"
             placeholder="RESPONSABLE" [showClear]="true" [style]="{ width: '160px' }"
-            [ngModelOptions]="{ standalone: true }" (onChange)="onResponsableSubtareaChange()">
+            [ngModelOptions]="{ standalone: true }" (onClear)="onResponsableSubtareaClear(st)">
           </p-dropdown>
 
           <!-- ELIMINAR -->

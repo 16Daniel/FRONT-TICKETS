@@ -22,7 +22,8 @@ export class Tarea {
   }[] = [];
   porcentaje: number = 0;
   deathline: Date | null = null;
-  idsResponsables: string[] = []
+  idsResponsables: string[] = [];
+  idResponsablePrincipal?: string;
   eliminado: boolean = false;
   idEtiqueta: string = '';
 }
