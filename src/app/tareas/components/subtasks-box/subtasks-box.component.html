@@ -1,52 +1,69 @@
 <div *ngIf="mostrarSubtareas || tarea.subtareas?.length > 0" class="p-2 border rounded" style="background: #fafafa;">
 
-    <div class="mb-2">
-        <label class="fw-bold subtareas-text">AGREGAR SUBTAREA</label>
-        <div class="d-flex gap-2">
-            <input class="form-control" [(ngModel)]="nuevaSubtarea" placeholder="ESCRIBE UNA SUBTAREA...">
+  <div class="mb-2">
+    <label class="fw-bold subtareas-text">AGREGAR SUBTAREA</label>
+    <div class="d-flex gap-2">
+      <input class="form-control" [(ngModel)]="nuevaSubtarea" placeholder="ESCRIBE UNA SUBTAREA...">
 
-            <button type="button" class="btn btn-success" (click)="agregarSubtarea()">
-                <i class="bx bx-plus"></i>
-            </button>
+      <button type="button" class="btn btn-success" (click)="agregarSubtarea()">
+        <i class="bx bx-plus"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="tarea.subtareas?.length">
+    <p class="fw-bold mt-3 subtareas-text">SUBTAREAS AGREGADAS</p>
+
+    <!-- PROGRESS BAR -->
+    <div *ngIf="tarea.subtareas?.length" class="mt-3">
+      <label class="fw-bold subtareas-text">PROGRESO</label>
+
+      <div class="progress" style="height: 20px;">
+        <div class="progress-bar" role="progressbar" [ngClass]="getProgressColor()" [style.width.%]="calcularProgreso()"
+          style="transition: width 0.4s ease;">
+          {{ calcularProgreso() }}%
         </div>
+      </div>
     </div>
 
-    <div *ngIf="tarea.subtareas?.length">
-        <p class="fw-bold mt-3 subtareas-text">SUBTAREAS AGREGADAS</p>
+    <br>
 
-        <!-- PROGRESS BAR -->
-        <div *ngIf="tarea.subtareas?.length" class="mt-3">
-            <label class="fw-bold subtareas-text">PROGRESO</label>
+    <ul class="list-group">
+      <li *ngFor="let st of tarea.subtareas; let i = index"
+        class="list-group-item d-flex align-items-center justify-content-between subtarea-item">
 
-            <div class="progress" style="height: 20px;">
-                <div class="progress-bar" role="progressbar" [ngClass]="getProgressColor()"
-                    [style.width.%]="calcularProgreso()" style="transition: width 0.4s ease;">
-                    {{ calcularProgreso() }}%
-                </div>
-            </div>
+        <!-- IZQUIERDA -->
+        <div class="d-flex align-items-center gap-2">
+          <ngx-avatars [name]="getResponsablesDeTarea(st.idResponsable)?.nombre" [size]="30" class="avatar-item"
+            pTooltip="{{getResponsablesDeTarea(st.idResponsable)?.nombre }}"
+            [bgColor]="getResponsablesDeTarea(st.idResponsable)?.color">
+          </ngx-avatars>
+
+          <input type="checkbox" [ngModelOptions]="{ standalone: true }" [(ngModel)]="st.terminado"
+            class="form-check-input">
+
+          <span [ngClass]="{ 'text-decoration-line-through': st.terminado }">
+            {{ st.titulo }}
+          </span>
         </div>
 
-        <br>
+        <!-- DERECHA -->
+        <div class="d-flex align-items-center gap-2">
 
-        <ul class="list-group">
-            <li *ngFor="let st of tarea.subtareas; let i = index"
-                class="list-group-item d-flex align-items-center justify-content-between subtarea-item">
+          <!-- RESPONSABLE -->
+          <p-dropdown [options]="responsables" optionLabel="nombre" optionValue="id" [(ngModel)]="st.idResponsable"
+            placeholder="RESPONSABLE" [showClear]="true" [style]="{ width: '160px' }"
+            [ngModelOptions]="{ standalone: true }" (onChange)="onResponsableSubtareaChange()">
+          </p-dropdown>
 
-                <div class="d-flex align-items-center">
-                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="st.terminado"
-                        class="form-check-input me-2">
+          <!-- ELIMINAR -->
+          <button type="button" class="btn btn-danger btn-sm" (click)="eliminarSubtarea(i)">
+            <i class="bx bx-trash"></i>
+          </button>
 
-                    <span [ngClass]="{'text-decoration-line-through': st.terminado}">
-                        {{ st.titulo }}
-                    </span>
-                </div>
+        </div>
+      </li>
 
-                <!-- BOTÓN ELIMINAR -->
-                <button type="button" class="btn btn-danger btn-sm" (click)="eliminarSubtarea(i)">
-                    <i class="bx bx-trash"></i>
-                </button>
-
-            </li>
-        </ul>
-    </div>
+    </ul>
+  </div>
 </div>
