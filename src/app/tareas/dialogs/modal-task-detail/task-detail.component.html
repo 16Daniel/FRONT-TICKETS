@@ -12,7 +12,7 @@
 
         <div class="avatars-container d-flex" *ngIf="tarea.idsResponsables?.length">
           <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30" class="avatar-item"
-            pTooltip="{{ r.nombre }}" [bgColor]="r.color">
+            pTooltip="{{ tarea.idResponsablePrincipal ==  r.nombre }}" [bgColor]="r.color" (click)="onSeleccionarLider(r)" [class.selected]="tarea.idResponsablePrincipal === r.id">
           </ngx-avatars>
         </div>
 
