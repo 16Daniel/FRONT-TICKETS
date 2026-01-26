@@ -68,12 +68,17 @@ export class SubtasksBoxComponent implements OnInit {
     return 'bg-success';
   }
 
-  onResponsableSubtareaChange() {
-    // this.guardarCambiosSubtareas();
-  }
-
   getResponsablesDeTarea(idResponsable: string) {
     return this.responsables.find(r => r.id == idResponsable);
+  }
+
+  onResponsableSubtareaClear(st: any) {
+    st.idResponsable = null;
+
+    // opcional: si quieres forzar refresco visual
+    // st = { ...st };
+
+    console.log('Responsable limpiado en subtarea:', st.titulo);
   }
 
 }
