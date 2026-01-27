@@ -199,8 +199,18 @@ export class DashboardTasksPageComponent implements OnInit {
         }
 
         this.distribuirTareas(tareasFiltradas);
-      });
+           if(this.idEtiquetaSeleccionada &&  this.idEtiquetaSeleccionada != '')
+        {
+          this.onEtiquetaChange();
+        }
 
+      if(this.idResponsableSeleccionado)
+        {
+          this.onResponsableChange();
+        }
+        
+      });
+  
       return;
     }
 
@@ -210,8 +220,19 @@ export class DashboardTasksPageComponent implements OnInit {
       .subscribe(tareas => {
         this.allTasks = tareas;
         this.distribuirTareas(this.allTasks);
-      });
 
+            if(this.idEtiquetaSeleccionada &&  this.idEtiquetaSeleccionada != '')
+        {
+          this.onEtiquetaChange();
+        }
+
+      if(this.idResponsableSeleccionado)
+        {
+          this.onResponsableChange();
+        }
+
+      });
+      
   }
 
   showMessage = (sev: string, summ: string, det: string) =>
@@ -250,6 +271,9 @@ export class DashboardTasksPageComponent implements OnInit {
     this.check = filtradas.filter(x => x.idEstatus == '3');
     this.done = filtradas.filter(x => x.idEstatus == '4');
 
+    let tareasfiltradas:Tarea[] = [...this.toDo,...this.working,...this.check];
+   this.tareasService.updateTasks(tareasfiltradas); 
+
     this.cdr.detectChanges();
   }
 
@@ -284,6 +308,9 @@ export class DashboardTasksPageComponent implements OnInit {
     this.done = tareas.filter(x => x.idEstatus === '4');
 
     this.cdr.detectChanges();
+
+   let tareasfiltradas:Tarea[] = [...this.toDo,...this.working,...this.check];
+   this.tareasService.updateTasks(tareasfiltradas); 
   }
 
   private actualizarOrdenColumna(tareas: Tarea[]) {

@@ -56,8 +56,12 @@
 
     <br>
 
-    <app-dashboard-tasks-page *ngIf="!verEisenhower"></app-dashboard-tasks-page>
-    <app-eisenhower-matrix-page *ngIf="verEisenhower"></app-eisenhower-matrix-page>
+    <!-- <app-dashboard-tasks-page *ngIf="!verEisenhower"></app-dashboard-tasks-page>
+    <app-eisenhower-matrix-page *ngIf="verEisenhower"></app-eisenhower-matrix-page> -->
+
+        <app-dashboard-tasks-page [hidden]="verEisenhower || sucursal.id == undefined"></app-dashboard-tasks-page>
+    <app-eisenhower-matrix-page [hidden]="!verEisenhower || sucursal.id == undefined"></app-eisenhower-matrix-page>
+    
   </p-tabPanel>
 
 
