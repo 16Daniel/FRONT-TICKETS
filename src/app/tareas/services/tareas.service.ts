@@ -14,7 +14,7 @@ import {
   QueryConstraint,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, combineLatest, map, Observable, of } from 'rxjs';
-import { Tarea } from '../interfaces/tarea.model';
+import { Tarea } from '../interfaces/tarea.interface';
 
 @Injectable({
   providedIn: 'root',
