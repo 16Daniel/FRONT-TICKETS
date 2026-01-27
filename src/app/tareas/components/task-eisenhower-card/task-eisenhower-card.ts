@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
-import { Tarea } from '../../interfaces/tarea.model';
-import { EstatusTarea } from '../../interfaces/estatus-tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
+import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 
 
 @Component({

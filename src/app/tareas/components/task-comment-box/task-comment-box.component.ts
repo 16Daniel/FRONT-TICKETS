@@ -9,7 +9,7 @@ import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor
 import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
 import { TareasService } from '../../services/tareas.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
-import { Tarea } from '../../interfaces/tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 
 @Component({

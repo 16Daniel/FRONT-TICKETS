@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { TaskCardComponent } from '../task-card/task-card.component';
-import { Tarea } from '../../interfaces/tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
 
 @Component({
   selector: 'app-tasks-board',

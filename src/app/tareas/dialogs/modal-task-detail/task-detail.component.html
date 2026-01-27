@@ -11,9 +11,20 @@
         </div>
 
         <div class="avatars-container d-flex" *ngIf="tarea.idsResponsables?.length">
-          <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30" class="avatar-item"
-            pTooltip="{{ r.nombre }}" [bgColor]="r.color">
-          </ngx-avatars>
+          <div class="avatar-wrapper" *ngFor="let r of getResponsablesDeTarea(tarea)"
+            [class.selected]="tarea.idResponsablePrincipal === r.id" (click)="onSeleccionarLider(r)">
+
+            <!-- CORONA -->
+            <!-- <i class="pi pi-crown crown-icon"></i> -->
+            <i class="fas fa-crown crown-icon"></i>
+
+            <ngx-avatars class="avatar-item" [name]="r.nombre" [size]="30" [bgColor]="r.color" pTooltip="{{ tarea.idResponsablePrincipal === r.id
+      ? 'LÍDER DE PROYECTO: ' + r.nombre
+      : r.nombre }}">
+            </ngx-avatars>
+
+          </div>
+
         </div>
 
       </div>

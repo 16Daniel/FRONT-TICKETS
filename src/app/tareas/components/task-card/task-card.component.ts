@@ -11,9 +11,9 @@ import { TareasService } from '../../services/tareas.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Tarea } from '../../interfaces/tarea.model';
-import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({

@@ -1,7 +1,15 @@
 .subtareas-text {
-    font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 .subtarea-item {
-    font-size: 1.3rem;
+  font-size: 1.3rem;
+}
+
+:host ::ng-deep .p-dropdown {
+  font-size: 0.8rem;
+}
+
+:host ::ng-deep .p-dropdown-label {
+  padding: 0.25rem 0.5rem;
 }

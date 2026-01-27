@@ -13,11 +13,11 @@ import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
-import { Tarea } from '../../interfaces/tarea.model';
-import { EstatusTarea } from '../../interfaces/estatus-tarea.model';
-import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.model';
+import { Tarea } from '../../interfaces/tarea.interface';
+import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-eisenhower-card';
 import { Subscription } from 'rxjs';
 
