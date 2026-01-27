@@ -13,14 +13,16 @@ import {
   getDocs,
   QueryConstraint,
 } from '@angular/fire/firestore';
-import { combineLatest, map, Observable, of } from 'rxjs';
-import { Tarea } from '../interfaces/tarea.interface';
+import { BehaviorSubject, combineLatest, map, Observable, of } from 'rxjs';
+import { Tarea } from '../interfaces/tarea.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TareasService {
   private pathName: string = 'tareas';
+   private tasksSubject = new BehaviorSubject<any[]>([]);
+  tasks$ = this.tasksSubject.asObservable();
 
   constructor(private firestore: Firestore) { }
 
@@ -177,5 +179,13 @@ export class TareasService {
         );
       })
     );
+  }
+
+  updateTasks(tasks: any[]) {
+    this.tasksSubject.next(tasks);
+  }
+
+  getCurrentTasks() {
+    return this.tasksSubject.value;
   }
 }

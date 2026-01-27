@@ -1,68 +1,4 @@
 
- <div class="row">
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">SUCURSAL Ó DEPARTAMENTO</p>
-      <p-dropdown [options]="sucursales" [(ngModel)]="idSucursalSeleccionada" name="sucursal" [optionValue]="'id'"
-        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
-        [style]="{width:'100%'}" required="true" (onChange)="onSucursalChange()">
-      </p-dropdown>
-    </div>
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">ETIQUETAS</p>
-      <p-dropdown [options]="etiquetasFiltradas" [(ngModel)]="etiquetaSeleccionada" name="etiquetas" optionValue="id"
-        optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS" [style]="{width:'100%'}"
-        (onChange)="onEtiquetaChange()" [showClear]="true">
-
-        <ng-template pTemplate="selectedItem" let-selected>
-          <div class="flex align-items-center gap-2" *ngIf="selected">
-
-            <!-- círculo de color -->
-            <span class="label-dot" [style.background]="selected.color">
-            </span>
-
-            <span>{{ selected.nombre }}</span>
-          </div>
-        </ng-template>
-
-        <ng-template pTemplate="item" let-item>
-          <div class="flex align-items-center gap-2">
-
-            <!-- círculo de color -->
-            <span class="label-dot" [style.background]="item.color">
-            </span>
-
-            <span>{{ item.nombre }}</span>
-          </div>
-        </ng-template>
-
-      </p-dropdown>
-    </div>
-    <div class="col-md-4">
-      <p class="fw-bold mb-1">RESPONSABLES</p>
-
-      <p-dropdown [options]="responsablesFiltrados" [(ngModel)]="responsableSeleccionado" name="responsables"
-        optionValue="id" optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="RESPONSABLES"
-        [style]="{ width: '100%' }" (onChange)="onResponsableChange()" [showClear]="true">
-
-        <!-- ITEM SELECCIONADO -->
-        <ng-template pTemplate="selectedItem" let-selected>
-          <div class="flex align-items-center gap-2" *ngIf="selected">
-            <span>{{ selected.nombre }}</span>
-          </div>
-        </ng-template>
-
-        <!-- ITEM LISTA -->
-        <ng-template pTemplate="item" let-item>
-          <div class="flex align-items-center gap-2">
-            <span>{{ item.nombre }}</span>
-          </div>
-        </ng-template>
-
-      </p-dropdown>
-    </div>
-
-  </div>
-
 
 <div class="d-flex justify-content-center" *ngIf="loading">
                     <div class="lds-ring">
@@ -76,7 +12,7 @@
 <div class="parent mt-3" *ngIf="!loading">
 <div class="div1 p-0 shadow rounded-3"> 
    <div class="rounded-3 p-3" style="background-color: rgb(156, 234, 156); color: rgb(0, 0, 0);">
-     <p class="m-0 fs-5 text-center">IMPORTANTE / URGENTE ⚡ REALIZALO YA! </p>
+     <p class="m-0 fs-5 text-center">C1:🔥PELIGRO! Hazlo ya </p>
    </div>
 
      <div class="columna p-3" cdkDropList id="c1" [cdkDropListData]="tc1" style="max-height: 300px; overflow: auto;"
@@ -93,7 +29,7 @@
 <div class="div2 p-0 shadow rounded-3" >
 
     <div class="rounded-3 p-3 shadow rounded-3" style="background-color: rgb(118, 191, 255); color: rgb(0, 0, 0);">
-     <p class="m-0 fs-5 text-center">IMPORTANTE / NO URGENTE 🗓️ AGENDALO Y PLANIFICALO...</p>
+     <p class="m-0 fs-5 text-center">C2:💎 VALOR! Planifícalo ya</p>
    </div>
 
      <div class="columna p-3" cdkDropList id="c2" [cdkDropListData]="tc2" style="max-height: 300px; overflow: auto;"
@@ -107,7 +43,7 @@
 
 <div class="div3 p-0 shadow rounded-3">  
     <div class="rounded-3 p-3" style="background-color: rgb(243, 234, 167); color: rgb(0, 0, 0);">
-     <p class="m-0 fs-5 text-center">URGENTE / NO IMPORTANTE ➡️ DELEGALO...</p>
+     <p class="m-0 fs-5 text-center">C3:📢 RUIDO! Si puedes, delégalo</p>
    </div>
 
      <div class="columna p-3" cdkDropList id="c3" [cdkDropListData]="tc3" style="max-height: 300px; overflow: auto;"
@@ -122,7 +58,7 @@
 
 <div class="div4 p-0 shadow rounded-3" >
   <div class="rounded-3 p-3" style="background-color: rgb(243, 167, 167); color: rgb(0, 0, 0);">
-     <p class="m-0 fs-5 text-center">NO URGENTE / NO IMPORTANTE ⏳ PUEDE ESPERAR..</p>
+     <p class="m-0 fs-5 text-center">C4:⏳TRANQUILO.. Puede esperar</p>
    </div>
       <div class="columna p-3" cdkDropList id="c4" [cdkDropListData]="tc4" style="max-height: 300px; overflow: auto;"
     [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">

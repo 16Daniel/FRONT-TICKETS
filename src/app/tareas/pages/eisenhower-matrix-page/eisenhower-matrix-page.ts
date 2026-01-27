@@ -19,6 +19,7 @@ import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-eisenhower-card';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-eisenhower-matrix-page',
@@ -33,7 +34,8 @@ export class EisenhowerMatrixPageComponent implements OnInit {
   tc2: Tarea[] = [];
   tc3: Tarea[] = [];
   tc4: Tarea[] = [];
-  loading: boolean = true;
+  private subscription: Subscription | undefined;
+  loading: boolean = false;
   dropListIds = ['c1', 'c2', 'c3', 'c4'];
   catEstatusTareas: EstatusTarea[] = [];
   usuario: Usuario;
@@ -56,9 +58,6 @@ export class EisenhowerMatrixPageComponent implements OnInit {
     private tareasService: TareasService,
     private messageService: MessageService,
     private statustaskService: StatusTaskService,
-    private labelsTasksService: LabelsTasksService,
-    private raskResponsibleService: TaskResponsibleService,
-    private branchesService: BranchesService,
     private cdr: ChangeDetectorRef,
   ) {
     this.statustaskService.estatus$.subscribe(catEstatus => this.catEstatusTareas = catEstatus)
@@ -68,45 +67,27 @@ export class EisenhowerMatrixPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.initData()
-    this.obtenerSucursales();
-
-    this.labelsTasksService.etiquetas$.subscribe(et => {
-      this.etiquetasTodas = et;
-      this.filtrarEtiquetas();
-    });
-
-    this.raskResponsibleService.responsables$.subscribe(responsable => {
-      this.responsablesTodos = responsable;
-      this.filtrarResponsables();
-    });
   }
 
-  obtenerSucursales() {
-    this.branchesService.get().subscribe({
-      next: (data) => {
-        this.sucursales = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => { },
-    });
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
-
 
   initData() {
-    this.tareasService.getBySucursal(this.idSucursalSeleccionada).subscribe((tareas: Tarea[]) => {
 
-      this.allTasks = tareas.filter(x => x.idEstatus != '4');
+     this.subscription = this.tareasService.tasks$.subscribe(tasks => {
+      this.allTasks = tasks;
 
-      this.tc1 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
-      this.tc2 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
-      this.tc3 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
-      this.tc4 = tareas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
-      this.loading = false;
-      this.cdr.detectChanges();
+       this.tc1 = this.allTasks.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
+      this.tc2 = this.allTasks.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
+      this.tc3 = this.allTasks.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
+      this.tc4 = this.allTasks.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
 
-      this.filtrarEtiquetas();
-      this.filtrarResponsables();
-    })
+      this.cdr.detectChanges(); 
+
+    });
   }
 
   async drop(event: CdkDragDrop<Tarea[]>) {
@@ -164,71 +145,6 @@ export class EisenhowerMatrixPageComponent implements OnInit {
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
-
-  onSucursalChange() {
-    this.initData();
-    this.filtrarEtiquetas();
-    this.filtrarResponsables();
-
-  }
-
-  onEtiquetaChange() {
-    debugger
-    if (!this.etiquetaSeleccionada || this.etiquetaSeleccionada === '') {
-      this.initData();
-      return;
-    }
-
-    const filtradas = this.allTasks.filter(t =>
-      t.idEtiqueta && t.idEtiqueta === this.etiquetaSeleccionada
-    );
-
-    this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
-    this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
-    this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
-    this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
-    this.cdr.detectChanges();
-  }
-
-  filtrarEtiquetas(): void {
-    if (!this.idSucursalSeleccionada) {
-      this.etiquetasFiltradas = this.etiquetasTodas;
-      return;
-    }
-
-    this.etiquetasFiltradas =
-      this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
-  }
-
-  filtrarResponsables(): void {
-    if (!this.idSucursalSeleccionada) {
-      this.responsablesFiltrados = this.responsablesTodos;
-      return;
-    }
-
-    this.responsablesFiltrados =
-      this.raskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
-  }
-
-  onResponsableChange() {
-
-    if (!this.responsableSeleccionado || this.responsableSeleccionado === '') {
-      this.initData();
-      return;
-    }
-
-    const filtradas = this.allTasks.filter(t =>
-      Array.isArray(t.idsResponsables) &&
-      t.idsResponsables.includes(this.responsableSeleccionado)
-    );
-
-    this.tc1 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '1');
-    this.tc2 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '2');
-    this.tc3 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
-    this.tc4 = filtradas.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
-
-    this.cdr.detectChanges();
   }
 
   abrirDetalle(tarea: Tarea) {
