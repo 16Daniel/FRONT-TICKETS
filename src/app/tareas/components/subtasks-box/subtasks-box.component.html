@@ -53,7 +53,8 @@
           <!-- RESPONSABLE -->
           <p-dropdown [options]="responsables" optionLabel="nombre" optionValue="id" [(ngModel)]="st.idResponsable"
             placeholder="RESPONSABLE" [showClear]="true" [style]="{ width: '160px' }"
-            [ngModelOptions]="{ standalone: true }" (onClear)="onResponsableSubtareaClear(st)">
+            [ngModelOptions]="{ standalone: true }" (onClear)="onResponsableSubtareaClear(st)"
+            (onChange)="onResponsableSubtareaChange()">
           </p-dropdown>
 
           <!-- ELIMINAR -->

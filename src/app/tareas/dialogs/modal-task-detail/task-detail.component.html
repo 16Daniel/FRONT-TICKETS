@@ -36,7 +36,8 @@
           <!-- ID / TÍTULO -->
           <div class="mb-3">
             <label class="fw-bold">TÍTULO</label>
-            <input [(ngModel)]="tarea.titulo" name="titulo" class="form-control" placeholder="Título de la tarea">
+            <input [(ngModel)]="tarea.titulo" name="titulo" class="form-control" placeholder="Título de la tarea"
+              (change)="guardarCambios()">
           </div>
 
           <div class="row mb-3">
@@ -45,7 +46,7 @@
               <label class="fw-bold d-block mb-1">ESTATUS</label>
               <p-dropdown [options]="estatusTeras" [(ngModel)]="tarea.idEstatus" name="estatusTeras" optionValue="id"
                 optionLabel="nombre" [filter]="true" filterBy="nombre" [style]="{width:'100%'}"
-                placeholder="SELECCIONA ESTATUS DE LA TAREA" required>
+                placeholder="SELECCIONA ESTATUS DE LA TAREA" required (onChange)="guardarCambios()">
 
                 <ng-template pTemplate="selectedItem" let-selected>
                   <div class="flex align-items-center gap-2" *ngIf="selected">
@@ -71,7 +72,7 @@
               <label class="fw-bold d-block mb-1">ETIQUETA</label>
               <p-dropdown [options]="etiquetas" [(ngModel)]="tarea.idEtiqueta" name="etiquetas" optionValue="id"
                 optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="ETIQUETAS"
-                placeholder="SELECCIONA ETIQUETA DE LA TAREA" [style]="{width:'100%'}">
+                placeholder="SELECCIONA ETIQUETA DE LA TAREA" [style]="{width:'100%'}" (onChange)="guardarCambios()">
 
                 <ng-template pTemplate="selectedItem" let-selected>
                   <div class="flex align-items-center gap-2" *ngIf="selected">
@@ -130,10 +131,10 @@
           <div class="row mb3">
             <div class="col-md-6">
               <!-- SUCURSAL -->
-              <p class="fw-bold">RESPONSABLE</p>
+              <p class="fw-bold">SUCURSAL / DEPARTAMENTO</p>
               <p-dropdown [options]="sucursales" [(ngModel)]="tarea.idSucursal" name="sucursal" [optionValue]="'id'"
                 optionLabel="nombre" [filter]="true" filterBy="nombre" placeholder="SELECCIONA SUCURSAL / DEPARTAMENTO"
-                [style]="{width:'100%'}" required="true">
+                [style]="{width:'100%'}" required="true" (onChange)="guardarCambios()">
               </p-dropdown>
 
               <p></p>
@@ -143,7 +144,8 @@
               <p class="fw-bold">CATEGORÍA</p>
               <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA CATEGORÍA"
                 [(ngModel)]="tarea.categoria" name="categoria" #formCategoriaCtrl="ngModel" required minlength="3"
-                maxlength="50" [ngClass]="{'p-invalid': formCategoriaCtrl.invalid && formCategoriaCtrl.touched}">
+                maxlength="50" [ngClass]="{'p-invalid': formCategoriaCtrl.invalid && formCategoriaCtrl.touched}"
+                (change)="guardarCambios()">
 
               <!-- Mensajes de validación -->
               <small *ngIf="formCategoriaCtrl.errors?.['required'] && formCategoriaCtrl.touched" class="p-error">
@@ -167,7 +169,7 @@
 
               <!-- SLIDER -->
               <input type="range" class="form-range mt-2" min="0" max="100" [(ngModel)]="tarea.porcentaje"
-                name="porcentaje" style="height: 6px; cursor: pointer;">
+                name="porcentaje" style="height: 6px; cursor: pointer;" (change)="guardarCambios()">
 
               <!-- BARRA DE PROGRESO -->
               <div class="progress mt-2" style="height: 20px;">
@@ -184,7 +186,8 @@
             <!-- DEADLINE / FECHA LÍMITE -->
             <div class="col-md-6 mb-3">
               <label class="fw-bold">FECHA LÍMITE (DEADLINE)</label>
-              <input type="date" class="form-control" [(ngModel)]="tarea.deathline" name="deathline">
+              <input type="date" class="form-control" [(ngModel)]="tarea.deathline" name="deathline"
+                (change)="guardarCambios()">
             </div>
           </div>
 
@@ -262,7 +265,8 @@
         </div>
 
         <app-subtasks-box [tarea]="tarea" [mostrarSubtareas]="mostrarSubtareas"
-          (subtareaAgregada)="agregarSubtarea($event)">
+          (subtareaAgregada)="agregarSubtarea($event)" (responsableEditado)="guardarCambios()"
+          (subtareaEliminada)="guardarCambios()">
         </app-subtasks-box>
 
         <!-- BOTONES -->

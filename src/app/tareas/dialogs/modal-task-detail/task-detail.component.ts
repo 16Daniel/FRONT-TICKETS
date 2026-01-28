@@ -183,6 +183,8 @@ export class TaskDetailComponent implements OnInit {
       titulo: texto,
       terminado: false
     });
+
+    this.guardarCambios();
   }
 
   getProgressColor(porcentaje: number) {
@@ -280,6 +282,8 @@ export class TaskDetailComponent implements OnInit {
   guardarDescripcion() {
     this.tarea.descripcion = this.descripcionEditada;
     this.editandoDescripcion = false;
+
+    this.guardarCambios();
   }
 
   enviarCorreo(responsable: ResponsableTarea) {
@@ -369,7 +373,18 @@ export class TaskDetailComponent implements OnInit {
   }
 
   onSeleccionarLider(responsable: ResponsableTarea) {
-    console.log(responsable);
-    this.tarea.idResponsablePrincipal = responsable.id;
-   }
+    if (this.tarea.idResponsablePrincipal == responsable.id) {
+      this.tarea.idResponsablePrincipal = null;
+    }
+    else {
+      this.tarea.idResponsablePrincipal = responsable.id;
+    }
+
+    this.guardarCambios();
+  }
+
+  async guardarCambios() {
+    await this.tareasService.update(this.tarea, this.tarea.id!);
+    this.showMessage('success', 'Success', 'Enviado correctamente');
+  }
 }
