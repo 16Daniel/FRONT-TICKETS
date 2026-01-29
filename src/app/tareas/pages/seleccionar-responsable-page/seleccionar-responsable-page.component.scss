@@ -1,0 +1,51 @@
+.responsables-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.responsable-card {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f5f7fa;
+  }
+
+  &.selected {
+    border-color: #0d6efd;
+    background: #eef4ff;
+  }
+}
+
+.color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+.nombre {
+  font-weight: 600;
+}
+
+.posicion {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.titulo-responsables {
+  text-align: center;
+  font-weight: 600;
+  font-size: 4rem;
+  margin-bottom: 10px;
+  color: #ff5500;
+}

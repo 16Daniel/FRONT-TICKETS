@@ -6,7 +6,6 @@ import {
   collection,
   doc,
   Firestore,
-  getDocs,
   onSnapshot,
   query,
   updateDoc,
@@ -92,12 +91,15 @@ export class TaskResponsibleService {
   }
 
   public filtrarPorSucursal(
-    idSucursal: string | null
+    idSucursal: string | null,
+    globales: boolean = true
   ): ResponsableTarea[] {
     if (!idSucursal) return [];
 
     return this._responsables.filter(
-      r => r.idSucursal === idSucursal || r.esGlobal
+      r =>
+        r.idSucursal === idSucursal ||
+        (globales && r.esGlobal)
     );
   }
 

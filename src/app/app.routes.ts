@@ -75,6 +75,10 @@ export const routes: Routes = [
   },
   {
     path: '',
+    loadChildren: () => import('./tareas/tareas.routes')
+  },
+  {
+    path: '',
     loadChildren: () => import('./auth/auth.routes'),
   },
   {
