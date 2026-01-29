@@ -3,6 +3,7 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { CommonModule } from '@angular/common';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-seleccionar-responsable-page',
@@ -19,6 +20,8 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
   usuario!: Usuario;
   idSucursalSeleccionada: string = '';
 
+  constructor(private router: Router) { }
+
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
@@ -29,6 +32,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
   }
 
   onSeleccionar(responsable: ResponsableTarea) {
-    // this.responsableActivoSeleccionado = responsable;
+    localStorage.setItem('responsable-tareas', JSON.stringify(responsable));
+    this.router.navigate(['/main/home-a']);
   }
 }

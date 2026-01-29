@@ -75,19 +75,20 @@ export default class LoginComponent {
 
         localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
 
-        if (userd.idRol === '1' || userd.idRol === '5') {
-          this.router.navigate(['/main/home-a']);
-        } else if (userd.idRol === '2' || userd.idRol === '3') {
-          this.router.navigate(['/main/home']);
-        } else if (userd.idRol === '4') {
-          this.router.navigate(['/main/home-s']);
-        } else if (userd.idRol === '6') {
-          this.router.navigate(['/cedis/recoleccion']);
-        } else if (userd.idRol === '7') {
-          this.router.navigate(['/main/home-specialist']);
-        } else if (userd.idRol === '8') {
-          this.router.navigate(['/nomina/control-de-personal']);
-        }
+        this.router.navigate(['/tareas/selecciona-responsable']);
+        // if (userd.idRol === '1' || userd.idRol === '5') {
+        //   this.router.navigate(['/main/home-a']);
+        // } else if (userd.idRol === '2' || userd.idRol === '3') {
+        //   this.router.navigate(['/main/home']);
+        // } else if (userd.idRol === '4') {
+        //   this.router.navigate(['/main/home-s']);
+        // } else if (userd.idRol === '6') {
+        //   this.router.navigate(['/cedis/recoleccion']);
+        // } else if (userd.idRol === '7') {
+        //   this.router.navigate(['/main/home-specialist']);
+        // } else if (userd.idRol === '8') {
+        //   this.router.navigate(['/nomina/control-de-personal']);
+        // }
       }
       Swal.close();
     } catch (error) {

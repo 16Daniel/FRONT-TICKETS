@@ -1,18 +1,25 @@
-<div class="titulo-responsables">
-  ¿Quién eres?
-</div>
+<div class="pt-5">
+  <div class="pt-3 container">
+    <div class="m-2 mt-3 bg-white p-3">
 
-<div class="responsables-container">
-  <div *ngFor="let r of resposablesDeSucursal" class="responsable-card" [class.selected]="r.id === this.responsableActivoSeleccionado?.id"
-    (click)="onSeleccionar(r)">
-    <!-- <div class="color-dot" [style.background]="r.color"></div> -->
+      <div class="titulo-responsables">
+        ¿Quién eres?
+      </div>
 
-    <div class="nombre">
-      {{ r.nombre }}
-    </div>
+      <div class="responsables-container">
+        <div *ngFor="let r of resposablesDeSucursal" class="responsable-card"
+          [class.selected]="r.id === this.responsableActivoSeleccionado?.id" (click)="onSeleccionar(r)">
+          <!-- <div class="color-dot" [style.background]="r.color"></div> -->
 
-    <div class="posicion" *ngIf="r.posicion">
-      {{ r.posicion }}
+          <div class="nombre">
+            {{ r.nombre }}
+          </div>
+
+          <div class="posicion" *ngIf="r.posicion">
+            {{ r.posicion }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

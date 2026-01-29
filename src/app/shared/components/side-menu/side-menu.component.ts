@@ -71,6 +71,7 @@ export class SideMenuComponent implements OnInit {
   logout() {
     localStorage.removeItem('rwuserdatatk');
     localStorage.removeItem('catRutastk');
+    localStorage.removeItem('responsable-tareas');
     this.router.navigate(['/auth/login']);
   }
 
