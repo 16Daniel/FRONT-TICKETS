@@ -10,6 +10,8 @@
         <div *ngFor="let r of resposablesDeSucursal" class="responsable-card"
           [class.selected]="r.id === this.responsableActivoSeleccionado?.id" (click)="onSeleccionar(r)">
           <!-- <div class="color-dot" [style.background]="r.color"></div> -->
+          <ngx-avatars class="avatar-item" [name]="r.nombre" [size]="30" [bgColor]="r.color" pTooltip="{{ r.nombre }}">
+          </ngx-avatars>
 
           <div class="nombre">
             {{ r.nombre }}

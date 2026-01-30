@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Router } from '@angular/router';
+import { AvatarModule } from 'ngx-avatars';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-seleccionar-responsable-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarModule, TooltipModule],
   templateUrl: './seleccionar-responsable-page.component.html',
   styleUrl: './seleccionar-responsable-page.component.scss'
 })

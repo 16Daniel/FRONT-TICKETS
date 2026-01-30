@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ResponsableGuard } from './shared/guards/responsable.guard';
 
 export const routes: Routes = [
   {
@@ -9,6 +10,7 @@ export const routes: Routes = [
   {
     path: 'main',
     loadComponent: () => import('./shared/layout/main/main.component'),
+    canActivate: [ResponsableGuard],
     children: [
       {
         path: '',
@@ -55,22 +57,27 @@ export const routes: Routes = [
   },
   {
     path: '',
+    canActivate: [ResponsableGuard],
     loadChildren: () => import('./nomina/nomina.routes')
   },
   {
     path: '',
+    canActivate: [ResponsableGuard],
     loadChildren: () => import('./activos-fijos/activos-fijos.routes').then(m => m.ACTIVOS_FIJOS_ROOT_ROUTES),
   },
   {
     path: '',
+    canActivate: [ResponsableGuard],
     loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_ROOT_ROUTES),
   },
   {
     path: '',
+    canActivate: [ResponsableGuard],
     loadChildren: () => import('./pagos/pagos.routes')
   },
   {
     path: '',
+    canActivate: [ResponsableGuard],
     loadChildren: () => import('./planeacion/planeacion.routes')
   },
   {
