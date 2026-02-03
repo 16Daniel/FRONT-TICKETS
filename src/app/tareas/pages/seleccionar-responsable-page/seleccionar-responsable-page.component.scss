@@ -1,51 +1,99 @@
-.responsables-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.user-selection-wrapper {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .selection-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    h1 {
+      font-weight: 800;
+      font-size: clamp(1.5rem, 5vw, 3rem); // Tamaño fluido
+      color: #ff5500;
+      letter-spacing: -1px;
+    }
+  }
+}
+
+.responsables-grid {
+  display: grid;
+  // Define un ancho mínimo de 160px para cada tarjeta
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
+  padding: 10px;
 }
 
 .responsable-card {
+  position: relative;
   cursor: pointer;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #fff;
+  background: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  transition: all 0.2s ease;
 
   &:hover {
-    background: #f5f7fa;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #e2e8f0;
   }
 
-  &.selected {
+  &.is-selected {
     border-color: #0d6efd;
-    background: #eef4ff;
+    background: #f8fbff;
+
+    .nombre {
+      color: #0d6efd;
+    }
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .info-container {
+    text-align: center;
+
+    .nombre {
+      display: block;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #1a202c;
+      line-height: 1.2;
+    }
+
+    .posicion {
+      display: block;
+      font-size: 0.8rem;
+      color: #718096;
+      margin-top: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
   }
 }
 
-.color-dot {
-  width: 14px;
-  height: 14px;
+// Badge de check para la tarjeta seleccionada
+.selection-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #0d6efd;
+  color: white;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  margin-bottom: 6px;
-}
-
-.nombre {
-  font-weight: 600;
-}
-
-.posicion {
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.titulo-responsables {
-  text-align: center;
-  font-weight: 600;
-  font-size: 4rem;
-  margin-bottom: 10px;
-  color: #ff5500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  border: 2px solid white;
 }

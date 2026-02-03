@@ -91,9 +91,9 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
     if (form.invalid || this.cargando) return;
 
     this.cargando = true;
-console.log({...this.nuevoResponsable})
+    console.log({ ...this.nuevoResponsable })
     try {
-      await this.responsablesService.create({...this.nuevoResponsable});
+      await this.responsablesService.create({ ...this.nuevoResponsable });
       this.messageService.add({
         severity: 'success',
         summary: 'Correcto',
@@ -179,4 +179,12 @@ console.log({...this.nuevoResponsable})
       });
     }
   }
+
+  regenerarPin(res: any) {
+    const nuevoPin = Math.floor(1000 + Math.random() * 9000).toString();
+    res.pin = nuevoPin;
+
+    this.guardarCambios(res);
+  }
+
 }

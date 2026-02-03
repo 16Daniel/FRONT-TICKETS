@@ -12,11 +12,13 @@ import { VersionButtonComponent } from '../version-button/version-button.compone
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
+import { ResponsableTarea } from '../../../tareas/interfaces/responsable-tarea.interface';
+import { AvatarModule } from 'ngx-avatars';
 
 @Component({
   selector: 'app-side-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, MenubarModule, VersionButtonComponent, ButtonModule, ChatNotificationsButtonComponent],
+  imports: [CommonModule, FormsModule, MenubarModule, VersionButtonComponent, ButtonModule, ChatNotificationsButtonComponent, AvatarModule],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,12 +31,15 @@ export class SideMenuComponent implements OnInit {
   urlbase: string = '';
   tituloBanner: string;
 
+  responsableTarea!: ResponsableTarea;
+
   constructor(
     public cdr: ChangeDetectorRef,
     private router: Router,
     public documentsService: DocumentsService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
 
     if (this.usuario.idRol == '2') {
       this.tituloBanner = this.usuario.sucursales[0].nombre;
