@@ -84,7 +84,7 @@
           <th>Sucursal</th>
           <th>Color</th>
           <th>Global</th>
-          <th>PIN</th>
+          <th *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'SISTEMAS'">PIN</th>
           <th>Eliminar</th>
         </tr>
       </ng-template>
@@ -136,7 +136,7 @@
           </td>
 
           <!-- PIN -->
-          <td>
+          <td *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'SISTEMAS'">
             <div class="d-flex align-items-center gap-2">
               <input type="text" class="form-control text-center" style="width: 90px" [value]="res.pin" disabled />
 
