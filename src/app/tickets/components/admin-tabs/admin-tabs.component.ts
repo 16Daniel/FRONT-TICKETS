@@ -14,6 +14,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/admin-reports-tab.component';
+import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
 
 @Component({
   selector: 'app-admin-tabs',
@@ -28,8 +29,9 @@ import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/
     AdminReportsTabComponent,
     EisenhowerMatrixPageComponent,
     DashboardTasksPageComponent,
-    DropdownModule
-  ],
+    DropdownModule,
+    ComensalesPage
+],
   templateUrl: './admin-tabs.component.html',
 })
 

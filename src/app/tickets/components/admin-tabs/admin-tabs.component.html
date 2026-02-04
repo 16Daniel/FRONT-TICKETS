@@ -60,4 +60,10 @@
 
   </p-tabPanel>
 
+   <p-tabPanel header="COMENSALES">
+    <ng-container *ngIf="tabsActivos['COMENSALES']">
+      <app-comensales-page></app-comensales-page>
+    </ng-container>
+  </p-tabPanel>
+
 </p-tabView>

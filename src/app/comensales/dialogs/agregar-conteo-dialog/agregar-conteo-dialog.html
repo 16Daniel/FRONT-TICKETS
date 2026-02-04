@@ -1,0 +1,117 @@
+<p-dialog 
+    header="AGREGAR CONTEO" 
+    [modal]="true"
+    [(visible)]="verModalAgregarConteo" 
+    [style]="{ width: '70rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"
+    (onHide)="onHide()">
+
+       
+    <div class="p-3">
+   
+        <div class="p-3 rounded-3" style="background-color: #e7e7e7;">
+            <div class="row">
+
+                <div class="col-4">
+                      <p class="fw-bold mt-3">SUCURSAL</p> 
+                        <p-dropdown [options]="sucursalesrw" [(ngModel)]="sucursaleSelRW" name="sucursal" optionLabel="nombre" [filter]="true"
+                                filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
+                                [style]="{width:'100%'}">
+                                <ng-template pTemplate="selectedItem" let-selectedOption>
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ selectedOption.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-dep pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ dep.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                                </p-dropdown>
+                </div>
+
+                <div class="col-4">
+                    <p class="fw-bold mt-3">MESAS</p>
+                    <input class="form-control p-2 h-42" type="number" [(ngModel)]="formMesasRW">
+                </div>
+                <div class="col-4">
+                      <p class="fw-bold mt-3">COMENSALES</p>
+                       <input class="form-control p-2 h-42" type="number" [(ngModel)]="formComensalesRW">
+                </div>
+            </div>
+        </div>
+        
+        <p class="mt-3 fw-bold">COMPETENCIA</p>
+
+
+          <div class="p-3 rounded-3" style="background-color: #e7e7e7;">
+           
+            <div class="row">
+
+                <div class="col-4">
+                      <p class="fw-bold mt-3">SUCURSAL</p> 
+                        <p-dropdown [options]="sucursalescompetencia" [(ngModel)]="sucursaleSelCompetencia" name="sucursal" optionLabel="nombre" [filter]="true"
+                                filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
+                                [style]="{width:'100%'}">
+                                <ng-template pTemplate="selectedItem" let-selectedOption>
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ selectedOption.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-dep pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ dep.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                                </p-dropdown>
+                </div>
+
+                <div class="col-4">
+                    <p class="fw-bold mt-3">MESAS</p>
+                    <input class="form-control p-2 h-42" type="number" [(ngModel)]="formMesasCompetencia">
+                </div>
+                <div class="col-4">
+                      <p class="fw-bold mt-3">COMENSALES</p>
+                       <input class="form-control p-2 h-42" type="number" [(ngModel)]="formComensalesCompetencia">
+                </div>
+            </div>
+
+           <div class="m-3 d-flex justify-content-end">
+             <button class="btn btn-success" (click)="agregarCompetencia()" [disabled]="sucursaleSelCompetencia == undefined
+              || formMesasCompetencia == undefined || formComensalesCompetencia == undefined"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR</button>
+           </div>
+
+        </div>
+        
+
+        <p-table [value]="arr_competencia" [tableStyle]="{ 'min-width': '50rem','min-height':'200px' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>SUCURSAL</th>
+            <th>MESAS</th>
+            <th>COMENSALES</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-i="rowIndex">
+        <tr>
+            <td>{{item.nombre}}</td>
+            <td>{{item.mesas}}</td>
+            <td>{{item.comensales}}</td>
+            <th> <button class="btn btn-danger" (click)="eliminarCompetencia(i)"> 
+                <i class='bx bx-trash bx-sm'></i>
+                </button></th>
+                
+        </tr>
+    </ng-template>
+</p-table>
+        @if(itemConteo == undefined)
+        {
+            <button class="btn bg-p-b p-3 mt-3" (click)="agregarConteo()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+        }@else 
+        {
+            <button class="btn bg-p-b p-3 mt-3" (click)="actualizarConteo()"><i class='bx bx-save'></i>&nbsp;ACTUALIZAR</button>
+        }
+    </div>
+</p-dialog>
