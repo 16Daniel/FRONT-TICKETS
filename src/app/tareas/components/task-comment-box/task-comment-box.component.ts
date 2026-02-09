@@ -11,6 +11,7 @@ import { TareasService } from '../../services/tareas.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 
 @Component({
   selector: 'app-task-comment-box',
@@ -21,6 +22,7 @@ import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 })
 export class TaskCommentBoxComponent implements OnInit {
   @Input() tarea: Tarea = new Tarea;
+  responsableActivo!: ResponsableTarea;
 
   nuevoComentario: string = '';
   usuario!: Usuario;
@@ -37,7 +39,7 @@ export class TaskCommentBoxComponent implements OnInit {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-
+    this.responsableActivo = JSON.parse(localStorage.getItem('responsable-tareas')!);
 
     this.tarea.comentarios = this.tarea.comentarios.map(c => {
       return {
@@ -62,7 +64,7 @@ export class TaskCommentBoxComponent implements OnInit {
         comentario: texto,
         fecha: new Date(),
         idUsuario: this.usuario.id,
-        nombre: this.usuario.nombre,
+        nombre: this.responsableActivo.nombre,
         imagenesEvidencia: []
       };
 

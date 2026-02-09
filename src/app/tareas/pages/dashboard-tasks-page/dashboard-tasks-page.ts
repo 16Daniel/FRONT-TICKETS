@@ -59,6 +59,7 @@ export class DashboardTasksPageComponent implements OnInit {
 
   dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
   tareaSeleccionada!: Tarea;
+  responsableTarea!: ResponsableTarea;
 
   toDo: Tarea[] = [];
   working: Tarea[] = [];
@@ -74,6 +75,8 @@ export class DashboardTasksPageComponent implements OnInit {
     private raskResponsibleService: TaskResponsibleService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
+
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
   }
 
@@ -199,18 +202,16 @@ export class DashboardTasksPageComponent implements OnInit {
         }
 
         this.distribuirTareas(tareasFiltradas);
-           if(this.idEtiquetaSeleccionada &&  this.idEtiquetaSeleccionada != '')
-        {
+        if (this.idEtiquetaSeleccionada && this.idEtiquetaSeleccionada != '') {
           this.onEtiquetaChange();
         }
 
-      if(this.idResponsableSeleccionado)
-        {
+        if (this.idResponsableSeleccionado) {
           this.onResponsableChange();
         }
-        
+
       });
-  
+
       return;
     }
 
@@ -218,21 +219,35 @@ export class DashboardTasksPageComponent implements OnInit {
     this.tareasService
       .getBySucursal(this.idSucursalSeleccionada)
       .subscribe(tareas => {
-        this.allTasks = tareas;
+        // this.allTasks = tareas;
+        this.allTasks = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!);
         this.distribuirTareas(this.allTasks);
 
-            if(this.idEtiquetaSeleccionada &&  this.idEtiquetaSeleccionada != '')
-        {
+        if (this.idEtiquetaSeleccionada && this.idEtiquetaSeleccionada != '') {
           this.onEtiquetaChange();
         }
 
-      if(this.idResponsableSeleccionado)
-        {
+        if (this.idResponsableSeleccionado) {
           this.onResponsableChange();
         }
 
       });
-      
+
+  }
+
+  filtrarTareasVisibles(tareas: Tarea[], miIdResponsable: string): Tarea[] {
+    return tareas.filter(tarea => {
+
+      if (tarea.visibleGlobal === undefined) {
+        return true;
+      }
+
+      if (tarea.visibleGlobal === true) {
+        return true;
+      }
+
+      return tarea.idsResponsables?.includes(miIdResponsable) ?? false;
+    });
   }
 
   showMessage = (sev: string, summ: string, det: string) =>
@@ -271,8 +286,8 @@ export class DashboardTasksPageComponent implements OnInit {
     this.check = filtradas.filter(x => x.idEstatus == '3');
     this.done = filtradas.filter(x => x.idEstatus == '4');
 
-    let tareasfiltradas:Tarea[] = [...this.toDo,...this.working,...this.check];
-   this.tareasService.updateTasks(tareasfiltradas); 
+    let tareasfiltradas: Tarea[] = [...this.toDo, ...this.working, ...this.check];
+    this.tareasService.updateTasks(tareasfiltradas);
 
     this.cdr.detectChanges();
   }
@@ -309,8 +324,8 @@ export class DashboardTasksPageComponent implements OnInit {
 
     this.cdr.detectChanges();
 
-   let tareasfiltradas:Tarea[] = [...this.toDo,...this.working,...this.check];
-   this.tareasService.updateTasks(tareasfiltradas); 
+    let tareasfiltradas: Tarea[] = [...this.toDo, ...this.working, ...this.check];
+    this.tareasService.updateTasks(tareasfiltradas);
   }
 
   private actualizarOrdenColumna(tareas: Tarea[]) {

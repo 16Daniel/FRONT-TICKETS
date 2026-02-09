@@ -84,6 +84,7 @@
           <th>Sucursal</th>
           <th>Color</th>
           <th>Global</th>
+          <th *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'RW INSURGENTES'">PIN</th>
           <th>Eliminar</th>
         </tr>
       </ng-template>
@@ -131,6 +132,17 @@
               <span class="badge" [ngClass]="res.esGlobal ? 'bg-success' : 'bg-secondary'">
                 {{ res.esGlobal ? 'SI' : 'NO' }}
               </span>
+            </div>
+          </td>
+
+          <!-- PIN -->
+          <td *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'RW INSURGENTES'">
+            <div class="d-flex align-items-center gap-2">
+              <input type="text" class="form-control text-center" style="width: 90px" [value]="res.pin" disabled />
+
+              <p-button icon="pi pi-refresh" severity="secondary" pTooltip="Regenerar PIN"
+                (onClick)="regenerarPin(res)">
+              </p-button>
             </div>
           </td>
 

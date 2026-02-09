@@ -1,0 +1,115 @@
+/* ===== Layout de página ===== */
+.pin-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 1rem;
+}
+
+.pin-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== PIN (tu CSS original, intacto) ===== */
+
+.pin-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+
+  .user-context {
+    text-align: center;
+
+    p {
+      margin: 10px 0 0;
+      font-size: 1.1rem;
+    }
+
+    small {
+      color: #888;
+    }
+  }
+}
+
+.pin-inputs-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .hidden-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .pin-dots {
+    display: flex;
+    gap: 1rem;
+
+    .dot {
+      width: 50px;
+      height: 60px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      transition: all 0.2s;
+
+      &.active {
+        border-color: #0d6efd;
+        background: #f0f7ff;
+      }
+    }
+  }
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s;
+}
+
+/* ===== Animación de error ===== */
+.shake {
+  animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}

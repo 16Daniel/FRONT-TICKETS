@@ -8,8 +8,19 @@
   </div>
 
   <!-- TÍTULO -->
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="titulo">{{ tarea.titulo }}</div>
+  <!-- <div class="d-flex align-items-center mb-1">
+    <div class="titulo">
+      <i [class]="tarea.visibleSoloParaMi ? 'bx bx-lock-open-alt text-success' : 'bx bx-lock-alt text-danger'"
+        [pTooltip]="tarea.visibleSoloParaMi ? 'Tarea público' : 'Tarea privada'" class="me-1 visibility-icon">
+      </i>
+      {{ tarea.titulo }}
+    </div>
+  </div> -->
+
+  <div class="d-flex align-items-center mb-1">
+    <div class="titulo">
+      {{ tarea.titulo }}
+    </div>
   </div>
 
   <!-- SUCURSAL -->
@@ -87,15 +98,27 @@
   </button>
 
   <!-- DEADLINE -->
-  <div class="deadline-indicator" *ngIf="tarea.deathline && tarea.idEstatus !== '4'" (click)="$event.stopPropagation()">
+  <div class="deadline-wrapper" (click)="$event.stopPropagation()">
 
-    <div class="mini-pie" [style.--progress]="getPorcentajeUsado(tarea)">
-    </div>
+    <i class="fa-solid me-2 visibility-icon mt-2" [class.fa-lock-open]="tarea.visibleGlobal !== false"
+      [class.fa-lock]="tarea.visibleGlobal === false" [class.text-success]="tarea.visibleGlobal !== false"
+      [class.text-danger]="tarea.visibleGlobal === false"
+      [pTooltip]="tarea.visibleGlobal === false ? 'Tarea privada' : 'Tarea pública'" tooltipPosition="top">
+    </i>
 
-    <div class="mini-text">
-      Restan {{ getDiasRestantes(tarea) }} días
+    <!-- DEADLINE -->
+    <div class="deadline-indicator" *ngIf="tarea.deathline && tarea.idEstatus !== '4'">
+
+      <div class="mini-pie" [style.--progress]="getPorcentajeUsado(tarea)">
+      </div>
+
+      <div class="mini-text">
+        Restan {{ getDiasRestantes(tarea) }} días
+      </div>
+
     </div>
 
   </div>
+
 
 </div>

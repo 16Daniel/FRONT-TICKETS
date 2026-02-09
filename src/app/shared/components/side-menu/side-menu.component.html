@@ -17,6 +17,10 @@
         <app-version-button></app-version-button>
 
         <app-chat-notifications-button></app-chat-notifications-button>
+
+        <ngx-avatars [name]="responsableTarea.nombre" [size]="30" pTooltip="{{ responsableTarea.nombre }}"
+          [bgColor]="responsableTarea.color">
+        </ngx-avatars>
       </div>
 
 
@@ -44,7 +48,8 @@
             [routerLink]="'/main/calendar-builder'"><i class='bx bx-calendar-plus'></i>Registrar visita</a></li>
         <li (click)="closemenu()"
           *ngIf="usuario!.idRol == '4' || usuario!.idRol == '2'|| usuario!.idRol == '7' || usuario!.idRol == '5' || usuario!.idRol == '1'">
-          <a [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a></li>
+          <a [routerLink]="'/main/branch-visit-schedule'"><i class='bx bx-calendar'></i>Calendario de visitas</a>
+        </li>
         <li (click)="closemenu()"><a [routerLink]="'/main/version-control'" *ngIf="usuario.idRol == '1'"><i
               class='bx bxs-dashboard'></i>Control de versiones</a></li>
 
@@ -62,20 +67,20 @@
         <li (click)="closemenu()"><a [routerLink]="'/nomina/historial-del-personal'">
             <i class='bx bx-group bx-sm'></i>&nbsp;Historial del Personal</a></li>
 
-                <li (click)="closemenu()"><a [routerLink]="'/administracion/compras'">
-                <i class='bx bx-shopping-bag bx-sm' ></i>&nbsp;Requisición de compra</a></li>
-     
-                  <li (click)="closemenu()"><a [routerLink]="'/planeacion/diccionario'">
-                <i class='bx bx-book bx-sm'></i>&nbsp;Diccionario</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/administracion/compras'">
+            <i class='bx bx-shopping-bag bx-sm'></i>&nbsp;Requisición de compra</a></li>
 
-                  <li (click)="closemenu()"><a [routerLink]="'/planeacion/mermas'">
-                <i class='bx bx-trash-alt bx-sm'></i>&nbsp;Mermas</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/planeacion/diccionario'">
+            <i class='bx bx-book bx-sm'></i>&nbsp;Diccionario</a></li>
+
+        <li (click)="closemenu()"><a [routerLink]="'/planeacion/mermas'">
+            <i class='bx bx-trash-alt bx-sm'></i>&nbsp;Mermas</a></li>
 
         <li (click)="closemenu()" *ngIf="usuario.idRol == '4'"><a [routerLink]="'/main/kpis'">
-                <i class='bx bx-objects-vertical-bottom bx-sm'></i>&nbsp;Kpis</a></li>
+            <i class='bx bx-objects-vertical-bottom bx-sm'></i>&nbsp;Kpis</a></li>
 
-  <li (click)="closemenu()" *ngIf="usuario.idRol == '2'"><a [routerLink]="'/inventario/captura'">
-                  <i class='bx bx-clipboard bx-sm'></i>&nbsp;Inventario</a></li>
+        <li (click)="closemenu()" *ngIf="usuario.idRol == '2'"><a [routerLink]="'/inventario/captura'">
+            <i class='bx bx-clipboard bx-sm'></i>&nbsp;Inventario</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>

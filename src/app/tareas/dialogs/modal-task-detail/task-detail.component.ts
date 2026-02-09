@@ -75,6 +75,7 @@ export class TaskDetailComponent implements OnInit {
   areasMap: Record<string, string> = {};
 
   idsResponsablesAuxEmail: string[] = [];
+  responsableTarea!: ResponsableTarea;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -90,6 +91,8 @@ export class TaskDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
+
     this.obtenerSucursales();
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
     // this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
@@ -183,6 +186,8 @@ export class TaskDetailComponent implements OnInit {
       titulo: texto,
       terminado: false
     });
+
+    this.guardarCambios();
   }
 
   getProgressColor(porcentaje: number) {
@@ -280,6 +285,8 @@ export class TaskDetailComponent implements OnInit {
   guardarDescripcion() {
     this.tarea.descripcion = this.descripcionEditada;
     this.editandoDescripcion = false;
+
+    this.guardarCambios();
   }
 
   enviarCorreo(responsable: ResponsableTarea) {
@@ -369,7 +376,31 @@ export class TaskDetailComponent implements OnInit {
   }
 
   onSeleccionarLider(responsable: ResponsableTarea) {
-    console.log(responsable);
-    this.tarea.idResponsablePrincipal = responsable.id;
-   }
+    if (this.tarea.idResponsablePrincipal == responsable.id) {
+      this.tarea.idResponsablePrincipal = null;
+    }
+    else {
+      this.tarea.idResponsablePrincipal = responsable.id;
+    }
+
+    this.guardarCambios();
+  }
+
+  async guardarCambios() {
+    await this.tareasService.update(this.tarea, this.tarea.id!);
+    this.showMessage('success', 'Success', 'Enviado correctamente');
+  }
+
+  cambiarVisibilidad() {
+    this.tarea.visibleGlobal = !this.tarea.visibleGlobal;
+    this.guardarCambios();
+  }
+
+  convertirAProyecto() {
+    console.log('Hola');
+  }
+
+  tareaAsignadaAMi() {
+    return this.tarea.idsResponsables?.includes(this.responsableTarea.id!) ?? false;
+  }
 }

@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
-import { DropdownModule } from 'primeng/dropdown';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { AvatarModule } from 'ngx-avatars';
-import { Tarea } from '../../interfaces/tarea.interface';
+import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
+import Swal from 'sweetalert2';
+
+import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
 
 @Component({
   selector: 'app-subtasks-box',
@@ -22,6 +23,8 @@ export class SubtasksBoxComponent implements OnInit {
   @Input() mostrarSubtareas: boolean = false;
 
   @Output() subtareaAgregada = new EventEmitter<string>();
+  @Output() subtareaEliminada = new EventEmitter<any>();
+  @Output() responsableEditado = new EventEmitter<any>();
 
   resposablesService = inject(TaskResponsibleService);
 
@@ -46,8 +49,24 @@ export class SubtasksBoxComponent implements OnInit {
     this.nuevaSubtarea = '';
   }
 
-  eliminarSubtarea(index: number) {
+  async eliminarSubtarea(index: number) {
+    const result = await Swal.fire({
+      title: '¿Eliminar subtarea?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
+
+    if (!result.isConfirmed) return;
+
     this.tarea.subtareas.splice(index, 1);
+    this.subtareaEliminada.emit();
   }
 
   calcularProgreso(): number {
@@ -74,6 +93,11 @@ export class SubtasksBoxComponent implements OnInit {
 
   onResponsableSubtareaClear(st: any) {
     st.idResponsable = null;
+    this.responsableEditado.emit();
+  }
+
+  onResponsableSubtareaChange() {
+    this.responsableEditado.emit();
   }
 
 }

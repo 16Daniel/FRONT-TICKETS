@@ -92,12 +92,15 @@ export class TaskResponsibleService {
   }
 
   public filtrarPorSucursal(
-    idSucursal: string | null
+    idSucursal: string | null,
+    globales: boolean = true
   ): ResponsableTarea[] {
     if (!idSucursal) return [];
 
     return this._responsables.filter(
-      r => r.idSucursal === idSucursal || r.esGlobal
+      r =>
+        r.idSucursal === idSucursal ||
+        (globales && r.esGlobal)
     );
   }
 
@@ -105,5 +108,34 @@ export class TaskResponsibleService {
     return this._responsables.filter(
       r => r.esGlobal === true
     );
+  }
+
+  public buscarPorPin(pin: string): ResponsableTarea | null {
+    if (!pin) return null;
+
+    return (
+      this._responsables.find(
+        r => r.pin === pin && r.eliminado === false
+      ) || null
+    );
+  }
+
+  async generarPinUnico(): Promise<string> {
+    for (let i = 0; i < 10; i++) {
+      const pin = Math.floor(1000 + Math.random() * 9000).toString();
+
+      const q = query(
+        collection(this.firestore, this.pathName),
+        where('pin', '==', pin)
+      );
+
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        return pin; // ✅ PIN único encontrado
+      }
+    }
+
+    throw new Error('No se pudo generar un PIN único después de varios intentos');
   }
 }
