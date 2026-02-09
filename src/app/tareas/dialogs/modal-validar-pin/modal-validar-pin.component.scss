@@ -1,16 +1,23 @@
-:host ::ng-deep .custom-pin-dialog {
-  .p-dialog-header {
-    display: none;
-  }
-
-  // Limpiamos el header por estética
-  border-radius: 20px;
-
-  .p-dialog-content {
-    border-radius: 20px;
-    padding: 2rem;
-  }
+/* ===== Layout de página ===== */
+.pin-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 1rem;
 }
+
+.pin-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== PIN (tu CSS original, intacto) ===== */
 
 .pin-wrapper {
   display: flex;
@@ -78,7 +85,7 @@
   animation: fadeIn 0.3s;
 }
 
-// Animación de error
+/* ===== Animación de error ===== */
 .shake {
   animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
 }

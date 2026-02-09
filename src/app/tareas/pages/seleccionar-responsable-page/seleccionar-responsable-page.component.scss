@@ -1,99 +1,115 @@
-.user-selection-wrapper {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-
-  .selection-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-
-    h1 {
-      font-weight: 800;
-      font-size: clamp(1.5rem, 5vw, 3rem); // Tamaño fluido
-      color: #ff5500;
-      letter-spacing: -1px;
-    }
-  }
-}
-
-.responsables-grid {
-  display: grid;
-  // Define un ancho mínimo de 160px para cada tarjeta
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1.5rem;
-  padding: 10px;
-}
-
-.responsable-card {
-  position: relative;
-  cursor: pointer;
-  background: #ffffff;
-  border: 2px solid transparent;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-color: #e2e8f0;
-  }
-
-  &.is-selected {
-    border-color: #0d6efd;
-    background: #f8fbff;
-
-    .nombre {
-      color: #0d6efd;
-    }
-  }
-
-  .card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .info-container {
-    text-align: center;
-
-    .nombre {
-      display: block;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #1a202c;
-      line-height: 1.2;
-    }
-
-    .posicion {
-      display: block;
-      font-size: 0.8rem;
-      color: #718096;
-      margin-top: 0.25rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-  }
-}
-
-// Badge de check para la tarjeta seleccionada
-.selection-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #0d6efd;
-  color: white;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+/* ===== Layout de página ===== */
+.pin-page-wrapper {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  border: 2px solid white;
+  background: #f8fafc;
+  padding: 1rem;
+}
+
+.pin-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== PIN (tu CSS original, intacto) ===== */
+
+.pin-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+
+  .user-context {
+    text-align: center;
+
+    p {
+      margin: 10px 0 0;
+      font-size: 1.1rem;
+    }
+
+    small {
+      color: #888;
+    }
+  }
+}
+
+.pin-inputs-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .hidden-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .pin-dots {
+    display: flex;
+    gap: 1rem;
+
+    .dot {
+      width: 50px;
+      height: 60px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      transition: all 0.2s;
+
+      &.active {
+        border-color: #0d6efd;
+        background: #f0f7ff;
+      }
+    }
+  }
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s;
+}
+
+/* ===== Animación de error ===== */
+.shake {
+  animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }

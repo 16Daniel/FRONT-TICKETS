@@ -8,8 +8,25 @@
   </div>
 
   <!-- TÍTULO -->
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="titulo">{{ tarea.titulo }}</div>
+  <!-- <div class="d-flex align-items-center mb-1">
+    <div class="titulo">
+      <i [class]="tarea.visibleSoloParaMi ? 'bx bx-lock-open-alt text-success' : 'bx bx-lock-alt text-danger'"
+        [pTooltip]="tarea.visibleSoloParaMi ? 'Tarea público' : 'Tarea privada'" class="me-1 visibility-icon">
+      </i>
+      {{ tarea.titulo }}
+    </div>
+  </div> -->
+
+  <div class="d-flex align-items-center mb-1">
+    <div class="titulo">
+      <i class="fa-solid me-2 visibility-icon"
+        [class.fa-lock-open]="tarea.visibleSoloParaMi" [class.text-success]="tarea.visibleSoloParaMi"
+        [class.fa-lock]="!tarea.visibleSoloParaMi" [class.text-danger]="!tarea.visibleSoloParaMi"
+        [pTooltip]="tarea.visibleSoloParaMi ? 'Tarea pública' : 'Tarea privada'" tooltipPosition="top">
+      </i>
+
+      {{ tarea.titulo }}
+    </div>
   </div>
 
   <!-- SUCURSAL -->

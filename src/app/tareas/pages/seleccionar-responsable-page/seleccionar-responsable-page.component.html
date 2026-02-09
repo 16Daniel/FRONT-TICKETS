@@ -1,28 +1,30 @@
-<div class="user-selection-wrapper">
-  <header class="selection-header">
-    <h1>SELECCIONA TU USUARIO</h1>
-  </header>
+<div class="pin-page-wrapper">
+  <div class="pin-card">
+    <div class="pin-wrapper">
+      <div class="user-context">
+        <p>Hola, <strong>{{ usuario.nombre }} {{ usuario.apellidoP }} {{ usuario.apellidoM }}</strong></p>
+        <small>Ingresa tu PIN de 4 dígitos para continuar</small>
+      </div>
 
-  <div class="responsables-grid">
-    <div *ngFor="let r of resposablesDeSucursal" class="responsable-card"
-      [class.is-selected]="r.id === responsableActivoSeleccionado?.id" (click)="onSeleccionar(r)" role="button"
-      tabindex="0">
-      <div class="card-content">
-        <ngx-avatars class="avatar-item" [name]="r.nombre" [size]="64" [bgColor]="r.color" [pTooltip]="r.nombre">
-        </ngx-avatars>
+      <div class="pin-inputs-container" [class.shake]="errorPin">
+        <input #pinInput type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" [(ngModel)]="pinIngresado"
+          (input)="onPinChange()" (keydown.enter)="validarPin()" class="hidden-input" />
 
-        <div class="info-container">
-          <span class="nombre">{{ r.nombre }}</span>
-          <span class="posicion" *ngIf="r.posicion">{{ r.posicion }}</span>
+        <div class="pin-dots" (click)="pinInput.focus()">
+          <div *ngFor="let i of [0,1,2,3]" class="dot" [class.active]="pinIngresado.length > i">
+            {{ pinIngresado[i] ? '•' : '' }}
+          </div>
         </div>
       </div>
 
-      <div class="selection-badge" *ngIf="r.id === responsableActivoSeleccionado?.id">
-        <i class="pi pi-check"></i>
+      <div class="error-message" *ngIf="errorPin">
+        <i class="pi pi-exclamation-circle"></i> {{ errorPin }}
+      </div>
+
+      <div class="actions">
+        <button pButton label="Cancelar" class="p-button-text p-button-secondary" (click)="cancelar()">
+        </button>
       </div>
     </div>
   </div>
 </div>
-
-<app-modal-validar-pin (pinValidado)="onPinValidado($event)">
-</app-modal-validar-pin>

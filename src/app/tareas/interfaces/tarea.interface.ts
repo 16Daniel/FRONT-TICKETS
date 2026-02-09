@@ -26,4 +26,5 @@ export class Tarea {
   idResponsablePrincipal: string | any;
   eliminado: boolean = false;
   idEtiqueta: string = '';
+  visibleSoloParaMi: boolean = false;
 }

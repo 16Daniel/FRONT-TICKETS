@@ -205,3 +205,31 @@
   /* SOLUCIÓN: Reserva el espacio para el priority-badge */
   padding-right: 60px;
 }
+
+/* Estilos para el icono de visibilidad */
+.visibility-icon {
+  font-size: 1.05rem;
+  /* Un pelín más pequeño si es sólido */
+  vertical-align: -2px;
+  /* Alineación óptica con el texto */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.05));
+  /* Opcional: para darle profundidad */
+}
+
+.titulo {
+  font-weight: 600;
+  margin-bottom: 5px;
+  word-break: break-word;
+  line-height: 1.2;
+
+  /* Reserva el espacio para el priority-badge que tienes en absolute */
+  padding-right: 60px;
+
+  /* Alineación por si el título tiene varias líneas */
+  display: block;
+}
+
+/* Opcional: Si quieres que el icono resalte más al hacer hover en la card */
+.task-card:hover .visibility-icon {
+  transform: scale(1.1);
+}

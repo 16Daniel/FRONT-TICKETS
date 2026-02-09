@@ -185,8 +185,8 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
     }
   }
 
-  regenerarPin(res: any) {
-    const nuevoPin = Math.floor(1000 + Math.random() * 9000).toString();
+  async regenerarPin(res: any) {
+    const nuevoPin = await this.responsablesService.generarPinUnico();
     res.pin = nuevoPin;
 
     this.guardarCambios(res);

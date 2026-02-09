@@ -7,4 +7,5 @@ export class ResponsableTarea {
   esGlobal: boolean = false;
   eliminado: boolean = false;
   correo: string = '';
+  pin: string = '';
 }
