@@ -75,6 +75,7 @@ export class TaskDetailComponent implements OnInit {
   areasMap: Record<string, string> = {};
 
   idsResponsablesAuxEmail: string[] = [];
+  responsableTarea!: ResponsableTarea;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -90,6 +91,8 @@ export class TaskDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
+
     this.obtenerSucursales();
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
     // this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
@@ -386,5 +389,18 @@ export class TaskDetailComponent implements OnInit {
   async guardarCambios() {
     await this.tareasService.update(this.tarea, this.tarea.id!);
     this.showMessage('success', 'Success', 'Enviado correctamente');
+  }
+
+  cambiarVisibilidad() {
+    this.tarea.visibleGlobal = !this.tarea.visibleGlobal;
+    this.guardarCambios();
+  }
+
+  convertirAProyecto() {
+    console.log('Hola');
+  }
+
+  tareaAsignadaAMi() {
+    return this.tarea.idsResponsables?.includes(this.responsableTarea.id!) ?? false;
   }
 }

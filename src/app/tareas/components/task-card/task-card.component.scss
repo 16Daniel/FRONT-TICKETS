@@ -233,3 +233,16 @@
 .task-card:hover .visibility-icon {
   transform: scale(1.1);
 }
+
+.deadline-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.candado-deadline {
+  font-size: 15px;
+  color: #6c757d;
+  cursor: default;
+}

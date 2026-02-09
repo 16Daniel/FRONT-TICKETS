@@ -8,6 +8,18 @@
           <button class="btn btn-primary" style="margin: 2px" (click)="mostrarModalSubirImagen = true">
             <i class="bx bx-image-add bx-sm" style="color: white" pTooltip="SUBIR IMÁGEN" tooltipPosition="top"></i>
           </button>
+
+          <button class="btn btn-primary" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            (click)="cambiarVisibilidad()" *ngIf="tareaAsignadaAMi()">
+
+            <i class="fa-solid me-2 visibility-icon mt-2" [class.fa-lock-open]="tarea.visibleGlobal"
+              [class.text-success]="tarea.visibleGlobal" [class.fa-lock]="!tarea.visibleGlobal"
+              [class.text-danger]="!tarea.visibleGlobal"
+              [pTooltip]="tarea.visibleGlobal ? 'Tarea pública' : 'Tarea privada'" tooltipPosition="top">
+            </i>
+
+          </button>
+
         </div>
 
         <div class="avatars-container d-flex" *ngIf="tarea.idsResponsables?.length">
@@ -250,6 +262,15 @@
           </div>
 
           <br>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
+            (click)="convertirAProyecto()" pTooltip="Convertir esta tarea en proyecto" tooltipPosition="top">
+
+            <i class="fa-solid fa-star" style="color: #f1c40f;"></i>
+            <span>Convertir a proyecto</span>
+
+          </button>
+
 
           <app-eisenhower-priority-checks [modelo]="tarea" (cambio)="recibirPrioridad($event)">
           </app-eisenhower-priority-checks>
