@@ -108,10 +108,10 @@
 </p-table>
         @if(itemConteo == undefined)
         {
-            <button class="btn bg-p-b p-3 mt-3" (click)="agregarConteo()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+            <button class="btn bg-p-b p-3 mt-3" (click)="agregarConteo()" [disabled]="formMesasRW == undefined || formComensalesRW == undefined"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
         }@else 
         {
-            <button class="btn bg-p-b p-3 mt-3" (click)="actualizarConteo()"><i class='bx bx-save'></i>&nbsp;ACTUALIZAR</button>
+            <button class="btn bg-p-b p-3 mt-3" (click)="actualizarConteo()" [disabled]="formMesasRW == undefined || formComensalesRW == undefined"><i class='bx bx-save'></i>&nbsp;ACTUALIZAR</button>
         }
     </div>
 </p-dialog>
