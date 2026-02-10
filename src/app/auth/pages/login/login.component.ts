@@ -62,6 +62,7 @@ export default class LoginComponent {
       }
     });
 
+    debugger
     try {
       const user = await this.authService.login(this.email, this.pass);
 
@@ -72,8 +73,15 @@ export default class LoginComponent {
           this.showMessage('error', 'Error', 'Usuario no encontrado');
           return;
         }
+        
+         localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
 
-        localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
+        if (userd.idRol === '6') {
+          this.router.navigate(['/cedis/recoleccion']);
+          return;
+        } 
+
+       
 
         this.router.navigate(['/tareas/selecciona-responsable']);
         // if (userd.idRol === '1' || userd.idRol === '5') {

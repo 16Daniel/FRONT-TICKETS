@@ -19,7 +19,7 @@
         <app-chat-notifications-button></app-chat-notifications-button>
 
         <ngx-avatars [name]="responsableTarea.nombre" [size]="30" pTooltip="{{ responsableTarea.nombre }}"
-          [bgColor]="responsableTarea.color">
+          [bgColor]="responsableTarea.color" *ngIf="usuario.idRol !='6'">
         </ngx-avatars>
       </div>
 
