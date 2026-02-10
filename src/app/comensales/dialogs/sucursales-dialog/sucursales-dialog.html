@@ -1,0 +1,36 @@
+<p-dialog 
+    header="SUCURSALES" 
+    [modal]="true"
+    [(visible)]="verModalSucursales" 
+    [style]="{ width: '70rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"
+    (onHide)="onHide()">
+
+       
+    <div class="m-3">
+        <input type="text" class="form-control" [(ngModel)]="formnombreSucursal">
+        <button class="btn btn-success bp-3 mt-3" (click)="agregarSucursal()"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR</button>
+    </div>
+
+<p-table [value]="sucursalesComensalesdata" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>SUCURSAL</th>
+            <th>
+            </th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+        <tr>
+            <td> <input class=" form-control" [(ngModel)]="item.nombre" (blur)="actualizarNombre(item)"></td>
+            <th> <button class="btn btn-danger" (click)="confirmacionEliminar(item.id!)">
+                <i class='bx bx-trash bx-sm'></i>
+                </button></th>
+                
+        </tr>
+    </ng-template>
+</p-table>
+
+</p-dialog>
