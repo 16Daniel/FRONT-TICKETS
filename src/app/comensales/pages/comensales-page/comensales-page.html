@@ -48,8 +48,8 @@
 </div>
 
   <div class="d-flex justify-content-start mt-3 gap-3">
-     <button class="btn bg-p-b p-3" (click)="abrirModalAgregarConteo()" *ngIf="usuario.idArea == '1'"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR CONTEO</button>
-            <button class="btn bg-p-b p-3" (click)="abrirModalSucursales()"><i class='bx bx-building' *ngIf="usuario.idArea == '1'"></i>&nbsp;COMPETENCIA</button>
+     <button class="btn bg-p-b p-3" (click)="abrirModalAgregarConteo()" *ngIf="usuario.idArea == '15' || usuario.idRol == '1'"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR CONTEO</button>
+            <button class="btn bg-p-b p-3" (click)="abrirModalSucursales()"><i class='bx bx-building' *ngIf="usuario.idArea == '1' || usuario.idRol == '1'"></i>&nbsp;COMPETENCIA</button>
  </div>
 
 

@@ -17,7 +17,7 @@
                       <p class="fw-bold mt-3">SUCURSAL</p> 
                         <p-dropdown [options]="sucursalesrw" [(ngModel)]="sucursaleSelRW" name="sucursal" optionLabel="nombre" [filter]="true"
                                 filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
-                                [style]="{width:'100%'}" [disabled]="true">
+                                [style]="{width:'100%'}" [disabled]="usuario.idRol != '1'">
                                 <ng-template pTemplate="selectedItem" let-selectedOption>
                                     <div class="flex align-items-center gap-2">
                                         <div>{{ selectedOption.nombre }}</div>
