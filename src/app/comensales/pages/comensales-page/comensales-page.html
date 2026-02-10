@@ -4,12 +4,6 @@
     <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
   </div>
 
-  
-  <div class="d-flex justify-content-end mt-3 gap-3">
-     <button class="btn bg-p-b p-3" (click)="abrirModalAgregarConteo()"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR CONTEO</button>
-            <button class="btn bg-p-b p-3" (click)="abrirModalSucursales()"><i class='bx bx-building'></i>&nbsp;SUCURSALES</button>
- </div>
-
 
   <div class="row">
     <div class="col-md-4">
@@ -24,16 +18,40 @@
     </div>
 
     <div class="col-md-3">
-      <p>SUCURSALES</p>
-      <p-multiSelect [options]="sucursalesrw" [(ngModel)]="sucursalesSel" [filter]="true" optionLabel="nombre"
-        placeholder="SELECCIONAR SUCURSALES" [style]="{width:'100%'}" />
+      <p>SUCURSAL</p>
+     <p-dropdown [options]="sucursalesrw" [(ngModel)]="sucursalSel" name="sucursal" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR SUCURSAL"
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
     </div>
 
     <div class="col-md-2">
-      <p>&nbsp;</p><button class="btn btn-warning p-2"><i
+      <p>&nbsp;</p><button class="btn btn-warning p-2 h-42" (click)="filtrar()" [disabled]="fechaini == undefined || fechafin == undefined || sucursalSel == undefined"><i
           class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
     </div>
   </div>
+
+  <div class="m-3" *ngIf="dataConteos.length>0">
+  <app-grafica-comensales [fechaIni]="fechaini" [fechaFin]="fechafin" [data]="dataConteos">
+  </app-grafica-comensales>
+  
+</div>
+
+  <div class="d-flex justify-content-start mt-3 gap-3">
+     <button class="btn bg-p-b p-3" (click)="abrirModalAgregarConteo()" *ngIf="usuario.idArea == '1'"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR CONTEO</button>
+            <button class="btn bg-p-b p-3" (click)="abrirModalSucursales()"><i class='bx bx-building' *ngIf="usuario.idArea == '1'"></i>&nbsp;COMPETENCIA</button>
+ </div>
+
 
 <div class="m-3">
 <p-table [value]="dataConteos" [tableStyle]="{ 'min-width': '50rem' }">
@@ -50,15 +68,15 @@
     </ng-template>
     <ng-template pTemplate="body" let-item>
         <tr>
-            <td>{{ getDtae(item.fecha) | date:'dd/MM/yyyy' }}</td>
-            <td>{{ getDtae(item.fecha) | date:'HH:mm' }}</td>
-            <td>{{ nombreDeSucursal(item.sucursal)}}</td>
+            <td>{{ getDate(item.fecha) | date:'dd/MM/yyyy' }}</td>
+            <td>{{ getDate(item.fecha) | date:'HH:mm' }}</td>
+            <td>{{ item.nombreSuc }}</td>
             <td>{{ item.mesas }}</td>
             <td>{{ item.comensales }}</td>
-                        <th> <button class="btn btn-primary" (click)="abrirmodalEditar(item)"> 
+                        <th> <button class="btn btn-primary" (click)="abrirmodalEditar(item.idReg)" *ngIf="item.id != undefined"> 
                 <i class='bx bxs-edit bx-sm' ></i>
                 </button></th>
-              <th> <button class="btn btn-danger" (click)="confirmacionEliminar(item.id)"> 
+              <th> <button class="btn btn-danger" (click)="confirmacionEliminar(item.idReg)" *ngIf="item.id != undefined"> 
                 <i class='bx bx-trash bx-sm'></i>
                 </button></th>
         </tr>

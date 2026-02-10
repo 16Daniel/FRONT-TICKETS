@@ -4,6 +4,7 @@ export interface ConteoComensales
 {
  id?:string; 
  fecha: Timestamp;
+ idSucursal:string; 
  sucursal:sucursalesComensales;
  competencia:sucursalCompetencia[]; 
  mesas:number;
@@ -22,4 +23,15 @@ export interface sucursalCompetencia
     nombre:string;
     mesas:number; 
     comensales:number; 
+}
+
+export interface itemConteo 
+{
+ id:string|undefined; 
+ fecha: Timestamp;
+ nombreSuc:string; 
+ sucursal:sucursalesComensales;
+ mesas:number;
+ comensales:number; 
+ idReg:string; 
 }

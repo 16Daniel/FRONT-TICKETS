@@ -29,7 +29,7 @@ ngOnInit(): void { this.obtenerSucursales(); }
 
  async agregarSucursal()
   {
-    let data:sucursalesComensales = { nombre: this.formnombreSucursal}; 
+    let data:sucursalesComensales = { nombre: this.formnombreSucursal.toUpperCase()}; 
     await this.comensalesService.agregarSucursal(data); 
     this.formnombreSucursal = ""; 
     Swal.fire({
@@ -92,7 +92,8 @@ ngOnInit(): void { this.obtenerSucursales(); }
   }
 
   async actualizarNombre(item:sucursalesComensales)
-  {
+  {  
+    item.nombre = item.nombre.toUpperCase();  
     await this.comensalesService.actualizarSucursal(item,item.id!); 
     Swal.fire({
               title: "Success",

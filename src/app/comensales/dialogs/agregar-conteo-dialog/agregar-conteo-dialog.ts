@@ -106,19 +106,23 @@ onHide() {
 
 
 agregarCompetencia()
-{
-  let data:sucursalCompetencia = 
-  {
-    id:this.sucursaleSelCompetencia!.id!,
-    nombre:this.sucursaleSelCompetencia!.nombre,
-    mesas:this.formMesasCompetencia!,
-    comensales:this.formComensalesCompetencia!
-  }
-  this.arr_competencia.push(data); 
+{  
+  let temp = this.arr_competencia.filter(x=> x.id == this.sucursaleSelCompetencia!.id!); 
+  if(temp.length== 0)
+    {
+        let data:sucursalCompetencia = 
+        {
+          id:this.sucursaleSelCompetencia!.id!,
+          nombre:this.sucursaleSelCompetencia!.nombre,
+          mesas:this.formMesasCompetencia!,
+          comensales:this.formComensalesCompetencia!
+        }
+        this.arr_competencia.push(data); 
 
-  this.sucursaleSelCompetencia = undefined;
-  this.formMesasCompetencia = undefined;
-  this.formComensalesCompetencia = undefined; 
+        this.sucursaleSelCompetencia = undefined;
+        this.formMesasCompetencia = undefined;
+        this.formComensalesCompetencia = undefined; 
+    }
 
 }
 
@@ -134,6 +138,7 @@ async agregarConteo()
   {
      fecha: Timestamp.fromDate(new Date()),
      sucursal:this.sucursaleSelRW!,
+     idSucursal: this.sucursaleSelRW!.id!, 
      competencia:this.arr_competencia, 
      mesas:this.formMesasRW!,
      comensales:this.formComensalesRW!
@@ -149,6 +154,7 @@ async agregarConteo()
                   container: 'swal-topmost'
                 }
               });
+              this.onHide();
 }
 
 getDtae(item:Timestamp):Date
@@ -172,6 +178,7 @@ getDtae(item:Timestamp):Date
                 container: 'swal-topmost'
               }
             });
+            this.onHide(); 
   }
 
 }

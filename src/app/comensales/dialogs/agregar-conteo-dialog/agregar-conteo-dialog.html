@@ -10,14 +10,14 @@
        
     <div class="p-3">
    
-        <div class="p-3 rounded-3" style="background-color: #e7e7e7;">
+        <div class="p-3 rounded-3" style="background-color: #b8d5ba;">
             <div class="row">
 
                 <div class="col-4">
                       <p class="fw-bold mt-3">SUCURSAL</p> 
                         <p-dropdown [options]="sucursalesrw" [(ngModel)]="sucursaleSelRW" name="sucursal" optionLabel="nombre" [filter]="true"
                                 filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR SUCURSAL"
-                                [style]="{width:'100%'}">
+                                [style]="{width:'100%'}" [disabled]="true">
                                 <ng-template pTemplate="selectedItem" let-selectedOption>
                                     <div class="flex align-items-center gap-2">
                                         <div>{{ selectedOption.nombre }}</div>
@@ -45,7 +45,7 @@
         <p class="mt-3 fw-bold">COMPETENCIA</p>
 
 
-          <div class="p-3 rounded-3" style="background-color: #e7e7e7;">
+          <div class="p-3 rounded-3" style="background-color: #c4d6e5;">
            
             <div class="row">
 

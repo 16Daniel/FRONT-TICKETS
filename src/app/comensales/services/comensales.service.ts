@@ -55,9 +55,10 @@ export class ComensalesService {
 
 obtenerconteosEntrefechas(
   fechaInicio?: Date, 
-  fechaFin?: Date
+  fechaFin?: Date,
+  idSucursal?:string
 ): Observable<ConteoComensales[]> {
-  
+  debugger
   let ref = collection(this.firestore, this.comensalestab);
   let q = query(ref);
   
@@ -65,6 +66,7 @@ obtenerconteosEntrefechas(
   const condiciones = [];
   
   if (fechaInicio) {
+    fechaInicio?.setHours(0,0,0,0);
     condiciones.push(where('fecha', '>=', Timestamp.fromDate(fechaInicio)));
   }
   
@@ -75,6 +77,11 @@ obtenerconteosEntrefechas(
     condiciones.push(where('fecha', '<=', Timestamp.fromDate(finAjustado)));
   }
   
+  if(idSucursal)
+    {
+      condiciones.push(where('idSucursal', '==',idSucursal));
+    }
+
   // Si hay condiciones, crear la consulta con ellas
   if (condiciones.length > 0) {
     q = query(ref, ...condiciones);
