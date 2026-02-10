@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -31,6 +31,8 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 })
 export class TasksFilterComponentComponent {
 
+  cdr = inject(ChangeDetectorRef);
+
   @Input() sucursales: any[] = [];
   @Input() sucursalesMap = new Map<string, string>();
   @Input() etiquetas: any[] = [];
@@ -48,6 +50,7 @@ export class TasksFilterComponentComponent {
   @Output() etiquetaChange = new EventEmitter<string>();
   @Output() responsableChange = new EventEmitter<string>();
   @Output() responsablesGlobalesChange = new EventEmitter<string[]>();
+  @Output() verProyectosChange = new EventEmitter<boolean>();
 
   mostrarFiltrosGlobales = false;
   responsables: ResponsableTarea[] = [];
@@ -57,6 +60,7 @@ export class TasksFilterComponentComponent {
   mostrarModalResponsables = false;
   mostrarModalArchivados = false;
   mostrarModalNuevaTarea = false;
+  mostrarProyectos = false;
 
   constructor(private taskResponsibleService: TaskResponsibleService) { }
 
@@ -126,5 +130,10 @@ export class TasksFilterComponentComponent {
     }).filter(x => x.esGlobal);
   }
 
+  onToggleProyectos() {
+    this.verProyectosChange.emit(this.mostrarProyectos);
+    // this.mostrarProyectos = !this.mostrarProyectos;
+    // this.cdr.detectChanges();
+  }
 }
 

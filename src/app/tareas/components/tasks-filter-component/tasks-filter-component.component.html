@@ -91,8 +91,8 @@
     <!-- RESPONSABLES GLOBALES -->
     <div class="col-md-6">
       <p class="fw-bold mb-1">RESPONSABLES</p>
-      <p-multiSelect [options]="responsablesGlobalesOrdenados" [(ngModel)]="idsResponsablesGlobalesSeleccionados" optionLabel="nombre"
-        optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES GLOBALES"
+      <p-multiSelect [options]="responsablesGlobalesOrdenados" [(ngModel)]="idsResponsablesGlobalesSeleccionados"
+        optionLabel="nombre" optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES GLOBALES"
         class="custom-responsable-dropdown" [style]="{ width: '100%' }"
         (onChange)="onResponsablesGlobalesChange($event.value)" [disabled]="textoBusqueda != ''">
 
@@ -115,7 +115,8 @@
       <p class="fw-bold mb-1">BÚSQUEDA GLOBAL</p>
       <span class="p-input-icon-left w-100">
         <input type="text" class="form-control" style="height: 45px;" (input)="onBuscarText()"
-          [(ngModel)]="textoBusqueda" placeholder="Buscar por título, descripción" [disabled]="idsResponsablesGlobalesSeleccionados.length > 0" />
+          [(ngModel)]="textoBusqueda" placeholder="Buscar por título, descripción"
+          [disabled]="idsResponsablesGlobalesSeleccionados.length > 0" />
       </span>
     </div>
 
@@ -161,6 +162,20 @@
 
     <!-- ACCIONES -->
     <div class="acciones">
+      <div class="d-flex align-items-center gap-3 ms-auto">
+        <label class="form-check-label fs-4 mb-0" *ngIf="!mostrarProyectos">
+          TAREAS
+        </label>
+        <label class="form-check-label fs-4 mb-0" *ngIf="mostrarProyectos">
+          PROYECTOS
+        </label>
+
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
+            [(ngModel)]="mostrarProyectos" (ngModelChange)="onToggleProyectos()">
+        </div>
+      </div>
+
       <p-button label="AGREGAR" icon="pi pi-plus" (click)="mostrarModalNuevaTarea = true">
       </p-button>
 

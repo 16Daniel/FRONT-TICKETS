@@ -41,6 +41,7 @@ import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.co
 })
 export class DashboardTasksPageComponent implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
+  mostrarProyectos: boolean = false;
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
