@@ -15,6 +15,9 @@
   [textoBusqueda]="textoBusqueda" *ngIf="!mostrarProyectos">
 </app-tasks-board>
 
+<app-projects-board [tareas]="allProjects" (seleccionarTarea)="abrirDetalle($event)"
+  *ngIf="mostrarProyectos"></app-projects-board>
+
 <app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
   (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada">
 </app-task-detail>

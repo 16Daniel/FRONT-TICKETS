@@ -27,4 +27,5 @@ export class Tarea {
   eliminado: boolean = false;
   idEtiqueta: string = '';
   visibleGlobal: boolean = true;
+  esProyecto: boolean = false;
 }

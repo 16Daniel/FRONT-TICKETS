@@ -397,7 +397,13 @@ export class TaskDetailComponent implements OnInit {
   }
 
   convertirAProyecto() {
-    console.log('Hola');
+    this.tarea.esProyecto = true;
+    this.guardarCambios();
+  }
+
+  convertirATarea() {
+    this.tarea.esProyecto = false;
+    this.guardarCambios();
   }
 
   tareaAsignadaAMi() {
