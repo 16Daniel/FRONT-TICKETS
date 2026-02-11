@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { Usuario } from '../../usuarios/interfaces/usuario.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResponsableGuard implements CanActivate {
@@ -8,10 +9,15 @@ export class ResponsableGuard implements CanActivate {
 
   canActivate(): boolean {
     const responsable = localStorage.getItem('responsable-tareas');
-
-    if (responsable) {
+    let usuario:Usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); 
+    if (responsable ) {
       return true;
-    }
+    } 
+
+    if(usuario != undefined && usuario.idRol == '6')
+      {
+        return true; 
+      }
 
     this.router.navigate(['/tareas/selecciona-responsable']);
     return false;
