@@ -20,6 +20,7 @@ import { Tarea } from '../../interfaces/tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TasksFilterComponentComponent } from '../../components/tasks-filter-component/tasks-filter-component.component';
 import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.component';
+import { ProjectsBoardComponent } from '../../components/projects-board/projects-board.component';
 
 @Component({
   selector: 'app-dashboard-tasks-page',
@@ -33,7 +34,8 @@ import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.co
     FormsModule,
     ButtonModule,
     TasksFilterComponentComponent,
-    TasksBoardComponent
+    TasksBoardComponent,
+    ProjectsBoardComponent
   ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks-page.html',
@@ -41,6 +43,7 @@ import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.co
 })
 export class DashboardTasksPageComponent implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
+  mostrarProyectos: boolean = false;
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
@@ -50,6 +53,7 @@ export class DashboardTasksPageComponent implements OnInit {
   etiquetasFiltradas: EtiquetaTarea[] = [];
   idEtiquetaSeleccionada: string = '';
   allTasks: Tarea[] = [];
+  allProjects: Tarea[] = [];
   esGlobal: boolean = false;
   responsablesTodos: ResponsableTarea[] = [];
   idResponsableSeleccionado: string = '';
@@ -220,7 +224,8 @@ export class DashboardTasksPageComponent implements OnInit {
       .getBySucursal(this.idSucursalSeleccionada)
       .subscribe(tareas => {
         // this.allTasks = tareas;
-        this.allTasks = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!);
+        this.allTasks = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!).filter(x => (x.esProyecto == false || x.esProyecto == undefined));
+        this.allProjects = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!).filter(x => x.esProyecto == true);
         this.distribuirTareas(this.allTasks);
 
         if (this.idEtiquetaSeleccionada && this.idEtiquetaSeleccionada != '') {

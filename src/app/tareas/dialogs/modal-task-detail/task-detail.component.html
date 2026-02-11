@@ -263,11 +263,22 @@
 
           <br>
 
-          <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
-            (click)="convertirAProyecto()" pTooltip="Convertir esta tarea en proyecto" tooltipPosition="top">
+          <!-- BOTÓN PROYECTO -->
+          <button *ngIf="!tarea.esProyecto" type="button"
+            class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" (click)="convertirAProyecto()"
+            pTooltip="Convertir esta tarea en proyecto" tooltipPosition="top">
 
             <i class="fa-solid fa-star" style="color: #f1c40f;"></i>
-            <span>Convertir a proyecto</span>
+            <span>CONVERTIR A PROYECTO</span>
+
+          </button>
+
+          <button *ngIf="tarea.esProyecto" type="button"
+            class="btn btn-sm btn-outline-warning d-flex align-items-center gap-2" (click)="convertirATarea()"
+            pTooltip="Convertir este proyecto en tarea" tooltipPosition="top">
+
+            <i class="fa-solid fa-star-half-stroke" style="color: #f1c40f;"></i>
+            <span>CONVERTIR A TAREA</span>
 
           </button>
 
