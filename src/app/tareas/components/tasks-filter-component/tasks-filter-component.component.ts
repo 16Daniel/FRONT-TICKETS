@@ -11,6 +11,7 @@ import { ModalLabelsTaskComponent } from '../../dialogs/modal-labels-task/modal-
 import { NewTaskComponent } from '../../dialogs/modal-new-task/new-task.component';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 
 @Component({
   selector: 'app-tasks-filter-component',
@@ -58,10 +59,12 @@ export class TasksFilterComponentComponent {
   mostrarModalArchivados = false;
   mostrarModalNuevaTarea = false;
   mostrarProyectos = false;
-
+  usuario!: Usuario;
   taskResponsibleService = inject(TaskResponsibleService);
 
   ngOnInit(): void {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+
     this.taskResponsibleService.responsables$.subscribe(() => {
       this.actualizarResponsables();
     });

@@ -138,4 +138,19 @@ export class TaskResponsibleService {
 
     throw new Error('No se pudo generar un PIN único después de varios intentos');
   }
+
+  async correoExiste(correo: string): Promise<boolean> {
+    if (!correo) return false;
+
+    const q = query(
+      collection(this.firestore, this.pathName),
+      where('correo', '==', correo.toLowerCase()),
+      where('eliminado', '==', false)
+    );
+
+    const snapshot = await getDocs(q);
+
+    return !snapshot.empty;
+  }
+
 }

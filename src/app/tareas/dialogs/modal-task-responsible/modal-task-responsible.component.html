@@ -34,32 +34,47 @@
           name="correo" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
       </div>
 
-      <!-- ES GLOBAL -->
-      <div class="col-md-4 mt-3">
-        <p class="fw-bold mb-1">ES GLOBAL?</p>
+      <!-- GLOBAL + COLOR -->
+      <div class="col-md-8 mt-3">
+        <div class="row">
 
-        <div class="d-flex align-items-center gap-2">
-          <p-inputSwitch [(ngModel)]="nuevoResponsable.esGlobal" name="esGlobal">
-          </p-inputSwitch>
+          <!-- ES GLOBAL -->
+          <div class="col-md-4">
+            <p class="fw-bold mb-1">ES GLOBAL?</p>
 
-          <span class="badge" [ngClass]="nuevoResponsable.esGlobal ? 'bg-success' : 'bg-secondary'">
-            {{ nuevoResponsable.esGlobal ? 'SI' : 'NO' }}
-          </span>
+            <div class="d-flex align-items-center gap-2">
+              <p-inputSwitch [(ngModel)]="nuevoResponsable.esGlobal" name="esGlobal">
+              </p-inputSwitch>
+
+              <span class="badge" [ngClass]="nuevoResponsable.esGlobal ? 'bg-success' : 'bg-secondary'">
+                {{ nuevoResponsable.esGlobal ? 'SI' : 'NO' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- COLOR + AVATAR -->
+          <div class="col-md-4">
+            <p class="fw-bold mb-1">COLOR</p>
+
+            <div class="d-flex align-items-center gap-2">
+              <ngx-avatars [name]="nuevoResponsable.nombre || ' '" [size]="32" [bgColor]="nuevoResponsable.color">
+              </ngx-avatars>
+
+              <input type="color" class="form-control form-control-color" [(ngModel)]="nuevoResponsable.color"
+                name="color" required>
+            </div>
+          </div>
+
+          <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <br>
+            <button type="button" class="btn btn-outline-primary w-100" (click)="verTodosResponsables()">
+              <i class="fa-solid fa-list me-2"></i>
+              VER TODOS
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- COLOR + AVATAR -->
-      <div class="col-md-3">
-        <p class="fw-bold mb-1">COLOR</p>
-
-        <div class="d-flex align-items-center gap-2">
-          <ngx-avatars [name]="nuevoResponsable.nombre || ' '" [size]="32" [bgColor]="nuevoResponsable.color">
-          </ngx-avatars>
-
-          <input type="color" class="form-control form-control-color" [(ngModel)]="nuevoResponsable.color" name="color"
-            required>
-        </div>
-      </div>
 
 
 
@@ -84,7 +99,7 @@
           <th>Sucursal</th>
           <th>Color</th>
           <th>Global</th>
-          <th *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'RW INSURGENTES'">PIN</th>
+          <th>PIN</th>
           <th>Eliminar</th>
         </tr>
       </ng-template>
@@ -136,7 +151,7 @@
           </td>
 
           <!-- PIN -->
-          <td *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'RW INSURGENTES'">
+          <td>
             <div class="d-flex align-items-center gap-2">
               <input type="text" class="form-control text-center" style="width: 90px" [value]="res.pin" disabled />
 
