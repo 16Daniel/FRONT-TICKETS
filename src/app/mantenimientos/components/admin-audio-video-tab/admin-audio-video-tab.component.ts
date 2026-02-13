@@ -29,7 +29,7 @@ import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.model';
+import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
 
 @Component({
   selector: 'app-admin-audio-video-tab',

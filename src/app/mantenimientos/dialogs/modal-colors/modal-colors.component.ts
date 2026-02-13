@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { CalendarColorsService } from '../../services/calendar-colors.service';
-import { ColorUsuario } from '../../interfaces/color-usuario';
+import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 
 @Component({
   selector: 'app-modal-colors',

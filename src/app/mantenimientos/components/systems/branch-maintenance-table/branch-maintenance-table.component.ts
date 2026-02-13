@@ -11,7 +11,7 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
 
 @Component({
   selector: 'app-branch-maintenance-table',

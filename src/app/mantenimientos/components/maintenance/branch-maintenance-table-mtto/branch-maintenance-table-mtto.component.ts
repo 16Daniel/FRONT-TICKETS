@@ -10,7 +10,7 @@ import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenanc
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
-import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.interface';
 
 @Component({
   selector: 'app-branch-maintenance-table-mtto',

@@ -3,7 +3,7 @@ import { DialogModule } from 'primeng/dialog';
 
 import { BranchesService } from '../../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-new',

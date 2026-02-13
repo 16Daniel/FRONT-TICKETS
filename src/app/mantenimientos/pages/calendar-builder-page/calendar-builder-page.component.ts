@@ -33,9 +33,9 @@ import { MaintenanceMtooService } from '../../services/maintenance-mtto.service'
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.model';
-import { ComentarioVisita } from '../../interfaces/comentario-visita.model';
-import { VisitaProgramada } from '../../interfaces/visita-programada';
+import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
+import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
+import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 
 @Component({

@@ -3,7 +3,7 @@ import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firesto
 import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
-import { MantenimientoMtto } from '../interfaces/mantenimiento-mtto.model';
+import { MantenimientoMtto } from '../interfaces/mantenimiento-mtto.interface';
 import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
 
 @Injectable({

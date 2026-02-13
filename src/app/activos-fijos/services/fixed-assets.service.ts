@@ -14,7 +14,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { ActivoFijo } from '../interfaces/activo-fijo.model';
-import { MantenimientoActivoFijo } from '../../mantenimientos/interfaces/mantenimiento-activo-fijo.model';
+import { MantenimientoActivoFijo } from '../../mantenimientos/interfaces/mantenimiento-activo-fijo.interface';
 
 @Injectable({
   providedIn: 'root'

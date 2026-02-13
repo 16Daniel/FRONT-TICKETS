@@ -11,7 +11,7 @@ import { Categoria } from '../../interfaces/categoria.mdoel';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.model';
+import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
 
 @Component({
   selector: 'app-grafica-general-tickets',

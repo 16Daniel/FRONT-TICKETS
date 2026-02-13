@@ -15,9 +15,9 @@ import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { ColorUsuario } from '../../interfaces/color-usuario';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.model';
-import { VisitaProgramada } from '../../interfaces/visita-programada';
+import { ColorUsuario } from '../../interfaces/color-usuario.interface';
+import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
+import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({

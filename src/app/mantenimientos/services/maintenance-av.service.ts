@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
-import { Mantenimiento6x6AV } from '../interfaces/mantenimiento-av.model';
+import { Mantenimiento6x6AV } from '../interfaces/mantenimiento-av.interface';
 
 @Injectable({
   providedIn: 'root'

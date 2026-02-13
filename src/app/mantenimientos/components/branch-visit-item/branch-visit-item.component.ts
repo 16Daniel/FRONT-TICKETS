@@ -6,7 +6,7 @@ import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-ev
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { SucursalProgramada } from '../../interfaces/sucursal-programada.model';
+import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 
 @Component({
   selector: 'app-branch-visit-item',

@@ -17,7 +17,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.model';
+import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 
 @Component({
   selector: 'app-branches-maintenance-tab',

@@ -1,4 +1,4 @@
-import { MantenimientoActivoFijo } from "../../mantenimientos/interfaces/mantenimiento-activo-fijo.model";
+import { MantenimientoActivoFijo } from "../../mantenimientos/interfaces/mantenimiento-activo-fijo.interface";
 
 export class ActivoFijo {
     id?: string;

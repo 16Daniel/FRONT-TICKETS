@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, query, where } from '@angular/fire/firestore';
-import { ColorUsuario } from '../interfaces/color-usuario';
+import { ColorUsuario } from '../interfaces/color-usuario.interface';
 
 @Injectable({
   providedIn: 'root'

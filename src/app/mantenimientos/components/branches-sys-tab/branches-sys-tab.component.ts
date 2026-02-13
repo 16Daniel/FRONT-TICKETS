@@ -19,7 +19,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.model';
+import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
 
 @Component({
   selector: 'app-branches-sys-tab',

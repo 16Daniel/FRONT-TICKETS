@@ -10,7 +10,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { ProgressBar80Component } from '../../../components/progress-bar-80/progress-bar-80.component';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.interface';
 
 @Component({
   selector: 'app-modal-mateinance-mtto-check',
