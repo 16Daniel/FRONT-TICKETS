@@ -1,4 +1,4 @@
-<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()" pTooltip="{{ estatusMap.get(tarea.idEstatus) || '' }}">
+<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()" [cdkDragDisabled]="tarea.esProyecto">
 
   <div class="priority-badge">
     <span *ngIf="tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
@@ -44,7 +44,7 @@
       </ng-container>
     </span>
 
-    <span class="estatus estatus-{{ tarea.idEstatus }}"></span>
+    <span class="estatus estatus-{{ tarea.idEstatus }}" pTooltip="{{ estatusMap.get(tarea.idEstatus) || '' }}"></span>
   </div>
 
   <div class="subtareas-info" *ngIf="tarea.subtareas?.length"
