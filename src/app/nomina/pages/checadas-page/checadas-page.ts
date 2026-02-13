@@ -170,10 +170,12 @@ consultar()
   let temp = this.catempleados.filter(e=> e.id==this.empleadosel!.id);
   this.nombreemp = temp[0].nombre +" "+ temp[0].apellidop +" "+ temp[0].apellidom;
 
-  
-  this.apiserv.getChecadas(this.empleadosel!.id,this.datePipe.transform(this.fechaIni, 'yyyy-MM-dd')!,this.datePipe.transform(this.fechaFin, 'yyyy-MM-dd')!).subscribe({
+  let fechafin:Date = new Date(this.fechaFin); 
+  fechafin.setDate(fechafin.getDate() + 1); 
+  this.apiserv.getChecadas(this.empleadosel!.id,this.datePipe.transform(this.fechaIni, 'yyyy-MM-dd')!,this.datePipe.transform(fechafin, 'yyyy-MM-dd')!).subscribe({
     next: data => {
        this.arr_checadas = data; 
+       console.log(this.arr_checadas);
        this.tabledia = []; 
        this.calcularData(this.fechaIni,this.fechaFin); 
     },
