@@ -77,6 +77,7 @@ export default class LoginComponent {
 
         if (userd.idRol === '6') {
           this.router.navigate(['/cedis/recoleccion']);
+           Swal.close();
           return;
         }
 
