@@ -116,6 +116,11 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
         return;
       }
 
+      const nuevoPin = await this.responsablesService.generarPinUnico();
+      this.nuevoResponsable.pin = nuevoPin;
+
+      this.enviarCorreo(this.nuevoResponsable, nuevoPin);
+
       await this.responsablesService.create({ ...this.nuevoResponsable });
       this.messageService.add({
         severity: 'success',
@@ -123,9 +128,10 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
         detail: 'Responsable creado',
       });
 
-      await this.regenerarPin(this.nuevoResponsable);
+      // await this.regenerarPin(this.nuevoResponsable);
 
-      form.resetForm();
+      form.resetForm({color: '#000'});
+      this.nuevoResponsable.color = '#000';
       this.nuevoResponsable.idSucursal = this.idSucursalSeleccionada!;
 
     } finally {
@@ -303,18 +309,20 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
     this.responsables = this.responsablesService.responsables;
   }
 
-  async cambiarCorreo(res: ResponsableTarea) {
+  async cambiarCorreo(res: ResponsableTarea, event: any) {
     try {
 
       res.correo = res.correo?.toLowerCase().trim();
+      const correoNuevo = event.target.value?.toLowerCase().trim();
+      if (!correoNuevo) return;
 
-      const existe = await this.responsablesService.correoExiste(res.correo);
+      const existe = await this.responsablesService.correoExiste(correoNuevo);
 
-      const esMismoRegistro =
+      const noEsMismoRegistro =
         this.responsablesService.responsables
-          .find(r => r.correo === res.correo && r.id === res.id);
+          .find(r => r.correo === res.correo && r.id !== res.id);
 
-      if (existe && !esMismoRegistro) {
+      if (existe && noEsMismoRegistro) {
 
         await Swal.fire({
           icon: 'warning',
@@ -327,6 +335,8 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
 
         return;
       }
+
+      this.guardarCambios(res);
     } catch (error) {
       console.error(error);
       this.showMessage('error', 'Error', 'No se pudo actualizar el correo');

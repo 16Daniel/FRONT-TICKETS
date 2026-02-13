@@ -122,7 +122,7 @@
           <!-- CORREO -->
           <td>
             <input type="email" class="form-control" [(ngModel)]="res.correo" [readonly]="!res.editando"
-              (click)="activarEdicion(res)" (blur)="guardarCambios(res)" (keydown.enter)="guardarCambios(res)" />
+              (click)="activarEdicion(res)" (blur)="cambiarCorreo(res, $event)" (keydown.enter)="cambiarCorreo(res, $event)" />
           </td>
 
           <!-- SUCURSAL -->
