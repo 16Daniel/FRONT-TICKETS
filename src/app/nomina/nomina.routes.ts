@@ -29,6 +29,12 @@ export const NOMINA_ROUTES: Routes = [
         loadComponent: () =>
           import('./pages/historial-personal-page/historial-personal-page.component'),
       },
+        {
+        path: 'checadas',
+        title: 'Checadas',
+        loadComponent: () =>
+          import('./pages/checadas-page/checadas-page'),
+      },
     ],
   },
 ];
