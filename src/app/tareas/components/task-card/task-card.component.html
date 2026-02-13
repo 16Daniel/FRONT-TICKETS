@@ -1,4 +1,4 @@
-<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
+<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()" pTooltip="{{ estatusMap.get(tarea.idEstatus) || '' }}">
 
   <div class="priority-badge">
     <span *ngIf="tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
@@ -6,16 +6,6 @@
     <span *ngIf="tarea.idEisenhower == '3'" pTooltip="RUIDO! Si puedes, delégalo">C3:📢</span>
     <span *ngIf="tarea.idEisenhower == '4'" pTooltip="TRANQUILO.. Puede esperar">C4:⏳</span>
   </div>
-
-  <!-- TÍTULO -->
-  <!-- <div class="d-flex align-items-center mb-1">
-    <div class="titulo">
-      <i [class]="tarea.visibleSoloParaMi ? 'bx bx-lock-open-alt text-success' : 'bx bx-lock-alt text-danger'"
-        [pTooltip]="tarea.visibleSoloParaMi ? 'Tarea público' : 'Tarea privada'" class="me-1 visibility-icon">
-      </i>
-      {{ tarea.titulo }}
-    </div>
-  </div> -->
 
   <div class="d-flex align-items-center mb-1">
     <div class="titulo">
@@ -25,10 +15,6 @@
 
   <!-- SUCURSAL -->
   <div class="sucursal-info" *ngIf="nombreSucursal">
-    <!-- <span class="sucursal-badge" [class.global]="esOtraSucursal">
-      <i *ngIf="esOtraSucursal" class="pi pi-globe"></i>
-      {{ nombreSucursal }}
-    </span> -->
     <span class="sucursal-badge">
       {{ nombreSucursal }}
     </span>
@@ -119,6 +105,5 @@
     </div>
 
   </div>
-
 
 </div>

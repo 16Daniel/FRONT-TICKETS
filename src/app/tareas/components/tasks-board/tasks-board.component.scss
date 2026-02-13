@@ -3,10 +3,26 @@
   gap: 20px;
 }
 
+.contenedor {
+  padding: 15px;
+  padding-left: 5px;
+  padding-right: 25px;
+  border-radius: 8px;
+  background-color: #fef9cb;
+  width: 100%;
+}
+
+.contador-columnas {
+  display: flex;
+  gap: 20px;
+}
+
 .columna {
   flex: 1;
   min-height: 300px;
   padding: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-radius: 8px;
 }
 
@@ -37,4 +53,13 @@
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.titulo-contenedor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // margin-bottom: 10px;
+  padding-left: 10px;
+  flex-basis: 100%;
 }

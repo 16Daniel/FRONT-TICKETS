@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MessageService } from 'primeng/api';
@@ -15,6 +15,8 @@ import { Tarea } from '../../interfaces/tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
+import { StatusTaskService } from '../../services/status-task.service';
 
 @Component({
   selector: 'app-task-card',
@@ -33,16 +35,24 @@ export class TaskCardComponent implements OnInit {
   etiquetas: EtiquetaTarea[] = [];
   responsables: ResponsableTarea[] = [];
   sucursales: Sucursal[] = [];
+  estatusTareas: EstatusTarea[] = [];
+  estatusMap = new Map<string, string>();
 
-  constructor(
-    private tareasService: TareasService,
-    private messageService: MessageService,
-    private labelsTasksService: LabelsTasksService,
-    private taskResponsibleService: TaskResponsibleService,
-    private sucursalesService: BranchesService
-  ) { }
+  tareasService = inject(TareasService);
+  messageService = inject(MessageService);
+  labelsTasksService = inject(LabelsTasksService);
+  taskResponsibleService = inject(TaskResponsibleService);
+  sucursalesService = inject(BranchesService);
+  estatusService = inject(StatusTaskService);
 
   ngOnInit(): void {
+    this.estatusService.estatus$.subscribe(estatus => {
+      this.estatusTareas = estatus;
+
+      this.estatusMap.clear();
+      estatus.forEach(x => this.estatusMap.set(x.id!, x.nombre));
+    });
+
     this.sucursalesService.get().subscribe(sucursales => this.sucursales = sucursales);
 
     this.labelsTasksService.etiquetas$.subscribe(et => {

@@ -1,71 +1,79 @@
 <div class="tablero-tareas">
+  <div class="contenedor">
 
-  <!-- TODO -->
-  <div class="columna" style="background-color: #fecbcb;" cdkDropList id="todoList" [cdkDropListData]="toDo"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
-
-    <div class="titulo-columna">
-      <h3>TO DO</h3>
-      <span class="contador">{{ toDo.length }}</span>
+    <div class="titulo-contenedor">
+      <h3>TAREAS</h3>
+      <!-- <span class="contador">{{ working.length }}</span> -->
     </div>
 
-    <div class="scroll">
-      <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
+    <div class="contador-columnas" style="background-color: #fef9cb;">
+      <!-- TODO -->
+      <div class="columna" style="background-color: #fef9cb;" cdkDropList id="todoList" [cdkDropListData]="toDo"
+        [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
+
+        <!-- <div class="titulo-columna">
+        <h3>TO DO</h3>
+        <span class="contador">{{ toDo.length }}</span>
+      </div> -->
+
+        <div class="scroll">
+          <app-task-card *ngFor="let t of toDo" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+            [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+            [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
+          </app-task-card>
+        </div>
+      </div>
+
+      <!-- WORKING -->
+      <div class="columna" style="background-color: #fef9cb;" cdkDropList id="workingList" [cdkDropListData]="working"
+        [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
+
+        <!-- <div class="titulo-columna">
+        <h3>WORKING</h3>
+        <span class="contador">{{ working.length }}</span>
+      </div> -->
+
+        <div class="scroll">
+          <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+            [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+            [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
+          </app-task-card>
+        </div>
+      </div>
+
+      <!-- CHECK -->
+      <div class="columna" style="background-color: #fef9cb;" cdkDropList id="checkList" [cdkDropListData]="check"
+        [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
+
+        <!-- <div class="titulo-columna">
+        <h3>CHECK</h3>
+        <span class="contador">{{ check.length }}</span>
+      </div> -->
+
+        <div class="scroll">
+          <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+            [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+            [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
+          </app-task-card>
+        </div>
+      </div>
+
+      <!-- DONE -->
+      <div class="columna" style="background-color: #fef9cb;" cdkDropList id="doneList" [cdkDropListData]="done"
+        [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
+
+        <!-- <div class="titulo-columna">
+        <h3>DONE</h3>
+        <span class="contador">{{ done.length }}</span>
+      </div> -->
+
+        <div class="scroll">
+          <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+            [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
+            [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
+          </app-task-card>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- WORKING -->
-  <div class="columna" style="background-color: #fef9cb;" cdkDropList id="workingList" [cdkDropListData]="working"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
-
-    <div class="titulo-columna">
-      <h3>WORKING</h3>
-      <span class="contador">{{ working.length }}</span>
-    </div>
-
-    <div class="scroll">
-      <app-task-card *ngFor="let t of working" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
-    </div>
-  </div>
-
-  <!-- CHECK -->
-  <div class="columna" style="background-color: #cbcdfe;" cdkDropList id="checkList" [cdkDropListData]="check"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
-
-    <div class="titulo-columna">
-      <h3>CHECK</h3>
-      <span class="contador">{{ check.length }}</span>
-    </div>
-
-    <div class="scroll">
-      <app-task-card *ngFor="let t of check" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
-    </div>
-  </div>
-
-  <!-- DONE -->
-  <div class="columna" style="background-color: #e4fecb;" cdkDropList id="doneList" [cdkDropListData]="done"
-    [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event)">
-
-    <div class="titulo-columna">
-      <h3>DONE</h3>
-      <span class="contador">{{ done.length }}</span>
-    </div>
-
-    <div class="scroll">
-      <app-task-card *ngFor="let t of done" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
-        [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
-        [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-      </app-task-card>
-    </div>
-  </div>
-
 </div>
