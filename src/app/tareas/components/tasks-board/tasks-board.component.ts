@@ -28,6 +28,8 @@ export class TasksBoardComponent {
   @Input() idSucursalSeleccionada!: string;
   @Input() textoBusqueda!: string;
 
+  @Input() mostrarProyectos: boolean = false;
+
   /** Eventos */
   @Output() dropTask = new EventEmitter<CdkDragDrop<Tarea[]>>();
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
@@ -40,5 +42,17 @@ export class TasksBoardComponent {
 
   onSeleccionar(tarea: Tarea) {
     this.seleccionarTarea.emit(tarea);
+  }
+
+  filtrarTareasProyectos(tareas: Tarea[]) {
+    return this.mostrarProyectos ? this.filtrarProyectos(tareas) : this.filtrarTareas(tareas);
+  }
+
+  private filtrarTareas(tareas: Tarea[]): Tarea[] {
+    return tareas.filter(x => (x.esProyecto == false || x.esProyecto == undefined));
+  }
+
+  private filtrarProyectos(tareas: Tarea[]): Tarea[] {
+    return tareas.filter(x => (x.esProyecto == true || x.esProyecto == undefined));
   }
 }

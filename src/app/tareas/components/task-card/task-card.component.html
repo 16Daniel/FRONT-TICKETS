@@ -1,4 +1,4 @@
-<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()" [cdkDragDisabled]="tarea.esProyecto">
+<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
 
   <div class="priority-badge">
     <span *ngIf="tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
@@ -89,7 +89,7 @@
     <i class="fa-solid me-2 visibility-icon mt-2" [class.fa-lock-open]="tarea.visibleGlobal !== false"
       [class.fa-lock]="tarea.visibleGlobal === false" [class.text-success]="tarea.visibleGlobal !== false"
       [class.text-danger]="tarea.visibleGlobal === false"
-      [pTooltip]="tarea.visibleGlobal === false ? 'Tarea privada' : 'Tarea pública'" tooltipPosition="top">
+      [pTooltip]="tarea.visibleGlobal === false ? 'PRIVADO' : 'PÚBLICO'" tooltipPosition="top">
     </i>
 
     <!-- DEADLINE -->
