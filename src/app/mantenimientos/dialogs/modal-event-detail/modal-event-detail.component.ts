@@ -16,7 +16,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { SucursalProgramada } from '../../interfaces/sucursal-programada.model';
+import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 
 @Component({
   selector: 'app-modal-event-detail',

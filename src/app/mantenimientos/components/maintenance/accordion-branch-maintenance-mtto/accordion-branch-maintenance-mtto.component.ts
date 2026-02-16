@@ -9,7 +9,7 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.interface';
 import { Sucursal } from '../../../../sucursales/interfaces/sucursal.model';
 
 @Component({

@@ -12,11 +12,11 @@
 
 <app-tasks-board [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"
   [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)"
-  [textoBusqueda]="textoBusqueda" *ngIf="!mostrarProyectos">
+  [textoBusqueda]="textoBusqueda" [mostrarProyectos]="mostrarProyectos">
 </app-tasks-board>
-
+<!--
 <app-projects-board [tareas]="allProjects" (seleccionarTarea)="abrirDetalle($event)"
-  *ngIf="mostrarProyectos"></app-projects-board>
+  *ngIf="mostrarProyectos"></app-projects-board> -->
 
 <app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
   (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada">

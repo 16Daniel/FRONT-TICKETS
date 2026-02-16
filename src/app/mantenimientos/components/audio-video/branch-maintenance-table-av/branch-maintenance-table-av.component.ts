@@ -9,7 +9,7 @@ import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenanc
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
-import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.model';
+import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interface';
 
 
 @Component({

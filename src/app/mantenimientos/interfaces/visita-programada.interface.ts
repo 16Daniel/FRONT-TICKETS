@@ -1,5 +1,5 @@
 import { Timestamp } from "@angular/fire/firestore";
-import { ComentarioVisita } from "./comentario-visita.model";
+import { ComentarioVisita } from "./comentario-visita.interface";
 import { Sucursal } from "../../sucursales/interfaces/sucursal.model";
 
 export interface VisitaProgramada {

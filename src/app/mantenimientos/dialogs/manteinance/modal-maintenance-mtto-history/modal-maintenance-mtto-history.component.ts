@@ -10,7 +10,7 @@ import { BranchMaintenanceTableMttoComponent } from '../../../components/mainten
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
-import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.model';
+import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.interface';
 
 @Component({
   selector: 'app-modal-maintenance-mtto-history',

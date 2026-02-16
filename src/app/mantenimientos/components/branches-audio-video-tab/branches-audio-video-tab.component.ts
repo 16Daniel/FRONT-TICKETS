@@ -17,7 +17,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
-import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.model';
+import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, Firestore, getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { VisitaProgramada } from '../interfaces/visita-programada';
+import { VisitaProgramada } from '../interfaces/visita-programada.interface';
 
 @Injectable({
   providedIn: 'root'

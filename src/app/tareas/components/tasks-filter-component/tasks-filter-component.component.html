@@ -182,7 +182,8 @@
       <p-button label="ETIQUETAS" icon="pi pi-tags" severity="danger" (click)="mostrarModalEtiquetas = true">
       </p-button>
 
-      <p-button label="RESPONSABLES" icon="pi pi-users" severity="secondary" (click)="mostrarModalResponsables = true">
+      <p-button label="RESPONSABLES" icon="pi pi-users" severity="secondary" (click)="mostrarModalResponsables = true"
+        *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'SISTEMAS'">
       </p-button>
 
       <p-button label="ARCHIVADOS" icon="pi pi-folder-open" outlined severity="secondary"

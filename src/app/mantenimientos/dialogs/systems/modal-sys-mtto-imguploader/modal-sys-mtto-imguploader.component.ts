@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
 
 @Component({
   selector: 'app-modal-sys-mtto-imguploader',

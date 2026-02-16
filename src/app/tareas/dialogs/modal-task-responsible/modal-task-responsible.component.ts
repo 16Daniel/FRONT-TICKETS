@@ -62,7 +62,7 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
     this.nuevoResponsable.idSucursal = this.usuario.sucursales[0].id;
-    this.aplicarFiltro();
+    // this.aplicarFiltro();
 
     this.subs.add(
       this.branchesService.get().subscribe({
@@ -98,14 +98,40 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
 
     this.cargando = true;
     try {
+      const existe = await this.responsablesService.correoExiste(
+        this.nuevoResponsable.correo
+      );
+
+      if (existe) {
+        await Swal.fire({
+          icon: 'warning',
+          title: 'Correo duplicado',
+          text: 'Este correo ya está registrado.',
+          confirmButtonColor: '#3085d6',
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+
+        return;
+      }
+
+      const nuevoPin = await this.responsablesService.generarPinUnico();
+      this.nuevoResponsable.pin = nuevoPin;
+
+      this.enviarCorreo(this.nuevoResponsable, nuevoPin);
+
       await this.responsablesService.create({ ...this.nuevoResponsable });
       this.messageService.add({
         severity: 'success',
         summary: 'Correcto',
-        detail: 'Responsable creado'
+        detail: 'Responsable creado',
       });
 
-      form.resetForm();
+      // await this.regenerarPin(this.nuevoResponsable);
+
+      form.resetForm({color: '#000'});
+      this.nuevoResponsable.color = '#000';
       this.nuevoResponsable.idSucursal = this.idSucursalSeleccionada!;
 
     } finally {
@@ -120,7 +146,7 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
 
   private aplicarFiltro() {
     this.responsables =
-      this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada);
+      this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada, false);
   }
 
   activarEdicion(res: any) {
@@ -138,7 +164,6 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
       detail: 'Cambios guardados'
     });
   }
-
 
   async eliminar(res: ResponsableTarea) {
     if (!res.id) return;
@@ -278,6 +303,44 @@ export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+  }
+
+  verTodosResponsables() {
+    this.responsables = this.responsablesService.responsables;
+  }
+
+  async cambiarCorreo(res: ResponsableTarea, event: any) {
+    try {
+
+      res.correo = res.correo?.toLowerCase().trim();
+      const correoNuevo = event.target.value?.toLowerCase().trim();
+      if (!correoNuevo) return;
+
+      const existe = await this.responsablesService.correoExiste(correoNuevo);
+
+      const noEsMismoRegistro =
+        this.responsablesService.responsables
+          .find(r => r.correo === res.correo && r.id !== res.id);
+
+      if (existe && noEsMismoRegistro) {
+
+        await Swal.fire({
+          icon: 'warning',
+          title: 'Correo duplicado',
+          text: 'Este correo ya está registrado.',
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+
+        return;
+      }
+
+      this.guardarCambios(res);
+    } catch (error) {
+      console.error(error);
+      this.showMessage('error', 'Error', 'No se pudo actualizar el correo');
+    }
   }
 
 }

@@ -15,7 +15,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { ProgressBarComponent } from '../../../components/progress-bar/progress-bar.component';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.model';
+import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-check',

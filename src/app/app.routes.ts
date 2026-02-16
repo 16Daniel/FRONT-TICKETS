@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ResponsableGuard } from './shared/guards/responsable.guard';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -57,31 +58,32 @@ export const routes: Routes = [
   },
   {
     path: '',
-    canActivate: [ResponsableGuard],
+    canActivate: [AuthGuard, ResponsableGuard],
     loadChildren: () => import('./nomina/nomina.routes')
   },
   {
     path: '',
-    canActivate: [ResponsableGuard],
+    canActivate: [AuthGuard, ResponsableGuard],
     loadChildren: () => import('./activos-fijos/activos-fijos.routes').then(m => m.ACTIVOS_FIJOS_ROOT_ROUTES),
   },
   {
     path: '',
-    canActivate: [ResponsableGuard],
+    canActivate: [AuthGuard, ResponsableGuard],
     loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_ROOT_ROUTES),
   },
   {
     path: '',
-    canActivate: [ResponsableGuard],
+    canActivate: [AuthGuard, ResponsableGuard],
     loadChildren: () => import('./pagos/pagos.routes')
   },
   {
     path: '',
-    canActivate: [ResponsableGuard],
+    canActivate: [AuthGuard, ResponsableGuard],
     loadChildren: () => import('./planeacion/planeacion.routes')
   },
   {
     path: '',
+    canActivate: [AuthGuard],
     loadChildren: () => import('./tareas/tareas.routes')
   },
   {

@@ -10,7 +10,7 @@ import { BranchMaintenanceTableAvComponent } from '../../../components/audio-vid
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
-import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.model';
+import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interface';
 ;
 
 @Component({
