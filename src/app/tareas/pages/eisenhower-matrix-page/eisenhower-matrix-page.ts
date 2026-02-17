@@ -12,7 +12,6 @@ import { StatusTaskService } from '../../services/status-task.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
@@ -20,11 +19,12 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-eisenhower-card';
 import { Subscription } from 'rxjs';
+import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 
 @Component({
   selector: 'app-eisenhower-matrix-page',
   standalone: true,
-  imports: [CommonModule, DragDropModule, TaskEisenhowerCard, DropdownModule, FormsModule, TaskDetailComponent, ToastModule],
+  imports: [CommonModule, DragDropModule, TaskEisenhowerCard, DropdownModule, FormsModule, DetalleTareaDialogComponent, ToastModule],
   providers: [MessageService],
   templateUrl: './eisenhower-matrix-page.html',
   styleUrl: './eisenhower-matrix-page.scss',
@@ -85,7 +85,7 @@ export class EisenhowerMatrixPageComponent implements OnInit {
       this.tc3 = this.allTasks.filter(x => x.idEstatus != '4' && x.idEisenhower == '3');
       this.tc4 = this.allTasks.filter(x => x.idEstatus != '4' && x.idEisenhower == '4');
 
-      this.cdr.detectChanges(); 
+      this.cdr.detectChanges();
 
     });
   }

@@ -230,3 +230,60 @@
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }
+
+
+.panel-proyecto {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 420px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+  border-left: 1px solid #e0e0e0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.3s ease forwards;
+}
+
+.panel-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  background: #f8f9fa;
+}
+
+.panel-body {
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.tarea-item {
+  margin-bottom: 20px;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+
+
+.proyecto-item {
+  padding: 12px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.proyecto-item:hover {
+  background-color: #f8f9fa;
+}

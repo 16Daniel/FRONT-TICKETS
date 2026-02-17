@@ -8,7 +8,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
-import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
@@ -20,6 +19,7 @@ import { Tarea } from '../../interfaces/tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TasksFilterComponentComponent } from '../../components/tasks-filter-component/tasks-filter-component.component';
 import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.component';
+import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 
 @Component({
   selector: 'app-dashboard-tasks-page',
@@ -28,7 +28,7 @@ import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.co
     DragDropModule,
     CommonModule,
     ToastModule,
-    TaskDetailComponent,
+    DetalleTareaDialogComponent,
     DropdownModule,
     FormsModule,
     ButtonModule,
@@ -348,5 +348,9 @@ export class DashboardTasksPageComponent implements OnInit {
   onBuscarText(texto: string) {
     this.textoBusqueda = texto;
     this.obtenerTareas();
+  }
+
+  get obtenerProyectos() {
+    return this.allTasks.filter(x => x.esProyecto);
   }
 }

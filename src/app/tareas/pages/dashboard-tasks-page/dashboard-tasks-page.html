@@ -19,7 +19,7 @@
   *ngIf="mostrarProyectos"></app-projects-board> -->
 
 <app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
-  (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada">
+  (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada" [proyectos]="obtenerProyectos">
 </app-task-detail>
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
