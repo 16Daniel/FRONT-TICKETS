@@ -1,0 +1,76 @@
+<p-dialog 
+    header="AGREGAR PRECIOS AYC" 
+    [modal]="true"
+    [(visible)]="visible" 
+    [style]="{ width: '80%' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="true"
+    (onHide)="onHide()">
+<div>
+
+  <div class="row">
+    <div class="col-6">
+      <p-dropdown 
+      [options]="regiones" 
+      [(ngModel)]="forRegion" 
+      optionLabel="name" 
+       [filter]="true"
+        filterBy="name" 
+      placeholder="SELECCIONAR REGION"
+      [style]="{width:'100%'}"
+      (onChange)="cambiarRegion()" />
+    </div>
+    <div class="col-6">
+        <p-dropdown 
+      [options]="sucursalesFiltro" 
+      [(ngModel)]="formSucursal" 
+      optionLabel="name" 
+       [filter]="true"
+      filterBy="name" 
+      placeholder="SELECCIONAR SUCURSAL"
+      [style]="{width:'100%'}"
+      [disabled]="sucursalesFiltro.length==0" />
+    </div>
+  </div>
+
+    <table class="table mt-3">
+  <thead>
+    <tr>
+      <th scope="col" style="background-color: #ccc;">LUNES</th>
+      <th scope="col" style="background-color: #ccc;">MARTES</th>
+      <th scope="col" style="background-color: #ccc;">MIERCOLES</th>
+      <th scope="col" style="background-color: #ccc;">JUEVES</th>
+      <th scope="col" style="background-color: #ccc;">VIERNES</th>
+      <th scope="col" style="background-color: #ccc;">SABADO</th>
+      <th scope="col" style="background-color: #ccc;">DOMINGO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><input type="number" [(ngModel)]="formPrecioLunes" class="form-control p-3"></td>
+      <td><input type="number" [(ngModel)]="formPrecioMartes" class="form-control p-3"></td>
+      <td><input type="number" [(ngModel)]="formPrecioMiercoles" class="form-control p-3"></td>
+      <td><input type="number" [(ngModel)]="formPrecioJueves" class="form-control p-3"></td>
+      <td><input type="number" [(ngModel)]="formPrecioViernes" class="form-control p-3"></td>
+      <td><input type="number" [(ngModel)]="formPrecioSabado" class="form-control p-3"></td>
+      <td><input type="number" [(ngModel)]="formPrecioDomingo" class="form-control p-3"></td>
+    </tr>
+      <tr>
+      <td><input type="color" [(ngModel)]="formColorLunes">&nbsp;{{formColorLunes}}</td>
+      <td><input type="color" [(ngModel)]="formColorMartes">&nbsp;{{formColorMartes}}</td>
+      <td><input type="color" [(ngModel)]="formColorMiercoles">&nbsp;{{formColorMiercoles}}</td>
+      <td><input type="color" [(ngModel)]="formColorJueves">&nbsp;{{formColorJueves}}</td>
+      <td><input type="color" [(ngModel)]="formColorViernes">&nbsp;{{formColorViernes}}</td>
+      <td><input type="color" [(ngModel)]="formColorSabado">&nbsp;{{formColorSabado}}</td>
+      <td><input type="color" [(ngModel)]="formColorDomingo">&nbsp;{{formColorDomingo}}</td>
+    </tr>
+  </tbody>
+</table>
+    
+<div class="d-flex justify-content-end" style="margin-top: 100px;">
+<button class="btn btn-success p-3" (click)="guardar()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+</div>
+
+</div>
+
+</p-dialog>
