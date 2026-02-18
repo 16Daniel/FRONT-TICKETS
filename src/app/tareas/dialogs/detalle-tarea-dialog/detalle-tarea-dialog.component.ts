@@ -59,6 +59,8 @@ export class DetalleTareaDialogComponent implements OnInit {
   @Input() proyectos: Tarea[] = [];
   @Output() closeEvent = new EventEmitter<boolean>();
 
+  tareaSeleccionada: Tarea = new Tarea;
+  abrirModalDetalle: boolean = false;
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
   mostrarModalVisorImagen: boolean = false;
@@ -81,6 +83,8 @@ export class DetalleTareaDialogComponent implements OnInit {
   mostrarPanelTareasAsociadas = false;
   mostrarPanelProyectos = false;
 
+  tareasRelacionadas: Tarea[] = [];
+
   private cdr = inject(ChangeDetectorRef);
   private branchesService = inject(BranchesService);
   private tareasService = inject(TareasService);
@@ -92,7 +96,7 @@ export class DetalleTareaDialogComponent implements OnInit {
   private mailService = inject(MailService);
 
   ngOnInit(): void {
-    console.log(this.proyectos)
+    this.obtenerTareasRelacionadas();
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
 
     this.obtenerSucursales();
@@ -412,6 +416,35 @@ export class DetalleTareaDialogComponent implements OnInit {
   }
 
   seleccionarProyecto(proyecto: Tarea) {
+    if (this.tarea.idProyectoRelacionado == proyecto.id) {
+      this.tarea.idProyectoRelacionado = null;
+      this.guardarCambios();
+      return;
+    }
 
+    this.tarea.idProyectoRelacionado = proyecto.id!;
+    this.guardarCambios();
   }
+
+  get misProyectos(): Tarea[] {
+    if (!this.responsableTarea.id) return [];
+
+    return this.proyectos
+      .filter(t =>
+        Array.isArray(t.idsResponsables) &&
+        t.idsResponsables.includes(this.responsableTarea.id!)
+      );
+  }
+
+  obtenerTareasRelacionadas() {
+    this.tareasService.tasks$.subscribe(tareas =>
+      this.tareasRelacionadas = tareas.filter((x: Tarea) => x.idProyectoRelacionado == this.tarea.id)
+    );
+  }
+
+  seleccionarTarea(tarea: Tarea) {
+    this.tareaSeleccionada = tarea;
+    this.abrirModalDetalle = true;
+  }
+
 }

@@ -1,4 +1,4 @@
-<p-dialog [header]="'ACTIVIDAD PRINCIPAL'" [(visible)]="mostrarModal" [modal]="true"
+<p-dialog [header]="tarea.esProyecto ? 'PROYECTO' : 'TAREA'" [(visible)]="mostrarModal" [modal]="true"
   [style]="{ 'width': '95vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
   <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
     <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
@@ -29,7 +29,7 @@
             </i>
           </button>
 
-          <button *ngIf="!tarea.esProyecto" class="btn btn-primary"
+          <button *ngIf="!tarea.esProyecto && tareaAsignadaAMi()" class="btn btn-primary"
             style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
             (click)="mostrarPanelProyectos = !mostrarPanelProyectos">
 
@@ -54,45 +54,34 @@
               </button>
             </div>
 
-            <!-- <div class="panel-body">
-              <div class="tarea-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="fw-semibold">Diseñar tablero Kanban</span>
-                  <span class="badge bg-success">80%</span>
-                </div>
-                <div class="progress mt-2">
-                  <div class="progress-bar bg-success" style="width:80%"></div>
-                </div>
-              </div>
-            </div> -->
             <div class="panel-body">
 
-              <div class="proyecto-item">
+              <div class="proyecto-item" *ngFor="let t of tareasRelacionadas" (click)="seleccionarTarea(t)">
 
                 <div class="flex-grow-1">
 
                   <div class="d-flex justify-content-between">
                     <span class="fw-semibold">
-                      {{ 'p.titulo' }}
+                      {{ t.titulo }}
                     </span>
 
-                    <span class="badge" [ngClass]="getProgressColor(50)">
-                      {{ 50 }}%
+                    <span class="badge" [ngClass]="getProgressColor(t.porcentaje)">
+                      {{ t.porcentaje }}%
                     </span>
                   </div>
-
                   <div class="progress mt-2">
-                    <div class="progress-bar" [ngClass]="getProgressColor(50)" [style.width.%]="50">
+                    <div class="progress-bar" [ngClass]="getProgressColor(t.porcentaje)" [style.width.%]="t.porcentaje">
                     </div>
                   </div>
 
+                  <div class="avatars-container" *ngIf="t.idsResponsables?.length">
+                    <ngx-avatars *ngFor="let r of getResponsablesDeTarea(t)" [name]="r.nombre" [size]="20"
+                      class="avatar-item" pTooltip="{{r.nombre }}" [bgColor]="r.color">
+                    </ngx-avatars>
+                  </div>
                 </div>
-
               </div>
-
             </div>
-
-
           </div>
 
           <!-- ===================================== -->
@@ -113,7 +102,7 @@
 
             <div class="panel-body">
 
-              <div class="proyecto-item" *ngFor="let p of proyectos" (click)="seleccionarProyecto(p)">
+              <div class="proyecto-item" *ngFor="let p of misProyectos" (click)="seleccionarProyecto(p)">
 
                 <div class="d-flex flex-column">
                   <span class="fw-semibold text-dark">
@@ -121,11 +110,13 @@
                   </span>
 
                   <small class="text-muted">
-                    {{ 'p.sucursalNombre' }}
+                    {{ sucursalesMap.get(p.idSucursal) }}
                   </small>
                 </div>
 
-                <i class="fa-solid fa-chevron-right text-muted"></i>
+                <!-- <i class="fa-solid fa-chevron-right text-muted"></i> -->
+                <i *ngIf="tarea.idProyectoRelacionado == p.id" class="pi pi-check-circle" style="color: #22c55e;">
+                </i>
 
               </div>
 
@@ -451,3 +442,7 @@
 
 <app-task-imguploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
   (closeEvent)="mostrarModalSubirImagen = false" [tarea]="tarea"></app-task-imguploader>
+
+<app-task-detail *ngIf="abrirModalDetalle" [mostrarModal]="abrirModalDetalle" (closeEvent)="abrirModalDetalle = false"
+  [tarea]="tareaSeleccionada" [proyectos]="proyectos">
+</app-task-detail>
