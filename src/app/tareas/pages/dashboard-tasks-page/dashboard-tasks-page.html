@@ -18,9 +18,9 @@
 <app-projects-board [tareas]="allProjects" (seleccionarTarea)="abrirDetalle($event)"
   *ngIf="mostrarProyectos"></app-projects-board> -->
 
-<app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
+<app-detalle-tarea-dialog *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
   (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada" [proyectos]="obtenerProyectos">
-</app-task-detail>
+</app-detalle-tarea-dialog>
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

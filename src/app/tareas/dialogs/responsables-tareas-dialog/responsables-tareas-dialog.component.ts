@@ -34,10 +34,10 @@ import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.
     InputSwitchModule
   ],
   providers: [MessageService],
-  templateUrl: './modal-task-responsible.component.html',
-  styleUrl: './modal-task-responsible.component.scss'
+  templateUrl: './responsables-tareas-dialog.component.html',
+  styleUrl: './responsables-tareas-dialog.component.scss'
 })
-export class ModalTaskResponsibleComponent implements OnInit, OnDestroy {
+export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
 
   @Input() mostrarModal = false;
   @Output() closeEvent = new EventEmitter<boolean>();

@@ -10,7 +10,7 @@
 </div>
 
 <div class="parent mt-3" *ngIf="!loading">
-<div class="div1 p-0 shadow rounded-3"> 
+<div class="div1 p-0 shadow rounded-3">
    <div class="rounded-3 p-3" style="background-color: rgb(156, 234, 156); color: rgb(0, 0, 0);">
      <p class="m-0 fs-5 text-center">C1:🔥PELIGRO! Hazlo ya </p>
    </div>
@@ -41,7 +41,7 @@
 
 </div>
 
-<div class="div3 p-0 shadow rounded-3">  
+<div class="div3 p-0 shadow rounded-3">
     <div class="rounded-3 p-3" style="background-color: rgb(243, 234, 167); color: rgb(0, 0, 0);">
      <p class="m-0 fs-5 text-center">C3:📢 RUIDO! Si puedes, delégalo</p>
    </div>
@@ -72,9 +72,9 @@
 </div>
 
 
-<app-task-detail *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
+<app-detalle-tarea-dialog *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
   (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada">
-</app-task-detail>
+</app-detalle-tarea-dialog>
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

@@ -440,9 +440,9 @@
   (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes" [mostrarBotonEliminar]="true"
   (imagenEliminadaEvent)="onEliminarImagen($event)"></app-modal-visor-varias-imagenes>
 
-<app-task-imguploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
-  (closeEvent)="mostrarModalSubirImagen = false" [tarea]="tarea"></app-task-imguploader>
+<app-subir-imgs-tareas-dialog *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
+  (closeEvent)="mostrarModalSubirImagen = false" [tarea]="tarea"></app-subir-imgs-tareas-dialog>
 
-<app-task-detail *ngIf="abrirModalDetalle" [mostrarModal]="abrirModalDetalle" (closeEvent)="abrirModalDetalle = false"
+<app-detalle-tarea-dialog *ngIf="abrirModalDetalle" [mostrarModal]="abrirModalDetalle" (closeEvent)="abrirModalDetalle = false"
   [tarea]="tareaSeleccionada" [proyectos]="proyectos">
-</app-task-detail>
+</app-detalle-tarea-dialog>
