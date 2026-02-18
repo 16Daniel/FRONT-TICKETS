@@ -8,7 +8,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
-import { TaskDetailComponent } from '../../dialogs/modal-task-detail/task-detail.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
@@ -20,6 +19,7 @@ import { Tarea } from '../../interfaces/tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TasksFilterComponentComponent } from '../../components/tasks-filter-component/tasks-filter-component.component';
 import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.component';
+import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 
 @Component({
   selector: 'app-dashboard-tasks-page',
@@ -28,7 +28,7 @@ import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.co
     DragDropModule,
     CommonModule,
     ToastModule,
-    TaskDetailComponent,
+    DetalleTareaDialogComponent,
     DropdownModule,
     FormsModule,
     ButtonModule,
@@ -50,7 +50,8 @@ export class DashboardTasksPageComponent implements OnInit {
   etiquetasTodas: EtiquetaTarea[] = [];
   etiquetasFiltradas: EtiquetaTarea[] = [];
   idEtiquetaSeleccionada: string = '';
-  allTasks: Tarea[] = [];
+  tareas: Tarea[] = [];
+  allTask: Tarea[] = [];
   // allProjects: Tarea[] = [];
   esGlobal: boolean = false;
   responsablesTodos: ResponsableTarea[] = [];
@@ -177,14 +178,16 @@ export class DashboardTasksPageComponent implements OnInit {
   }
 
   obtenerTareas() {
-    this.allTasks = [];
+    this.tareas = [];
+
+    this.tareasService.getAll().subscribe(tareas => this.allTask = tareas);
 
     // GLOBAL
     if (this.esGlobal) {
       this.tareasService.getAll().subscribe(tareas => {
-        this.allTasks = tareas;
+        this.tareas = tareas;
 
-        let tareasFiltradas = [...this.allTasks];
+        let tareasFiltradas = [...this.tareas];
         const texto = this.textoBusqueda?.trim().toLowerCase();
 
         // FILTRO POR TEXTO (titulo + descripcion)
@@ -221,11 +224,12 @@ export class DashboardTasksPageComponent implements OnInit {
     this.tareasService
       .getBySucursal(this.idSucursalSeleccionada)
       .subscribe(tareas => {
-        // this.allTasks = tareas;
-        this.allTasks = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!);
-        // this.allTasks = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!).filter(x => (x.esProyecto == false || x.esProyecto == undefined));
+        // this.tareas = tareas;
+        this.tareas = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!);
+
+        // this.tareas = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!).filter(x => (x.esProyecto == false || x.esProyecto == undefined));
         // this.allProjects = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!).filter(x => x.esProyecto == true);
-        this.distribuirTareas(this.allTasks);
+        this.distribuirTareas(this.tareas);
 
         if (this.idEtiquetaSeleccionada && this.idEtiquetaSeleccionada != '') {
           this.onEtiquetaChange();
@@ -281,7 +285,7 @@ export class DashboardTasksPageComponent implements OnInit {
       return;
     }
 
-    const filtradas = this.allTasks.filter(t =>
+    const filtradas = this.tareas.filter(t =>
       t.idEtiqueta && t.idEtiqueta === this.idEtiquetaSeleccionada
     );
 
@@ -312,7 +316,7 @@ export class DashboardTasksPageComponent implements OnInit {
       return;
     }
 
-    const filtradas = this.allTasks.filter(t =>
+    const filtradas = this.tareas.filter(t =>
       Array.isArray(t.idsResponsables) &&
       t.idsResponsables.includes(this.idResponsableSeleccionado)
     );
@@ -348,5 +352,9 @@ export class DashboardTasksPageComponent implements OnInit {
   onBuscarText(texto: string) {
     this.textoBusqueda = texto;
     this.obtenerTareas();
+  }
+
+  get obtenerProyectos() {
+    return this.allTask.filter(x => x.esProyecto);
   }
 }

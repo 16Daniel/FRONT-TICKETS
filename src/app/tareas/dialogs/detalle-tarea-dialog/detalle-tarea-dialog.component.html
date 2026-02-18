@@ -1,4 +1,4 @@
-<p-dialog [header]="'ACTIVIDAD PRINCIPAL'" [(visible)]="mostrarModal" [modal]="true"
+<p-dialog [header]="tarea.esProyecto ? 'PROYECTO' : 'TAREA'" [(visible)]="mostrarModal" [modal]="true"
   [style]="{ 'width': '95vw', 'height': '95vh' }" [maximizable]="true" (onHide)="onHide()">
   <div class="d-flex gap-3" style="width: 100%; height: 75vh;">
     <div style="width: 60%; overflow-y: auto; padding-right: 10px;">
@@ -14,12 +14,115 @@
 
             <i class="fa-solid me-2 visibility-icon mt-2" [class.fa-lock-open]="tarea.visibleGlobal"
               [class.text-success]="tarea.visibleGlobal" [class.fa-lock]="!tarea.visibleGlobal"
-              [class.text-danger]="!tarea.visibleGlobal"
-              [pTooltip]="tarea.visibleGlobal ? 'Tarea pública' : 'Tarea privada'" tooltipPosition="top">
+              [class.text-danger]="!tarea.visibleGlobal" [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'"
+              tooltipPosition="top">
             </i>
 
           </button>
 
+          <button *ngIf="tarea.esProyecto" class="btn btn-primary"
+            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            (click)="mostrarPanelTareasAsociadas = !mostrarPanelTareasAsociadas">
+
+            <i class="fa-solid fa-bars-progress bx-sm" style="color: #0d6efd" pTooltip="VER TAREAS DEL PROYECTO"
+              tooltipPosition="top">
+            </i>
+          </button>
+
+          <button *ngIf="!tarea.esProyecto && tareaAsignadaAMi()" class="btn btn-primary"
+            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            (click)="mostrarPanelProyectos = !mostrarPanelProyectos">
+
+            <i class="fa-solid fa-diagram-project bx-sm" style="color: #0d6efd" pTooltip="LIGAR A PROYECTO"
+              tooltipPosition="top">
+            </i>
+          </button>
+
+          <!-- ===================================== -->
+          <!-- PANEL DESLIZABLE - TAREAS PROYECTO -->
+          <!-- ===================================== -->
+          <div *ngIf="mostrarPanelTareasAsociadas && tarea.esProyecto" class="panel-proyecto">
+            <!-- HEADER -->
+            <div class="panel-header d-flex justify-content-between align-items-center">
+              <h6 class="fw-bold mb-0">
+                <i class="fa-solid fa-diagram-project me-2 text-primary"></i>
+                TAREAS DEL PROYECTO
+              </h6>
+
+              <button class="btn btn-sm btn-light" (click)="mostrarPanelTareasAsociadas = false">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div class="panel-body">
+
+              <div class="proyecto-item" *ngFor="let t of tareasRelacionadas" (click)="seleccionarTarea(t)">
+
+                <div class="flex-grow-1">
+
+                  <div class="d-flex justify-content-between">
+                    <span class="fw-semibold">
+                      {{ t.titulo }}
+                    </span>
+
+                    <span class="badge" [ngClass]="getProgressColor(t.porcentaje)">
+                      {{ t.porcentaje }}%
+                    </span>
+                  </div>
+                  <div class="progress mt-2">
+                    <div class="progress-bar" [ngClass]="getProgressColor(t.porcentaje)" [style.width.%]="t.porcentaje">
+                    </div>
+                  </div>
+
+                  <div class="avatars-container" *ngIf="t.idsResponsables?.length">
+                    <ngx-avatars *ngFor="let r of getResponsablesDeTarea(t)" [name]="r.nombre" [size]="20"
+                      class="avatar-item" pTooltip="{{r.nombre }}" [bgColor]="r.color">
+                    </ngx-avatars>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===================================== -->
+          <!-- PANEL DESLIZABLE - TAREAS PROYECTO -->
+          <!-- ===================================== -->
+          <div *ngIf="mostrarPanelProyectos && !tarea.esProyecto" class="panel-proyecto">
+            <!-- HEADER -->
+            <div class="panel-header d-flex justify-content-between align-items-center">
+              <h6 class="fw-bold mb-0">
+                <i class="fa-solid fa-diagram-project me-2 text-primary"></i>
+                LISTA DE PROYECTOS
+              </h6>
+
+              <button class="btn btn-sm btn-light" (click)="mostrarPanelProyectos = false">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div class="panel-body">
+
+              <div class="proyecto-item" *ngFor="let p of misProyectos" (click)="seleccionarProyecto(p)">
+
+                <div class="d-flex flex-column">
+                  <span class="fw-semibold text-dark">
+                    {{ p.titulo }}
+                  </span>
+
+                  <small class="text-muted">
+                    {{ sucursalesMap.get(p.idSucursal) }}
+                  </small>
+                </div>
+
+                <!-- <i class="fa-solid fa-chevron-right text-muted"></i> -->
+                <i *ngIf="tarea.idProyectoRelacionado == p.id" class="pi pi-check-circle" style="color: #22c55e;">
+                </i>
+
+              </div>
+
+            </div>
+
+          </div>
         </div>
 
         <div class="avatars-container d-flex" *ngIf="tarea.idsResponsables?.length">
@@ -339,3 +442,7 @@
 
 <app-task-imguploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
   (closeEvent)="mostrarModalSubirImagen = false" [tarea]="tarea"></app-task-imguploader>
+
+<app-task-detail *ngIf="abrirModalDetalle" [mostrarModal]="abrirModalDetalle" (closeEvent)="abrirModalDetalle = false"
+  [tarea]="tareaSeleccionada" [proyectos]="proyectos">
+</app-task-detail>
