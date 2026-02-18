@@ -1,0 +1,46 @@
+<div class="m-3">
+
+<div class="d-flex justify-content-end">
+    <button class="btn bg-p-b m-3 p-3" (click)="abrirModalAgregar()">AGREGAR PRECIO AYC</button>
+</div>
+
+<div class="p-3">
+  <p-table [value]="preciosdata" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>REGIÓN</th>
+            <th>SUCURSAL</th>
+            <th>LUNES</th>
+            <th>MARTES</th>
+            <th>MIERCOLES</th>
+            <th>JUEVES</th>
+            <th>VIERNES</th>
+            <th>SÁBADO</th>
+            <th>DOMINGO</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{item.grupo}}</td>
+          <td>{{item.nombreSuc}}</td>
+          <td [ngStyle]="{'background-color': item.cLunes}" class="text-light">{{item.pLunes}}</td>
+          <td [ngStyle]="{'background-color': item.cMartes}" class="text-light">{{item.pMartes}}</td>
+          <td [ngStyle]="{'background-color': item.cMiercoles}" class="text-light">{{item.pMiercoles}}</td>
+          <td [ngStyle]="{'background-color': item.cJueves}" class="text-light">{{item.pJueves}}</td>
+          <td [ngStyle]="{'background-color': item.cViernes}" class="text-light">{{item.pViernes}}</td>
+          <td [ngStyle]="{'background-color': item.cSabado}" class="text-light">{{item.pSabado}}</td>
+          <td [ngStyle]="{'background-color': item.cDomingo}" class="text-light">{{item.pDomingo}}</td>
+            <th> <button class="btn btn-danger"> 
+                <i class='bx bx-trash bx-sm'></i>
+                </button></th>
+        </tr>
+    </ng-template>
+</p-table>  
+</div>
+
+
+</div>
+
+<app-modal-agregar-precio-ayc *ngIf="modalAgregar" [visible]="modalAgregar" (closeEvent)="modalAgregar = false" 
+(actualizarData)="obtenerPrecios()"></app-modal-agregar-precio-ayc>
