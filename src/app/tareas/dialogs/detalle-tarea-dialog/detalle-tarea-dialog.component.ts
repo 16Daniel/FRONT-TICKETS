@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -48,16 +48,19 @@ import { AvatarModule } from 'ngx-avatars';
     SubtasksBoxComponent,
     LinkifyPipe,
     MultiSelectModule,
-    AvatarModule
+    AvatarModule,
   ],
-  templateUrl: './task-detail.component.html',
-  styleUrl: './task-detail.component.scss'
+  templateUrl: './detalle-tarea-dialog.component.html',
+  styleUrl: './detalle-tarea-dialog.component.scss'
 })
-export class TaskDetailComponent implements OnInit {
+export class DetalleTareaDialogComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Input() tarea!: Tarea;
+  @Input() proyectos: Tarea[] = [];
   @Output() closeEvent = new EventEmitter<boolean>();
 
+  tareaSeleccionada: Tarea = new Tarea;
+  abrirModalDetalle: boolean = false;
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
   mostrarModalVisorImagen: boolean = false;
@@ -77,25 +80,27 @@ export class TaskDetailComponent implements OnInit {
   idsResponsablesAuxEmail: string[] = [];
   responsableTarea!: ResponsableTarea;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
-    private tareasService: TareasService,
-    private messageService: MessageService,
-    private statusTaskService: StatusTaskService,
-    // private statusEisenhowerService: StatusEisenhowerService,
-    private labelsTasksService: LabelsTasksService,
-    private areasService: AreasService,
-    private taskResponsibleService: TaskResponsibleService,
-    private mailService: MailService
-  ) { }
+  mostrarPanelTareasAsociadas = false;
+  mostrarPanelProyectos = false;
+
+  tareasRelacionadas: Tarea[] = [];
+
+  private cdr = inject(ChangeDetectorRef);
+  private branchesService = inject(BranchesService);
+  private tareasService = inject(TareasService);
+  private messageService = inject(MessageService);
+  private statusTaskService = inject(StatusTaskService);
+  private labelsTasksService = inject(LabelsTasksService);
+  private areasService = inject(AreasService);
+  private taskResponsibleService = inject(TaskResponsibleService);
+  private mailService = inject(MailService);
 
   ngOnInit(): void {
+    this.obtenerTareasRelacionadas();
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
 
     this.obtenerSucursales();
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
-    // this.statusEisenhowerService.estatus$.subscribe(estatus => console.log(estatus));
 
     this.mostrarSubtareas = this.tarea?.subtareas?.length! > 0;
 
@@ -409,4 +414,37 @@ export class TaskDetailComponent implements OnInit {
   tareaAsignadaAMi() {
     return this.tarea.idsResponsables?.includes(this.responsableTarea.id!) ?? false;
   }
+
+  seleccionarProyecto(proyecto: Tarea) {
+    if (this.tarea.idProyectoRelacionado == proyecto.id) {
+      this.tarea.idProyectoRelacionado = null;
+      this.guardarCambios();
+      return;
+    }
+
+    this.tarea.idProyectoRelacionado = proyecto.id!;
+    this.guardarCambios();
+  }
+
+  get misProyectos(): Tarea[] {
+    if (!this.responsableTarea.id) return [];
+
+    return this.proyectos
+      .filter(t =>
+        Array.isArray(t.idsResponsables) &&
+        t.idsResponsables.includes(this.responsableTarea.id!)
+      );
+  }
+
+  obtenerTareasRelacionadas() {
+    this.tareasService.tasks$.subscribe(tareas =>
+      this.tareasRelacionadas = tareas.filter((x: Tarea) => x.idProyectoRelacionado == this.tarea.id)
+    );
+  }
+
+  seleccionarTarea(tarea: Tarea) {
+    this.tareaSeleccionada = tarea;
+    this.abrirModalDetalle = true;
+  }
+
 }
