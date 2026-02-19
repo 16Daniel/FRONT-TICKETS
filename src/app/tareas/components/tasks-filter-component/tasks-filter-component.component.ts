@@ -53,7 +53,7 @@ export class TasksFilterComponentComponent {
   mostrarFiltrosGlobales = false;
   responsables: ResponsableTarea[] = [];
   responsablesGlobalesOrdenados: ResponsableTarea[] = [];
-
+  mostrarResponsables: boolean = false;
   mostrarModalEtiquetas = false;
   mostrarModalResponsables = false;
   mostrarModalArchivados = false;
@@ -64,6 +64,7 @@ export class TasksFilterComponentComponent {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.mostrarResponsables = this.usuario.sucursales.filter(x => x.nombre === 'SISTEMAS').length > 0;
 
     this.taskResponsibleService.responsables$.subscribe(() => {
       this.actualizarResponsables();
