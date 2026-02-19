@@ -21,7 +21,7 @@ import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.
 import { MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-new-task',
+  selector: 'app-crear-tarea-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -33,10 +33,10 @@ import { MessageService } from 'primeng/api';
     AvatarModule,
     TooltipModule
   ],
-  templateUrl: './new-task.component.html',
-  styleUrl: './new-task.component.scss'
+  templateUrl: './crear-tarea-dialog.component.html',
+  styleUrl: './crear-tarea-dialog.component.scss'
 })
-export class NewTaskComponent implements OnInit {
+export class CrearTareaDialogComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 

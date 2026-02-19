@@ -183,7 +183,7 @@
       </p-button>
 
       <p-button label="RESPONSABLES" icon="pi pi-users" severity="secondary" (click)="mostrarModalResponsables = true"
-        *ngIf="sucursalesMap.get(usuario.sucursales[0].id) == 'SISTEMAS'">
+        *ngIf="mostrarResponsables">
       </p-button>
 
       <p-button label="ARCHIVADOS" icon="pi pi-folder-open" outlined severity="secondary"
@@ -204,9 +204,9 @@
   (closeEvent)="mostrarModalResponsables = false">
 </app-modal-task-responsible>
 
-<app-new-task *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
+<app-crear-tarea-dialog *ngIf="mostrarModalNuevaTarea" [mostrarModal]="mostrarModalNuevaTarea"
   (closeEvent)="mostrarModalNuevaTarea = false">
-</app-new-task>
+</app-crear-tarea-dialog>
 
-<app-modal-archived-tasks *ngIf="mostrarModalArchivados" [mostrarModal]="mostrarModalArchivados"
-  (closeEvent)="mostrarModalArchivados = false"></app-modal-archived-tasks>
+<app-tareas-archivadas-dialog *ngIf="mostrarModalArchivados" [mostrarModal]="mostrarModalArchivados"
+  (closeEvent)="mostrarModalArchivados = false"></app-tareas-archivadas-dialog>

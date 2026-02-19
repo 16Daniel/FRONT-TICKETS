@@ -6,7 +6,6 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Router } from '@angular/router';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
-import { ModalValidarPinComponent } from '../../dialogs/modal-validar-pin/modal-validar-pin.component';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 

@@ -5,13 +5,13 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 
-import { ModalTaskResponsibleComponent } from '../../dialogs/modal-task-responsible/modal-task-responsible.component';
-import { ModalArchivedTasksComponent } from '../../dialogs/modal-archived-tasks/modal-archived-tasks.component';
-import { ModalLabelsTaskComponent } from '../../dialogs/modal-labels-task/modal-labels-task.component';
-import { NewTaskComponent } from '../../dialogs/modal-new-task/new-task.component';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { TareasArchivadasDialogComponent } from '../../dialogs/tareas-archivadas-dialog/tareas-archivadas-dialog.component';
+import { EtiquetasTareaDialogComponent } from '../../dialogs/etiquetas-tarea-dialog/etiquetas-tarea-dialog.component';
+import { CrearTareaDialogComponent } from '../../dialogs/crear-tarea-dialog/crear-tarea-dialog.component';
+import { ResponsablesTareasDialogComponent } from '../../dialogs/responsables-tareas-dialog/responsables-tareas-dialog.component';
 
 @Component({
   selector: 'app-tasks-filter-component',
@@ -21,10 +21,10 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
     FormsModule,
     DropdownModule,
     ButtonModule,
-    ModalTaskResponsibleComponent,
-    ModalArchivedTasksComponent,
-    ModalLabelsTaskComponent,
-    NewTaskComponent,
+    ResponsablesTareasDialogComponent,
+    TareasArchivadasDialogComponent,
+    EtiquetasTareaDialogComponent,
+    CrearTareaDialogComponent,
     MultiSelectModule
   ],
   templateUrl: './tasks-filter-component.component.html',
@@ -53,7 +53,7 @@ export class TasksFilterComponentComponent {
   mostrarFiltrosGlobales = false;
   responsables: ResponsableTarea[] = [];
   responsablesGlobalesOrdenados: ResponsableTarea[] = [];
-
+  mostrarResponsables: boolean = false;
   mostrarModalEtiquetas = false;
   mostrarModalResponsables = false;
   mostrarModalArchivados = false;
@@ -64,6 +64,7 @@ export class TasksFilterComponentComponent {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.mostrarResponsables = this.usuario.sucursales.filter(x => x.nombre === 'SISTEMAS').length > 0;
 
     this.taskResponsibleService.responsables$.subscribe(() => {
       this.actualizarResponsables();

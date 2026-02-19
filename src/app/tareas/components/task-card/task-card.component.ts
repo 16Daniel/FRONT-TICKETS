@@ -17,11 +17,12 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
+import { AvataresResponsablesTareaComponent } from "../avatares-responsables-tarea/avatares-responsables-tarea.component";
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule],
+  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent],
   providers: [MessageService],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss'

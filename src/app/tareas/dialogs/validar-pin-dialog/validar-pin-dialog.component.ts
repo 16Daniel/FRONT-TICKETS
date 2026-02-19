@@ -6,13 +6,13 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({
-  selector: 'app-modal-validar-pin',
+  selector: 'app-validar-pin-dialog',
   standalone: true,
   imports: [DialogModule, CommonModule, FormsModule, ButtonModule, AvatarModule],
-  templateUrl: './modal-validar-pin.component.html',
-  styleUrl: './modal-validar-pin.component.scss'
+  templateUrl: './validar-pin-dialog.component.html',
+  styleUrl: './validar-pin-dialog.component.scss'
 })
-export class ModalValidarPinComponent {
+export class ValidarPinDialogComponent {
   @ViewChild('pinInput') pinInput!: ElementRef;
   @Output() pinValidado = new EventEmitter<any>();
 

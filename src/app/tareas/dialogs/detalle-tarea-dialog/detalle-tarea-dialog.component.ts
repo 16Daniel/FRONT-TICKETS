@@ -9,7 +9,6 @@ import { ToastModule } from 'primeng/toast';
 import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
-import { TaskImguploaderComponent } from '../task-imguploader/task-imguploader.component';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { TaskCommentBoxComponent } from '../../components/task-comment-box/task-comment-box.component';
 import { EisenhowerPriorityChecksComponent } from '../../components/eisenhower-priority-checks/eisenhower-priority-checks.component';
@@ -30,9 +29,11 @@ import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.interface
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { AvatarModule } from 'ngx-avatars';
+import { SubirImgsTareasDialogComponent } from '../subir-imgs-tareas-dialog/subir-imgs-tareas-dialog.component';
+import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";
 
 @Component({
-  selector: 'app-task-detail',
+  selector: 'app-detalle-tarea-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -42,13 +43,14 @@ import { AvatarModule } from 'ngx-avatars';
     TooltipModule,
     ToastModule,
     ModalVisorVariasImagenesComponent,
-    TaskImguploaderComponent,
+    SubirImgsTareasDialogComponent,
     TaskCommentBoxComponent,
     EisenhowerPriorityChecksComponent,
     SubtasksBoxComponent,
     LinkifyPipe,
     MultiSelectModule,
     AvatarModule,
+    AvataresResponsablesTareaComponent
   ],
   templateUrl: './detalle-tarea-dialog.component.html',
   styleUrl: './detalle-tarea-dialog.component.scss'
@@ -135,6 +137,8 @@ export class DetalleTareaDialogComponent implements OnInit {
 
       return;
     }
+
+    if(this.tarea.idsResponsables.length == 0) this.tarea.visibleGlobal = true;
 
     await this.tareasService.update(this.tarea, this.tarea.id!);
     this.showMessage('success', 'Success', 'Enviado correctamente');

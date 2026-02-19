@@ -8,13 +8,13 @@ import { TareasService } from '../../services/tareas.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 
 @Component({
-  selector: 'app-task-imguploader',
+  selector: 'app-subir-imgs-tareas-dialog',
   standalone: true,
   imports: [DialogModule, CommonModule],
-  templateUrl: './task-imguploader.component.html',
-  styleUrl: './task-imguploader.component.scss'
+  templateUrl: './subir-imgs-tareas-dialog.component.html',
+  styleUrl: './subir-imgs-tareas-dialog.component.scss'
 })
-export class TaskImguploaderComponent {
+export class SubirImgsTareasDialogComponent {
   @Input() mostrarModal: boolean = false;
   @Input() tarea: Tarea | undefined;
   @Input() titulo: string | undefined;

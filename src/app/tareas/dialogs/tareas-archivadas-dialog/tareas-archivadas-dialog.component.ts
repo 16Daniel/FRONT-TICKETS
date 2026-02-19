@@ -19,13 +19,13 @@ import { Tarea } from '../../interfaces/tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 
 @Component({
-  selector: 'app-modal-archived-tasks',
+  selector: 'app-tareas-archivadas-dialog',
   standalone: true,
   imports: [FormsModule, DialogModule, CalendarModule, DropdownModule, CommonModule, AvatarModule, TooltipModule, SearchFilterPipe],
-  templateUrl: './modal-archived-tasks.component.html',
-  styleUrl: './modal-archived-tasks.component.scss'
+  templateUrl: './tareas-archivadas-dialog.component.html',
+  styleUrl: './tareas-archivadas-dialog.component.scss'
 })
-export class ModalArchivedTasksComponent implements OnInit {
+export class TareasArchivadasDialogComponent implements OnInit {
 
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();

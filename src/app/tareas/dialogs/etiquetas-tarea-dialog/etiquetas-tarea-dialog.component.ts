@@ -30,10 +30,10 @@ import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
     ToastModule
   ],
   providers: [MessageService],
-  templateUrl: './modal-labels-task.component.html',
-  styleUrl: './modal-labels-task.component.scss'
+  templateUrl: './etiquetas-tarea-dialog.component.html',
+  styleUrl: './etiquetas-tarea-dialog.component.scss'
 })
-export class ModalLabelsTaskComponent implements OnDestroy, OnInit {
+export class EtiquetasTareaDialogComponent implements OnDestroy, OnInit {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
