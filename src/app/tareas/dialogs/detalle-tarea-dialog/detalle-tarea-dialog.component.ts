@@ -138,7 +138,7 @@ export class DetalleTareaDialogComponent implements OnInit {
       return;
     }
 
-    if(this.tarea.idsResponsables.length == 0) this.tarea.visibleGlobal = true;
+    if (this.tarea.idsResponsables.length == 0) this.tarea.visibleGlobal = true;
 
     await this.tareasService.update(this.tarea, this.tarea.id!);
     this.showMessage('success', 'Success', 'Enviado correctamente');
@@ -441,9 +441,9 @@ export class DetalleTareaDialogComponent implements OnInit {
   }
 
   obtenerTareasRelacionadas() {
-    this.tareasService.tasks$.subscribe(tareas =>
-      this.tareasRelacionadas = tareas.filter((x: Tarea) => x.idProyectoRelacionado == this.tarea.id)
-    );
+    this.tareasService.getAll()
+      .subscribe(tareas => this.tareasRelacionadas = tareas
+      .filter((x: Tarea) => x.idProyectoRelacionado == this.tarea.id));
   }
 
   seleccionarTarea(tarea: Tarea) {
