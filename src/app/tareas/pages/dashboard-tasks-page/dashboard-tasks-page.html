@@ -10,10 +10,10 @@
 
 <p></p>
 
-<app-tasks-board [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"
+<app-contenedor-tareas [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"
   [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)"
   [textoBusqueda]="textoBusqueda" [mostrarProyectos]="mostrarProyectos">
-</app-tasks-board>
+</app-contenedor-tareas>
 <!--
 <app-projects-board [tareas]="allProjects" (seleccionarTarea)="abrirDetalle($event)"
   *ngIf="mostrarProyectos"></app-projects-board> -->

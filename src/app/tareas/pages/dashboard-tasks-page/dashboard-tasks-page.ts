@@ -18,8 +18,8 @@ import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TasksFilterComponentComponent } from '../../components/tasks-filter-component/tasks-filter-component.component';
-import { TasksBoardComponent } from '../../components/tasks-board/tasks-board.component';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
+import { ContenedorTareasComponent } from '../../components/contenedor-tareas/contenedor-tareas.component';
 
 @Component({
   selector: 'app-dashboard-tasks-page',
@@ -33,7 +33,7 @@ import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/
     FormsModule,
     ButtonModule,
     TasksFilterComponentComponent,
-    TasksBoardComponent,
+    ContenedorTareasComponent,
   ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks-page.html',
