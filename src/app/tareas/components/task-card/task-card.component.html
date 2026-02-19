@@ -60,11 +60,13 @@
 
 
 
-  <div class="avatars-container" *ngIf="tarea.idsResponsables?.length">
+  <!-- <div class="avatars-container" *ngIf="tarea.idsResponsables?.length">
     <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30" class="avatar-item"
       pTooltip="{{r.nombre }}" [bgColor]="r.color">
     </ngx-avatars>
-  </div>
+  </div> -->
+
+  <app-avatares-responsables-tarea [tarea]="tarea" [responsables]="responsables"></app-avatares-responsables-tarea>
 
 
 

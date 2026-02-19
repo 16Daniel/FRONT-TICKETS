@@ -5,26 +5,24 @@
       <div class="d-flex justify-content-between mt-3 align-items-center">
 
         <div>
-          <button class="btn btn-primary" style="margin: 2px" (click)="mostrarModalSubirImagen = true">
-            <i class="bx bx-image-add bx-sm" style="color: white" pTooltip="SUBIR IMÁGEN" tooltipPosition="top"></i>
+          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            (click)="mostrarModalSubirImagen = true">
+            <i class="bx bx-image-add bx-sm mt-2" style="color: #1976d2" pTooltip="SUBIR IMAGEN" tooltipPosition="top">
+            </i>
           </button>
 
-          <button class="btn btn-primary" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
             (click)="cambiarVisibilidad()" *ngIf="tareaAsignadaAMi()">
-
-            <i class="fa-solid me-2 visibility-icon mt-2" [class.fa-lock-open]="tarea.visibleGlobal"
-              [class.text-success]="tarea.visibleGlobal" [class.fa-lock]="!tarea.visibleGlobal"
-              [class.text-danger]="!tarea.visibleGlobal" [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'"
-              tooltipPosition="top">
+            <i class="bx bx-sm mt-2" [class.bx-lock-open]="tarea.visibleGlobal" [class.bx-lock]="!tarea.visibleGlobal"
+              [style.color]="tarea.visibleGlobal ? '#2e7d32' : '#d32f2f'"
+              [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'" tooltipPosition="top">
             </i>
-
           </button>
 
           <button *ngIf="tarea.esProyecto" class="btn btn-primary"
             style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
             (click)="mostrarPanelTareasAsociadas = !mostrarPanelTareasAsociadas">
-
-            <i class="fa-solid fa-bars-progress bx-sm" style="color: #0d6efd" pTooltip="VER TAREAS DEL PROYECTO"
+            <i class="bx bx-list-ul bx-sm mt-2" style="color: #1976d2" pTooltip="VER TAREAS DEL PROYECTO"
               tooltipPosition="top">
             </i>
           </button>
@@ -32,11 +30,20 @@
           <button *ngIf="!tarea.esProyecto && tareaAsignadaAMi()" class="btn btn-primary"
             style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
             (click)="mostrarPanelProyectos = !mostrarPanelProyectos">
-
-            <i class="fa-solid fa-diagram-project bx-sm" style="color: #0d6efd" pTooltip="LIGAR A PROYECTO"
+            <i class="bx bx-network-chart bx-sm mt-2" style="color: #1976d2" pTooltip="LIGAR A PROYECTO"
               tooltipPosition="top">
             </i>
           </button>
+
+          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            (click)="tarea.esProyecto ? convertirATarea() : convertirAProyecto()">
+            <i class="bx bx-sm mt-2" [class.bxs-star]="tarea.esProyecto" [class.bx-task]="!tarea.esProyecto"
+              [style.color]="tarea.esProyecto ? '#fbc02d' : '#1976d2'"
+              [pTooltip]="tarea.esProyecto ? 'PROYECTO' : 'TAREA'" tooltipPosition="top">
+            </i>
+          </button>
+
+
 
           <!-- ===================================== -->
           <!-- PANEL DESLIZABLE - TAREAS PROYECTO -->
@@ -74,11 +81,12 @@
                     </div>
                   </div>
 
-                  <div class="avatars-container" *ngIf="t.idsResponsables?.length">
-                    <ngx-avatars *ngFor="let r of getResponsablesDeTarea(t)" [name]="r.nombre" [size]="20"
-                      class="avatar-item" pTooltip="{{r.nombre }}" [bgColor]="r.color">
-                    </ngx-avatars>
-                  </div>
+                  <app-avatares-responsables-tarea [tarea]="t"
+                    [responsables]="responsables"></app-avatares-responsables-tarea>
+
+                  <small class="text-muted">
+                    {{ sucursalesMap.get(t.idSucursal) }}
+                  </small>
                 </div>
               </div>
             </div>
@@ -101,47 +109,29 @@
             </div>
 
             <div class="panel-body">
-
-              <div class="proyecto-item" *ngFor="let p of misProyectos" (click)="seleccionarProyecto(p)">
-
+              <div *ngFor="let p of misProyectos" class="proyecto-item"
+                [class.active]="tarea.idProyectoRelacionado == p.id" (click)="seleccionarProyecto(p)">
                 <div class="d-flex flex-column">
                   <span class="fw-semibold text-dark">
                     {{ p.titulo }}
                   </span>
-
                   <small class="text-muted">
                     {{ sucursalesMap.get(p.idSucursal) }}
                   </small>
                 </div>
 
-                <!-- <i class="fa-solid fa-chevron-right text-muted"></i> -->
-                <i *ngIf="tarea.idProyectoRelacionado == p.id" class="pi pi-check-circle" style="color: #22c55e;">
-                </i>
-
+                <div *ngIf="tarea.idProyectoRelacionado === p.id" class="d-flex align-items-center gap-1 badge-ligado">
+                  <i class="pi pi-check-circle"></i>
+                  <small class="fw-bold">LIGADO</small>
+                </div>
               </div>
-
             </div>
 
           </div>
         </div>
 
-        <div class="avatars-container d-flex" *ngIf="tarea.idsResponsables?.length">
-          <div class="avatar-wrapper" *ngFor="let r of getResponsablesDeTarea(tarea)"
-            [class.selected]="tarea.idResponsablePrincipal === r.id" (click)="onSeleccionarLider(r)">
-
-            <!-- CORONA -->
-            <!-- <i class="pi pi-crown crown-icon"></i> -->
-            <i class="fas fa-crown crown-icon"></i>
-
-            <ngx-avatars class="avatar-item" [name]="r.nombre" [size]="30" [bgColor]="r.color" pTooltip="{{ tarea.idResponsablePrincipal === r.id
-      ? 'LÍDER DE PROYECTO: ' + r.nombre
-      : r.nombre }}">
-            </ngx-avatars>
-
-          </div>
-
-        </div>
-
+        <app-avatares-responsables-tarea [tarea]="tarea" [responsables]="responsables"
+          (responsableLiderEvent)="onSeleccionarLider($event)" [mostrarCorona]="true"></app-avatares-responsables-tarea>
       </div>
 
 
@@ -334,7 +324,7 @@
             <!-- MODO EDICIÓN -->
             <div *ngIf="editandoDescripcion" class="mt-2">
               <textarea [(ngModel)]="descripcionEditada" name="comentarioResponsable" class="form-control" rows="7">
-    </textarea>
+              </textarea>
 
               <div class="d-flex justify-content-end gap-2 mt-2">
                 <button type="button" class="btn btn-sm btn-secondary" (click)="cancelarEdicionDescripcion()">
@@ -365,16 +355,6 @@
           </div>
 
           <br>
-
-          <!-- BOTÓN PROYECTO -->
-          <button *ngIf="!tarea.esProyecto" type="button"
-            class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" (click)="convertirAProyecto()"
-            pTooltip="Convertir esta tarea en proyecto" tooltipPosition="top">
-
-            <i class="fa-solid fa-star" style="color: #f1c40f;"></i>
-            <span>CONVERTIR A PROYECTO</span>
-
-          </button>
 
           <button *ngIf="tarea.esProyecto" type="button"
             class="btn btn-sm btn-outline-warning d-flex align-items-center gap-2" (click)="convertirATarea()"
@@ -443,6 +423,6 @@
 <app-subir-imgs-tareas-dialog *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
   (closeEvent)="mostrarModalSubirImagen = false" [tarea]="tarea"></app-subir-imgs-tareas-dialog>
 
-<app-detalle-tarea-dialog *ngIf="abrirModalDetalle" [mostrarModal]="abrirModalDetalle" (closeEvent)="abrirModalDetalle = false"
-  [tarea]="tareaSeleccionada" [proyectos]="proyectos">
+<app-detalle-tarea-dialog *ngIf="abrirModalDetalle" [mostrarModal]="abrirModalDetalle"
+  (closeEvent)="abrirModalDetalle = false" [tarea]="tareaSeleccionada" [proyectos]="proyectos">
 </app-detalle-tarea-dialog>

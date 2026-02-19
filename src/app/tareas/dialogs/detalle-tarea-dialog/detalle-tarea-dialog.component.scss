@@ -176,62 +176,6 @@
   }
 }
 
-.avatars-container {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-/* CONTENEDOR */
-.avatar-wrapper {
-  position: relative;
-  display: inline-flex;
-  cursor: pointer;
-  overflow: visible;
-}
-
-/* AVATAR */
-.avatar-item {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-/* HOVER */
-.avatar-wrapper:hover .avatar-item {
-  transform: scale(1.08);
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
-}
-
-/* SELECCIONADO */
-.avatar-wrapper.selected .avatar-item {
-  // box-shadow: 0 0 0 3px #0d6efd;
-  box-shadow: 0 0 0 3px #facc15; // dorado
-}
-
-/* CORONA */
-.crown-icon {
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  font-size: 0.9rem;
-  color: gold;
-  opacity: 0;
-  transform: translateX(-50%) scale(0.5);
-  transition: all 0.2s ease;
-  pointer-events: none;
-
-  /* relleno visual */
-  text-shadow:
-    0 0 1px gold,
-    0 0 1px gold;
-}
-
-/* CORONA SOLO CUANDO ESTÁ SELECCIONADO */
-.avatar-wrapper.selected .crown-icon {
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-}
-
-
 .panel-proyecto {
   position: absolute;
   top: 0;
@@ -272,18 +216,24 @@
   }
 }
 
-
-
 .proyecto-item {
-  padding: 12px 10px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 12px;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.2s ease;
-}
+  transition: all 0.2s ease-in-out;
+  border-left: 4px solid transparent; // Previene el "salto" visual al seleccionar
+  border-bottom: 1px solid #f0f0f0;
 
-.proyecto-item:hover {
-  background-color: #f8f9fa;
+  &:hover {
+    background-color: #e5f2ff;
+    transform: scale(1.05);
+  }
+
+  &.active {
+    background-color: #a6ff97; // Azul muy claro
+    border-left-color: #007311; // Color primario de marca
+
+    span {
+      color: #4338ca !important; // Enfatiza el texto seleccionado
+    }
+  }
 }
