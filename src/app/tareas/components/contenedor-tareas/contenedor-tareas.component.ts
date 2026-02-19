@@ -6,17 +6,17 @@ import { TaskCardComponent } from '../task-card/task-card.component';
 import { Tarea } from '../../interfaces/tarea.interface';
 
 @Component({
-  selector: 'app-tasks-board',
+  selector: 'app-contenedor-tareas',
   standalone: true,
   imports: [
     CommonModule,
     DragDropModule,
     TaskCardComponent,
   ],
-  templateUrl: './tasks-board.component.html',
-  styleUrl: './tasks-board.component.scss'
+  templateUrl: './contenedor-tareas.component.html',
+  styleUrl: './contenedor-tareas.component.scss'
 })
-export class TasksBoardComponent {
+export class ContenedorTareasComponent {
 
   /** Datos */
   @Input() toDo: Tarea[] = [];
@@ -53,6 +53,6 @@ export class TasksBoardComponent {
   }
 
   private filtrarProyectos(tareas: Tarea[]): Tarea[] {
-    return tareas.filter(x => (x.esProyecto == true || x.esProyecto == undefined));
+    return tareas.filter(x => (x.esProyecto == true));
   }
 }
