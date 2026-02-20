@@ -1,7 +1,8 @@
 <div class="m-3">
 
 <div class="d-flex justify-content-end">
-    <button class="btn bg-p-b m-3 p-3" (click)="abrirModalAgregar()">AGREGAR PRECIO AYC</button>
+    <button class="btn bg-p-b m-3 p-3" (click)="abrirModalColores()">COLORES Y PRECIOS AYC</button>
+    <button class="btn bg-p-b m-3 p-3" (click)="abrirModalAgregar()">AGREGAR PRECIOS AYC EN SUCURSAL</button>
 </div>
 
 <div class="p-3">
@@ -18,22 +19,28 @@
             <th>SÁBADO</th>
             <th>DOMINGO</th>
             <th></th>
+            <th></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
         <tr>
           <td>{{item.grupo}}</td>
           <td>{{item.nombreSuc}}</td>
-          <td [ngStyle]="{'background-color': item.cLunes}" class="text-light">{{item.pLunes}}</td>
-          <td [ngStyle]="{'background-color': item.cMartes}" class="text-light">{{item.pMartes}}</td>
-          <td [ngStyle]="{'background-color': item.cMiercoles}" class="text-light">{{item.pMiercoles}}</td>
-          <td [ngStyle]="{'background-color': item.cJueves}" class="text-light">{{item.pJueves}}</td>
-          <td [ngStyle]="{'background-color': item.cViernes}" class="text-light">{{item.pViernes}}</td>
-          <td [ngStyle]="{'background-color': item.cSabado}" class="text-light">{{item.pSabado}}</td>
-          <td [ngStyle]="{'background-color': item.cDomingo}" class="text-light">{{item.pDomingo}}</td>
-            <th> <button class="btn btn-danger"> 
+          <td [ngStyle]="{'background-color': obtenerColor(item.cLunes), 'color': getTextColor(obtenerColor(item.cLunes))}">{{obtenerPrecio(item.cLunes)}}</td>
+          <td [ngStyle]="{'background-color': obtenerColor(item.cMartes), 'color': getTextColor(obtenerColor(item.cMartes))}">{{obtenerPrecio(item.cMartes)}}</td>
+          <td [ngStyle]="{'background-color': obtenerColor(item.cMiercoles), 'color': getTextColor(obtenerColor(item.cMiercoles))}">{{obtenerPrecio(item.cMiercoles)}}</td>
+          <td [ngStyle]="{'background-color': obtenerColor(item.cJueves), 'color': getTextColor(obtenerColor(item.cJueves))}">{{obtenerPrecio(item.cJueves)}}</td>
+          <td [ngStyle]="{'background-color': obtenerColor(item.cViernes), 'color': getTextColor(obtenerColor(item.cViernes))}">{{obtenerPrecio(item.cViernes)}}</td>
+          <td [ngStyle]="{'background-color': obtenerColor(item.cSabado), 'color': getTextColor(obtenerColor(item.cSabado))}">{{obtenerPrecio(item.cSabado)}}</td>
+          <td [ngStyle]="{'background-color': obtenerColor(item.cDomingo), 'color': getTextColor(obtenerColor(item.cDomingo))}">{{obtenerPrecio(item.cDomingo)}}</td>
+          <th>&nbsp;<button class="btn btn-primary" (click)="abrirModalEditar(item)"> 
+                <i class='bx bx-edit bx-sm'></i>
+                </button>
+         </th>  
+          <td> <button class="btn btn-danger" (click)="confirmarEliminar(item.id)"> 
                 <i class='bx bx-trash bx-sm'></i>
-                </button></th>
+                </button>
+            </td>
         </tr>
     </ng-template>
 </p-table>  
@@ -43,4 +50,8 @@
 </div>
 
 <app-modal-agregar-precio-ayc *ngIf="modalAgregar" [visible]="modalAgregar" (closeEvent)="modalAgregar = false" 
-(actualizarData)="obtenerPrecios()"></app-modal-agregar-precio-ayc>
+(actualizarData)="obtenerPrecios()" [itemReg]="itemReg"></app-modal-agregar-precio-ayc>
+
+<app-modal-precios-ayc *ngIf="modalcolores" [visible]="modalcolores" (closeEvent)="modalcolores = false" 
+(actualizarData)="obtenerPrecios();obtenerColores()">
+</app-modal-precios-ayc>

@@ -1,0 +1,48 @@
+<p-dialog 
+    header="AGREGAR PRECIOS AYC" 
+    [modal]="true"
+    [(visible)]="visible" 
+    [style]="{ width: '40rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [maximizable]="false"
+    (onHide)="onHide()">
+
+<div>
+
+<div class="row">
+<div class="col-auto"><p>PRECIO</p><input type="number" [(ngModel)]="formprecio" class="form-control p-3"></div>
+<div class="col-auto"><p>COLOR</p><input type="color" [(ngModel)]="formcolor"></div>
+<div class="col-auto">
+    <p>&nbsp;</p>
+   <div class="d-flex gap-3">
+     <button class="btn btn-success p-3" (click)="agregar()" *ngIf="idItem == undefined">AGREGAR</button>
+     <button class="btn btn-warning p-3" *ngIf="idItem != undefined" (click)="actualizar()">ACTUALIZAR</button>
+     <button class="btn btn-secondary p-3" (click)="cancelarEditar()" *ngIf="idItem != undefined">CANCELAR</button>
+   </div>
+</div>
+</div>
+
+<div class="m-3">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">COLOR</th>
+      <th scope="col">PRECIO</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of dataColores">
+      <th><input type="color" [value]="item.color"></th>
+      <td>{{item.precio | number:'1.0-2' }}</td>
+      <td><button class="btn btn-primary" (click)="editar(item)"><i class='bx bx-edit bx-sm'></i></button></td>
+      <td><button class="btn btn-danger" (click)="confirmarEliminar(item.id!)"><i class='bx bx-trash bx-sm'></i></button></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</p-dialog>

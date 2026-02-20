@@ -9,6 +9,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
+import { PreciosAycPageComponent } from "../../../sucursales/pages/precios-ayc-page.component/precios-ayc-page.component";
 
 @Component({
   selector: 'app-analyst-tabs',
@@ -20,7 +21,8 @@ import { ComensalesPage } from "../../../comensales/pages/comensales-page/comens
     DashboardTasksPageComponent,
     EisenhowerMatrixPageComponent,
     TicketsTabComponent,
-    ComensalesPage
+    ComensalesPage,
+    PreciosAycPageComponent
 ],
   templateUrl: './analyst-tabs.component.html',
   styleUrl: './analyst-tabs.component.scss'

@@ -18,7 +18,8 @@
         filterBy="name" 
       placeholder="SELECCIONAR REGION"
       [style]="{width:'100%'}"
-      (onChange)="cambiarRegion()" />
+      (onChange)="cambiarRegion()"
+      [disabled]="itemReg != undefined" />
     </div>
     <div class="col-6">
         <p-dropdown 
@@ -29,7 +30,8 @@
       filterBy="name" 
       placeholder="SELECCIONAR SUCURSAL"
       [style]="{width:'100%'}"
-      [disabled]="sucursalesFiltro.length==0" />
+      [disabled]="sucursalesFiltro.length==0 || itemReg != undefined"
+       />
     </div>
   </div>
 
@@ -47,28 +49,132 @@
   </thead>
   <tbody>
     <tr>
-      <td><input type="number" [(ngModel)]="formPrecioLunes" class="form-control p-3"></td>
-      <td><input type="number" [(ngModel)]="formPrecioMartes" class="form-control p-3"></td>
-      <td><input type="number" [(ngModel)]="formPrecioMiercoles" class="form-control p-3"></td>
-      <td><input type="number" [(ngModel)]="formPrecioJueves" class="form-control p-3"></td>
-      <td><input type="number" [(ngModel)]="formPrecioViernes" class="form-control p-3"></td>
-      <td><input type="number" [(ngModel)]="formPrecioSabado" class="form-control p-3"></td>
-      <td><input type="number" [(ngModel)]="formPrecioDomingo" class="form-control p-3"></td>
-    </tr>
-      <tr>
-      <td><input type="color" [(ngModel)]="formColorLunes">&nbsp;{{formColorLunes}}</td>
-      <td><input type="color" [(ngModel)]="formColorMartes">&nbsp;{{formColorMartes}}</td>
-      <td><input type="color" [(ngModel)]="formColorMiercoles">&nbsp;{{formColorMiercoles}}</td>
-      <td><input type="color" [(ngModel)]="formColorJueves">&nbsp;{{formColorJueves}}</td>
-      <td><input type="color" [(ngModel)]="formColorViernes">&nbsp;{{formColorViernes}}</td>
-      <td><input type="color" [(ngModel)]="formColorSabado">&nbsp;{{formColorSabado}}</td>
-      <td><input type="color" [(ngModel)]="formColorDomingo">&nbsp;{{formColorDomingo}}</td>
+            <td>
+         <p-dropdown [options]="dataColores" [(ngModel)]="formColorLunes" name="PRECIO" optionLabel="precio"
+             [showClear]="false" placeholder=""
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': selectedOption.color, 'color':getTextColor(selectedOption.color)}" class="p-3">{{ selectedOption.precio }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': item.color, 'color':getTextColor(item.color)}" class="p-3">{{ item.precio }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+      </td>
+
+
+            <td>
+         <p-dropdown [options]="dataColores" [(ngModel)]="formColorMartes" name="PRECIO" optionLabel="precio"
+             [showClear]="false" placeholder=""
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': selectedOption.color, 'color':getTextColor(selectedOption.color)}" class="p-3">{{ selectedOption.precio }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': item.color, 'color':getTextColor(item.color)}" class="p-3">{{ item.precio }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+      </td>
+
+            <td>
+         <p-dropdown [options]="dataColores" [(ngModel)]="formColorMiercoles" name="PRECIO" optionLabel="precio"
+             [showClear]="false" placeholder=""
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': selectedOption.color, 'color':getTextColor(selectedOption.color)}" class="p-3">{{ selectedOption.precio }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': item.color, 'color':getTextColor(item.color)}" class="p-3">{{ item.precio }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+      </td>
+
+            <td>
+         <p-dropdown [options]="dataColores" [(ngModel)]="formColorJueves" name="PRECIO" optionLabel="precio"
+             [showClear]="false" placeholder=""
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': selectedOption.color, 'color':getTextColor(selectedOption.color)}" class="p-3">{{ selectedOption.precio }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': item.color, 'color':getTextColor(item.color)}" class="p-3">{{ item.precio }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+      </td>
+
+            <td>
+         <p-dropdown [options]="dataColores" [(ngModel)]="formColorViernes" name="PRECIO" optionLabel="precio"
+             [showClear]="false" placeholder=""
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': selectedOption.color, 'color':getTextColor(selectedOption.color)}" class="p-3">{{ selectedOption.precio }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': item.color, 'color':getTextColor(item.color)}" class="p-3">{{ item.precio }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+      </td>
+
+            <td>
+         <p-dropdown [options]="dataColores" [(ngModel)]="formColorSabado" name="PRECIO" optionLabel="precio"
+             [showClear]="false" placeholder=""
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': selectedOption.color, 'color':getTextColor(selectedOption.color)}" class="p-3">{{ selectedOption.precio }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': item.color, 'color':getTextColor(item.color)}" class="p-3">{{ item.precio }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+      </td>
+
+          <td>
+         <p-dropdown [options]="dataColores" [(ngModel)]="formColorDomingo" name="PRECIO" optionLabel="precio"
+             [showClear]="false" placeholder=""
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': selectedOption.color, 'color':getTextColor(selectedOption.color)}" class="p-3">{{ selectedOption.precio }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="flex align-items-center gap-1">
+                    <div [ngStyle]="{'background-color': item.color, 'color':getTextColor(item.color)}" class="p-3">{{ item.precio }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+      </td>
     </tr>
   </tbody>
 </table>
     
-<div class="d-flex justify-content-end" style="margin-top: 100px;">
-<button class="btn btn-success p-3" (click)="guardar()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+<div class="d-flex justify-content-end" style="margin-top: 150px;">
+<button class="btn btn-success p-3" (click)="guardar()" *ngIf="itemReg == undefined"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+<button class="btn btn-success p-3" (click)="actualizar()" *ngIf="itemReg != undefined"><i class='bx bx-save'></i>&nbsp;ACTUALIZAR</button>
 </div>
 
 </div>
