@@ -9,20 +9,20 @@ export interface SucursalRegion {
 export interface PreciosAyc {
   id?:number
   ids: number;
-  pLunes: number;
-  cLunes: string;
-  pMartes: number;
-  cMartes: string;
-  pMiercoles: number;
-  cMiercoles: string;
-  pJueves: number;
-  cJueves: string;
-  pViernes: number;
-  cViernes: string;
-  pSabado: number;
-  cSabado: string;
-  pDomingo: number;
-  cDomingo: string;
+  cLunes:number;
+  cMartes: number;
+  cMiercoles: number;
+  cJueves: number;
+  cViernes: number;
+  cSabado: number;
+  cDomingo: number;
   grupo: string;
   nombreSuc?:string; 
+}
+
+export interface colorPrecioayc
+{
+  id?:number; 
+  color:string; 
+  precio:number; 
 }

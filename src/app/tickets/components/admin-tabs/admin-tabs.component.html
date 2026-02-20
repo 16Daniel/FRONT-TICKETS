@@ -66,11 +66,11 @@
     </ng-container>
   </p-tabPanel>
 
-    <!-- <p-tabPanel header="PRECIOS AYC">
+    <p-tabPanel header="PRECIOS AYC" *ngIf="usuario.idArea == '1'">
     <ng-container *ngIf="tabsActivos['PRECIOS AYC']">
       <app-precios-ayc-page></app-precios-ayc-page>
     </ng-container>
-  </p-tabPanel> -->
+  </p-tabPanel>
 
 
 </p-tabView>
