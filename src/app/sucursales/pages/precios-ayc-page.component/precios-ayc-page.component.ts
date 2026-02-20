@@ -13,7 +13,7 @@ import { ModalPreciosAyc } from "../../dialogs/modal-precios-ayc/modal-precios-a
   templateUrl: './precios-ayc-page.component.html',
   styleUrl: './precios-ayc-page.component.scss',
 })
-export class PreciosAycPageComponent implements OnInit {
+export default class PreciosAycPageComponent implements OnInit {
 modalAgregar:boolean = false;
 modalcolores:boolean = false; 
 
