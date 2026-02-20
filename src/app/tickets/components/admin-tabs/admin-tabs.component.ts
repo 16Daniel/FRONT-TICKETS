@@ -15,7 +15,6 @@ import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tas
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/admin-reports-tab.component';
 import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
-import { PreciosAycPageComponent } from "../../../sucursales/pages/precios-ayc-page.component/precios-ayc-page.component";
 
 @Component({
   selector: 'app-admin-tabs',
@@ -32,7 +31,6 @@ import { PreciosAycPageComponent } from "../../../sucursales/pages/precios-ayc-p
     DashboardTasksPageComponent,
     DropdownModule,
     ComensalesPage,
-    PreciosAycPageComponent
 ],
   templateUrl: './admin-tabs.component.html',
 })

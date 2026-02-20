@@ -85,6 +85,9 @@
         <li (click)="closemenu()"><a [routerLink]="'/nomina/checadas'">
        <i class='bx bx-fingerprint bx-sm'></i>&nbsp;Checadas del personal</a></li>
 
+       <li (click)="closemenu()"><a [routerLink]="'/main/precios-ayc'" *ngIf="usuario.idArea == '1'">
+       <i class='bx bx-fingerprint bx-sm'></i>&nbsp;Precios AYC</a></li>
+
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">
