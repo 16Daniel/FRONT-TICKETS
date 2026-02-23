@@ -1,0 +1,41 @@
+<div class="gantt-wrapper" [style.--cell-width.px]="CELL_WIDTH">
+  <div class="gantt-scroll-container">
+
+    <div class="task-list">
+      <div class="header-cell">Nombre de Tarea</div>
+      @for (item of ganttTasks(); track item.tarea.id) {
+      <div class="task-cell">{{ item.tarea.titulo }}</div>
+      }
+    </div>
+
+    <div class="timeline-grid">
+      <div class="header-row">
+        @for (day of timeline(); track day.getTime()) {
+        <div class="day-cell">
+          <span>{{ day | date:'dd' }}</span>
+          <small>{{ day | date:'MMM' }}</small>
+        </div>
+        }
+      </div>
+
+      <div class="rows-container">
+        <div class="grid-background">
+          @for (day of timeline(); track $index) {
+          <div class="grid-column"></div>
+          }
+        </div>
+
+        @for (item of ganttTasks(); track item.tarea.id) {
+        <div class="task-row">
+          <div class="task-bar" [style.left.px]="item.startOffset * CELL_WIDTH"
+            [style.width.px]="item.durationDays * CELL_WIDTH"
+            [style.background-color]="getBarColor(item.tarea.porcentaje)">
+            {{ item.tarea.porcentaje }}%
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

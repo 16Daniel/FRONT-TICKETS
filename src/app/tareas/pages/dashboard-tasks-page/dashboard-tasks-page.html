@@ -1,19 +1,24 @@
-<app-tasks-filter-component [sucursales]="sucursales" [etiquetas]="etiquetasFiltradas" [sucursalesMap]="sucursalesMap"
+<app-cabecera-tareas [sucursales]="sucursales" [etiquetas]="etiquetasFiltradas" [sucursalesMap]="sucursalesMap"
   [idSucursalSeleccionada]="idSucursalSeleccionada" [sucursalSeleccionadaNombre]="sucursalSeleccionadaNombre"
   (sucursalChange)="idSucursalSeleccionada = $event; onSucursalChange()"
   (etiquetaChange)="idEtiquetaSeleccionada = $event; onEtiquetaChange()"
   (responsableChange)="idResponsableSeleccionado = $event; onResponsableChange()"
   (responsablesGlobalesChange)="idsResponsablesGlobales = $event; onResponsablesGlobalesChange()"
   (textoBusquedaChange)="onBuscarText($event)" (esGlobal)="esGlobal = $event"
-  (verProyectosChange)="mostrarProyectos = $event">
-</app-tasks-filter-component>
+  (verProyectosChange)="mostrarProyectos = $event" (verGantChange)="mostrarGant = $event">
+</app-cabecera-tareas>
 
 <p></p>
 
+@if(mostrarGant) {
+<app-diagrama-gant [tareas]="tareas"></app-diagrama-gant>
+}
+@else {
 <app-contenedor-tareas [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"
   [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)"
   [textoBusqueda]="textoBusqueda" [mostrarProyectos]="mostrarProyectos">
 </app-contenedor-tareas>
+}
 <!--
 <app-projects-board [tareas]="allProjects" (seleccionarTarea)="abrirDetalle($event)"
   *ngIf="mostrarProyectos"></app-projects-board> -->

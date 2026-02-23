@@ -17,9 +17,10 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
-import { TasksFilterComponentComponent } from '../../components/tasks-filter-component/tasks-filter-component.component';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 import { ContenedorTareasComponent } from '../../components/contenedor-tareas/contenedor-tareas.component';
+import { CabeceraTareasComponent } from '../../components/cabecera-tareas/cabecera-tareas.component';
+import { DiagramaGantComponent } from "../../components/diagrama-gant/diagrama-gant.component";
 
 @Component({
   selector: 'app-dashboard-tasks-page',
@@ -32,9 +33,10 @@ import { ContenedorTareasComponent } from '../../components/contenedor-tareas/co
     DropdownModule,
     FormsModule,
     ButtonModule,
-    TasksFilterComponentComponent,
+    CabeceraTareasComponent,
     ContenedorTareasComponent,
-  ],
+    DiagramaGantComponent
+],
   providers: [MessageService],
   templateUrl: './dashboard-tasks-page.html',
   styleUrl: './dashboard-tasks-page.scss'
@@ -42,6 +44,7 @@ import { ContenedorTareasComponent } from '../../components/contenedor-tareas/co
 export class DashboardTasksPageComponent implements OnInit {
   mostrarModalDetalleTarea: boolean = false;
   mostrarProyectos: boolean = false;
+  mostrarGant: boolean = false;
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
