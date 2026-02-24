@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MessageService } from 'primeng/api';
@@ -18,11 +18,12 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
 import { AvataresResponsablesTareaComponent } from "../avatares-responsables-tarea/avatares-responsables-tarea.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent],
+  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent,FormsModule],
   providers: [MessageService],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss'
@@ -46,6 +47,8 @@ export class TaskCardComponent implements OnInit {
   sucursalesService = inject(BranchesService);
   estatusService = inject(StatusTaskService);
 
+   constructor(public cdr:ChangeDetectorRef){}
+
   ngOnInit(): void {
     this.estatusService.estatus$.subscribe(estatus => {
       this.estatusTareas = estatus;
@@ -64,6 +67,7 @@ export class TaskCardComponent implements OnInit {
       this.responsables = responsable;
       this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
     });
+
   }
 
   onClick() {
@@ -176,5 +180,29 @@ export class TaskCardComponent implements OnInit {
     if (!idSucursal) return '';
     return this.sucursales.find(x => x.id == idSucursal)?.nombre ?? '';
   }
+
+girar(id:string)
+{
+ let card = document.getElementById(id); 
+  if(card != null)
+    {
+       let front = document.getElementById('front-task-'+id); 
+      card!.classList.toggle('flipped');
+      if(card.classList.contains('flipped'))
+        {
+          let front = document.getElementById('front-task-'+id); 
+          let back = document.getElementById('back-task-'+id);   
+          back!.style.height = (front!.offsetHeight-95)+'px';
+          
+        }
+    }
+}
+
+async guardarNotas()
+{
+
+   await this.tareasService.update(this.tarea, this.tarea.id!);
+      this.showMessage('success', 'Success', 'Guardado correctamente');
+}
 
 }

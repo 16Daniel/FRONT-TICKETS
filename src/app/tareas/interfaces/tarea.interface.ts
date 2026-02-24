@@ -29,4 +29,5 @@ export class Tarea {
   visibleGlobal: boolean = true;
   esProyecto: boolean = false;
   idProyectoRelacionado: string | null = null;
+  notas:string = ''; 
 }
