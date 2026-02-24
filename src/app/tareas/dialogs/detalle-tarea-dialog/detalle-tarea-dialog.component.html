@@ -379,10 +379,10 @@
 
         </div>
 
-        <app-subtasks-box [tarea]="tarea" [mostrarSubtareas]="mostrarSubtareas"
+        <app-contenedor-subtareas [tarea]="tarea" [mostrarSubtareas]="mostrarSubtareas"
           (subtareaAgregada)="agregarSubtarea($event)" (responsableEditado)="guardarCambios()"
           (subtareaEliminada)="guardarCambios()">
-        </app-subtasks-box>
+        </app-contenedor-subtareas>
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between mt-3">
@@ -404,7 +404,7 @@
 
     <!-- COMENTARIOS -->
     <div style="width: 40%; border-left: 1px solid #ddd; padding-left: 10px; overflow-y: auto;">
-      <app-task-comment-box [tarea]="tarea"></app-task-comment-box>
+      <app-caja-comentarios-tarea [tarea]="tarea"></app-caja-comentarios-tarea>
     </div>
 
   </div>

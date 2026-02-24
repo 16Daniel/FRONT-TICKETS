@@ -10,9 +10,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { TaskCommentBoxComponent } from '../../components/task-comment-box/task-comment-box.component';
 import { EisenhowerPriorityChecksComponent } from '../../components/eisenhower-priority-checks/eisenhower-priority-checks.component';
-import { SubtasksBoxComponent } from '../../components/subtasks-box/subtasks-box.component';
 import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
 import { Area } from '../../../areas/interfaces/area.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
@@ -31,6 +29,8 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { AvatarModule } from 'ngx-avatars';
 import { SubirImgsTareasDialogComponent } from '../subir-imgs-tareas-dialog/subir-imgs-tareas-dialog.component';
 import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";
+import { ContenedorSubtareasComponent } from '../../components/contenedor-subtareas/contenedor-subtareas.component';
+import { CajaComentariosTareaComponent } from '../../components/caja-comentarios-tarea/caja-comentarios-tarea.component';
 
 @Component({
   selector: 'app-detalle-tarea-dialog',
@@ -44,9 +44,9 @@ import { AvataresResponsablesTareaComponent } from "../../components/avatares-re
     ToastModule,
     ModalVisorVariasImagenesComponent,
     SubirImgsTareasDialogComponent,
-    TaskCommentBoxComponent,
+    CajaComentariosTareaComponent,
     EisenhowerPriorityChecksComponent,
-    SubtasksBoxComponent,
+    ContenedorSubtareasComponent,
     LinkifyPipe,
     MultiSelectModule,
     AvatarModule,

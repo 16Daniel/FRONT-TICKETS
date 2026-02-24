@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, computed, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
@@ -22,6 +22,10 @@ export class DiagramaGantComponent implements OnInit {
 
   @Input() set tareas(val: Tarea[]) { this._tareas.set(val); }
   @Input() estatusMap = new Map<string, string>();
+
+  @ViewChild('scrollContainer')
+  scrollContainer!: ElementRef<HTMLDivElement>;
+
   estatusService = inject(StatusTaskService);
   cdr = inject(ChangeDetectorRef);
 
@@ -38,16 +42,17 @@ export class DiagramaGantComponent implements OnInit {
     }
 
     const starts = tasks.map(t =>
-      this.getDateFromTask(t).getTime()
+      this.getDateFromTask(t, true).getTime()
     );
 
     const ends = tasks.map(t =>
-      this.getDateFromTask(t).getTime()
+      this.getDateFromTask(t, false).getTime()
     );
 
     const minDate = new Date(Math.min(...starts));
     const maxDate = new Date(Math.max(...ends));
 
+    console.log('Fecha inicio calculada:', minDate.toLocaleDateString());
     console.log('Fecha fin calculada:', maxDate.toLocaleDateString());
 
     return {
@@ -84,8 +89,8 @@ export class DiagramaGantComponent implements OnInit {
 
     return this._tareas().map(t => {
 
-      const startRaw = this.getDateFromTask({ fecha: t.fecha });
-      const endRaw = this.getDateFromTask(t);
+      const startRaw = this.getDateFromTask({ fecha: t.fecha }, true);
+      const endRaw = this.getDateFromTask(t, false);
 
       const start = new Date(
         startRaw.getFullYear(),
@@ -118,11 +123,26 @@ export class DiagramaGantComponent implements OnInit {
       this.estatusMap.clear();
       estatus.forEach(x => this.estatusMap.set(x.id!, x.nombre));
     });
+  }
 
-    // this.tareas = this.tareas.filter(x =>
-    //   ['1', '2', '3'].includes(x.idEstatus)
-    // );
-    // this.cdr.detectChanges();
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.scrollToToday();
+    });
+  }
+
+  private scrollToToday(): void {
+    const days = this.timeline();
+    const todayIndex = days.findIndex(d => this.isToday(d));
+
+    if (todayIndex === -1) return;
+
+    const scrollPosition = todayIndex * this.CELL_WIDTH;
+
+    this.scrollContainer.nativeElement.scrollTo({
+      left: scrollPosition - 20, // pequeño margen
+      behavior: 'smooth' // puedes usar 'smooth' si quieres animación
+    });
   }
 
   getBarColor(porcentaje: number = 0): string {
@@ -131,12 +151,13 @@ export class DiagramaGantComponent implements OnInit {
     return '#198754';
   }
 
-  private getDateFromTask(task: any): Date {
-    // 🔥 Prioridad absoluta al deathline
-    if (task?.deathline) {
+  private getDateFromTask(task: any, initDate: boolean): Date {
+
+    // 🔥 Solo usar deathline cuando NO es fecha inicial
+    if (!initDate && task?.deathline) {
       // Siempre viene formato YYYY-MM-DD
       const [year, month, day] = task.deathline.split('-').map(Number);
-      return new Date(year, month - 1, day); // LOCAL TIME (sin desfase UTC)
+      return new Date(year, month - 1, day);
     }
 
     const value = task?.fecha;
@@ -163,5 +184,15 @@ export class DiagramaGantComponent implements OnInit {
   onClick(tarea: Tarea) {
     console.log(tarea)
     this.seleccionarTarea.emit(tarea);
+  }
+
+  isToday(date: Date): boolean {
+    const today = new Date();
+
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
   }
 }
