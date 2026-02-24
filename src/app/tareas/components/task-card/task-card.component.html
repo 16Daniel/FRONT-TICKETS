@@ -1,4 +1,8 @@
-<div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()">
+
+  <div class="flip-container" [id]="tarea.id">
+                <div class="flipper">
+                    <div class="front">
+                       <div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()" [id]="'front-task-'+tarea.id!" (dblclick)="girar(tarea.id!)">
 
   <div class="priority-badge">
     <span *ngIf="tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
@@ -105,7 +109,22 @@
       </div>
 
     </div>
-
+<button (click)="girar(tarea.id!)" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'"><i class='bx bx-reflect-vertical bx-sm'></i></button>
+<i class='bx bx-note bx-sm' *ngIf=" tarea.notas != undefined && tarea.notas !=''" tooltipPosition="top" [pTooltip]="'INDICADOR DE NOTAS'"></i>
   </div>
 
 </div>
+
+
+                    </div>
+                    <div class="back p-3" (dblclick)="girar(tarea.id!)">
+                        <h5 class="text-center">Notas</h5>
+                        <textarea class="form-control" [id]="'back-task-'+tarea.id" [placeholder]="'Escribe aquí...'" style="height:120px; border:none; background-color: transparent;" [(ngModel)]="tarea.notas"></textarea>
+                       <div class="d-flex justify-content-start flex-wrap gap-2 mt-2">
+                           <button (click)="girar(tarea.id!)" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'"><i class='bx bx-reflect-vertical bx-sm'></i></button>
+                           <button (click)="guardarNotas()" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GUARDAR'"><i class='bx bx-save bx-sm'></i></button>
+
+                       </div>
+                    </div>
+                </div>
+            </div>
