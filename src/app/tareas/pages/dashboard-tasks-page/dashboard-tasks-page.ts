@@ -36,7 +36,7 @@ import { DiagramaGantComponent } from "../../components/diagrama-gant/diagrama-g
     CabeceraTareasComponent,
     ContenedorTareasComponent,
     DiagramaGantComponent
-],
+  ],
   providers: [MessageService],
   templateUrl: './dashboard-tasks-page.html',
   styleUrl: './dashboard-tasks-page.scss'
@@ -359,5 +359,9 @@ export class DashboardTasksPageComponent implements OnInit {
 
   get obtenerProyectos() {
     return this.allTask.filter(x => x.esProyecto);
+  }
+
+  get filtrarTareasGant() {
+    return this.tareas.filter(x => ['1', '2', '3'].includes(x.idEstatus))
   }
 }

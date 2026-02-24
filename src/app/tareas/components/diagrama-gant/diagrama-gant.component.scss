@@ -113,3 +113,34 @@
     }
   }
 }
+
+.task-title {
+  font-weight: 500;
+}
+
+/* To Do */
+.estatus-1 {
+  background: #f31212;
+}
+
+/* Working */
+.estatus-2 {
+  background: #ffaa00bf;
+}
+
+/* Pause */
+.estatus-3 {
+  background: #5448f7;
+}
+
+/* Done */
+.estatus-4 {
+  background: #30e91f;
+}
+
+.estatus {
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
