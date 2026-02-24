@@ -1,0 +1,146 @@
+.gantt-wrapper {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  flex-direction: column;
+
+  .gantt-scroll-container {
+    overflow-x: auto;
+    display: flex;
+  }
+}
+
+.task-list {
+  width: 250px;
+  min-width: 250px;
+  border-right: 2px solid #e2e8f0;
+  background: #f8fafc;
+  z-index: 10;
+
+  .header-cell {
+    height: 50px;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 1rem;
+    font-weight: bold;
+  }
+
+  .task-cell {
+    height: 45px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f1f5f9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.timeline-grid {
+  position: relative;
+  flex-grow: 1;
+
+  .header-row {
+    display: flex;
+    height: 50px;
+    border-bottom: 2px solid #e2e8f0;
+    background: #f8fafc;
+
+    .day-cell {
+      min-width: var(--cell-width);
+      width: var(--cell-width);
+      text-align: center;
+      font-size: 0.75rem;
+      border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      span {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .rows-container {
+    position: relative;
+
+    .grid-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      pointer-events: none;
+
+      .grid-column {
+        min-width: var(--cell-width);
+        width: var(--cell-width);
+        border-right: 1px solid #f1f5f9;
+        height: 100%;
+      }
+    }
+
+    .task-row {
+      height: 45px;
+      position: relative;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+
+      .task-bar {
+        position: absolute;
+        height: 28px;
+        border-radius: 4px;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+        transition: transform 0.2s;
+
+        &:hover {
+          transform: scaleY(1.1);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.task-title {
+  font-weight: 500;
+}
+
+/* To Do */
+.estatus-1 {
+  background: #f31212;
+}
+
+/* Working */
+.estatus-2 {
+  background: #ffaa00bf;
+}
+
+/* Pause */
+.estatus-3 {
+  background: #5448f7;
+}
+
+/* Done */
+.estatus-4 {
+  background: #30e91f;
+}
+
+.estatus {
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
+}

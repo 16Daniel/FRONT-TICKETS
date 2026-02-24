@@ -14,7 +14,7 @@ import { CrearTareaDialogComponent } from '../../dialogs/crear-tarea-dialog/crea
 import { ResponsablesTareasDialogComponent } from '../../dialogs/responsables-tareas-dialog/responsables-tareas-dialog.component';
 
 @Component({
-  selector: 'app-tasks-filter-component',
+  selector: 'app-cabecera-tareas',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,10 +27,10 @@ import { ResponsablesTareasDialogComponent } from '../../dialogs/responsables-ta
     CrearTareaDialogComponent,
     MultiSelectModule
   ],
-  templateUrl: './tasks-filter-component.component.html',
-  styleUrl: './tasks-filter-component.component.scss'
+  templateUrl: './cabecera-tareas.component.html',
+  styleUrl: './cabecera-tareas.component.scss'
 })
-export class TasksFilterComponentComponent {
+export class CabeceraTareasComponent {
   @Input() sucursales: any[] = [];
   @Input() sucursalesMap = new Map<string, string>();
   @Input() etiquetas: any[] = [];
@@ -49,6 +49,7 @@ export class TasksFilterComponentComponent {
   @Output() responsableChange = new EventEmitter<string>();
   @Output() responsablesGlobalesChange = new EventEmitter<string[]>();
   @Output() verProyectosChange = new EventEmitter<boolean>();
+  @Output() verGantChange = new EventEmitter<boolean>();
 
   mostrarFiltrosGlobales = false;
   responsables: ResponsableTarea[] = [];
@@ -59,6 +60,7 @@ export class TasksFilterComponentComponent {
   mostrarModalArchivados = false;
   mostrarModalNuevaTarea = false;
   mostrarProyectos = false;
+  mostrarGant = false;
   usuario!: Usuario;
   taskResponsibleService = inject(TaskResponsibleService);
 
@@ -133,6 +135,10 @@ export class TasksFilterComponentComponent {
 
   onToggleProyectos() {
     this.verProyectosChange.emit(this.mostrarProyectos);
+  }
+
+  onToggleGant() {
+    this.verGantChange.emit(this.mostrarGant);
   }
 }
 
