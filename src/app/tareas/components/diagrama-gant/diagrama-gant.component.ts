@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, computed, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
@@ -22,6 +22,10 @@ export class DiagramaGantComponent implements OnInit {
 
   @Input() set tareas(val: Tarea[]) { this._tareas.set(val); }
   @Input() estatusMap = new Map<string, string>();
+
+  @ViewChild('scrollContainer')
+  scrollContainer!: ElementRef<HTMLDivElement>;
+
   estatusService = inject(StatusTaskService);
   cdr = inject(ChangeDetectorRef);
 
@@ -118,6 +122,26 @@ export class DiagramaGantComponent implements OnInit {
     this.estatusService.estatus$.subscribe(estatus => {
       this.estatusMap.clear();
       estatus.forEach(x => this.estatusMap.set(x.id!, x.nombre));
+    });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.scrollToToday();
+    });
+  }
+
+  private scrollToToday(): void {
+    const days = this.timeline();
+    const todayIndex = days.findIndex(d => this.isToday(d));
+
+    if (todayIndex === -1) return;
+
+    const scrollPosition = todayIndex * this.CELL_WIDTH;
+
+    this.scrollContainer.nativeElement.scrollTo({
+      left: scrollPosition - 20, // pequeño margen
+      behavior: 'smooth' // puedes usar 'smooth' si quieres animación
     });
   }
 
