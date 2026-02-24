@@ -14,13 +14,13 @@ import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 
 @Component({
-  selector: 'app-task-comment-box',
+  selector: 'app-caja-comentarios-tarea',
   standalone: true,
   imports: [FormsModule, CommonModule, ModalVisorImagenesComponent, LinkifyPipe],
-  templateUrl: './task-comment-box.component.html',
-  styleUrl: './task-comment-box.component.scss'
+  templateUrl: './caja-comentarios-tarea.component.html',
+  styleUrl: './caja-comentarios-tarea.component.scss'
 })
-export class TaskCommentBoxComponent implements OnInit {
+export class CajaComentariosTareaComponent implements OnInit {
   @Input() tarea: Tarea = new Tarea;
   responsableActivo!: ResponsableTarea;
 

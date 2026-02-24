@@ -10,14 +10,14 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 
 @Component({
-  selector: 'app-subtasks-box',
+  selector: 'app-contenedor-subtareas',
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule, AvatarModule, TooltipModule],
 
-  templateUrl: './subtasks-box.component.html',
-  styleUrl: './subtasks-box.component.scss'
+  templateUrl: './contenedor-subtareas.component.html',
+  styleUrl: './contenedor-subtareas.component.scss'
 })
-export class SubtasksBoxComponent implements OnInit {
+export class ContenedorSubtareasComponent implements OnInit {
 
   @Input() tarea: any;
   @Input() mostrarSubtareas: boolean = false;
