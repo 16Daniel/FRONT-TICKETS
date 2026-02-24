@@ -7,8 +7,10 @@
       @for (item of ganttTasks(); track item.tarea.id) {
       <div class="task-cell">
         <span class="estatus estatus-{{ item.tarea.idEstatus }}"
-          pTooltip="{{ estatusMap.get(item.tarea.idEstatus) || '' }}"></span>
-        <div class="task-title">
+          pTooltip="{{ estatusMap.get(item.tarea.idEstatus) || '' }}">
+        </span>
+
+        <div class="task-title" pTooltip="{{ item.tarea.titulo }}">
           {{ item.tarea.titulo }}
         </div>
       </div>
@@ -28,7 +30,7 @@
 
       <div class="rows-container">
         <div class="grid-background">
-          @for (day of timeline(); track $index; let i = $index) {
+          @for (day of timeline(); track day.getTime(); let i = $index) {
           <div class="grid-column" [class.today-column]="isToday(day)">
           </div>
           }
