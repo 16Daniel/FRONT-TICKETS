@@ -1,8 +1,4 @@
 
-// --- checkbox 
-
-/* From Uiverse.io by Esca-Byte */ 
-/* ---------- wrapper ---------- */
 .cosmic-checkbox {
   --size: 20px;
   --clr-idle: #8b8fa3;
@@ -26,7 +22,6 @@
   gap: 6px;
 }
 
-/* ---------- the box ---------- */
 .checkbox-box {
   position: relative;
   width: var(--size);
@@ -44,13 +39,11 @@
   flex-shrink: 0;
 }
 
-/* idle hover */
 .cosmic-checkbox:hover .checkbox-box {
   border-color: var(--clr-glow);
   box-shadow: 0 0 8px rgba(168, 85, 247, 0.25);
 }
 
-/* Background Element */
 .checkbox-bg {
   position: absolute;
   inset: 0;
@@ -73,7 +66,6 @@
     inset 0 0 8px rgba(233, 213, 255, 0.15);
 }
 
-/* ---------- checkmark ---------- */
 .checkmark {
   width: 16px;
   height: 16px;
@@ -94,7 +86,6 @@
   transition: stroke-dashoffset 0.5s cubic-bezier(0.65, 0, 0.35, 1) 0.15s;
 }
 
-/* ---------- label text ---------- */
 .label-text {
   font-family:
     "Segoe UI",
@@ -109,9 +100,6 @@
   user-select: none;
 }
 
-/* ======================
-   PARTICLES
-   ====================== */
 .particle {
   position: absolute;
   width: 5px;
@@ -125,9 +113,6 @@
   z-index: 3;
 }
 
-/* ======================
-   SHOCKWAVE RINGS
-   ====================== */
 .ring {
   position: absolute;
   inset: -8px;
@@ -138,9 +123,6 @@
   z-index: 1;
 }
 
-/* ======================
-   SPARK LINES
-   ====================== */
 .spark {
   position: absolute;
   width: 2px;
@@ -155,7 +137,6 @@
   z-index: 3;
 }
 
-/* Position sparks in a radial pattern */
 .s1 {
   transform: rotate(0deg) translateY(-2px);
 }
@@ -188,12 +169,8 @@
   transform: rotate(315deg) translateY(-2px);
 }
 
-/* ==========================================
-   ✅ CHECKED STATE — the supernova ignites
-   ========================================== */
 .cosmic-checkbox input:checked ~ .checkbox-container .checkbox-box {
   border-color: var(--clr-active);
-  /* Background moves to .checkbox-bg */
   transform: scale(1);
   animation: box-pulse 0.5s ease;
 }
@@ -216,7 +193,6 @@
   }
 }
 
-/* checkmark draws in */
 .cosmic-checkbox input:checked ~ .checkbox-container .checkmark {
   opacity: 1;
   transform: scale(1) rotate(0deg);
@@ -226,12 +202,10 @@
   stroke-dashoffset: 0;
 }
 
-/* label lights up */
 .cosmic-checkbox input:checked ~ .checkbox-container .label-text {
   color: var(--clr-core);
 }
 
-/* ---- Particle explosion ---- */
 .cosmic-checkbox input:checked ~ .checkbox-container .p1 {
   animation: particle-fly 0.65s ease-out forwards;
   --angle: -45deg;
@@ -294,7 +268,6 @@
   }
 }
 
-/* ---- Shockwave rings ---- */
 .cosmic-checkbox input:checked ~ .checkbox-container .ring-1 {
   animation: shockwave 0.7s ease-out forwards;
 }
@@ -326,7 +299,6 @@
   }
 }
 
-/* ---- Spark lines burst ---- */
 .cosmic-checkbox input:checked ~ .checkbox-container .s1 {
   animation: spark-burst 0.5s 0.05s ease-out forwards;
   --rot: 0deg;
@@ -385,11 +357,6 @@
   }
 }
 
-/* ======================
-   IDLE BREATHING GLOW
-   A subtle ambient pulse
-   when unchecked
-   ====================== */
 .checkbox-box::before {
   content: "";
   position: absolute;
@@ -418,7 +385,6 @@
   }
 }
 
-/* after check, the glow becomes steady */
 .cosmic-checkbox input:checked ~ .checkbox-container .checkbox-box::before {
   animation: none;
   opacity: 0.6;
@@ -433,10 +399,6 @@
     transform 0.5s;
 }
 
-/* ======================
-   AFTER-GLOW — persistent
-   shimmer on checked state
-   ====================== */
 .checkbox-box::after {
   content: "";
   position: absolute;
@@ -457,10 +419,6 @@
   opacity: 1;
 }
 
-/* ======================
-   UNCHECKED TRANSITION
-   smooth return
-   ====================== */
 .cosmic-checkbox input:not(:checked) ~ .checkbox-container .checkbox-box {
   background: transparent;
   box-shadow: none;
@@ -475,9 +433,6 @@
   stroke-dashoffset: 28;
 }
 
-/* ======================
-   FOCUS-VISIBLE (a11y)
-   ====================== */
 .cosmic-checkbox input:focus-visible ~ .checkbox-container .checkbox-box {
   outline: 2px solid var(--clr-glow);
   outline-offset: 3px;
