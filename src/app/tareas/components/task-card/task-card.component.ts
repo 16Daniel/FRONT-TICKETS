@@ -19,6 +19,8 @@ import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
 import { AvataresResponsablesTareaComponent } from "../avatares-responsables-tarea/avatares-responsables-tarea.component";
 import { FormsModule } from '@angular/forms';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-task-card',
@@ -46,8 +48,13 @@ export class TaskCardComponent implements OnInit {
   taskResponsibleService = inject(TaskResponsibleService);
   sucursalesService = inject(BranchesService);
   estatusService = inject(StatusTaskService);
-
-   constructor(public cdr:ChangeDetectorRef){}
+  usuario: Usuario;
+  checkRevision:boolean = false; 
+  responsable:ResponsableTarea;
+   constructor(public cdr:ChangeDetectorRef){ 
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); 
+    this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!); 
+  }
 
   ngOnInit(): void {
     this.estatusService.estatus$.subscribe(estatus => {
@@ -67,7 +74,8 @@ export class TaskCardComponent implements OnInit {
       this.responsables = responsable;
       this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
     });
-
+ 
+    this.checkRevision = this.obtenerRevision(); 
   }
 
   onClick() {
@@ -200,9 +208,45 @@ girar(id:string)
 
 async guardarNotas()
 {
-
-   await this.tareasService.update(this.tarea, this.tarea.id!);
+   this.girar(this.tarea.id!);
+   setTimeout(() => {
+      this.tareasService.update(this.tarea, this.tarea.id!);
       this.showMessage('success', 'Success', 'Guardado correctamente');
+   }, 600);
+}
+
+obtenerRevision():boolean
+{  
+  let revisiones = this.tarea.revisiones; 
+    if(revisiones == undefined){ revisiones = [];}
+  let temp:boolean =revisiones.filter(x =>x.idUsuario == this.responsable.pin && x.ultimafecha >= Timestamp.fromDate(new Date())).length>0 
+  ? this.tarea.revisiones.filter(x =>x.idUsuario == this.responsable.pin)[0].revisado : false;   
+  return temp; 
+}
+
+async atualizarRevision()
+{ 
+   let nuevafecha = new Date(); 
+   nuevafecha.setDate(nuevafecha.getDate()+1); 
+    nuevafecha.setHours(2,0,0,0);
+    let revisiones = this.tarea.revisiones; 
+    if(revisiones == undefined){ revisiones = [];}
+  if(revisiones.filter(x=>x.idUsuario == this.responsable.pin).length == 0)
+    {
+        revisiones.push({idUsuario:this.responsable.pin,revisado:this.checkRevision,ultimafecha:Timestamp.fromDate(nuevafecha)}); 
+    } else
+      {
+          for(let item of revisiones)
+            { 
+              if(item.idUsuario == this.responsable.pin)
+                {
+                  item.ultimafecha = Timestamp.fromDate(nuevafecha); 
+                  item.revisado = this.checkRevision; 
+                }
+            }
+      }
+  this.tarea.revisiones = revisiones; 
+  await this.tareasService.update(this.tarea, this.tarea.id!);
 }
 
 }

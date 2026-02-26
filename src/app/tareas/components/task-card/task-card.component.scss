@@ -291,17 +291,503 @@
   border-radius: 6px;
 }
 
-        /* Área de notas en la parte trasera */
-        .notas {
-            width: 100%;
-            height: auto;
-            background-color: white;
-            color: #333;
-            border-radius: 4px;
-            padding: 8px;
-            overflow-y: auto;
-            font-family: Arial, sans-serif;
-            border: 1px solid #ccc;
-            outline: none;
-            margin-bottom: 10px;
-        }
+ 
+.notas {
+  width: 100%;
+  height: auto;
+  background-color: white;
+  color: #333;
+  border-radius: 4px;
+  padding: 8px;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  outline: none;
+   margin-bottom: 10px;
+}
+
+
+
+// --- checkbox 
+
+/* From Uiverse.io by Esca-Byte */ 
+/* ---------- wrapper ---------- */
+.cosmic-checkbox {
+  --size: 20px;
+  --clr-idle: #8b8fa3;
+  --clr-active: #a855f7;
+  --clr-glow: #c084fc;
+  --clr-core: #e9d5ff;
+  --clr-spark: #f0abfc;
+  --duration: 0.6s;
+  display: inline-flex;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cosmic-checkbox input {
+  display: none;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- the box ---------- */
+.checkbox-box {
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  border: 2px solid var(--clr-idle);
+  border-radius: 8px;
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* idle hover */
+.cosmic-checkbox:hover .checkbox-box {
+  border-color: var(--clr-glow);
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.25);
+}
+
+/* Background Element */
+.checkbox-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .checkbox-bg {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow:
+    0 0 12px rgba(168, 85, 247, 0.5),
+    0 0 30px rgba(168, 85, 247, 0.2),
+    inset 0 0 8px rgba(233, 213, 255, 0.15);
+}
+
+/* ---------- checkmark ---------- */
+.checkmark {
+  width: 16px;
+  height: 16px;
+  color: #fff;
+  opacity: 0;
+  transform: scale(0) rotate(-20deg);
+  transition:
+    opacity 0.25s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.checkmark path {
+  stroke-dasharray: 28;
+  stroke-dashoffset: 28;
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.65, 0, 0.35, 1) 0.15s;
+}
+
+/* ---------- label text ---------- */
+.label-text {
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--clr-idle);
+  letter-spacing: 0.3px;
+  transition: color 0.35s;
+  user-select: none;
+}
+
+/* ======================
+   PARTICLES
+   ====================== */
+.particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--clr-spark);
+  opacity: 0;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+}
+
+/* ======================
+   SHOCKWAVE RINGS
+   ====================== */
+.ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--clr-glow);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ======================
+   SPARK LINES
+   ====================== */
+.spark {
+  position: absolute;
+  width: 2px;
+  height: 10px;
+  background: linear-gradient(to top, var(--clr-spark), transparent);
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  pointer-events: none;
+  border-radius: 2px;
+  z-index: 3;
+}
+
+/* Position sparks in a radial pattern */
+.s1 {
+  transform: rotate(0deg) translateY(-2px);
+}
+
+.s2 {
+  transform: rotate(45deg) translateY(-2px);
+}
+
+.s3 {
+  transform: rotate(90deg) translateY(-2px);
+}
+
+.s4 {
+  transform: rotate(135deg) translateY(-2px);
+}
+
+.s5 {
+  transform: rotate(180deg) translateY(-2px);
+}
+
+.s6 {
+  transform: rotate(225deg) translateY(-2px);
+}
+
+.s7 {
+  transform: rotate(270deg) translateY(-2px);
+}
+
+.s8 {
+  transform: rotate(315deg) translateY(-2px);
+}
+
+/* ==========================================
+   ✅ CHECKED STATE — the supernova ignites
+   ========================================== */
+.cosmic-checkbox input:checked ~ .checkbox-container .checkbox-box {
+  border-color: var(--clr-active);
+  /* Background moves to .checkbox-bg */
+  transform: scale(1);
+  animation: box-pulse 0.5s ease;
+}
+
+@keyframes box-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(0.85);
+  }
+
+  60% {
+    transform: scale(1.15);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* checkmark draws in */
+.cosmic-checkbox input:checked ~ .checkbox-container .checkmark {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .checkmark path {
+  stroke-dashoffset: 0;
+}
+
+/* label lights up */
+.cosmic-checkbox input:checked ~ .checkbox-container .label-text {
+  color: var(--clr-core);
+}
+
+/* ---- Particle explosion ---- */
+.cosmic-checkbox input:checked ~ .checkbox-container .p1 {
+  animation: particle-fly 0.65s ease-out forwards;
+  --angle: -45deg;
+  --dist: 22px;
+  --clr: #f0abfc;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .p2 {
+  animation: particle-fly 0.6s 0.05s ease-out forwards;
+  --angle: -90deg;
+  --dist: 26px;
+  --clr: #c084fc;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .p3 {
+  animation: particle-fly 0.55s 0.08s ease-out forwards;
+  --angle: 0deg;
+  --dist: 20px;
+  --clr: #e879f9;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .p4 {
+  animation: particle-fly 0.7s 0.03s ease-out forwards;
+  --angle: 45deg;
+  --dist: 24px;
+  --clr: #d946ef;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .p5 {
+  animation: particle-fly 0.5s 0.1s ease-out forwards;
+  --angle: 135deg;
+  --dist: 18px;
+  --clr: #a78bfa;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .p6 {
+  animation: particle-fly 0.65s 0.06s ease-out forwards;
+  --angle: -135deg;
+  --dist: 23px;
+  --clr: #818cf8;
+}
+
+@keyframes particle-fly {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(1);
+    background: var(--clr);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle))
+      translateY(calc(var(--dist) * -1)) scale(1.1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle))
+      translateY(calc(var(--dist) * -1.4)) scale(0);
+  }
+}
+
+/* ---- Shockwave rings ---- */
+.cosmic-checkbox input:checked ~ .checkbox-container .ring-1 {
+  animation: shockwave 0.7s ease-out forwards;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .ring-2 {
+  animation: shockwave 0.7s 0.12s ease-out forwards;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .ring-3 {
+  animation: shockwave 0.7s 0.24s ease-out forwards;
+}
+
+@keyframes shockwave {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.5);
+    border-color: var(--clr-glow);
+  }
+
+  50% {
+    opacity: 0.4;
+    border-color: var(--clr-spark);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+    border-color: transparent;
+  }
+}
+
+/* ---- Spark lines burst ---- */
+.cosmic-checkbox input:checked ~ .checkbox-container .s1 {
+  animation: spark-burst 0.5s 0.05s ease-out forwards;
+  --rot: 0deg;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .s2 {
+  animation: spark-burst 0.45s 0.08s ease-out forwards;
+  --rot: 45deg;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .s3 {
+  animation: spark-burst 0.5s 0.03s ease-out forwards;
+  --rot: 90deg;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .s4 {
+  animation: spark-burst 0.55s 0.1s ease-out forwards;
+  --rot: 135deg;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .s5 {
+  animation: spark-burst 0.5s 0.06s ease-out forwards;
+  --rot: 180deg;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .s6 {
+  animation: spark-burst 0.45s 0.09s ease-out forwards;
+  --rot: 225deg;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .s7 {
+  animation: spark-burst 0.5s 0.04s ease-out forwards;
+  --rot: 270deg;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .s8 {
+  animation: spark-burst 0.55s 0.07s ease-out forwards;
+  --rot: 315deg;
+}
+
+@keyframes spark-burst {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--rot)) translateY(-4px) scaleY(0.5);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: rotate(var(--rot)) translateY(-20px) scaleY(1.2);
+    background: linear-gradient(to top, var(--clr-active), transparent);
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--rot)) translateY(-30px) scaleY(0.3);
+  }
+}
+
+/* ======================
+   IDLE BREATHING GLOW
+   A subtle ambient pulse
+   when unchecked
+   ====================== */
+.checkbox-box::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 10px;
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.12),
+    transparent 70%
+  );
+  opacity: 0;
+  animation: idle-breathe 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes idle-breathe {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* after check, the glow becomes steady */
+.cosmic-checkbox input:checked ~ .checkbox-container .checkbox-box::before {
+  animation: none;
+  opacity: 0.6;
+  transform: scale(1.2);
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.25),
+    transparent 70%
+  );
+  transition:
+    opacity 0.5s,
+    transform 0.5s;
+}
+
+/* ======================
+   AFTER-GLOW — persistent
+   shimmer on checked state
+   ====================== */
+.checkbox-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  opacity: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
+  transition: opacity 0.4s 0.2s;
+}
+
+.cosmic-checkbox input:checked ~ .checkbox-container .checkbox-box::after {
+  opacity: 1;
+}
+
+/* ======================
+   UNCHECKED TRANSITION
+   smooth return
+   ====================== */
+.cosmic-checkbox input:not(:checked) ~ .checkbox-container .checkbox-box {
+  background: transparent;
+  box-shadow: none;
+}
+
+.cosmic-checkbox input:not(:checked) ~ .checkbox-container .checkmark {
+  opacity: 0;
+  transform: scale(0) rotate(-20deg);
+}
+
+.cosmic-checkbox input:not(:checked) ~ .checkbox-container .checkmark path {
+  stroke-dashoffset: 28;
+}
+
+/* ======================
+   FOCUS-VISIBLE (a11y)
+   ====================== */
+.cosmic-checkbox input:focus-visible ~ .checkbox-container .checkbox-box {
+  outline: 2px solid var(--clr-glow);
+  outline-offset: 3px;
+}

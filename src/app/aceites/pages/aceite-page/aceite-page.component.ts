@@ -192,4 +192,53 @@ export default class AceitPageComponent implements OnInit {
 
   }
 
+    exportarExcel(estrampa: boolean) {
+    debugger
+    this.loading = true;
+
+    let data = this.entregas; 
+
+    this.aceiteService.exportarHistorialEntregas(data).subscribe({
+      next: data => {
+        this.loading = false;
+        this.cdr.detectChanges();
+        const base64String = data.archivoBase64; // Aquí debes colocar tu cadena base64 del archivo Excel
+
+        // Decodificar la cadena base64
+        const binaryString = window.atob(base64String);
+
+        // Convertir a un array de bytes
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        // Crear un Blob con los datos binarios
+        const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+        // Crear una URL para el Blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Crear un enlace para la descarga
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'HISTORIAL ENTREGAS DE ACEITE.xlsx'; // Establecer el nombre del archivo
+        document.body.appendChild(link);
+
+        // Hacer clic en el enlace para iniciar la descarga
+        link.click();
+
+        // Limpiar la URL y el enlace después de la descarga
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      },
+      error: error => {
+        this.loading = false;
+        this.showMessage('error', 'Error', 'Error al generar el archivo de excel');
+        console.log(error);
+
+      }
+    });
+  }
+
 }
