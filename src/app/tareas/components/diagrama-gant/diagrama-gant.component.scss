@@ -17,11 +17,6 @@
 .task-list {
   // width: 250px;
   // min-width: 250px;
-  // border-right: 2px solid #e2e8f0;
-  // background: #f8fafc;
-  // z-index: 10;
-  width: 250px;
-  min-width: 250px;
   border-right: 2px solid #e2e8f0;
   background: #f8fafc;
   z-index: 20;
@@ -149,8 +144,8 @@
 }
 
 .estatus {
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   margin-right: 10px;
   border-radius: 50%;
 }
@@ -192,4 +187,21 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.header-actividad {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contador-badge {
+  background: #1976d2;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
 }

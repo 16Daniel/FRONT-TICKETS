@@ -18,10 +18,22 @@ interface GanttTask {
   styleUrl: './diagrama-gant.component.scss'
 })
 export class DiagramaGantComponent implements OnInit {
-  @Output() seleccionarTarea = new EventEmitter<Tarea>();
-
   @Input() set tareas(val: Tarea[]) { this._tareas.set(val); }
   @Input() estatusMap = new Map<string, string>();
+
+  @Input()
+  set mostrarProyectos(val: boolean) {
+    this._mostrarProyectos = val;
+
+    // Esperamos a que Angular renderice
+    setTimeout(() => {
+      this.scrollToToday();
+    });
+  }
+
+  private _mostrarProyectos = false;
+
+  @Output() seleccionarTarea = new EventEmitter<Tarea>();
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLDivElement>;
@@ -195,4 +207,6 @@ export class DiagramaGantComponent implements OnInit {
       date.getDate() === today.getDate()
     );
   }
+
+  contadorTareas = computed(() => this._tareas().length);
 }

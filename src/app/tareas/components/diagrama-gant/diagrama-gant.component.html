@@ -2,16 +2,27 @@
   <div class="gantt-scroll-container" #scrollContainer>
 
     <div class="task-list">
-      <div class="header-cell">Nombre de Tarea</div>
-
+      <div class="header-cell header-actividad">
+        <span>ACTIVIDAD</span>
+        <span class="contador-badge">
+          {{ contadorTareas() }}
+        </span>
+      </div>
       @for (item of ganttTasks(); track item.tarea.id) {
       <div class="task-cell">
         <span class="estatus estatus-{{ item.tarea.idEstatus }}"
           pTooltip="{{ estatusMap.get(item.tarea.idEstatus) || '' }}">
         </span>
 
+        <div>
+          <span *ngIf="item.tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">🔥</span>
+          <span *ngIf="item.tarea.idEisenhower == '2'" pTooltip="VALOR! Planifícalo ya">💎</span>
+          <span *ngIf="item.tarea.idEisenhower == '3'" pTooltip="RUIDO! Si puedes, delégalo">📢</span>
+          <span *ngIf="item.tarea.idEisenhower == '4'" pTooltip="TRANQUILO.. Puede esperar">⏳</span>
+        </div>
+
         <div class="task-title" pTooltip="{{ item.tarea.titulo }}">
-          {{ item.tarea.titulo }}
+          {{ item.tarea.titulo }} ({{ item.tarea.porcentaje }}%)
         </div>
       </div>
       }
@@ -41,8 +52,17 @@
           <div class="task-bar" [style.left.px]="item.startOffset * CELL_WIDTH" (click)="onClick(item.tarea)"
             [style.width.px]="item.durationDays * CELL_WIDTH"
             [style.background-color]="getBarColor(item.tarea.porcentaje)">
-            {{ item.tarea.porcentaje }}%
+            <!-- {{ item.tarea.porcentaje }}% -->
           </div>
+        </div>
+        }
+      </div>
+
+      <div class="header-row">
+        @for (day of timeline(); track day.getTime()) {
+        <div class="day-cell bottom-day" [class.today]="isToday(day)">
+          <span>{{ day | date:'dd' }}</span>
+          <small>{{ day | date:'MMM' }}</small>
         </div>
         }
       </div>
