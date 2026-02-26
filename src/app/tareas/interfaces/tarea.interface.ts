@@ -1,3 +1,4 @@
+import { Timestamp } from "@angular/fire/firestore";
 import { Comentario } from "../../shared/interfaces/comentario-chat.model";
 
 export class Tarea {
@@ -30,4 +31,10 @@ export class Tarea {
   esProyecto: boolean = false;
   idProyectoRelacionado: string | null = null;
   notas:string = ''; 
+  revisiones:
+  {
+    idUsuario:string;
+    revisado:boolean; 
+    ultimafecha:Timestamp; 
+  }[] = []
 }
