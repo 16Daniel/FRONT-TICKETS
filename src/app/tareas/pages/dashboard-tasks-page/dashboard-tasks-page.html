@@ -11,7 +11,8 @@
 <p></p>
 
 @if(mostrarGant) {
-<app-diagrama-gant [tareas]="filtrarTareasGant" (seleccionarTarea)="abrirDetalle($event)"></app-diagrama-gant>
+<app-diagrama-gant [tareas]="filtrarTareasGant" (seleccionarTarea)="abrirDetalle($event)"
+  [mostrarProyectos]="mostrarProyectos"></app-diagrama-gant>
 }
 @else {
 <app-contenedor-tareas [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"

@@ -27,6 +27,13 @@
   border-radius: 8px;
 }
 
+.columna {
+  flex: 1 1 0;
+  min-width: 0;      /* 🔥 MUY IMPORTANTE */
+  display: flex;
+  flex-direction: column;
+}
+
 // .scroll {
 //   max-height: 600px;
 //   overflow-y: auto;
