@@ -28,7 +28,11 @@ import { Timestamp } from '@angular/fire/firestore';
   imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent,FormsModule],
   providers: [MessageService],
   templateUrl: './task-card.component.html',
-  styleUrl: './task-card.component.scss'
+  styleUrls:[
+    './task-card.component.scss',
+    './task-card-checkbox.scss'
+  ]
+
 })
 export class TaskCardComponent implements OnInit {
 
