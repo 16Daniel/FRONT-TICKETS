@@ -15,13 +15,13 @@
         </span>
 
         <div>
-          <span *ngIf="item.tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">🔥</span>
-          <span *ngIf="item.tarea.idEisenhower == '2'" pTooltip="VALOR! Planifícalo ya">💎</span>
-          <span *ngIf="item.tarea.idEisenhower == '3'" pTooltip="RUIDO! Si puedes, delégalo">📢</span>
-          <span *ngIf="item.tarea.idEisenhower == '4'" pTooltip="TRANQUILO.. Puede esperar">⏳</span>
+          <span *ngIf="item.tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
+          <span *ngIf="item.tarea.idEisenhower == '2'" pTooltip="VALOR! Planifícalo ya">C2:💎</span>
+          <span *ngIf="item.tarea.idEisenhower == '3'" pTooltip="RUIDO! Si puedes, delégalo">C3:📢</span>
+          <span *ngIf="item.tarea.idEisenhower == '4'" pTooltip="TRANQUILO.. Puede esperar">C4:⏳</span>
         </div>
 
-        <div class="task-title" pTooltip="{{ item.tarea.titulo }}">
+        <div class="task-title">
           {{ item.tarea.titulo }} ({{ item.tarea.porcentaje }}%)
         </div>
       </div>

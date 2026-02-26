@@ -365,5 +365,6 @@ export class DashboardTasksPageComponent implements OnInit {
     return this.tareas
       .filter(x => ['1', '2', '3'].includes(x.idEstatus))
       .filter(x => x.esProyecto == this.mostrarProyectos)
+      .sort((a, b) => Number(a.idEisenhower) - Number(b.idEisenhower));
   }
 }
