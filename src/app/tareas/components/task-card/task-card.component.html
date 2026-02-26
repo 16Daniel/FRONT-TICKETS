@@ -97,20 +97,66 @@
       [class.text-danger]="tarea.visibleGlobal === false"
       [pTooltip]="tarea.visibleGlobal === false ? 'PRIVADO' : 'PÚBLICO'" tooltipPosition="top">
     </i>
-
+    
     <!-- DEADLINE -->
     <div class="deadline-indicator" *ngIf="tarea.deathline && tarea.idEstatus !== '4'">
 
       <div class="mini-pie" [style.--progress]="getPorcentajeUsado(tarea)">
       </div>
+  
+
+
+
 
       <div class="mini-text">
         Restan {{ getDiasRestantes(tarea) }} días
       </div>
 
     </div>
-<button (click)="girar(tarea.id!)" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'"><i class='bx bx-reflect-vertical bx-sm'></i></button>
-<i class='bx bx-note bx-sm' *ngIf=" tarea.notas != undefined && tarea.notas !=''" tooltipPosition="top" [pTooltip]="'INDICADOR DE NOTAS'"></i>
+
+<i class='bx bx-reflect-vertical bx-sm' tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'" 
+[ngClass]="{'text-primary':tarea.notas != undefined && tarea.notas != ''}" (click)="girar(tarea.id!)"></i>
+
+  <label class="cosmic-checkbox">
+  <input type="checkbox" [(ngModel)]="checkRevision" (change)="atualizarRevision()"/>
+  <div class="checkbox-container">
+    <div class="checkbox-box">
+      <div class="checkbox-bg"></div>
+
+      <svg class="checkmark" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M4 12.5L9.5 18L20 6"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+
+      <div class="particle p1"></div>
+      <div class="particle p2"></div>
+      <div class="particle p3"></div>
+      <div class="particle p4"></div>
+      <div class="particle p5"></div>
+      <div class="particle p6"></div>
+
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="ring ring-3"></div>
+
+      <div class="spark s1"></div>
+      <div class="spark s2"></div>
+      <div class="spark s3"></div>
+      <div class="spark s4"></div>
+      <div class="spark s5"></div>
+      <div class="spark s6"></div>
+      <div class="spark s7"></div>
+      <div class="spark s8"></div>
+    </div>
+    <span class="label-text"></span>
+  </div>
+</label>
+
   </div>
 
 </div>
@@ -119,12 +165,14 @@
                     </div>
                     <div class="back p-3" (dblclick)="girar(tarea.id!)">
                         <h5 class="text-center">Notas</h5>
-                        <textarea class="form-control" [id]="'back-task-'+tarea.id" [placeholder]="'Escribe aquí...'" style="height:120px; border:none; background-color: transparent;" [(ngModel)]="tarea.notas"></textarea>
-                       <div class="d-flex justify-content-start flex-wrap gap-2 mt-2">
-                           <button (click)="girar(tarea.id!)" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'"><i class='bx bx-reflect-vertical bx-sm'></i></button>
-                           <button (click)="guardarNotas()" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GUARDAR'"><i class='bx bx-save bx-sm'></i></button>
-
+                        <textarea class="form-control" [id]="'back-task-'+tarea.id" [placeholder]="'Escribe aquí...'" 
+                        style="height:120px; border:1px solid #ddd; background-color: transparent;" [(ngModel)]="tarea.notas"></textarea>
+                       <div class="d-flex justify-content-end flex-wrap gap-2 mt-2">
+                           <button (click)="guardarNotas()" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GUARDAR'"><i class='bx bx-save bx-sm' ></i></button>
+                           <button (click)="girar(tarea.id!)" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'"><i class='bx bx-reflect-vertical bx-sm' ></i></button>
                        </div>
                     </div>
                 </div>
             </div>
+
+

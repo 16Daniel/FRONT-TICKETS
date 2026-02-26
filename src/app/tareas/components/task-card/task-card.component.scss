@@ -291,17 +291,17 @@
   border-radius: 6px;
 }
 
-        /* Área de notas en la parte trasera */
-        .notas {
-            width: 100%;
-            height: auto;
-            background-color: white;
-            color: #333;
-            border-radius: 4px;
-            padding: 8px;
-            overflow-y: auto;
-            font-family: Arial, sans-serif;
-            border: 1px solid #ccc;
-            outline: none;
-            margin-bottom: 10px;
-        }
+ 
+.notas {
+  width: 100%;
+  height: auto;
+  background-color: white;
+  color: #333;
+  border-radius: 4px;
+  padding: 8px;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  outline: none;
+   margin-bottom: 10px;
+}
