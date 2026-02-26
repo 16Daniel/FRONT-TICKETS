@@ -54,7 +54,7 @@ export class DashboardTasksPageComponent implements OnInit {
   etiquetasFiltradas: EtiquetaTarea[] = [];
   idEtiquetaSeleccionada: string = '';
   tareas: Tarea[] = [];
-  allTask: Tarea[] = [];
+  private allTask: Tarea[] = [];
   // allProjects: Tarea[] = [];
   esGlobal: boolean = false;
   responsablesTodos: ResponsableTarea[] = [];
@@ -101,6 +101,10 @@ export class DashboardTasksPageComponent implements OnInit {
       this.responsablesTodos = responsables;
       // this.filtrarResponsables();
     });
+  }
+
+  obtenerTareas() {
+    this.usuario.idRol == '1' ? this.obtenerTodasTareas() : this.obtenerTareasPorResponsable();
   }
 
   obtenerSucursales() {
@@ -180,7 +184,16 @@ export class DashboardTasksPageComponent implements OnInit {
     this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
-  obtenerTareas() {
+  obtenerTareasPorResponsable() {
+    this.tareas = [];
+
+    this.tareasService.getByResponsables([this.responsableTarea.id!]).subscribe(tareas => {
+      this.tareas = tareas;
+      this.distribuirTareas(this.tareas);
+    });
+  }
+
+  obtenerTodasTareas() {
     this.tareas = [];
 
     this.tareasService.getAll().subscribe(tareas => this.allTask = tareas);
