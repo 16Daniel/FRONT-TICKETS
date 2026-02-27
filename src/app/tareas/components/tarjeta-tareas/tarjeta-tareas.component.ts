@@ -23,18 +23,18 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
-  selector: 'app-task-card',
+  selector: 'app-tarjeta-tareas',
   standalone: true,
   imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent,FormsModule],
   providers: [MessageService],
-  templateUrl: './task-card.component.html',
+  templateUrl: './tarjeta-tareas.component.html',
   styleUrls:[
-    './task-card.component.scss',
-    './task-card-checkbox.scss'
+    './tarjeta-tareas.component.scss',
+    './tarjeta-tareas-checkbox.component.scss'
   ]
 
 })
-export class TaskCardComponent implements OnInit {
+export class TarjetaTareasComponent implements OnInit {
 
   @Input() tarea!: Tarea;
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
@@ -53,11 +53,11 @@ export class TaskCardComponent implements OnInit {
   sucursalesService = inject(BranchesService);
   estatusService = inject(StatusTaskService);
   usuario: Usuario;
-  checkRevision:boolean = false; 
+  checkRevision:boolean = false;
   responsable:ResponsableTarea;
-   constructor(public cdr:ChangeDetectorRef){ 
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); 
-    this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!); 
+   constructor(public cdr:ChangeDetectorRef){
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!);
   }
 
   ngOnInit(): void {
@@ -78,8 +78,8 @@ export class TaskCardComponent implements OnInit {
       this.responsables = responsable;
       this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
     });
- 
-    this.checkRevision = this.obtenerRevision(); 
+
+    this.checkRevision = this.obtenerRevision();
   }
 
   onClick() {
@@ -195,17 +195,17 @@ export class TaskCardComponent implements OnInit {
 
 girar(id:string)
 {
- let card = document.getElementById(id); 
+ let card = document.getElementById(id);
   if(card != null)
     {
-       let front = document.getElementById('front-task-'+id); 
+       let front = document.getElementById('front-task-'+id);
       card!.classList.toggle('flipped');
       if(card.classList.contains('flipped'))
         {
-          let front = document.getElementById('front-task-'+id); 
-          let back = document.getElementById('back-task-'+id);   
+          let front = document.getElementById('front-task-'+id);
+          let back = document.getElementById('back-task-'+id);
           back!.style.height = (front!.offsetHeight-95)+'px';
-          
+
         }
     }
 }
@@ -220,36 +220,36 @@ async guardarNotas()
 }
 
 obtenerRevision():boolean
-{  
-  let revisiones = this.tarea.revisiones; 
+{
+  let revisiones = this.tarea.revisiones;
     if(revisiones == undefined){ revisiones = [];}
-  let temp:boolean =revisiones.filter(x =>x.idUsuario == this.responsable.pin && x.ultimafecha >= Timestamp.fromDate(new Date())).length>0 
-  ? this.tarea.revisiones.filter(x =>x.idUsuario == this.responsable.pin)[0].revisado : false;   
-  return temp; 
+  let temp:boolean =revisiones.filter(x =>x.idUsuario == this.responsable.pin && x.ultimafecha >= Timestamp.fromDate(new Date())).length>0
+  ? this.tarea.revisiones.filter(x =>x.idUsuario == this.responsable.pin)[0].revisado : false;
+  return temp;
 }
 
 async atualizarRevision()
-{ 
-   let nuevafecha = new Date(); 
-   nuevafecha.setDate(nuevafecha.getDate()+1); 
+{
+   let nuevafecha = new Date();
+   nuevafecha.setDate(nuevafecha.getDate()+1);
     nuevafecha.setHours(2,0,0,0);
-    let revisiones = this.tarea.revisiones; 
+    let revisiones = this.tarea.revisiones;
     if(revisiones == undefined){ revisiones = [];}
   if(revisiones.filter(x=>x.idUsuario == this.responsable.pin).length == 0)
     {
-        revisiones.push({idUsuario:this.responsable.pin,revisado:this.checkRevision,ultimafecha:Timestamp.fromDate(nuevafecha)}); 
+        revisiones.push({idUsuario:this.responsable.pin,revisado:this.checkRevision,ultimafecha:Timestamp.fromDate(nuevafecha)});
     } else
       {
           for(let item of revisiones)
-            { 
+            {
               if(item.idUsuario == this.responsable.pin)
                 {
-                  item.ultimafecha = Timestamp.fromDate(nuevafecha); 
-                  item.revisado = this.checkRevision; 
+                  item.ultimafecha = Timestamp.fromDate(nuevafecha);
+                  item.revisado = this.checkRevision;
                 }
             }
       }
-  this.tarea.revisiones = revisiones; 
+  this.tarea.revisiones = revisiones;
   await this.tareasService.update(this.tarea, this.tarea.id!);
 }
 
