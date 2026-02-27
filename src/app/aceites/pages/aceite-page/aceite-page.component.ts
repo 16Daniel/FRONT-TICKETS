@@ -222,7 +222,7 @@ export default class AceitPageComponent implements OnInit {
         // Crear un enlace para la descarga
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'HISTORIAL ENTREGAS DE ACEITE.xlsx'; // Establecer el nombre del archivo
+        link.download = 'ENTREGAS DE ACEITE POR VALIDAR.xlsx'; // Establecer el nombre del archivo
         document.body.appendChild(link);
 
         // Hacer clic en el enlace para iniciar la descarga
