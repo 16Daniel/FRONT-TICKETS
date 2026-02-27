@@ -1,5 +1,14 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
@@ -20,7 +30,7 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 import { ContenedorTareasComponent } from '../../components/contenedor-tareas/contenedor-tareas.component';
 import { CabeceraTareasComponent } from '../../components/cabecera-tareas/cabecera-tareas.component';
-import { DiagramaGantComponent } from "../../components/diagrama-gant/diagrama-gant.component";
+import { DiagramaGantComponent } from '../../components/diagrama-gant/diagrama-gant.component';
 
 @Component({
   selector: 'app-dashboard-tasks-page',
@@ -41,29 +51,37 @@ import { DiagramaGantComponent } from "../../components/diagrama-gant/diagrama-g
   templateUrl: './dashboard-tasks-page.html',
   styleUrl: './dashboard-tasks-page.scss'
 })
-export class DashboardTasksPageComponent implements OnInit {
-  mostrarModalDetalleTarea: boolean = false;
-  mostrarProyectos: boolean = false;
-  mostrarGant: boolean = false;
+export class DashboardTasksPageComponent implements OnInit, OnDestroy {
+
+  private tareasSub?: Subscription;
+
+  mostrarModalDetalleTarea = false;
+  mostrarProyectos = false;
+  mostrarGant = false;
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
-  idSucursalSeleccionada: string = '';
+  idSucursalSeleccionada = '';
   usuario: Usuario;
+
   etiquetasTodas: EtiquetaTarea[] = [];
   etiquetasFiltradas: EtiquetaTarea[] = [];
-  idEtiquetaSeleccionada: string = '';
+  idEtiquetaSeleccionada = '';
+
   tareas: Tarea[] = [];
   private allTask: Tarea[] = [];
-  // allProjects: Tarea[] = [];
-  esGlobal: boolean = false;
+
+  esGlobal = false;
+
   responsablesTodos: ResponsableTarea[] = [];
-  idResponsableSeleccionado: string = '';
+  idResponsableSeleccionado = '';
   idsResponsablesGlobales: string[] = [];
+
   sucursalSeleccionadaNombre?: string;
   textoBusqueda!: string;
 
   dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
+
   tareaSeleccionada!: Tarea;
   responsableTarea!: ResponsableTarea;
 
@@ -82,13 +100,10 @@ export class DashboardTasksPageComponent implements OnInit {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
-
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
   }
 
   ngOnInit(): void {
-    // this.tareasService.normalizarOrden();
-
     this.obtenerTareas();
     this.obtenerSucursales();
 
@@ -99,33 +114,185 @@ export class DashboardTasksPageComponent implements OnInit {
 
     this.raskResponsibleService.responsables$.subscribe(responsables => {
       this.responsablesTodos = responsables;
-      // this.filtrarResponsables();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.tareasSub) {
+      this.tareasSub.unsubscribe();
+    }
   }
 
   obtenerTareas() {
-    this.usuario.idRol == '1' ? this.obtenerTodasTareas() : this.obtenerTareasPorResponsable();
+    this.usuario.idRol == '1'
+      ? this.obtenerTodasTareas()
+      : this.obtenerTareasPorResponsable();
+  }
+
+  obtenerTareasPorResponsable() {
+
+    if (this.tareasSub) this.tareasSub.unsubscribe();
+
+    this.tareasSub = this.tareasService
+      .getByResponsables([this.responsableTarea.id!])
+      .subscribe(tareas => {
+        this.tareas = tareas;
+        this.distribuirTareas(this.tareas);
+      });
+  }
+
+  obtenerTodasTareas() {
+
+    if (this.tareasSub) this.tareasSub.unsubscribe();
+
+    const observable = this.esGlobal
+      ? this.tareasService.getAll()
+      : this.tareasService.getBySucursal(this.idSucursalSeleccionada);
+
+    this.tareasSub = observable.subscribe(tareas => {
+
+      this.allTask = tareas;
+
+      let tareasProcesadas = [...tareas];
+
+      if (this.esGlobal) {
+
+        const texto = this.textoBusqueda?.trim().toLowerCase();
+
+        if (texto) {
+          tareasProcesadas = tareasProcesadas.filter(t =>
+            t.titulo?.toLowerCase().includes(texto) ||
+            t.descripcion?.toLowerCase().includes(texto)
+          );
+        }
+        else if (this.idsResponsablesGlobales.length > 0) {
+          tareasProcesadas = tareasProcesadas.filter(t =>
+            t.idsResponsables?.some(id =>
+              this.idsResponsablesGlobales.includes(id)
+            )
+          );
+        }
+
+      } else {
+        tareasProcesadas = this.filtrarTareasVisibles(
+          tareasProcesadas,
+          this.responsableTarea.id!
+        );
+      }
+
+      this.tareas = tareasProcesadas;
+      this.distribuirTareas(this.tareas);
+
+      if (this.idEtiquetaSeleccionada) this.onEtiquetaChange();
+      if (this.idResponsableSeleccionado) this.onResponsableChange();
+    });
   }
 
   obtenerSucursales() {
-    this.branchesService.get().subscribe({
-      next: (data) => {
-        this.sucursales = data;
+    this.branchesService.get().subscribe(data => {
+      this.sucursales = data;
+      this.sucursalesMap.clear();
+      data.forEach(s => this.sucursalesMap.set(s.id!, s.nombre));
 
-        this.sucursalesMap.clear();
-        data.forEach(s =>
-          this.sucursalesMap.set(s.id!, s.nombre)
-        );
-
-        // Nombre inicial (modo local)
-        if (this.idSucursalSeleccionada) {
-          this.sucursalSeleccionadaNombre =
-            this.sucursalesMap.get(this.idSucursalSeleccionada);
-        }
-
-        this.cdr.detectChanges();
+      if (this.idSucursalSeleccionada) {
+        this.sucursalSeleccionadaNombre =
+          this.sucursalesMap.get(this.idSucursalSeleccionada);
       }
+
+      this.cdr.detectChanges();
     });
+  }
+
+  filtrarTareasVisibles(tareas: Tarea[], miIdResponsable: string): Tarea[] {
+    return tareas.filter(t => {
+      if (t.visibleGlobal === undefined) return true;
+      if (t.visibleGlobal === true) return true;
+      return t.idsResponsables?.includes(miIdResponsable) ?? false;
+    });
+  }
+
+  onSucursalChange() {
+    this.sucursalSeleccionadaNombre =
+      this.sucursalesMap.get(this.idSucursalSeleccionada);
+
+    this.idEtiquetaSeleccionada = '';
+    this.idResponsableSeleccionado = '';
+
+    this.obtenerTareas();
+    this.filtrarEtiquetas();
+  }
+
+  onEtiquetaChange() {
+    if (!this.idEtiquetaSeleccionada) {
+      this.obtenerTareas();
+      return;
+    }
+
+    const filtradas = this.tareas.filter(t =>
+      t.idEtiqueta === this.idEtiquetaSeleccionada
+    );
+
+    this.distribuirTareas(filtradas);
+  }
+
+  async onResponsableChange() {
+    if (!this.idResponsableSeleccionado) {
+      this.obtenerTareas();
+      return;
+    }
+
+    const filtradas = this.tareas.filter(t =>
+      t.idsResponsables?.includes(this.idResponsableSeleccionado)
+    );
+
+    this.distribuirTareas(filtradas);
+  }
+
+  private distribuirTareas(tareas: Tarea[]) {
+    this.toDo = tareas.filter(x => x.idEstatus === '1');
+    this.working = tareas.filter(x => x.idEstatus === '2');
+    this.check = tareas.filter(x => x.idEstatus === '3');
+    this.done = tareas.filter(x => x.idEstatus === '4');
+
+    this.cdr.detectChanges();
+  }
+
+  showMessage = (sev: string, summ: string, det: string) =>
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
+
+  get obtenerProyectos() {
+    return this.allTask.filter(x => x.esProyecto);
+  }
+
+  get filtrarTareasGant() {
+    return this.tareas
+      .filter(x => ['1', '2', '3'].includes(x.idEstatus))
+      .filter(x => x.esProyecto == this.mostrarProyectos)
+      .sort((a, b) => Number(a.idEisenhower) - Number(b.idEisenhower));
+  }
+
+  filtrarEtiquetas(): void {
+    if (!this.idSucursalSeleccionada) {
+      this.etiquetasFiltradas = this.etiquetasTodas;
+      return;
+    }
+
+    this.etiquetasFiltradas =
+      this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  }
+
+  onBuscarText(texto: string) {
+    this.textoBusqueda = texto;
+    this.obtenerTareas();
+  }
+
+  onResponsablesGlobalesChange(): void {
+    this.obtenerTareas();
+  }
+
+  abrirDetalle(tarea: Tarea) {
+    this.tareaSeleccionada = { ...tarea };
+    this.mostrarModalDetalleTarea = true;
   }
 
   async drop(event: CdkDragDrop<Tarea[]>) {
@@ -184,174 +351,6 @@ export class DashboardTasksPageComponent implements OnInit {
     this.showMessage('success', 'Success', 'Enviado correctamente');
   }
 
-  obtenerTareasPorResponsable() {
-    this.tareas = [];
-
-    this.tareasService.getByResponsables([this.responsableTarea.id!]).subscribe(tareas => {
-      this.tareas = tareas;
-      this.distribuirTareas(this.tareas);
-    });
-  }
-
-  obtenerTodasTareas() {
-    this.tareas = [];
-
-    this.tareasService.getAll().subscribe(tareas => this.allTask = tareas);
-
-    // GLOBAL
-    if (this.esGlobal) {
-      this.tareasService.getAll().subscribe(tareas => {
-        this.tareas = tareas;
-
-        let tareasFiltradas = [...this.tareas];
-        const texto = this.textoBusqueda?.trim().toLowerCase();
-
-        // FILTRO POR TEXTO (titulo + descripcion)
-        if (texto) {
-          tareasFiltradas = tareasFiltradas.filter(t =>
-            t.titulo?.toLowerCase().includes(texto) ||
-            t.descripcion?.toLowerCase().includes(texto)
-          );
-        }
-        // 👥 FILTRO POR RESPONSABLES
-        else if (this.idsResponsablesGlobales.length > 0) {
-          tareasFiltradas = tareasFiltradas.filter(t =>
-            t.idsResponsables?.some(id =>
-              this.idsResponsablesGlobales.includes(id)
-            )
-          );
-        }
-
-        this.distribuirTareas(tareasFiltradas);
-        if (this.idEtiquetaSeleccionada && this.idEtiquetaSeleccionada != '') {
-          this.onEtiquetaChange();
-        }
-
-        if (this.idResponsableSeleccionado) {
-          this.onResponsableChange();
-        }
-
-      });
-
-      return;
-    }
-
-    // LOCAL
-    this.tareasService
-      .getBySucursal(this.idSucursalSeleccionada)
-      .subscribe(tareas => {
-        // this.tareas = tareas;
-        this.tareas = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!);
-
-        // this.tareas = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!).filter(x => (x.esProyecto == false || x.esProyecto == undefined));
-        // this.allProjects = this.filtrarTareasVisibles(tareas, this.responsableTarea.id!).filter(x => x.esProyecto == true);
-        this.distribuirTareas(this.tareas);
-
-        if (this.idEtiquetaSeleccionada && this.idEtiquetaSeleccionada != '') {
-          this.onEtiquetaChange();
-        }
-
-        if (this.idResponsableSeleccionado) {
-          this.onResponsableChange();
-        }
-
-      });
-
-  }
-
-  filtrarTareasVisibles(tareas: Tarea[], miIdResponsable: string): Tarea[] {
-    return tareas.filter(tarea => {
-
-      if (tarea.visibleGlobal === undefined) {
-        return true;
-      }
-
-      if (tarea.visibleGlobal === true) {
-        return true;
-      }
-
-      return tarea.idsResponsables?.includes(miIdResponsable) ?? false;
-    });
-  }
-
-  showMessage = (sev: string, summ: string, det: string) =>
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
-
-  abrirDetalle(tarea: Tarea) {
-    this.tareaSeleccionada = { ...tarea };
-    this.mostrarModalDetalleTarea = true;
-  }
-
-  onSucursalChange() {
-    this.sucursalSeleccionadaNombre =
-      this.sucursalesMap.get(this.idSucursalSeleccionada);
-
-    this.idEtiquetaSeleccionada = '';
-    this.idResponsableSeleccionado = '';
-
-    this.obtenerTareas();
-    this.filtrarEtiquetas();
-    // this.filtrarResponsables();
-  }
-
-  onEtiquetaChange() {
-
-    if (!this.idEtiquetaSeleccionada || this.idEtiquetaSeleccionada === '') {
-      this.obtenerTareas();
-      return;
-    }
-
-    const filtradas = this.tareas.filter(t =>
-      t.idEtiqueta && t.idEtiqueta === this.idEtiquetaSeleccionada
-    );
-
-    this.toDo = filtradas.filter(x => x.idEstatus == '1');
-    this.working = filtradas.filter(x => x.idEstatus == '2');
-    this.check = filtradas.filter(x => x.idEstatus == '3');
-    this.done = filtradas.filter(x => x.idEstatus == '4');
-
-    let tareasfiltradas: Tarea[] = [...this.toDo, ...this.working, ...this.check];
-    this.tareasService.updateTasks(tareasfiltradas);
-
-    this.cdr.detectChanges();
-  }
-
-  filtrarEtiquetas(): void {
-    if (!this.idSucursalSeleccionada) {
-      this.etiquetasFiltradas = this.etiquetasTodas;
-      return;
-    }
-
-    this.etiquetasFiltradas =
-      this.labelsTasksService.filtrarPorSucursal(this.idSucursalSeleccionada);
-  }
-
-  async onResponsableChange() {
-    if (!this.idResponsableSeleccionado) {
-      this.obtenerTareas();
-      return;
-    }
-
-    const filtradas = this.tareas.filter(t =>
-      Array.isArray(t.idsResponsables) &&
-      t.idsResponsables.includes(this.idResponsableSeleccionado)
-    );
-    this.distribuirTareas(filtradas);
-  }
-
-  private distribuirTareas(tareas: Tarea[]) {
-
-    this.toDo = tareas.filter(x => x.idEstatus === '1');
-    this.working = tareas.filter(x => x.idEstatus === '2');
-    this.check = tareas.filter(x => x.idEstatus === '3');
-    this.done = tareas.filter(x => x.idEstatus === '4');
-
-    this.cdr.detectChanges();
-
-    let tareasfiltradas: Tarea[] = [...this.toDo, ...this.working, ...this.check];
-    this.tareasService.updateTasks(tareasfiltradas);
-  }
-
   private actualizarOrdenColumna(tareas: Tarea[]) {
     tareas.forEach((tarea, index) => {
       if (tarea.orden !== index) {
@@ -361,23 +360,11 @@ export class DashboardTasksPageComponent implements OnInit {
     });
   }
 
-  onResponsablesGlobalesChange(): void {
-    this.obtenerTareas();
+  filtrarTareas(tareas: Tarea[]): Tarea[] {
+    return tareas.filter(x => (x.esProyecto == false || x.esProyecto == undefined));
   }
 
-  onBuscarText(texto: string) {
-    this.textoBusqueda = texto;
-    this.obtenerTareas();
-  }
-
-  get obtenerProyectos() {
-    return this.allTask.filter(x => x.esProyecto);
-  }
-
-  get filtrarTareasGant() {
-    return this.tareas
-      .filter(x => ['1', '2', '3'].includes(x.idEstatus))
-      .filter(x => x.esProyecto == this.mostrarProyectos)
-      .sort((a, b) => Number(a.idEisenhower) - Number(b.idEisenhower));
+  filtrarProyectos(tareas: Tarea[]): Tarea[] {
+    return tareas.filter(x => (x.esProyecto == true));
   }
 }
