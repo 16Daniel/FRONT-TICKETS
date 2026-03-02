@@ -14,7 +14,7 @@ import { GraficaTickets30DiasComponent } from '../../../mantenimientos/component
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-branches-tickets-accordion',

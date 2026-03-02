@@ -18,7 +18,7 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-branch-visit-schedule-page',

@@ -13,7 +13,7 @@ import { TareasService } from '../../services/tareas.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';

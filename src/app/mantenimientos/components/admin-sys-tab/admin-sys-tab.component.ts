@@ -29,7 +29,7 @@ import { Maintenance10x10Service } from '../../services/maintenance-10x10.servic
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
 
 @Component({

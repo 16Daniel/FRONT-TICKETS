@@ -17,7 +17,7 @@ import { HistorialAceite } from '../../components/historial-aceite/historial-ace
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { EntregaAceite } from '../../interfaces/aceite.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { RegistrosPendientesPageComponent } from '../registros-pendientes-page/registros-pendientes-page';
 
 @Component({
@@ -196,7 +196,7 @@ export default class AceitPageComponent implements OnInit {
     debugger
     this.loading = true;
 
-    let data = this.entregas; 
+    let data = this.entregas;
 
     this.aceiteService.exportarHistorialEntregas(data).subscribe({
       next: data => {

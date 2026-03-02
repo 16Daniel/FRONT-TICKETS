@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 
 import { BranchesService } from '../../services/branches.service';
 import { ModalBranchCreateComponent } from '../../dialogs/modal-branch-create/modal-branch-create.component';
-import { Sucursal } from '../../interfaces/sucursal.model';
+import { Sucursal } from '../../interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-branches-page',

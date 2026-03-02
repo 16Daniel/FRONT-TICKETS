@@ -10,7 +10,7 @@ import { UsersService } from '../../../../usuarios/services/users.service';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interface';
-import { Sucursal } from '../../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-av',

@@ -15,7 +15,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-eisenhower-card';
 import { Subscription } from 'rxjs';

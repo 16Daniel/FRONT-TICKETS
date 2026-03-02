@@ -20,7 +20,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ProveedoresComponent } from '../../dialogs/proveedores/proveedores.component';
 import { AgregarCompraComponent } from '../../dialogs/agregar-compra/agregar-compra.component';
 import { GraficaAdminComprasComponent } from '../../components/grafica-admin-compras/grafica-admin-compras.component';

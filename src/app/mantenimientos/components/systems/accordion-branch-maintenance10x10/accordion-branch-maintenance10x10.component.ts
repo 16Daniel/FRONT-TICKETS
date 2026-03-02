@@ -10,7 +10,7 @@ import { UsersService } from '../../../../usuarios/services/users.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
-import { Sucursal } from '../../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
 
 
 @Component({

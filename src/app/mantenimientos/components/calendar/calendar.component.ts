@@ -20,7 +20,7 @@ import { TicketsService } from '../../../tickets/services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 

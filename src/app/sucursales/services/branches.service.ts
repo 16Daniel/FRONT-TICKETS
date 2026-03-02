@@ -14,7 +14,7 @@ import {
   writeBatch,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Sucursal } from '../interfaces/sucursal.model';
+import { Sucursal } from '../interfaces/sucursal.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -5,7 +5,7 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 
 @Component({

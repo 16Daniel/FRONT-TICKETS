@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { DispositivoTPV } from '../../interfaces/dispositivo-tpv';
 import { EstatusTPV } from '../../interfaces/estatus-tpv';
 

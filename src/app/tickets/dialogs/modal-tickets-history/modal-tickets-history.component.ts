@@ -26,7 +26,7 @@ import { TicketsService } from '../../services/tickets.service';
 import { CategoriesService } from '../../services/categories.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-modal-tickets-history',

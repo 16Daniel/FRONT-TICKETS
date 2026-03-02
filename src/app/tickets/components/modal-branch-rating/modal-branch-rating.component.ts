@@ -10,7 +10,7 @@ import { Maintenance10x10Service } from '../../../mantenimientos/services/mainte
 import { TicketsService } from '../../services/tickets.service';
 import { Ticket } from '../../interfaces/ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
 
 

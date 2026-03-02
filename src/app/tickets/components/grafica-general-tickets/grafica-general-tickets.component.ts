@@ -10,7 +10,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Categoria } from '../../interfaces/categoria.mdoel';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { Ticket } from '../../interfaces/ticket.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
 
 @Component({

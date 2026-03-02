@@ -11,7 +11,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { NominaService } from '../../services/nomina.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { HistorailPersonal, Marcajes, PuestoNomina } from '../../interfaces/Nomina';
 
 @Component({

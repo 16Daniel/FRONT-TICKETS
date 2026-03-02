@@ -32,7 +32,7 @@ import { FixedAssetsService } from '../../../activos-fijos/services/fixed-assets
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
 import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';

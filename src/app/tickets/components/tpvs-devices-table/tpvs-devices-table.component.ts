@@ -6,7 +6,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { StatusTpvsDevicesService } from '../../../activos-fijos/services/status-tpvs-devices.service';
 import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos/dialogs/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { DispositivoTPV } from '../../../activos-fijos/interfaces/dispositivo-tpv';
 import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv';
 

@@ -14,7 +14,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
 import { AvataresResponsablesTareaComponent } from "../avatares-responsables-tarea/avatares-responsables-tarea.component";

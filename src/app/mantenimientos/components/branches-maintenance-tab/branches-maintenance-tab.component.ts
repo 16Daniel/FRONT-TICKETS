@@ -16,7 +16,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 
 @Component({

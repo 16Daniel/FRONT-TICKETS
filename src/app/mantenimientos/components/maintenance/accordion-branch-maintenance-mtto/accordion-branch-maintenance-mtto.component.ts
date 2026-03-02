@@ -10,7 +10,7 @@ import { UsersService } from '../../../../usuarios/services/users.service';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.interface';
-import { Sucursal } from '../../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-mtto',

@@ -18,7 +18,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
 import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-branches-audio-video-tab',

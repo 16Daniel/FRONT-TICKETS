@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 
 @Component({

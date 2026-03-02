@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
+import { TableModule } from 'primeng/table';
+import Swal from 'sweetalert2';
+
 import { ModalAgregarPrecioAyc } from "../../dialogs/modal-agregar-precio-ayc/modal-agregar-precio-ayc";
 import { PreciosaycService } from '../../services/preciosayc.service';
-import { colorPrecioayc, PreciosAyc } from '../../interfaces/sucursalRegion';
-import Swal from 'sweetalert2';
 import { ModalPreciosAyc } from "../../dialogs/modal-precios-ayc/modal-precios-ayc";
+import { PreciosAyc } from '../../interfaces/precios-AyC.interface';
+import { colorPrecioayc } from '../../interfaces/color-precio-ayc.interface';
+
 @Component({
   selector: 'app-precios-ayc-page',
   standalone: true,
@@ -14,136 +17,127 @@ import { ModalPreciosAyc } from "../../dialogs/modal-precios-ayc/modal-precios-a
   styleUrl: './precios-ayc-page.component.scss',
 })
 export default class PreciosAycPageComponent implements OnInit {
-modalAgregar:boolean = false;
-modalcolores:boolean = false; 
+  modalAgregar: boolean = false;
+  modalcolores: boolean = false;
 
-public preciosdata:PreciosAyc[] = []; 
-public itemReg:PreciosAyc|undefined; 
-public dataColores:colorPrecioayc[] = []; 
-constructor(public preciosaycService:PreciosaycService, public cdr: ChangeDetectorRef){}
+  public preciosdata: PreciosAyc[] = [];
+  public itemReg: PreciosAyc | undefined;
+  public dataColores: colorPrecioayc[] = [];
+  constructor(public preciosaycService: PreciosaycService, public cdr: ChangeDetectorRef) { }
 
-ngOnInit(): void { this.obtenerColores(); this.obtenerPrecios(); }
+  ngOnInit(): void { this.obtenerColores(); this.obtenerPrecios(); }
 
 
-obtenerColores()
-{
-   this.preciosaycService.getColoresPreciosAYC().subscribe({
-        next: (data) => {
-          this.dataColores = data; 
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-            console.log(error);
-            Swal.fire("Oops...", "Error al procesar la solicitud", "error");
-        },
-      });
-}
-abrirModalAgregar()
-{
-  this.itemReg = undefined; 
-  this.modalAgregar = true; 
-}
-
-abrirModalEditar(item:PreciosAyc)
-{
-  this.itemReg = item; 
-  this.modalAgregar = true; 
-}
-
-abrirModalColores()
-{
-  this.modalcolores = true; 
-}
-
-obtenerPrecios()
-{
-   Swal.fire({
-        target: document.body,
-        allowOutsideClick: false,
-        icon: 'info',
-        text: 'Espere por favor...',
-        didOpen: () => Swal.showLoading(),
-        customClass: {
-          container: 'swal-topmost'
-        }
-      });
-
-   this.preciosaycService.getPreciosAYC().subscribe({
+  obtenerColores() {
+    this.preciosaycService.getColoresPreciosAYC().subscribe({
       next: (data) => {
-        this.preciosdata = data;
-        console.log(data); 
-        Swal.close(); 
+        this.dataColores = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
-          console.log(error);
-          Swal.fire("Oops...", "Error al procesar la solicitud", "error");
+        console.log(error);
+        Swal.fire("Oops...", "Error al procesar la solicitud", "error");
       },
     });
-}
+  }
+  abrirModalAgregar() {
+    this.itemReg = undefined;
+    this.modalAgregar = true;
+  }
 
-confirmarEliminar(id:number)
-{
+  abrirModalEditar(item: PreciosAyc) {
+    this.itemReg = item;
+    this.modalAgregar = true;
+  }
+
+  abrirModalColores() {
+    this.modalcolores = true;
+  }
+
+  obtenerPrecios() {
     Swal.fire({
-       title: "ESTÁS SEGURO?",
-       text: "ESTÁS SEGURO QUE DESEAS ELIMINAR?",
-       icon: "warning",
-       showCancelButton: true,
-       confirmButtonColor: "#3085d6",
-       cancelButtonColor: "#d33",
-       confirmButtonText: "Sí, eliminar!",
-       customClass: {
-         container: 'swal-topmost'
-       }
-     }).then((result) => {
-       if (result.isConfirmed) {
-         this.eliminar(id);
-       }
-     });
-}
+      target: document.body,
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    });
 
-eliminar(id:number)
-{
+    this.preciosaycService.getPreciosAYC().subscribe({
+      next: (data) => {
+        this.preciosdata = data;
+        console.log(data);
+        Swal.close();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        Swal.fire("Oops...", "Error al procesar la solicitud", "error");
+      },
+    });
+  }
 
-  this.preciosaycService.eliminarPreciosAYC(id).subscribe({
-        next: (data) => {
-            Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Eliminado correctamente",
-                            showConfirmButton: false,
-                            timer: 1500,
-                            customClass: {
-         container: 'swal-topmost'
-       }
-                          });
-          this.obtenerPrecios(); 
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-            console.log(error);
-            Swal.fire("Oops...", "Error al procesar la solicitud", "error");
-        },
-      });
-}
+  confirmarEliminar(id: number) {
+    Swal.fire({
+      title: "ESTÁS SEGURO?",
+      text: "ESTÁS SEGURO QUE DESEAS ELIMINAR?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar!",
+      customClass: {
+        container: 'swal-topmost'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.eliminar(id);
+      }
+    });
+  }
 
-obtenerColor(id:number):string
-{
-  let color = "";
-  let temp = this.dataColores.filter(x=> x.id == id);
-  if(temp.length>0){ color = temp[0].color;} 
-  return color; 
-}
+  eliminar(id: number) {
 
-obtenerPrecio(id:number):string
-{
-  let precio = "";
-  let temp = this.dataColores.filter(x=> x.id == id);
-  if(temp.length>0){ precio = temp[0].precio.toString();} 
-  return precio; 
-}
+    this.preciosaycService.eliminarPreciosAYC(id).subscribe({
+      next: (data) => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Eliminado correctamente",
+          showConfirmButton: false,
+          timer: 1500,
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+        this.obtenerPrecios();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+        Swal.fire("Oops...", "Error al procesar la solicitud", "error");
+      },
+    });
+  }
 
-   getTextColor(hexColor: string): string {
+  obtenerColor(id: number): string {
+    let color = "";
+    let temp = this.dataColores.filter(x => x.id == id);
+    if (temp.length > 0) { color = temp[0].color; }
+    return color;
+  }
+
+  obtenerPrecio(id: number): string {
+    let precio = "";
+    let temp = this.dataColores.filter(x => x.id == id);
+    if (temp.length > 0) { precio = temp[0].precio.toString(); }
+    return precio;
+  }
+
+  getTextColor(hexColor: string): string {
     // Convertir HEX a RGB
     let r, g, b;
     if (hexColor.startsWith('#')) {

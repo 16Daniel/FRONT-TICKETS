@@ -8,7 +8,7 @@ import { TableModule } from "primeng/table";
 import * as XLSX from 'xlsx';
 
 import { AceiteService } from '../../services/aceite.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ReporteRA } from '../../interfaces/aceite.model';
 
 @Component({

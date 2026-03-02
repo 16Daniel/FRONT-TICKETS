@@ -8,7 +8,7 @@ import { RequesterTicketsListComponent } from '../requester-tickets-list/request
 import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-priority-tickets-accordion',

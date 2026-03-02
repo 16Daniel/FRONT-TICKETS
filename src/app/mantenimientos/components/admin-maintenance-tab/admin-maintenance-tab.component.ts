@@ -29,7 +29,7 @@ import { MaintenanceMtooService } from '../../services/maintenance-mtto.service'
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 
 @Component({

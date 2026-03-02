@@ -31,7 +31,7 @@ import { FirebaseStorageService } from '../../../shared/services/firebase-storag
 import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { ActivoFijo } from '../../../activos-fijos/interfaces/activo-fijo.model';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-modal-generate-ticket',

@@ -15,7 +15,7 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ModalUserCreateComponent } from '../../../usuarios/dialogs/modal-user-create/modal-user-create.component';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Rol } from '../../../roles/interfaces/rol.model';
 
 @Component({

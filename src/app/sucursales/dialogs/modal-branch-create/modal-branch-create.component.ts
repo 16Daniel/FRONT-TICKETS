@@ -7,7 +7,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../interfaces/sucursal.model';
+import { Sucursal } from '../../interfaces/sucursal.interface';
 import { DispositivoTPV } from '../../../activos-fijos/interfaces/dispositivo-tpv';
 
 @Component({
