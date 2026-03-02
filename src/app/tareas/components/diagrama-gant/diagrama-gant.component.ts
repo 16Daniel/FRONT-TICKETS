@@ -64,8 +64,8 @@ export class DiagramaGantComponent implements OnInit {
     const minDate = new Date(Math.min(...starts));
     const maxDate = new Date(Math.max(...ends));
 
-    console.log('Fecha inicio calculada:', minDate.toLocaleDateString());
-    console.log('Fecha fin calculada:', maxDate.toLocaleDateString());
+    // console.log('Fecha inicio calculada:', minDate.toLocaleDateString());
+    // console.log('Fecha fin calculada:', maxDate.toLocaleDateString());
 
     return {
       min: minDate,

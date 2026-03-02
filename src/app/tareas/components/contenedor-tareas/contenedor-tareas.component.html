@@ -16,10 +16,10 @@
         <span class="contador">{{ toDo.length }}</span>
       </div>
         <div class="scroll">
-          <app-task-card *ngFor="let t of filtrarTareasProyectos(toDo)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+          <app-tarjeta-tareas *ngFor="let t of filtrarTareasProyectos(toDo)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
             [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
             [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-          </app-task-card>
+          </app-tarjeta-tareas>
         </div>
       </div>
 
@@ -31,10 +31,10 @@
         <span class="contador">{{ working.length }}</span>
       </div>
         <div class="scroll">
-          <app-task-card *ngFor="let t of filtrarTareasProyectos(working)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+          <app-tarjeta-tareas *ngFor="let t of filtrarTareasProyectos(working)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
             [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
             [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-          </app-task-card>
+          </app-tarjeta-tareas>
         </div>
       </div>
 
@@ -46,10 +46,10 @@
         <span class="contador">{{ check.length }}</span>
       </div>
         <div class="scroll">
-          <app-task-card *ngFor="let t of filtrarTareasProyectos(check)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+          <app-tarjeta-tareas *ngFor="let t of filtrarTareasProyectos(check)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
             [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
             [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-          </app-task-card>
+          </app-tarjeta-tareas>
         </div>
       </div>
 
@@ -61,10 +61,10 @@
         <span class="contador">{{ done.length }}</span>
       </div>
         <div class="scroll">
-          <app-task-card *ngFor="let t of filtrarTareasProyectos(done)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
+          <app-tarjeta-tareas *ngFor="let t of filtrarTareasProyectos(done)" [tarea]="t" (seleccionarTarea)="onSeleccionar($event)"
             [nombreSucursal]="sucursalesMap.get(t.idSucursal) || ''"
             [esOtraSucursal]="t.idSucursal !== idSucursalSeleccionada">
-          </app-task-card>
+          </app-tarjeta-tareas>
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ import { Tarea } from '../interfaces/tarea.interface';
 })
 export class TareasService {
   private pathName: string = 'tareas';
-   private tasksSubject = new BehaviorSubject<any[]>([]);
+  private tasksSubject = new BehaviorSubject<any[]>([]);
   tasks$ = this.tasksSubject.asObservable();
 
   constructor(private firestore: Firestore) { }

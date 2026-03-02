@@ -15,7 +15,10 @@
   [mostrarProyectos]="mostrarProyectos"></app-diagrama-gant>
 }
 @else {
-<app-contenedor-tareas [toDo]="toDo" [working]="working" [check]="check" [done]="done" [sucursalesMap]="sucursalesMap"
+<app-contenedor-tareas [toDo]="mostrarProyectos ? filtrarProyectos( toDo) : filtrarTareas(toDo)"
+  [working]="mostrarProyectos ? filtrarProyectos( working) : filtrarTareas(working)"
+  [check]="mostrarProyectos ? filtrarProyectos( check) : filtrarTareas( check)"
+  [done]="mostrarProyectos ? filtrarProyectos( done) : filtrarTareas(done)" [sucursalesMap]="sucursalesMap"
   [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)"
   [textoBusqueda]="textoBusqueda" [mostrarProyectos]="mostrarProyectos">
 </app-contenedor-tareas>

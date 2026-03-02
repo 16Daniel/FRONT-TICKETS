@@ -1,7 +1,7 @@
 <div class="row align-items-center">
 
   <!-- TOGGLE LOCAL / GLOBAL -->
-  <div class="col-12 mb-3">
+  <div class="col-12 mb-3" *ngIf="usuario.idRol == '1'">
     <div class="d-flex gap-2">
 
       <button type="button" class="btn" (click)="onToggleModo(false)" [class.btn-primary]="!mostrarFiltrosGlobales"
@@ -20,7 +20,7 @@
   <!-- ========================= -->
   <!-- FILTROS LOCALES (ACTUALES) -->
   <!-- ========================= -->
-  <div class="row" *ngIf="!mostrarFiltrosGlobales">
+  <div class="row" *ngIf="!mostrarFiltrosGlobales && usuario.idRol == '1'">
 
     <!-- SUCURSAL -->
     <div class="col-md-4">
