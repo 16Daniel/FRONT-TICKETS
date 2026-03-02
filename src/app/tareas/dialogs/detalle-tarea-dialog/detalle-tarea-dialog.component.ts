@@ -437,17 +437,30 @@ export class DetalleTareaDialogComponent implements OnInit {
       .filter(t =>
         Array.isArray(t.idsResponsables) &&
         t.idsResponsables.includes(this.responsableTarea.id!)
-      );
+      )
+      .sort((a, b) => {
+        if (!this.tarea?.idProyectoRelacionado) return 0;
+
+        if (a.id === this.tarea.idProyectoRelacionado) return -1;
+        if (b.id === this.tarea.idProyectoRelacionado) return 1;
+
+        return 0;
+      });
   }
 
   obtenerTareasRelacionadas() {
     this.tareasService.getAll()
       .subscribe(tareas => this.tareasRelacionadas = tareas
-      .filter((x: Tarea) => x.idProyectoRelacionado == this.tarea.id));
+        .filter((x: Tarea) => x.idProyectoRelacionado == this.tarea.id));
   }
 
   seleccionarTarea(tarea: Tarea) {
     this.tareaSeleccionada = tarea;
+    this.abrirModalDetalle = true;
+  }
+
+  abrirProyecto(proyecto: Tarea) {
+    this.tareaSeleccionada = proyecto;
     this.abrirModalDetalle = true;
   }
 

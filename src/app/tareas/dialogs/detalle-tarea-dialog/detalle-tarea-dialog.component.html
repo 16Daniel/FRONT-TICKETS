@@ -22,16 +22,17 @@
           <button *ngIf="tarea.esProyecto" class="btn btn-primary"
             style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
             (click)="mostrarPanelTareasAsociadas = !mostrarPanelTareasAsociadas">
-            <i class="bx bx-list-ul bx-sm mt-2" style="color: #1976d2" pTooltip="VER TAREAS DEL PROYECTO"
-              tooltipPosition="top">
+            <i class="bx bx-list-ul bx-sm mt-2" [style.color]="tareasRelacionadas.length > 0 ? '#fc7100' : '#1976d2'"
+              pTooltip="VER TAREAS DEL PROYECTO" tooltipPosition="top">
             </i>
           </button>
 
           <button *ngIf="!tarea.esProyecto && tareaAsignadaAMi()" class="btn btn-primary"
             style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
             (click)="mostrarPanelProyectos = !mostrarPanelProyectos">
-            <i class="bx bx-network-chart bx-sm mt-2" style="color: #1976d2" pTooltip="LIGAR A PROYECTO"
-              tooltipPosition="top">
+            <i class="bx bx-network-chart bx-sm mt-2"
+              [style.color]="tarea.idProyectoRelacionado ? '#fc7100' : '#1976d2'" style="color: #1976d2"
+              pTooltip="LIGAR A PROYECTO" tooltipPosition="top">
             </i>
           </button>
 
@@ -93,7 +94,7 @@
           </div>
 
           <!-- ===================================== -->
-          <!-- PANEL DESLIZABLE - TAREAS PROYECTO -->
+          <!-- PANEL DESLIZABLE - PROYECTO DE LA TAREA -->
           <!-- ===================================== -->
           <div *ngIf="mostrarPanelProyectos && !tarea.esProyecto" class="panel-proyecto">
             <!-- HEADER -->
@@ -109,8 +110,10 @@
             </div>
 
             <div class="panel-body">
-              <div *ngFor="let p of misProyectos" class="proyecto-item"
+              <div *ngFor="let p of misProyectos"
+                class="proyecto-item d-flex justify-content-between align-items-center"
                 [class.active]="tarea.idProyectoRelacionado == p.id" (click)="seleccionarProyecto(p)">
+
                 <div class="d-flex flex-column">
                   <span class="fw-semibold text-dark">
                     {{ p.titulo }}
@@ -120,10 +123,23 @@
                   </small>
                 </div>
 
-                <div *ngIf="tarea.idProyectoRelacionado === p.id" class="d-flex align-items-center gap-1 badge-ligado">
-                  <i class="pi pi-check-circle"></i>
-                  <small class="fw-bold">LIGADO</small>
+                <div class="d-flex align-items-center gap-2">
+
+                  <!-- Badge ligado -->
+                  <div *ngIf="tarea.idProyectoRelacionado === p.id"
+                    class="d-flex align-items-center gap-1 badge-ligado">
+                    <i class="pi pi-check-circle"></i>
+                    <small class="fw-bold">LIGADO</small>
+                  </div>
+
+                  <!-- Botón abrir -->
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                    (click)="abrirProyecto(p); $event.stopPropagation()">
+                    ABRIR
+                  </button>
+
                 </div>
+
               </div>
             </div>
 
