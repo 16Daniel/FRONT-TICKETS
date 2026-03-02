@@ -25,7 +25,8 @@ export class CrearSucursalDialogComponent implements OnInit {
   @Input() esNuevaSucursal: boolean = true;
   idSucursalEditar: string = '';
   usuario: Usuario;
-
+  cantidadTVs: number = 0;
+  cantidadBocinas: number = 0;
   cantidadTabletas: number = 0;
   cantidadTPVs: number = 0;
 
@@ -38,6 +39,8 @@ export class CrearSucursalDialogComponent implements OnInit {
   async ngOnInit() {
     if (!this.esNuevaSucursal) {
       this.idSucursalEditar = this.sucursal.id;
+      if (this.sucursal?.tvs) this.cantidadTVs = this.sucursal.tvs.length;
+      if (this.sucursal?.bocinas) this.cantidadBocinas = this.sucursal.bocinas.length;
       if (!this.sucursal.tabletas) this.sucursal.tabletas = [];
       if (!this.sucursal.tpvs) this.sucursal.tpvs = [];
       if (!this.sucursal.tabletasRequeridas) this.sucursal.tabletasRequeridas = 0;
@@ -88,6 +91,7 @@ export class CrearSucursalDialogComponent implements OnInit {
 
   actualizar() {
     this.sucursal = { ...this.sucursal, id: parseInt(this.sucursal.id) }
+    // console.log(this.sucursal)
     this.branchesService
       .update(this.sucursal, this.idSucursalEditar)
       .then(() => {
@@ -140,4 +144,39 @@ export class CrearSucursalDialogComponent implements OnInit {
     }
   }
 
+  onTVsChange(cantidad: number) {
+
+    if (!this.sucursal.tvs) this.sucursal.tvs = [];
+
+    while (this.sucursal.tvs.length < cantidad) {
+      this.sucursal.tvs.push({
+        id: crypto.randomUUID(),
+        nombre: '',
+        estatus: '1',
+        eliminado: false
+      });
+    }
+
+    while (this.sucursal.tvs.length > cantidad) {
+      this.sucursal.tvs.pop();
+    }
+  }
+
+  onBocinasChange(cantidad: number) {
+
+    if (!this.sucursal.bocinas) this.sucursal.bocinas = [];
+
+    while (this.sucursal.bocinas.length < cantidad) {
+      this.sucursal.bocinas.push({
+        id: crypto.randomUUID(),
+        nombre: '',
+        estatus: '1',
+        eliminado: false
+      });
+    }
+
+    while (this.sucursal.bocinas.length > cantidad) {
+      this.sucursal.bocinas.pop();
+    }
+  }
 }

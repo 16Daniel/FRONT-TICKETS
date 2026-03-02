@@ -8,13 +8,13 @@ import { PreciosaycService } from '../../services/preciosayc.service';
 import { colorPrecioayc } from '../../interfaces/color-precio-ayc.interface';
 
 @Component({
-  selector: 'app-modal-precios-ayc',
+  selector: 'app-precios-ayc-dialog',
   standalone: true,
   imports: [CommonModule, DialogModule, FormsModule],
-  templateUrl: './modal-precios-ayc.html',
-  styleUrl: './modal-precios-ayc.scss',
+  templateUrl: './precios-ayc-dialog.component.html',
+  styleUrl: './precios-ayc-dialog.component.scss',
 })
-export class ModalPreciosAyc implements OnInit {
+export class PreciosAycDialogComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Output() actualizarData = new EventEmitter<void>();

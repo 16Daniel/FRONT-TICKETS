@@ -3,16 +3,16 @@ import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core'
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 
-import { ModalAgregarPrecioAyc } from "../../dialogs/modal-agregar-precio-ayc/modal-agregar-precio-ayc";
 import { PreciosaycService } from '../../services/preciosayc.service';
-import { ModalPreciosAyc } from "../../dialogs/modal-precios-ayc/modal-precios-ayc";
 import { PreciosAyc } from '../../interfaces/precios-AyC.interface';
 import { colorPrecioayc } from '../../interfaces/color-precio-ayc.interface';
+import { AgregarPrecioAycDialogComponent } from '../../dialogs/agregar-precio-ayc-dialog/agregar-precio-ayc-dialog.component';
+import { PreciosAycDialogComponent } from '../../dialogs/precios-ayc-dialog/precios-ayc-dialog.component';
 
 @Component({
   selector: 'app-precios-ayc-page',
   standalone: true,
-  imports: [CommonModule, TableModule, ModalAgregarPrecioAyc, ModalPreciosAyc],
+  imports: [CommonModule, TableModule, AgregarPrecioAycDialogComponent, PreciosAycDialogComponent],
   templateUrl: './precios-ayc-page.component.html',
   styleUrl: './precios-ayc-page.component.scss',
 })

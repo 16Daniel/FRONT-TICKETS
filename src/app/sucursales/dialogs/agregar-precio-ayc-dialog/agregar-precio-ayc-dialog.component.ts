@@ -14,10 +14,10 @@ import { SucursalRegion } from '../../interfaces/sucursal-region.interface';
   selector: 'app-modal-agregar-precio-ayc',
   standalone: true,
   imports: [CommonModule, FormsModule, DialogModule, DropdownModule],
-  templateUrl: './modal-agregar-precio-ayc.html',
-  styleUrl: './modal-agregar-precio-ayc.scss',
+  templateUrl: './agregar-precio-ayc-dialog.component.html',
+  styleUrl: './agregar-precio-ayc-dialog.component.scss',
 })
-export class ModalAgregarPrecioAyc implements OnInit {
+export class AgregarPrecioAycDialogComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Output() actualizarData = new EventEmitter<void>();
