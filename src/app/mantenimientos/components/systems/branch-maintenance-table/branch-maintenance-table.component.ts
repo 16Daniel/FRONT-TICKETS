@@ -11,7 +11,7 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-branch-maintenance-table',
@@ -28,13 +28,13 @@ import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.inte
   templateUrl: './branch-maintenance-table.component.html',
 })
 export class BranchMaintenanceTableComponent {
-  @Input() mantenimientos: Mantenimiento10x10[] = [];
+  @Input() mantenimientos: MantenimientoSys[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idSucursal?: string;
   @Input() mostrarChat: boolean = false;
-  @Output() clickEvent = new EventEmitter<Mantenimiento10x10>();
+  @Output() clickEvent = new EventEmitter<MantenimientoSys>();
 
-  mantenimientoSeleccionado: Mantenimiento10x10 | undefined;
+  mantenimientoSeleccionado: MantenimientoSys | undefined;
   mostrarModalComentarios: boolean = false;
   mostrarModalChat: boolean = false;
   mostrarModalSubirImagen: boolean = false;
@@ -115,7 +115,7 @@ export class BranchMaintenanceTableComponent {
     }
   }
 
-  abrirModalVisorImagen(mantenimiento: Mantenimiento10x10, campo: string) {
+  abrirModalVisorImagen(mantenimiento: MantenimientoSys, campo: string) {
     this.imagenes = [];
     this.tituloVisor = campo;
 
@@ -166,7 +166,7 @@ export class BranchMaintenanceTableComponent {
     this.mostrarModalChat = true;
   }
 
-  verificarChatNoLeido(mantenimiento: Mantenimiento10x10) {
+  verificarChatNoLeido(mantenimiento: MantenimientoSys) {
     if (!mantenimiento.participantesChat)
       mantenimiento.participantesChat = [];
 

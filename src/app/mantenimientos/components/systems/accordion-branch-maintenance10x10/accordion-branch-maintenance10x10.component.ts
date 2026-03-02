@@ -9,8 +9,8 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
 import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 
 @Component({
@@ -22,13 +22,13 @@ import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
 })
 
 export class AccordionBranchMaintenance10x10Component {
-  @Input() mantenimientos: Mantenimiento10x10[] = [];
+  @Input() mantenimientos: MantenimientoSys[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
 
-  mantenimientosOriginal: Mantenimiento10x10[] = [];
-  mantenimientosOrdenados: Mantenimiento10x10[] = [];
+  mantenimientosOriginal: MantenimientoSys[] = [];
+  mantenimientosOrdenados: MantenimientoSys[] = [];
 
   usuariosHelp: Usuario[] = [];
 
@@ -142,7 +142,7 @@ export class AccordionBranchMaintenance10x10Component {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): Mantenimiento10x10[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSys[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 

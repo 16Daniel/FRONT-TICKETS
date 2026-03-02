@@ -33,10 +33,10 @@ import { MaintenanceMtooService } from '../../services/maintenance-mtto.service'
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
 import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-calendar-builder-page',
@@ -68,7 +68,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
   usuarioseleccionado: Usuario | undefined;
   fecha = new Date();
   ordenarxmantenimiento: boolean = false;
-  arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
+  arr_ultimosmantenimientos: MantenimientoSys[] = [];
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
   itemtk: Ticket | undefined;
@@ -371,7 +371,6 @@ export default class CalendarBuilderPageComponent implements OnInit {
 
             if (this.usuario.idArea == '4') {
               let freidoras = await this.fixedAssetsService.obtenerFredioras(sucursal.id);
-              console.log(freidoras)
 
               if (freidoras.length == 0) {
                 this.messageService.add({
@@ -400,6 +399,10 @@ export default class CalendarBuilderPageComponent implements OnInit {
             else {
               const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
               await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+
+              if (this.usuario.idArea == '1') {
+                this.registrarMantenimientoTvs(sucursal, participantesChat);
+              }
             }
           }
 
@@ -420,6 +423,34 @@ export default class CalendarBuilderPageComponent implements OnInit {
     }
     this.loading = false;
     this.cdr.detectChanges();
+  }
+
+  registrarMantenimientoTvs(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
+    if (this.usuario.idArea == '1') {
+      let tvs = sucursal.tvs;
+
+      if (tvs && tvs.length == 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Warning',
+          detail: 'Se registró la visita pero no se encontraron tv´s en sucursal',
+          life: 7000
+        }); return;
+      }
+
+      tvs!.forEach(async element => {
+        const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+
+        // this.usuario.idArea == '1' ?
+        //   await servicio.create2(
+        //     sucursal.id,
+        //     this.usuarioseleccionado!.id,
+        //     this.fecha,
+        //     element.id!,
+        //     participantesChat
+        //   ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+      });
+    }
   }
 
   tieneMantenimientosActivos(idSucursal: string | number): boolean {
@@ -497,7 +528,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.arr_ultimosmantenimientos = data.filter(
-            (elemento: any): elemento is Mantenimiento10x10 => elemento !== null
+            (elemento: any): elemento is MantenimientoSys => elemento !== null
           );
           this.loading = false;
           this.cdr.detectChanges();

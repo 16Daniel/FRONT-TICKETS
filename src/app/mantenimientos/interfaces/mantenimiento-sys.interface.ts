@@ -2,7 +2,7 @@ import { Timestamp } from "@angular/fire/firestore";
 import { Comentario } from "../../shared/interfaces/comentario-chat.model";
 import { ParticipanteChat } from "../../shared/interfaces/participante-chat.model";
 
-export interface Mantenimiento10x10 {
+export interface MantenimientoSys {
   id?: string | any;
   idSucursal: string | undefined;
   idUsuarioSoporte: string | undefined;

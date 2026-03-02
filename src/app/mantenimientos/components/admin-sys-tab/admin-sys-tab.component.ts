@@ -30,7 +30,7 @@ import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -70,7 +70,7 @@ export class AdminSysTabComponent {
   mostrarModalCompras: boolean = false;
   mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: Mantenimiento10x10[] = [];
+  mantenimientos: MantenimientoSys[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;

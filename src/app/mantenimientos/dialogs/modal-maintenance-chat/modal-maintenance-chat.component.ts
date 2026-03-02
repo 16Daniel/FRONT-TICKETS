@@ -9,7 +9,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-modal-maintenance-chat',
@@ -30,7 +30,7 @@ export class ModalMaintenanceChatComponent {
   @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 
-  mantenimiento?: Mantenimiento10x10;
+  mantenimiento?: MantenimientoSys;
   userdata: Usuario;
   comentario: string = '';
   private mantenimientoSub?: Subscription;

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-modal-maintenance-detail',
@@ -12,7 +12,7 @@ import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.inte
   styleUrl: './modal-maintenance-detail.component.scss'
 })
 export class ModalMaintenanceDetailComponent {
-  @Input() mantenimiento: Mantenimiento10x10 | undefined;
+  @Input() mantenimiento: MantenimientoSys | undefined;
   @Input() mostrarModalDetalleMantenimeinto: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 

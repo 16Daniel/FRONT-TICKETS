@@ -19,7 +19,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -58,7 +58,7 @@ export class BranchesSysTabComponent {
   mostrarTPVs: boolean = false;
 
   sucursal: Sucursal | undefined;
-  mantenimientoActivo: Mantenimiento10x10 | null = null;
+  mantenimientoActivo: MantenimientoSys | null = null;
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;

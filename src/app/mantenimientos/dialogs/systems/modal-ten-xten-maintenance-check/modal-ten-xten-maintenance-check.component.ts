@@ -15,7 +15,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { ProgressBarComponent } from '../../../components/progress-bar/progress-bar.component';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-check',
@@ -34,11 +34,11 @@ import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.inte
 })
 export class ModalTenXtenMaintenanceCheckComponent {
   @Input() showModal10x10: boolean = false;
-  @Input() mantenimientoActivo: Mantenimiento10x10 | null = null;
+  @Input() mantenimientoActivo: MantenimientoSys | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   progreso: number = 0;
-  mantenimientos: Mantenimiento10x10[] = [];
+  mantenimientos: MantenimientoSys[] = [];
   formularioDeMantenimiento: FormGroup | any;
   opcionesDeMantenimiento = [
     { label: 'MANTENIMIENTO CAJA', controlName: 'mantenimientoCaja', tooltip: 'AREA Y CABLEADO DE CAJA ACOMODADOS Y MTTO DE PC' },
@@ -119,7 +119,7 @@ export class ModalTenXtenMaintenanceCheckComponent {
 
     console.log(this.mantenimientoActivo)
 
-    const mantenimiento: Mantenimiento10x10 = {
+    const mantenimiento: MantenimientoSys = {
       ...this.formularioDeMantenimiento.value,
       id: this.mantenimientoActivo?.id,
       participantesChat: this.mantenimientoActivo?.participantesChat,

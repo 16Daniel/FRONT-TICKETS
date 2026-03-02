@@ -18,7 +18,7 @@ import {
 import { Timestamp } from '@angular/fire/firestore';
 import { combineLatest, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
-import { Mantenimiento10x10 } from '../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../interfaces/mantenimiento-sys.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
   constructor(private firestore: Firestore) { }
 
   async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
-    const mantenimiento: Mantenimiento10x10 = {
+    const mantenimiento: MantenimientoSys = {
       idSucursal: idSucursal,
       idUsuarioSoporte: idUsuario,
       fecha: fecha,
@@ -56,7 +56,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     });
   }
 
-  calcularPorcentaje(mantenimiento: Mantenimiento10x10): number {
+  calcularPorcentaje(mantenimiento: MantenimientoSys): number {
     if (!mantenimiento) return 0;
 
     let porcentaje = 0;
@@ -80,14 +80,14 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return porcentaje;
   }
 
-  get(): Observable<Mantenimiento10x10[]> {
+  get(): Observable<MantenimientoSys[]> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
     const q = query(mantenimientoRef, where('estatus', '==', true));
-    return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento10x10[]>;
+    return collectionData(q, { idField: 'id' }) as Observable<MantenimientoSys[]>;
   }
 
-  getById(id: string): Observable<Mantenimiento10x10 | undefined> {
-    return new Observable<Mantenimiento10x10 | undefined>((subscriber) => {
+  getById(id: string): Observable<MantenimientoSys | undefined> {
+    return new Observable<MantenimientoSys | undefined>((subscriber) => {
       const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
 
       const unsubscribe = onSnapshot(
@@ -97,7 +97,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
             subscriber.next({
               id: snapshot.id,
               ...snapshot.data(),
-            } as Mantenimiento10x10);
+            } as MantenimientoSys);
           } else {
             subscriber.next(undefined);
           }
@@ -110,7 +110,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     });
   }
 
-  async update(id: string, mantenimiento: Mantenimiento10x10): Promise<void> {
+  async update(id: string, mantenimiento: MantenimientoSys): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await updateDoc(mantenimientoRef, {
       ...mantenimiento,
@@ -125,7 +125,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
   getMantenimientoActivo(
     idSucursal: string | undefined,
-    callback: (mantenimiento: Mantenimiento10x10 | null) => void
+    callback: (mantenimiento: MantenimientoSys | null) => void
   ): () => void {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
@@ -149,7 +149,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
         const mantenimiento = {
           id: primerDoc.id,
           ...primerDoc.data(),
-        } as Mantenimiento10x10;
+        } as MantenimientoSys;
         callback(mantenimiento); // Devuelve el primer registro
       }
     });
@@ -162,7 +162,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     fechaInicio: Date,
     fechaFin: Date,
     idSucursal: string,
-    callback: (mantenimientos: Mantenimiento10x10[] | null) => void
+    callback: (mantenimientos: MantenimientoSys[] | null) => void
   ): () => void {
     fechaInicio.setHours(0, 0, 0, 0);
 
@@ -185,7 +185,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
         const mantenimientos = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        })) as Mantenimiento10x10[];
+        })) as MantenimientoSys[];
         callback(mantenimientos);
       }
     });
@@ -275,10 +275,10 @@ export class Maintenance10x10Service implements IMantenimientoService {
     const consulta = query(coleccionRef, ...filtros);
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({
+    const documentos: MantenimientoSys[] = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    } as Mantenimiento10x10));
+    } as MantenimientoSys));
 
     return documentos;
   }
@@ -304,15 +304,15 @@ export class Maintenance10x10Service implements IMantenimientoService {
     const consulta = query(coleccionRef, ...filtros);
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Mantenimiento10x10[] = querySnapshot.docs.map(doc => ({
+    const documentos: MantenimientoSys[] = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    } as Mantenimiento10x10));
+    } as MantenimientoSys));
 
     return documentos;
   }
 
-  getLastMaintenanceByBranch(idSucursal: string): Observable<Mantenimiento10x10[]> {
+  getLastMaintenanceByBranch(idSucursal: string): Observable<MantenimientoSys[]> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
     const q = query(
       mantenimientoRef,
@@ -321,7 +321,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
       orderBy('fecha', 'desc'),
       limit(1)
     );
-    return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento10x10[]>;
+    return collectionData(q, { idField: 'id' }) as Observable<MantenimientoSys[]>;
   }
 
   async obtenerMantenimientosEntreFechas(

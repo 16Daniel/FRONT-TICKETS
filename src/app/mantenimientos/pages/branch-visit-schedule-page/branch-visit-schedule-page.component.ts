@@ -16,9 +16,9 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-branch-visit-schedule-page',
@@ -32,7 +32,7 @@ export default class BranchVisitSchedulePageComponent implements OnInit {
   usuariosHelp: Usuario[] = [];
   colorUsuario: ColorUsuario | undefined;
   tickets: Ticket[] = [];
-  arr_ultimosmantenimientos: Mantenimiento10x10[] = []; // <--- revisar
+  arr_ultimosmantenimientos: MantenimientoSys[] = []; // <--- revisar
   usuario: Usuario;
   arr_data: VisitaProgramada[] = [];
   sucursalSeleccionada: Sucursal | undefined;

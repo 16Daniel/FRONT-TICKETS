@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-modal-sys-mtto-imguploader',
@@ -16,7 +16,7 @@ import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.inte
 })
 export class ModalSysMttoImguploaderComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() mantenimiento: Mantenimiento10x10 | undefined;
+  @Input() mantenimiento: MantenimientoSys | undefined;
   @Input() titulo: string | undefined;
   @Output() closeEvent = new EventEmitter<boolean>();
 

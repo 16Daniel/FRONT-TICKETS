@@ -33,7 +33,7 @@ import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -74,7 +74,7 @@ export class TicketsTabComponent implements OnInit {
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
-  mantenimientoActivo: Mantenimiento10x10 | null = null;
+  mantenimientoActivo: MantenimientoSys | null = null;
   areas: Area[] = [];
   subscriptiontk: Subscription | undefined;
   usuario: Usuario;

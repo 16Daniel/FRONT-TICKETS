@@ -11,7 +11,7 @@ import { TicketsService } from '../../services/tickets.service';
 import { Ticket } from '../../interfaces/ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 
 
 @Component({
@@ -64,7 +64,7 @@ export class ModalBranchRatingComponent {
     });
   }
 
-  private calcularPorcentajeMantenimiento(mantenimiento: Mantenimiento10x10) {
+  private calcularPorcentajeMantenimiento(mantenimiento: MantenimientoSys) {
     let porcentaje = 0;
     mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
     mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
