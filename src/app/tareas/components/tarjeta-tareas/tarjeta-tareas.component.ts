@@ -25,10 +25,10 @@ import { Timestamp } from '@angular/fire/firestore';
 @Component({
   selector: 'app-tarjeta-tareas',
   standalone: true,
-  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent,FormsModule],
+  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent, FormsModule],
   providers: [MessageService],
   templateUrl: './tarjeta-tareas.component.html',
-  styleUrls:[
+  styleUrls: [
     './tarjeta-tareas.component.scss',
     './tarjeta-tareas-checkbox.component.scss'
   ]
@@ -53,9 +53,9 @@ export class TarjetaTareasComponent implements OnInit {
   sucursalesService = inject(BranchesService);
   estatusService = inject(StatusTaskService);
   usuario: Usuario;
-  checkRevision:boolean = false;
-  responsable:ResponsableTarea;
-   constructor(public cdr:ChangeDetectorRef){
+  checkRevision: boolean = false;
+  responsable: ResponsableTarea;
+  constructor(public cdr: ChangeDetectorRef) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!);
   }
@@ -193,64 +193,54 @@ export class TarjetaTareasComponent implements OnInit {
     return this.sucursales.find(x => x.id == idSucursal)?.nombre ?? '';
   }
 
-girar(id:string)
-{
- let card = document.getElementById(id);
-  if(card != null)
-    {
-       let front = document.getElementById('front-task-'+id);
+  girar(id: string) {
+    let card = document.getElementById(id);
+    if (card != null) {
+      let front = document.getElementById('front-task-' + id);
       card!.classList.toggle('flipped');
-      if(card.classList.contains('flipped'))
-        {
-          let front = document.getElementById('front-task-'+id);
-          let back = document.getElementById('back-task-'+id);
-          back!.style.height = (front!.offsetHeight-95)+'px';
+      if (card.classList.contains('flipped')) {
+        let front = document.getElementById('front-task-' + id);
+        let back = document.getElementById('back-task-' + id);
+        back!.style.height = (front!.offsetHeight - 95) + 'px';
 
-        }
+      }
     }
-}
+  }
 
-async guardarNotas()
-{
-   this.girar(this.tarea.id!);
-   setTimeout(() => {
+  async guardarNotas() {
+    this.girar(this.tarea.id!);
+    setTimeout(() => {
       this.tareasService.update(this.tarea, this.tarea.id!);
       this.showMessage('success', 'Success', 'Guardado correctamente');
-   }, 600);
-}
+    }, 600);
+  }
 
-obtenerRevision():boolean
-{
-  let revisiones = this.tarea.revisiones;
-    if(revisiones == undefined){ revisiones = [];}
-  let temp:boolean =revisiones.filter(x =>x.idUsuario == this.responsable.pin && x.ultimafecha >= Timestamp.fromDate(new Date())).length>0
-  ? this.tarea.revisiones.filter(x =>x.idUsuario == this.responsable.pin)[0].revisado : false;
-  return temp;
-}
-
-async atualizarRevision()
-{
-   let nuevafecha = new Date();
-   nuevafecha.setDate(nuevafecha.getDate()+1);
-    nuevafecha.setHours(2,0,0,0);
+  obtenerRevision(): boolean {
     let revisiones = this.tarea.revisiones;
-    if(revisiones == undefined){ revisiones = [];}
-  if(revisiones.filter(x=>x.idUsuario == this.responsable.pin).length == 0)
-    {
-        revisiones.push({idUsuario:this.responsable.pin,revisado:this.checkRevision,ultimafecha:Timestamp.fromDate(nuevafecha)});
-    } else
-      {
-          for(let item of revisiones)
-            {
-              if(item.idUsuario == this.responsable.pin)
-                {
-                  item.ultimafecha = Timestamp.fromDate(nuevafecha);
-                  item.revisado = this.checkRevision;
-                }
-            }
+    if (revisiones == undefined) { revisiones = []; }
+    let temp: boolean = revisiones.filter(x => x.idUsuario == this.responsable.pin && x.ultimafecha >= Timestamp.fromDate(new Date())).length > 0
+      ? this.tarea.revisiones.filter(x => x.idUsuario == this.responsable.pin)[0].revisado : false;
+    return temp;
+  }
+
+  async atualizarRevision() {
+    let nuevafecha = new Date();
+    nuevafecha.setDate(nuevafecha.getDate() + 1);
+    nuevafecha.setHours(2, 0, 0, 0);
+    let revisiones = this.tarea.revisiones;
+    if (revisiones == undefined) { revisiones = []; }
+    if (revisiones.filter(x => x.idUsuario == this.responsable.pin).length == 0) {
+      revisiones.push({ idUsuario: this.responsable.pin, revisado: this.checkRevision, ultimafecha: Timestamp.fromDate(nuevafecha) });
+    } else {
+      for (let item of revisiones) {
+        if (item.idUsuario == this.responsable.pin) {
+          item.ultimafecha = Timestamp.fromDate(nuevafecha);
+          item.revisado = this.checkRevision;
+        }
       }
-  this.tarea.revisiones = revisiones;
-  await this.tareasService.update(this.tarea, this.tarea.id!);
-}
+    }
+    this.tarea.revisiones = revisiones;
+    await this.tareasService.update(this.tarea, this.tarea.id!);
+  }
 
 }

@@ -367,14 +367,6 @@ export default class CalendarBuilderPageComponent implements OnInit {
             });
           });
 
-
-
-
-
-
-
-
-
           if (this.tieneMantenimientosActivos(sucursal.id)) {
 
             if (this.usuario.idArea == '4') {
