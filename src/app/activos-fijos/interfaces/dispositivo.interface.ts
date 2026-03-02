@@ -1,4 +1,4 @@
-export class DispositivoTPV {
+export class Dispositivo {
     id: string = '';
     nombre: string = '';
     estatus: string = '1';

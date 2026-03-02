@@ -9,8 +9,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
 import { BranchesService } from '../../services/branches.service';
-import { ModalBranchCreateComponent } from '../../dialogs/modal-branch-create/modal-branch-create.component';
 import { Sucursal } from '../../interfaces/sucursal.interface';
+import { CrearSucursalDialogComponent } from '../../dialogs/crear-sucursal-dialog/crear-sucursal-dialog.component';
 
 @Component({
   selector: 'app-branches-page',
@@ -22,7 +22,7 @@ import { Sucursal } from '../../interfaces/sucursal.interface';
     TableModule,
     ToastModule,
     ConfirmDialogModule,
-    ModalBranchCreateComponent
+    CrearSucursalDialogComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './branches-page.component.html',

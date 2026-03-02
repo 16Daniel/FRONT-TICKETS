@@ -8,17 +8,17 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../interfaces/sucursal.interface';
-import { DispositivoTPV } from '../../../activos-fijos/interfaces/dispositivo-tpv';
+import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
 
 @Component({
-  selector: 'app-modal-branch-create',
+  selector: 'app-crear-sucursal-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, DialogModule, InputNumberModule],
-  templateUrl: './modal-branch-create.component.html',
-  styleUrl: './modal-branch-create.component.scss'
+  templateUrl: './crear-sucursal-dialog.component.html',
+  styleUrl: './crear-sucursal-dialog.component.scss'
 })
 
-export class ModalBranchCreateComponent implements OnInit {
+export class CrearSucursalDialogComponent implements OnInit {
   @Input() mostrarModalCrearSucursal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() sucursal: Sucursal | any;
@@ -124,7 +124,7 @@ export class ModalBranchCreateComponent implements OnInit {
 
   onTabletasChange(cantidad: number) {
     while (this.sucursal.tabletas.length < cantidad) {
-      this.sucursal.tabletas.push(new DispositivoTPV());
+      this.sucursal.tabletas.push(new Dispositivo());
     }
     while (this.sucursal.tabletas.length > cantidad) {
       this.sucursal.tabletas.pop();
@@ -133,7 +133,7 @@ export class ModalBranchCreateComponent implements OnInit {
 
   onTPVsChange(cantidad: number) {
     while (this.sucursal.tpvs.length < cantidad) {
-      this.sucursal.tpvs.push(new DispositivoTPV());
+      this.sucursal.tpvs.push(new Dispositivo());
     }
     while (this.sucursal.tpvs.length > cantidad) {
       this.sucursal.tpvs.pop();

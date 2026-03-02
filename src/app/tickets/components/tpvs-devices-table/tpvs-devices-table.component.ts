@@ -7,7 +7,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { StatusTpvsDevicesService } from '../../../activos-fijos/services/status-tpvs-devices.service';
 import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos/dialogs/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { DispositivoTPV } from '../../../activos-fijos/interfaces/dispositivo-tpv';
+import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
 import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv';
 
 @Component({
@@ -19,7 +19,7 @@ import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv';
 })
 export class TpvsDevicesTableComponent implements OnInit {
   @Input() sucursal!: Sucursal;
-  dispositivoSeleccionado!: DispositivoTPV;
+  dispositivoSeleccionado!: Dispositivo;
 
   estatus: EstatusTPV[] = [];
   isLoading: boolean = true;
@@ -70,7 +70,7 @@ export class TpvsDevicesTableComponent implements OnInit {
     return estatus ? estatus.nombre : '...';
   }
 
-  verDetallesDispositivo(dispositivo: DispositivoTPV, tipo: string): void {
+  verDetallesDispositivo(dispositivo: Dispositivo, tipo: string): void {
     if (this.usuario.idRol == '1' || this.usuario.idRol == '5') {
       console.log('Ddispositivo:', dispositivo);
       this.mostrarModaalEstatus = true;
