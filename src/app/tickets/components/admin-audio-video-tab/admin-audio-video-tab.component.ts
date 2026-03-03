@@ -14,7 +14,6 @@ import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tic
 import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { AccordionBranchMaintenanceAvComponent } from '../audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -24,12 +23,13 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
+import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { Mantenimiento6x6AV } from '../../../mantenimientos/interfaces/mantenimiento-av.interface';
+import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
 
 @Component({
   selector: 'app-admin-audio-video-tab',

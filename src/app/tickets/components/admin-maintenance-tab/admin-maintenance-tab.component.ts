@@ -14,7 +14,6 @@ import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tic
 import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { AccordionBranchMaintenanceMttoComponent } from '../maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -25,12 +24,13 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
+import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
+import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
+import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
 
 @Component({
   selector: 'app-admin-maintenance-tab',

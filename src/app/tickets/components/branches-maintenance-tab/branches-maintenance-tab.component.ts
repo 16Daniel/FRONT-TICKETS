@@ -1,30 +1,26 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { FormsModule } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 
 import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
-import { ModalTenXtenMaintenanceCheckComponent } from '../../dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
-import { ModalTenXtenMaintenanceHistoryComponent } from '../../dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
-import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
-import { CheckMantenimientoSisAvComponent } from "../../dialogs/sistemas-av/check-mantenimiento-sis-av-dialog/check-mantenimiento-sis-av-dialog.component";
+import { ModalMateinanceMttoCheckComponent } from '../../../mantenimientos/dialogs/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
+import { ModalMaintenanceMttoHistoryComponent } from '../../../mantenimientos/dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
+import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
+import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
 
 @Component({
-  selector: 'app-branches-sys-tab',
+  selector: 'app-branches-maintenance-tab',
   standalone: true,
   imports: [
     DialogModule,
@@ -33,20 +29,17 @@ import { CheckMantenimientoSisAvComponent } from "../../dialogs/sistemas-av/chec
     CommonModule,
     ModalGenerateTicketComponent,
     ModalTicketDetailComponent,
-    ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
-    ModalTenXtenMaintenanceCheckComponent,
-    ModalTenXtenMaintenanceHistoryComponent,
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
-    FormsModule,
-    CheckMantenimientoSisAvComponent
+    ModalMateinanceMttoCheckComponent,
+    ModalMaintenanceMttoHistoryComponent
   ],
-  templateUrl: './branches-sys-tab.component.html',
-  styleUrl: './branches-sys-tab.component.scss',
+  templateUrl: './branches-maintenance-tab.component.html',
+  styleUrl: './branches-maintenance-tab.component.scss'
 })
 
-export class BranchesSysTabComponent {
+export class BranchesMaintenanceTabComponent {
   @Input() tickets: Ticket[] = [];
   @Input() todosLosTickets: Ticket[] = [];
   @Input() esEspectadorActivo: boolean = false;
@@ -55,56 +48,33 @@ export class BranchesSysTabComponent {
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarModal10x10: boolean = false;
-  mostrarModal8x8: boolean = false;
+  mostrarModalManteinance: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalRating: boolean = false;
-  mostrarTPVs: boolean = false;
 
   sucursal: Sucursal | undefined;
-  mantenimientoActivo: MantenimientoSys | null = null;
-  mantenimientoAVActivo: MantenimientoSysAv | null = null;
+  mantenimientosActivos: MantenimientoMtto[] = [];
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;
 
   private unsubscribe!: () => void;
-  private unsubscribeAV!: () => void;
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoService: MaintenanceMtooService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
 
-    this.obtenerMantenimientoActivo();
+    this.obtenerMantenimientosActivos();
   }
 
   ngOnDestroy(): void {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
-
-    if (this.unsubscribeAV) {
-      this.unsubscribeAV();
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['esEspectadorActivo']) {
-      const prev = changes['esEspectadorActivo'].previousValue;
-      const curr = changes['esEspectadorActivo'].currentValue;
-
-      // Aquí pones la lógica que quieres que se ejecute cuando cambie
-      this.onEspectadorActivoChanged(curr);
-      this.cdr.detectChanges();
-    }
-  }
-
-  onEspectadorActivoChanged(nuevoValor: boolean) {
-
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
@@ -132,66 +102,34 @@ export class BranchesSysTabComponent {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
-  async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+  async obtenerMantenimientosActivos() {
+    this.unsubscribe = this.mantenimientoService.getMantenimientosActivosPorFecha(
       this.sucursal?.id,
-      (mantenimiento) => {
-        this.mantenimientoActivo = mantenimiento;
+      (mantenimientos: MantenimientoMtto[]) => {
+        this.mantenimientosActivos = mantenimientos;
         this.cdr.detectChanges();
-      }
-    );
-
-    this.unsubscribeAV = this.mantenimientoService.getMantenimientoActivoAV(
-      this.sucursal?.id,
-      (mantenimiento) => {
-        this.mantenimientoAVActivo = mantenimiento;
-        this.cdr.detectChanges();
-        // console.log('Mantenimiento activo:', this.mantenimientoActivo);
       }
     );
   }
 
-  mostrarAlerta10x10() {
+  mostrarAlerta() {
     this.confirmationService.confirm({
       header: 'IMPORTANTE',
       message: `
-      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
-      <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
-      <br><br>
-      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
-      acceptLabel: 'Aceptar',
-      rejectLabel: 'Cancelar',
+        TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
+        <br><br>
+        ES UNA EVALUACIÓN DE MANTENIMIENTO DE FREIDORAS EN 8 PUNTOS
+        <br><br>
+        CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
+      acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
+      rejectLabel: 'Cancelar', // 🔥 Cambia "No" por "Cancelar"
       acceptIcon: 'pi pi-check mr-2',
       rejectIcon: 'pi pi-times mr-2',
       acceptButtonStyleClass: 'btn bg-p-b p-3',
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-        this.mostrarModal10x10 = true;
-      },
-      reject: () => { },
-    });
-  }
-
-  mostrarAlerta8x8() {
-    this.confirmationService.confirm({
-      header: 'IMPORTANTE',
-      message: `
-      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
-      <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
-      <br><br>
-      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
-      acceptLabel: 'Aceptar',
-      rejectLabel: 'Cancelar',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-
-      accept: () => {
-        this.mostrarModal8x8 = true;
+        this.mostrarModalManteinance = true;
       },
       reject: () => { },
     });

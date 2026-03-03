@@ -11,14 +11,14 @@ import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticke
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
-import { ModalMaintenanceAvHistoryComponent } from '../../dialogs/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
-import { ModalMaintenanceAvCheckComponent } from '../../dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
-import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { ModalMaintenanceAvHistoryComponent } from '../../../mantenimientos/dialogs/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
+import { ModalMaintenanceAvCheckComponent } from '../../../mantenimientos/dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
+import { Mantenimiento6x6AV } from '../../../mantenimientos/interfaces/mantenimiento-av.interface';
+import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
 
 @Component({
   selector: 'app-branches-audio-video-tab',

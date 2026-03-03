@@ -14,7 +14,6 @@ import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-gen
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
-import { AccordionBranchMaintenance10x10Component } from '../systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
@@ -25,12 +24,13 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
+import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
+import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-admin-sys-tab',

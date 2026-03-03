@@ -5,9 +5,6 @@ import { TabViewModule } from 'primeng/tabview';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Subscription } from 'rxjs';
 
-import { BranchesSysTabComponent } from '../../../mantenimientos/components/branches-sys-tab/branches-sys-tab.component';
-import { BranchesAudioVideoTabComponent } from '../../../mantenimientos/components/branches-audio-video-tab/branches-audio-video-tab.component';
-import { BranchesMaintenanceTabComponent } from '../../../mantenimientos/components/branches-maintenance-tab/branches-maintenance-tab.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
@@ -17,6 +14,9 @@ import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tas
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import { BranchesOilTabComponent } from '../../../aceites/components/branches-oil-tab/branches-oil-tab.component';
 import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
+import { BranchesSysTabComponent } from '../branches-sys-tab/branches-sys-tab.component';
+import { BranchesAudioVideoTabComponent } from '../branches-audio-video-tab/branches-audio-video-tab.component';
+import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
 
 @Component({
   selector: 'app-branches-tabs',
