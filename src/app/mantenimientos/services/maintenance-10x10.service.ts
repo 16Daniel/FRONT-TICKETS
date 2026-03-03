@@ -157,12 +157,20 @@ export class Maintenance10x10Service implements IMantenimientoService {
     });
   }
 
+  async updateAV(id: string, mantenimiento: MantenimientoSysAv): Promise<void> {
+    const mantenimientoRef = doc(this.firestore, `${this.pathNameAv}/${id}`);
+    await updateDoc(mantenimientoRef, {
+      ...mantenimiento,
+      timestamp: Timestamp.now(),
+    });
+  }
+
   async delete(id: string): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await deleteDoc(mantenimientoRef);
   }
 
-  async delete2(id: string): Promise<void> {
+  async deleteAV(id: string): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathNameAv}/${id}`);
     await deleteDoc(mantenimientoRef);
   }
@@ -194,6 +202,41 @@ export class Maintenance10x10Service implements IMantenimientoService {
           id: primerDoc.id,
           ...primerDoc.data(),
         } as MantenimientoSys;
+        callback(mantenimiento); // Devuelve el primer registro
+      }
+    });
+
+    // Retorna la función para desuscribirse
+    return unsubscribe;
+  }
+
+  getMantenimientoActivoAV(
+    idSucursal: string | undefined,
+    callback: (mantenimiento: MantenimientoSysAv | null) => void
+  ): () => void {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const mantenimientosRef = collection(this.firestore, this.pathNameAv);
+
+    const q = query(
+      mantenimientosRef,
+      where('fecha', '>=', hoy),
+      where('fecha', '<', new Date(hoy.getTime() + 24 * 60 * 60 * 1000)), // Fecha menor que mañana a las 00:00:00
+      where('idSucursal', '==', idSucursal),
+      where('estatus', '==', true)
+    );
+
+    // Suscribirse a cambios en tiempo real
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        callback(null); // No hay registros
+      } else {
+        const primerDoc = querySnapshot.docs[0];
+        const mantenimiento = {
+          id: primerDoc.id,
+          ...primerDoc.data(),
+        } as MantenimientoSysAv;
         callback(mantenimiento); // Devuelve el primer registro
       }
     });
@@ -327,7 +370,7 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return documentos;
   }
 
-  async obtenerMantenimientoVisitaPorFechaArea2(
+  async obtenerMantenimientoVisitaPorFechaAreaAV(
     fecha: Date,
     idSucursal: string,
     estatus?: boolean

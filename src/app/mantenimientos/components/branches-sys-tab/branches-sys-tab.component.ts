@@ -20,6 +20,8 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
+import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
+import { CheckMantenimientoSisAvComponent } from "../../dialogs/sistemas-av/check-mantenimiento-sis-av-dialog/check-mantenimiento-sis-av-dialog.component";
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -37,7 +39,8 @@ import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
     ModalTenXtenMaintenanceHistoryComponent,
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
-    FormsModule
+    FormsModule,
+    CheckMantenimientoSisAvComponent
   ],
   templateUrl: './branches-sys-tab.component.html',
   styleUrl: './branches-sys-tab.component.scss',
@@ -53,17 +56,20 @@ export class BranchesSysTabComponent {
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
   mostrarModal10x10: boolean = false;
+  mostrarModal8x8: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalRating: boolean = false;
   mostrarTPVs: boolean = false;
 
   sucursal: Sucursal | undefined;
   mantenimientoActivo: MantenimientoSys | null = null;
+  mantenimientoAVActivo: MantenimientoSysAv | null = null;
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;
 
   private unsubscribe!: () => void;
+  private unsubscribeAV!: () => void;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -79,6 +85,10 @@ export class BranchesSysTabComponent {
   ngOnDestroy(): void {
     if (this.unsubscribe) {
       this.unsubscribe();
+    }
+
+    if (this.unsubscribeAV) {
+      this.unsubscribeAV();
     }
   }
 
@@ -128,6 +138,14 @@ export class BranchesSysTabComponent {
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
         this.cdr.detectChanges();
+      }
+    );
+
+    this.unsubscribeAV = this.mantenimientoService.getMantenimientoActivoAV(
+      this.sucursal?.id,
+      (mantenimiento) => {
+        this.mantenimientoAVActivo = mantenimiento;
+        this.cdr.detectChanges();
         // console.log('Mantenimiento activo:', this.mantenimientoActivo);
       }
     );
@@ -142,8 +160,8 @@ export class BranchesSysTabComponent {
       ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
       <br><br>
       CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
-      acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"
-      rejectLabel: 'Cancelar', // 🔥 Cambia "No" por "Cancelar"
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
       acceptIcon: 'pi pi-check mr-2',
       rejectIcon: 'pi pi-times mr-2',
       acceptButtonStyleClass: 'btn bg-p-b p-3',
@@ -151,6 +169,29 @@ export class BranchesSysTabComponent {
 
       accept: () => {
         this.mostrarModal10x10 = true;
+      },
+      reject: () => { },
+    });
+  }
+
+  mostrarAlerta8x8() {
+    this.confirmationService.confirm({
+      header: 'IMPORTANTE',
+      message: `
+      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
+      <br><br>
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
+      <br><br>
+      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      acceptIcon: 'pi pi-check mr-2',
+      rejectIcon: 'pi pi-times mr-2',
+      acceptButtonStyleClass: 'btn bg-p-b p-3',
+      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+
+      accept: () => {
+        this.mostrarModal8x8 = true;
       },
       reject: () => { },
     });

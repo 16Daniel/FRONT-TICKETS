@@ -571,9 +571,9 @@ export default class CalendarBuilderPageComponent implements OnInit {
           await servicio.delete(element.id);
         });
 
-        let temp2 = await this.maintenance10x10Service.obtenerMantenimientoVisitaPorFechaArea2(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
+        let temp2 = await this.maintenance10x10Service.obtenerMantenimientoVisitaPorFechaAreaAV(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
         temp2.forEach(async (element: any) => {
-          await this.maintenance10x10Service.delete2(element.id);
+          await this.maintenance10x10Service.deleteAV(element.id);
         });
       }
 
