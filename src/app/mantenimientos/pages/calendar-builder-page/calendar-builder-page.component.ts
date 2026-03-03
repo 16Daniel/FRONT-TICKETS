@@ -37,6 +37,8 @@ import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
 
 @Component({
   selector: 'app-calendar-builder-page',
@@ -99,6 +101,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private fixedAssetsService: FixedAssetsService,
     private maintenanceMtooService: MaintenanceMtooService,
+    private maintenance10x10Service: Maintenance10x10Service,
     private datesHelper: DatesHelperService,
     private areasService: AreasService
   ) {
@@ -401,7 +404,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
               await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
 
               if (this.usuario.idArea == '1') {
-                this.registrarMantenimientoTvs(sucursal, participantesChat);
+                this.registrarMantenimientoSysAv(sucursal, participantesChat);
               }
             }
           }
@@ -425,31 +428,39 @@ export default class CalendarBuilderPageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  registrarMantenimientoTvs(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
+  async registrarMantenimientoSysAv(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
     if (this.usuario.idArea == '1') {
-      let tvs = sucursal.tvs;
 
-      if (tvs && tvs.length == 0) {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Warning',
-          detail: 'Se registró la visita pero no se encontraron tv´s en sucursal',
-          life: 7000
-        }); return;
-      }
+      const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
-      tvs!.forEach(async element => {
-        const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+      let tvs: any[] = [];
+      let bocinas: any[] = [];
+      const registroSucursal = this.sucursales.find(x => x.id == sucursal.id);
 
-        // this.usuario.idArea == '1' ?
-        //   await servicio.create2(
-        //     sucursal.id,
-        //     this.usuarioseleccionado!.id,
-        //     this.fecha,
-        //     element.id!,
-        //     participantesChat
-        //   ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+      registroSucursal!.tvs?.forEach(tv => {
+        tvs.push({
+          dispositivo: tv,
+          evidenciaUrls: []
+        });
       });
+
+      registroSucursal!.bocinas?.forEach(bocina => {
+        bocinas.push({
+          dispositivo: bocina,
+          evidenciaUrls: []
+        });
+      });
+
+      this.usuario.idArea == '1' ?
+        await this.maintenance10x10Service.createAv(
+          sucursal.id,
+          this.usuarioseleccionado!.id,
+          this.fecha,
+          tvs,
+          bocinas,
+          participantesChat
+        ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+
     }
   }
 
@@ -559,6 +570,11 @@ export default class CalendarBuilderPageComponent implements OnInit {
         let temp = await servicio.obtenerMantenimientoVisitaPorFechaArea(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
         temp.forEach(async (element: any) => {
           await servicio.delete(element.id);
+        });
+
+        let temp2 = await this.maintenance10x10Service.obtenerMantenimientoVisitaPorFechaArea2(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
+        temp2.forEach(async (element: any) => {
+          await this.maintenance10x10Service.delete2(element.id);
         });
       }
 

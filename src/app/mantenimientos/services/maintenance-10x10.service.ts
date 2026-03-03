@@ -19,12 +19,15 @@ import { Timestamp } from '@angular/fire/firestore';
 import { combineLatest, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoSys } from '../interfaces/mantenimiento-sys.interface';
+import { MantenimientoSysAv } from '../interfaces/mantenimiento-sys-av.interface';
+import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Maintenance10x10Service implements IMantenimientoService {
   pathName: string = 'mantenimientos-10x10';
+  pathNameAv: string = 'mantenimientos-sys-av';
 
   constructor(private firestore: Firestore) { }
 
@@ -55,6 +58,42 @@ export class Maintenance10x10Service implements IMantenimientoService {
       timestamp: Timestamp.now(),
     });
   }
+
+  async createAv(
+    idSucursal: string,
+    idUsuario: string,
+    fecha: Date,
+    tvs: any,
+    bocinas: any,
+    participantesChat: ParticipanteChat[]
+  ): Promise<void> {
+    const mantenimiento: MantenimientoSysAv = {
+      idSucursal: idSucursal,
+      idUsuarioSoporte: idUsuario,
+      fecha: fecha,
+      estatus: true,
+      mantenimientoPantallasSoporte: false,
+      mantenimientoSenalVideo: false,
+      mantenimientoParametrosImagen: false,
+      mantenimientoFuncionalBocinas: false,
+      mantenimientoTransmisionAudio: false,
+      mantenimientoOrdenamientoCableado: false,
+      mantenimientoLimpiezaRack: false,
+      mantenimientoElectrico: false,
+      observaciones: '',
+      comentarios: [],
+      tvs,
+      bocinas,
+      participantesChat,
+    };
+
+    const mantenimientoRef = collection(this.firestore, this.pathNameAv);
+    await addDoc(mantenimientoRef, {
+      ...mantenimiento,
+      timestamp: Timestamp.now(),
+    });
+  }
+
 
   calcularPorcentaje(mantenimiento: MantenimientoSys): number {
     if (!mantenimiento) return 0;
@@ -120,6 +159,11 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
   async delete(id: string): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
+    await deleteDoc(mantenimientoRef);
+  }
+
+  async delete2(id: string): Promise<void> {
+    const mantenimientoRef = doc(this.firestore, `${this.pathNameAv}/${id}`);
     await deleteDoc(mantenimientoRef);
   }
 
@@ -258,6 +302,37 @@ export class Maintenance10x10Service implements IMantenimientoService {
     estatus?: boolean
   ) {
     const coleccionRef = collection(this.firestore, this.pathName);
+
+    // Convertir la fecha a las 00:00:00 del día
+    fecha.setHours(0, 0, 0, 0);
+
+    // Construir los filtros dinámicamente
+    const filtros = [
+      where('fecha', '==', fecha),
+      where('idSucursal', '==', idSucursal),
+    ];
+
+    if (estatus !== undefined) {
+      filtros.push(where('estatus', '==', estatus));
+    }
+
+    const consulta = query(coleccionRef, ...filtros);
+
+    const querySnapshot = await getDocs(consulta);
+    const documentos: MantenimientoSys[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as MantenimientoSys));
+
+    return documentos;
+  }
+
+  async obtenerMantenimientoVisitaPorFechaArea2(
+    fecha: Date,
+    idSucursal: string,
+    estatus?: boolean
+  ) {
+    const coleccionRef = collection(this.firestore, this.pathNameAv);
 
     // Convertir la fecha a las 00:00:00 del día
     fecha.setHours(0, 0, 0, 0);
