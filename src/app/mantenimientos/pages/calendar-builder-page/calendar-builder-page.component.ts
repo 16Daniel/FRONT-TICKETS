@@ -13,7 +13,6 @@ import { EditorModule } from 'primeng/editor';
 import { Subscription } from 'rxjs';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { BranchVisitItemComponent } from '../../components/branch-visit-item/branch-visit-item.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
@@ -38,7 +37,7 @@ import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
-import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
+import { CalendarioComponent } from '../../components/calendario/calendario.component';
 
 @Component({
   selector: 'app-calendar-builder-page',
@@ -52,7 +51,7 @@ import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.inter
     CalendarModule,
     EditorModule,
     ModalTicketDetailComponent,
-    CalendarComponent,
+    CalendarioComponent,
     ModalColorsComponent,
     BranchVisitItemComponent,
     ModalActivityComponent

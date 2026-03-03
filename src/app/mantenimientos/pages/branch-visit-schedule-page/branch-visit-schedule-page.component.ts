@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
-import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
@@ -19,11 +18,12 @@ import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
+import { CalendarioComponent } from '../../components/calendario/calendario.component';
 
 @Component({
   selector: 'app-branch-visit-schedule-page',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarComponent, DropdownModule, FormsModule],
+  imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarioComponent, DropdownModule, FormsModule],
   providers: [MessageService],
   templateUrl: './branch-visit-schedule-page.component.html',
 })

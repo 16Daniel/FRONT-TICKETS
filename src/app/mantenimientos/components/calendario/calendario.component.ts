@@ -25,14 +25,14 @@ import { SucursalProgramada } from '../../interfaces/sucursal-programada.interfa
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-calendario',
   standalone: true,
   imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent],
-  templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss'
+  templateUrl: './calendario.component.html',
+  styleUrl: './calendario.component.scss'
 })
 
-export class CalendarComponent implements OnInit {
+export class CalendarioComponent implements OnInit {
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idUsuarioFiltro: string = '';
   @Input() tickets: Ticket[] = [];
