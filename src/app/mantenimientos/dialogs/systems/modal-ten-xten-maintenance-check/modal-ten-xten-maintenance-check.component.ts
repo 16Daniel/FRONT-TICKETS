@@ -117,8 +117,6 @@ export class ModalTenXtenMaintenanceCheckComponent {
       return;
     }
 
-    console.log(this.mantenimientoActivo)
-
     const mantenimiento: MantenimientoSys = {
       ...this.formularioDeMantenimiento.value,
       id: this.mantenimientoActivo?.id,

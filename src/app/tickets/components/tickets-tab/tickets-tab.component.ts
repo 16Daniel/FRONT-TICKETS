@@ -34,6 +34,7 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
+import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/systems/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -57,6 +58,7 @@ import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimien
     AccordionBranchMaintenanceAvComponent,
     AccordionBranchMaintenanceMttoComponent,
     ModalRequestPurchaseComponent,
+    AcordeonMantenimientosSisAvComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',
@@ -81,8 +83,10 @@ export class TicketsTabComponent implements OnInit {
   selectedtk: Ticket | undefined;
   loading: boolean = false;
   ultimosmantenimientos: any[] = [];
+  ultimosmantenimientosAV: any[] = [];
   private unsubscribe!: () => void;
   ordenarxmantenimiento: boolean = false;
+  mostrar8x8av: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];
@@ -103,7 +107,8 @@ export class TicketsTabComponent implements OnInit {
     private notificationService: NotificationService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private purchaseService: PurchaseService,
-    private datesHelper: DatesHelperService
+    private datesHelper: DatesHelperService,
+    private maintenance10x10Service: Maintenance10x10Service
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -176,6 +181,25 @@ export class TicketsTabComponent implements OnInit {
         }
 
         this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
+          x.fecha = this.datesHelper.getDate(x.fecha);
+          return x;
+        });
+
+        this.cdr.detectChanges();
+      });
+
+    this.subscriptiontk = this.maintenance10x10Service
+      .getUltimosMantenimientosAV(idsSucursales)
+      .subscribe((result: any) => {
+        let data = result.filter((element: any) => element.length > 0);
+        this.ultimosmantenimientosAV = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.ultimosmantenimientosAV.push(item);
+          }
+        }
+
+        this.ultimosmantenimientosAV = this.ultimosmantenimientosAV.map(x => {
           x.fecha = this.datesHelper.getDate(x.fecha);
           return x;
         });

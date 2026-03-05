@@ -1,44 +1,49 @@
 <div class="notification-wrapper" (click)="toggleNotifications()">
-    <div class="boton-mensajes-wrapper">
-        <p-button severity="secondary" outlined="true">
-            <ng-template pTemplate="content">
-                <span class="icono-con-badge">
-                    <i class="pi pi-comments"></i>
-                    <span *ngIf="notificaciones?.length" class="badge-inline">{{ notificaciones.length }}</span>
-                </span>
-                <span class="label">MENSAJES</span>
-            </ng-template>
-        </p-button>
-    </div>
+  <div class="boton-mensajes-wrapper">
+    <p-button severity="secondary" outlined="true">
+      <ng-template pTemplate="content">
+        <span class="icono-con-badge">
+          <i class="pi pi-comments"></i>
+          <span *ngIf="notificaciones?.length" class="badge-inline">{{ notificaciones.length }}</span>
+        </span>
+        <span class="label">MENSAJES</span>
+      </ng-template>
+    </p-button>
+  </div>
 
-    <!-- Dropdown -->
-    <div class="notification-dropdown" *ngIf="showNotifications" (click)="$event.stopPropagation()">
-        <div *ngIf="!notificaciones?.length" class="empty">No hay notificaciones</div>
-        <ul *ngIf="notificaciones?.length" class="notification-list">
-            <li *ngFor="let item of notificaciones" (click)="seleccionarNotificacion(item)">
-                <span>
-                    <i class="pi pi-comments icon-chat"></i>
-                    {{ 'Tienes un nuevo mensaje en ' + item.tipoOrigen }}
-                </span>
-                <small>
-                    <i class="pi pi-user icon-user"></i>
-                    {{ 'De: ' + item.nombreRemitente }}
-                </small>
-            </li>
-        </ul>
-    </div>
+  <!-- Dropdown -->
+  <div class="notification-dropdown" *ngIf="showNotifications" (click)="$event.stopPropagation()">
+    <div *ngIf="!notificaciones?.length" class="empty">No hay notificaciones</div>
+    <ul *ngIf="notificaciones?.length" class="notification-list">
+      <li *ngFor="let item of notificaciones" (click)="seleccionarNotificacion(item)">
+        <span>
+          <i class="pi pi-comments icon-chat"></i>
+          {{ 'Tienes un nuevo mensaje en ' + item.tipoOrigen }}
+        </span>
+        <small>
+          <i class="pi pi-user icon-user"></i>
+          {{ 'De: ' + item.nombreRemitente }}
+        </small>
+      </li>
+    </ul>
+  </div>
 </div>
 
 
 <!-- Chats -->
 <app-modal-ticket-chat *ngIf="mostrarModalChatTicket" [showModalChatTicket]="mostrarModalChatTicket" [ticket]="ticket"
-    (closeEvent)="cerrarChatTicket()">
+  (closeEvent)="cerrarChatTicket()">
 </app-modal-ticket-chat>
 
 <app-modal-maintenance-chat *ngIf="mostrarModalChatMantenimiento" [mostrarModal]="mostrarModalChatMantenimiento"
-    [idMnatenimiento]="mantenimiento?.id" [idArea]="idArea" (closeEvent)="cerrarChatMantenimiento()">
+  [idMnatenimiento]="mantenimiento?.id" [idArea]="idArea" (closeEvent)="cerrarChatMantenimiento()">
 </app-modal-maintenance-chat>
 
+<app-chat-mantenimiento-sys-av-dialog *ngIf="mostrarModalChatMantenimientoAV"
+  [mostrarModal]="mostrarModalChatMantenimientoAV" [idMnatenimiento]="mantenimiento?.id"
+  (closeEvent)="cerrarChatMantenimiento()">
+</app-chat-mantenimiento-sys-av-dialog>
+
 <app-admin-compras-chat *ngIf="mostrarModalChatCompra" [showModalChatCompra]="mostrarModalChatCompra" [ticket]="compra"
-    (closeEvent)="cerrarChatCompras()">
+  (closeEvent)="cerrarChatCompras()">
 </app-admin-compras-chat>

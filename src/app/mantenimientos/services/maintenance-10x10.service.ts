@@ -94,7 +94,6 @@ export class Maintenance10x10Service implements IMantenimientoService {
     });
   }
 
-
   calcularPorcentaje(mantenimiento: MantenimientoSys): number {
     if (!mantenimiento) return 0;
 
@@ -119,6 +118,26 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return porcentaje;
   }
 
+  calcularPorcentajeAV(mantenimiento: MantenimientoSysAv) {
+    if (!mantenimiento) return 0;
+
+    let porcentaje = 0;
+    mantenimiento.mantenimientoPantallasSoporte ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoSenalVideo ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoParametrosImagen ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoFuncionalBocinas
+      ? (porcentaje += 12.5)
+      : porcentaje;
+    mantenimiento.mantenimientoTransmisionAudio
+      ? (porcentaje += 12.5)
+      : porcentaje;
+    mantenimiento.mantenimientoOrdenamientoCableado ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoLimpiezaRack ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoElectrico ? (porcentaje += 12.5) : porcentaje;
+
+    return Math.round(porcentaje);
+  }
+
   get(): Observable<MantenimientoSys[]> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
     const q = query(mantenimientoRef, where('estatus', '==', true));
@@ -137,6 +156,30 @@ export class Maintenance10x10Service implements IMantenimientoService {
               id: snapshot.id,
               ...snapshot.data(),
             } as MantenimientoSys);
+          } else {
+            subscriber.next(undefined);
+          }
+        },
+        (error) => subscriber.error(error)
+      );
+
+      // limpiar suscripción al destruir
+      return () => unsubscribe();
+    });
+  }
+
+  getByIdAV(id: string): Observable<MantenimientoSysAv | undefined> {
+    return new Observable<MantenimientoSysAv | undefined>((subscriber) => {
+      const mantenimientoRef = doc(this.firestore, `${this.pathNameAv}/${id}`);
+
+      const unsubscribe = onSnapshot(
+        mantenimientoRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            subscriber.next({
+              id: snapshot.id,
+              ...snapshot.data(),
+            } as MantenimientoSysAv);
           } else {
             subscriber.next(undefined);
           }
@@ -285,6 +328,33 @@ export class Maintenance10x10Service implements IMantenimientoService {
     const observables = idsSucursales.map(idSucursal => {
       return new Observable<any[]>(observer => {
         const mantenimientosRef = collection(this.firestore, this.pathName);
+        const q = query(
+          mantenimientosRef,
+          where('idSucursal', '==', idSucursal.toString()),
+          where('estatus', '==', false),
+          orderBy('fecha', 'desc'),
+          limit(3)
+        );
+
+        const unsubscribe = onSnapshot(q, snapshot => {
+          const resultados = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          observer.next(resultados);
+        }, error => observer.error(error));
+
+        // Limpiar suscripción cuando se complete
+        return () => unsubscribe();
+      });
+    });
+
+    // Combinamos todos los Observables para emitir un array con los resultados por sucursal
+    return combineLatest(observables);
+  }
+
+  getUltimosMantenimientosAV(idsSucursales: string[]): Observable<any[]> {
+    // Creamos un Observable por cada sucursal
+    const observables = idsSucursales.map(idSucursal => {
+      return new Observable<any[]>(observer => {
+        const mantenimientosRef = collection(this.firestore, this.pathNameAv);
         const q = query(
           mantenimientosRef,
           where('idSucursal', '==', idSucursal.toString()),
@@ -468,6 +538,22 @@ export class Maintenance10x10Service implements IMantenimientoService {
     ultimoComentarioLeido: number
   ) {
     const ticketRef = doc(this.firestore, `${this.pathName}/${idMantenimiento}`);
+
+    // Actualizar el índice del último comentario leído para un participante
+    return updateDoc(ticketRef, {
+      participantesChat: arrayUnion({
+        idUsuario,
+        ultimoComentarioLeido,
+      }),
+    });
+  }
+
+  updateLastCommentReadAV(
+    idMantenimiento: string,
+    idUsuario: string,
+    ultimoComentarioLeido: number
+  ) {
+    const ticketRef = doc(this.firestore, `${this.pathNameAv}/${idMantenimiento}`);
 
     // Actualizar el índice del último comentario leído para un participante
     return updateDoc(ticketRef, {

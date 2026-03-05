@@ -111,8 +111,6 @@ export class CheckMantenimientoSisAvComponent {
       return;
     }
 
-    console.log(this.mantenimientoActivo)
-
     const mantenimiento: MantenimientoSysAv = {
       ...this.formularioDeMantenimiento.value,
       id: this.mantenimientoActivo?.id,
