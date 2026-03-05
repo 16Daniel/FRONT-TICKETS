@@ -15,7 +15,6 @@ import { ModalTicketsHistoryComponent } from '../../dialogs/modal-tickets-histor
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
-import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
 import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
@@ -34,7 +33,8 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/systems/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
+import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
+import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 
 @Component({
   selector: 'app-tickets-tab',

@@ -5,31 +5,30 @@ import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
 import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../../usuarios/services/users.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { TablaMantenimientosSysAvComponent } from "../tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 
 
 @Component({
-  selector: 'app-acordeon-mantenimientos-sis-av',
+  selector: 'app-accordion-branch-maintenance10x10',
   standalone: true,
-  imports: [BranchMaintenanceTableComponent, BadgeModule, CommonModule, AccordionModule, TablaMantenimientosSysAvComponent],
-  templateUrl: './acordeon-mantenimientos-sis-av.component.html',
-  styleUrl: './acordeon-mantenimientos-sis-av.component.scss',
+  imports: [BranchMaintenanceTableComponent, BadgeModule, CommonModule, AccordionModule],
+  templateUrl: './accordion-branch-maintenance10x10.component.html',
+  styleUrl: './accordion-branch-maintenance10x10.component.scss',
 })
 
-export class AcordeonMantenimientosSisAvComponent {
-  @Input() mantenimientos: MantenimientoSysAv[] = [];
+export class AccordionBranchMaintenance10x10Component {
+  @Input() mantenimientos: MantenimientoSys[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
 
-  mantenimientosOriginal: MantenimientoSysAv[] = [];
-  mantenimientosOrdenados: MantenimientoSysAv[] = [];
+  mantenimientosOriginal: MantenimientoSys[] = [];
+  mantenimientosOrdenados: MantenimientoSys[] = [];
 
   usuariosHelp: Usuario[] = [];
 
@@ -99,7 +98,7 @@ export class AcordeonMantenimientosSisAvComponent {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenance10x10Service.calcularPorcentajeAV(registro[0]);
+        porcentaje = this.maintenance10x10Service.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;
@@ -143,7 +142,7 @@ export class AcordeonMantenimientosSisAvComponent {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSysAv[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSys[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 

@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 
-import { ModalFinalCommentsComponent } from '../../../dialogs/modal-final-comments/modal-final-comments.component';
-import { ModalSysMttoImguploaderComponent } from '../../../dialogs/systems/modal-sys-mtto-imguploader/modal-sys-mtto-imguploader.component';
-import { ModalVisorVariasImagenesComponent } from '../../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
-import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
+import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
+import { ModalSysMttoImguploaderComponent } from '../../dialogs/systems/modal-sys-mtto-imguploader/modal-sys-mtto-imguploader.component';
+import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalMaintenanceChatComponent } from '../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
+import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 
 @Component({
   selector: 'app-branch-maintenance-table',

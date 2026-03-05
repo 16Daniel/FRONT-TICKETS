@@ -6,7 +6,6 @@ import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 
 import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
-import { BranchMaintenanceTableComponent } from '../../components/systems/branch-maintenance-table/branch-maintenance-table.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalMaintenanceDetailComponent } from '../systems/modal-maintenance-detail/modal-maintenance-detail.component';
 import { BranchMaintenanceTableAvComponent } from '../../components/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
@@ -17,6 +16,7 @@ import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
+import { BranchMaintenanceTableComponent } from '../../components/branch-maintenance-table/branch-maintenance-table.component';
 
 @Component({
   selector: 'app-modal-event-detail',

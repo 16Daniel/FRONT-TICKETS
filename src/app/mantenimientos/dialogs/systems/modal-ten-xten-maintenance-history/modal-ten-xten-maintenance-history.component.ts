@@ -7,11 +7,11 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
-import { BranchMaintenanceTableComponent } from '../../../components/systems/branch-maintenance-table/branch-maintenance-table.component';
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
+import { BranchMaintenanceTableComponent } from '../../../components/branch-maintenance-table/branch-maintenance-table.component';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',

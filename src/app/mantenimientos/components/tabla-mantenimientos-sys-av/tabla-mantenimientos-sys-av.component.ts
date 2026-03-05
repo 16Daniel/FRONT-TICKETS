@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 
-import { ModalFinalCommentsComponent } from '../../../dialogs/modal-final-comments/modal-final-comments.component';
-import { ModalVisorVariasImagenesComponent } from '../../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
-import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { ChatMantenimientoSysAvComponent } from '../../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
-import { SubirImagenesSysAvComponent } from "../../../dialogs/systems/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component";
+import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
+import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
+import { ChatMantenimientoSysAvComponent } from '../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
+import { SubirImagenesSysAvComponent } from "../../dialogs/systems/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component";
 
 @Component({
   selector: 'app-tabla-mantenimientos-sys-av',
@@ -202,58 +202,56 @@ export class TablaMantenimientosSysAvComponent {
   async actualizarImagenesPorTitulo(titulo: string, url: string) {
     if (!this.mantenimientoSeleccionado) return;
 
-    // switch (titulo) {
+    switch (titulo) {
 
-    //   case 'CAJA':
-    //     this.mantenimientoSeleccionado.mantenimientoCajaEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoCajaEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
+      case 'PANTALLAS':
+        // if (this.mantenimientoSeleccionado.tvs) {
+        //   this.mantenimientoSeleccionado.tvs = this.mantenimientoSeleccionado.tvs.map(tv => ({
+        //     ...tv,
+        //     evidenciaUrls: (tv.evidenciaUrls || []).filter(u => u !== url)
+        //   }));
+        // }
+        break;
 
-    //   case 'IMPRESORAS':
-    //     this.mantenimientoSeleccionado.mantenimientoImpresorasEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoImpresorasEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
+      case 'VIDEO':
+        this.mantenimientoSeleccionado.mantenimientoSenalVideoEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoSenalVideoEvidenciaUrls || []).filter(u => u !== url);
+        break;
 
-    //   case 'RACK':
-    //     this.mantenimientoSeleccionado.mantenimientoRackEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoRackEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
+      case 'IMAGEN':
+        this.mantenimientoSeleccionado.mantenimientoParametrosImagenEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoParametrosImagenEvidenciaUrls || []).filter(u => u !== url);
+        break;
 
-    //   case 'TPV':
-    //     this.mantenimientoSeleccionado.mantenimientoPuntosVentaTabletasEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoPuntosVentaTabletasEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
+      case 'BOCINAS':
+        // if (this.mantenimientoSeleccionado.bocinas) {
+        //   this.mantenimientoSeleccionado.bocinas = this.mantenimientoSeleccionado.bocinas.map(b => ({
+        //     ...b,
+        //     evidenciaUrls: (b.evidenciaUrls || []).filter(u => u !== url)
+        //   }));
+        // }
+        break;
 
-    //   case 'CONTENIDOS':
-    //     this.mantenimientoSeleccionado.mantenimientoContenidosSistemaCableEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoContenidosSistemaCableEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
+      case 'AUDIO':
+        this.mantenimientoSeleccionado.mantenimientoTransmisionAudioEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoTransmisionAudioEvidenciaUrls || []).filter(u => u !== url);
+        break;
 
-    //   case 'INTERNET':
-    //     this.mantenimientoSeleccionado.mantenimientoInternetEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoInternetEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
+      case 'CABLEADO':
+        this.mantenimientoSeleccionado.mantenimientoOrdenamientoCableadoEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoOrdenamientoCableadoEvidenciaUrls || []).filter(u => u !== url);
+        break;
 
-    //   case 'CCTV':
-    //     this.mantenimientoSeleccionado.mantenimientoCCTVEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoCCTVEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
+      case 'RACK':
+        this.mantenimientoSeleccionado.mantenimientoLimpiezaRackEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoLimpiezaRackEvidenciaUrls || []).filter(u => u !== url);
+        break;
 
-    //   case 'NO BRAKES':
-    //     this.mantenimientoSeleccionado.mantenimientoNoBrakesEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoNoBrakesEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
-
-    //   case 'TIEMPOS COCINA':
-    //     this.mantenimientoSeleccionado.mantenimientoTiemposCocinaEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoTiemposCocinaEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
-
-    //   case 'APPS':
-    //     this.mantenimientoSeleccionado.mantenimientoConcentradorAppsEvidenciaUrls =
-    //       (this.mantenimientoSeleccionado.mantenimientoConcentradorAppsEvidenciaUrls || []).filter(u => u !== url);
-    //     break;
-    // }
+      case 'ELECTRICO':
+        this.mantenimientoSeleccionado.mantenimientoElectricoEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoElectricoEvidenciaUrls || []).filter(u => u !== url);
+        break;
+    }
 
     await this.maintenance10x10Service.updateAV(this.mantenimientoSeleccionado.id, this.mantenimientoSeleccionado);
   }
