@@ -11,6 +11,7 @@ import { Maintenance10x10Service } from '../../../services/maintenance-10x10.ser
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 import { ChatMantenimientoSysAvComponent } from '../../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
+import { SubirImagenesSysAvComponent } from "../../../dialogs/systems/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component";
 
 @Component({
   selector: 'app-tabla-mantenimientos-sys-av',
@@ -21,8 +22,9 @@ import { ChatMantenimientoSysAvComponent } from '../../../dialogs/sistemas-av/ch
     CommonModule,
     ModalFinalCommentsComponent,
     ModalVisorVariasImagenesComponent,
-    ChatMantenimientoSysAvComponent
-],
+    ChatMantenimientoSysAvComponent,
+    SubirImagenesSysAvComponent
+  ],
   templateUrl: './tabla-mantenimientos-sys-av.component.html',
 })
 export class TablaMantenimientosSysAvComponent {
@@ -117,38 +119,40 @@ export class TablaMantenimientosSysAvComponent {
     this.imagenes = [];
     this.tituloVisor = campo;
 
-    // switch (campo) {
-    //   case 'CAJA':
-    //     this.imagenes = mantenimiento.mantenimientoCajaEvidenciaUrls || [];
-    //     break;
-    //   case 'IMPRESORAS':
-    //     this.imagenes = mantenimiento.mantenimientoImpresorasEvidenciaUrls || [];
-    //     break;
-    //   case 'RACK':
-    //     this.imagenes = mantenimiento.mantenimientoRackEvidenciaUrls || [];
-    //     break;
-    //   case 'TPV':
-    //     this.imagenes = mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls || [];
-    //     break;
-    //   case 'CONTENIDOS':
-    //     this.imagenes = mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrls || [];
-    //     break;
-    //   case 'INTERNET':
-    //     this.imagenes = mantenimiento.mantenimientoInternetEvidenciaUrls || [];
-    //     break;
-    //   case 'CCTV':
-    //     this.imagenes = mantenimiento.mantenimientoCCTVEvidenciaUrls || [];
-    //     break;
-    //   case 'NO BRAKES':
-    //     this.imagenes = mantenimiento.mantenimientoNoBrakesEvidenciaUrls || [];
-    //     break;
-    //   case 'TIEMPOS COCINA':
-    //     this.imagenes = mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls || [];
-    //     break;
-    //   case 'APPS':
-    //     this.imagenes = mantenimiento.mantenimientoConcentradorAppsEvidenciaUrls || [];
-    //     break;
-    // }
+    switch (campo) {
+
+      // case 'PANTALLAS':
+      //   this.imagenes = mantenimiento.tvs?.flatMap(tv => tv.evidenciaUrls || []) || [];
+      //   break;
+
+      case 'VIDEO':
+        this.imagenes = mantenimiento.mantenimientoSenalVideoEvidenciaUrls || [];
+        break;
+
+      case 'IMAGEN':
+        this.imagenes = mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || [];
+        break;
+
+      // case 'BOCINAS':
+      //   this.imagenes = mantenimiento.bocinas?.flatMap(b => b.evidenciaUrls || []) || [];
+      //   break;
+
+      case 'AUDIO':
+        this.imagenes = mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls || [];
+        break;
+
+      case 'CABLEADO':
+        this.imagenes = mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls || [];
+        break;
+
+      case 'RACK':
+        this.imagenes = mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || [];
+        break;
+
+      case 'ELECTRICO':
+        this.imagenes = mantenimiento.mantenimientoElectricoEvidenciaUrls || [];
+        break;
+    }
 
     this.mostrarModalVisorImagen = true;
     this.cdr.detectChanges();
