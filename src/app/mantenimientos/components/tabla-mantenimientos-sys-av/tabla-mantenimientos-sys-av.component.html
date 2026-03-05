@@ -137,10 +137,19 @@
   (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
   [mantenimiento]="mantenimientoSeleccionado"></app-subir-imagen-sys-av-dialog>
 
+<app-subir-imagen-sys-av-dialog-2 *ngIf="mostrarModalSubirImagen2" [mostrarModal]="mostrarModalSubirImagen2"
+  (closeEvent)="mostrarModalSubirImagen2 = false" [titulo]="tituloEvidencia"
+  [mantenimiento]="mantenimientoSeleccionado"></app-subir-imagen-sys-av-dialog-2>
+
 <app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
   [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"
   (imagenEliminadaEvent)="onEliminarImagen($event)"
   [mostrarBotonEliminar]="usuario.idRol == '4' || usuario.idRol == '1' || usuario.idRol == '5'"></app-modal-visor-varias-imagenes>
+
+<app-visor-imagenes-sys-av-dialog [mostrarModal]="mostrarModalVisorImagenAV"
+  [imagenesPorDispositivo]="imagenesPorDispositivo" [titulo]="tituloVisor!" [mostrarBotonEliminar]="true"
+  (closeEvent)="mostrarModalVisorImagenAV = false" (imagenEliminadaEvent)="onEliminarImagen($event)">
+</app-visor-imagenes-sys-av-dialog>
 
 <app-chat-mantenimiento-sys-av-dialog *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
   (closeEvent)="mostrarModalChat = false"
