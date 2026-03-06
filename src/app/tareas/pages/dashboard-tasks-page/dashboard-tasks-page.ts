@@ -126,15 +126,15 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
   obtenerTareas() {
     this.usuario.idRol == '1'
       ? this.obtenerTodasTareas()
-      : this.obtenerTareasPorResponsable();
+      : this.obtenerTareasPorResponsable(this.idsResponsablesGlobales);
   }
 
-  obtenerTareasPorResponsable() {
+  obtenerTareasPorResponsable(idsResponsables: string[]) {
 
     if (this.tareasSub) this.tareasSub.unsubscribe();
 
     this.tareasSub = this.tareasService
-      .getByResponsables([this.responsableTarea.id!])
+      .getByResponsables(idsResponsables)
       .subscribe(tareas => {
         this.tareas = tareas;
         this.distribuirTareas(this.tareas);
@@ -146,7 +146,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
     if (this.tareasSub) this.tareasSub.unsubscribe();
 
     const observable = this.esGlobal
-      ? this.tareasService.getAll()
+      ? this.tareasService.getByResponsables(this.idsResponsablesGlobales)
       : this.tareasService.getBySucursal(this.idSucursalSeleccionada);
 
     this.tareasSub = observable.subscribe(tareas => {
