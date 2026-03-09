@@ -1,178 +1,129 @@
+<div class="flip-container" [id]="tarea.id">
+  <div class="flipper">
+    <div class="front">
+      <div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()" [id]="'front-task-'+tarea.id!"
+        (dblclick)="girar(tarea.id!)">
 
-  <div class="flip-container" [id]="tarea.id">
-                <div class="flipper">
-                    <div class="front">
-                       <div class="task-card" cdkDrag [cdkDragData]="tarea" (click)="onClick()" [id]="'front-task-'+tarea.id!" (dblclick)="girar(tarea.id!)">
+        <div class="priority-badge">
+          <span *ngIf="tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
+          <span *ngIf="tarea.idEisenhower == '2'" pTooltip="VALOR! Planifícalo ya">C2:💎</span>
+          <span *ngIf="tarea.idEisenhower == '3'" pTooltip="RUIDO! Si puedes, delégalo">C3:📢</span>
+          <span *ngIf="tarea.idEisenhower == '4'" pTooltip="TRANQUILO.. Puede esperar">C4:⏳</span>
+        </div>
 
-  <div class="priority-badge">
-    <span *ngIf="tarea.idEisenhower == '1'" pTooltip="PELIGRO! Hazlo ya">C1:🔥</span>
-    <span *ngIf="tarea.idEisenhower == '2'" pTooltip="VALOR! Planifícalo ya">C2:💎</span>
-    <span *ngIf="tarea.idEisenhower == '3'" pTooltip="RUIDO! Si puedes, delégalo">C3:📢</span>
-    <span *ngIf="tarea.idEisenhower == '4'" pTooltip="TRANQUILO.. Puede esperar">C4:⏳</span>
-  </div>
+        <div class="d-flex align-items-center mb-1">
+          <div class="titulo">
+            {{ tarea.titulo }}
+          </div>
+        </div>
 
-  <div class="d-flex align-items-center mb-1">
-    <div class="titulo">
-      {{ tarea.titulo }}
-    </div>
-  </div>
+        <!-- SUCURSAL -->
+        <div class="sucursal-info" *ngIf="nombreSucursal">
+          <span class="sucursal-badge">
+            {{ nombreSucursal }}
+          </span>
+        </div>
 
-  <!-- SUCURSAL -->
-  <div class="sucursal-info" *ngIf="nombreSucursal">
-    <span class="sucursal-badge">
-      {{ nombreSucursal }}
-    </span>
-  </div>
+        <!-- ETIQUETA -->
+        <div class="fila-etiqueta" *ngIf="tarea.idEtiqueta">
+          <div class="etiqueta-contenedor">
+            <span class="etiqueta-icono" [style.background]="getEtiquetaColor(tarea.idEtiqueta)">
+            </span>
+            <span class="etiqueta-texto">
+              {{ getEtiquetaNombre(tarea.idEtiqueta) }}
+            </span>
+          </div>
+        </div>
 
-  <!-- ETIQUETA -->
-  <div class="fila-etiqueta" *ngIf="tarea.idEtiqueta">
-    <div class="etiqueta-contenedor">
-      <span class="etiqueta-icono" [style.background]="getEtiquetaColor(tarea.idEtiqueta)">
-      </span>
-      <span class="etiqueta-texto">
-        {{ getEtiquetaNombre(tarea.idEtiqueta) }}
-      </span>
-    </div>
-  </div>
+        <!-- CATEGORÍA -->
+        <div>{{ tarea.categoria }}</div>
 
-  <!-- CATEGORÍA -->
-  <div>{{ tarea.categoria }}</div>
+        <!-- META -->
+        <div class="meta">
+          <span class="fecha">
+            {{ tarea.fecha | date:'dd/MM/yyyy' }}
 
-  <!-- META -->
-  <div class="meta">
-    <span class="fecha">
-      {{ tarea.fecha | date:'dd/MM/yyyy' }}
+            <ng-container *ngIf="tarea.deathline">
+              · ⏰ {{ tarea.deathline | date:'dd/MM/yyyy' }}
+            </ng-container>
+          </span>
 
-      <ng-container *ngIf="tarea.deathline">
-        · ⏰ {{ tarea.deathline | date:'dd/MM/yyyy' }}
-      </ng-container>
-    </span>
+          <span class="estatus estatus-{{ tarea.idEstatus }}"
+            pTooltip="{{ estatusMap.get(tarea.idEstatus) || '' }}"></span>
+        </div>
 
-    <span class="estatus estatus-{{ tarea.idEstatus }}" pTooltip="{{ estatusMap.get(tarea.idEstatus) || '' }}"></span>
-  </div>
+        <div class="subtareas-info" *ngIf="tarea.subtareas?.length"
+          pTooltip="{{ getSubtareasCompletadas(tarea) }} / {{ tarea.subtareas?.length }} subtareas completadas"
+          tooltipPosition="top">
 
-  <div class="subtareas-info" *ngIf="tarea.subtareas?.length"
-    pTooltip="{{ getSubtareasCompletadas(tarea) }} / {{ tarea.subtareas?.length }} subtareas completadas"
-    tooltipPosition="top">
+          <i class="bx bx-check-square me-1"></i>
+          <span class="fw-semibold">
+            {{ getSubtareasCompletadas(tarea) }}/{{ tarea.subtareas?.length }}
+          </span>
 
-    <i class="bx bx-check-square me-1"></i>
-    <span class="fw-semibold">
-      {{ getSubtareasCompletadas(tarea) }}/{{ tarea.subtareas?.length }}
-    </span>
+        </div>
 
-  </div>
+        <app-avatares-responsables-tarea [tarea]="tarea"
+          [responsables]="responsables"></app-avatares-responsables-tarea>
 
+        <!-- PROGRESO -->
+        <div *ngIf="tarea.porcentaje !== undefined" class="mt-3">
+          <div class="progress" style="height: 20px;">
+            <div class="progress-bar" [ngClass]="getProgressColor(tarea.porcentaje)" [style.width.%]="tarea.porcentaje">
+              {{ tarea.porcentaje }}%
+            </div>
+          </div>
+        </div>
 
+        <!-- ARCHIVAR -->
+        <button *ngIf="tarea.idEstatus === '4'" class="btn btn-sm btn-outline-secondary mt-2"
+          (click)="archivarTarea(tarea); $event.stopPropagation()">
+          <i class="bx bx-archive"></i> Archivar
+        </button>
 
-  <!-- <div class="avatars-container" *ngIf="tarea.idsResponsables?.length">
-    <ngx-avatars *ngFor="let r of getResponsablesDeTarea(tarea)" [name]="r.nombre" [size]="30" class="avatar-item"
-      pTooltip="{{r.nombre }}" [bgColor]="r.color">
-    </ngx-avatars>
-  </div> -->
+        <!-- DEADLINE -->
+        <div class="deadline-wrapper" (click)="$event.stopPropagation()">
 
-  <app-avatares-responsables-tarea [tarea]="tarea" [responsables]="responsables"></app-avatares-responsables-tarea>
+          <i class="fa-solid me-2 visibility-icon mt-2" [class.fa-lock-open]="tarea.visibleGlobal !== false"
+            [class.fa-lock]="tarea.visibleGlobal === false" [class.text-success]="tarea.visibleGlobal !== false"
+            [class.text-danger]="tarea.visibleGlobal === false"
+            [pTooltip]="tarea.visibleGlobal === false ? 'PRIVADO' : 'PÚBLICO'" tooltipPosition="top">
+          </i>
 
+          <!-- DEADLINE -->
+          <div class="deadline-indicator" *ngIf="tarea.deathline && tarea.idEstatus !== '4'">
 
-
-  <!-- PROGRESO -->
-  <div *ngIf="tarea.porcentaje !== undefined" class="mt-3">
-    <div class="progress" style="height: 20px;">
-      <div class="progress-bar" [ngClass]="getProgressColor(tarea.porcentaje)" [style.width.%]="tarea.porcentaje">
-        {{ tarea.porcentaje }}%
-      </div>
-    </div>
-  </div>
-
-  <!-- ARCHIVAR -->
-  <button *ngIf="tarea.idEstatus === '4'" class="btn btn-sm btn-outline-secondary mt-2"
-    (click)="archivarTarea(tarea); $event.stopPropagation()">
-    <i class="bx bx-archive"></i> Archivar
-  </button>
-
-  <!-- DEADLINE -->
-  <div class="deadline-wrapper" (click)="$event.stopPropagation()">
-
-    <i class="fa-solid me-2 visibility-icon mt-2" [class.fa-lock-open]="tarea.visibleGlobal !== false"
-      [class.fa-lock]="tarea.visibleGlobal === false" [class.text-success]="tarea.visibleGlobal !== false"
-      [class.text-danger]="tarea.visibleGlobal === false"
-      [pTooltip]="tarea.visibleGlobal === false ? 'PRIVADO' : 'PÚBLICO'" tooltipPosition="top">
-    </i>
-    
-    <!-- DEADLINE -->
-    <div class="deadline-indicator" *ngIf="tarea.deathline && tarea.idEstatus !== '4'">
-
-      <div class="mini-pie" [style.--progress]="getPorcentajeUsado(tarea)">
-      </div>
-  
-
-
-
-
-      <div class="mini-text">
-        Restan {{ getDiasRestantes(tarea) }} días
-      </div>
-
-    </div>
-
-<i class='bx bx-reflect-vertical bx-sm' tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'" 
-[ngClass]="{'text-primary':tarea.notas != undefined && tarea.notas != ''}" (click)="girar(tarea.id!)"></i>
-
-  <label class="cosmic-checkbox">
-  <input type="checkbox" [(ngModel)]="checkRevision" (change)="atualizarRevision()"/>
-  <div class="checkbox-container">
-    <div class="checkbox-box">
-      <div class="checkbox-bg"></div>
-
-      <svg class="checkmark" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M4 12.5L9.5 18L20 6"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></path>
-      </svg>
-
-      <div class="particle p1"></div>
-      <div class="particle p2"></div>
-      <div class="particle p3"></div>
-      <div class="particle p4"></div>
-      <div class="particle p5"></div>
-      <div class="particle p6"></div>
-
-      <div class="ring ring-1"></div>
-      <div class="ring ring-2"></div>
-      <div class="ring ring-3"></div>
-
-      <div class="spark s1"></div>
-      <div class="spark s2"></div>
-      <div class="spark s3"></div>
-      <div class="spark s4"></div>
-      <div class="spark s5"></div>
-      <div class="spark s6"></div>
-      <div class="spark s7"></div>
-      <div class="spark s8"></div>
-    </div>
-    <span class="label-text"></span>
-  </div>
-</label>
-
-  </div>
-
-</div>
-
-
-                    </div>
-                    <div class="back p-3" (dblclick)="girar(tarea.id!)">
-                        <h5 class="text-center">Notas</h5>
-                        <textarea class="form-control" [id]="'back-task-'+tarea.id" [placeholder]="'Escribe aquí...'" 
-                        style="height:120px; border:1px solid #ddd; background-color: transparent;" [(ngModel)]="tarea.notas"></textarea>
-                       <div class="d-flex justify-content-end flex-wrap gap-2 mt-2">
-                           <button (click)="guardarNotas()" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GUARDAR'"><i class='bx bx-save bx-sm' ></i></button>
-                           <button (click)="girar(tarea.id!)" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'"><i class='bx bx-reflect-vertical bx-sm' ></i></button>
-                       </div>
-                    </div>
-                </div>
+            <div class="mini-pie" [style.--progress]="getPorcentajeUsado(tarea)">
             </div>
 
+            <div class="mini-text">
+              Restan {{ getDiasRestantes(tarea) }} días
+            </div>
 
+          </div>
+
+          <i class='bx bx-reflect-vertical bx-sm' tooltipPosition="top" [pTooltip]="'GIRAR TARJETA'"
+            [ngClass]="{'text-primary':tarea.notas != undefined && tarea.notas != ''}" (click)="girar(tarea.id!)"></i>
+
+          <app-cosmic-chechbox [tarea]="tarea"></app-cosmic-chechbox>
+
+        </div>
+
+      </div>
+
+
+    </div>
+    <div class="back p-3" (dblclick)="girar(tarea.id!)">
+      <h5 class="text-center">Notas</h5>
+      <textarea class="form-control" [id]="'back-task-'+tarea.id" [placeholder]="'Escribe aquí...'"
+        style="height:120px; border:1px solid #ddd; background-color: transparent;"
+        [(ngModel)]="tarea.notas"></textarea>
+      <div class="d-flex justify-content-end flex-wrap gap-2 mt-2">
+        <button (click)="guardarNotas()" class="btn btn-light p-1" tooltipPosition="top" [pTooltip]="'GUARDAR'"><i
+            class='bx bx-save bx-sm'></i></button>
+        <button (click)="girar(tarea.id!)" class="btn btn-light p-1" tooltipPosition="top"
+          [pTooltip]="'GIRAR TARJETA'"><i class='bx bx-reflect-vertical bx-sm'></i></button>
+      </div>
+    </div>
+  </div>
+</div>

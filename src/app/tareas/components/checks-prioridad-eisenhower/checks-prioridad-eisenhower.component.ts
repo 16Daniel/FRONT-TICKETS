@@ -3,16 +3,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ControlContainer, FormsModule, NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-eisenhower-priority-checks',
+  selector: 'app-checks-prioridad-eisenhower',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './eisenhower-priority-checks.component.html',
-  styleUrl: './eisenhower-priority-checks.component.scss',
+  templateUrl: './checks-prioridad-eisenhower.component.html',
+  styleUrl: './checks-prioridad-eisenhower.component.scss',
   viewProviders: [
     { provide: ControlContainer, useExisting: NgForm }
   ]
 })
-export class EisenhowerPriorityChecksComponent {
+export class ChecksPrioridadEinsehowerComponent {
   @Input() modelo: any = {
     urgente: null,
     importante: null

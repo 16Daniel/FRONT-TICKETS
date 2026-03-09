@@ -16,7 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
@@ -69,13 +69,13 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
   idEtiquetaSeleccionada = '';
 
   tareas: Tarea[] = [];
-  private allTask: Tarea[] = [];
+  // private allTask: Tarea[] = [];
 
-  esGlobal = false;
+  tipoTablero: 'TABLERO SUCURSALES' | 'TABLERO RESPONSABLES' | 'MI TABLERO' = 'MI TABLERO';
 
   responsablesTodos: ResponsableTarea[] = [];
   idResponsableSeleccionado = '';
-  idsResponsablesGlobales: string[] = [];
+  idsResponsablesFiltro: string[] = [];
 
   sucursalSeleccionadaNombre?: string;
   textoBusqueda!: string;
@@ -100,7 +100,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
-    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+    // this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
   }
 
   ngOnInit(): void {
@@ -114,6 +114,9 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
 
     this.raskResponsibleService.responsables$.subscribe(responsables => {
       this.responsablesTodos = responsables;
+      this.responsablesTodos = [...responsables].sort(
+        (a, b) => Number(a.idSucursal) - Number(b.idSucursal)
+      );
     });
   }
 
@@ -124,68 +127,49 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
   }
 
   obtenerTareas() {
-    this.usuario.idRol == '1'
-      ? this.obtenerTodasTareas()
-      : this.obtenerTareasPorResponsable();
+    switch (this.tipoTablero) {
+      case 'TABLERO RESPONSABLES':
+        this.obtenerTareasPorResponsable(this.idsResponsablesFiltro);
+        break;
+      case 'TABLERO SUCURSALES':
+        this.obtenerTareasPorSucursal(this.idSucursalSeleccionada);
+        break;
+      default:
+        this.obtenerTareasPorResponsable([this.responsableTarea.id!]);
+        break;
+    }
   }
 
-  obtenerTareasPorResponsable() {
+  obtenerTareasPorResponsable(idsResponsables: string[]) {
 
     if (this.tareasSub) this.tareasSub.unsubscribe();
 
     this.tareasSub = this.tareasService
-      .getByResponsables([this.responsableTarea.id!])
+      .getByResponsables(idsResponsables)
       .subscribe(tareas => {
         this.tareas = tareas;
+        this.tareas = this.quitarTareasPrivadas(
+          this.tareas,
+          this.responsableTarea.id!
+        );
         this.distribuirTareas(this.tareas);
       });
   }
 
-  obtenerTodasTareas() {
+  obtenerTareasPorSucursal(idSucursal: string) {
 
     if (this.tareasSub) this.tareasSub.unsubscribe();
 
-    const observable = this.esGlobal
-      ? this.tareasService.getAll()
-      : this.tareasService.getBySucursal(this.idSucursalSeleccionada);
-
-    this.tareasSub = observable.subscribe(tareas => {
-
-      this.allTask = tareas;
-
-      let tareasProcesadas = [...tareas];
-
-      if (this.esGlobal) {
-
-        const texto = this.textoBusqueda?.trim().toLowerCase();
-
-        if (texto) {
-          tareasProcesadas = tareasProcesadas.filter(t =>
-            t.titulo?.toLowerCase().includes(texto) ||
-            t.descripcion?.toLowerCase().includes(texto)
-          );
-        }
-        else if (this.idsResponsablesGlobales.length > 0) {
-          tareasProcesadas = tareasProcesadas.filter(t =>
-            t.idsResponsables?.some(id =>
-              this.idsResponsablesGlobales.includes(id)
-            )
-          );
-        }
-
-      } else {
-        tareasProcesadas = this.filtrarTareasVisibles(
-          tareasProcesadas,
+    this.tareasSub = this.tareasService
+      .getBySucursal(this.idSucursalSeleccionada)
+      .subscribe(tareas => {
+        this.tareas = tareas;
+        this.tareas = this.quitarTareasPrivadas(
+          this.tareas,
           this.responsableTarea.id!
         );
-      }
-
-      this.tareas = tareasProcesadas;
-      this.distribuirTareas(this.tareas);
-
-      if (this.idEtiquetaSeleccionada) this.onEtiquetaChange();
-      if (this.idResponsableSeleccionado) this.onResponsableChange();
-    });
+        this.distribuirTareas(this.tareas);
+      });
   }
 
   obtenerSucursales() {
@@ -203,7 +187,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  filtrarTareasVisibles(tareas: Tarea[], miIdResponsable: string): Tarea[] {
+  private quitarTareasPrivadas(tareas: Tarea[], miIdResponsable: string): Tarea[] {
     return tareas.filter(t => {
       if (t.visibleGlobal === undefined) return true;
       if (t.visibleGlobal === true) return true;
@@ -211,6 +195,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  // FILTROS POR SUCURSAL
   onSucursalChange() {
     this.sucursalSeleccionadaNombre =
       this.sucursalesMap.get(this.idSucursalSeleccionada);
@@ -235,7 +220,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
     this.distribuirTareas(filtradas);
   }
 
-  async onResponsableChange() {
+  onResponsableChange() {
     if (!this.idResponsableSeleccionado) {
       this.obtenerTareas();
       return;
@@ -247,6 +232,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
 
     this.distribuirTareas(filtradas);
   }
+  // FIN FILTROS POR SUCURSAL
 
   private distribuirTareas(tareas: Tarea[]) {
     this.toDo = tareas.filter(x => x.idEstatus === '1');
@@ -261,7 +247,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
 
   get obtenerProyectos() {
-    return this.allTask.filter(x => x.esProyecto);
+    return this.tareas.filter(x => x.esProyecto);
   }
 
   get filtrarTareasGant() {
@@ -283,14 +269,14 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
 
   onBuscarText(texto: string) {
     this.textoBusqueda = texto;
+    // this.obtenerTareas();
+  }
+
+  onResponsablesFiltroChange(): void {
     this.obtenerTareas();
   }
 
-  onResponsablesGlobalesChange(): void {
-    this.obtenerTareas();
-  }
-
-  abrirDetalle(tarea: Tarea) {
+  abrirModalDetalle(tarea: Tarea) {
     this.tareaSeleccionada = { ...tarea };
     this.mostrarModalDetalleTarea = true;
   }

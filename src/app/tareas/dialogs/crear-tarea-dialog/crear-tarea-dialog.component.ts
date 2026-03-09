@@ -6,7 +6,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
-import { EisenhowerPriorityChecksComponent } from '../../components/eisenhower-priority-checks/eisenhower-priority-checks.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
@@ -19,6 +18,7 @@ import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 import { MessageService } from 'primeng/api';
+import { ChecksPrioridadEinsehowerComponent } from '../../components/checks-prioridad-eisenhower/checks-prioridad-eisenhower.component';
 
 @Component({
   selector: 'app-crear-tarea-dialog',
@@ -28,7 +28,7 @@ import { MessageService } from 'primeng/api';
     FormsModule,
     CommonModule,
     DropdownModule,
-    EisenhowerPriorityChecksComponent,
+    ChecksPrioridadEinsehowerComponent,
     MultiSelectModule,
     AvatarModule,
     TooltipModule

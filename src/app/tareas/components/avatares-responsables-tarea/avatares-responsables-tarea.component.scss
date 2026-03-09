@@ -1,7 +1,14 @@
+// .avatars-container {
+//   display: flex;
+//   gap: 6px;
+//   margin-top: 8px;
+// }
 .avatars-container {
   display: flex;
+  flex-wrap: wrap;   /* 👈 permite que bajen */
   gap: 6px;
   margin-top: 8px;
+  max-width: 100%;   /* evita que empuje la tarjeta */
 }
 
 /* CONTENEDOR */

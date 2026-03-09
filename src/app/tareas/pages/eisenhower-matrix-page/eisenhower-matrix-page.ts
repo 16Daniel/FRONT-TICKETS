@@ -9,22 +9,19 @@ import { ToastModule } from "primeng/toast";
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';
-import { LabelsTasksService } from '../../services/labels-tasks.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
-import { TaskEisenhowerCard } from '../../components/task-eisenhower-card/task-eisenhower-card';
 import { Subscription } from 'rxjs';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
+import { TarjetaTareaEisenhowerComponent } from '../../components/tarjeta-tarea-eisenhower/tarjeta-tarea-eisenhower.component';
 
 @Component({
   selector: 'app-eisenhower-matrix-page',
   standalone: true,
-  imports: [CommonModule, DragDropModule, TaskEisenhowerCard, DropdownModule, FormsModule, DetalleTareaDialogComponent, ToastModule],
+  imports: [CommonModule, DragDropModule, TarjetaTareaEisenhowerComponent, DropdownModule, FormsModule, DetalleTareaDialogComponent, ToastModule],
   providers: [MessageService],
   templateUrl: './eisenhower-matrix-page.html',
   styleUrl: './eisenhower-matrix-page.scss',
