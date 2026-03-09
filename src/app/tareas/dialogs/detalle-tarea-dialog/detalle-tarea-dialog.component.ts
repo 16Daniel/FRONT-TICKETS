@@ -10,7 +10,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { EisenhowerPriorityChecksComponent } from '../../components/eisenhower-priority-checks/eisenhower-priority-checks.component';
 import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
 import { Area } from '../../../areas/interfaces/area.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
@@ -31,6 +30,7 @@ import { SubirImgsTareasDialogComponent } from '../subir-imgs-tareas-dialog/subi
 import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";
 import { ContenedorSubtareasComponent } from '../../components/contenedor-subtareas/contenedor-subtareas.component';
 import { CajaComentariosTareaComponent } from '../../components/caja-comentarios-tarea/caja-comentarios-tarea.component';
+import { ChecksPrioridadEinsehowerComponent } from '../../components/checks-prioridad-eisenhower/checks-prioridad-eisenhower.component';
 
 @Component({
   selector: 'app-detalle-tarea-dialog',
@@ -45,7 +45,7 @@ import { CajaComentariosTareaComponent } from '../../components/caja-comentarios
     ModalVisorVariasImagenesComponent,
     SubirImgsTareasDialogComponent,
     CajaComentariosTareaComponent,
-    EisenhowerPriorityChecksComponent,
+    ChecksPrioridadEinsehowerComponent,
     ContenedorSubtareasComponent,
     LinkifyPipe,
     MultiSelectModule,

@@ -36,13 +36,14 @@ export class CabeceraTareasComponent {
   @Input() etiquetas: any[] = [];
   @Input() sucursalSeleccionadaNombre?: string;
   @Input() idSucursalSeleccionada!: string;
+  @Input() responsables: ResponsableTarea[] = [];
 
   idEtiquetaSeleccionada!: string;
   idResponsableSeleccionado!: string;
   idsResponsablesGlobalesSeleccionados: string[] = [];
   textoBusqueda?: string;
 
-  @Output() esGlobal = new EventEmitter<boolean>();
+  @Output() tipoTableroChange = new EventEmitter<any>();
   @Output() textoBusquedaChange = new EventEmitter<string>();
   @Output() sucursalChange = new EventEmitter<string>();
   @Output() etiquetaChange = new EventEmitter<string>();
@@ -51,8 +52,7 @@ export class CabeceraTareasComponent {
   @Output() verProyectosChange = new EventEmitter<boolean>();
   @Output() verGantChange = new EventEmitter<boolean>();
 
-  mostrarFiltrosGlobales = false;
-  responsables: ResponsableTarea[] = [];
+  tipoTablero: 'TABLERO SUCURSALES' | 'TABLERO RESPONSABLES' | 'MI TABLERO' = 'MI TABLERO';
   responsablesGlobalesOrdenados: ResponsableTarea[] = [];
   mostrarResponsables: boolean = false;
   mostrarModalEtiquetas = false;
@@ -69,43 +69,48 @@ export class CabeceraTareasComponent {
     this.mostrarResponsables = this.usuario.sucursales.filter(x => x.nombre === 'SISTEMAS').length > 0;
 
     this.taskResponsibleService.responsables$.subscribe(() => {
-      this.actualizarResponsables();
+      // this.actualizarResponsables();
     });
   }
 
-  onToggleModo(global: boolean): void {
+  onToggleModo(type: 'TABLERO SUCURSALES' | 'TABLERO RESPONSABLES' | 'MI TABLERO'): void {
 
-    if (global) {
-      this.ordenarResponsablesGlobales();
-    }
+    this.tipoTablero = type;
+
+    // if (this.tipoTablero === 'TABLERO RESPONSABLES') {
+    //   this.ordenarResponsablesGlobales();
+    // }
 
     this.idEtiquetaSeleccionada = '';
     this.idResponsableSeleccionado = '';
     this.idsResponsablesGlobalesSeleccionados = [];
     this.textoBusqueda = '';
 
-    this.mostrarFiltrosGlobales = global;
-
-    this.esGlobal.emit(global);
+    this.tipoTableroChange.emit(this.tipoTablero);
     this.responsableChange.emit(undefined as any);
     this.responsablesGlobalesChange.emit([]);
     this.textoBusquedaChange.emit(undefined as any);
 
-    this.actualizarResponsables();
+    // this.actualizarResponsables();
   }
 
   onSucursalChange(): void {
     this.sucursalChange.emit(this.idSucursalSeleccionada);
     this.idResponsableSeleccionado = undefined!;
     this.responsableChange.emit(undefined as any);
-    this.actualizarResponsables();
+    // this.actualizarResponsables();
   }
 
-  private actualizarResponsables(): void {
-    this.responsables = this.mostrarFiltrosGlobales
-      ? this.taskResponsibleService.filtrarGlobales()
-      : this.taskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
-  }
+  // private actualizarResponsables(): void {
+  //   debugger
+  //   if (this.tipoTablero === 'TABLERO RESPONSABLES') {
+  //     this.taskResponsibleService.filtrarGlobales()
+  //   }
+
+  //   if (this.tipoTablero === 'TABLERO SUCURSALES') {
+  //     this.taskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  //   }
+  // }
 
   onResponsableChange(id: string | null): void {
     this.responsableChange.emit(id ?? undefined as any);
@@ -124,14 +129,14 @@ export class CabeceraTareasComponent {
     this.textoBusquedaChange.emit(this.textoBusqueda);
   }
 
-  private ordenarResponsablesGlobales(): void {
-    this.responsablesGlobalesOrdenados = [...this.responsables].sort((a, b) => {
-      if (a.idSucursal === b.idSucursal) {
-        return a.nombre.localeCompare(b.nombre);
-      }
-      return a.idSucursal.localeCompare(b.idSucursal);
-    }).filter(x => x.esGlobal);
-  }
+  // private ordenarResponsablesGlobales(): void {
+  //   this.responsablesGlobalesOrdenados = [...this.responsables].sort((a, b) => {
+  //     if (a.idSucursal === b.idSucursal) {
+  //       return a.nombre.localeCompare(b.nombre);
+  //     }
+  //     return a.idSucursal.localeCompare(b.idSucursal);
+  //   }).filter(x => x.esGlobal);
+  // }
 
   onToggleProyectos() {
     this.verProyectosChange.emit(this.mostrarProyectos);

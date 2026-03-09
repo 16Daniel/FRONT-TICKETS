@@ -18,8 +18,8 @@
      <div class="columna p-3" cdkDropList id="c1" [cdkDropListData]="tc1" style="max-height: 300px; overflow: auto;"
     [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
-    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc1" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
-    </app-task-eisenhower-card>
+    <app-tarjeta-tarea-eisenhower [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc1" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
+    </app-tarjeta-tarea-eisenhower>
 
   </div>
 
@@ -34,8 +34,8 @@
 
      <div class="columna p-3" cdkDropList id="c2" [cdkDropListData]="tc2" style="max-height: 300px; overflow: auto;"
     [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
-    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc2" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
-    </app-task-eisenhower-card>
+    <app-tarjeta-tarea-eisenhower [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc2" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
+    </app-tarjeta-tarea-eisenhower>
 
   </div>
 
@@ -49,8 +49,8 @@
      <div class="columna p-3" cdkDropList id="c3" [cdkDropListData]="tc3" style="max-height: 300px; overflow: auto;"
     [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
-    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc3" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
-    </app-task-eisenhower-card>
+    <app-tarjeta-tarea-eisenhower [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc3" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
+    </app-tarjeta-tarea-eisenhower>
 
   </div>
 
@@ -63,8 +63,8 @@
       <div class="columna p-3" cdkDropList id="c4" [cdkDropListData]="tc4" style="max-height: 300px; overflow: auto;"
     [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="drop($event)">
 
-    <app-task-eisenhower-card [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc4" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
-    </app-task-eisenhower-card>
+    <app-tarjeta-tarea-eisenhower [catEstatusTareas]="catEstatusTareas" *ngFor="let t of tc4" [tarea]="t" (seleccionarTarea)="abrirDetalle(t)">
+    </app-tarjeta-tarea-eisenhower>
 
   </div>
 

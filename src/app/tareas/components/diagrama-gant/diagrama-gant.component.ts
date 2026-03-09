@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { CosmicChechboxComponent } from "../cosmic-chechbox/cosmic-chechbox.component";
 
 interface GanttTask {
   tarea: Tarea;
@@ -13,7 +14,7 @@ interface GanttTask {
 @Component({
   selector: 'app-diagrama-gant',
   standalone: true,
-  imports: [CommonModule, TooltipModule],
+  imports: [CommonModule, TooltipModule, CosmicChechboxComponent],
   templateUrl: './diagrama-gant.component.html',
   styleUrl: './diagrama-gant.component.scss'
 })

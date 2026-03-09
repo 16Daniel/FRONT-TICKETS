@@ -1,26 +1,85 @@
 <div class="row align-items-center">
 
   <!-- TOGGLE LOCAL / GLOBAL -->
-  <div class="col-12 mb-3" *ngIf="usuario.idRol == '1'">
+  <div class="col-12 mb-3">
     <div class="d-flex gap-2">
 
-      <button type="button" class="btn" (click)="onToggleModo(false)" [class.btn-primary]="!mostrarFiltrosGlobales"
-        [class.btn-outline-primary]="mostrarFiltrosGlobales">
-        Filtros locales
+      <button type="button" class="btn" (click)="onToggleModo('MI TABLERO')"
+        [class.btn-primary]="tipoTablero === 'MI TABLERO'" [class.btn-outline-primary]="tipoTablero !== 'MI TABLERO'">
+        MI TABLERO
       </button>
 
-      <button type="button" class="btn" (click)="onToggleModo(true)" [class.btn-primary]="mostrarFiltrosGlobales"
-        [class.btn-outline-primary]="!mostrarFiltrosGlobales">
-        Filtros globales
+      <button type="button" class="btn" (click)="onToggleModo('TABLERO SUCURSALES')"
+        [class.btn-primary]="tipoTablero === 'TABLERO SUCURSALES'"
+        [class.btn-outline-primary]="tipoTablero !== 'TABLERO SUCURSALES'">
+        TABLERO POR DEPARTAMENTO
+      </button>
+
+      <button type="button" class="btn" (click)="onToggleModo('TABLERO RESPONSABLES')"
+        [class.btn-primary]="tipoTablero === 'TABLERO RESPONSABLES'"
+        [class.btn-outline-primary]="tipoTablero !== 'TABLERO RESPONSABLES'">
+        TABLERO POR RESPONSABLE
       </button>
 
     </div>
   </div>
 
+  <!-- TEXTO DESCRIPTIVO -->
+  <div class="col-12 mb-3">
+
+    <div class="card border-0 shadow-sm p-3"
+      style="background: linear-gradient(90deg, #eef4ff, #f7f9ff); border-left:4px solid #4f6df5;">
+
+      <div class="d-flex align-items-center gap-3">
+
+        <i class="pi pi-th-large text-primary" style="font-size:1.4rem"></i>
+
+        <div>
+
+          <div class="fw-semibold">
+
+            <span *ngIf="tipoTablero === 'MI TABLERO'">
+              MI TABLERO PERSONAL
+            </span>
+
+            <span *ngIf="tipoTablero === 'TABLERO SUCURSALES'">
+              TABLERO POR DEPARTAMENTO
+            </span>
+
+            <span *ngIf="tipoTablero === 'TABLERO RESPONSABLES'">
+              TABLERO POR RESPONSABLE
+            </span>
+
+          </div>
+
+          <small class="text-muted">
+
+            <span *ngIf="tipoTablero === 'MI TABLERO'">
+              VISUALIZA TUS TAREAS Y PROYECTOS ASIGNADOS.
+            </span>
+
+            <span *ngIf="tipoTablero === 'TABLERO SUCURSALES'">
+              CONSULTA LAS TAREAS Y PROYECTOS DE CADA SUCURSAL O DEPARTAMENTO.
+            </span>
+
+            <span *ngIf="tipoTablero === 'TABLERO RESPONSABLES'">
+              REVISA LAS TAREAS Y PROYECTOS ASIGNADOS A CADA RESPONSABLE DEL SISTEMA.
+            </span>
+
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
   <!-- ========================= -->
-  <!-- FILTROS LOCALES (ACTUALES) -->
+  <!-- FILTROS POR SUCURSAL -->
   <!-- ========================= -->
-  <div class="row" *ngIf="!mostrarFiltrosGlobales && usuario.idRol == '1'">
+  <div class="row" *ngIf="tipoTablero === 'TABLERO SUCURSALES'">
 
     <!-- SUCURSAL -->
     <div class="col-md-4">
@@ -84,14 +143,14 @@
   </div>
 
   <!-- ========================= -->
-  <!-- FILTROS GLOBALES (NUEVOS) -->
+  <!-- FILTROS POR RESPONSABLE -->
   <!-- ========================= -->
-  <div class="row" *ngIf="mostrarFiltrosGlobales">
+  <div class="row" *ngIf="tipoTablero === 'TABLERO RESPONSABLES'">
 
     <!-- RESPONSABLES GLOBALES -->
     <div class="col-md-6">
       <p class="fw-bold mb-1">RESPONSABLES</p>
-      <p-multiSelect [options]="responsablesGlobalesOrdenados" [(ngModel)]="idsResponsablesGlobalesSeleccionados"
+      <p-multiSelect [options]="responsables" [(ngModel)]="idsResponsablesGlobalesSeleccionados"
         optionLabel="nombre" optionValue="id" [filter]="true" display="chip" placeholder="RESPONSABLES GLOBALES"
         class="custom-responsable-dropdown" [style]="{ width: '100%' }"
         (onChange)="onResponsablesGlobalesChange($event.value)" [disabled]="textoBusqueda != ''">
@@ -110,59 +169,15 @@
 
     </div>
 
-    <!-- BUSQUEDA GLOBAL -->
-    <div class="col-md-6">
-      <p class="fw-bold mb-1">BÚSQUEDA GLOBAL</p>
-      <span class="p-input-icon-left w-100">
-        <input type="text" class="form-control" style="height: 45px;" (input)="onBuscarText()"
-          [(ngModel)]="textoBusqueda" placeholder="Buscar por título, descripción"
-          [disabled]="idsResponsablesGlobalesSeleccionados.length > 0" />
-      </span>
-    </div>
-
   </div>
 
   <div class="d-flex justify-content-between align-items-center mt-3">
 
-    <div class="d-flex align-items-center gap-3">
-
-      <!-- LOCAL -->
-      <div *ngIf="!mostrarFiltrosGlobales"
-        class="px-3 py-2 rounded-3 border bg-light d-flex align-items-center gap-2 shadow-sm">
-
-        <i class="pi pi-building fs-4 text-primary"></i>
-
-        <div class="d-flex flex-column">
-          <span class="fw-semibold fs-5">
-            {{ sucursalSeleccionadaNombre || 'Sucursal actual' }}
-          </span>
-        </div>
-
-      </div>
-
-      <!-- GLOBAL -->
-      <div *ngIf="mostrarFiltrosGlobales"
-        class="px-4 py-2 rounded-3 bg-primary text-white d-flex align-items-center gap-2 shadow">
-
-        <i class="pi pi-globe fs-3"></i>
-
-        <div class="d-flex flex-column">
-          <span class="fw-bold text-uppercase" style="font-size: 0.7rem; opacity: 0.85;">
-            Modo
-          </span>
-          <span class="fw-bold fs-5">
-            BÚSQUEDA GLOBAL
-          </span>
-        </div>
-
-      </div>
-
-    </div>
-
-
     <!-- ACCIONES -->
-    <div class="acciones">
-      <div class="d-flex align-items-center gap-3 ms-auto">
+    <div class="acciones d-flex align-items-center gap-3 ms-auto flex-wrap">
+
+      <!-- TABLERO / GANT -->
+      <div class="d-flex align-items-center gap-3">
         <label class="form-check-label fs-4 mb-0" *ngIf="!mostrarGant">
           TABLERO
         </label>
@@ -176,7 +191,8 @@
         </div>
       </div>
 
-      <div class="d-flex align-items-center gap-3 ms-auto">
+      <!-- TAREAS / PROYECTOS -->
+      <div class="d-flex align-items-center gap-3">
         <label class="form-check-label fs-4 mb-0" *ngIf="!mostrarProyectos">
           TAREAS
         </label>
