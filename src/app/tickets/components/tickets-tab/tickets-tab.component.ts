@@ -16,8 +16,8 @@ import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/d
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
-import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
+import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';

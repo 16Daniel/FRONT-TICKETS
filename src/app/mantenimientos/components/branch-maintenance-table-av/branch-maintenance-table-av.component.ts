@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
-import { ModalFinalCommentsComponent } from '../../../dialogs/modal-final-comments/modal-final-comments.component';
-import { ModalAvMttoImguploaderComponent } from '../../../dialogs/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
-import { ModalVisorVariasImagenesComponent } from '../../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { ModalMaintenanceChatComponent } from '../../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
-import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interface';
+import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
+import { ModalAvMttoImguploaderComponent } from '../../dialogs/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
+import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalMaintenanceChatComponent } from '../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
+import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
 
 
 @Component({

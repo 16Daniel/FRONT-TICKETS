@@ -27,7 +27,7 @@ import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { Mantenimiento6x6AV } from '../../../mantenimientos/interfaces/mantenimiento-av.interface';
 import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
 

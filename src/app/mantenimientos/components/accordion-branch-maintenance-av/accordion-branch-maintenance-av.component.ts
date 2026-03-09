@@ -5,12 +5,12 @@ import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 
 import { BranchMaintenanceTableAvComponent } from '../branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../../usuarios/services/users.service';
-import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
-import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
-import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interface';
-import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-av',
