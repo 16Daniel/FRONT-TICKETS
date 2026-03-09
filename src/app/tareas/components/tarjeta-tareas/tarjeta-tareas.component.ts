@@ -20,19 +20,15 @@ import { StatusTaskService } from '../../services/status-task.service';
 import { AvataresResponsablesTareaComponent } from "../avatares-responsables-tarea/avatares-responsables-tarea.component";
 import { FormsModule } from '@angular/forms';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Timestamp } from '@angular/fire/firestore';
+import { CosmicChechboxComponent } from "../cosmic-chechbox/cosmic-chechbox.component";
 
 @Component({
   selector: 'app-tarjeta-tareas',
   standalone: true,
-  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent,FormsModule],
+  imports: [CommonModule, DragDropModule, NgxChartsModule, AvatarModule, TooltipModule, AvataresResponsablesTareaComponent, FormsModule, CosmicChechboxComponent],
   providers: [MessageService],
   templateUrl: './tarjeta-tareas.component.html',
-  styleUrls:[
-    './tarjeta-tareas.component.scss',
-    './tarjeta-tareas-checkbox.component.scss'
-  ]
-
+  styleUrls: ['./tarjeta-tareas.component.scss']
 })
 export class TarjetaTareasComponent implements OnInit {
 
@@ -53,9 +49,8 @@ export class TarjetaTareasComponent implements OnInit {
   sucursalesService = inject(BranchesService);
   estatusService = inject(StatusTaskService);
   usuario: Usuario;
-  checkRevision:boolean = false;
-  responsable:ResponsableTarea;
-   constructor(public cdr:ChangeDetectorRef){
+  responsable: ResponsableTarea;
+  constructor(public cdr: ChangeDetectorRef) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!);
   }
@@ -78,8 +73,6 @@ export class TarjetaTareasComponent implements OnInit {
       this.responsables = responsable;
       this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
     });
-
-    this.checkRevision = this.obtenerRevision();
   }
 
   onClick() {
@@ -193,64 +186,26 @@ export class TarjetaTareasComponent implements OnInit {
     return this.sucursales.find(x => x.id == idSucursal)?.nombre ?? '';
   }
 
-girar(id:string)
-{
- let card = document.getElementById(id);
-  if(card != null)
-    {
-       let front = document.getElementById('front-task-'+id);
+  girar(id: string) {
+    let card = document.getElementById(id);
+    if (card != null) {
+      let front = document.getElementById('front-task-' + id);
       card!.classList.toggle('flipped');
-      if(card.classList.contains('flipped'))
-        {
-          let front = document.getElementById('front-task-'+id);
-          let back = document.getElementById('back-task-'+id);
-          back!.style.height = (front!.offsetHeight-95)+'px';
+      if (card.classList.contains('flipped')) {
+        let front = document.getElementById('front-task-' + id);
+        let back = document.getElementById('back-task-' + id);
+        back!.style.height = (front!.offsetHeight - 95) + 'px';
 
-        }
+      }
     }
-}
+  }
 
-async guardarNotas()
-{
-   this.girar(this.tarea.id!);
-   setTimeout(() => {
+  async guardarNotas() {
+    this.girar(this.tarea.id!);
+    setTimeout(() => {
       this.tareasService.update(this.tarea, this.tarea.id!);
       this.showMessage('success', 'Success', 'Guardado correctamente');
-   }, 600);
-}
-
-obtenerRevision():boolean
-{
-  let revisiones = this.tarea.revisiones;
-    if(revisiones == undefined){ revisiones = [];}
-  let temp:boolean =revisiones.filter(x =>x.idUsuario == this.responsable.pin && x.ultimafecha >= Timestamp.fromDate(new Date())).length>0
-  ? this.tarea.revisiones.filter(x =>x.idUsuario == this.responsable.pin)[0].revisado : false;
-  return temp;
-}
-
-async atualizarRevision()
-{
-   let nuevafecha = new Date();
-   nuevafecha.setDate(nuevafecha.getDate()+1);
-    nuevafecha.setHours(2,0,0,0);
-    let revisiones = this.tarea.revisiones;
-    if(revisiones == undefined){ revisiones = [];}
-  if(revisiones.filter(x=>x.idUsuario == this.responsable.pin).length == 0)
-    {
-        revisiones.push({idUsuario:this.responsable.pin,revisado:this.checkRevision,ultimafecha:Timestamp.fromDate(nuevafecha)});
-    } else
-      {
-          for(let item of revisiones)
-            {
-              if(item.idUsuario == this.responsable.pin)
-                {
-                  item.ultimafecha = Timestamp.fromDate(nuevafecha);
-                  item.revisado = this.checkRevision;
-                }
-            }
-      }
-  this.tarea.revisiones = revisiones;
-  await this.tareasService.update(this.tarea, this.tarea.id!);
-}
+    }, 600);
+  }
 
 }

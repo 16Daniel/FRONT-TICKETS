@@ -1,17 +1,17 @@
 <app-cabecera-tareas [sucursales]="sucursales" [etiquetas]="etiquetasFiltradas" [sucursalesMap]="sucursalesMap"
   [idSucursalSeleccionada]="idSucursalSeleccionada" [sucursalSeleccionadaNombre]="sucursalSeleccionadaNombre"
-  (sucursalChange)="idSucursalSeleccionada = $event; onSucursalChange()"
+  [responsables]="responsablesTodos" (sucursalChange)="idSucursalSeleccionada = $event; onSucursalChange()"
   (etiquetaChange)="idEtiquetaSeleccionada = $event; onEtiquetaChange()"
   (responsableChange)="idResponsableSeleccionado = $event; onResponsableChange()"
-  (responsablesGlobalesChange)="idsResponsablesGlobales = $event; onResponsablesGlobalesChange()"
-  (textoBusquedaChange)="onBuscarText($event)" (esGlobal)="esGlobal = $event"
+  (responsablesGlobalesChange)="idsResponsablesFiltro = $event; onResponsablesFiltroChange()"
+  (textoBusquedaChange)="onBuscarText($event)" (tipoTableroChange)="tipoTablero = $event"
   (verProyectosChange)="mostrarProyectos = $event" (verGantChange)="mostrarGant = $event">
 </app-cabecera-tareas>
 
 <p></p>
 
 @if(mostrarGant) {
-<app-diagrama-gant [tareas]="filtrarTareasGant" (seleccionarTarea)="abrirDetalle($event)"
+<app-diagrama-gant [tareas]="filtrarTareasGant" (seleccionarTarea)="abrirModalDetalle($event)"
   [mostrarProyectos]="mostrarProyectos"></app-diagrama-gant>
 }
 @else {
@@ -19,13 +19,10 @@
   [working]="mostrarProyectos ? filtrarProyectos( working) : filtrarTareas(working)"
   [check]="mostrarProyectos ? filtrarProyectos( check) : filtrarTareas( check)"
   [done]="mostrarProyectos ? filtrarProyectos( done) : filtrarTareas(done)" [sucursalesMap]="sucursalesMap"
-  [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)" (seleccionarTarea)="abrirDetalle($event)"
-  [textoBusqueda]="textoBusqueda" [mostrarProyectos]="mostrarProyectos">
+  [idSucursalSeleccionada]="idSucursalSeleccionada" (dropTask)="drop($event)"
+  (seleccionarTarea)="abrirModalDetalle($event)" [textoBusqueda]="textoBusqueda" [mostrarProyectos]="mostrarProyectos">
 </app-contenedor-tareas>
 }
-<!--
-<app-projects-board [tareas]="allProjects" (seleccionarTarea)="abrirDetalle($event)"
-  *ngIf="mostrarProyectos"></app-projects-board> -->
 
 <app-detalle-tarea-dialog *ngIf="mostrarModalDetalleTarea" [mostrarModal]="mostrarModalDetalleTarea"
   (closeEvent)="mostrarModalDetalleTarea = false" [tarea]="tareaSeleccionada" [proyectos]="obtenerProyectos">
