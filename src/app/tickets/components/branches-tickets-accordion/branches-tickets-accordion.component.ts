@@ -10,7 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
-import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/radiografia/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
+import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
