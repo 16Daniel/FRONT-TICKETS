@@ -23,6 +23,7 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-calendario',
@@ -71,7 +72,8 @@ export class CalendarioComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private branchesService: BranchesService,
     private datesHelper: DatesHelperService,
-    private usuariosService: UsersService
+    private usuariosService: UsersService,
+    private maintenance10x10Service: Maintenance10x10Service
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -170,6 +172,9 @@ export class CalendarioComponent implements OnInit {
       const mantenimientosTotales = await servicio
         .obtenerMantenimientoVisitaPorFecha(this.datesHelper.getDate(visita.fecha), false);
 
+      const mantenimientosTotalesSysAV = await this.maintenance10x10Service
+        .obtenerMantenimientoVisitaPorFechaAV(this.datesHelper.getDate(visita.fecha), false);
+
       for (let sucursal of visita.sucursalesProgramadas) {
 
         const usuarioEvento = await this.usuariosService.getUsuarioById(visita.idUsuario);
@@ -189,6 +194,7 @@ export class CalendarioComponent implements OnInit {
         let totalTickets = [...ticketsFinalizados, ...nuevosTickets];
 
         const mantenimientos = mantenimientosTotales.filter((x: any) => x.idSucursal == sucursal.id)
+        const mantenimientosSysAv = mantenimientosTotalesSysAV.filter((x: any) => x.idSucursal == sucursal.id)
 
         let temp = visita.comentarios.filter(x => x.idSucursal == sucursal.id);
         comentario = temp.length > 0 ? temp[0].comentario : '';
@@ -207,7 +213,8 @@ export class CalendarioComponent implements OnInit {
             idsTickets: sucursal.idsTickets,
             ticketsFinalizados: totalTickets.length,
             fechaVisita: visita.fecha,
-            mantenimientosDelDia: mantenimientos
+            mantenimientosDelDia: mantenimientos,
+            mantenimientosDelDiaSysAv: mantenimientosSysAv,
           },
           order: contador
         });
@@ -227,7 +234,6 @@ export class CalendarioComponent implements OnInit {
     if (timestamp.toDate) return timestamp.toDate();
     return null;
   }
-
 
   obtenerNombreUsuario(idUsuario: string): string {
     let nombre = '';
@@ -300,6 +306,15 @@ export class CalendarioComponent implements OnInit {
 
       const servicio = this.mantenimientoFactory.getService(idArea);
       return servicio.calcularPorcentaje(mantenimiento);
+    }
+    else
+      return 0
+  }
+
+  calcularPorcentajeSysAv(mantenimiento: any, idArea: string) {
+    if (mantenimiento) {
+
+      return this.maintenance10x10Service.calcularPorcentajeAV(mantenimiento);
     }
     else
       return 0

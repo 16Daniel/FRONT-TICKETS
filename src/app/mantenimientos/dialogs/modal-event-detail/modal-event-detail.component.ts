@@ -17,6 +17,8 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 import { BranchMaintenanceTableComponent } from '../../components/branch-maintenance-table/branch-maintenance-table.component';
+import { TablaMantenimientosSysAvComponent } from "../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -31,7 +33,8 @@ import { BranchMaintenanceTableComponent } from '../../components/branch-mainten
     ModalTicketDetailComponent,
     ModalMaintenanceDetailComponent,
     BranchMaintenanceTableAvComponent,
-    BranchMaintenanceTableMttoComponent
+    BranchMaintenanceTableMttoComponent,
+    TablaMantenimientosSysAvComponent
   ],
   templateUrl: './modal-event-detail.component.html',
 })
@@ -56,12 +59,14 @@ export default class ModalEventDetailComponent implements OnInit {
   loading: boolean = true;
   usuario: Usuario;
   mantenimientosDelDia: any[] = [];
+  mantenimientosDelDiaAV: any[] = [];
 
   constructor(
     private ticketsService: TicketsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private cdr: ChangeDetectorRef,
-    private datesHelper: DatesHelperService
+    private datesHelper: DatesHelperService,
+    private maintenance10x10Service: Maintenance10x10Service
   ) {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -69,6 +74,7 @@ export default class ModalEventDetailComponent implements OnInit {
 
   async ngOnInit() {
     this.obtenerTickets();
+
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
     await servicio.getMantenimientosPorSucursalYFecha([this.sucursal.id], this.fecha).subscribe((result: any) => {
       let data = result.filter((element: any) => element.length > 0);
@@ -80,6 +86,23 @@ export default class ModalEventDetailComponent implements OnInit {
       }
 
       this.mantenimientosDelDia = this.mantenimientosDelDia.map(x => {
+        x.fecha = this.datesHelper.getDate(x.fecha);
+        return x;
+      });
+
+      this.cdr.detectChanges();
+    });
+
+    await this.maintenance10x10Service.getMantenimientosPorSucursalYFechaAV([this.sucursal.id], this.fecha).subscribe((result: any) => {
+      let data = result.filter((element: any) => element.length > 0);
+      this.mantenimientosDelDiaAV = [];
+      for (let itemdata of data) {
+        for (let item of itemdata) {
+          this.mantenimientosDelDiaAV.push(item);
+        }
+      }
+
+      this.mantenimientosDelDiaAV = this.mantenimientosDelDiaAV.map(x => {
         x.fecha = this.datesHelper.getDate(x.fecha);
         return x;
       });

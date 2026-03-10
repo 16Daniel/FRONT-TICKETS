@@ -13,7 +13,6 @@ import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interf
 import { ChatMantenimientoSysAvComponent } from '../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 import { SubirImagenesSysAvComponent } from "../../dialogs/systems/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component";
 import { SubirImagenesSysAv2Component } from "../../dialogs/systems/subir-imagenes-sys-av-dialog-2/subir-imagenes-sys-av-dialog-2.component";
-import { TicketsTabComponent } from '../../../tickets/components/tickets-tab/tickets-tab.component';
 import { VisorImagenesSysAvComponent } from "../../dialogs/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component";
 
 @Component({

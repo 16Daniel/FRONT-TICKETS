@@ -409,6 +409,38 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return combineLatest(observables);
   }
 
+  getMantenimientosPorSucursalYFechaAV(idsSucursales: string[], fecha: Date): Observable<any[]> {
+    const observables = idsSucursales.map(idSucursal => {
+      return new Observable<any[]>(observer => {
+        const mantenimientosRef = collection(this.firestore, this.pathNameAv);
+
+        const q = query(
+          mantenimientosRef,
+          where('idSucursal', '==', idSucursal.toString()),
+          where('estatus', '==', false),
+          where('fecha', '==', fecha)
+        );
+
+        const unsubscribe = onSnapshot(
+          q,
+          snapshot => {
+            const resultados = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }));
+
+            observer.next(resultados);
+          },
+          error => observer.error(error)
+        );
+
+        return () => unsubscribe();
+      });
+    });
+
+    return combineLatest(observables);
+  }
+
   async obtenerMantenimientoVisitaPorFechaArea(
     fecha: Date,
     idSucursal: string,
@@ -496,6 +528,35 @@ export class Maintenance10x10Service implements IMantenimientoService {
       id: doc.id,
       ...doc.data(),
     } as MantenimientoSys));
+
+    return documentos;
+  }
+
+  async obtenerMantenimientoVisitaPorFechaAV(
+    fecha: Date,
+    estatus?: boolean
+  ) {
+    const coleccionRef = collection(this.firestore, this.pathNameAv);
+
+    // Convertir la fecha a las 00:00:00 del día
+    fecha.setHours(0, 0, 0, 0);
+
+    // Construir los filtros dinámicamente
+    const filtros = [
+      where('fecha', '==', fecha),
+    ];
+
+    if (estatus !== undefined) {
+      filtros.push(where('estatus', '==', estatus));
+    }
+
+    const consulta = query(coleccionRef, ...filtros);
+
+    const querySnapshot = await getDocs(consulta);
+    const documentos: MantenimientoSysAv[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as MantenimientoSysAv));
 
     return documentos;
   }

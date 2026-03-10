@@ -32,6 +32,14 @@
             {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0], arg.event.extendedProps.idArea)}}%
           </span>
         </p>
+
+        <p class="p-0" *ngIf="idArea == '1'">
+          <span class="p-1 bg-white text-dark rounded-3">
+            8X8 SYS AV:
+            {{calcularPorcentajeSysAv(arg.event.extendedProps.mantenimientosDelDiaSysAv[0],
+            arg.event.extendedProps.idArea)}}%
+          </span>
+        </p>
       </div>
       }
     </div>
