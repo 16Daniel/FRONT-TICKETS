@@ -31,13 +31,15 @@
 
     <div class="form-check form-switch d-flex align-items-center gap-3">
       <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-        style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarxmantenimiento">
+        style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarxmantenimiento"
+        (ngModelChange)="mostrar8x8av = false">
       <label class="form-check-label fs-4" for="flexSwitchCheckDefault">{{tituloMantenimiento}}</label>
     </div>
 
     <div class="form-check form-switch d-flex align-items-center gap-3">
       <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-        style="width: 3rem; height: 2rem;" [(ngModel)]="mostrar8x8av">
+        style="width: 3rem; height: 2rem;" [(ngModel)]="mostrar8x8av"
+        (ngModelChange)="ordenarxmantenimiento = false">
       <label class="form-check-label fs-4" for="flexSwitchCheckDefault">8x8 AV</label>
     </div>
 

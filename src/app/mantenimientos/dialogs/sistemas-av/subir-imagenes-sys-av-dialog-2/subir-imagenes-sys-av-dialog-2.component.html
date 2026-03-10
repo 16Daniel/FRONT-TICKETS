@@ -9,7 +9,7 @@
     <div *ngFor="let tv of mantenimiento?.tvs; let i = index" class="mb-4">
 
       <h5 class="mb-2">
-        Pantalla {{ i + 1 }}
+        {{ tv.dispositivo.nombre }}
       </h5>
 
       <!-- Área de subida -->
@@ -58,7 +58,7 @@
     <div *ngFor="let bocina of mantenimiento?.bocinas; let i = index" class="mb-4">
 
       <h5 class="mb-2">
-        Bocina {{ i + 1 }}
+        {{ bocina.dispositivo.nombre }}
       </h5>
 
       <!-- Área de subida -->

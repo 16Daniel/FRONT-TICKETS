@@ -12,8 +12,8 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
 import { ChatMantenimientoSysAvComponent } from '../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 import { SubirImagenesSysAvComponent } from "../../dialogs/systems/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component";
-import { SubirImagenesSysAv2Component } from "../../dialogs/systems/subir-imagenes-sys-av-dialog-2/subir-imagenes-sys-av-dialog-2.component";
-import { VisorImagenesSysAvComponent } from "../../dialogs/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component";
+import { EvidenciaSysAv, VisorImagenesSysAvComponent } from '../../dialogs/sistemas-av/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component';
+import { SubirImagenesSysAv2Component } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog-2/subir-imagenes-sys-av-dialog-2.component';
 
 @Component({
   selector: 'app-tabla-mantenimientos-sys-av',
@@ -51,6 +51,7 @@ export class TablaMantenimientosSysAvComponent {
   tituloVisor: string | undefined;
   imagenes: string[] = [];
   imagenesPorDispositivo: string[][] = [];
+  evidencias: EvidenciaSysAv[] = [];
 
   constructor(
     public dateHelpder: DatesHelperService,
@@ -110,9 +111,6 @@ export class TablaMantenimientosSysAvComponent {
 
         if (result.isConfirmed) {
 
-          // if (this.tituloEvidencia == 'PANTALLAS' || this.tituloEvidencia == 'BOCINAS')
-          //   console.log();
-          // else
           this.abrirModalVisorImagen(mantenimiento, campo);
           this.cdr.detectChanges();
 
@@ -135,51 +133,75 @@ export class TablaMantenimientosSysAvComponent {
   }
 
   abrirModalVisorImagen(mantenimiento: MantenimientoSysAv, campo: string) {
+
     this.imagenes = [];
+    this.imagenesPorDispositivo = [];
+    this.evidencias = [];
+
     this.tituloVisor = campo;
 
     switch (campo) {
 
       case 'PANTALLAS':
+
+        this.evidencias = mantenimiento.tvs || [];
         this.imagenesPorDispositivo =
           mantenimiento.tvs?.map(tv => tv.evidenciaUrls || []) || [];
+
         this.mostrarModalVisorImagenAV = true;
+
         break;
 
       case 'VIDEO':
+
         this.imagenes = mantenimiento.mantenimientoSenalVideoEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
+
         break;
 
       case 'IMAGEN':
+
         this.imagenes = mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
+
         break;
 
       case 'BOCINAS':
+
+        this.evidencias = mantenimiento.bocinas || [];
         this.imagenesPorDispositivo =
           mantenimiento.bocinas?.map(b => b.evidenciaUrls || []) || [];
+
         this.mostrarModalVisorImagenAV = true;
+
         break;
 
       case 'AUDIO':
+
         this.imagenes = mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
+
         break;
 
       case 'CABLEADO':
+
         this.imagenes = mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
+
         break;
 
       case 'RACK':
+
         this.imagenes = mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
+
         break;
 
       case 'ELECTRICO':
+
         this.imagenes = mantenimiento.mantenimientoElectricoEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
+
         break;
     }
 

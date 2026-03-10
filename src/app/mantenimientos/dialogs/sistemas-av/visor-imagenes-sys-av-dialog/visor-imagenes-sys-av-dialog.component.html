@@ -2,11 +2,15 @@
   [maximizable]="true" (onHide)="onHide()">
 
   <!-- Selector de dispositivo -->
-  <div class="dispositivos" *ngIf="imagenesPorDispositivo.length > 1">
-    <button *ngFor="let dispositivo of imagenesPorDispositivo; let d = index"
-      (click)="dispositivoIndex = d; imagenSeleccionadaIndex = 0" [class.activo]="d === dispositivoIndex">
-      Dispositivo {{ d + 1 }}
+  <div class="dispositivos" *ngIf="dispositivos.length > 1">
+
+    <button *ngFor="let d of dispositivos; let i = index" (click)="dispositivoIndex = i; imagenSeleccionadaIndex = 0"
+      [class.activo]="i === dispositivoIndex">
+
+      {{ d?.dispositivo?.nombre || ('Dispositivo ' + (i + 1)) }}
+
     </button>
+
   </div>
 
   <!-- Imagen principal -->
@@ -14,7 +18,9 @@
 
     <button class="boton-eliminar-flotante" (click)="eliminarImagen()"
       *ngIf="imagenes.length > 0 && mostrarBotonEliminar">
+
       🗑
+
     </button>
 
     <img [src]="imagenActual" alt="Imagen principal" />
@@ -25,7 +31,9 @@
   <div class="botones-navegacion" *ngIf="imagenes.length > 1">
 
     <button (click)="anterior()" [disabled]="imagenSeleccionadaIndex === 0">
+
       ◀
+
     </button>
 
     <span>
@@ -33,7 +41,9 @@
     </span>
 
     <button (click)="siguiente()" [disabled]="imagenSeleccionadaIndex === imagenes.length - 1">
+
       ▶
+
     </button>
 
   </div>
@@ -43,7 +53,9 @@
 
     <div *ngFor="let img of imagenes; let i = index" class="miniatura"
       [class.seleccionada]="i === imagenSeleccionadaIndex" (click)="seleccionarImagen(i)">
-      <img [src]="img" alt="Miniatura" />
+
+      <img [src]="img" alt="Miniatura">
+
     </div>
 
   </div>

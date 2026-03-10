@@ -2,6 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
+import { Dispositivo } from '../../../../activos-fijos/interfaces/dispositivo.interface';
+
+export interface EvidenciaSysAv {
+  evidenciaUrls?: string[];
+  dispositivo: Dispositivo;
+}
 
 @Component({
   selector: 'app-visor-imagenes-sys-av-dialog',
@@ -14,7 +20,13 @@ export class VisorImagenesSysAvComponent {
 
   @Input() mostrarModal: boolean = false;
   @Input() mostrarBotonEliminar: boolean = false;
+
+  /** modo viejo */
   @Input() imagenesPorDispositivo: string[][] = [];
+
+  /** modo nuevo */
+  @Input() evidencias: EvidenciaSysAv[] = [];
+
   @Input() titulo: string = 'VISOR DE IMÁGENES';
 
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -25,15 +37,32 @@ export class VisorImagenesSysAvComponent {
 
   onHide = () => this.closeEvent.emit();
 
+  /** Detecta si estamos usando evidencias */
+  get usandoEvidencias(): boolean {
+    return this.evidencias && this.evidencias.length > 0;
+  }
+
+  /** Lista de dispositivos para el selector */
+  get dispositivos(): any[] {
+    if (this.usandoEvidencias) return this.evidencias;
+    return this.imagenesPorDispositivo;
+  }
+
+  /** Imágenes del dispositivo actual */
+  get imagenes(): string[] {
+
+    if (this.usandoEvidencias) {
+      return this.evidencias[this.dispositivoIndex]?.evidenciaUrls || [];
+    }
+
+    return this.imagenesPorDispositivo[this.dispositivoIndex] || [];
+  }
+
   get imagenActual(): string {
     return (
       this.imagenes[this.imagenSeleccionadaIndex] ||
       'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'
     );
-  }
-
-  get imagenes(): string[] {
-    return this.imagenesPorDispositivo[this.dispositivoIndex] || [];
   }
 
   seleccionarImagen(index: number) {
@@ -80,7 +109,13 @@ export class VisorImagenesSysAvComponent {
           dispositivoIndex: this.dispositivoIndex
         });
 
-        const lista = this.imagenesPorDispositivo[this.dispositivoIndex];
+        let lista: string[] | undefined;
+
+        if (this.usandoEvidencias) {
+          lista = this.evidencias[this.dispositivoIndex]?.evidenciaUrls;
+        } else {
+          lista = this.imagenesPorDispositivo[this.dispositivoIndex];
+        }
 
         if (!lista) return;
 

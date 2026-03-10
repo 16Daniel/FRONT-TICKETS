@@ -31,6 +31,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
 import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
+import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -50,7 +52,8 @@ import { AccordionBranchMaintenance10x10Component } from '../../../mantenimiento
     ModalTicketDetailComponent,
     IconosNotificacionesTicketsComponent,
     ModalPurshasesComponent,
-    ModalRequestPurchaseComponent
+    ModalRequestPurchaseComponent,
+    AcordeonMantenimientosSisAvComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-sys-tab.component.html',
@@ -63,6 +66,7 @@ export class AdminSysTabComponent {
   tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
+  mostrarMantenimientosAV: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalHistorial: boolean = false;
   mostrarAgrupacion: boolean = false;
@@ -71,6 +75,7 @@ export class AdminSysTabComponent {
   mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
   mantenimientos: MantenimientoSys[] = [];
+  mantenimientosAV: MantenimientoSysAv[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -84,6 +89,7 @@ export class AdminSysTabComponent {
   ordenarMantenimientosFecha: boolean = false;
   compras: Compra[] = [];
   auxMostrarMantenimientos = true;
+  auxMostrarMantenimientosAV = true;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -195,6 +201,8 @@ export class AdminSysTabComponent {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+
+        // 10x10
         this.maintenanceService
           .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
@@ -209,6 +217,27 @@ export class AdminSysTabComponent {
             }
 
             this.mantenimientos = this.mantenimientos.map(x => {
+              x.fecha = this.datesHelper.getDate(x.fecha);
+              return x;
+            });
+            this.cdr.detectChanges();
+          });
+
+        // 8x8
+        this.maintenanceService
+          .getUltimosMantenimientosAV(
+            this.sucursales.map((sucursal) => sucursal.id)
+          )
+          .subscribe((result) => {
+            let data = result.filter((element) => element.length > 0);
+            this.mantenimientosAV = [];
+            for (let itemdata of data) {
+              for (let item of itemdata) {
+                this.mantenimientosAV.push(item);
+              }
+            }
+
+            this.mantenimientosAV = this.mantenimientosAV.map(x => {
               x.fecha = this.datesHelper.getDate(x.fecha);
               return x;
             });
@@ -263,6 +292,14 @@ export class AdminSysTabComponent {
     this.auxMostrarMantenimientos = false;
     setTimeout(() => {
       this.auxMostrarMantenimientos = true;
+      this.cdr.detectChanges();
+    }, 400);
+  }
+
+  filtrarMantenimientosAV() {
+    this.auxMostrarMantenimientosAV = false;
+    setTimeout(() => {
+      this.auxMostrarMantenimientosAV = true;
       this.cdr.detectChanges();
     }, 400);
   }
