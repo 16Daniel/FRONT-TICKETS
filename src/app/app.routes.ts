@@ -78,7 +78,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    canActivate: [AuthGuard, ResponsableGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./planeacion/planeacion.routes')
   },
   {
