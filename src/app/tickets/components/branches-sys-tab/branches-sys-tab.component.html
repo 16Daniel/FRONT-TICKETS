@@ -10,6 +10,10 @@
     (click)="mostrarModalHistorialMantenimientos = true">
   </p-button>
 
+  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8 AV" icon="pi pi-history" styleClass="p-button-secondary"
+    (click)="mostrarModalHistorialMantenimientosAV = true">
+  </p-button>
+
   <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="CHECK 10 X 10" icon="pi pi-wrench"
     styleClass="p-button-danger" (click)="mostrarAlerta10x10()">
   </p-button>
@@ -55,6 +59,10 @@
 <app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
   (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
+
+<app-historial-mantenimiento-sys-av-dialog *ngIf="mostrarModalHistorialMantenimientosAV"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientosAV"
+  (closeEvent)="mostrarModalHistorialMantenimientosAV = false"></app-historial-mantenimiento-sys-av-dialog>
 
 <app-modal-ten-xten-maintenance-check *ngIf="mostrarModal10x10" [showModal10x10]="mostrarModal10x10"
   (closeEvent)="mostrarModal10x10 = false"

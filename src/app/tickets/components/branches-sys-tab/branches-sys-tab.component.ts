@@ -22,6 +22,7 @@ import { CheckMantenimientoSisAvComponent } from '../../../mantenimientos/dialog
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component";
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -40,8 +41,9 @@ import { Maintenance10x10Service } from '../../../mantenimientos/services/mainte
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
     FormsModule,
-    CheckMantenimientoSisAvComponent
-  ],
+    CheckMantenimientoSisAvComponent,
+    HistorialMantenimeintoSysAvComponent
+],
   templateUrl: './branches-sys-tab.component.html',
   styleUrl: './branches-sys-tab.component.scss',
 })
@@ -58,6 +60,7 @@ export class BranchesSysTabComponent {
   mostrarModal10x10: boolean = false;
   mostrarModal8x8: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
+  mostrarModalHistorialMantenimientosAV: boolean = false;
   mostrarModalRating: boolean = false;
   mostrarTPVs: boolean = false;
 

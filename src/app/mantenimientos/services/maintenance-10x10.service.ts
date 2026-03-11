@@ -323,6 +323,41 @@ export class Maintenance10x10Service implements IMantenimientoService {
     return unsubscribe;
   }
 
+  getHistorialMantenimeintosAV(
+    fechaInicio: Date,
+    fechaFin: Date,
+    idSucursal: string,
+    callback: (mantenimientos: MantenimientoSysAv[] | null) => void
+  ): () => void {
+    fechaInicio.setHours(0, 0, 0, 0);
+
+    const mantenimientosRef = collection(this.firestore, this.pathNameAv);
+
+    const q = query(
+      mantenimientosRef,
+      where('fecha', '>=', fechaInicio),
+      where('fecha', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+      where('idSucursal', '==', idSucursal),
+      where('estatus', '==', false),
+      orderBy('fecha', 'desc') // 🔥 Ordena por fecha descendente (más recientes primero)
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        callback(null);
+      } else {
+        const primerDoc = querySnapshot.docs[0];
+        const mantenimientos = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as MantenimientoSysAv[];
+        callback(mantenimientos);
+      }
+    });
+
+    return unsubscribe;
+  }
+
   getUltimosMantenimientos(idsSucursales: string[]): Observable<any[]> {
     // Creamos un Observable por cada sucursal
     const observables = idsSucursales.map(idSucursal => {
@@ -571,6 +606,18 @@ export class Maintenance10x10Service implements IMantenimientoService {
       limit(1)
     );
     return collectionData(q, { idField: 'id' }) as Observable<MantenimientoSys[]>;
+  }
+
+  getLastMaintenanceByBranchAV(idSucursal: string): Observable<MantenimientoSysAv[]> {
+    const mantenimientoRef = collection(this.firestore, this.pathName);
+    const q = query(
+      mantenimientoRef,
+      where('estatus', '==', false),
+      where('idSucursal', '==', idSucursal),
+      orderBy('fecha', 'desc'),
+      limit(1)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<MantenimientoSysAv[]>;
   }
 
   async obtenerMantenimientosEntreFechas(
