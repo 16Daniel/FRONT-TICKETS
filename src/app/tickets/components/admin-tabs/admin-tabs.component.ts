@@ -5,16 +5,16 @@ import { TabViewModule } from 'primeng/tabview';
 import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 
-import { AdminSysTabComponent } from '../../../mantenimientos/components/admin-sys-tab/admin-sys-tab.component';
-import { AdminAudioVideoTabComponent } from '../../../mantenimientos/components/admin-audio-video-tab/admin-audio-video-tab.component';
-import { AdminMaintenanceTabComponent } from '../../../mantenimientos/components/admin-maintenance-tab/admin-maintenance-tab.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../interfaces/ticket.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/admin-reports-tab.component';
 import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
+import { AdminSysTabComponent } from '../admin-sys-tab/admin-sys-tab.component';
+import { AdminAudioVideoTabComponent } from '../admin-audio-video-tab/admin-audio-video-tab.component';
+import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-maintenance-tab.component';
 
 @Component({
   selector: 'app-admin-tabs',

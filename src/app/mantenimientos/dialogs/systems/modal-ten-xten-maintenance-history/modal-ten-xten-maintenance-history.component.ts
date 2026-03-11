@@ -7,11 +7,11 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
-import { BranchMaintenanceTableComponent } from '../../../components/systems/branch-maintenance-table/branch-maintenance-table.component';
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
+import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
+import { BranchMaintenanceTableComponent } from '../../../components/branch-maintenance-table/branch-maintenance-table.component';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',
@@ -34,12 +34,12 @@ export class ModalTenXtenMaintenanceHistoryComponent {
 
   fechaInicio: Date = new Date();
   fechaFin: Date = new Date();
-  mantenimientos: Mantenimiento10x10[] = [];
+  mantenimientos: MantenimientoSys[] = [];
   usuario: Usuario;
   idSucursal: string;
   usuariosHelp: Usuario[] = [];
   mostrarModalDetalleMantenimeinto: boolean = false;
-  mantenimiento: Mantenimiento10x10 | any;
+  mantenimiento: MantenimientoSys | any;
   paginaCargaPrimeraVez: boolean = true;
 
   constructor(
@@ -56,7 +56,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
     this.obtenerUsuariosHelp();
   }
 
-  abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento10x10 | any) {
+  abrirModalDetalleMantenimiento(mantenimiento: MantenimientoSys | any) {
     this.mantenimiento = mantenimiento;
     this.mostrarModalDetalleMantenimeinto = true;
   }

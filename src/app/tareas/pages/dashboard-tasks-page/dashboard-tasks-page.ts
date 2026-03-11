@@ -23,7 +23,7 @@ import { TareasService } from '../../services/tareas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';

@@ -13,7 +13,6 @@ import { EditorModule } from 'primeng/editor';
 import { Subscription } from 'rxjs';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { BranchVisitItemComponent } from '../../components/branch-visit-item/branch-visit-item.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
@@ -32,11 +31,13 @@ import { FixedAssetsService } from '../../../activos-fijos/services/fixed-assets
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../interfaces/mantenimiento-10x10.interface';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { CalendarioComponent } from '../../components/calendario/calendario.component';
 
 @Component({
   selector: 'app-calendar-builder-page',
@@ -50,7 +51,7 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
     CalendarModule,
     EditorModule,
     ModalTicketDetailComponent,
-    CalendarComponent,
+    CalendarioComponent,
     ModalColorsComponent,
     BranchVisitItemComponent,
     ModalActivityComponent
@@ -68,7 +69,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
   usuarioseleccionado: Usuario | undefined;
   fecha = new Date();
   ordenarxmantenimiento: boolean = false;
-  arr_ultimosmantenimientos: Mantenimiento10x10[] = [];
+  arr_ultimosmantenimientos: MantenimientoSys[] = [];
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
   itemtk: Ticket | undefined;
@@ -99,6 +100,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private fixedAssetsService: FixedAssetsService,
     private maintenanceMtooService: MaintenanceMtooService,
+    private maintenance10x10Service: Maintenance10x10Service,
     private datesHelper: DatesHelperService,
     private areasService: AreasService
   ) {
@@ -367,19 +369,10 @@ export default class CalendarBuilderPageComponent implements OnInit {
             });
           });
 
-
-
-
-
-
-
-
-
           if (this.tieneMantenimientosActivos(sucursal.id)) {
 
             if (this.usuario.idArea == '4') {
               let freidoras = await this.fixedAssetsService.obtenerFredioras(sucursal.id);
-              console.log(freidoras)
 
               if (freidoras.length == 0) {
                 this.messageService.add({
@@ -408,6 +401,10 @@ export default class CalendarBuilderPageComponent implements OnInit {
             else {
               const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
               await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+
+              if (this.usuario.idArea == '1') {
+                this.registrarMantenimientoSysAv(sucursal, participantesChat);
+              }
             }
           }
 
@@ -428,6 +425,42 @@ export default class CalendarBuilderPageComponent implements OnInit {
     }
     this.loading = false;
     this.cdr.detectChanges();
+  }
+
+  async registrarMantenimientoSysAv(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
+    if (this.usuario.idArea == '1') {
+
+      const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+
+      let tvs: any[] = [];
+      let bocinas: any[] = [];
+      const registroSucursal = this.sucursales.find(x => x.id == sucursal.id);
+
+      registroSucursal!.tvs?.forEach(tv => {
+        tvs.push({
+          dispositivo: tv,
+          evidenciaUrls: []
+        });
+      });
+
+      registroSucursal!.bocinas?.forEach(bocina => {
+        bocinas.push({
+          dispositivo: bocina,
+          evidenciaUrls: []
+        });
+      });
+
+      this.usuario.idArea == '1' ?
+        await this.maintenance10x10Service.createAv(
+          sucursal.id,
+          this.usuarioseleccionado!.id,
+          this.fecha,
+          tvs,
+          bocinas,
+          participantesChat
+        ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+
+    }
   }
 
   tieneMantenimientosActivos(idSucursal: string | number): boolean {
@@ -505,7 +538,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.arr_ultimosmantenimientos = data.filter(
-            (elemento: any): elemento is Mantenimiento10x10 => elemento !== null
+            (elemento: any): elemento is MantenimientoSys => elemento !== null
           );
           this.loading = false;
           this.cdr.detectChanges();
@@ -536,6 +569,11 @@ export default class CalendarBuilderPageComponent implements OnInit {
         let temp = await servicio.obtenerMantenimientoVisitaPorFechaArea(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
         temp.forEach(async (element: any) => {
           await servicio.delete(element.id);
+        });
+
+        let temp2 = await this.maintenance10x10Service.obtenerMantenimientoVisitaPorFechaAreaAV(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
+        temp2.forEach(async (element: any) => {
+          await this.maintenance10x10Service.deleteAV(element.id);
         });
       }
 

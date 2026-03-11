@@ -2,7 +2,7 @@
     [ngClass]="{'bg-success':asignadaAlUsuario(sucursal.id),'bg-danger':!asignadaAlUsuario(sucursal.id)}">
     <p class="m-1">{{sucursal.nombre}}</p>
     <p class="m-1">Tickets: {{tickets.length}}&nbsp;&nbsp; {{textoMantenimiento}}:
-        {{ porcentaje$ | async }}%
+        {{ porcentaje$ | async }}% <span *ngIf="usuario.idArea == '1'"> - 8X8 SYS AV: {{ porcentaje$ | async }}%</span>
     </p>
     <p>{{usuarioSeleccionado?.nombre}} {{usuarioSeleccionado?.apellidoP}} {{usuarioSeleccionado?.apellidoM}}</p>
 </div>

@@ -22,8 +22,8 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { CategoriesService } from '../../../tickets/services/categories.service';
 import { StatusTicketService } from '../../../tickets/services/status-ticket.service';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-admin-reports-tab',
@@ -58,7 +58,7 @@ export default class AdminReportsTabComponent implements OnInit {
   categorias: Categoria[] = [];
   estatusTicket: EstatusTicket[] = [];
   mesesDistintos: string[] = [];
-  manteniminetos: Mantenimiento10x10[] = [];
+  manteniminetos: MantenimientoSys[] = [];
   finalizado: boolean = false;
 
   constructor(

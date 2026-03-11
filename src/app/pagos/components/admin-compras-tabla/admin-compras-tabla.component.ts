@@ -9,7 +9,7 @@ import { ArchivosComponent } from "../../dialogs/Archivos/Archivos.component";
 import { DetallesComponent } from "../../dialogs/Detalles/Detalles.component";
 import { AdminComprasChatComponent } from "../../dialogs/admin-compras-chat/admin-compras-chat.component";
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';

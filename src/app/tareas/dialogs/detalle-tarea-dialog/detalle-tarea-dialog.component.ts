@@ -20,7 +20,7 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';

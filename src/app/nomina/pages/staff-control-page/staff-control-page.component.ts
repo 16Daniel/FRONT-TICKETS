@@ -15,7 +15,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CorreosNotificacionService } from '../../../shared/services/correos-notificacion.service';
 import { NominaService } from '../../services/nomina.service';
 import { Correonotificacion, EmpleadoHorario, Marcajes, PuestoNomina, TurnodbNomina } from '../../interfaces/Nomina';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { environment } from '../../../../environments/environments';
 @Component({
   selector: 'app-staff-control-page',
@@ -45,7 +45,7 @@ export default class StaffControlPageComponent implements OnInit {
   public formcomentariosolucion: string = "";
   public formcomentarioSucursal: string = "";
   public idReg: number = -1;
-  public idServico:string = environment.idServicio; 
+  public idServico:string = environment.idServicio;
 
   constructor(public cdr: ChangeDetectorRef,
     public apiserv: NominaService,
@@ -73,7 +73,7 @@ export default class StaffControlPageComponent implements OnInit {
 
   consultar() {
      if(this.sucursalSel!.idFront)
-      {     
+      {
         this.getDepartamentos();
         this.obtenercalendario();
         this.getTurnos();
@@ -100,7 +100,7 @@ export default class StaffControlPageComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: error => {
-        this.loading = false; 
+        this.loading = false;
         console.log(error);
       }
     });
@@ -250,7 +250,7 @@ export default class StaffControlPageComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: error => {
-        this.loading = false; 
+        this.loading = false;
         console.log(error);
       }
     });

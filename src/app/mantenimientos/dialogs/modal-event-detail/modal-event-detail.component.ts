@@ -6,17 +6,19 @@ import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 
 import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
-import { BranchMaintenanceTableComponent } from '../../components/systems/branch-maintenance-table/branch-maintenance-table.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalMaintenanceDetailComponent } from '../systems/modal-maintenance-detail/modal-maintenance-detail.component';
-import { BranchMaintenanceTableAvComponent } from '../../components/audio-video/branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { BranchMaintenanceTableMttoComponent } from '../../components/maintenance/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
+import { BranchMaintenanceTableAvComponent } from '../../components/branch-maintenance-table-av/branch-maintenance-table-av.component';
+import { BranchMaintenanceTableMttoComponent } from '../../components/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
+import { BranchMaintenanceTableComponent } from '../../components/branch-maintenance-table/branch-maintenance-table.component';
+import { TablaMantenimientosSysAvComponent } from "../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -31,7 +33,8 @@ import { SucursalProgramada } from '../../interfaces/sucursal-programada.interfa
     ModalTicketDetailComponent,
     ModalMaintenanceDetailComponent,
     BranchMaintenanceTableAvComponent,
-    BranchMaintenanceTableMttoComponent
+    BranchMaintenanceTableMttoComponent,
+    TablaMantenimientosSysAvComponent
   ],
   templateUrl: './modal-event-detail.component.html',
 })
@@ -56,12 +59,14 @@ export default class ModalEventDetailComponent implements OnInit {
   loading: boolean = true;
   usuario: Usuario;
   mantenimientosDelDia: any[] = [];
+  mantenimientosDelDiaAV: any[] = [];
 
   constructor(
     private ticketsService: TicketsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private cdr: ChangeDetectorRef,
-    private datesHelper: DatesHelperService
+    private datesHelper: DatesHelperService,
+    private maintenance10x10Service: Maintenance10x10Service
   ) {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -69,6 +74,7 @@ export default class ModalEventDetailComponent implements OnInit {
 
   async ngOnInit() {
     this.obtenerTickets();
+
     const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
     await servicio.getMantenimientosPorSucursalYFecha([this.sucursal.id], this.fecha).subscribe((result: any) => {
       let data = result.filter((element: any) => element.length > 0);
@@ -80,6 +86,23 @@ export default class ModalEventDetailComponent implements OnInit {
       }
 
       this.mantenimientosDelDia = this.mantenimientosDelDia.map(x => {
+        x.fecha = this.datesHelper.getDate(x.fecha);
+        return x;
+      });
+
+      this.cdr.detectChanges();
+    });
+
+    await this.maintenance10x10Service.getMantenimientosPorSucursalYFechaAV([this.sucursal.id], this.fecha).subscribe((result: any) => {
+      let data = result.filter((element: any) => element.length > 0);
+      this.mantenimientosDelDiaAV = [];
+      for (let itemdata of data) {
+        for (let item of itemdata) {
+          this.mantenimientosDelDiaAV.push(item);
+        }
+      }
+
+      this.mantenimientosDelDiaAV = this.mantenimientosDelDiaAV.map(x => {
         x.fecha = this.datesHelper.getDate(x.fecha);
         return x;
       });

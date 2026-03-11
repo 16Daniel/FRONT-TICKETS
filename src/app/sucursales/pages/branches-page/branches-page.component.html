@@ -58,6 +58,6 @@
     </ng-template>
 </p-confirmDialog>
 
-<app-modal-branch-create *ngIf="mostrarModalSucursal" [mostrarModalCrearSucursal]="mostrarModalSucursal"
+<app-crear-sucursal-dialog *ngIf="mostrarModalSucursal" [mostrarModalCrearSucursal]="mostrarModalSucursal"
     (closeEvent)="cerrarModalSucursal()" [sucursal]="sucursalSeleccionada"
-    [esNuevaSucursal]="esNuevaSucursal"></app-modal-branch-create>
+    [esNuevaSucursal]="esNuevaSucursal"></app-crear-sucursal-dialog>

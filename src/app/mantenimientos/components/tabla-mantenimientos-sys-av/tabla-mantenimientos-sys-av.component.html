@@ -1,0 +1,157 @@
+<p-table [value]="mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+  styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
+  [(selection)]="mantenimientoSeleccionado">
+  <ng-template pTemplate="header">
+    <tr class="text-center">
+      <th>NOMBRE</th>
+      <th>FECHA</th>
+      <th>PANTALLAS</th>
+      <th>VIDEO</th>
+      <th>IMAGEN</th>
+      <th>BOCINAS</th>
+      <th>AUDIO</th>
+      <th>CABLEADO</th>
+      <th>RACK</th>
+      <th>ELECTRICO</th>
+      <th>% DE PROGRESO</th>
+      <th>ACCIONES</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-mantenimiento>
+    <tr>
+      <td class="text-center">
+        {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
+      </td>
+
+      <td class="text-center">
+        {{ dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}
+      </td>
+
+      <!-- PANTALLAS -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'PANTALLAS')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoPantallasSoporte,
+          'bg-danger': !mantenimiento.mantenimientoPantallasSoporte
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoPantallasSoporte ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- VIDEO -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'VIDEO')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoSenalVideo,
+          'bg-danger': !mantenimiento.mantenimientoSenalVideo
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoSenalVideo ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- IMAGEN -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'IMAGEN')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoParametrosImagen,
+          'bg-danger': !mantenimiento.mantenimientoParametrosImagen
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoParametrosImagen ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- BOCINAS -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'BOCINAS')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoFuncionalBocinas,
+          'bg-danger': !mantenimiento.mantenimientoFuncionalBocinas
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoFuncionalBocinas ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- AUDIO -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'AUDIO')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoTransmisionAudio,
+          'bg-danger': !mantenimiento.mantenimientoTransmisionAudio
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoTransmisionAudio ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- CABLEADO -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CABLEADO')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoOrdenamientoCableado,
+          'bg-danger': !mantenimiento.mantenimientoOrdenamientoCableado
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoOrdenamientoCableado ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- RACK -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'RACK')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoLimpiezaRack,
+          'bg-danger': !mantenimiento.mantenimientoLimpiezaRack
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoLimpiezaRack ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- ELECTRICO -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'ELECTRICO')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoElectrico,
+          'bg-danger': !mantenimiento.mantenimientoElectrico
+        }">
+        <label style="color: white;">
+          {{ mantenimiento.mantenimientoElectrico ? 'Si' : 'No' }}
+        </label>
+      </td>
+
+      <!-- PROGRESO -->
+      <td class="text-center">
+        {{ maintenance10x10Service.calcularPorcentajeAV(mantenimiento) }}%
+      </td>
+
+      <!-- ACCIONES -->
+      <td style="display: flex; gap: 10px">
+        <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
+          (click)="abrirModalDetalle(mantenimiento)">
+          <i class='bx bx-show bx-sm'></i>
+        </button>
+
+        <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)" *ngIf="mostrarChat"
+          [ngClass]="{'has-notification': verificarChatNoLeido(mantenimiento)}">
+          <i class="bx bx-message-square-dots bx-sm" style="color: white" pTooltip="CHAT" tooltipPosition="top"></i>
+        </button>
+      </td>
+
+    </tr>
+  </ng-template>
+</p-table>
+
+<app-modal-final-comments *ngIf="mostrarModalComentarios" [mostrarModal]="mostrarModalComentarios"
+  [mantenimiento]="mantenimientoSeleccionado" (closeEvent)="mostrarModalComentarios = false"></app-modal-final-comments>
+
+<app-subir-imagen-sys-av-dialog *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
+  (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
+  [mantenimiento]="mantenimientoSeleccionado"></app-subir-imagen-sys-av-dialog>
+
+<app-subir-imagen-sys-av-dialog-2 *ngIf="mostrarModalSubirImagen2" [mostrarModal]="mostrarModalSubirImagen2"
+  (closeEvent)="mostrarModalSubirImagen2 = false" [titulo]="tituloEvidencia"
+  [mantenimiento]="mantenimientoSeleccionado"></app-subir-imagen-sys-av-dialog-2>
+
+<app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
+  [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"
+  (imagenEliminadaEvent)="onEliminarImagen($event)"
+  [mostrarBotonEliminar]="usuario.idRol == '4' || usuario.idRol == '1' || usuario.idRol == '5'"></app-modal-visor-varias-imagenes>
+
+<app-visor-imagenes-sys-av-dialog [mostrarModal]="mostrarModalVisorImagenAV"
+  [imagenesPorDispositivo]="imagenesPorDispositivo" [titulo]="tituloVisor!" [mostrarBotonEliminar]="true"
+  (closeEvent)="mostrarModalVisorImagenAV = false" (imagenEliminadaEvent)="onEliminarImagen($event)"
+  [evidencias]="evidencias">
+</app-visor-imagenes-sys-av-dialog>
+
+<app-chat-mantenimiento-sys-av-dialog *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
+  (closeEvent)="mostrarModalChat = false"
+  [idMnatenimiento]="mantenimientoSeleccionado?.id"></app-chat-mantenimiento-sys-av-dialog>

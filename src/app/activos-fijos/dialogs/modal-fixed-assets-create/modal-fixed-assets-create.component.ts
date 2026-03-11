@@ -15,7 +15,7 @@ import { CategoriesFixedAssetsService } from '../../services/categories-activos-
 import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
 import { ActivoFijo } from '../../interfaces/activo-fijo.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.model';
 import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.model';
 import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.model';

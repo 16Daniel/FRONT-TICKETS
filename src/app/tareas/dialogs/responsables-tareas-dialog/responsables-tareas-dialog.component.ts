@@ -14,7 +14,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TaskResponsibleService } from '../../services/task-responsible.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';

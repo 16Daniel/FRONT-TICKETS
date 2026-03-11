@@ -21,7 +21,7 @@ import { StatusTicketService } from '../../services/status-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { TicketsPriorityService } from '../../services/tickets-priority.service';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-modal-filter-tickets',

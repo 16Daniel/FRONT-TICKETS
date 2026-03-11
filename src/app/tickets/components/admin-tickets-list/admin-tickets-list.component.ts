@@ -31,7 +31,7 @@ import { TicketsPriorityService } from '../../services/tickets-priority.service'
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-admin-tickets-list',

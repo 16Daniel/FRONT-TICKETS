@@ -1,0 +1,131 @@
+<p-dialog [header]="!esNuevaSucursal ? 'ACTUALIZAR SUCURSAL' :'CREAR SUCURSAL'" [(visible)]="mostrarModalCrearSucursal"
+  [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true" (onHide)="onHide()">
+  <form #form="ngForm" (ngSubmit)="enviar(form)">
+
+    <p class="fw-bold">ID</p>
+    <input [disabled]="true" class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL ID"
+      [(ngModel)]="sucursal.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
+      #formidCtrl="ngModel" required>
+    <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error">
+      Campo requerido.
+    </small>
+    <p></p>
+
+    <p class="fw-bold">NOMBRE</p>
+    <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
+      [(ngModel)]="sucursal.nombre" name="nombre"
+      [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel" required>
+    <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error">
+      Campo requerido.
+    </small>
+    <p></p>
+
+    <p class="fw-bold">ID FRONT</p>
+    <input class="form-control" style="height: 48px;" type="number" placeholder="INGRESE EL ID FRONT"
+      [(ngModel)]="sucursal.idFront" name="idfront"
+      [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formIdfCtrl="ngModel" required>
+    <small *ngIf="formIdfCtrl.invalid && formIdfCtrl.touched" class="p-error">
+      Campo requerido.
+    </small>
+    <p></p>
+
+    <p class="fw-bold">CLA UBICACIÓN</p>
+    <input class="form-control" style="height: 48px;" type="number" placeholder="INGRESE EL ID DE UBICACIÓN EN FORTIA"
+      [(ngModel)]="sucursal.claUbicacion" name="claubicacion">
+    <p></p>
+
+    <div class="row mt-3">
+      <div class="col-md-6 col-12">
+        <p class="fw-bold">TABLETAS REQUERIDAS</p>
+        <p-inputNumber [(ngModel)]="sucursal.tabletasRequeridas" name="tabletasRequeridas" mode="decimal"
+          [showButtons]="true" buttonLayout="horizontal" incrementButtonIasacon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+          class="contador-gris"></p-inputNumber>
+      </div>
+      <div class="col-md-6 col-12">
+        <p class="fw-bold">CANTIDAD DE TABLETAS</p>
+        <p-inputNumber [(ngModel)]="cantidadTabletas" (ngModelChange)="onTabletasChange($event)" name="cantidadTabletas"
+          mode="decimal" [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+          class="contador-gris" [max]="sucursal.tabletasRequeridas">
+        </p-inputNumber>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-6 col-12">
+        <p class="fw-bold">PUNTOS DE VENTA REQUERIDOS</p>
+        <p-inputNumber [(ngModel)]="sucursal.tpvsRequeridos" name="tpvsRequeridos" mode="decimal" [showButtons]="true"
+          buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="0"
+          [inputStyle]="{ width: '100%', height: '48px' }" class="contador-gris"></p-inputNumber>
+      </div>
+      <div class="col-md-6 col-12">
+        <p class="fw-bold">CANTIDAD DE PUNTOS DE VENTA</p>
+        <p-inputNumber [(ngModel)]="cantidadTPVs" (ngModelChange)="onTPVsChange($event)" name="cantidadTPVs"
+          mode="decimal" [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+          class="contador-gris" [max]="sucursal.tpvsRequeridos">
+        </p-inputNumber>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-12">
+        <p class="fw-bold">CANTIDAD DE TVs</p>
+        <p-inputNumber [(ngModel)]="cantidadTVs" (ngModelChange)="onTVsChange($event)" name="cantidadTVs" mode="decimal"
+          [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+          class="contador-gris">
+        </p-inputNumber>
+      </div>
+    </div>
+
+    <!-- Inputs dinámicos de números de serie -->
+    <div class="mt-3" *ngIf="sucursal.tvs?.length > 0">
+      <div *ngFor="let tv of sucursal.tvs; let i = index" class="mb-3">
+        <p class="fw-bold">TV {{ i + 1 }} - NÚMERO DE SERIE</p>
+        <input type="text" class="form-control" style="height: 48px;" placeholder="Ingrese número de serie"
+          [(ngModel)]="tv.nombre" name="tvSerie{{i}}" required>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12">
+        <p class="fw-bold">CANTIDAD DE BOCINAS</p>
+        <p-inputNumber [(ngModel)]="cantidadBocinas" (ngModelChange)="onBocinasChange($event)" name="cantidadBocinas"
+          mode="decimal" [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
+          class="contador-gris">
+        </p-inputNumber>
+      </div>
+    </div>
+
+    <!-- Inputs dinámicos -->
+    <div class="mt-3" *ngIf="sucursal.bocinas?.length > 0">
+      <div *ngFor="let bocina of sucursal.bocinas; let i = index" class="mb-3 col-12">
+        <p class="fw-bold">BOCINA {{ i + 1 }} - NÚMERO DE SERIE</p>
+        <input type="text" class="form-control w-100" style="height: 48px;" placeholder="Ingrese número de serie"
+          [(ngModel)]="bocina.nombre" name="bocinaSerie{{i}}" required>
+      </div>
+    </div>
+
+    <div class="form-check form-switch d-flex align-items-center gap-3 mt-3"
+      *ngIf="usuario.idRol == '5' || usuario.idRol == '1'">
+      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+        style="width: 3rem; height: 2rem;" name="activoMantenimientos" [checked]="esMantenimientoActivo(sucursal)"
+        (change)="toggleMantenimiento(sucursal)">
+      <label class="form-check-label fs-4" for="flexSwitchCheckChecked">¿ACTIVAR MANTENIMIENTOS?</label>
+    </div>
+
+
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn bg-p-b p-3">
+        <i class='bx bx-send'></i>
+        <label *ngIf="esNuevaSucursal">ENVIAR</label>
+        <label *ngIf="!esNuevaSucursal">ACTUALIZAR</label>
+      </button>
+    </div>
+
+  </form>
+
+</p-dialog>

@@ -10,8 +10,8 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Categoria } from '../../interfaces/categoria.mdoel';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { Ticket } from '../../interfaces/ticket.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-grafica-general-tickets',
@@ -30,7 +30,7 @@ export class GraficaGeneralTicketsComponent implements OnInit {
 @Input() catEstatusTicket:EstatusTicket[] = [];
 @Input() meses:string[] = [];
 @Input() sucursalesSel: Sucursal[] = [];
-@Input() mantenimientos:Mantenimiento10x10[] = [];
+@Input() mantenimientos:MantenimientoSys[] = [];
 public usuariosSoporte:Usuario[] = [];
 gCategorias:any[] = [];
 public tabTickets:any[] = [];

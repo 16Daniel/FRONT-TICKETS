@@ -14,6 +14,8 @@ import { ShoppingService } from '../../../pagos/services/shopping.service';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
 import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-chat/admin-compras-chat.component';
+import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { ChatMantenimientoSysAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 
 @Component({
   selector: 'app-chat-notifications-button',
@@ -23,7 +25,8 @@ import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-
     ButtonModule,
     ModalTicketChatComponent,
     ModalMaintenanceChatComponent,
-    AdminComprasChatComponent
+    AdminComprasChatComponent,
+    ChatMantenimientoSysAvComponent
   ],
   providers: [MessageService],
   templateUrl: './chat-notifications-button.component.html',
@@ -45,6 +48,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
 
   mostrarModalChatTicket: boolean = false;
   mostrarModalChatMantenimiento: boolean = false;
+  mostrarModalChatMantenimientoAV: boolean = false;
   mostrarModalChatCompra: boolean = false;
 
   constructor(
@@ -52,7 +56,8 @@ export class ChatNotificationsButtonComponent implements OnInit {
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
     private mantenimientoFactory: MantenimientoFactoryService,
-    private shopingService: ShoppingService
+    private shopingService: ShoppingService,
+    private maintenance10x10Service: Maintenance10x10Service
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -85,6 +90,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
         this.abrirChatTicket(item.idOrigen);
         break;
 
+      case 'Sistemas-8x8':
       case '10x10':
       case '8x8':
       case '6x6':
@@ -119,28 +125,39 @@ export class ChatNotificationsButtonComponent implements OnInit {
   abrirChatMantenimiento(id: string, tipoOrigen: string) {
     this.mantenimientoSub?.unsubscribe();
 
-    switch (tipoOrigen) {
-      case '10x10':
-        this.idArea = '1';
-        break;
-      case '6x6':
-        this.idArea = '2';
-        break;
-      case '8x8':
-        this.idArea = '4';
-        break;
+    if (tipoOrigen === 'Sistemas-8x8') {
+      this.mantenimientoSub = this.maintenance10x10Service.getByIdAV(id).subscribe((mantenimiento: any) => {
+        this.mantenimiento = mantenimiento;
+        this.mostrarModalChatMantenimientoAV = true;
+        this.cdr.detectChanges();
+      });
     }
-    const servicio = this.mantenimientoFactory.getService(this.idArea);
-    this.mantenimientoSub = servicio.getById(id).subscribe((mantenimiento: any) => {
-      this.mantenimiento = mantenimiento;
-      this.mostrarModalChatMantenimiento = true;
-      this.cdr.detectChanges();
-    });
+    else {
+      switch (tipoOrigen) {
+        case '10x10':
+          this.idArea = '1';
+          break;
+        case '6x6':
+          this.idArea = '2';
+          break;
+        case '8x8':
+          this.idArea = '4';
+          break;
+      }
+
+      const servicio = this.mantenimientoFactory.getService(this.idArea);
+      this.mantenimientoSub = servicio.getById(id).subscribe((mantenimiento: any) => {
+        this.mantenimiento = mantenimiento;
+        this.mostrarModalChatMantenimiento = true;
+        this.cdr.detectChanges();
+      });
+    }
   }
 
   cerrarChatMantenimiento() {
     this.mantenimientoSub?.unsubscribe();
     this.mostrarModalChatMantenimiento = false;
+    this.mostrarModalChatMantenimientoAV = false;
   }
 
   abrirChatPagos(id: string) {

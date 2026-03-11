@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 
 import { TicketsTabComponent } from '../tickets-tab/tickets-tab.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";

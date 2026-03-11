@@ -12,7 +12,7 @@ import { StatusTaskService } from '../../services/status-task.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 import { Subscription } from 'rxjs';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';

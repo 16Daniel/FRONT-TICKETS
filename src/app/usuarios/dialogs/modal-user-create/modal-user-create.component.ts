@@ -13,7 +13,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Rol } from '../../../roles/interfaces/rol.model';
 
 @Component({

@@ -51,16 +51,13 @@
 
     <br>
 
-    <!-- <app-dashboard-tasks-page *ngIf="!verEisenhower && sucursal.id"></app-dashboard-tasks-page>
-    <app-eisenhower-matrix-page *ngIf="verEisenhower && sucursal.id"></app-eisenhower-matrix-page> -->
-
-       <app-dashboard-tasks-page [hidden]="verEisenhower || sucursal.id == undefined"></app-dashboard-tasks-page>
+    <app-dashboard-tasks-page [hidden]="verEisenhower || sucursal.id == undefined"></app-dashboard-tasks-page>
     <app-eisenhower-matrix-page [hidden]="!verEisenhower || sucursal.id == undefined"></app-eisenhower-matrix-page>
 
 
   </p-tabPanel>
 
-   <p-tabPanel header="COMENSALES">
+  <p-tabPanel header="COMENSALES">
     <ng-container *ngIf="tabsActivos['COMENSALES']">
       <app-comensales-page></app-comensales-page>
     </ng-container>

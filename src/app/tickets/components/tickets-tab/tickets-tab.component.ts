@@ -15,10 +15,9 @@ import { ModalTicketsHistoryComponent } from '../../dialogs/modal-tickets-histor
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
-import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/systems/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
-import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/audio-video/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/maintenance/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
+import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
+import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -32,8 +31,10 @@ import { MantenimientoFactoryService } from '../../../mantenimientos/services/ma
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimiento-10x10.interface';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
+import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
+import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -57,6 +58,7 @@ import { Mantenimiento10x10 } from '../../../mantenimientos/interfaces/mantenimi
     AccordionBranchMaintenanceAvComponent,
     AccordionBranchMaintenanceMttoComponent,
     ModalRequestPurchaseComponent,
+    AcordeonMantenimientosSisAvComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',
@@ -74,15 +76,17 @@ export class TicketsTabComponent implements OnInit {
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
   todosLosTickets: Ticket[] = [];
-  mantenimientoActivo: Mantenimiento10x10 | null = null;
+  mantenimientoActivo: MantenimientoSys | null = null;
   areas: Area[] = [];
   subscriptiontk: Subscription | undefined;
   usuario: Usuario;
   selectedtk: Ticket | undefined;
   loading: boolean = false;
   ultimosmantenimientos: any[] = [];
+  ultimosmantenimientosAV: any[] = [];
   private unsubscribe!: () => void;
   ordenarxmantenimiento: boolean = false;
+  mostrar8x8av: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];
@@ -103,7 +107,8 @@ export class TicketsTabComponent implements OnInit {
     private notificationService: NotificationService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private purchaseService: PurchaseService,
-    private datesHelper: DatesHelperService
+    private datesHelper: DatesHelperService,
+    private maintenance10x10Service: Maintenance10x10Service
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -176,6 +181,25 @@ export class TicketsTabComponent implements OnInit {
         }
 
         this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
+          x.fecha = this.datesHelper.getDate(x.fecha);
+          return x;
+        });
+
+        this.cdr.detectChanges();
+      });
+
+    this.subscriptiontk = this.maintenance10x10Service
+      .getUltimosMantenimientosAV(idsSucursales)
+      .subscribe((result: any) => {
+        let data = result.filter((element: any) => element.length > 0);
+        this.ultimosmantenimientosAV = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.ultimosmantenimientosAV.push(item);
+          }
+        }
+
+        this.ultimosmantenimientosAV = this.ultimosmantenimientosAV.map(x => {
           x.fecha = this.datesHelper.getDate(x.fecha);
           return x;
         });

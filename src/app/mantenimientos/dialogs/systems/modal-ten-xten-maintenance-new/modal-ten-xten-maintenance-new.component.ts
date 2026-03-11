@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output, type OnInit 
 import { DialogModule } from 'primeng/dialog';
 
 import { BranchesService } from '../../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../../sucursales/interfaces/sucursal.model';
-import { Mantenimiento10x10 } from '../../../interfaces/mantenimiento-10x10.interface';
+import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-new',
@@ -38,7 +38,7 @@ export class ModalTenXtenMaintenanceNewComponent implements OnInit {
   }
 
   async nuevoMantenimiento() {
-    const mantenimiento: Mantenimiento10x10 = {
+    const mantenimiento: MantenimientoSys = {
       idSucursal: '1',
       idUsuarioSoporte: "JhPZN7fQD1REyldGXop17qR8Now1",
       fecha: new Date(),
