@@ -8,17 +8,17 @@ import { EditorModule } from 'primeng/editor';
 import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalMaintenanceDetailComponent } from '../systems/modal-maintenance-detail/modal-maintenance-detail.component';
-import { BranchMaintenanceTableAvComponent } from '../../components/branch-maintenance-table-av/branch-maintenance-table-av.component';
-import { BranchMaintenanceTableMttoComponent } from '../../components/branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
-import { BranchMaintenanceTableComponent } from '../../components/branch-maintenance-table/branch-maintenance-table.component';
 import { TablaMantenimientosSysAvComponent } from "../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { TablaMantenimientosSistemasComponent } from '../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
+import { TablaMantenimientosMantenimientoComponent } from '../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
+import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -28,12 +28,12 @@ import { Maintenance10x10Service } from '../../services/maintenance-10x10.servic
     CommonModule,
     FormsModule,
     RequesterTicketsListComponent,
-    BranchMaintenanceTableComponent,
+    TablaMantenimientosSistemasComponent,
     EditorModule,
     ModalTicketDetailComponent,
     ModalMaintenanceDetailComponent,
-    BranchMaintenanceTableAvComponent,
-    BranchMaintenanceTableMttoComponent,
+    TablaMantenimientosAudioVideoComponent,
+    TablaMantenimientosMantenimientoComponent,
     TablaMantenimientosSysAvComponent
   ],
   templateUrl: './modal-event-detail.component.html',

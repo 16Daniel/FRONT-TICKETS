@@ -27,9 +27,9 @@ import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
 import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
+import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -46,7 +46,7 @@ import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimi
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    AccordionBranchMaintenanceAvComponent,
+    AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
     ModalPurshasesComponent,
     ModalRequestPurchaseComponent

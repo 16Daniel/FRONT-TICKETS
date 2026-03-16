@@ -16,7 +16,7 @@ import { SubirImagenesAv2Component } from "../../dialogs/audio-video/subir-image
 
 
 @Component({
-  selector: 'app-branch-maintenance-table-av',
+  selector: 'app-tabla-mantenimientos-audio-video',
   standalone: true,
   imports: [
     TableModule,
@@ -27,12 +27,12 @@ import { SubirImagenesAv2Component } from "../../dialogs/audio-video/subir-image
     ModalMaintenanceChatComponent,
     VisorImagenesSysAvComponent,
     SubirImagenesAv2Component
-],
-  templateUrl: './branch-maintenance-table-av.component.html',
-  styleUrl: './branch-maintenance-table-av.component.scss'
+  ],
+  templateUrl: './tabla-mantenimientos-audio-video.component.html',
+  styleUrl: './tabla-mantenimientos-audio-video.component.scss'
 })
 
-export class BranchMaintenanceTableAvComponent {
+export class TablaMantenimientosAudioVideoComponent {
   @Input() mantenimientos: MantenimientoSysAv[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idSucursal?: string;

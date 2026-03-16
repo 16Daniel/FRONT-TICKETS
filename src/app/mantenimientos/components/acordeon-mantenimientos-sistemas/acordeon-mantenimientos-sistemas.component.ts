@@ -4,37 +4,39 @@ import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
-import { BranchMaintenanceTableMttoComponent } from '../branch-maintenance-table-mtto/branch-maintenance-table-mtto.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
+import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
+import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
+
 
 @Component({
-  selector: 'app-accordion-branch-maintenance-mtto',
+  selector: 'app-acordeon-mantenimientos-sistemas',
   standalone: true,
-  imports: [BranchMaintenanceTableMttoComponent, BadgeModule, CommonModule, AccordionModule],
-  templateUrl: './accordion-branch-maintenance-mtto.component.html',
-  styleUrl: './accordion-branch-maintenance-mtto.component.scss'
+  imports: [TablaMantenimientosSistemasComponent, BadgeModule, CommonModule, AccordionModule],
+  templateUrl: './acordeon-mantenimientos-sistemas.component.html',
+  styleUrl: './acordeon-mantenimientos-sistemas.component.scss',
 })
 
-export class AccordionBranchMaintenanceMttoComponent {
-  @Input() mantenimientos: MantenimientoMtto[] = [];
+export class AcordeonMantenimientosSistemasComponent {
+  @Input() mantenimientos: MantenimientoSys[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
 
-  mantenimientosOriginal: MantenimientoMtto[] = [];
-  mantenimientosOrdenados: MantenimientoMtto[] = [];
+  mantenimientosOriginal: MantenimientoSys[] = [];
+  mantenimientosOrdenados: MantenimientoSys[] = [];
 
   usuariosHelp: Usuario[] = [];
 
   constructor(
     private usersService: UsersService,
-    private maintenanceMtooService: MaintenanceMtooService,
+    private maintenance10x10Service: Maintenance10x10Service,
     private datesHelper: DatesHelperService
+
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
@@ -69,7 +71,7 @@ export class AccordionBranchMaintenanceMttoComponent {
 
   obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
     const mantenimientosSucursal = this.mantenimientos
-      .filter(m => m.idSucursal === idSucursal && m.fecha);
+      .filter(m => m.idSucursal == idSucursal && m.fecha);
 
     if (mantenimientosSucursal.length === 0) {
       // Si no hay mantenimientos, regresamos una fecha muy antigua
@@ -96,7 +98,7 @@ export class AccordionBranchMaintenanceMttoComponent {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenanceMtooService.calcularPorcentaje(registro[0]);
+        porcentaje = this.maintenance10x10Service.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;
@@ -122,7 +124,7 @@ export class AccordionBranchMaintenanceMttoComponent {
     return dias;
   }
 
-  obtenerColorDeFondoSucursal(value: number): string {
+  obtenerColorDeFondoSucursal10x10(value: number): string {
     let str = '';
 
     if (value <= 50) {
@@ -140,11 +142,11 @@ export class AccordionBranchMaintenanceMttoComponent {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoMtto[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSys[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 
-  obtenerColorDeTexto(value: number): string {
+  obtenerColorDeTexto10x10(value: number): string {
     let str = '';
 
     if (value <= 50) {

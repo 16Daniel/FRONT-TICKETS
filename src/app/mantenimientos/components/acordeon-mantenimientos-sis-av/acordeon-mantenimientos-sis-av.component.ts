@@ -4,7 +4,6 @@ import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
-import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
@@ -12,12 +11,13 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
 import { TablaMantenimientosSysAvComponent } from "../tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
+import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 
 
 @Component({
   selector: 'app-acordeon-mantenimientos-sis-av',
   standalone: true,
-  imports: [BranchMaintenanceTableComponent, BadgeModule, CommonModule, AccordionModule, TablaMantenimientosSysAvComponent],
+  imports: [TablaMantenimientosSistemasComponent, BadgeModule, CommonModule, AccordionModule, TablaMantenimientosSysAvComponent],
   templateUrl: './acordeon-mantenimientos-sis-av.component.html',
   styleUrl: './acordeon-mantenimientos-sis-av.component.scss',
 })

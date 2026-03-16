@@ -1,42 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Timestamp } from "@angular/fire/firestore";
-import { BadgeModule } from 'primeng/badge';
+import { Timestamp } from '@angular/fire/firestore';
 import { AccordionModule } from 'primeng/accordion';
+import { BadgeModule } from 'primeng/badge';
 
-import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
-
+import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
+import { TablaMantenimientosAudioVideoComponent } from '../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 
 @Component({
-  selector: 'app-accordion-branch-maintenance10x10',
+  selector: 'app-acordeon-mantenimientos-audio-video',
   standalone: true,
-  imports: [BranchMaintenanceTableComponent, BadgeModule, CommonModule, AccordionModule],
-  templateUrl: './accordion-branch-maintenance10x10.component.html',
-  styleUrl: './accordion-branch-maintenance10x10.component.scss',
+  imports: [CommonModule, AccordionModule, BadgeModule, TablaMantenimientosAudioVideoComponent],
+  templateUrl: './acordeon-mantenimientos-audio-video.component.html',
+  styleUrl: './acordeon-mantenimientos-audio-video.component.scss'
 })
 
-export class AccordionBranchMaintenance10x10Component {
-  @Input() mantenimientos: MantenimientoSys[] = [];
+export class AcordeonMantenimientosAudioVideoComponent {
+  @Input() mantenimientos: MantenimientoSysAv[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
-
-  mantenimientosOriginal: MantenimientoSys[] = [];
-  mantenimientosOrdenados: MantenimientoSys[] = [];
 
   usuariosHelp: Usuario[] = [];
 
   constructor(
     private usersService: UsersService,
-    private maintenance10x10Service: Maintenance10x10Service,
+    private maintenance6x6AvService: Maintenance6x6AvService,
     private datesHelper: DatesHelperService
-
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
@@ -45,8 +40,8 @@ export class AccordionBranchMaintenance10x10Component {
 
   ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {
     return [...catsucursales].sort((a, b) => {
-      const fechaA: any = this.obtenerFechaUltimoMantenimiento(a.id);
-      const fechaB: any = this.obtenerFechaUltimoMantenimiento(b.id);
+      const fechaA = this.obtenerFechaUltimoMantenimiento(a.id);
+      const fechaB = this.obtenerFechaUltimoMantenimiento(b.id);
 
       return this.firebaseTimestampToDate(fechaA).getTime() - this.firebaseTimestampToDate(fechaB).getTime();
     });
@@ -59,8 +54,21 @@ export class AccordionBranchMaintenance10x10Component {
     return new Date(timestamp); // Por si acaso es un número o string de fecha
   }
 
-  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+  obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
+    const mantenimientosSucursal = this.mantenimientos
+      .filter(m => m.idSucursal === idSucursal && m.fecha);
 
+    if (mantenimientosSucursal.length === 0) {
+      return new Date(0);
+    }
+
+    return mantenimientosSucursal
+      .reduce((ultimo, actual) =>
+        actual.fecha! > ultimo.fecha! ? actual : ultimo
+      ).fecha!;
+  }
+
+  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
     return catsucursales.sort((a, b) => {
       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
@@ -69,23 +77,15 @@ export class AccordionBranchMaintenance10x10Component {
     });
   }
 
-  obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
-    const mantenimientosSucursal = this.mantenimientos
-      .filter(m => m.idSucursal == idSucursal && m.fecha);
-
-    if (mantenimientosSucursal.length === 0) {
-      // Si no hay mantenimientos, regresamos una fecha muy antigua
-      return new Date(0);
-    }
-
-    // Retornar la fecha más reciente
-    return mantenimientosSucursal
-      .reduce((ultimo, actual) =>
-        actual.fecha! > ultimo.fecha! ? actual : ultimo
-      ).fecha!;
-  }
-
   obtenerPorcentajedeUltimoMantenimiento(idSucursal: string): number {
+    // let porcentaje = 0;
+    // let registro = this.mantenimientos.filter(
+    //   (x) => x.idSucursal == idSucursal
+    // );
+    // if (registro.length > 0) {
+    //   porcentaje = this.maintenanceHelper.calcularPorcentajeAV(registro[0]);
+    // }
+    // return porcentaje;
     let porcentaje = 0;
     let registro = this.mantenimientos.filter(
       (x) => x.idSucursal == idSucursal
@@ -98,10 +98,50 @@ export class AccordionBranchMaintenance10x10Component {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenance10x10Service.calcularPorcentaje(registro[0]);
+        porcentaje = this.maintenance6x6AvService.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;
+  }
+
+  obtenerColorDeFondoSucursal(value: number): string {
+    let str = '';
+
+    if (value <= 50) {
+      str = '#ff0000';
+    }
+
+    if (value > 50 && value <= 80) {
+      str = '#ffe800';
+    }
+
+    if (value > 80) {
+      str = '#00a312';
+    }
+
+    return str;
+  }
+
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSysAv[] {
+    return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
+  }
+
+  obtenerColorDeTexto(value: number): string {
+    let str = '';
+
+    if (value <= 50) {
+      str = '#fff';
+    }
+
+    if (value > 50 && value <= 80) {
+      str = '#000';
+    }
+
+    if (value > 80) {
+      str = '#fff';
+    }
+
+    return str;
   }
 
   obtenerDiasPasados(idSucursal: string): number {
@@ -124,43 +164,4 @@ export class AccordionBranchMaintenance10x10Component {
     return dias;
   }
 
-  obtenerColorDeFondoSucursal10x10(value: number): string {
-    let str = '';
-
-    if (value <= 50) {
-      str = '#ff0000';
-    }
-
-    if (value > 50 && value <= 80) {
-      str = '#ffe800';
-    }
-
-    if (value > 80) {
-      str = '#00a312';
-    }
-
-    return str;
-  }
-
-  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSys[] {
-    return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
-  }
-
-  obtenerColorDeTexto10x10(value: number): string {
-    let str = '';
-
-    if (value <= 50) {
-      str = '#fff';
-    }
-
-    if (value > 50 && value <= 80) {
-      str = '#000';
-    }
-
-    if (value > 80) {
-      str = '#fff';
-    }
-
-    return str;
-  }
 }

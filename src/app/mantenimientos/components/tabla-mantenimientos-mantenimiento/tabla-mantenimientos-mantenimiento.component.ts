@@ -13,7 +13,7 @@ import { MaintenanceMtooService } from '../../services/maintenance-mtto.service'
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 
 @Component({
-  selector: 'app-branch-maintenance-table-mtto',
+  selector: 'app-tabla-mantenimientos-mantenimiento',
   standalone: true,
   imports: [
     TableModule,
@@ -23,10 +23,10 @@ import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface
     ModalFinalCommentsComponent,
     ModalMaintenanceChatComponent
   ],
-  templateUrl: './branch-maintenance-table-mtto.component.html',
-  styleUrl: './branch-maintenance-table-mtto.component.scss'
+  templateUrl: './tabla-mantenimientos-mantenimiento.component.html',
+  styleUrl: './tabla-mantenimientos-mantenimiento.component.scss'
 })
-export class BranchMaintenanceTableMttoComponent {
+export class TablaMantenimientosMantenimientoComponent {
   @Input() mantenimientos: MantenimientoMtto[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() mostrarChat: boolean = false;

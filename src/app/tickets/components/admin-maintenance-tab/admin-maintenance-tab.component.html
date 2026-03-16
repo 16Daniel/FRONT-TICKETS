@@ -71,9 +71,9 @@
 
 @if(mostrarMantenimientos) {
 <div class="mt-4">
-  <app-accordion-branch-maintenance-mtto *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
+  <app-acordeon-mantenimientos-mantenimiento *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
     [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
-    [mostrarChat]="true"></app-accordion-branch-maintenance-mtto>
+    [mostrarChat]="true"></app-acordeon-mantenimientos-mantenimiento>
 </div>
 }@else {
 <div *ngIf="usergroup == undefined" class="mt-4">

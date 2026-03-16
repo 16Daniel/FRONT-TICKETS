@@ -28,9 +28,9 @@ import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
 import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
+import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -47,7 +47,7 @@ import { MaintenanceMtooService } from '../../../mantenimientos/services/mainten
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    AccordionBranchMaintenanceMttoComponent,
+    AcordeonMantenimientosMantenimientoComponent,
     IconosNotificacionesTicketsComponent,
     ModalPurshasesComponent,
     ModalRequestPurchaseComponent

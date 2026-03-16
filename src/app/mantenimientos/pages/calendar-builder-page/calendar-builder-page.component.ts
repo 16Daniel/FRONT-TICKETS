@@ -14,7 +14,6 @@ import { Subscription } from 'rxjs';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
-import { BranchVisitItemComponent } from '../../components/branch-visit-item/branch-visit-item.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -38,6 +37,7 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
+import { TarjetaSucursalPorVisitarComponent } from '../../components/tarjeta-sucursal-por-visitar/tarjeta-sucursal-por-visitar.component';
 
 @Component({
   selector: 'app-calendar-builder-page',
@@ -53,7 +53,7 @@ import { CalendarioComponent } from '../../components/calendario/calendario.comp
     ModalTicketDetailComponent,
     CalendarioComponent,
     ModalColorsComponent,
-    BranchVisitItemComponent,
+    TarjetaSucursalPorVisitarComponent,
     ModalActivityComponent
   ],
   providers: [MessageService],

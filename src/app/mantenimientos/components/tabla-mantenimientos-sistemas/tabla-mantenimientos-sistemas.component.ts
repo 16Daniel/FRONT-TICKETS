@@ -14,8 +14,9 @@ import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 
 @Component({
-  selector: 'app-branch-maintenance-table',
-  styleUrl: './branch-maintenance-table.component.scss',
+  selector: 'app-tabla-mantenimientos-sistemas',
+  styleUrl: './tabla-mantenimientos-sistemas.component.scss',
+  templateUrl: './tabla-mantenimientos-sistemas.component.html',
   standalone: true,
   imports: [
     TableModule,
@@ -25,9 +26,8 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
     ModalVisorVariasImagenesComponent,
     ModalMaintenanceChatComponent
   ],
-  templateUrl: './branch-maintenance-table.component.html',
 })
-export class BranchMaintenanceTableComponent {
+export class TablaMantenimientosSistemasComponent {
   @Input() mantenimientos: MantenimientoSys[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idSucursal?: string;

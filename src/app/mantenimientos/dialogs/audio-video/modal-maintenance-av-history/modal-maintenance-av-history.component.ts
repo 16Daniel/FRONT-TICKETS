@@ -6,11 +6,11 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 
-import { BranchMaintenanceTableAvComponent } from '../../../components/branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { TablaMantenimientosAudioVideoComponent } from '../../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 ;
 
 @Component({
@@ -22,7 +22,7 @@ import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.int
     DialogModule,
     CalendarModule,
     TableModule,
-    BranchMaintenanceTableAvComponent
+    TablaMantenimientosAudioVideoComponent
   ],
   templateUrl: './modal-maintenance-av-history.component.html',
   styleUrl: './modal-maintenance-av-history.component.scss'

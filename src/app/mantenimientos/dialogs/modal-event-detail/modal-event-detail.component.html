@@ -21,21 +21,22 @@
   <div class="mt-3">
     <h5 class=" text-dark fw-bold text-center">MANTENIMIENTO</h5>
 
-    <app-branch-maintenance-table *ngIf=" usuarioSeleccionado.idArea == '1'" [mantenimientos]="mantenimientosDelDia"
-      [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"
-      [mostrarChat]="true"></app-branch-maintenance-table>
+    <app-tabla-mantenimientos-sistemas *ngIf=" usuarioSeleccionado.idArea == '1'"
+      [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
+      (clickEvent)="abrirModalDetalleMantenimiento($event)" [mostrarChat]="true"></app-tabla-mantenimientos-sistemas>
 
-    <app-tabla-mantenimientos-sys-av *ngIf=" usuarioSeleccionado.idArea == '1'" [mantenimientos]="mantenimientosDelDiaAV"
-      [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"
-      [mostrarChat]="true"></app-tabla-mantenimientos-sys-av>
+    <app-tabla-mantenimientos-sys-av *ngIf=" usuarioSeleccionado.idArea == '1'"
+      [mantenimientos]="mantenimientosDelDiaAV" [usuariosHelp]="usuariosHelp"
+      (clickEvent)="abrirModalDetalleMantenimiento($event)" [mostrarChat]="true"></app-tabla-mantenimientos-sys-av>
 
-    <app-branch-maintenance-table-av *ngIf="usuarioSeleccionado.idArea == '2'" [mantenimientos]="mantenimientosDelDia"
-      [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"
-      [mostrarChat]="true"></app-branch-maintenance-table-av>
+    <app-tabla-mantenimientos-audio-video *ngIf="usuarioSeleccionado.idArea == '2'"
+      [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
+      (clickEvent)="abrirModalDetalleMantenimiento($event)" [mostrarChat]="true"></app-tabla-mantenimientos-audio-video>
 
-    <app-branch-maintenance-table-mtto *ngIf="usuarioSeleccionado.idArea == '4'" [mantenimientos]="mantenimientosDelDia"
-      [usuariosHelp]="usuariosHelp" (clickEvent)="abrirModalDetalleMantenimiento($event)"
-      [mostrarChat]="true"></app-branch-maintenance-table-mtto>
+    <app-tabla-mantenimientos-mantenimiento *ngIf="usuarioSeleccionado.idArea == '4'"
+      [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
+      (clickEvent)="abrirModalDetalleMantenimiento($event)"
+      [mostrarChat]="true"></app-tabla-mantenimientos-mantenimiento>
   </div>
 
   <div *ngIf="comentario != ''">
