@@ -11,9 +11,9 @@ import { Maintenance10x10Service } from '../../services/maintenance-10x10.servic
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
 import { ChatMantenimientoSysAvComponent } from '../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
-import { SubirImagenesSysAvComponent } from "../../dialogs/systems/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component";
 import { EvidenciaSysAv, VisorImagenesSysAvComponent } from '../../dialogs/sistemas-av/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component';
 import { SubirImagenesSysAv2Component } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog-2/subir-imagenes-sys-av-dialog-2.component';
+import { SubirImagenesSysAvComponent } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component';
 
 @Component({
   selector: 'app-tabla-mantenimientos-sys-av',

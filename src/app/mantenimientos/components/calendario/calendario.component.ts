@@ -311,7 +311,7 @@ export class CalendarioComponent implements OnInit {
       return 0
   }
 
-  calcularPorcentajeSysAv(mantenimiento: any, idArea: string) {
+  calcularPorcentajeSysAv(mantenimiento: any) {
     if (mantenimiento) {
 
       return this.maintenance10x10Service.calcularPorcentajeAV(mantenimiento);

@@ -371,6 +371,8 @@ export default class CalendarBuilderPageComponent implements OnInit {
 
           if (this.tieneMantenimientosActivos(sucursal.id)) {
 
+            const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+
             if (this.usuario.idArea == '4') {
               let freidoras = await this.fixedAssetsService.obtenerFredioras(sucursal.id);
 
@@ -384,27 +386,56 @@ export default class CalendarBuilderPageComponent implements OnInit {
               }
 
               freidoras.forEach(async element => {
-                const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
+                await servicio.create({
+                  idSucursal: sucursal.id,
+                  idUsuario: this.usuarioseleccionado!.id,
+                  fecha: this.fecha,
+                  participantesChat,
+                  idActivoFijo: element.id!,
+                  descripcion: element.descripcion,
+                  referencia: element.referencia
+                });
+              });
+            }
+            else if (this.usuario.idArea == '2') {
+              const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
 
-                this.usuario.idArea == '4' ?
-                  await this.maintenanceMtooService.create2(
-                    sucursal.id,
-                    this.usuarioseleccionado!.id,
-                    this.fecha,
-                    element.id!,
-                    element.descripcion,
-                    element.referencia,
-                    participantesChat
-                  ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+              let tvs: any[] = [];
+              let bocinas: any[] = [];
+              const registroSucursal = this.sucursales.find(x => x.id == sucursal.id);
+
+              registroSucursal!.tvs?.forEach(tv => {
+                tvs.push({
+                  dispositivo: tv,
+                  evidenciaUrls: []
+                });
+              });
+
+              registroSucursal!.bocinas?.forEach(bocina => {
+                bocinas.push({
+                  dispositivo: bocina,
+                  evidenciaUrls: []
+                });
+              });
+
+              await servicio.create({
+                idSucursal: sucursal.id,
+                idUsuario: this.usuarioseleccionado!.id,
+                fecha: this.fecha,
+                participantesChat,
+                tvs,
+                bocinas
               });
             }
             else {
-              const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-              await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
+              await await servicio.create({
+                idSucursal: sucursal.id,
+                idUsuario: this.usuarioseleccionado!.id,
+                fecha: this.fecha,
+                participantesChat
+              });
 
-              if (this.usuario.idArea == '1') {
-                this.registrarMantenimientoSysAv(sucursal, participantesChat);
-              }
+              this.registrarMantenimientoSysAv(sucursal, participantesChat);
             }
           }
 
@@ -429,9 +460,6 @@ export default class CalendarBuilderPageComponent implements OnInit {
 
   async registrarMantenimientoSysAv(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
     if (this.usuario.idArea == '1') {
-
-      const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-
       let tvs: any[] = [];
       let bocinas: any[] = [];
       const registroSucursal = this.sucursales.find(x => x.id == sucursal.id);
@@ -450,16 +478,14 @@ export default class CalendarBuilderPageComponent implements OnInit {
         });
       });
 
-      this.usuario.idArea == '1' ?
-        await this.maintenance10x10Service.createAv(
-          sucursal.id,
-          this.usuarioseleccionado!.id,
-          this.fecha,
-          tvs,
-          bocinas,
-          participantesChat
-        ) : await servicio.create(sucursal.id, this.usuarioseleccionado!.id, this.fecha, participantesChat);
-
+      await this.maintenance10x10Service.createAv(
+        sucursal.id,
+        this.usuarioseleccionado!.id,
+        this.fecha,
+        tvs,
+        bocinas,
+        participantesChat
+      )
     }
   }
 

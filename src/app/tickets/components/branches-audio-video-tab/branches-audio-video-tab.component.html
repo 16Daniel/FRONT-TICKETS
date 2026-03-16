@@ -14,7 +14,7 @@
     styleClass="p-button-danger" (click)="mostrarAlertaMantenimiento()">
   </p-button>
 
-  <!-- <p-button *ngIf="usuario.idRol == '2'" label="EVALUACION GENERAL" icon="pi pi-star" 
+  <!-- <p-button *ngIf="usuario.idRol == '2'" label="EVALUACION GENERAL" icon="pi pi-star"
       styleClass="p-button-yellow"
       (click)="mostrarModalRating = true"> -->
   <!-- </p-button> -->
@@ -43,7 +43,7 @@
 [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
 (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-maintenance-av-history>
 
-<app-modal-maintenance-av-check *ngIf="mostrarModalMantenimiento" [showModal10x10]="mostrarModalMantenimiento"
+<app-modal-maintenance-av-check *ngIf="mostrarModalMantenimiento" [showModal8x8]="mostrarModalMantenimiento"
   (closeEvent)="mostrarModalMantenimiento = false"
   [mantenimientoActivo]="mantenimientoActivo"></app-modal-maintenance-av-check>
 

@@ -10,7 +10,7 @@ import { BranchMaintenanceTableAvComponent } from '../../../components/branch-ma
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
-import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interface';
+import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 ;
 
 @Component({
@@ -34,12 +34,12 @@ export class ModalMaintenanceAvHistoryComponent {
 
   fechaInicio: Date = new Date();
   fechaFin: Date = new Date();
-  mantenimientos: Mantenimiento6x6AV[] = [];
+  mantenimientos: MantenimientoSysAv[] = [];
   usuario: Usuario;
   idSucursal: string;
   usuariosHelp: Usuario[] = [];
   mostrarModalDetalleMantenimeinto: boolean = false;
-  mantenimiento: Mantenimiento6x6AV | any;
+  mantenimiento: MantenimientoSysAv | any;
   paginaCargaPrimeraVez: boolean = true;
 
   constructor(private maintenanceService: Maintenance6x6AvService,
@@ -93,7 +93,7 @@ export class ModalMaintenanceAvHistoryComponent {
     );
   }
 
-  abrirModalDetalleMantenimiento(mantenimiento: Mantenimiento6x6AV | any) {
+  abrirModalDetalleMantenimiento(mantenimiento: MantenimientoSysAv | any) {
     this.mantenimiento = mantenimiento;
     this.mostrarModalDetalleMantenimeinto = true;
   }

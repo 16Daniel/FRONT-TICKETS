@@ -119,7 +119,7 @@ export class TicketsTabComponent implements OnInit {
         break;
 
       case '2':
-        this.tituloMantenimiento = '6X6';
+        this.tituloMantenimiento = '8X8';
         break;
 
       case '4':

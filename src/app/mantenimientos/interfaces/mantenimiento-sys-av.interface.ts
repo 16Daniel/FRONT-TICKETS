@@ -10,10 +10,14 @@ export interface MantenimientoSysAv {
   fecha: Date | undefined;
 
   mantenimientoPantallasSoporte: boolean;
-  tvs?: [{
+  // tvs?: [{
+  //   evidenciaUrls?: string[];
+  //   dispositivo: Dispositivo,
+  // }];
+  tvs?: {
     evidenciaUrls?: string[];
-    dispositivo: Dispositivo,
-  }];
+    dispositivo: Dispositivo;
+  }[];
 
   mantenimientoSenalVideo: boolean;
   mantenimientoSenalVideoEvidenciaUrls?: string[];
@@ -22,12 +26,14 @@ export interface MantenimientoSysAv {
   mantenimientoParametrosImagenEvidenciaUrls?: string[];
 
   mantenimientoFuncionalBocinas: boolean;
-  bocinas?: [{
-    dispositivo: Dispositivo,
+  // bocinas?: [{
+  //   dispositivo: Dispositivo,
+  //   evidenciaUrls?: string[];
+  // }];
+  bocinas?: {
+    dispositivo: Dispositivo;
     evidenciaUrls?: string[];
-  }];
-  // mantenimientoFuncionalBocinas: boolean;
-  // mantenimientoFuncionalBocinasEvidenciaUrls?: string[];
+  }[];
 
   mantenimientoTransmisionAudio: boolean;
   mantenimientoTransmisionAudioEvidenciaUrls?: string[];

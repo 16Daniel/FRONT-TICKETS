@@ -28,8 +28,8 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { Mantenimiento6x6AV } from '../../../mantenimientos/interfaces/mantenimiento-av.interface';
 import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -67,7 +67,7 @@ export class AdminAudioVideoTabComponent {
   mostrarModalCompras: boolean = false;
   mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: Mantenimiento6x6AV[] = [];
+  mantenimientos: MantenimientoSysAv[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;

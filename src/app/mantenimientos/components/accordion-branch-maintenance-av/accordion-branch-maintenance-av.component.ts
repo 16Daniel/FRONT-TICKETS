@@ -9,8 +9,8 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
 
 @Component({
   selector: 'app-accordion-branch-maintenance-av',
@@ -21,7 +21,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 })
 
 export class AccordionBranchMaintenanceAvComponent {
-  @Input() mantenimientos: Mantenimiento6x6AV[] = [];
+  @Input() mantenimientos: MantenimientoSysAv[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
@@ -122,7 +122,7 @@ export class AccordionBranchMaintenanceAvComponent {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): Mantenimiento6x6AV[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSysAv[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 
