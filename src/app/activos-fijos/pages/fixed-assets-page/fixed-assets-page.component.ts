@@ -111,8 +111,9 @@ export default class FixedAssetsPageComponent implements OnInit {
   }
 
   obtenerActivosFijos() {
-    debugger
-    let idArea = (this.usuario.idRol == '1' || this.usuario.idRol == '13' || this.usuario.idRol == '10') ? undefined : this.usuario.idArea;
+    let idArea = this.usuario.idRol == '1' ? undefined : this.usuario.idArea;
+    idArea = (this.usuario.idArea == '10' || this.usuario.idArea == '13') ?
+      undefined : this.usuario.idArea;
 
     this.subscripcion = this.fixedAssetsService.get(idArea).subscribe(result => {
       this.activosFijos = result.sort((a, b) => {
