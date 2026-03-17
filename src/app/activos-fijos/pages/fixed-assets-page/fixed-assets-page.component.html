@@ -119,9 +119,9 @@
 
             <div class="row align-items-center">
                 <div class="col-6">
-                    <label class="form-label fw-bold">Filtro</label>
+                    <label class="form-label fw-bold">FILTRO</label>
                     <input type="text" class="form-control" [(ngModel)]="textoBusquedaReferencia"
-                        placeholder="BUSCAR POR REFERENCIA">
+                        placeholder="BUSCAR POR REFERENCIA O NO. SERIE">
                 </div>
 
                 <div class="col-6 text-end">
@@ -162,6 +162,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>REFERENCIA</th>
+                        <th>NO. SERIE</th>
                         <th>DESCRIPCION</th>
                         <th>SUCURSAL</th>
                         <th>AREA</th>
@@ -187,6 +188,7 @@
                         'row-amarillo': nombreEstatusActivoFijo(activo.idEstatusActivoFijo) === 'USADO' && getCostoTotalMantenimientos(activo) < activo.costo
                     }">
                         <td>{{ activo.referencia }}</td>
+                        <td>{{ activo.noSerie }}</td>
                         <td>{{ activo.descripcion }}</td>
                         <td>{{ nombreSucursal(activo.idSucursal) }}</td>
                         <td>{{ nombreArea(activo.idArea) }}</td>

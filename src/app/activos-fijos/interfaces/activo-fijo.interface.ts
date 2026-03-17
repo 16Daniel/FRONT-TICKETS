@@ -16,4 +16,5 @@ export class ActivoFijo {
     eliminado: boolean = false;
     mantenimientos: MantenimientoActivoFijo[] = [];
     referenciasAnteriores: string[] = []
+    noSerie: string = '';
 }

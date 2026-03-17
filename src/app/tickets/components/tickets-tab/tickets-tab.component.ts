@@ -115,7 +115,7 @@ export class TicketsTabComponent implements OnInit {
 
     switch (this.usuario.idArea) {
       case '1':
-        this.tituloMantenimiento = '10X10';
+        this.tituloMantenimiento = 'IT: 10X10';
         break;
 
       case '2':
