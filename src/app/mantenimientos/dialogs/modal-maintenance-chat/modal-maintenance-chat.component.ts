@@ -46,13 +46,13 @@ export class ModalMaintenanceChatComponent {
   }
 
   async ngOnInit() {
-    let tipoOrigen: '10x10' | '8x8' | '6x6';
+    let tipoOrigen: '10x10' | '8x8' | 'AudioVideo-8x8';
     switch (this.idArea) {
       case '1':
         tipoOrigen = '10x10';
         break;
       case '2':
-        tipoOrigen = '6x6';
+        tipoOrigen = 'AudioVideo-8x8';
         break;
       case '4':
         tipoOrigen = '8x8';
@@ -137,13 +137,13 @@ export class ModalMaintenanceChatComponent {
 
         this.cdr.detectChanges();
 
-        let tipoOrigen: '10x10' | '8x8' | '6x6';
+        let tipoOrigen: '10x10' | '8x8' | 'AudioVideo-8x8';
         switch (this.idArea) {
           case '1':
             tipoOrigen = '10x10';
             break;
           case '2':
-            tipoOrigen = '6x6';
+            tipoOrigen = 'AudioVideo-8x8';
             break;
           case '4':
             tipoOrigen = '8x8';

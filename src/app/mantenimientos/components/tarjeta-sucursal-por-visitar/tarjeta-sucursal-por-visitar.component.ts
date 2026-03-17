@@ -44,7 +44,7 @@ export class TarjetaSucursalPorVisitarComponent {
         this.textoMantenimiento = '10X10';
         break;
       case '2':
-        this.textoMantenimiento = '6X6';
+        this.textoMantenimiento = '8X8';
         break;
       case '4':
         this.textoMantenimiento = '8X8';

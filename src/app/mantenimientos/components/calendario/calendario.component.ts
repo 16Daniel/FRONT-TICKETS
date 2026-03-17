@@ -327,9 +327,9 @@ export class CalendarioComponent implements OnInit {
   textoMantenimiento(idArea: string) {
     switch (idArea) {
       case '1':
-        return '10X10';
+        return 'IT: 10X10';
       case '2':
-        return '6X6';
+        return '8X8';
       case '4':
         return '8X8';
       default:
