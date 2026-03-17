@@ -12,7 +12,7 @@ import { FixedAssetsService } from '../../services/fixed-assets.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { ModalFixedAssetSelectTicketComponent } from '../modal-fixed-asset-select-ticket/modal-fixed-asset-select-ticket.component';
-import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 import { MantenimientoActivoFijo } from '../../../mantenimientos/interfaces/mantenimiento-activo-fijo.interface';
 
 @Component({

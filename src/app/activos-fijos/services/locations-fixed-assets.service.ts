@@ -11,7 +11,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { UbicacionActivoFijo } from '../interfaces/ubicacion-activo-fijo.model';
+import { UbicacionActivoFijo } from '../interfaces/ubicacion-activo-fijo.interface';
 
 @Injectable({
   providedIn: 'root'

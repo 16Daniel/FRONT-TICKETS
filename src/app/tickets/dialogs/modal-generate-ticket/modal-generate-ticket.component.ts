@@ -29,7 +29,7 @@ import { TicketsPriorityService } from '../../services/tickets-priority.service'
 import { FixedAssetsService } from '../../../activos-fijos/services/fixed-assets.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
-import { ActivoFijo } from '../../../activos-fijos/interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../../activos-fijos/interfaces/activo-fijo.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 

@@ -12,7 +12,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { CategoriaActivoFijo } from '../interfaces/categoria-activo-fijo.model';
+import { CategoriaActivoFijo } from '../interfaces/categoria-activo-fijo.interface';
 
 @Injectable({
   providedIn: 'root'

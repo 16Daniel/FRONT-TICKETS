@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
 
 @Pipe({
   name: 'buscarPorReferencia',

@@ -28,7 +28,7 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { TicketsPriorityService } from '../../../tickets/services/tickets-priority.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Subcategoria } from '../../../tickets/interfaces/subcategoria.model';
-import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 

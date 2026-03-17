@@ -11,7 +11,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { AreaActivoFijo } from '../interfaces/area-activo-fijo.model';
+import { AreaActivoFijo } from '../interfaces/area-activo-fijo.interface';
 
 @Injectable({
   providedIn: 'root'
