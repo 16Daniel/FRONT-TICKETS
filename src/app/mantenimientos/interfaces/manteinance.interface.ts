@@ -1,9 +1,7 @@
 import { Observable } from "rxjs";
-import { ParticipanteChat } from "../../shared/interfaces/participante-chat.model";
 import { CreateMantenimientoDto } from "./create-mantenimeinto.interface";
 
 export interface IMantenimientoService {
-  // create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: ParticipanteChat[]): Promise<void>;
   create(data: CreateMantenimientoDto): Promise<void>;
   calcularPorcentaje(mantenimiento: any): number;
   obtenerMantenimientoVisitaPorFechaArea(fecha: Date, idSucursal: string, estatus?: boolean): Promise<any>;

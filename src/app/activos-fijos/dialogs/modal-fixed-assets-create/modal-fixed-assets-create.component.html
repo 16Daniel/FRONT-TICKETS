@@ -45,7 +45,7 @@
     <p class="fw-bold">NO. SERIE</p>
     <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NÚMERO DE SERIE"
       [(ngModel)]="activoFijo.noSerie" name="noSerie"
-      [ngClass]="{'p-invalid': formNoSerieCtrl.invalid && formNoSerieCtrl.touched}" #formNoSerieCtrl="ngModel" required>
+      [ngClass]="{'p-invalid': formNoSerieCtrl.invalid && formNoSerieCtrl.touched}" #formNoSerieCtrl="ngModel">
     <small *ngIf="formNoSerieCtrl.invalid && formNoSerieCtrl.touched" class="p-error">
       Campo requerido.
     </small>
