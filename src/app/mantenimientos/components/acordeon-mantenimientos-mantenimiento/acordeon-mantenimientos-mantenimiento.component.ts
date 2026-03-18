@@ -4,39 +4,37 @@ import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
-import { BranchMaintenanceTableComponent } from '../branch-maintenance-table/branch-maintenance-table.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
-
+import { TablaMantenimientosMantenimientoComponent } from '../tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
 
 @Component({
-  selector: 'app-accordion-branch-maintenance10x10',
+  selector: 'app-acordeon-mantenimientos-mantenimiento',
   standalone: true,
-  imports: [BranchMaintenanceTableComponent, BadgeModule, CommonModule, AccordionModule],
-  templateUrl: './accordion-branch-maintenance10x10.component.html',
-  styleUrl: './accordion-branch-maintenance10x10.component.scss',
+  imports: [TablaMantenimientosMantenimientoComponent, BadgeModule, CommonModule, AccordionModule],
+  templateUrl: './acordeon-mantenimientos-mantenimiento.component.html',
+  styleUrl: './acordeon-mantenimientos-mantenimiento.component.scss'
 })
 
-export class AccordionBranchMaintenance10x10Component {
-  @Input() mantenimientos: MantenimientoSys[] = [];
+export class AcordeonMantenimientosMantenimientoComponent {
+  @Input() mantenimientos: MantenimientoMtto[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
 
-  mantenimientosOriginal: MantenimientoSys[] = [];
-  mantenimientosOrdenados: MantenimientoSys[] = [];
+  mantenimientosOriginal: MantenimientoMtto[] = [];
+  mantenimientosOrdenados: MantenimientoMtto[] = [];
 
   usuariosHelp: Usuario[] = [];
 
   constructor(
     private usersService: UsersService,
-    private maintenance10x10Service: Maintenance10x10Service,
+    private maintenanceMtooService: MaintenanceMtooService,
     private datesHelper: DatesHelperService
-
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
@@ -71,7 +69,7 @@ export class AccordionBranchMaintenance10x10Component {
 
   obtenerFechaUltimoMantenimiento(idSucursal: string): Date {
     const mantenimientosSucursal = this.mantenimientos
-      .filter(m => m.idSucursal == idSucursal && m.fecha);
+      .filter(m => m.idSucursal === idSucursal && m.fecha);
 
     if (mantenimientosSucursal.length === 0) {
       // Si no hay mantenimientos, regresamos una fecha muy antigua
@@ -98,7 +96,7 @@ export class AccordionBranchMaintenance10x10Component {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenance10x10Service.calcularPorcentaje(registro[0]);
+        porcentaje = this.maintenanceMtooService.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;
@@ -124,7 +122,7 @@ export class AccordionBranchMaintenance10x10Component {
     return dias;
   }
 
-  obtenerColorDeFondoSucursal10x10(value: number): string {
+  obtenerColorDeFondoSucursal(value: number): string {
     let str = '';
 
     if (value <= 50) {
@@ -142,11 +140,11 @@ export class AccordionBranchMaintenance10x10Component {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSys[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoMtto[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 
-  obtenerColorDeTexto10x10(value: number): string {
+  obtenerColorDeTexto(value: number): string {
     let str = '';
 
     if (value <= 50) {

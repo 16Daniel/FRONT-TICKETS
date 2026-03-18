@@ -1,9 +1,9 @@
-<p-dialog header="REGISTRO DE MANTENIMIENTO 6 DE 6" [(visible)]="showModal10x10" [modal]="true" [maximizable]="true"
+<p-dialog header="REGISTRO DE MANTENIMIENTO AUDIO Y VIDEO" [(visible)]="showModal8x8" [modal]="true" [maximizable]="true"
     (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
 
     <div class="sticky-header">
-        <h2>{{ datesHelper.getDate(mantenimientoActivo?.fecha) | date }}</h2>
-        <app-progress-bar-60 [progreso]="progreso"></app-progress-bar-60>
+        <h2>{{ getDate(mantenimientoActivo?.fecha) | date }}</h2>
+        <app-progress-bar-80 [progreso]="progreso"></app-progress-bar-80>
     </div>
 
     <form [formGroup]="formularioDeMantenimiento" class="p-fluid">
@@ -13,8 +13,7 @@
                     <p-checkbox [binary]="true" [formControlName]="opcion.controlName"
                         (onChange)="onCheckboxChange($event)">
                         ></p-checkbox>
-                    <label class="check-text ml-2" [pTooltip]="opcion.tooltip" tooltipPosition="top">{{ i + 1 }}.- {{
-                        opcion.label }}</label>
+                    <label class="check-text ml-2" [pTooltip]="opcion.tooltip" tooltipPosition="top">{{ i + 1 }}.- {{ opcion.label }}</label>
                 </div>
             </div>
         </div>

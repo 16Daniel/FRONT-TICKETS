@@ -17,8 +17,8 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ModalMaintenanceAvHistoryComponent } from '../../../mantenimientos/dialogs/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
 import { ModalMaintenanceAvCheckComponent } from '../../../mantenimientos/dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
-import { Mantenimiento6x6AV } from '../../../mantenimientos/interfaces/mantenimiento-av.interface';
 import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 
 @Component({
   selector: 'app-branches-audio-video-tab',
@@ -50,7 +50,7 @@ export class BranchesAudioVideoTabComponent {
   mostrarModalRating: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalMantenimiento: boolean = false;
-  mantenimientoActivo: Mantenimiento6x6AV | null = null;
+  mantenimientoActivo: MantenimientoSysAv | null = null;
 
   sucursal: Sucursal | undefined;
   areas: Area[] = [];
@@ -131,7 +131,7 @@ export class BranchesAudioVideoTabComponent {
       message: `
       TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
       <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE AUDIO Y VIDEO EN 6 PUNTOS
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE AUDIO Y VIDEO EN 8 PUNTOS
       <br><br>
       CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
       acceptLabel: 'Aceptar', // 🔥 Cambia "Yes" por "Aceptar"

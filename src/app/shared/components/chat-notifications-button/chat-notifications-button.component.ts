@@ -93,7 +93,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
       case 'Sistemas-8x8':
       case '10x10':
       case '8x8':
-      case '6x6':
+      case 'AudioVideo-8x8':
         this.abrirChatMantenimiento(item.idOrigen, item.tipoOrigen)
         break;
 
@@ -137,7 +137,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
         case '10x10':
           this.idArea = '1';
           break;
-        case '6x6':
+        case 'AudioVideo-8x8':
           this.idArea = '2';
           break;
         case '8x8':

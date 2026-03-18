@@ -21,6 +21,7 @@ import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoSys } from '../interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../interfaces/mantenimiento-sys-av.interface';
 import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
+import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,12 +32,14 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
+  async create(data: CreateMantenimientoDto): Promise<void> {
+
     const mantenimiento: MantenimientoSys = {
-      idSucursal: idSucursal,
-      idUsuarioSoporte: idUsuario,
-      fecha: fecha,
+      idSucursal: data.idSucursal,
+      idUsuarioSoporte: data.idUsuario,
+      fecha: data.fecha,
       estatus: true,
+
       mantenimientoCaja: false,
       mantenimientoCCTV: false,
       mantenimientoConcentradorApps: false,
@@ -47,16 +50,20 @@ export class Maintenance10x10Service implements IMantenimientoService {
       mantenimientoPuntosVentaTabletas: false,
       mantenimientoRack: false,
       mantenimientoTiemposCocina: false,
+
       observaciones: '',
       comentarios: [],
-      participantesChat
+
+      participantesChat: data.participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
+
     await addDoc(mantenimientoRef, {
       ...mantenimiento,
       timestamp: Timestamp.now(),
     });
+
   }
 
   async createAv(

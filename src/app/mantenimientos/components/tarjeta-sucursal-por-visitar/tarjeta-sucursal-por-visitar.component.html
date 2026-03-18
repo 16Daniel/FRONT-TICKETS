@@ -1,0 +1,13 @@
+<div class="card p-3 bg-opacity-25" (click)="detalles(sucursal)"
+  [ngClass]="{'bg-success':asignadaAlUsuario(sucursal.id),'bg-danger':!asignadaAlUsuario(sucursal.id)}">
+  <p class="m-1">{{sucursal.nombre}}</p>
+  <p class="m-1">Tickets: {{tickets.length}}&nbsp;&nbsp; {{textoMantenimiento}}:
+    {{ porcentaje$ | async }}% <span *ngIf="usuario.idArea == '1'"> - 8X8 SYS AV: {{ porcentaje$ | async }}%</span>
+  </p>
+  <p>{{usuarioSeleccionado?.nombre}} {{usuarioSeleccionado?.apellidoP}} {{usuarioSeleccionado?.apellidoM}}</p>
+</div>
+
+<app-modal-event-detail *ngIf="showModalBranchDetail" [showModalEventeDetail]="showModalBranchDetail"
+  (closeEvent)="showModalBranchDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="fecha" [comentario]="''"
+  [usuariosHelp]="usuariosHelp" [usuarioSeleccionado]="usuarioSeleccionado" [verFinzalizadosHoy]="false">
+</app-modal-event-detail>

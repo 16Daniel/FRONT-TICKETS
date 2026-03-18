@@ -3,13 +3,13 @@
         *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales))">
         <ng-template pTemplate="header">
             <div class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center justify-content-between" [style]="{
-            'background-color': obtenerColorDeFondoSucursal10x10(obtenerPorcentajedeUltimoMantenimiento(item.id))
+            'background-color': obtenerColorDeFondoSucursal(obtenerPorcentajedeUltimoMantenimiento(item.id))
           }">
                 <div class=" d-flex gap-3 align-items-center">
                     <p-badge [value]="obtenerPorcentajedeUltimoMantenimiento(item.id)+'%'" class="ml-auto mr-2"
                         [size]="'large'" [style]="{ 'background-color': 'white', color: 'black' }" />
                     <span class="fw-bold"
-                        [style]="{ color: obtenerColorDeTexto10x10(obtenerPorcentajedeUltimoMantenimiento(item.id)) }">
+                        [style]="{ color: obtenerColorDeTexto(obtenerPorcentajedeUltimoMantenimiento(item.id)) }">
                         {{item.nombre }}
                     </span>
 
@@ -18,17 +18,13 @@
                 <p-badge [value]="obtenerDiasPasados(item.id.toString())+' DÍAS'" class="ml-auto mr-2" [size]="'large'"
                     [style]="{ 'background-color': 'white', color: 'black' }" />
 
-                <!-- <span [style]="{ color: obtenerColorDeTexto10x10(obtenerPorcentajedeUltimoMantenimiento(item.id)) }">
-                    ULTIMO MANTENIMIENTO: HACE {{obtenerDiasPasados(item.id)}} DÍAS
-                </span> -->
-
             </div>
 
 
         </ng-template>
 
-        <app-branch-maintenance-table [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"
-            [usuariosHelp]="usuariosHelp" [idSucursal]="item.id" [mostrarChat]="mostrarChat"></app-branch-maintenance-table>
+        <app-tabla-mantenimientos-mantenimiento [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"
+            [usuariosHelp]="usuariosHelp" [mostrarChat]="mostrarChat"></app-tabla-mantenimientos-mantenimiento>
 
     </p-accordionTab>
 </p-accordion>

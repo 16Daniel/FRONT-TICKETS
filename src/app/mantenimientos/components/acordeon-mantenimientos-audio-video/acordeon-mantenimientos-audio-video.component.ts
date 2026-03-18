@@ -4,24 +4,24 @@ import { Timestamp } from '@angular/fire/firestore';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 
-import { BranchMaintenanceTableAvComponent } from '../branch-maintenance-table-av/branch-maintenance-table-av.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Mantenimiento6x6AV } from '../../interfaces/mantenimiento-av.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
+import { TablaMantenimientosAudioVideoComponent } from '../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 
 @Component({
-  selector: 'app-accordion-branch-maintenance-av',
+  selector: 'app-acordeon-mantenimientos-audio-video',
   standalone: true,
-  imports: [CommonModule, AccordionModule, BadgeModule, BranchMaintenanceTableAvComponent],
-  templateUrl: './accordion-branch-maintenance-av.component.html',
-  styleUrl: './accordion-branch-maintenance-av.component.scss'
+  imports: [CommonModule, AccordionModule, BadgeModule, TablaMantenimientosAudioVideoComponent],
+  templateUrl: './acordeon-mantenimientos-audio-video.component.html',
+  styleUrl: './acordeon-mantenimientos-audio-video.component.scss'
 })
 
-export class AccordionBranchMaintenanceAvComponent {
-  @Input() mantenimientos: Mantenimiento6x6AV[] = [];
+export class AcordeonMantenimientosAudioVideoComponent {
+  @Input() mantenimientos: MantenimientoSysAv[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
@@ -122,7 +122,7 @@ export class AccordionBranchMaintenanceAvComponent {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): Mantenimiento6x6AV[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSysAv[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 

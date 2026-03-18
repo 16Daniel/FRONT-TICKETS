@@ -11,7 +11,7 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
-import { BranchMaintenanceTableComponent } from '../../../components/branch-maintenance-table/branch-maintenance-table.component';
+import { TablaMantenimientosSistemasComponent } from '../../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 
 @Component({
   selector: 'app-modal-ten-xten-maintenance-history',
@@ -22,7 +22,7 @@ import { BranchMaintenanceTableComponent } from '../../../components/branch-main
     CalendarModule,
     FormsModule,
     TableModule,
-    BranchMaintenanceTableComponent,
+    TablaMantenimientosSistemasComponent,
     ModalMaintenanceDetailComponent,
   ],
   templateUrl: './modal-ten-xten-maintenance-history.component.html',

@@ -1,37 +1,38 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
-
 import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
+import { ModalAvMttoImguploaderComponent } from '../../dialogs/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
+import { ModalMaintenanceChatComponent } from '../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
-import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
-import { ChatMantenimientoSysAvComponent } from '../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 import { EvidenciaSysAv, VisorImagenesSysAvComponent } from '../../dialogs/sistemas-av/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component';
-import { SubirImagenesSysAv2Component } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog-2/subir-imagenes-sys-av-dialog-2.component';
-import { SubirImagenesSysAvComponent } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component';
+import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { SubirImagenesAv2Component } from "../../dialogs/audio-video/subir-imagenes-av-dialog-2/subir-imagenes-av-dialog-2.component";
+
 
 @Component({
-  selector: 'app-tabla-mantenimientos-sys-av',
-  styleUrl: './tabla-mantenimientos-sys-av.component.scss',
+  selector: 'app-tabla-mantenimientos-audio-video',
   standalone: true,
   imports: [
     TableModule,
     CommonModule,
     ModalFinalCommentsComponent,
+    ModalAvMttoImguploaderComponent,
     ModalVisorVariasImagenesComponent,
-    ChatMantenimientoSysAvComponent,
-    SubirImagenesSysAvComponent,
-    SubirImagenesSysAv2Component,
-    VisorImagenesSysAvComponent
+    ModalMaintenanceChatComponent,
+    VisorImagenesSysAvComponent,
+    SubirImagenesAv2Component
   ],
-  templateUrl: './tabla-mantenimientos-sys-av.component.html',
+  templateUrl: './tabla-mantenimientos-audio-video.component.html',
+  styleUrl: './tabla-mantenimientos-audio-video.component.scss'
 })
-export class TablaMantenimientosSysAvComponent {
+
+export class TablaMantenimientosAudioVideoComponent {
   @Input() mantenimientos: MantenimientoSysAv[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idSucursal?: string;
@@ -56,7 +57,7 @@ export class TablaMantenimientosSysAvComponent {
   constructor(
     public dateHelpder: DatesHelperService,
     private cdr: ChangeDetectorRef,
-    public maintenance10x10Service: Maintenance10x10Service,
+    public maintenance6x6AvService: Maintenance6x6AvService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
@@ -116,6 +117,7 @@ export class TablaMantenimientosSysAvComponent {
 
         }
         else if (result.isDenied) {
+          debugger
           if (this.tituloEvidencia == 'PANTALLAS' || this.tituloEvidencia == 'BOCINAS')
             this.mostrarModalSubirImagen2 = true;
           else
@@ -328,7 +330,7 @@ export class TablaMantenimientosSysAvComponent {
         break;
     }
 
-    await this.maintenance10x10Service.updateAV(
+    await this.maintenance6x6AvService.update(
       this.mantenimientoSeleccionado.id,
       this.mantenimientoSeleccionado
     );

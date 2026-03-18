@@ -4,7 +4,7 @@
     <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)">
         <input type="file" id="fileUpload" #fileInput hidden accept="image/*" multiple
-            (change)="onFileSelected($event)">
+            (change)="onFileSelected($event)" />
 
         <div class="upload-content">
             <i class="pi pi-upload upload-icon"></i>

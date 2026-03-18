@@ -5,6 +5,7 @@ import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoMtto } from '../interfaces/mantenimiento-mtto.interface';
 import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
+import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +15,48 @@ export class MaintenanceMtooService implements IMantenimientoService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
+  // async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
+  //   const mantenimiento: MantenimientoMtto = {
+  //     idSucursal: idSucursal.toString(),
+  //     idUsuarioSoporte: idUsuario,
+  //     idActivoFijo: '',
+  //     descripcion: '',
+  //     referencia: '',
+  //     fecha,
+  //     estatus: true,
+  //     mantenimientoTermostato: true,
+  //     mantenimientoPerillas: true,
+  //     mantenimientoTornilleria: true,
+  //     mantenimientoCableado: true,
+  //     mantenimientoRuedas: true,
+  //     mantenimientoTina: true,
+  //     mantenimientoMangueras: true,
+  //     mantenimientoLlavesDePaso: true,
+  //     observaciones: '',
+  //     comentarios: [],
+  //     participantesChat
+  //   };
+
+  //   const mantenimientoRef = collection(this.firestore, this.pathName);
+  //   await addDoc(mantenimientoRef, {
+  //     ...mantenimiento,
+  //     timestamp: Timestamp.now(), // Usa el timestamp de Firestore
+  //   });
+  // }
+
+  async create(data: CreateMantenimientoDto): Promise<void> {
+
     const mantenimiento: MantenimientoMtto = {
-      idSucursal: idSucursal.toString(),
-      idUsuarioSoporte: idUsuario,
-      idActivoFijo: '',
-      descripcion: '',
-      referencia: '',
-      fecha,
+      idSucursal: data.idSucursal.toString(),
+      idUsuarioSoporte: data.idUsuario,
+
+      idActivoFijo: data.idActivoFijo ?? '',
+      descripcion: data.descripcion ?? '',
+      referencia: data.referencia ?? '',
+
+      fecha: data.fecha,
       estatus: true,
+
       mantenimientoTermostato: true,
       mantenimientoPerillas: true,
       mantenimientoTornilleria: true,
@@ -31,56 +65,24 @@ export class MaintenanceMtooService implements IMantenimientoService {
       mantenimientoTina: true,
       mantenimientoMangueras: true,
       mantenimientoLlavesDePaso: true,
+
       observaciones: '',
       comentarios: [],
-      participantesChat
+
+      participantesChat: data.participantesChat
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
+
     await addDoc(mantenimientoRef, {
       ...mantenimiento,
-      timestamp: Timestamp.now(), // Usa el timestamp de Firestore
+      timestamp: Timestamp.now(),
     });
-  }
 
-  async create2(
-    idSucursal: string,
-    idUsuario: string,
-    fecha: Date,
-    idActivoFijo: string,
-    descripcion: string,
-    referencia: string,
-    participantesChat: ParticipanteChat[]): Promise<void> {
-    const mantenimiento: MantenimientoMtto = {
-      idSucursal: idSucursal.toString(),
-      idUsuarioSoporte: idUsuario,
-      idActivoFijo,
-      fecha,
-      estatus: true,
-      descripcion,
-      referencia,
-      mantenimientoTermostato: true,
-      mantenimientoPerillas: true,
-      mantenimientoTornilleria: true,
-      mantenimientoCableado: true,
-      mantenimientoRuedas: true,
-      mantenimientoTina: true,
-      mantenimientoMangueras: true,
-      mantenimientoLlavesDePaso: true,
-      observaciones: '',
-      comentarios: [],
-      participantesChat
-    };
-
-    const mantenimientoRef = collection(this.firestore, this.pathName);
-    await addDoc(mantenimientoRef, {
-      ...mantenimiento,
-      timestamp: Timestamp.now(), // Usa el timestamp de Firestore
-    });
   }
 
   calcularPorcentaje(mantenimiento: MantenimientoMtto) {
-    if(!mantenimiento) return 0;
+    if (!mantenimiento) return 0;
 
     let porcentaje = 0;
     mantenimiento.mantenimientoTermostato ? (porcentaje += 12.5) : porcentaje;

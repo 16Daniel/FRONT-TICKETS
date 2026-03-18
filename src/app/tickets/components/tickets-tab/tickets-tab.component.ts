@@ -16,8 +16,6 @@ import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/d
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
 import { ModalTenXtenMaintenanceNewComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-new/modal-ten-xten-maintenance-new.component';
-import { AccordionBranchMaintenanceAvComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-av/accordion-branch-maintenance-av.component';
-import { AccordionBranchMaintenanceMttoComponent } from '../../../mantenimientos/components/accordion-branch-maintenance-mtto/accordion-branch-maintenance-mtto.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -34,7 +32,9 @@ import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-re
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
-import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
+import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
+import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
+import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -54,9 +54,9 @@ import { AccordionBranchMaintenance10x10Component } from '../../../mantenimiento
     FormsModule,
     PriorityTicketsAccordionAnalystComponent,
     ModalTenXtenMaintenanceNewComponent,
-    AccordionBranchMaintenance10x10Component,
-    AccordionBranchMaintenanceAvComponent,
-    AccordionBranchMaintenanceMttoComponent,
+    AcordeonMantenimientosSistemasComponent,
+    AcordeonMantenimientosAudioVideoComponent,
+    AcordeonMantenimientosMantenimientoComponent,
     ModalRequestPurchaseComponent,
     AcordeonMantenimientosSisAvComponent
   ],
@@ -119,7 +119,7 @@ export class TicketsTabComponent implements OnInit {
         break;
 
       case '2':
-        this.tituloMantenimiento = '6X6';
+        this.tituloMantenimiento = '8X8';
         break;
 
       case '4':

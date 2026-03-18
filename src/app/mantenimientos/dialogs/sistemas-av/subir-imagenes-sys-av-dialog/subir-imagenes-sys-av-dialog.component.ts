@@ -113,104 +113,104 @@ export class SubirImagenesSysAvComponent {
   }
 
   async actualizarUrlsImagenMantenimiento(campo: string, urls: string[]) {
-  if (!this.mantenimiento) return;
+    if (!this.mantenimiento) return;
 
-  switch (campo) {
+    switch (campo) {
 
-    /* =======================
-       PANTALLAS (TVS ARRAY)
-    ======================== */
-    case 'PANTALLAS':
-      if (!this.mantenimiento.tvs) return;
+      /* =======================
+         PANTALLAS (TVS ARRAY)
+      ======================== */
+      case 'PANTALLAS':
+        if (!this.mantenimiento.tvs) return;
 
-      // this.mantenimiento.tvs = this.mantenimiento.tvs.map(tv => ({
-      //   ...tv,
-      //   evidenciaUrls: [
-      //     ...(tv.evidenciaUrls || []),
-      //     ...urls
-      //   ]
-      // }));
-      break;
+        // this.mantenimiento.tvs = this.mantenimiento.tvs.map(tv => ({
+        //   ...tv,
+        //   evidenciaUrls: [
+        //     ...(tv.evidenciaUrls || []),
+        //     ...urls
+        //   ]
+        // }));
+        break;
 
-    /* =======================
-       VIDEO
-    ======================== */
-    case 'VIDEO':
-      this.mantenimiento.mantenimientoSenalVideoEvidenciaUrls = [
-        ...(this.mantenimiento.mantenimientoSenalVideoEvidenciaUrls || []),
-        ...urls
-      ];
-      break;
+      /* =======================
+         VIDEO
+      ======================== */
+      case 'VIDEO':
+        this.mantenimiento.mantenimientoSenalVideoEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoSenalVideoEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
 
-    /* =======================
-       IMAGEN
-    ======================== */
-    case 'IMAGEN':
-      this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls = [
-        ...(this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || []),
-        ...urls
-      ];
-      break;
+      /* =======================
+         IMAGEN
+      ======================== */
+      case 'IMAGEN':
+        this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
 
-    /* =======================
-       BOCINAS (ARRAY)
-    ======================== */
-    case 'BOCINAS':
-      // if (!this.mantenimiento.bocinas) return;
+      /* =======================
+         BOCINAS (ARRAY)
+      ======================== */
+      case 'BOCINAS':
+        // if (!this.mantenimiento.bocinas) return;
 
-      // this.mantenimiento.bocinas = this.mantenimiento.bocinas.map(bocina => ({
-      //   ...bocina,
-      //   evidenciaUrls: [
-      //     ...(bocina.evidenciaUrls || []),
-      //     ...urls
-      //   ]
-      // }));
-      break;
+        // this.mantenimiento.bocinas = this.mantenimiento.bocinas.map(bocina => ({
+        //   ...bocina,
+        //   evidenciaUrls: [
+        //     ...(bocina.evidenciaUrls || []),
+        //     ...urls
+        //   ]
+        // }));
+        break;
 
-    /* =======================
-       AUDIO
-    ======================== */
-    case 'AUDIO':
-      this.mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls = [
-        ...(this.mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls || []),
-        ...urls
-      ];
-      break;
+      /* =======================
+         AUDIO
+      ======================== */
+      case 'AUDIO':
+        this.mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
 
-    /* =======================
-       CABLEADO
-    ======================== */
-    case 'CABLEADO':
-      this.mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls = [
-        ...(this.mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls || []),
-        ...urls
-      ];
-      break;
+      /* =======================
+         CABLEADO
+      ======================== */
+      case 'CABLEADO':
+        this.mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
 
-    /* =======================
-       RACK
-    ======================== */
-    case 'RACK':
-      this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls = [
-        ...(this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || []),
-        ...urls
-      ];
-      break;
+      /* =======================
+         RACK
+      ======================== */
+      case 'RACK':
+        this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
 
-    /* =======================
-       ELECTRICO
-    ======================== */
-    case 'ELECTRICO':
-      this.mantenimiento.mantenimientoElectricoEvidenciaUrls = [
-        ...(this.mantenimiento.mantenimientoElectricoEvidenciaUrls || []),
-        ...urls
-      ];
-      break;
+      /* =======================
+         ELECTRICO
+      ======================== */
+      case 'ELECTRICO':
+        this.mantenimiento.mantenimientoElectricoEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoElectricoEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
+    }
+
+    await this.maintenance10x10Service.updateAV(
+      this.mantenimiento.id,
+      this.mantenimiento
+    );
   }
-
-  await this.maintenance10x10Service.updateAV(
-    this.mantenimiento.id,
-    this.mantenimiento
-  );
-}
 }

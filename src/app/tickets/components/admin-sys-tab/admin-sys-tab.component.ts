@@ -30,9 +30,9 @@ import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-re
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
-import { AccordionBranchMaintenance10x10Component } from '../../../mantenimientos/components/accordion-branch-maintenance10x10/accordion-branch-maintenance10x10.component';
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
+import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -48,7 +48,7 @@ import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimi
     ModalTicketsHistoryComponent,
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
-    AccordionBranchMaintenance10x10Component,
+    AcordeonMantenimientosSistemasComponent,
     ModalTicketDetailComponent,
     IconosNotificacionesTicketsComponent,
     ModalPurshasesComponent,
@@ -61,7 +61,7 @@ import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimi
 })
 
 export class AdminSysTabComponent {
-  @ViewChild(AccordionBranchMaintenance10x10Component) hijo!: AccordionBranchMaintenance10x10Component;
+  @ViewChild(AcordeonMantenimientosSistemasComponent) hijo!: AcordeonMantenimientosSistemasComponent;
 
   tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;

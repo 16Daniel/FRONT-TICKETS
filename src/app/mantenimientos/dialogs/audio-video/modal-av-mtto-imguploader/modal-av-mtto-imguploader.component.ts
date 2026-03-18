@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
 import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
-import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interface';
+import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 
 @Component({
   selector: 'app-modal-av-mtto-imguploader',
@@ -16,7 +16,7 @@ import { Mantenimiento6x6AV } from '../../../interfaces/mantenimiento-av.interfa
 })
 export class ModalAvMttoImguploaderComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() mantenimiento: Mantenimiento6x6AV | undefined;
+  @Input() mantenimiento: MantenimientoSysAv | undefined;
   @Input() titulo: string | undefined;
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -26,8 +26,8 @@ export class ModalAvMttoImguploaderComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance6x6AvService: Maintenance6x6AvService) { }
-
+    private maintenance6x6AvService: Maintenance6x6AvService
+  ) { }
 
   onHide() {
     this.closeEvent.emit();
@@ -116,46 +116,102 @@ export class ModalAvMttoImguploaderComponent {
     if (!this.mantenimiento) return;
 
     switch (campo) {
-      case 'CONEXIONES':
-        this.mantenimiento.mantenimientoConexionesEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoConexionesEvidenciaUrls || []),
+
+      /* =======================
+         PANTALLAS (TVS ARRAY)
+      ======================== */
+      case 'PANTALLAS':
+        if (!this.mantenimiento.tvs) return;
+
+        // this.mantenimiento.tvs = this.mantenimiento.tvs.map(tv => ({
+        //   ...tv,
+        //   evidenciaUrls: [
+        //     ...(tv.evidenciaUrls || []),
+        //     ...urls
+        //   ]
+        // }));
+        break;
+
+      /* =======================
+         VIDEO
+      ======================== */
+      case 'VIDEO':
+        this.mantenimiento.mantenimientoSenalVideoEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoSenalVideoEvidenciaUrls || []),
           ...urls
         ];
         break;
+
+      /* =======================
+         IMAGEN
+      ======================== */
+      case 'IMAGEN':
+        this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
+
+      /* =======================
+         BOCINAS (ARRAY)
+      ======================== */
+      case 'BOCINAS':
+        // if (!this.mantenimiento.bocinas) return;
+
+        // this.mantenimiento.bocinas = this.mantenimiento.bocinas.map(bocina => ({
+        //   ...bocina,
+        //   evidenciaUrls: [
+        //     ...(bocina.evidenciaUrls || []),
+        //     ...urls
+        //   ]
+        // }));
+        break;
+
+      /* =======================
+         AUDIO
+      ======================== */
+      case 'AUDIO':
+        this.mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls || []),
+          ...urls
+        ];
+        break;
+
+      /* =======================
+         CABLEADO
+      ======================== */
       case 'CABLEADO':
-        this.mantenimiento.mantenimientoCableadoEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoCableadoEvidenciaUrls || []),
+        this.mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls || []),
           ...urls
         ];
         break;
+
+      /* =======================
+         RACK
+      ======================== */
       case 'RACK':
-        this.mantenimiento.mantenimientoRackEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoRackEvidenciaUrls || []),
+        this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || []),
           ...urls
         ];
         break;
-      case 'CONTROLES':
-        this.mantenimiento.mantenimientoControlesEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoControlesEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
-      case 'NIVEL AUDIO':
-        this.mantenimiento.mantenimientoNivelAudioEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoNivelAudioEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
-      case 'CANALES':
-        this.mantenimiento.mantenimientoCanalesEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoCanalesEvidenciaUrls || []),
+
+      /* =======================
+         ELECTRICO
+      ======================== */
+      case 'ELECTRICO':
+        this.mantenimiento.mantenimientoElectricoEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoElectricoEvidenciaUrls || []),
           ...urls
         ];
         break;
     }
 
-    await this.maintenance6x6AvService.update(this.mantenimiento.id, this.mantenimiento);
-    Swal.fire("OK", "¡LAS IMÁGENES SE SUBIERON CORRECTAMENTE!", "success");
+    await this.maintenance6x6AvService.update(
+      this.mantenimiento.id,
+      this.mantenimiento
+    );
   }
 
 }

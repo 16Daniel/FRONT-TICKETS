@@ -9,14 +9,14 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 
 @Component({
-  selector: 'app-branch-visit-item',
+  selector: 'app-tarjeta-sucursal-por-visitar',
   standalone: true,
   imports: [CommonModule, ModalEventDetailComponent],
-  templateUrl: './branch-visit-item.component.html',
-  styleUrl: './branch-visit-item.component.scss'
+  templateUrl: './tarjeta-sucursal-por-visitar.component.html',
+  styleUrl: './tarjeta-sucursal-por-visitar.component.scss'
 })
 
-export class BranchVisitItemComponent {
+export class TarjetaSucursalPorVisitarComponent {
   @Input() sucursal: Sucursal | any;
   @Input() tickets: Ticket[] = [];
   @Input() usuariosHelp: Usuario[] = [];
@@ -44,7 +44,7 @@ export class BranchVisitItemComponent {
         this.textoMantenimiento = '10X10';
         break;
       case '2':
-        this.textoMantenimiento = '6X6';
+        this.textoMantenimiento = '8X8';
         break;
       case '4':
         this.textoMantenimiento = '8X8';

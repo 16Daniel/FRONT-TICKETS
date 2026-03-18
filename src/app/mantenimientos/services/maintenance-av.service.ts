@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
-import { Mantenimiento6x6AV } from '../interfaces/mantenimiento-av.interface';
+import { MantenimientoSysAv } from '../interfaces/mantenimiento-sys-av.interface';
+import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,44 +13,57 @@ export class Maintenance6x6AvService implements IMantenimientoService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(idSucursal: string, idUsuario: string, fecha: Date, participantesChat: []): Promise<void> {
-    const mantenimiento: Mantenimiento6x6AV = {
-      idSucursal,
-      idUsuarioSoporte: idUsuario,
-      fecha,
+  async create(data: CreateMantenimientoDto): Promise<void> {
+
+    const mantenimiento: MantenimientoSysAv = {
+      idSucursal: data.idSucursal,
+      idUsuarioSoporte: data.idUsuario,
+      fecha: data.fecha,
       estatus: true,
-      mantenimientoConexiones: true,
-      mantenimientoCableado: true,
-      mantenimientoRack: true,
-      mantenimientoControles: true,
-      mantenimientoNivelAudio: true,
-      mantenimientoCanales: true,
+
+      mantenimientoPantallasSoporte: false,
+      mantenimientoSenalVideo: false,
+      mantenimientoParametrosImagen: false,
+      mantenimientoFuncionalBocinas: false,
+      mantenimientoTransmisionAudio: false,
+      mantenimientoOrdenamientoCableado: false,
+      mantenimientoLimpiezaRack: false,
+      mantenimientoElectrico: false,
+
       observaciones: '',
       comentarios: [],
-      participantesChat
+
+      tvs: data.tvs,
+      bocinas: data.bocinas,
+
+      participantesChat: data.participantesChat,
     };
 
     const mantenimientoRef = collection(this.firestore, this.pathName);
+
     await addDoc(mantenimientoRef, {
       ...mantenimiento,
-      timestamp: Timestamp.now(), // Usa el timestamp de Firestore
+      timestamp: Timestamp.now(),
     });
+
   }
 
-  calcularPorcentaje(mantenimiento: Mantenimiento6x6AV) {
+  calcularPorcentaje(mantenimiento: MantenimientoSysAv) {
     if (!mantenimiento) return 0;
 
     let porcentaje = 0;
-    mantenimiento.mantenimientoConexiones ? (porcentaje += 16.67) : porcentaje;
-    mantenimiento.mantenimientoCableado ? (porcentaje += 16.67) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 16.67) : porcentaje;
-    mantenimiento.mantenimientoControles
-      ? (porcentaje += 16.67)
+    mantenimiento.mantenimientoPantallasSoporte ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoSenalVideo ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoParametrosImagen ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoFuncionalBocinas
+      ? (porcentaje += 12.5)
       : porcentaje;
-    mantenimiento.mantenimientoNivelAudio
-      ? (porcentaje += 16.67)
+    mantenimiento.mantenimientoTransmisionAudio
+      ? (porcentaje += 12.5)
       : porcentaje;
-    mantenimiento.mantenimientoCanales ? (porcentaje += 16.67) : porcentaje;
+    mantenimiento.mantenimientoOrdenamientoCableado ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoLimpiezaRack ? (porcentaje += 12.5) : porcentaje;
+    mantenimiento.mantenimientoElectrico ? (porcentaje += 12.5) : porcentaje;
 
     return Math.round(porcentaje);
   }
@@ -77,10 +91,10 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     const consulta = query(coleccionRef, ...filtros);
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({
+    const documentos: MantenimientoSysAv[] = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    } as Mantenimiento6x6AV));
+    } as MantenimientoSysAv));
 
     return documentos;
   }
@@ -106,10 +120,10 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     const consulta = query(coleccionRef, ...filtros);
 
     const querySnapshot = await getDocs(consulta);
-    const documentos: Mantenimiento6x6AV[] = querySnapshot.docs.map(doc => ({
+    const documentos: MantenimientoSysAv[] = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    } as Mantenimiento6x6AV));
+    } as MantenimientoSysAv));
 
     return documentos;
   }
@@ -147,7 +161,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return forkJoin(consultas);
   }
 
-  async update(id: string, mantenimiento: Mantenimiento6x6AV): Promise<void> {
+  async update(id: string, mantenimiento: MantenimientoSysAv): Promise<void> {
     const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
     await updateDoc(mantenimientoRef, {
       ...mantenimiento,
@@ -157,7 +171,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
 
   getMantenimientoActivo(
     idSucursal: string | undefined,
-    callback: (mantenimiento: Mantenimiento6x6AV | null) => void
+    callback: (mantenimiento: MantenimientoSysAv | null) => void
   ): () => void {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
@@ -181,7 +195,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
         const mantenimiento = {
           id: primerDoc.id,
           ...primerDoc.data(),
-        } as Mantenimiento6x6AV;
+        } as MantenimientoSysAv;
         callback(mantenimiento); // Devuelve el primer registro
       }
     });
@@ -190,7 +204,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     return unsubscribe;
   }
 
-  getLastMaintenanceByBranch(idSucursal: string): Observable<Mantenimiento6x6AV[]> {
+  getLastMaintenanceByBranch(idSucursal: string): Observable<MantenimientoSysAv[]> {
     const mantenimientoRef = collection(this.firestore, this.pathName);
     const q = query(
       mantenimientoRef,
@@ -199,14 +213,14 @@ export class Maintenance6x6AvService implements IMantenimientoService {
       orderBy('fecha', 'desc'),
       limit(1)
     );
-    return collectionData(q, { idField: 'id' }) as Observable<Mantenimiento6x6AV[]>;
+    return collectionData(q, { idField: 'id' }) as Observable<MantenimientoSysAv[]>;
   }
 
   getHistorialMantenimeintos(
     fechaInicio: Date,
     fechaFin: Date,
     idSucursal: string,
-    callback: (mantenimientos: Mantenimiento6x6AV[] | null) => void
+    callback: (mantenimientos: MantenimientoSysAv[] | null) => void
   ): () => void {
     fechaInicio.setHours(0, 0, 0, 0);
 
@@ -229,7 +243,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
         const mantenimientos = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        })) as Mantenimiento6x6AV[];
+        })) as MantenimientoSysAv[];
         callback(mantenimientos);
       }
     });
@@ -301,8 +315,8 @@ export class Maintenance6x6AvService implements IMantenimientoService {
     await deleteDoc(mantenimientoRef);
   }
 
-  getById(id: string): Observable<Mantenimiento6x6AV | undefined> {
-    return new Observable<Mantenimiento6x6AV | undefined>((subscriber) => {
+  getById(id: string): Observable<MantenimientoSysAv | undefined> {
+    return new Observable<MantenimientoSysAv | undefined>((subscriber) => {
       const mantenimientoRef = doc(this.firestore, `${this.pathName}/${id}`);
 
       const unsubscribe = onSnapshot(
@@ -312,7 +326,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
             subscriber.next({
               id: snapshot.id,
               ...snapshot.data(),
-            } as Mantenimiento6x6AV);
+            } as MantenimientoSysAv);
           } else {
             subscriber.next(undefined);
           }
