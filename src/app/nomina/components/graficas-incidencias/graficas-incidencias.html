@@ -1,0 +1,64 @@
+<div class="m-3">
+     <p-selectButton 
+            [options]="stateOptions" 
+            [(ngModel)]="GraficaSel"
+            optionLabel="label" 
+            optionValue="value" 
+            />
+       
+</div>
+
+<div style="height: 500px; width: 100%;" *ngIf="GraficaSel == '1'">
+        <ngx-charts-bar-vertical
+        [scheme]="colorScheme"
+        [results]="graficaFaltas"
+        [gradient]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="'SUCURSAL'"
+        [yAxisLabel]="'PORCENTAJE'"
+        legendTitle="INDICADORES"
+        >
+        </ngx-charts-bar-vertical>
+    </div>
+
+
+
+<div style="height: 500px; width: 100%;" *ngIf="GraficaSel == '2'">
+        <ngx-charts-bar-vertical
+        [scheme]="colorScheme"
+        [results]="graficaVacaciones"
+        [gradient]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="'SUCURSAL'"
+        [yAxisLabel]="'PORCENTAJE'"
+        legendTitle="INDICADORES"
+        >
+        </ngx-charts-bar-vertical>
+    </div>
+
+
+
+<div style="height: 500px; width: 100%;" *ngIf="GraficaSel == '3'">
+        <ngx-charts-bar-vertical
+        [scheme]="colorScheme"
+        [results]="graficaIncapacidad"
+        [gradient]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="'SUCURSAL'"
+        [yAxisLabel]="'PORCENTAJE'"
+        legendTitle="INDICADORES"
+        >
+        </ngx-charts-bar-vertical>
+    </div>
