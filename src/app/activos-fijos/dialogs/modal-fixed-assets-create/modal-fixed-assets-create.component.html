@@ -159,6 +159,18 @@
     </small>
     <p></p>
 
+    @if(!esNuevoActivoFijo) {
+    <p class="fw-bold">REFERENCIA</p>
+    <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE LA REFERENCIA"
+      [(ngModel)]="activoFijo.referencia" name="referencia"
+      [ngClass]="{'p-invalid': formReferenciaCtrl.invalid && formReferenciaCtrl.touched}" #formReferenciaCtrl="ngModel"
+      required>
+    <small *ngIf="formNoSerieCtrl.invalid && formNoSerieCtrl.touched" class="p-error">
+      Campo requerido.
+    </small>
+    <p></p>
+    }
+
     <div class="d-flex justify-content-end mt-3">
       <button class="btn bg-p-b p-3">
         <i class='bx bx-send'></i>
