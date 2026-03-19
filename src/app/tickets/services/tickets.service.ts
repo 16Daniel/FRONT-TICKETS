@@ -22,7 +22,7 @@ import {
 } from '@angular/fire/firestore';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Ticket } from '../interfaces/ticket.model';
-import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -13,7 +13,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { ActivoFijo } from '../interfaces/activo-fijo.model';
+import { ActivoFijo } from '../interfaces/activo-fijo.interface';
 import { MantenimientoActivoFijo } from '../../mantenimientos/interfaces/mantenimiento-activo-fijo.interface';
 
 @Injectable({

@@ -23,12 +23,12 @@ import { AreasFixedAssetsService } from '../../services/areas-fixed-assets.servi
 import { CategoriesFixedAssetsService } from '../../services/categories-activos-fijos.service';
 import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
-import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.model';
-import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.model';
-import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.model';
-import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
+import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.interface';
+import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.interface';
+import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.interface';
+import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.interface';
 
 @Component({
   selector: 'app-fixed-assets-page',
@@ -112,6 +112,8 @@ export default class FixedAssetsPageComponent implements OnInit {
 
   obtenerActivosFijos() {
     let idArea = this.usuario.idRol == '1' ? undefined : this.usuario.idArea;
+    idArea = (this.usuario.idArea == '10' || this.usuario.idArea == '13') ?
+      undefined : this.usuario.idArea;
 
     this.subscripcion = this.fixedAssetsService.get(idArea).subscribe(result => {
       this.activosFijos = result.sort((a, b) => {

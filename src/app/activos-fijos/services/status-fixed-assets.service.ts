@@ -11,7 +11,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { EstatusActivoFijo } from '../interfaces/estatus-activo-fijo.model';
+import { EstatusActivoFijo } from '../interfaces/estatus-activo-fijo.interface';
 
 @Injectable({
   providedIn: 'root'

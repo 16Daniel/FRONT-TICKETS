@@ -14,12 +14,12 @@ import { AreasFixedAssetsService } from '../../services/areas-fixed-assets.servi
 import { CategoriesFixedAssetsService } from '../../services/categories-activos-fijos.service';
 import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
-import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.model';
-import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.model';
-import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.model';
-import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.model';
+import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.interface';
+import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.interface';
+import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.interface';
+import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.interface';
 
 @Component({
   selector: 'app-modal-fixed-assets-create',
@@ -64,7 +64,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     }
 
     this.areas = this.areasService.areas;
-    this.activoFijo.idArea = this.usuario.idArea;
+    // this.activoFijo.idArea = this.usuario.idArea;
     this.obtenerSucursales();
     this.obtenerAreasActivosFijos();
     this.obtenerCategoriasActivosFijos();
@@ -170,15 +170,15 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
 
   async actualizar() {
 
-    if (this.requiereNuevaReferencia(
-      this.activoFijo,
-      this.activoFijo.referencia,
-      this.areas,
-      this.areasActivosFijos,
-      this.categoriasActivosFijos
-    )) {
-      this.activoFijo.referencia = await this.crearReferencia();
-    }
+    // if (this.requiereNuevaReferencia(
+    //   this.activoFijo,
+    //   this.activoFijo.referencia,
+    //   this.areas,
+    //   this.areasActivosFijos,
+    //   this.categoriasActivosFijos
+    // )) {
+    //   this.activoFijo.referencia = await this.crearReferencia();
+    // }
 
     this.fixedAssetsService
       .update(this.activoFijo, this.idActivoFijoEditar)
@@ -200,7 +200,8 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
           id: item.id.toString()
         }));
 
-        this.activoFijo.idSucursal = parseInt(this.usuario.sucursales[0].id).toString();
+        this.activoFijo.idSucursal = this.esNuevoActivoFijo ? parseInt(this.usuario.sucursales[0].id).toString()
+          : this.activoFijo.idSucursal;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -214,7 +215,11 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
       next: (data) => {
         this.areasActivosFijos = data.map((item: any) => ({
           ...item,
-        }));;
+        }));
+
+        this.activoFijo.idArea = this.esNuevoActivoFijo ? parseInt(this.usuario.idArea).toString()
+          : this.activoFijo.idArea;
+
         this.cdr.detectChanges();
       },
       error: (error) => {

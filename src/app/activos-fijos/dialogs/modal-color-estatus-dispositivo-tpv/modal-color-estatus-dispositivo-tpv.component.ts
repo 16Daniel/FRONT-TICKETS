@@ -10,7 +10,7 @@ import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.ser
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Dispositivo } from '../../interfaces/dispositivo.interface';
-import { EstatusTPV } from '../../interfaces/estatus-tpv';
+import { EstatusTPV } from '../../interfaces/estatus-tpv.interface';
 
 @Component({
   selector: 'app-modal-color-estatus-dispositivo-tpv',

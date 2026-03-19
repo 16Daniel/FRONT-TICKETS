@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
 
 @Pipe({
   name: 'buscarPorReferencia',
@@ -13,9 +13,13 @@ export class BuscarPorReferenciaPipe implements PipeTransform {
     }
 
     texto = texto.toLowerCase().trim();
-    return activos.filter(activo =>
-      activo.referencia?.toLowerCase().includes(texto)
-    );
+
+    return activos.filter(activo => {
+      const referencia = activo.referencia?.toLowerCase() || '';
+      const noSerie = activo.noSerie?.toLowerCase() || '';
+
+      return referencia.includes(texto) || noSerie.includes(texto);
+    });
   }
 
 }

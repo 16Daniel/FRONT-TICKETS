@@ -8,7 +8,7 @@ import { StatusTpvsDevicesService } from '../../../activos-fijos/services/status
 import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos/dialogs/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
-import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv';
+import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv.interface';
 
 @Component({
   selector: 'app-tpvs-devices-table',

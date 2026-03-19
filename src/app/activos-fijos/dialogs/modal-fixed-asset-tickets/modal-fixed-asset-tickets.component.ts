@@ -6,7 +6,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { ActivoFijo } from '../../interfaces/activo-fijo.model';
+import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 
 @Component({
   selector: 'app-modal-fixed-asset-tickets',
