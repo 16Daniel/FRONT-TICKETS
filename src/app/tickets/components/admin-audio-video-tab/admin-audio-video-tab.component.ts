@@ -30,6 +30,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
+import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -49,7 +51,8 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimient
     AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
     ModalPurshasesComponent,
-    ModalRequestPurchaseComponent
+    ModalRequestPurchaseComponent,
+    AcordeonMantenimientosSisAvComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-audio-video-tab.component.html',
@@ -81,6 +84,9 @@ export class AdminAudioVideoTabComponent {
   ordenarMantenimientosFecha: boolean = false;
   compras: Compra[] = [];
   auxMostrarMantenimientos = true;
+  mostrarMantenimientosAV: boolean = false;
+  auxMostrarMantenimientosAV = true;
+  mantenimientosAV: MantenimientoSysAv[] = [];
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -89,6 +95,7 @@ export class AdminAudioVideoTabComponent {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private maintenanceService: Maintenance6x6AvService,
+    private maintenanceSysService: Maintenance10x10Service,
     private purchaseService: PurchaseService,
     private datesHelper: DatesHelperService
   ) {
@@ -207,6 +214,28 @@ export class AdminAudioVideoTabComponent {
             this.cdr.detectChanges();
 
           });
+
+
+        this.maintenanceSysService
+          .getUltimosMantenimientosAV(
+            this.sucursales.map((sucursal) => sucursal.id)
+          )
+          .subscribe((result) => {
+            let data = result.filter((element) => element.length > 0);
+            this.mantenimientosAV = [];
+            for (let itemdata of data) {
+              for (let item of itemdata) {
+                this.mantenimientosAV.push(item);
+              }
+            }
+
+            this.mantenimientosAV = this.mantenimientosAV.map(x => {
+              x.fecha = this.datesHelper.getDate(x.fecha);
+              return x;
+            });
+            this.cdr.detectChanges();
+          });
+
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -274,5 +303,13 @@ export class AdminAudioVideoTabComponent {
         sucursal.activoMantenimientos.includes('2')
       );
     }
+
   }
+  // filtrarMantenimientosAV() {
+  //   this.auxMostrarMantenimientosAV = false;
+  //   setTimeout(() => {
+  //     this.auxMostrarMantenimientosAV = true;
+  //     this.cdr.detectChanges();
+  //   }, 400);
+  // }
 }
