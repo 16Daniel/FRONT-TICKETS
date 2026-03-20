@@ -99,42 +99,42 @@
   user-select: none;
 }
 
-.particle {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--clr-spark);
-  opacity: 0;
-  pointer-events: none;
-  top: 50%;
-  left: 50%;
-  z-index: 3;
-}
+// .particle {
+//   position: absolute;
+//   width: 5px;
+//   height: 5px;
+//   border-radius: 50%;
+//   background: var(--clr-spark);
+//   opacity: 0;
+//   pointer-events: none;
+//   top: 50%;
+//   left: 50%;
+//   z-index: 3;
+// }
 
-.ring {
-  position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  border: 2px solid var(--clr-glow);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1;
-}
+// .ring {
+//   position: absolute;
+//   inset: -8px;
+//   border-radius: 50%;
+//   border: 2px solid var(--clr-glow);
+//   opacity: 0;
+//   pointer-events: none;
+//   z-index: 1;
+// }
 
-.spark {
-  position: absolute;
-  width: 2px;
-  height: 10px;
-  background: linear-gradient(to top, var(--clr-spark), transparent);
-  opacity: 0;
-  top: 50%;
-  left: 50%;
-  transform-origin: center center;
-  pointer-events: none;
-  border-radius: 2px;
-  z-index: 3;
-}
+// .spark {
+//   position: absolute;
+//   width: 2px;
+//   height: 10px;
+//   background: linear-gradient(to top, var(--clr-spark), transparent);
+//   opacity: 0;
+//   top: 50%;
+//   left: 50%;
+//   transform-origin: center center;
+//   pointer-events: none;
+//   border-radius: 2px;
+//   z-index: 3;
+// }
 
 .s1 {
   transform: rotate(0deg) translateY(-2px);
@@ -171,7 +171,7 @@
 .cosmic-checkbox input:checked~.checkbox-container .checkbox-box {
   border-color: var(--clr-active);
   transform: scale(1);
-  animation: box-pulse 0.5s ease;
+  // animation: box-pulse 0.5s ease;
 }
 
 @keyframes box-pulse {
@@ -205,47 +205,47 @@
   color: var(--clr-core);
 }
 
-.cosmic-checkbox input:checked~.checkbox-container .p1 {
-  animation: particle-fly 0.65s ease-out forwards;
-  --angle: -45deg;
-  --dist: 22px;
-  --clr: #f0abfc;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .p1 {
+//   animation: particle-fly 0.65s ease-out forwards;
+//   --angle: -45deg;
+//   --dist: 22px;
+//   --clr: #f0abfc;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .p2 {
-  animation: particle-fly 0.6s 0.05s ease-out forwards;
-  --angle: -90deg;
-  --dist: 26px;
-  --clr: #c084fc;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .p2 {
+//   animation: particle-fly 0.6s 0.05s ease-out forwards;
+//   --angle: -90deg;
+//   --dist: 26px;
+//   --clr: #c084fc;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .p3 {
-  animation: particle-fly 0.55s 0.08s ease-out forwards;
-  --angle: 0deg;
-  --dist: 20px;
-  --clr: #e879f9;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .p3 {
+//   animation: particle-fly 0.55s 0.08s ease-out forwards;
+//   --angle: 0deg;
+//   --dist: 20px;
+//   --clr: #e879f9;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .p4 {
-  animation: particle-fly 0.7s 0.03s ease-out forwards;
-  --angle: 45deg;
-  --dist: 24px;
-  --clr: #d946ef;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .p4 {
+//   animation: particle-fly 0.7s 0.03s ease-out forwards;
+//   --angle: 45deg;
+//   --dist: 24px;
+//   --clr: #d946ef;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .p5 {
-  animation: particle-fly 0.5s 0.1s ease-out forwards;
-  --angle: 135deg;
-  --dist: 18px;
-  --clr: #a78bfa;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .p5 {
+//   animation: particle-fly 0.5s 0.1s ease-out forwards;
+//   --angle: 135deg;
+//   --dist: 18px;
+//   --clr: #a78bfa;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .p6 {
-  animation: particle-fly 0.65s 0.06s ease-out forwards;
-  --angle: -135deg;
-  --dist: 23px;
-  --clr: #818cf8;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .p6 {
+//   animation: particle-fly 0.65s 0.06s ease-out forwards;
+//   --angle: -135deg;
+//   --dist: 23px;
+//   --clr: #818cf8;
+// }
 
 @keyframes particle-fly {
   0% {
@@ -265,17 +265,17 @@
   }
 }
 
-.cosmic-checkbox input:checked~.checkbox-container .ring-1 {
-  animation: shockwave 0.7s ease-out forwards;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .ring-1 {
+//   animation: shockwave 0.7s ease-out forwards;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .ring-2 {
-  animation: shockwave 0.7s 0.12s ease-out forwards;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .ring-2 {
+//   animation: shockwave 0.7s 0.12s ease-out forwards;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .ring-3 {
-  animation: shockwave 0.7s 0.24s ease-out forwards;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .ring-3 {
+//   animation: shockwave 0.7s 0.24s ease-out forwards;
+// }
 
 @keyframes shockwave {
   0% {
@@ -296,45 +296,45 @@
   }
 }
 
-.cosmic-checkbox input:checked~.checkbox-container .s1 {
-  animation: spark-burst 0.5s 0.05s ease-out forwards;
-  --rot: 0deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s1 {
+//   animation: spark-burst 0.5s 0.05s ease-out forwards;
+//   --rot: 0deg;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .s2 {
-  animation: spark-burst 0.45s 0.08s ease-out forwards;
-  --rot: 45deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s2 {
+//   animation: spark-burst 0.45s 0.08s ease-out forwards;
+//   --rot: 45deg;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .s3 {
-  animation: spark-burst 0.5s 0.03s ease-out forwards;
-  --rot: 90deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s3 {
+//   animation: spark-burst 0.5s 0.03s ease-out forwards;
+//   --rot: 90deg;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .s4 {
-  animation: spark-burst 0.55s 0.1s ease-out forwards;
-  --rot: 135deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s4 {
+//   animation: spark-burst 0.55s 0.1s ease-out forwards;
+//   --rot: 135deg;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .s5 {
-  animation: spark-burst 0.5s 0.06s ease-out forwards;
-  --rot: 180deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s5 {
+//   animation: spark-burst 0.5s 0.06s ease-out forwards;
+//   --rot: 180deg;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .s6 {
-  animation: spark-burst 0.45s 0.09s ease-out forwards;
-  --rot: 225deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s6 {
+//   animation: spark-burst 0.45s 0.09s ease-out forwards;
+//   --rot: 225deg;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .s7 {
-  animation: spark-burst 0.5s 0.04s ease-out forwards;
-  --rot: 270deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s7 {
+//   animation: spark-burst 0.5s 0.04s ease-out forwards;
+//   --rot: 270deg;
+// }
 
-.cosmic-checkbox input:checked~.checkbox-container .s8 {
-  animation: spark-burst 0.55s 0.07s ease-out forwards;
-  --rot: 315deg;
-}
+// .cosmic-checkbox input:checked~.checkbox-container .s8 {
+//   animation: spark-burst 0.55s 0.07s ease-out forwards;
+//   --rot: 315deg;
+// }
 
 @keyframes spark-burst {
   0% {

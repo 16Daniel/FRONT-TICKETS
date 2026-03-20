@@ -1,4 +1,4 @@
-@if(mostrarMantenimientos==false)
+@if(mostrarMantenimientos==false && mostrarMantenimientosAV==false)
 {
 <h3 class="m-3 text-center">TICKETS</h3>
 }@else
@@ -40,14 +40,21 @@
 <div class="d-flex flex-wrap gap-2 align-items-center">
   <div class="form-check form-switch d-flex align-items-center gap-3">
     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-      style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientos">
-    <label class="form-check-label fs-4" for="flexSwitchCheckChecked">8X8</label>
+      style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientos"
+      (ngModelChange)="mostrarMantenimientosAV = false">
+    <label class="form-check-label fs-4" for="flexSwitchCheckChecked">AV: 8X8</label>
   </div>
 
   <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="mostrarMantenimientos">
     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
       style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarMantenimientosFecha" (change)="filtrarMantenimientos()">
     <label class="form-check-label fs-4" for="flexSwitchCheckChecked">ORDENAR POR FECHA</label>
+  </div>
+
+  <div class="form-check form-switch d-flex align-items-center gap-2">
+    <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
+      [(ngModel)]="mostrarMantenimientosAV" (ngModelChange)="mostrarMantenimientos = false">
+    <label class="form-check-label fs-4">IT: 8X8</label>
   </div>
 </div>
 
@@ -75,7 +82,15 @@
     [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
     [mostrarChat]="true"></app-acordeon-mantenimientos-audio-video>
 </div>
-}@else {
+}
+@else if(mostrarMantenimientosAV) {
+<div class="mt-4">
+  <app-acordeon-mantenimientos-sis-av *ngIf="auxMostrarMantenimientosAV" [mantenimientos]="mantenimientosAV"
+    [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+    [mostrarChat]="true"></app-acordeon-mantenimientos-sis-av>
+</div>
+}
+@else {
 <div *ngIf="usergroup == undefined" class="mt-4">
   <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales"
     [idArea]="idArea"></app-branches-tickets-accordion>

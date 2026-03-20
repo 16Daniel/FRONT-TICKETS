@@ -108,8 +108,6 @@ export class CajaComentariosTareaComponent implements OnInit {
         }
       }
     });
-
-    event.preventDefault();
   }
 
   async eliminarComentario(comentario: Comentario) {
