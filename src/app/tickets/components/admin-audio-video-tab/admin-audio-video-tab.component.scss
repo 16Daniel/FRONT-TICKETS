@@ -42,3 +42,35 @@
   border: none !important;
   color: white !important;
 }
+
+.banner-8x8 {
+  border-radius: 10px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* AV */
+.banner-av {
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  color: white;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+}
+
+/* IT */
+.banner-it {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: white;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
