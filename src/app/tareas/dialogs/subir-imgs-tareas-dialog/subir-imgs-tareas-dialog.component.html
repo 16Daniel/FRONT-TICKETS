@@ -1,33 +1,64 @@
 <p-dialog [header]="'SUBIR EVIDENCIA DE TAREA ' + titulo" [modal]="true" [(visible)]="mostrarModal"
-    [style]="{ width: '40vw', height: '65vh' }" [maximizable]="true" (onHide)="onHide()">
-    <!-- Área de subida -->
-    <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-        (drop)="onDrop($event)">
-        <input type="file" id="fileUpload" #fileInput hidden accept="image/*" multiple
-            (change)="onFileSelected($event)" />
+  [style]="{ width: '40vw', height: '65vh' }" [maximizable]="true" (onHide)="onHide()">
+  <!-- Área de subida -->
+  <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+    <input type="file" id="fileUpload" #fileInput hidden accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" multiple
+      (change)="onFileSelected($event)" />
 
-        <div class="upload-content">
-            <i class="pi pi-upload upload-icon"></i>
-            <p class="upload-text">Arrastra y suelta una imagen aquí</p>
-            <p class="upload-separator">o</p>
-            <button type="button" class="btn-upload" (click)="fileInput.click()">
-                Seleccionar imagen
-            </button>
-        </div>
+    <div class="upload-content">
+      <i class="pi pi-upload upload-icon"></i>
+      <p class="upload-text">Arrastra y suelta un archivo aquí</p>
+      <p class="upload-separator">o</p>
+      <button type="button" class="btn-upload" (click)="fileInput.click()">
+        Seleccionar imagen
+      </button>
     </div>
+  </div>
 
-    <!-- Vista previa -->
-    <div *ngIf="imagenesBase64?.length" class="preview-container">
-        <div *ngFor="let img of imagenesBase64" class="preview-item">
-            <img [src]="img" alt="Vista previa" />
+  <!-- Vista previa -->
+  <div *ngIf="imagenesBase64?.length" class="preview-container">
+    <!-- <div *ngFor="let img of imagenesBase64" class="preview-item"> -->
+      <div *ngFor="let img of imagenesBase64; let i = index" class="preview-item">
+
+        <!-- Imagen -->
+        <img *ngIf="archivos[i].type.startsWith('image/')" [src]="img" />
+
+        <!-- PDF -->
+        <div *ngIf="archivos[i].type === 'application/pdf'" class="file-preview">
+          <i class="pi pi-file-pdf"></i>
+          <p>{{ archivos[i].name }}</p>
         </div>
+
+        <!-- Word -->
+        <div *ngIf="archivos[i].type.includes('word')" class="file-preview">
+          <i class="pi pi-file-word"></i>
+          <p>{{ archivos[i].name }}</p>
+        </div>
+
+        <!-- PowerPoint -->
+        <div *ngIf="archivos[i].type.includes('presentation')" class="file-preview">
+          <i class="pi pi-file"></i>
+          <p>{{ archivos[i].name }}</p>
+        </div>
+
+        <!-- Excel -->
+        <div
+          *ngIf="archivos[i].type.includes('sheet') || archivos[i].name.endsWith('.xls') || archivos[i].name.endsWith('.xlsx')"
+          class="file-preview">
+          <i class="pi pi-file-excel"></i>
+          <p>{{ archivos[i].name }}</p>
+        </div>
+
+      </div>
+    <!-- </div> -->
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="footer-actions" *ngIf="imagenesBase64?.length">
+      <button type="button" class="btn-confirm" (click)="subirImagen()">
+        <i class="pi pi-check"></i> Subir
+      </button>
     </div>
-
-    <ng-template pTemplate="footer">
-        <div class="footer-actions" *ngIf="imagenesBase64?.length">
-            <button type="button" class="btn-confirm" (click)="subirImagen()">
-                <i class="pi pi-check"></i> Subir
-            </button>
-        </div>
-    </ng-template>
+  </ng-template>
 </p-dialog>

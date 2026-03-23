@@ -58,12 +58,22 @@ export class SubirImgsTareasDialogComponent {
   }
 
   async handleFiles(files: FileList) {
-    const nuevasImagenes = Array.from(files);
-    for (const file of nuevasImagenes) {
-      const base64 = await this.convertToBase64(file);
-      this.imagenesBase64.push(base64);
+    const nuevosArchivos = Array.from(files);
+
+    for (const file of nuevosArchivos) {
+
       this.archivos.push(file);
+
+      // SOLO convertir a base64 si es imagen
+      if (file.type.startsWith('image/')) {
+        const base64 = await this.convertToBase64(file);
+        this.imagenesBase64.push(base64);
+      } else {
+        // Para otros archivos solo guardamos un placeholder
+        this.imagenesBase64.push('archivo'); // marcador
+      }
     }
+
     this.cdr.detectChanges();
   }
 

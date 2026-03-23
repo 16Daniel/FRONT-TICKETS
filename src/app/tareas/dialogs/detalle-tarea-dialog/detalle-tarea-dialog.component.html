@@ -364,9 +364,28 @@
             </div>
 
             <div class="miniaturas-container" *ngIf="tarea.evidenciaUrls.length > 0">
-              <div class="thumb" *ngFor="let img of tarea.evidenciaUrls; let i = index" (click)="abrirVisor(i)">
-                <img [src]="img" alt="evidencia">
+
+              <div class="thumb" *ngFor="let file of tarea.evidenciaUrls; let i = index" (click)="abrirVisor(i)">
+
+                <!-- 🖼 IMAGEN -->
+                <img *ngIf="esImagen(file)" [src]="file" class="thumb-img" />
+
+                <!-- 📄 ARCHIVOS -->
+                <div *ngIf="!esImagen(file)" class="thumb-file">
+
+                  <i [ngClass]="{
+                    'fas fa-file-pdf text-danger': esPdf(file),
+                    'fas fa-file-word text-primary': esWord(file),
+                    'fas fa-file-excel text-success': esExcel(file),
+                    'fas fa-file-powerpoint text-warning': esPpt(file),
+                    'fas fa-file text-secondary': true
+                  }">
+                  </i>
+
+                </div>
+
               </div>
+
             </div>
           </div>
 
