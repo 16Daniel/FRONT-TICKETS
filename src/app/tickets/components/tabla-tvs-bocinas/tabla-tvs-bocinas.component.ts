@@ -11,22 +11,20 @@ import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.inter
 import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv.interface';
 
 @Component({
-  selector: 'app-tpvs-devices-table',
+  selector: 'app-tabla-tvs-bocinas',
   standalone: true,
   imports: [CommonModule, TableModule, TooltipModule, ModalColorEstatusDispositivoTpvComponent],
-  templateUrl: './tpvs-devices-table.component.html',
-  styleUrl: './tpvs-devices-table.component.scss'
+  templateUrl: './tabla-tvs-bocinas.component.html',
+  styleUrl: './tabla-tvs-bocinas.component.scss'
 })
-export class TpvsDevicesTableComponent implements OnInit {
+export class TablaTvsBocinasComponent implements OnInit {
   @Input() sucursal!: Sucursal;
-  dispositivoSeleccionado!: Dispositivo;
 
+  dispositivoSeleccionado!: Dispositivo;
   estatus: EstatusTPV[] = [];
   isLoading: boolean = true;
   mostrarModaalEstatus: boolean = false;
   tipo!: string;
-  tabletasFaltantes: number[] = [];
-  tpvsFaltantes: number[] = [];
   usuario!: Usuario;
 
   constructor(
@@ -38,26 +36,10 @@ export class TpvsDevicesTableComponent implements OnInit {
     this.estatusService.estatus$.subscribe((estatus) => {
       this.estatus = estatus;
       this.isLoading = false;
-      this.actualizarFaltantes();
       this.cdr.detectChanges();
     });
 
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-  }
-
-  private actualizarFaltantes(): void {
-    const faltantesTabletas = Math.max(
-      (this.sucursal.tabletasRequeridas || 0) - (this.sucursal.tabletas?.length || 0),
-      0
-    );
-
-    const faltantesTpvs = Math.max(
-      (this.sucursal.tpvsRequeridos || 0) - (this.sucursal.tpvs?.length || 0),
-      0
-    );
-
-    this.tabletasFaltantes = Array.from({ length: faltantesTabletas }, (_, i) => i);
-    this.tpvsFaltantes = Array.from({ length: faltantesTpvs }, (_, i) => i);
   }
 
   getColorEstatus(idEstatus: string): string {
@@ -72,11 +54,9 @@ export class TpvsDevicesTableComponent implements OnInit {
 
   verDetallesDispositivo(dispositivo: Dispositivo, tipo: string): void {
     if (this.usuario.idRol == '1' || this.usuario.idRol == '5' || this.usuario.idRol == '4') {
-      console.log('Ddispositivo:', dispositivo);
       this.mostrarModaalEstatus = true;
       this.dispositivoSeleccionado = dispositivo;
       this.tipo = tipo;
     }
-    else return;
   }
 }

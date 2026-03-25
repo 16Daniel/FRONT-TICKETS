@@ -1,0 +1,48 @@
+<!-- TABLA TVS -->
+<table class="w-100 text-center mb-3" style="border-collapse: collapse;" *ngIf="!isLoading">
+  <thead>
+    <tr>
+      <th [attr.colspan]="sucursal.tvs?.length || 0" style="padding: 0.5rem; font-size: 1.2rem;">
+        📺 TVs ({{ sucursal.tvs?.length || 0 }})
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td *ngFor="let tv of sucursal.tvs" style="padding: 0.5rem;"
+        [style.backgroundColor]="getColorEstatus(tv.estatus)">
+        <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tv.estatus)"
+          tooltipPosition="top" (click)="verDetallesDispositivo(tv, 'TV')">
+          📺
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- TABLA BOCINAS -->
+<table class="w-100 text-center mb-3" style="border-collapse: collapse;" *ngIf="!isLoading">
+  <thead>
+    <tr>
+      <th [attr.colspan]="sucursal.bocinas?.length || 0" style="padding: 0.5rem; font-size: 1.2rem;">
+        🔊 Bocinas ({{ sucursal.bocinas?.length || 0 }})
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td *ngFor="let bocina of sucursal.bocinas" style="padding: 0.5rem;"
+        [style.backgroundColor]="getColorEstatus(bocina.estatus)">
+        <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(bocina.estatus)"
+          tooltipPosition="top" (click)="verDetallesDispositivo(bocina, 'BOCINA')">
+          🔊
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<app-modal-color-estatus-dispositivo-tpv *ngIf="mostrarModaalEstatus" [mostrarModal]="mostrarModaalEstatus"
+  (closeEvent)="mostrarModaalEstatus = false" [sucursal]="sucursal" [dispositivo]="dispositivoSeleccionado"
+  [tipo]="tipo">
+</app-modal-color-estatus-dispositivo-tpv>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -22,7 +22,7 @@ export class TablaRadiografiaComponent {
   pendientes = 0;
   porcentajeMtto = 0;
 
-  constructor(private mantenimientoFactory: MantenimientoFactoryService) { }
+  constructor(private mantenimientoFactory: MantenimientoFactoryService, private cdr: ChangeDetectorRef) { }
 
   async ngOnChanges() {
     const hoy = new Date();
@@ -34,6 +34,7 @@ export class TablaRadiografiaComponent {
     this.mantenimientos = this.mantenimientos.filter(x => x.estatus == false);
 
     this.calcularResumen();
+    this.cdr.detectChanges();
   }
 
   calcularResumen() {
@@ -43,5 +44,6 @@ export class TablaRadiografiaComponent {
     this.pendientes = this.tickets.filter((ticket: Ticket) => ticket.idEstatusTicket !== '3').length;
     const servicio = this.mantenimientoFactory.getService(this.idArea);
     this.porcentajeMtto = servicio.calcularPorcentaje(this.mantenimientos[0]);
+    this.cdr.detectChanges();
   }
 }

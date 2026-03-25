@@ -15,6 +15,7 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { TablaTvsBocinasComponent } from "../tabla-tvs-bocinas/tabla-tvs-bocinas.component";
 
 @Component({
   selector: 'app-branches-tickets-accordion',
@@ -29,8 +30,9 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     AdminTicketsListComponent,
     TooltipModule,
     TpvsDevicesTableComponent,
-    GraficaTickets30DiasComponent
-  ],
+    GraficaTickets30DiasComponent,
+    TablaTvsBocinasComponent
+],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
 })
@@ -46,16 +48,10 @@ export class BranchesTicketsAccordionComponent {
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
-  // mostrarGraficasMap: { [idSucursal: string]: boolean } = {};
-
-  constructor(private cdr: ChangeDetectorRef) {
-
-  }
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursales.forEach(s => this.mostrarRadiografiaMap[s.id] = false);
-    // this.sucursales.forEach(s => this.mostrarGraficasMap[s.id] = false);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -68,7 +64,7 @@ export class BranchesTicketsAccordionComponent {
     return this.sucursales.sort((a, b) => {
       const ticketsA = this.contarTickets(a.id);
       const ticketsB = this.contarTickets(b.id);
-      return ticketsB - ticketsA; // Ordena de mayor a menor
+      return ticketsB - ticketsA;
     });
   }
 
