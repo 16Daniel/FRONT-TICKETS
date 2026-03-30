@@ -161,7 +161,7 @@ export default class HistorialPersonalPageComponent implements OnInit {
     let data: Marcajes[] = [];
     if (this.vista == 1) {
       for (let dia of this.data[0].data) {
-        let temp = dia.incidencias.filter(x => x.regbitacora == null && !x.incidencia.toLowerCase().includes("vacaciones") && !x.incidencia.toLowerCase().includes("incapacidad") );
+        let temp = dia.incidencias.filter(x => x.regbitacora == null && !x.incidencia.toLowerCase().includes("vacaciones") && !x.incidencia.toLowerCase().includes("incapacidad") && !x.incidencia.toLowerCase().includes("ficticia"));
         data.push(...temp);
       }
     }
@@ -175,7 +175,7 @@ export default class HistorialPersonalPageComponent implements OnInit {
 
     if (this.vista == 3) {
       for (let dia of this.data[0].data) {
-        let temp = dia.asistencias.filter(x=> !x.incidencia.toLowerCase().includes("ficticia") && x.entrada!='' && x.salida !='' && !x.incidencia.toLowerCase().includes("incapacidad") && !x.incidencia.toLowerCase().includes("vacaciones"));
+        let temp = dia.asistencias.filter(x=> !x.incidencia.toLowerCase().includes("ficticia") && x.entrada!='' && x.salida !='' && !x.incidencia.toLowerCase().includes("injustificada") && !x.incidencia.toLowerCase().includes("vacaciones"));
         data.push(...temp);
       }
     }
@@ -189,7 +189,14 @@ export default class HistorialPersonalPageComponent implements OnInit {
     
       if (this.vista == 5) {
       for (let dia of this.data[0].data) {
-        let temp = dia.asistencias.filter(x=> x.incidencia.toLowerCase().includes("ficticia"));
+        let temp = dia.ficticias; 
+        data.push(...temp);
+      }
+    }
+
+       if (this.vista == 6) {
+      for (let dia of this.data[0].data) {
+        let temp = dia.asistencias.filter(x=> x.incidencia.toLowerCase().includes("incapacidad"));
         data.push(...temp);
       }
     }
