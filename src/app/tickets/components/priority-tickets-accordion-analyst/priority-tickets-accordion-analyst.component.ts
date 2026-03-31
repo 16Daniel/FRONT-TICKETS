@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
@@ -10,6 +10,8 @@ import { GraficaTickets30DiasComponent } from '../../../mantenimientos/component
 import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { TpvsDevicesTableComponent } from "../tpvs-devices-table/tpvs-devices-table.component";
+import { TablaTvsBocinasComponent } from "../tabla-tvs-bocinas/tabla-tvs-bocinas.component";
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',
@@ -21,8 +23,10 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     RequesterTicketsListComponent,
     TooltipModule,
     FormsModule,
-    GraficaTickets30DiasComponent
-  ],
+    GraficaTickets30DiasComponent,
+    TpvsDevicesTableComponent,
+    TablaTvsBocinasComponent
+],
   templateUrl: './priority-tickets-accordion-analyst.component.html',
   styleUrl: './priority-tickets-accordion-analyst.component.scss',
 })
@@ -30,6 +34,7 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() esEspectadorActivo: boolean = false;
+  idArea = input.required<string>();
 
   @Output() clickEvent = new EventEmitter<Ticket>();
 

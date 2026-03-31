@@ -44,8 +44,13 @@
 
     <br />
 
+    <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '1'"
+      [sucursal]="item"></app-tpvs-devices-table>
+    <app-tabla-tvs-bocinas *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '2'"
+      [sucursal]="item"></app-tabla-tvs-bocinas>
+
     <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
-            [idArea]="usuario.idArea"></app-grafica-tickets-30-dias>
+      [idArea]="usuario.idArea"></app-grafica-tickets-30-dias>
     <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)" [esEspectadorActivo]="esEspectadorActivo"
       (clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
       [mostrarEstrellas]="false"></app-requester-tickets-list>

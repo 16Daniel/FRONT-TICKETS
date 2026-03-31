@@ -59,12 +59,27 @@ export class ModalColorEstatusDispositivoTpvComponent implements OnInit {
       return;
     }
 
-    const index = this.tipo == 'TPV' ? this.sucursal.tpvs?.findIndex(d => d.id === this.dispositivo.id) :
-      this.sucursal.tabletas?.findIndex(d => d.id === this.dispositivo.id);
+    let lista: Dispositivo[] | undefined;
 
-    if (index !== undefined && index >= 0 && this.sucursal.tpvs) {
-      this.tipo == 'TPV' ? this.sucursal.tpvs[index].estatus = this.estatusSeleccionado.id :
-        this.sucursal.tabletas![index].estatus = this.estatusSeleccionado.id
+    switch (this.tipo) {
+      case 'TPV':
+        lista = this.sucursal.tpvs;
+        break;
+      case 'TABLETA':
+        lista = this.sucursal.tabletas;
+        break;
+      case 'TV':
+        lista = this.sucursal.tvs;
+        break;
+      case 'BOCINA':
+        lista = this.sucursal.bocinas;
+        break;
+    }
+
+    const index = lista?.findIndex(d => d.id === this.dispositivo.id);
+
+    if (index !== undefined && index >= 0 && lista) {
+      lista[index].estatus = this.estatusSeleccionado.id;
     }
 
     this.branchesServices.update(this.sucursal, this.sucursal.id);

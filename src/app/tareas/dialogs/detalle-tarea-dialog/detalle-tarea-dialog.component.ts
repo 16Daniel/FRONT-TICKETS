@@ -174,8 +174,14 @@ export class DetalleTareaDialogComponent implements OnInit {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  onEliminarImagen(event: any) {
-    // this.actualizarImagenesPorTitulo(event.titulo, event.url)
+  async onEliminarImagen(event: any) {
+    const url = event.url;
+
+    if (!this.tarea || !this.tarea.evidenciaUrls) return;
+
+    this.tarea.evidenciaUrls = this.tarea.evidenciaUrls.filter(u => u !== url);
+
+    await this.tareasService.update(this.tarea, this.tarea.id!);
   }
 
   abrirModalImagenes() {
@@ -206,8 +212,14 @@ export class DetalleTareaDialogComponent implements OnInit {
   }
 
   abrirVisor(index: number) {
-    this.imagenes = this.tarea.evidenciaUrls;
-    this.mostrarModalVisorImagen = true;
+    const file = this.tarea.evidenciaUrls[index];
+
+    if (this.esImagen(file)) {
+      this.imagenes = this.tarea.evidenciaUrls.filter(f => this.esImagen(f));
+      this.mostrarModalVisorImagen = true;
+    } else {
+      window.open(file, '_blank');
+    }
   }
 
   async eliminarTarea(tarea: Tarea) {
@@ -464,4 +476,30 @@ export class DetalleTareaDialogComponent implements OnInit {
     this.abrirModalDetalle = true;
   }
 
+  esImagen(url: string) {
+    const nombre = this.getNombreArchivo(url);
+    return /\.(jpg|jpeg|png|webp|gif)$/.test(nombre);
+  }
+
+  esPdf(url: string) {
+    return this.getNombreArchivo(url).endsWith('.pdf');
+  }
+
+  esWord(url: string) {
+    return this.getNombreArchivo(url).match(/\.(doc|docx)$/);
+  }
+
+  esExcel(url: string) {
+    return this.getNombreArchivo(url).match(/\.(xls|xlsx)$/);
+  }
+
+  esPpt(url: string) {
+    return this.getNombreArchivo(url).match(/\.(ppt|pptx)$/);
+  }
+
+  getNombreArchivo(url: string): string {
+    const nombreCompleto = url.split('/').pop()?.split('?')[0] || '';
+    const limpio = decodeURIComponent(nombreCompleto);
+    return limpio.toLowerCase();
+  }
 }

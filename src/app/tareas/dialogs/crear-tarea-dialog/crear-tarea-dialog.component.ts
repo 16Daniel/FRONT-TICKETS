@@ -19,6 +19,12 @@ import { TooltipModule } from 'primeng/tooltip';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 import { MessageService } from 'primeng/api';
 import { ChecksPrioridadEinsehowerComponent } from '../../components/checks-prioridad-eisenhower/checks-prioridad-eisenhower.component';
+import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";
+import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
+import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
+import { StatusTaskService } from '../../services/status-task.service';
+import { LabelsTasksService } from '../../services/labels-tasks.service';
+import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({
   selector: 'app-crear-tarea-dialog',
@@ -31,7 +37,8 @@ import { ChecksPrioridadEinsehowerComponent } from '../../components/checks-prio
     ChecksPrioridadEinsehowerComponent,
     MultiSelectModule,
     AvatarModule,
-    TooltipModule
+    TooltipModule,
+    AvataresResponsablesTareaComponent
   ],
   templateUrl: './crear-tarea-dialog.component.html',
   styleUrl: './crear-tarea-dialog.component.scss'
@@ -40,8 +47,15 @@ export class CrearTareaDialogComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  mailService = inject(MailService);
-  messageService = inject(MessageService);
+  private mailService = inject(MailService);
+  private messageService = inject(MessageService);
+  private statusTaskService = inject(StatusTaskService);
+  private labelsTasksService = inject(LabelsTasksService);
+  private areasService = inject(AreasService);
+
+  estatusTeras: EstatusTarea[] = [];
+  etiquetas: EtiquetaTarea[] = [];
+  areasMap: Record<string, string> = {};
 
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
@@ -66,6 +80,18 @@ export class CrearTareaDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerSucursales();
+    this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
+    this.labelsTasksService.etiquetas$.subscribe(et => {
+      this.etiquetas = et;
+      this.etiquetas = this.labelsTasksService.filtrarPorSucursal(this.tarea.idSucursal);
+
+    });
+    this.areasService.areas$.subscribe(areas => {
+      this.areasMap = {};
+      areas.forEach(a => {
+        this.areasMap[a.id] = a.nombre;
+      });
+    });
   }
 
   onHide = () => this.closeEvent.emit(false);
@@ -298,4 +324,18 @@ export class CrearTareaDialogComponent implements OnInit {
   showMessage = (sev: string, summ: string, det: string) =>
     this.messageService.add({ severity: sev, summary: summ, detail: det });
 
+  onSeleccionarLider(responsable: ResponsableTarea) {
+    if (this.tarea.idResponsablePrincipal == responsable.id) {
+      this.tarea.idResponsablePrincipal = null;
+    }
+    else {
+      this.tarea.idResponsablePrincipal = responsable.id;
+    }
+  }
+
+  getProgressColor(porcentaje: number) {
+    if (porcentaje < 40) return 'bg-danger';
+    if (porcentaje < 70) return 'bg-warning';
+    return 'bg-success';
+  }
 }
