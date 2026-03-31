@@ -11,7 +11,7 @@
     <tr>
       <td *ngFor="let tv of sucursal.tvs" style="padding: 0.5rem;"
         [style.backgroundColor]="getColorEstatus(tv.estatus)">
-        <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(tv.estatus)"
+        <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="tv.nombre + ' - ' + getNombreEstatus(tv.estatus)"
           tooltipPosition="top" (click)="verDetallesDispositivo(tv, 'TV')">
           📺
         </span>
@@ -33,8 +33,9 @@
     <tr>
       <td *ngFor="let bocina of sucursal.bocinas" style="padding: 0.5rem;"
         [style.backgroundColor]="getColorEstatus(bocina.estatus)">
-        <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="getNombreEstatus(bocina.estatus)"
-          tooltipPosition="top" (click)="verDetallesDispositivo(bocina, 'BOCINA')">
+        <span style="font-size: 2.5rem; cursor: pointer;"
+          [pTooltip]="bocina.nombre + ' - ' + getNombreEstatus(bocina.estatus)" tooltipPosition="top"
+          (click)="verDetallesDispositivo(bocina, 'BOCINA')">
           🔊
         </span>
       </td>

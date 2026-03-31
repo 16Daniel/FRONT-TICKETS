@@ -11,6 +11,7 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TpvsDevicesTableComponent } from "../tpvs-devices-table/tpvs-devices-table.component";
+import { TablaTvsBocinasComponent } from "../tabla-tvs-bocinas/tabla-tvs-bocinas.component";
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',
@@ -23,7 +24,8 @@ import { TpvsDevicesTableComponent } from "../tpvs-devices-table/tpvs-devices-ta
     TooltipModule,
     FormsModule,
     GraficaTickets30DiasComponent,
-    TpvsDevicesTableComponent
+    TpvsDevicesTableComponent,
+    TablaTvsBocinasComponent
 ],
   templateUrl: './priority-tickets-accordion-analyst.component.html',
   styleUrl: './priority-tickets-accordion-analyst.component.scss',
