@@ -72,9 +72,15 @@ filtrar()
   this.comensalesService.obtenerconteosEntrefechas(this.fechaini,this.fechafin,this.sucursalSel!.id!,this.turnoSel == undefined ? undefined:this.turnoSel.id).subscribe({
       next: (data) => {
            this.arr_ortiginal = data; 
+           console.log(this.arr_ortiginal); 
         this.dataConteos = []; 
          for(let item of data)
           {
+            let nomturno = '';
+            if(item.turno)
+              {
+                nomturno = this.arr_turnos.filter(x=>x.id == item.turno)[0].nombre;
+              }
             let data:itemConteo = 
                 {
                   id:item.sucursal.id!, 
@@ -84,11 +90,16 @@ filtrar()
                   mesas:item.mesas,
                   comensales:item.comensales,
                   idReg:item.id!,
-                  turno:this.arr_turnos.filter(x=>x.id == item.turno)[0].nombre
+                  turno: nomturno
                 }
               this.dataConteos.push(data);
             for(let itemC of item.competencia)
               { 
+                let nomturno = '';
+                if(item.turno)
+                  {
+                    nomturno = this.arr_turnos.filter(x=>x.id == item.turno)[0].nombre;
+                  }
                 let sucursal:sucursalesComensales = {id:itemC.id, nombre:itemC.nombre}; 
                 let data:itemConteo = 
                 {
@@ -99,7 +110,7 @@ filtrar()
                   mesas:itemC.mesas,
                   comensales:itemC.comensales,
                   idReg:item.id!,
-                  turno:this.arr_turnos.filter(x=>x.id == item.turno)[0].nombre
+                  turno:nomturno
                 }
 
                 this.dataConteos.push(data);
