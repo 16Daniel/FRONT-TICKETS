@@ -88,4 +88,5 @@ export interface DataDia
   fecha:string; 
   asistencias:Marcajes[];
   todo:Marcajes[];
+  ficticias:Marcajes[]; 
 }

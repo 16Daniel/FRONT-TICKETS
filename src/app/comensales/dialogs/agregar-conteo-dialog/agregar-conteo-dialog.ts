@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 })
 export class AgregarConteoDialog implements OnInit {
 @Input() verModalAgregarConteo:boolean = false; 
+@Input() arr_turnos:any[] = []; 
 @Output() closeEvent = new EventEmitter<boolean>();
 @Input() itemConteo:ConteoComensales|undefined; 
 
@@ -38,6 +39,7 @@ public sucursaleSelRW:sucursalesComensales|undefined;
 public sucursaleSelCompetencia:sucursalesComensales|undefined;
 
 usuario: Usuario;
+public turnoSel:any; 
 
 constructor(public comensalesService:ComensalesService,public cdr: ChangeDetectorRef,
     private branchesService: BranchesService,)
@@ -56,6 +58,14 @@ ngOnInit(): void
         this.formMesasRW = this.itemConteo.mesas; 
         this.arr_competencia = this.itemConteo.competencia; 
         this.sucursaleSelRW = this.itemConteo.sucursal; 
+        let temp = this.arr_turnos.filter(x=>x.id == this.itemConteo!.turno)[0]; 
+        if(temp == undefined || temp == null)
+          {
+            this.turnoSel = undefined
+          } else 
+            {
+              this.turnoSel = temp;  
+            }
       }
       this.cdr.detectChanges(); 
 }
@@ -141,7 +151,8 @@ async agregarConteo()
      idSucursal: this.sucursaleSelRW!.id!, 
      competencia:this.arr_competencia, 
      mesas:this.formMesasRW!,
-     comensales:this.formComensalesRW!
+     comensales:this.formComensalesRW!,
+     turno: this.turnoSel.id
   }
 
   await this.comensalesService.agregarconteo(data); 
@@ -168,6 +179,7 @@ getDtae(item:Timestamp):Date
     this.itemConteo!.comensales = this.formComensalesRW!; 
     this.itemConteo!.competencia = this.arr_competencia; 
     this.itemConteo!.sucursal = this.sucursaleSelRW!;
+    this.itemConteo!.turno = this.turnoSel.id; 
 
     await this.comensalesService.actualizarConteo(this.itemConteo,this.itemConteo!.id!); 
     Swal.fire({

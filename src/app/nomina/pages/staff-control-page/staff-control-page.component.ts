@@ -134,6 +134,7 @@ export default class StaffControlPageComponent implements OnInit {
     this.apiserv.consultarMarcajes(this.sucursalSel!.claUbicacion!, hoy, hoy).subscribe({
       next: data => {
         this.marcajes = data;
+        console.log(this.marcajes);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -153,6 +154,7 @@ export default class StaffControlPageComponent implements OnInit {
     this.apiserv.consultarCalendario(this.sucursalSel!.claUbicacion!, hoy).subscribe({
       next: data => {
         this.horarios = data;
+        console.log(this.horarios); 
         this.loading = false;
         this.puestosDeTrabajo = [];
         let puestosunicos = [...new Set(this.horarios.map(emp => emp.nom_puesto))];
@@ -189,10 +191,18 @@ export default class StaffControlPageComponent implements OnInit {
       } else {
         horaSalida = parseInt(item.salida.substring(0, 1));
       }
-
-      if (horaEntrada <= this.horaActual && horaSalida > this.horaActual) {
-        temp.push(item);
-      }
+       if(horaEntrada<horaSalida)
+          {
+            if (horaEntrada <= this.horaActual && horaSalida > this.horaActual) {
+                temp.push(item);
+              }
+          }else
+            {
+              if (horaEntrada < this.horaActual && horaSalida < this.horaActual) {
+                temp.push(item);
+              }
+            }
+            
     }
 
     let empleadosRequeridos = temp.length;
@@ -250,7 +260,6 @@ export default class StaffControlPageComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: error => {
-        this.loading = false;
         console.log(error);
       }
     });
@@ -330,9 +339,19 @@ export default class StaffControlPageComponent implements OnInit {
         } else {
           horaSalida = parseInt(itemhorario.salida.substring(0, 1));
         }
-        if (horaEntrada <= this.horaActual && horaSalida > this.horaActual) {
-          value = true;
-        }
+        
+        if(horaEntrada<horaSalida)
+          {
+            if (horaEntrada <= this.horaActual && horaSalida > this.horaActual) {
+                value = true;
+              }
+          }else
+            { 
+              if (horaEntrada < this.horaActual && horaSalida < this.horaActual) {
+                value = true;
+              }
+            }
+
       }
 
     }

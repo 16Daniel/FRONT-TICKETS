@@ -9,7 +9,18 @@
 
        
     <div class="p-3">
-   
+     
+    <div class="w-100 mb-3">
+            <p-dropdown 
+    [options]="arr_turnos" 
+    [(ngModel)]="turnoSel" 
+    optionLabel="nombre" 
+    placeholder="SELECCIONAR TURNO" 
+     [style]="{width:'100%'}"
+    />
+    
+    </div>
+
         <div class="p-3 rounded-3" style="background-color: #b8d5ba;">
             <div class="row">
 
@@ -108,10 +119,10 @@
 </p-table>
         @if(itemConteo == undefined)
         {
-            <button class="btn bg-p-b p-3 mt-3" (click)="agregarConteo()" [disabled]="formMesasRW == undefined || formComensalesRW == undefined"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+            <button class="btn bg-p-b p-3 mt-3" (click)="agregarConteo()" [disabled]="formMesasRW == undefined || formComensalesRW == undefined || turnoSel == undefined"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
         }@else 
         {
-            <button class="btn bg-p-b p-3 mt-3" (click)="actualizarConteo()" [disabled]="formMesasRW == undefined || formComensalesRW == undefined"><i class='bx bx-save'></i>&nbsp;ACTUALIZAR</button>
+            <button class="btn bg-p-b p-3 mt-3" (click)="actualizarConteo()" [disabled]="formMesasRW == undefined || formComensalesRW == undefined || turnoSel == undefined"><i class='bx bx-save'></i>&nbsp;ACTUALIZAR</button>
         }
     </div>
 </p-dialog>

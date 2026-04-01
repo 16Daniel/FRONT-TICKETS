@@ -48,16 +48,16 @@ export class AceiteService {
   getEntregasH(idFront: number, fechaIni: Date, fechafin: Date): Observable<EntregaAceite[]> {
     let formdata = new FormData();
     formdata.append("ids", idFront.toString());
-    formdata.append("fechaini", fechaIni.toISOString());
-    formdata.append("fechafin", fechafin.toISOString());
+    formdata.append("fechaini", fechaIni.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
     return this.http.post<EntregaAceite[]>(this.url + 'Aceite/getEntregasAceiteH', formdata, { headers: this.headers })
   }
 
   getEntregasTAH(idFront: number, fechaIni: Date, fechafin: Date): Observable<EntregaAceite[]> {
     let formdata = new FormData();
     formdata.append("ids", idFront.toString());
-    formdata.append("fechaini", fechaIni.toISOString());
-    formdata.append("fechafin", fechafin.toISOString());
+    formdata.append("fechaini", fechaIni.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
     return this.http.post<EntregaAceite[]>(this.url + 'Aceite/getEntregasAceiteTAH', formdata, { headers: this.headers })
   }
 
@@ -108,16 +108,16 @@ export class AceiteService {
   getEntregasCedisH(idFront: string, fechaIni: Date, fechafin: Date): Observable<EntregaAceite[]> {
     let formdata = new FormData();
     formdata.append("ids", idFront.toString());
-    formdata.append("fechaini", fechaIni.toISOString());
-    formdata.append("fechafin", fechafin.toISOString());
+    formdata.append("fechaini", fechaIni.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
     return this.http.post<EntregaAceite[]>(this.url + 'Aceite/getEntregasAceiteCedisH', formdata, { headers: this.headers })
   }
 
   getEntregasCedisTAH(idFront: string, fechaIni: Date, fechafin: Date): Observable<EntregaAceite[]> {
     let formdata = new FormData();
     formdata.append("ids", idFront.toString());
-    formdata.append("fechaini", fechaIni.toISOString());
-    formdata.append("fechafin", fechafin.toISOString());
+    formdata.append("fechaini", fechaIni.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
     return this.http.post<EntregaAceite[]>(this.url + 'Aceite/getEntregasAceiteCedisTAH', formdata, { headers: this.headers })
   }
 
@@ -128,14 +128,14 @@ export class AceiteService {
   agregarEntregaManual(ids: number, fecha: Date): Observable<any> {
     let data = new FormData();
     data.append("ids", ids.toString());
-    data.append("fecha", fecha.toISOString());
+    data.append("fecha", fecha.toDateString());
     return this.http.post<any>(this.url + 'Aceite/agregarEntregaManual', data, { headers: this.headers });
   }
 
   agregarEntregaManualTrampaAceite(ids: number, fecha: Date): Observable<any> {
     let data = new FormData();
     data.append("ids", ids.toString());
-    data.append("fecha", fecha.toISOString());
+    data.append("fecha", fecha.toDateString());
     return this.http.post<any>(this.url + 'Aceite/agregarRecoleccionTrampaAceite', data, { headers: this.headers });
   }
 
@@ -150,8 +150,8 @@ export class AceiteService {
   getReporteRecoleccionAceite(idFront: string, fechaIni: Date, fechafin: Date): Observable<ReporteRA[]> {
     let formdata = new FormData();
     formdata.append("ids", idFront.toString());
-    formdata.append("fechaini", fechaIni.toISOString());
-    formdata.append("fechafin", fechafin.toISOString());
+    formdata.append("fechaini", fechaIni.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
     return this.http.post<ReporteRA[]>(this.url + 'Aceite/getReporteRecoleccionAceite', formdata, { headers: this.headers })
   }
 

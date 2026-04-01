@@ -86,8 +86,8 @@ export default class MermasPageComponent implements OnInit {
       sucursales.push(suc.idFront!);
     }
     let data = new FormData();
-    data.append("fechaini", this.fechaini.toISOString());
-    data.append("fechafin", this.fechafin.toISOString());
+    data.append("fechaini", this.fechaini.toDateString());
+    data.append("fechafin", this.fechafin.toDateString());
     data.append("jdataSuc", JSON.stringify(sucursales));
 
     this.apiserv.getMermas(data).subscribe({
