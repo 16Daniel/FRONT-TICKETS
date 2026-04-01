@@ -58,15 +58,15 @@ export class NominaService {
   consultarMarcajes(idUbicacion: number, fechaIni: Date, fechaFin: Date): Observable<Marcajes[]> {
     let formdata = new FormData();
     formdata.append("idUbicacion", idUbicacion.toString());
-    formdata.append("fechaIni", fechaIni.toISOString());
-    formdata.append("fechaFin", fechaFin.toISOString());
+    formdata.append("fechaIni", fechaIni.toDateString());
+    formdata.append("fechaFin", fechaFin.toDateString());
     return this.http.post<Marcajes[]>(this.url + 'PersonalNominas/getPersonalNominas', formdata, { headers: this.headers })
   }
 
   consultarCalendario(idUbicacion: number, fecha: Date): Observable<EmpleadoHorario[]> {
     let formdata = new FormData();
     formdata.append("idSuc", idUbicacion.toString());
-    formdata.append("fecha", fecha.toISOString());
+    formdata.append("fecha", fecha.toDateString());
     return this.http.post<EmpleadoHorario[]>(this.url + 'PersonalNominas/gethorariosSuc', formdata, { headers: this.headers })
   }
 
@@ -100,8 +100,8 @@ export class NominaService {
 
   obtnerHistorialPersonal(fechaini: Date, fechafin: Date, jdata: string): Observable<HistorailPersonal[]> {
     let formdata = new FormData();
-    formdata.append("fechaini", fechaini.toISOString());
-    formdata.append("fechafin", fechafin.toISOString());
+    formdata.append("fechaini", fechaini.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
     formdata.append("jdatasuc", jdata);
     return this.http.post<HistorailPersonal[]>(this.url + 'PersonalNominas/HistorialPersonal', formdata, { headers: this.headers })
   }
