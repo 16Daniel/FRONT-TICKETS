@@ -87,6 +87,7 @@ export default class StaffControlPageComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -260,6 +261,7 @@ export default class StaffControlPageComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -388,6 +390,7 @@ export default class StaffControlPageComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -435,6 +438,7 @@ export default class StaffControlPageComponent implements OnInit {
         this.showMessage("success", "Success", "Guardado correctamente");
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -449,6 +453,7 @@ export default class StaffControlPageComponent implements OnInit {
         this.showMessage("success", "Success", "Guardado correctamente");
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -471,6 +476,7 @@ export default class StaffControlPageComponent implements OnInit {
             this.showMessage("success", "Success", "Guardado correctamente");
           },
           error: error => {
+            this.loading = false;
             console.log(error);
           }
         });
