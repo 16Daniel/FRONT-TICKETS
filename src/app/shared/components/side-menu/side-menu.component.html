@@ -88,6 +88,9 @@
        <li (click)="closemenu()"><a [routerLink]="'/main/precios-ayc'" *ngIf="usuario.idArea == '1'">
        <i class='bx bx-dollar-circle bx-sm'></i>&nbsp;Precios AYC</a></li>
 
+        <li (click)="closemenu()"><a [routerLink]="'/nomina/reportes'">
+       <i class='bx bx-bar-chart-square bx-sm' ></i>&nbsp;Reportes nomina</a></li>
+
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">

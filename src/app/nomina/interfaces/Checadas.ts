@@ -72,3 +72,22 @@ export interface Checada
     estadia:any;
  }
 
+export interface ChecadaManual {
+  clA_UBICACION: number;
+  noM_UBICACION: string;
+  fecha:Date;  
+  clA_TRAB: number;
+  nombre: string;
+  statuS_TRAB: string; 
+  entrada: number;
+  salida: number;
+}
+
+export interface TurnoLargo {
+  clA_UBICACION: number;
+  noM_UBICACION: string;
+  fecha:Date;  
+  clA_TRAB: number;
+  nombre: string;
+  statuS_TRAB: string; 
+}
