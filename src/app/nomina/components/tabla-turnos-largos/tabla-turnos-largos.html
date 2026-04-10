@@ -1,0 +1,107 @@
+<div class="d-flex justify-content-center flex-wrap gap-3">
+<div>
+    <p>FECHA INICIO</p>
+    <p-calendar 
+    [(ngModel)]="fechaini" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay" [style]="{width:'100%'}" />
+</div>
+<div>
+    <p>FECHA FIN</p>
+    <p-calendar 
+    [(ngModel)]="fechafin" 
+    [iconDisplay]="'input'" 
+    [showIcon]="true" 
+    inputId="icondisplay" [style]="{width:'100%'}" />
+</div>
+<div>
+    <p>&nbsp;</p>
+    <button class="btn bg-p-b p-2 h-42" (click)="consultar()"><i class='bx bx-search ' ></i>&nbsp;CONSULTAR</button>
+</div>
+<div> 
+    <p>&nbsp;</p>
+    <button class="btn btn-success h-42" (click)="exportToExcel()">
+        <img src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" style="height: 100%;"
+            alt="microsoft-excel-2019" />&nbsp;EXCEL</button>
+</div>
+</div>
+
+<div class="bg-white p-3">
+
+    <div class="d-flex justify-content-center gap-3">
+        <div><strong>{{datafiltro.length}}</strong>&nbsp;TURNOS LARGOS</div>
+    </div>
+
+<p-table [value]="datatl" [tableStyle]="{ 'min-width': '50rem' }" [scrollable]="true" [scrollHeight]="altopantalla" (onFilter)="filtrar($event)">
+    <ng-template pTemplate="header">
+        <tr>
+             <th>
+                <p-columnFilter 
+                    type="text"
+                    field="clA_UBICACION" 
+                    placeholder="" 
+                    ariaLabel="" />
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text"
+                    field="noM_UBICACION" 
+                    placeholder="" 
+                    ariaLabel="" />
+            </th>
+            <th>
+                  <div class="d-flex gap-2 align-items-center">
+                     <p-calendar 
+                   [(ngModel)]="filtrofecha"
+                           [iconDisplay]="'input'" 
+                             [showIcon]="true" 
+                              [touchUI]="true" 
+                            (onSelect)="filtrarfecha()">
+                        </p-calendar> <i class='bx bx-brush-alt bx-sm' *ngIf="filtrofecha != undefined" (click)="limparfiltrofecha()"></i>
+                  </div>
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text"
+                    field="clA_TRAB" 
+                    placeholder="" 
+                    ariaLabel="" />
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text"
+                    field="nombre" 
+                    placeholder="" 
+                    ariaLabel="" />
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text"
+                    field="statuS_TRAB" 
+                    placeholder="" 
+                    ariaLabel="" />
+            </th>
+        </tr>
+        <tr>
+            <th pSortableColumn="clA_UBICACION">CLA UBICACIÓN <p-sortIcon field="clA_UBICACION" /></th>
+            <th pSortableColumn="noM_UBICACION">SUCURSAL <p-sortIcon field="noM_UBICACION" /></th>
+            <th pSortableColumn="fecha">FECHA <p-sortIcon field="fecha" /></th>
+            <th pSortableColumn="clA_TRAB">CLA_TRAB <p-sortIcon field="clA_TRAB" /></th>
+            <th pSortableColumn="nombre">NOMBRE <p-sortIcon field="nombre" /></th>
+            <th pSortableColumn="statuS_TRAB">ESTATUS <p-sortIcon field="statuS_TRAB" /></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+        <tr>
+            <td>{{ item.clA_UBICACION}}</td>
+            <td>{{ item.noM_UBICACION}}</td>
+            <td>{{ item.fecha |  date:'dd/MM/yyyy'}}</td>
+            <td>{{ item.clA_TRAB}}</td>
+            <td>{{ item.nombre}}</td>
+            <td  [ngClass]="{'bg-danger bg-opacity-25': item.statuS_TRAB == 'B'}">{{ item.statuS_TRAB}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+</div>

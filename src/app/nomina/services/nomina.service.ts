@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { EmpleadoHorario, EmpleadoNomina, HistorailPersonal, Marcajes, PuestoNomina, TurnodbNomina, TurnoNomina, UbicacionNomina } from '../interfaces/Nomina';
+import { ChecadaManual, TurnoLargo } from '../interfaces/Checadas';
 
 @Injectable({
   providedIn: 'root'
@@ -105,4 +106,20 @@ export class NominaService {
     formdata.append("jdatasuc", jdata);
     return this.http.post<HistorailPersonal[]>(this.url + 'PersonalNominas/HistorialPersonal', formdata, { headers: this.headers })
   }
+
+   obtenerChecadasManuales(fechaini: Date, fechafin: Date): Observable<ChecadaManual[]> {
+    let formdata = new FormData();
+    formdata.append("fechaini", fechaini.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
+    return this.http.post<ChecadaManual[]>(this.url + 'PersonalNominas/getChecadasManuales', formdata, { headers: this.headers })
+  }
+
+  obtenerTurnosLargos(fechaini: Date, fechafin: Date): Observable<TurnoLargo[]> {
+    let formdata = new FormData();
+    formdata.append("fechaini", fechaini.toDateString());
+    formdata.append("fechafin", fechafin.toDateString());
+    return this.http.post<TurnoLargo[]>(this.url + 'PersonalNominas/getTurnosLargos', formdata, { headers: this.headers })
+  }
+
+
 }
