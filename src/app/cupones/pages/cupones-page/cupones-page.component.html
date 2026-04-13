@@ -1,0 +1,101 @@
+<div class="pt-5">
+    <div class="pt-3 container">
+        <div class="m-2 mt-3 bg-white p-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>ADMINISTRADOR DE CUPONES</h1>
+            </div>
+
+            <div class="form-group">
+                <label for="lote">Lote</label>
+
+                <p-dropdown [options]="[
+                    {label:'01', value:'01'},
+                    {label:'02', value:'02'},
+                    {label:'03', value:'03'},
+                    {label:'04', value:'04'},
+                    {label:'05', value:'05'},
+                    {label:'06', value:'06'},
+                    {label:'07', value:'07'},
+                    {label:'08', value:'08'},
+                    {label:'09', value:'09'},
+                    {label:'10', value:'10'}
+                ]" placeholder="SELECCIONAR LOTE" [style]="{width:'100%'}" [showClear]="true">
+                </p-dropdown>
+
+                <small>Se usará como parte del código (RW-01-XXXXX)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="cantidad">Cantidad</label>
+
+                <input pInputText type="number" placeholder="CANTIDAD DE CUPONES" style="width:100%; height:48px;">
+            </div>
+
+            <div class="preview">
+                <h4>Ejemplo de códigos generados:</h4>
+                <pre>
+RW-01-00001
+RW-01-00002
+RW-01-00003
+...
+RW-01-01000
+            </pre>
+            </div>
+
+            <p-button label="Generar cupones" styleClass="p-button-primary" [style]="{width:'100%'}">
+            </p-button>
+
+        </div>
+
+        <!-- Resultado -->
+        <div class="card" style="border-left: 5px solid #22c55e; background: #f0fdf4;">
+            <h3 style="color:#16a34a;">✔ Lote de cupones generado exitosamente</h3>
+
+            <div class="result-info">
+                <p><strong>Lote:</strong> 02</p>
+                <p><strong>Cantidad:</strong> 10</p>
+                <p><strong>Rango:</strong> RW-02-00011 → RW-02-00020</p>
+                <p><strong>Fecha:</strong> 13/04/2026</p>
+            </div>
+        </div>
+
+        <!-- Historial -->
+        <div class="m-2 mt-3 bg-white p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>HISTORIAL DE LOTES</h1>
+            </div>
+            <p-table [value]="[{}, {}]" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Lote</th>
+                        <th>Cantidad</th>
+                        <th>Fecha</th>
+                        <th>Acción</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body">
+                    <tr>
+                        <td>01</td>
+                        <td>1000</td>
+                        <td>12/04/2026</td>
+                        <td>
+                            <p-button label="Ver" size="small"></p-button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>02</td>
+                        <td>500</td>
+                        <td>13/04/2026</td>
+                        <td>
+                            <p-button label="Ver" size="small"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+        </div>
+
+    </div>
+</div>

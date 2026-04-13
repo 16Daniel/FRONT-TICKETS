@@ -59,7 +59,8 @@
             <i class='bx bxs-droplet'></i>&nbsp;Control de aceite</a></li>
 
         <li (click)="closemenu()"><a [routerLink]="'/main/fixed-assets'"
-            *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.id == 'pclOBh7sMdziimACOc1w' || usuario.id =='WO0CbRub7FecMua3n7BV'"><i class='bx bxs-dashboard'></i>Activos fijos</a></li>
+            *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.id == 'pclOBh7sMdziimACOc1w' || usuario.id =='WO0CbRub7FecMua3n7BV'"><i
+              class='bx bxs-dashboard'></i>Activos fijos</a></li>
 
         <li (click)="closemenu()"><a [routerLink]="'/nomina/control-de-personal'">
             <i class='bx bx-group bx-sm'></i>&nbsp;Personal en sucursal</a></li>
@@ -83,10 +84,13 @@
             <i class='bx bx-clipboard bx-sm'></i>&nbsp;Inventario</a></li>
 
         <li (click)="closemenu()"><a [routerLink]="'/nomina/checadas'">
-       <i class='bx bx-fingerprint bx-sm'></i>&nbsp;Checadas del personal</a></li>
+            <i class='bx bx-fingerprint bx-sm'></i>&nbsp;Checadas del personal</a></li>
 
-       <li (click)="closemenu()"><a [routerLink]="'/main/precios-ayc'" *ngIf="usuario.idArea == '1'">
-       <i class='bx bx-dollar-circle bx-sm'></i>&nbsp;Precios AYC</a></li>
+        <li (click)="closemenu()"><a [routerLink]="'/main/precios-ayc'" *ngIf="usuario.idArea == '1'">
+            <i class='bx bx-dollar-circle bx-sm'></i>&nbsp;Precios AYC</a></li>
+
+        <li (click)="closemenu()"><a [routerLink]="'/main/cupones'">
+            <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;CUPONES</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
