@@ -20,7 +20,8 @@
                     {label:'08', value:'08'},
                     {label:'09', value:'09'},
                     {label:'10', value:'10'}
-                ]" placeholder="SELECCIONAR LOTE" [style]="{width:'100%'}" [showClear]="true">
+                ]" placeholder="SELECCIONAR LOTE" [style]="{width:'100%'}" [showClear]="true"
+                    [(ngModel)]="loteSeleccionado">
                 </p-dropdown>
 
                 <small>Se usará como parte del código (RW-01-XXXXX)</small>
@@ -29,7 +30,8 @@
             <div class="form-group">
                 <label for="cantidad">Cantidad</label>
 
-                <input pInputText type="number" placeholder="CANTIDAD DE CUPONES" style="width:100%; height:48px;">
+                <input pInputText type="number" placeholder="CANTIDAD DE CUPONES" style="width:100%; height:48px;"
+                    [(ngModel)]="cantidad">
             </div>
 
             <div class="preview">
@@ -43,20 +45,21 @@ RW-01-01000
             </pre>
             </div>
 
-            <p-button label="Generar cupones" styleClass="p-button-primary" [style]="{width:'100%'}">
+            <p-button label="Generar cupones" styleClass="p-button-primary" [style]="{width:'100%'}"
+                (onClick)="generar()" [loading]="isGenerating" [disabled]="!loteSeleccionado || !cantidad">
             </p-button>
 
         </div>
 
         <!-- Resultado -->
-        <div class="card" style="border-left: 5px solid #22c55e; background: #f0fdf4;">
-            <h3 style="color:#16a34a;">✔ Lote de cupones generado exitosamente</h3>
+        <div class="card p-3 m-2 mt-3" style="border-left: 5px solid #22c55e; background: #f0fdf4;" *ngIf="resultado">
+            <h3 style="color:#16a34a;">✔ {{ resultado.message || 'Lote de cupones generado exitosamente' }}</h3>
 
             <div class="result-info">
-                <p><strong>Lote:</strong> 02</p>
-                <p><strong>Cantidad:</strong> 10</p>
-                <p><strong>Rango:</strong> RW-02-00011 → RW-02-00020</p>
-                <p><strong>Fecha:</strong> 13/04/2026</p>
+                <p><strong>Lote:</strong> {{ resultado.lote }}</p>
+                <p><strong>Cantidad:</strong> {{ resultado.cantidad }}</p>
+                <p><strong>Inicio:</strong> {{ resultado.cupon_inicial || 'N/A' }}</p>
+                <p><strong>Fin:</strong> {{ resultado.cupon_final || 'N/A' }}</p>
             </div>
         </div>
 
@@ -65,29 +68,21 @@ RW-01-01000
             <div class="d-flex justify-content-between align-items-center">
                 <h1>HISTORIAL DE LOTES</h1>
             </div>
-            <p-table [value]="[{}, {}]" responsiveLayout="scroll">
+            <p-table [value]="lotesHistorial" responsiveLayout="scroll">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Lote</th>
-                        <th>Cantidad</th>
-                        <th>Fecha</th>
+                        <th>Cantidad Total</th>
+                        <th>Cantidad Usada</th>
                         <th>Acción</th>
                     </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body">
+                <ng-template pTemplate="body" let-lote>
                     <tr>
-                        <td>01</td>
-                        <td>1000</td>
-                        <td>12/04/2026</td>
-                        <td>
-                            <p-button label="Ver" size="small"></p-button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>02</td>
-                        <td>500</td>
-                        <td>13/04/2026</td>
+                        <td>{{ lote.lote }}</td>
+                        <td>{{ lote.cantidad_cupones_totales }}</td>
+                        <td>{{ lote.cantidad_cupones_usados }}</td>
                         <td>
                             <p-button label="Ver" size="small"></p-button>
                         </td>
