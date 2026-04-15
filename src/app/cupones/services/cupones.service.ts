@@ -28,6 +28,6 @@ export class CuponesService {
    * Obtiene el historial y contador de cada lote
    */
   getLotesInfo(): Observable<LoteInfo[]> {
-    return this.http.get<LoteInfo[]>(`${this.apiUrl}/cupones/lotes`);
+    return this.http.get<LoteInfo[]>(`${this.apiUrl}/lotes`);
   }
 }

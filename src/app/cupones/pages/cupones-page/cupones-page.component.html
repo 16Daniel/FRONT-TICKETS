@@ -72,6 +72,7 @@ RW-01-01000
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Lote</th>
+                        <th>Referencia</th>
                         <th>Cantidad Total</th>
                         <th>Cantidad Usada</th>
                         <th>Acción</th>
@@ -81,10 +82,12 @@ RW-01-01000
                 <ng-template pTemplate="body" let-lote>
                     <tr>
                         <td>{{ lote.lote }}</td>
+                        <td>{{ lote.referencia }}</td>
                         <td>{{ lote.cantidad_cupones_totales }}</td>
                         <td>{{ lote.cantidad_cupones_usados }}</td>
                         <td>
-                            <p-button label="Ver" size="small"></p-button>
+                            <p-button label="Cambiar Referencia" size="small"
+                                (onClick)="abrirModalReferencia(lote)"></p-button>
                         </td>
                     </tr>
                 </ng-template>
@@ -93,4 +96,8 @@ RW-01-01000
         </div>
 
     </div>
+
+    <app-lote-referencia-dialog [mostrarModal]="mostrarModalReferencia" [lote]="loteAEditar"
+        (closeEvent)="cerrarModalReferencia($event)">
+    </app-lote-referencia-dialog>
 </div>

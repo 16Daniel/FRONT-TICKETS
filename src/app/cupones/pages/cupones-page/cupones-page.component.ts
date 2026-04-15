@@ -8,12 +8,13 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { BatchResponse } from '../../interfaces/batch-response.interface';
 import { LoteInfo } from '../../interfaces/lote-info.interface';
+import { LoteReferenciaDialogComponent } from '../../dialogs/lote-referencia-dialog/lote-referencia-dialog.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cupones-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, TableModule, InputTextModule],
+  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, TableModule, InputTextModule, LoteReferenciaDialogComponent],
   templateUrl: './cupones-page.component.html',
   styleUrls: ['./cupones-page.component.css']
 })
@@ -29,6 +30,19 @@ export default class CuponesPageComponent implements OnInit {
 
   isGenerating: boolean = false;
   resultado: BatchResponse | null = null;
+
+  mostrarModalReferencia: boolean = false;
+  loteAEditar: LoteInfo | null = null;
+
+  abrirModalReferencia(lote: LoteInfo) {
+    this.loteAEditar = lote;
+    this.mostrarModalReferencia = true;
+  }
+
+  cerrarModalReferencia(event: boolean) {
+    this.mostrarModalReferencia = false;
+    this.loteAEditar = null;
+  }
 
   ngOnInit() {
     this.cargarHistorial();
