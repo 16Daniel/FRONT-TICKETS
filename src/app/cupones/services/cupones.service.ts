@@ -39,4 +39,12 @@ export class CuponesService {
       }
     });
   }
+
+  updateLoteReferencia(loteId: string, referencia: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/lotes/${loteId}/referencia`, { referencia }, {
+      headers: {
+        'x-api-key': environment.apiKeyCupones
+      }
+    });
+  }
 }

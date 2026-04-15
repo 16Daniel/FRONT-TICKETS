@@ -43,6 +43,9 @@ export default class CuponesPageComponent implements OnInit {
   cerrarModalReferencia(event: boolean) {
     this.mostrarModalReferencia = false;
     this.loteAEditar = null;
+    if (event) {
+      this.cargarHistorial(); // Recargar tras actualizar
+    }
   }
 
   ngOnInit() {
