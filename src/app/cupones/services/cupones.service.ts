@@ -20,7 +20,12 @@ export class CuponesService {
   generateBatch(body: BatchDto): Observable<BatchResponse> {
     return this.http.post<BatchResponse>(
       `${this.apiUrl}/cupones/batch`,
-      body
+      body,
+      {
+        headers: {
+          'x-api-key': environment.apiKeyCupones
+        }
+      }
     );
   }
 
@@ -28,6 +33,10 @@ export class CuponesService {
    * Obtiene el historial y contador de cada lote
    */
   getLotesInfo(): Observable<LoteInfo[]> {
-    return this.http.get<LoteInfo[]>(`${this.apiUrl}/lotes`);
+    return this.http.get<LoteInfo[]>(`${this.apiUrl}/lotes`, {
+      headers: {
+        'x-api-key': environment.apiKeyCupones
+      }
+    });
   }
 }

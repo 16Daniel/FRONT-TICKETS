@@ -15,6 +15,7 @@ export const environment = {
   idAdministracion: "QvSLmxLZjJnaGPPsA7zi",
   idServicio: "hHqyRWm306Zmb5XADbbR",
   idDireccion: "Mcaolq7LySn81CSX4n5L",
-  apiCuponesUrl: 'http://localhost:3000'
+  apiCuponesUrl: 'http://localhost:3000',
+  apiKeyCupones: 'bXlzM2NyM3RBcDFrM3ktcnctY3VwMG4zNS0yMDI2'
 };
 

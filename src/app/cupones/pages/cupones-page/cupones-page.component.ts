@@ -24,6 +24,7 @@ export default class CuponesPageComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   lotesHistorial: LoteInfo[] = [];
+  lotesDropdown: any[] = [];
 
   loteSeleccionado: string = '';
   cantidad: number | null = null;
@@ -52,6 +53,7 @@ export default class CuponesPageComponent implements OnInit {
     this.cuponesService.getLotesInfo().subscribe({
       next: (data) => {
         this.lotesHistorial = data;
+        this.lotesDropdown = data.map(l => ({ label: l.lote, value: l.lote }));
         this.cdr.detectChanges();
       },
       error: (err) => {
