@@ -47,6 +47,10 @@ export const routes: Routes = [
       },
       {
         path: '',
+        loadChildren: () => import('./cupones/cupones.routes'),
+      },
+      {
+        path: '',
         loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_MAIN_ROUTES),
       },
       {
