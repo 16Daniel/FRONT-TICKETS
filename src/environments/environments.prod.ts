@@ -13,6 +13,6 @@ export const environment = {
     idAdministracion: "pclOBh7sMdziimACOc1w",
     idServicio: "0Ax05ndesDcThRJKW6K0",
     idDireccion: "Mcaolq7LySn81CSX4n5L",
-    apiCuponesUrl: 'https://rw-cupones-api.onrender.com',
+    apiCuponesUrl: 'https://operamx.no-ip.net/back/rw-cupones-api',
     apiKeyCupones: 'bXlzM2NyM3RBcDFrM3ktcnctY3VwMG4zNS0yMDI2'
 };

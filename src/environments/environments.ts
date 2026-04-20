@@ -15,7 +15,8 @@ export const environment = {
   idAdministracion: "QvSLmxLZjJnaGPPsA7zi",
   idServicio: "hHqyRWm306Zmb5XADbbR",
   idDireccion: "Mcaolq7LySn81CSX4n5L",
-  apiCuponesUrl: 'http://localhost:3000',
+  // apiCuponesUrl: 'https://localhost:7264',
+  apiCuponesUrl: 'https://operamx.no-ip.net/back/rw-cupones-api',
   apiKeyCupones: 'bXlzM2NyM3RBcDFrM3ktcnctY3VwMG4zNS0yMDI2'
 };
 
