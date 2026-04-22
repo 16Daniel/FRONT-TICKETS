@@ -179,6 +179,17 @@
         </label>
     </div>
 
+ <div class="d-flex align-items-center">
+        <p-radioButton 
+            name="opciones" 
+            value="6" 
+            [(ngModel)]="vista" 
+            inputId="ingredient6" />
+        <label for="ingredient6" class="ml-2">
+            INCAPACIDAD
+        </label>
+    </div>
+
 </div>
 
 
@@ -191,6 +202,8 @@
                             <th>FECHA</th>
                             <th>NOMBRE</th>
                             <th>PUESTO</th>
+                            <th>ENTRADA REAL</th>
+                            <th>SALIDA REAL</th>
                             <th>INCIDENCA</th>
                             <th>SOLUCIÓN</th>
                             <th>COMENTARIO SUCURSAL</th>
@@ -202,6 +215,8 @@
                             <td class="fw-bold">{{item.fecha}}</td>
                             <td>{{item.nombre}}</td>
                             <td>{{obtenerNombrePuesto(item.idpuesto)}}</td>
+                            <td>{{item.entrada}}</td>
+                            <td>{{item.salida}}</td>
                             <td>{{item.incidencia}}</td>
                             <td>
                                 <span *ngIf="item.regbitacora != undefined">{{item.regbitacora.solucion}}</span>
@@ -225,7 +240,7 @@
                 <p-table [value]="obtenerdataopcion()" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
         <tr>
-             <th>FECHA</th>
+            <th>FECHA</th>
             <th>NOMBRE</th>
             <th>PUESTO</th>
             <th>ENTRADA REAL</th>
@@ -235,7 +250,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-            <tr class="bg-opacity-25" [ngClass]="{'bg-success': vista == 3, 'bg-orange':vista== 4,'bg-info':vista==5}">
+            <tr class="bg-opacity-25" [ngClass]="{'bg-success': vista == 3, 'bg-orange':vista== 4,'bg-info':vista==5,'bg-purple':vista==5}">
                   <td class="fw-bold">{{item.fecha}}</td>
                 <td>{{item.nombre}}</td>
                 <td>{{obtenerNombrePuesto(item.idpuesto)}}</td>

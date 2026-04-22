@@ -9,6 +9,7 @@ export interface ConteoComensales
  competencia:sucursalCompetencia[]; 
  mesas:number;
  comensales:number; 
+ turno:number;  
 }
 
 export interface sucursalesComensales
@@ -34,4 +35,5 @@ export interface itemConteo
  mesas:number;
  comensales:number; 
  idReg:string; 
+ turno:string; 
 }

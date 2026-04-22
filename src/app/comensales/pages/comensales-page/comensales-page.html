@@ -6,7 +6,7 @@
 
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <p>FECHA INICIO</p>
       <p-calendar [(ngModel)]="fechaini" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
         [style]="{width:'100%'}" />
@@ -36,6 +36,18 @@
     </div>
 
     <div class="col-md-2">
+        <p>TURNO</p>
+               <p-dropdown 
+                [options]="arr_turnos" 
+                [(ngModel)]="turnoSel" 
+                optionLabel="nombre" 
+                placeholder="SELECCIONAR TURNO" 
+                [showClear]="true"
+                [style]="{width:'100%'}"
+    />
+    </div>
+
+    <div class="col-md-1">
       <p>&nbsp;</p><button class="btn btn-warning p-2 h-42" (click)="filtrar()" [disabled]="fechaini == undefined || fechafin == undefined || sucursalSel == undefined"><i
           class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
     </div>
@@ -59,6 +71,7 @@
         <tr>
             <th>FECHA</th>
             <th>HORA</th>
+            <th>TURNO</th>
             <th>SUCURSAL</th>
             <th>MESAS</th>
             <th>COMENSALES</th>
@@ -70,6 +83,7 @@
         <tr>
             <td>{{ getDate(item.fecha) | date:'dd/MM/yyyy' }}</td>
             <td>{{ getDate(item.fecha) | date:'HH:mm' }}</td>
+            <td>{{item.turno}}</td>
             <td>{{ item.nombreSuc }}</td>
             <td>{{ item.mesas }}</td>
             <td>{{ item.comensales }}</td>
@@ -85,5 +99,5 @@
 </div>
 
 <app-sucursales-dialog *ngIf="verModalSucursales"  [verModalSucursales]="verModalSucursales" (closeEvent)="verModalSucursales = false"></app-sucursales-dialog>
-<app-agregar-conteo-dialog *ngIf="verModalAgregarConteo"  [verModalAgregarConteo]="verModalAgregarConteo" 
+<app-agregar-conteo-dialog *ngIf="verModalAgregarConteo"  [verModalAgregarConteo]="verModalAgregarConteo"  [arr_turnos]="arr_turnos"
 (closeEvent)="verModalAgregarConteo = false" [itemConteo]="itemConteo"></app-agregar-conteo-dialog>

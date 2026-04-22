@@ -38,7 +38,8 @@ public itemConteo:ConteoComensales|undefined;
 
 public loading:boolean = false; 
 public usuario: Usuario;
-
+public arr_turnos:any[] = [{id:1,nombre:'MATUTINO'},{id:2,nombre:'VESPERTINO'}];
+public turnoSel:any; 
 constructor(public comensalesService:ComensalesService, private branchesService: BranchesService,public cdr: ChangeDetectorRef)
 {
    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -68,12 +69,18 @@ filtrar()
 { 
   this.dataConteos = []; 
   this.loading = true; 
-  this.comensalesService.obtenerconteosEntrefechas(this.fechaini,this.fechafin,this.sucursalSel!.id!).subscribe({
+  this.comensalesService.obtenerconteosEntrefechas(this.fechaini,this.fechafin,this.sucursalSel!.id!,this.turnoSel == undefined ? undefined:this.turnoSel.id).subscribe({
       next: (data) => {
            this.arr_ortiginal = data; 
+           console.log(this.arr_ortiginal); 
         this.dataConteos = []; 
          for(let item of data)
           {
+            let nomturno = '';
+            if(item.turno)
+              {
+                nomturno = this.arr_turnos.filter(x=>x.id == item.turno)[0].nombre;
+              }
             let data:itemConteo = 
                 {
                   id:item.sucursal.id!, 
@@ -82,11 +89,17 @@ filtrar()
                   nombreSuc:this.nombreDeSucursal(item.sucursal),
                   mesas:item.mesas,
                   comensales:item.comensales,
-                  idReg:item.id!
+                  idReg:item.id!,
+                  turno: nomturno
                 }
               this.dataConteos.push(data);
             for(let itemC of item.competencia)
               { 
+                let nomturno = '';
+                if(item.turno)
+                  {
+                    nomturno = this.arr_turnos.filter(x=>x.id == item.turno)[0].nombre;
+                  }
                 let sucursal:sucursalesComensales = {id:itemC.id, nombre:itemC.nombre}; 
                 let data:itemConteo = 
                 {
@@ -96,7 +109,8 @@ filtrar()
                   nombreSuc:this.nombreDeSucursalCompetencia(sucursal),
                   mesas:itemC.mesas,
                   comensales:itemC.comensales,
-                  idReg:item.id!
+                  idReg:item.id!,
+                  turno:nomturno
                 }
 
                 this.dataConteos.push(data);
