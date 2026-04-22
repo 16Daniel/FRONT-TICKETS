@@ -58,4 +58,13 @@ export class CuponesService {
 
     return this.http.get<AidaConfig>(`${this.apiUrl}/aida`, { headers });
   }
+
+  updateAidaConfig(codigoProducto: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-API-Key': environment.apiKeyCupones
+    });
+
+    return this.http.put(`${this.apiUrl}/aida`, { codigoProducto }, { headers });
+  }
 }

@@ -103,4 +103,8 @@ RW-01-01000
     <app-lote-referencia-dialog [mostrarModal]="mostrarModalReferencia" [lote]="loteAEditar"
         (closeEvent)="cerrarModalReferencia($event)">
     </app-lote-referencia-dialog>
+
+    <app-aida-referencia-dialog [mostrarModal]="mostrarModalAida" [configActual]="aidaConfig"
+        (closeEvent)="cerrarModalAida($event)">
+    </app-aida-referencia-dialog>
 </div>

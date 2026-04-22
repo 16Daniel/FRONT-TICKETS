@@ -93,8 +93,13 @@
             *ngIf="usuario.idRol == '1' || usuario.idRol == '5'">
             <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;Cupones</a></li>
 
-        <li (click)="closemenu()"><a [routerLink]="'/main/cupones'">
-            <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;Validador cupones</a></li>
+        <li (click)="closemenu()">
+          <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer"
+            *ngIf="usuario.idRol == '1' || usuario.idRol == '5'">
+            <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;Validador cupones
+          </a>
+        </li>
+
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>

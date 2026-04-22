@@ -10,12 +10,13 @@ import { BatchResponse } from '../../interfaces/batch-response.interface';
 import { LoteInfo } from '../../interfaces/lote-info.interface';
 import { AidaConfig } from '../../interfaces/aida-config.interface';
 import { LoteReferenciaDialogComponent } from '../../dialogs/lote-referencia-dialog/lote-referencia-dialog.component';
+import { AidaReferenciaDialogComponent } from '../../dialogs/aida-referencia-dialog/aida-referencia-dialog.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cupones-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, TableModule, InputTextModule, LoteReferenciaDialogComponent],
+  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, TableModule, InputTextModule, LoteReferenciaDialogComponent, AidaReferenciaDialogComponent],
   templateUrl: './cupones-page.component.html',
   styleUrls: ['./cupones-page.component.css']
 })
@@ -37,6 +38,7 @@ export default class CuponesPageComponent implements OnInit {
   loteAEditar: LoteInfo | null = null;
 
   aidaConfig: AidaConfig | null = null;
+  mostrarModalAida: boolean = false;
 
   abrirModalReferencia(lote: LoteInfo) {
     this.loteAEditar = lote;
@@ -69,7 +71,14 @@ export default class CuponesPageComponent implements OnInit {
   }
 
   accionAida() {
-    // Actualmente no hace nada
+    this.mostrarModalAida = true;
+  }
+
+  cerrarModalAida(event: boolean) {
+    this.mostrarModalAida = false;
+    if (event) {
+      this.cargarAidaConfig();
+    }
   }
 
   cargarHistorial() {
