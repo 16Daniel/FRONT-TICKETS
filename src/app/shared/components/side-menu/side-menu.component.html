@@ -94,15 +94,14 @@
             <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;Cupones</a></li>
 
         <li (click)="closemenu()">
-          <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer"
-            *ngIf="usuario.idRol == '1' || usuario.idRol == '5'">
+          <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer">
             <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;Validador cupones
           </a>
         </li>
 
 
         <li (click)="closemenu()"><a [routerLink]="'/nomina/reportes'">
-       <i class='bx bx-bar-chart-square bx-sm' ></i>&nbsp;Reportes nomina</a></li>
+            <i class='bx bx-bar-chart-square bx-sm'></i>&nbsp;Reportes nomina</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
