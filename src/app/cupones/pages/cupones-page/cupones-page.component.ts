@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { BatchResponse } from '../../interfaces/batch-response.interface';
 import { LoteInfo } from '../../interfaces/lote-info.interface';
+import { AidaConfig } from '../../interfaces/aida-config.interface';
 import { LoteReferenciaDialogComponent } from '../../dialogs/lote-referencia-dialog/lote-referencia-dialog.component';
 import Swal from 'sweetalert2';
 
@@ -35,6 +36,8 @@ export default class CuponesPageComponent implements OnInit {
   mostrarModalReferencia: boolean = false;
   loteAEditar: LoteInfo | null = null;
 
+  aidaConfig: AidaConfig | null = null;
+
   abrirModalReferencia(lote: LoteInfo) {
     this.loteAEditar = lote;
     this.mostrarModalReferencia = true;
@@ -50,6 +53,23 @@ export default class CuponesPageComponent implements OnInit {
 
   ngOnInit() {
     this.cargarHistorial();
+    this.cargarAidaConfig();
+  }
+
+  cargarAidaConfig() {
+    this.cuponesService.getAidaConfig().subscribe({
+      next: (data) => {
+        this.aidaConfig = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al obtener configuración Aida', err);
+      }
+    });
+  }
+
+  accionAida() {
+    // Actualmente no hace nada
   }
 
   cargarHistorial() {

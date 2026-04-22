@@ -89,8 +89,12 @@
         <li (click)="closemenu()"><a [routerLink]="'/main/precios-ayc'" *ngIf="usuario.idArea == '1'">
             <i class='bx bx-dollar-circle bx-sm'></i>&nbsp;Precios AYC</a></li>
 
+        <li (click)="closemenu()"><a [routerLink]="'/main/cupones'"
+            *ngIf="usuario.idRol == '1' || usuario.idRol == '5'">
+            <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;Cupones</a></li>
+
         <li (click)="closemenu()"><a [routerLink]="'/main/cupones'">
-            <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;CUPONES</a></li>
+            <i class='bx bx-purchase-tag bx-sm'></i>&nbsp;Validador cupones</a></li>
 
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
