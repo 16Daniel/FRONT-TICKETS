@@ -20,6 +20,7 @@ import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.
 import { MessageService } from 'primeng/api';
 import { ChecksPrioridadEinsehowerComponent } from '../../components/checks-prioridad-eisenhower/checks-prioridad-eisenhower.component';
 import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";
+import { ContenedorSubtareasComponent } from '../../components/contenedor-subtareas/contenedor-subtareas.component';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
@@ -38,7 +39,8 @@ import { AreasService } from '../../../areas/services/areas.service';
     MultiSelectModule,
     AvatarModule,
     TooltipModule,
-    AvataresResponsablesTareaComponent
+    AvataresResponsablesTareaComponent,
+    ContenedorSubtareasComponent
   ],
   templateUrl: './crear-tarea-dialog.component.html',
   styleUrl: './crear-tarea-dialog.component.scss'
@@ -56,6 +58,7 @@ export class CrearTareaDialogComponent implements OnInit {
   estatusTeras: EstatusTarea[] = [];
   etiquetas: EtiquetaTarea[] = [];
   areasMap: Record<string, string> = {};
+  mostrarSubtareas: boolean = false;
 
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
@@ -230,6 +233,47 @@ export class CrearTareaDialogComponent implements OnInit {
     this.tarea.idEisenhower = event.idEisenhower;
   }
 
+  agregarSubtarea(texto: string) {
+    this.tarea.subtareas = this.tarea.subtareas || [];
+    this.tarea.subtareas.push({
+      titulo: texto,
+      terminado: false
+    });
+  }
+
+  async toggleSubtareas() {
+    if (this.mostrarSubtareas && this.tarea.subtareas && this.tarea.subtareas.length > 0) {
+      const result = await Swal.fire({
+        title: '¿Eliminar subtareas?',
+        text: 'Esta tarea tiene subtareas. ¿Deseas eliminarlas?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'No, conservar',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        customClass: {
+          container: 'swal-topmost'
+        }
+      });
+
+      if (!result.isConfirmed) {
+        this.mostrarSubtareas = false;
+        return;
+      }
+
+      this.tarea.subtareas = [];
+      this.mostrarSubtareas = false;
+      return;
+    }
+
+    this.mostrarSubtareas = !this.mostrarSubtareas;
+
+    if (!this.tarea.subtareas) {
+      this.tarea.subtareas = [];
+    }
+  }
+
   getCantidadPorEstatus(idEstatus: string): Promise<number> {
     return new Promise((resolve, reject) => {
       this.tareasService.getByEstatus(idEstatus).subscribe({
@@ -338,6 +382,14 @@ export class CrearTareaDialogComponent implements OnInit {
 
   cambiarVisibilidad() {
     this.tarea.visibleGlobal = !this.tarea.visibleGlobal;
+  }
+
+  convertirAProyecto() {
+    this.tarea.esProyecto = true;
+  }
+
+  convertirATarea() {
+    this.tarea.esProyecto = false;
   }
 
   onSeleccionarLider(responsable: ResponsableTarea) {
