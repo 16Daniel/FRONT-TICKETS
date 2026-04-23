@@ -59,6 +59,10 @@ export class CrearTareaDialogComponent implements OnInit {
   etiquetas: EtiquetaTarea[] = [];
   areasMap: Record<string, string> = {};
   mostrarSubtareas: boolean = false;
+  mostrarPanelProyectos: boolean = false;
+  mostrarPanelTareasAsociadas: boolean = false;
+  proyectos: Tarea[] = [];
+  responsableTarea!: ResponsableTarea;
 
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
@@ -82,7 +86,9 @@ export class CrearTareaDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
     this.obtenerSucursales();
+    this.obtenerProyectos();
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetas = et;
@@ -231,6 +237,39 @@ export class CrearTareaDialogComponent implements OnInit {
     this.tarea.urgente = event.urgente;
     this.tarea.importante = event.importante;
     this.tarea.idEisenhower = event.idEisenhower;
+  }
+
+  obtenerProyectos() {
+    this.tareasService.getAll().subscribe(tareas => {
+      this.proyectos = tareas.filter((t: Tarea) => t.esProyecto && !t.eliminado);
+    });
+  }
+
+  get misProyectos(): Tarea[] {
+    if (!this.responsableTarea?.id) return [];
+
+    return this.proyectos
+      .filter(t =>
+        Array.isArray(t.idsResponsables) &&
+        t.idsResponsables.includes(this.responsableTarea.id!)
+      )
+      .sort((a, b) => {
+        if (!this.tarea?.idProyectoRelacionado) return 0;
+
+        if (a.id === this.tarea.idProyectoRelacionado) return -1;
+        if (b.id === this.tarea.idProyectoRelacionado) return 1;
+
+        return 0;
+      });
+  }
+
+  seleccionarProyecto(proyecto: Tarea) {
+    if (this.tarea.idProyectoRelacionado == proyecto.id) {
+      this.tarea.idProyectoRelacionado = null;
+      return;
+    }
+
+    this.tarea.idProyectoRelacionado = proyecto.id!;
   }
 
   agregarSubtarea(texto: string) {
