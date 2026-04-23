@@ -3,7 +3,16 @@
 
   <form #form="ngForm" (ngSubmit)="enviar(form)">
 
-    <div class="avatars-container d-flex justify-content-end">
+    <div class="avatars-container d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <button type="button" class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          (click)="cambiarVisibilidad()">
+          <i class="bx bx-sm mt-2" [class.bx-lock-open]="tarea.visibleGlobal" [class.bx-lock]="!tarea.visibleGlobal"
+            [style.color]="tarea.visibleGlobal ? '#2e7d32' : '#d32f2f'"
+            [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'" tooltipPosition="top">
+          </i>
+        </button>
+      </div>
       <app-avatares-responsables-tarea [tarea]="tarea" [responsables]="responsables"
         (responsableLiderEvent)="onSeleccionarLider($event)"></app-avatares-responsables-tarea>
     </div>

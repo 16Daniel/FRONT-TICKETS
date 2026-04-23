@@ -105,6 +105,18 @@ export class CrearTareaDialogComponent implements OnInit {
       return;
     }
 
+    if (!this.tarea.visibleGlobal && (!this.tarea.idsResponsables || this.tarea.idsResponsables.length === 0)) {
+      Swal.fire({
+        title: "ATENCIÓN",
+        text: "No puedes crear una tarea privada sin responsables asignados.",
+        icon: "warning",
+        customClass: {
+          container: 'swal-topmost'
+        }
+      });
+      return;
+    }
+
     this.firebaseStorage.cargarImagenesEvidenciasTareas(this.archivos)
       .then(async urls => {
         this.tarea.evidenciaUrls = urls;
@@ -323,6 +335,10 @@ export class CrearTareaDialogComponent implements OnInit {
 
   showMessage = (sev: string, summ: string, det: string) =>
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+
+  cambiarVisibilidad() {
+    this.tarea.visibleGlobal = !this.tarea.visibleGlobal;
+  }
 
   onSeleccionarLider(responsable: ResponsableTarea) {
     if (this.tarea.idResponsablePrincipal == responsable.id) {
