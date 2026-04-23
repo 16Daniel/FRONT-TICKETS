@@ -216,6 +216,17 @@
   }
 }
 
+.btn-ligado-activo {
+  background: linear-gradient(135deg, #fc7100, #ffa726) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 4px 10px rgba(252, 113, 0, 0.35) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.btn-ligado-activo i {
+  color: white !important;
+}
+
 .proyecto-item {
   padding: 12px;
   cursor: pointer;

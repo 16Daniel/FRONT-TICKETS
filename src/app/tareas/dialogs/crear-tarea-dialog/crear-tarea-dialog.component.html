@@ -22,18 +22,19 @@
         </button>
 
         <button *ngIf="tarea.esProyecto" type="button" class="btn btn-primary"
-          style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          style="background-color: white; border: 1px solid #bdbdbd; margin: 2px;"
           (click)="mostrarPanelTareasAsociadas = !mostrarPanelTareasAsociadas">
-          <i class="bx bx-list-ul bx-sm mt-2" [style.color]="'#1976d2'" pTooltip="VER TAREAS DEL PROYECTO"
+          <i class="bx bx-list-ul bx-sm mt-2" style="color: #1976d2" pTooltip="VER TAREAS DEL PROYECTO"
             tooltipPosition="top">
           </i>
         </button>
 
         <button *ngIf="!tarea.esProyecto" type="button" class="btn btn-primary"
-          style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          style="background-color: white; border: 1px solid #bdbdbd; margin: 2px;"
+          [class.btn-ligado-activo]="tarea.idProyectoRelacionado"
           (click)="mostrarPanelProyectos = !mostrarPanelProyectos">
-          <i class="bx bx-network-chart bx-sm mt-2" [style.color]="tarea.idProyectoRelacionado ? '#fc7100' : '#1976d2'"
-            style="color: #1976d2" pTooltip="LIGAR A PROYECTO" tooltipPosition="top">
+          <i class="bx bx-network-chart bx-sm mt-2" style="color: #1976d2"
+            pTooltip="LIGAR A PROYECTO" tooltipPosition="top">
           </i>
         </button>
 
