@@ -26,7 +26,6 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { MantenimientoFactoryService } from '../../../mantenimientos/services/maintenance-factory.service';
-import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -35,6 +34,7 @@ import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/co
 import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
 import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { ComprasService } from '../../../compras/services/compras.service';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -106,7 +106,7 @@ export class TicketsTabComponent implements OnInit {
     private branchesService: BranchesService,
     private notificationService: NotificationService,
     private mantenimientoFactory: MantenimientoFactoryService,
-    private purchaseService: PurchaseService,
+    private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
     private maintenance10x10Service: Maintenance10x10Service
   ) {

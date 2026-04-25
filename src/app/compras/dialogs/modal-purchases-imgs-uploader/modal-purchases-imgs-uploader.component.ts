@@ -4,8 +4,8 @@ import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
 import { Compra } from '../../../compras/interfaces/compra.model';
-import { PurchaseService } from '../../../compras/services/purchase.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
+import { ComprasService } from '../../services/compras.service';
 
 @Component({
   selector: 'app-modal-purchases-imgs-uploader',
@@ -25,7 +25,7 @@ export class ModalPurchasesImgsUploaderComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private purchaseService: PurchaseService
+    private purchaseService: ComprasService
   ) { }
 
   onHide() {

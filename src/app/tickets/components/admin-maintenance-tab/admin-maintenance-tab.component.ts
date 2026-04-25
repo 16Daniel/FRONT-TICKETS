@@ -24,13 +24,13 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
 import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
 import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
+import { ComprasService } from '../../../compras/services/compras.service';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -90,7 +90,7 @@ export class AdminMaintenanceTabComponent {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private maintenanceService: MaintenanceMtooService,
-    private purchaseService: PurchaseService,
+    private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

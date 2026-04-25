@@ -23,7 +23,6 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
@@ -33,6 +32,7 @@ import { Maintenance10x10Service } from '../../../mantenimientos/services/mainte
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
+import { ComprasService } from '../../../compras/services/compras.service';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -98,7 +98,7 @@ export class AdminSysTabComponent {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private maintenanceService: Maintenance10x10Service,
-    private purchaseService: PurchaseService,
+    private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

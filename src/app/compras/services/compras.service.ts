@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class PurchaseService {
+export class ComprasService {
   pathName: string = 'compras';
 
   constructor(private firestore: Firestore) {

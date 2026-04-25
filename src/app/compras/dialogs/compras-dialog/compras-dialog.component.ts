@@ -10,7 +10,6 @@ import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal
 import { Compra } from '../../interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { PurchaseService } from '../../services/purchase.service';
 import { StatusPurchaseService } from '../../services/status-purchase.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
@@ -19,6 +18,7 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
+import { ComprasService } from '../../services/compras.service';
 
 @Component({
   selector: 'app-compras-dialog',
@@ -60,7 +60,7 @@ export class ComprasDialogComponent {
   imagenes: string[] = [];
 
   constructor(
-    private purchaseService: PurchaseService,
+    private purchaseService: ComprasService,
     private statusPurchaseService: StatusPurchaseService,
     private cdr: ChangeDetectorRef,
     private areasService: AreasService,
