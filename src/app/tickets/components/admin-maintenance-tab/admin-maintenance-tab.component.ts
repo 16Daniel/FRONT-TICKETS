@@ -15,7 +15,7 @@ import { BranchesTicketsAccordionComponent } from '../../../tickets/components/b
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
+import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
@@ -49,7 +49,7 @@ import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimi
     ModalTicketDetailComponent,
     AcordeonMantenimientosMantenimientoComponent,
     IconosNotificacionesTicketsComponent,
-    ModalPurshasesComponent,
+    ComprasDialogComponent,
     ModalRequestPurchaseComponent
   ],
   providers: [MessageService, ConfirmationService],

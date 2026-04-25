@@ -21,7 +21,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 
 @Component({
-  selector: 'app-modal-purshases',
+  selector: 'app-compras-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -33,10 +33,10 @@ import { EstatusCompra } from '../../interfaces/estatus-compras.model';
     ModalPurchasesImgsUploaderComponent,
     ModalVisorVariasImagenesComponent
   ],
-  templateUrl: './modal-purshases.component.html',
-  styleUrl: './modal-purshases.component.scss'
+  templateUrl: './compras-dialog.component.html',
+  styleUrl: './compras-dialog.component.scss'
 })
-export class ModalPurshasesComponent {
+export class ComprasDialogComponent {
   @Input() mostrarModal: boolean = false;
   @Input() idArea: string = '';
   @Output() closeEvent = new EventEmitter<boolean>();

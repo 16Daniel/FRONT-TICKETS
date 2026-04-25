@@ -16,7 +16,6 @@ import { BranchesTicketsAccordionComponent } from '../../../tickets/components/b
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -26,6 +25,7 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
@@ -51,7 +51,7 @@ import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos
     AcordeonMantenimientosSistemasComponent,
     ModalTicketDetailComponent,
     IconosNotificacionesTicketsComponent,
-    ModalPurshasesComponent,
+    ComprasDialogComponent,
     ModalRequestPurchaseComponent,
     AcordeonMantenimientosSisAvComponent
   ],
