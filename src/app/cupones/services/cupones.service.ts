@@ -5,6 +5,8 @@ import { environment } from '../../../environments/environments';
 import { BatchResponse } from '../interfaces/batch-response.interface';
 import { BatchDto } from '../interfaces/batch.interface';
 import { LoteInfo } from '../interfaces/lote-info.interface';
+import { HttpHeaders } from '@angular/common/http';
+import { AidaConfig } from '../interfaces/aida-config.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +48,23 @@ export class CuponesService {
         'x-api-key': environment.apiKeyCupones
       }
     });
+  }
+
+  getAidaConfig() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-API-Key': environment.apiKeyCupones
+    });
+
+    return this.http.get<AidaConfig>(`${this.apiUrl}/aida`, { headers });
+  }
+
+  updateAidaConfig(codigoProducto: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-API-Key': environment.apiKeyCupones
+    });
+
+    return this.http.put(`${this.apiUrl}/aida`, { codigoProducto }, { headers });
   }
 }

@@ -20,6 +20,7 @@ import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.
 import { MessageService } from 'primeng/api';
 import { ChecksPrioridadEinsehowerComponent } from '../../components/checks-prioridad-eisenhower/checks-prioridad-eisenhower.component';
 import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";
+import { ContenedorSubtareasComponent } from '../../components/contenedor-subtareas/contenedor-subtareas.component';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
@@ -38,7 +39,8 @@ import { AreasService } from '../../../areas/services/areas.service';
     MultiSelectModule,
     AvatarModule,
     TooltipModule,
-    AvataresResponsablesTareaComponent
+    AvataresResponsablesTareaComponent,
+    ContenedorSubtareasComponent
   ],
   templateUrl: './crear-tarea-dialog.component.html',
   styleUrl: './crear-tarea-dialog.component.scss'
@@ -56,6 +58,11 @@ export class CrearTareaDialogComponent implements OnInit {
   estatusTeras: EstatusTarea[] = [];
   etiquetas: EtiquetaTarea[] = [];
   areasMap: Record<string, string> = {};
+  mostrarSubtareas: boolean = false;
+  mostrarPanelProyectos: boolean = false;
+  mostrarPanelTareasAsociadas: boolean = false;
+  proyectos: Tarea[] = [];
+  responsableTarea!: ResponsableTarea;
 
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
@@ -79,7 +86,9 @@ export class CrearTareaDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
     this.obtenerSucursales();
+    this.obtenerProyectos();
     this.statusTaskService.estatus$.subscribe(estatus => this.estatusTeras = estatus);
     this.labelsTasksService.etiquetas$.subscribe(et => {
       this.etiquetas = et;
@@ -102,6 +111,18 @@ export class CrearTareaDialogComponent implements OnInit {
         control.markAsTouched();
       });
 
+      return;
+    }
+
+    if (!this.tarea.visibleGlobal && (!this.tarea.idsResponsables || this.tarea.idsResponsables.length === 0)) {
+      Swal.fire({
+        title: "ATENCIÓN",
+        text: "No puedes crear una tarea privada sin responsables asignados.",
+        icon: "warning",
+        customClass: {
+          container: 'swal-topmost'
+        }
+      });
       return;
     }
 
@@ -218,6 +239,80 @@ export class CrearTareaDialogComponent implements OnInit {
     this.tarea.idEisenhower = event.idEisenhower;
   }
 
+  obtenerProyectos() {
+    this.tareasService.getAll().subscribe(tareas => {
+      this.proyectos = tareas.filter((t: Tarea) => t.esProyecto && !t.eliminado);
+    });
+  }
+
+  get misProyectos(): Tarea[] {
+    if (!this.responsableTarea?.id) return [];
+
+    return this.proyectos
+      .filter(t =>
+        Array.isArray(t.idsResponsables) &&
+        t.idsResponsables.includes(this.responsableTarea.id!)
+      )
+      .sort((a, b) => {
+        if (!this.tarea?.idProyectoRelacionado) return 0;
+
+        if (a.id === this.tarea.idProyectoRelacionado) return -1;
+        if (b.id === this.tarea.idProyectoRelacionado) return 1;
+
+        return 0;
+      });
+  }
+
+  seleccionarProyecto(proyecto: Tarea) {
+    if (this.tarea.idProyectoRelacionado == proyecto.id) {
+      this.tarea.idProyectoRelacionado = null;
+      return;
+    }
+
+    this.tarea.idProyectoRelacionado = proyecto.id!;
+  }
+
+  agregarSubtarea(texto: string) {
+    this.tarea.subtareas = this.tarea.subtareas || [];
+    this.tarea.subtareas.push({
+      titulo: texto,
+      terminado: false
+    });
+  }
+
+  async toggleSubtareas() {
+    if (this.mostrarSubtareas && this.tarea.subtareas && this.tarea.subtareas.length > 0) {
+      const result = await Swal.fire({
+        title: '¿Eliminar subtareas?',
+        text: 'Esta tarea tiene subtareas. ¿Deseas eliminarlas?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'No, conservar',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        customClass: {
+          container: 'swal-topmost'
+        }
+      });
+
+      if (!result.isConfirmed) {
+        this.mostrarSubtareas = false;
+        return;
+      }
+
+      this.tarea.subtareas = [];
+      this.mostrarSubtareas = false;
+      return;
+    }
+
+    this.mostrarSubtareas = !this.mostrarSubtareas;
+
+    if (!this.tarea.subtareas) {
+      this.tarea.subtareas = [];
+    }
+  }
+
   getCantidadPorEstatus(idEstatus: string): Promise<number> {
     return new Promise((resolve, reject) => {
       this.tareasService.getByEstatus(idEstatus).subscribe({
@@ -323,6 +418,18 @@ export class CrearTareaDialogComponent implements OnInit {
 
   showMessage = (sev: string, summ: string, det: string) =>
     this.messageService.add({ severity: sev, summary: summ, detail: det });
+
+  cambiarVisibilidad() {
+    this.tarea.visibleGlobal = !this.tarea.visibleGlobal;
+  }
+
+  convertirAProyecto() {
+    this.tarea.esProyecto = true;
+  }
+
+  convertirATarea() {
+    this.tarea.esProyecto = false;
+  }
 
   onSeleccionarLider(responsable: ResponsableTarea) {
     if (this.tarea.idResponsablePrincipal == responsable.id) {

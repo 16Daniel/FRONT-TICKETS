@@ -52,6 +52,20 @@ RW-01-01000
             </div>
         </div>
 
+        <!-- Configuración Aida -->
+        <div class="m-2 mt-3 bg-white p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1>CONFIGURACIÓN AIDA</h1>
+            </div>
+            <div *ngIf="aidaConfig; else loadingAida" class="d-flex justify-content-between align-items-center">
+                <p class="mb-0"><strong>Referencia:</strong> {{ aidaConfig.codigoProducto }}</p>
+                <p-button label="Cambiar Referencia" size="small" (onClick)="accionAida()"></p-button>
+            </div>
+            <ng-template #loadingAida>
+                <p>Cargando configuración...</p>
+            </ng-template>
+        </div>
+
         <!-- Historial -->
         <div class="m-2 mt-3 bg-white p-3">
             <div class="d-flex justify-content-between align-items-center">
@@ -89,4 +103,8 @@ RW-01-01000
     <app-lote-referencia-dialog [mostrarModal]="mostrarModalReferencia" [lote]="loteAEditar"
         (closeEvent)="cerrarModalReferencia($event)">
     </app-lote-referencia-dialog>
+
+    <app-aida-referencia-dialog [mostrarModal]="mostrarModalAida" [configActual]="aidaConfig"
+        (closeEvent)="cerrarModalAida($event)">
+    </app-aida-referencia-dialog>
 </div>

@@ -8,13 +8,15 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { BatchResponse } from '../../interfaces/batch-response.interface';
 import { LoteInfo } from '../../interfaces/lote-info.interface';
+import { AidaConfig } from '../../interfaces/aida-config.interface';
 import { LoteReferenciaDialogComponent } from '../../dialogs/lote-referencia-dialog/lote-referencia-dialog.component';
+import { AidaReferenciaDialogComponent } from '../../dialogs/aida-referencia-dialog/aida-referencia-dialog.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cupones-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, TableModule, InputTextModule, LoteReferenciaDialogComponent],
+  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, TableModule, InputTextModule, LoteReferenciaDialogComponent, AidaReferenciaDialogComponent],
   templateUrl: './cupones-page.component.html',
   styleUrls: ['./cupones-page.component.css']
 })
@@ -35,6 +37,9 @@ export default class CuponesPageComponent implements OnInit {
   mostrarModalReferencia: boolean = false;
   loteAEditar: LoteInfo | null = null;
 
+  aidaConfig: AidaConfig | null = null;
+  mostrarModalAida: boolean = false;
+
   abrirModalReferencia(lote: LoteInfo) {
     this.loteAEditar = lote;
     this.mostrarModalReferencia = true;
@@ -50,6 +55,30 @@ export default class CuponesPageComponent implements OnInit {
 
   ngOnInit() {
     this.cargarHistorial();
+    this.cargarAidaConfig();
+  }
+
+  cargarAidaConfig() {
+    this.cuponesService.getAidaConfig().subscribe({
+      next: (data) => {
+        this.aidaConfig = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al obtener configuración Aida', err);
+      }
+    });
+  }
+
+  accionAida() {
+    this.mostrarModalAida = true;
+  }
+
+  cerrarModalAida(event: boolean) {
+    this.mostrarModalAida = false;
+    if (event) {
+      this.cargarAidaConfig();
+    }
   }
 
   cargarHistorial() {
