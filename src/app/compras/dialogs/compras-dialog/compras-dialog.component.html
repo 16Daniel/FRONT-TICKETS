@@ -61,6 +61,19 @@
             </div>
         </div>
 
+        <div class="row" style="margin-top: 10px">
+            <div class="col-md-4">
+                <p class="fw-bold">FECHA INICIAL</p>
+                <p-calendar [(ngModel)]="fechaInicio" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+                    [style]="{width:'100%'}" />
+            </div>
+            <div class="col-md-4">
+                <p class="fw-bold">FECHA FINAL</p>
+                <p-calendar [(ngModel)]="fechaFinal" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+                    [style]="{width:'100%'}" />
+            </div>
+        </div>
+
         <div class="d-flex justify-content-end mt-3">
             <!-- <button class="btn bg-p-b p-3"><i class='bx bx-send'></i>ENVIAR</button> -->
             <p-button label="BUSCAR" icon="pi pi-search" styleClass="p-button-info" (click)="buscar()"></p-button>
@@ -81,6 +94,7 @@
                 <th>AREA</th>
                 <th>JUSTIFICACIÓN</th>
                 <th>RESPONSABLE</th>
+                <th>EVIDENCIAS</th>
                 <th>ESTATUS</th>
                 <th>ACCIONES</th>
             </tr>
@@ -94,6 +108,14 @@
                 <td> {{ obtenerNombreAreas(compra.idArea) }}</td>
                 <td>{{ compra.justificacion }}</td>
                 <td> {{ obtenerNombreResponsable(compra.idUsuario) }}</td>
+                <td style="text-align: center">
+                    <span *ngIf="compra.evidenciaUrls?.length > 0" class="badge bg-success">
+                        <i class='bx bx-image'></i> {{ compra.evidenciaUrls.length }} {{ compra.evidenciaUrls.length === 1 ? 'imagen' : 'imágenes' }}
+                    </span>
+                    <span *ngIf="!compra.evidenciaUrls || compra.evidenciaUrls.length === 0" class="badge bg-secondary">
+                        Sin evidencias
+                    </span>
+                </td>
                 <td>
                     <p-dropdown [options]="estatus" [(ngModel)]="compra.idEstatusCompra" optionLabel="nombre"
                         [showClear]="false" optionValue="id" (onChange)="actualizaCompra(compra)"

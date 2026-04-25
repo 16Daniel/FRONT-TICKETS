@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDoc, onSnapshot, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDoc, onSnapshot, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Compra } from '../interfaces/compra.model';
 import { Observable } from 'rxjs';
 
@@ -18,7 +18,17 @@ export class ComprasService {
     return docRef.id; // Devolver el ID del documento creado
   }
 
-  getByArea(idArea: string): Observable<Compra[]> {
+  getByArea(idArea: string, fechaInicio?: Date, fechaFinal?: Date): Observable<Compra[]> {
+    // Por default busca el mes actual
+    if (!fechaInicio) {
+      const now = new Date();
+      fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1);
+    }
+    if (!fechaFinal) {
+      const now = new Date();
+      fechaFinal = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    }
+
     return new Observable<Compra[]>((observer) => {
       const collectionRef = collection(this.firestore, this.pathName);
 
@@ -26,7 +36,9 @@ export class ComprasService {
       const constraints = [
         where('eliminado', '==', false),
         // where('idEstatusCompra', 'not-in', ['4', '5']),
-        where('idArea', '==', idArea)];
+        where('idArea', '==', idArea),
+        where('fecha', '>=', Timestamp.fromDate(fechaInicio!)),
+        where('fecha', '<=', Timestamp.fromDate(fechaFinal!))];
 
       const q = query(collectionRef, ...constraints);
 

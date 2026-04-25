@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { Compra } from '../../interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
@@ -30,6 +31,7 @@ import { ComprasService } from '../../services/compras.service';
     DropdownModule,
     FormsModule,
     ButtonModule,
+    CalendarModule,
     ModalPurchasesImgsUploaderComponent,
     ModalVisorVariasImagenesComponent
   ],
@@ -53,6 +55,8 @@ export class ComprasDialogComponent {
   idEstado: string = '';
   idSucursal: string = '';
   idUsuario: string = '';
+  fechaInicio: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  fechaFinal: Date = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59);
 
   mostrarModalSubirImagen = false;
   mostrarModalVisorImagen = false;
@@ -100,10 +104,10 @@ export class ComprasDialogComponent {
   }
 
   obtenerCompras() {
-    this.purchaseService.getByArea(this.idArea).subscribe({
+    this.purchaseService.getByArea(this.idArea, this.fechaInicio, this.fechaFinal).subscribe({
       next: (data) => {
         this.compras = data;
-        this.comprasFiltradas = this.compras;
+        this.aplicarFiltros();
         this.cdr.detectChanges();
       }
     });
@@ -167,11 +171,15 @@ export class ComprasDialogComponent {
   }
 
   buscar() {
+    this.obtenerCompras();
+  }
+
+  aplicarFiltros() {
     this.comprasFiltradas = this.compras.filter(compra => {
       return (!this.idSucursal || this.idSucursal == compra.idSucursal) &&
         (!this.idEstado || this.idEstado == compra.idEstatusCompra) &&
         (!this.idUsuario || this.idUsuario == compra.idUsuario)
-    })
+    });
   }
 
   abrirModalSubirImagen(compra: Compra) {
