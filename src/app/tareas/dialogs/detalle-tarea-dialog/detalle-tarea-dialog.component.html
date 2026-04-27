@@ -11,10 +11,12 @@
             </i>
           </button>
 
-          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          <button class="btn"
+            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            [class.btn-privado-activo]="!tarea.visibleGlobal"
             (click)="cambiarVisibilidad()" *ngIf="tareaAsignadaAMi()">
             <i class="bx bx-sm mt-2" [class.bx-lock-open]="tarea.visibleGlobal" [class.bx-lock]="!tarea.visibleGlobal"
-              [style.color]="tarea.visibleGlobal ? '#2e7d32' : '#d32f2f'"
+              style="color: #2e7d32"
               [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'" tooltipPosition="top">
             </i>
           </button>
@@ -37,10 +39,12 @@
             </i>
           </button>
 
-          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          <button class="btn"
+            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            [class.btn-proyecto-activo]="tarea.esProyecto"
             (click)="tarea.esProyecto ? convertirATarea() : convertirAProyecto()">
             <i class="bx bx-sm mt-2" [class.bxs-star]="tarea.esProyecto" [class.bx-task]="!tarea.esProyecto"
-              [style.color]="tarea.esProyecto ? '#fbc02d' : '#1976d2'"
+              style="color: #1976d2"
               [pTooltip]="tarea.esProyecto ? 'PROYECTO' : 'TAREA'" tooltipPosition="top">
             </i>
           </button>
