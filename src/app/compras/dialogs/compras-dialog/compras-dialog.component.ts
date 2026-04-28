@@ -192,4 +192,32 @@ export class ComprasDialogComponent {
     this.compraSeleccionada = compra;
     this.imagenes = compra.evidenciaUrls || [];
   }
+
+  eliminarCompra(compra: Compra) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará la compra',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await this.purchaseService.delete(compra.id!);
+        Swal.fire({
+          title: 'Eliminado',
+          text: 'La compra ha sido eliminada',
+          icon: 'success',
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+      }
+    });
+  }
 }
