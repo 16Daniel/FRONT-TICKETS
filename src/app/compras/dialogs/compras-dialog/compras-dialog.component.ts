@@ -20,6 +20,7 @@ import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-upl
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 import { ComprasService } from '../../services/compras.service';
+import { ComentariosCompraDialogComponent } from '../comentarios-compra-dialog/comentarios-compra-dialog.component';
 
 @Component({
   selector: 'app-compras-dialog',
@@ -33,7 +34,8 @@ import { ComprasService } from '../../services/compras.service';
     ButtonModule,
     CalendarModule,
     ModalPurchasesImgsUploaderComponent,
-    ModalVisorVariasImagenesComponent
+    ModalVisorVariasImagenesComponent,
+    ComentariosCompraDialogComponent
   ],
   templateUrl: './compras-dialog.component.html',
   styleUrl: './compras-dialog.component.scss'
@@ -60,6 +62,7 @@ export class ComprasDialogComponent {
 
   mostrarModalSubirImagen = false;
   mostrarModalVisorImagen = false;
+  mostrarComentariosModal = false;
   compraSeleccionada!: Compra;
   imagenes: string[] = [];
 
@@ -219,5 +222,10 @@ export class ComprasDialogComponent {
         });
       }
     });
+  }
+
+  onClickChat(compra: Compra) {
+    this.mostrarComentariosModal = true;
+    this.compraSeleccionada = compra;
   }
 }

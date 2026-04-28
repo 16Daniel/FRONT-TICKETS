@@ -139,6 +139,11 @@
                         <i class='bx bx-show bx-sm'></i>
                     </button>
 
+                    <button class="btn btn-primary" (click)="onClickChat(compra)" style="margin: 2px">
+                        <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
+                            tooltipPosition="top"></i>
+                    </button>
+
                     <button class="btn btn-danger" pTooltip="ELIMINAR" tooltipPosition="top"
                         (click)="eliminarCompra(compra)">
                         <i class='bx bx-trash bx-sm'></i>
@@ -154,3 +159,6 @@
 
 <app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
     (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"></app-modal-visor-varias-imagenes>
+
+<app-comentarios-compra-dialog *ngIf="mostrarComentariosModal" [mostrarModal]="mostrarComentariosModal"
+    [compra]="compraSeleccionada" (closeEvent)="mostrarComentariosModal = false"></app-comentarios-compra-dialog>
