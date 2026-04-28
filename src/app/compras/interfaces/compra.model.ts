@@ -10,4 +10,5 @@ export class Compra {
     justificacion: string = '';
     eliminado: boolean = false;  
     evidenciaUrls?: string[];
+    comentarios?: string[];
 }

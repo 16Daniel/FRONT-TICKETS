@@ -1,0 +1,33 @@
+<p-dialog header="COMENTARIOS DE COMPRA" [(visible)]="mostrarModal" [modal]="true"
+    [style]="{ width: '50vw', 'max-height': '80vh' }" (onHide)="onHide()" styleClass="dialog-rojo">
+
+    <div class="comentarios-container">
+        <h6 class="fw-bold">{{ compra.articulo }}</h6>
+        <hr>
+
+        <div class="comentarios-lista" *ngIf="compra.comentarios && compra.comentarios.length > 0">
+            <div class="comentario-item" *ngFor="let comentario of compra.comentarios; let i = index">
+                <div class="comentario-numero">{{ i + 1 }}</div>
+                <div class="comentario-texto">{{ comentario }}</div>
+            </div>
+        </div>
+
+        <div *ngIf="!compra.comentarios || compra.comentarios.length === 0" class="text-center text-muted py-3">
+            <i class='bx bx-comment-detail bx-lg'></i>
+            <p>Sin comentarios</p>
+        </div>
+
+        <hr>
+
+        <div class="agregar-comentario">
+            <p class="fw-bold">AGREGAR COMENTARIO</p>
+            <textarea class="form-control" rows="3" [(ngModel)]="nuevoComentario"
+                placeholder="Escribe un comentario..."></textarea>
+            <div class="d-flex justify-content-end mt-2">
+                <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-success"
+                    (click)="agregarComentario()" [disabled]="!nuevoComentario.trim()"></p-button>
+            </div>
+        </div>
+    </div>
+
+</p-dialog>
