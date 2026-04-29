@@ -145,6 +145,28 @@
   color: white !important;
 }
 
+.btn-privado-activo {
+  background: linear-gradient(135deg, #d32f2f, #ef5350) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 4px 10px rgba(211, 47, 47, 0.35) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.btn-privado-activo i {
+  color: white !important;
+}
+
+.btn-proyecto-activo {
+  background: linear-gradient(135deg, #f9a825, #fbc02d) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 4px 10px rgba(251, 192, 45, 0.4) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.btn-proyecto-activo i {
+  color: white !important;
+}
+
 .proyecto-item {
   padding: 12px;
   cursor: pointer;

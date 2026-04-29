@@ -15,7 +15,7 @@ import { BranchesTicketsAccordionComponent } from '../../../tickets/components/b
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { ModalPurshasesComponent } from '../../../compras/dialogs/modal-purshases/modal-purshases.component';
+import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -23,7 +23,6 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { PurchaseService } from '../../../compras/services/purchase.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -32,6 +31,7 @@ import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimi
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { ComprasService } from '../../../compras/services/compras.service';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -50,7 +50,7 @@ import { Maintenance10x10Service } from '../../../mantenimientos/services/mainte
     ModalTicketDetailComponent,
     AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
-    ModalPurshasesComponent,
+    ComprasDialogComponent,
     ModalRequestPurchaseComponent,
     AcordeonMantenimientosSisAvComponent
   ],
@@ -96,7 +96,7 @@ export class AdminAudioVideoTabComponent {
     private branchesService: BranchesService,
     private maintenanceService: Maintenance6x6AvService,
     private maintenanceSysService: Maintenance10x10Service,
-    private purchaseService: PurchaseService,
+    private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

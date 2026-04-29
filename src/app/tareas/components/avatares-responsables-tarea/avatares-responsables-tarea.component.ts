@@ -27,4 +27,21 @@ export class AvataresResponsablesTareaComponent {
       tarea.idsResponsables?.includes(r.id!)
     );
   }
+
+  getProgresoResponsable(idResponsable: string): { mostrar: boolean, porcentaje: number } {
+    if (!this.tarea.subtareas || this.tarea.subtareas.length === 0) {
+      return { mostrar: false, porcentaje: 0 };
+    }
+
+    const subtareasDelResponsable = this.tarea.subtareas.filter(st => st.idResponsable === idResponsable);
+
+    if (subtareasDelResponsable.length === 0) {
+      return { mostrar: false, porcentaje: 0 };
+    }
+
+    const terminadas = subtareasDelResponsable.filter(st => st.terminado).length;
+    const porcentaje = Math.round((terminadas / subtareasDelResponsable.length) * 100);
+
+    return { mostrar: true, porcentaje };
+  }
 }

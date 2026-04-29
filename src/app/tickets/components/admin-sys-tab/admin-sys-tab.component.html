@@ -131,8 +131,8 @@
 <app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
   (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-modal-tickets-history>
 
-<app-modal-purshases *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras" [idArea]="idArea"
-  (closeEvent)="mostrarModalCompras = false"></app-modal-purshases>
+<app-compras-dialog *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras" [idArea]="idArea"
+  (closeEvent)="mostrarModalCompras = false"></app-compras-dialog>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

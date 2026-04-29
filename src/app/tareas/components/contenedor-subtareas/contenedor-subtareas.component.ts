@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnInit, DoCheck } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'ngx-avatars';
@@ -17,7 +17,7 @@ import { TaskResponsibleService } from '../../services/task-responsible.service'
   templateUrl: './contenedor-subtareas.component.html',
   styleUrl: './contenedor-subtareas.component.scss'
 })
-export class ContenedorSubtareasComponent implements OnInit {
+export class ContenedorSubtareasComponent implements OnInit, DoCheck {
 
   @Input() tarea: any;
   @Input() mostrarSubtareas: boolean = false;
@@ -31,13 +31,28 @@ export class ContenedorSubtareasComponent implements OnInit {
   nuevaSubtarea: string = '';
   responsables: ResponsableTarea[] = [];
 
+  private todosLosResponsables: ResponsableTarea[] = [];
+  private idsResponsablesAnterior: string[] = [];
+
   ngOnInit(): void {
     this.resposablesService.responsables$
-      .subscribe(responsables => this.filtrarResponsables(responsables));
+      .subscribe(responsables => {
+        this.todosLosResponsables = responsables;
+        this.filtrarResponsables();
+      });
   }
 
-  private filtrarResponsables(responsables: any[]) {
-    this.responsables = responsables.filter(r =>
+  ngDoCheck(): void {
+    const idsActuales = this.tarea?.idsResponsables || [];
+
+    if (JSON.stringify(idsActuales) !== JSON.stringify(this.idsResponsablesAnterior)) {
+      this.idsResponsablesAnterior = [...idsActuales];
+      this.filtrarResponsables();
+    }
+  }
+
+  private filtrarResponsables() {
+    this.responsables = this.todosLosResponsables.filter(r =>
       this.tarea?.idsResponsables?.includes(r.id)
     );
   }

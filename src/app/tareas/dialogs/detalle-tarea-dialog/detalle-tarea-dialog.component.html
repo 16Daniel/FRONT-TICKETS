@@ -11,10 +11,12 @@
             </i>
           </button>
 
-          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          <button class="btn"
+            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            [class.btn-privado-activo]="!tarea.visibleGlobal"
             (click)="cambiarVisibilidad()" *ngIf="tareaAsignadaAMi()">
             <i class="bx bx-sm mt-2" [class.bx-lock-open]="tarea.visibleGlobal" [class.bx-lock]="!tarea.visibleGlobal"
-              [style.color]="tarea.visibleGlobal ? '#2e7d32' : '#d32f2f'"
+              style="color: #2e7d32"
               [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'" tooltipPosition="top">
             </i>
           </button>
@@ -37,10 +39,12 @@
             </i>
           </button>
 
-          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          <button class="btn"
+            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            [class.btn-proyecto-activo]="tarea.esProyecto"
             (click)="tarea.esProyecto ? convertirATarea() : convertirAProyecto()">
             <i class="bx bx-sm mt-2" [class.bxs-star]="tarea.esProyecto" [class.bx-task]="!tarea.esProyecto"
-              [style.color]="tarea.esProyecto ? '#fbc02d' : '#1976d2'"
+              style="color: #1976d2"
               [pTooltip]="tarea.esProyecto ? 'PROYECTO' : 'TAREA'" tooltipPosition="top">
             </i>
           </button>
@@ -157,7 +161,15 @@
 
           <!-- ID / TÍTULO -->
           <div class="mb-3">
-            <label class="fw-bold">TÍTULO</label>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="fw-bold mb-0">TÍTULO</label>
+              <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold text-muted" style="font-size: 0.75rem;">AVANCE GENERAL:</span>
+                <span class="badge" [ngClass]="getProgressColor(tarea.porcentaje)" style="font-size: 0.85rem;">
+                  {{ tarea.porcentaje }}%
+                </span>
+              </div>
+            </div>
             <input [(ngModel)]="tarea.titulo" name="titulo" class="form-control" placeholder="Título de la tarea"
               (change)="guardarCambios()">
           </div>

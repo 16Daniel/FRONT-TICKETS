@@ -6,11 +6,11 @@ import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { Compra } from '../../interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { PurchaseService } from '../../services/purchase.service';
 import { StatusPurchaseService } from '../../services/status-purchase.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
@@ -19,9 +19,11 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
+import { ComprasService } from '../../services/compras.service';
+import { ComentariosCompraDialogComponent } from '../comentarios-compra-dialog/comentarios-compra-dialog.component';
 
 @Component({
-  selector: 'app-modal-purshases',
+  selector: 'app-compras-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -30,13 +32,15 @@ import { EstatusCompra } from '../../interfaces/estatus-compras.model';
     DropdownModule,
     FormsModule,
     ButtonModule,
+    CalendarModule,
     ModalPurchasesImgsUploaderComponent,
-    ModalVisorVariasImagenesComponent
+    ModalVisorVariasImagenesComponent,
+    ComentariosCompraDialogComponent
   ],
-  templateUrl: './modal-purshases.component.html',
-  styleUrl: './modal-purshases.component.scss'
+  templateUrl: './compras-dialog.component.html',
+  styleUrl: './compras-dialog.component.scss'
 })
-export class ModalPurshasesComponent {
+export class ComprasDialogComponent {
   @Input() mostrarModal: boolean = false;
   @Input() idArea: string = '';
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -53,14 +57,17 @@ export class ModalPurshasesComponent {
   idEstado: string = '';
   idSucursal: string = '';
   idUsuario: string = '';
+  fechaInicio: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  fechaFinal: Date = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59);
 
   mostrarModalSubirImagen = false;
   mostrarModalVisorImagen = false;
+  mostrarComentariosModal = false;
   compraSeleccionada!: Compra;
   imagenes: string[] = [];
 
   constructor(
-    private purchaseService: PurchaseService,
+    private purchaseService: ComprasService,
     private statusPurchaseService: StatusPurchaseService,
     private cdr: ChangeDetectorRef,
     private areasService: AreasService,
@@ -100,10 +107,10 @@ export class ModalPurshasesComponent {
   }
 
   obtenerCompras() {
-    this.purchaseService.getByArea(this.idArea).subscribe({
+    this.purchaseService.getByArea(this.idArea, this.fechaInicio, this.fechaFinal).subscribe({
       next: (data) => {
         this.compras = data;
-        this.comprasFiltradas = this.compras;
+        this.aplicarFiltros();
         this.cdr.detectChanges();
       }
     });
@@ -167,11 +174,15 @@ export class ModalPurshasesComponent {
   }
 
   buscar() {
+    this.obtenerCompras();
+  }
+
+  aplicarFiltros() {
     this.comprasFiltradas = this.compras.filter(compra => {
       return (!this.idSucursal || this.idSucursal == compra.idSucursal) &&
         (!this.idEstado || this.idEstado == compra.idEstatusCompra) &&
         (!this.idUsuario || this.idUsuario == compra.idUsuario)
-    })
+    });
   }
 
   abrirModalSubirImagen(compra: Compra) {
@@ -183,5 +194,38 @@ export class ModalPurshasesComponent {
     this.mostrarModalVisorImagen = true;
     this.compraSeleccionada = compra;
     this.imagenes = compra.evidenciaUrls || [];
+  }
+
+  eliminarCompra(compra: Compra) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará la compra',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await this.purchaseService.delete(compra.id!);
+        Swal.fire({
+          title: 'Eliminado',
+          text: 'La compra ha sido eliminada',
+          icon: 'success',
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+      }
+    });
+  }
+
+  onClickChat(compra: Compra) {
+    this.mostrarComentariosModal = true;
+    this.compraSeleccionada = compra;
   }
 }

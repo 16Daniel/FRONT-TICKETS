@@ -11,7 +11,6 @@ import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-upl
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { PurchaseService } from '../../../compras/services/purchase.service';
 import { StatusPurchaseService } from '../../../compras/services/status-purchase.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
@@ -19,6 +18,7 @@ import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
+import { ComprasService } from '../../services/compras.service';
 
 @Component({
   selector: 'app-modal-request-purchase',
@@ -53,7 +53,7 @@ export class ModalRequestPurchaseComponent implements OnInit {
   imagenes: string[] = [];
 
   constructor(
-    private purchaseService: PurchaseService,
+    private purchaseService: ComprasService,
     private statusPurchaseService: StatusPurchaseService,
     private cdr: ChangeDetectorRef,
     private areasService: AreasService,

@@ -1,3 +1,5 @@
+import { Comentario } from "../../shared/interfaces/comentario-chat.model";
+
 export class Compra {
     id?: string;
     idEstatusCompra: string = '';
@@ -8,6 +10,7 @@ export class Compra {
     articulo: string = '';
     unidades?: number;
     justificacion: string = '';
-    eliminado: boolean = false;  
+    eliminado: boolean = false;
     evidenciaUrls?: string[];
+    comentarios?: Comentario[];
 }
