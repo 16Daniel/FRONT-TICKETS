@@ -113,7 +113,15 @@
         (responsableLiderEvent)="onSeleccionarLider($event)"></app-avatares-responsables-tarea>
     </div>
 
-    <p class="fw-bold">TÍTULO</p>
+    <div class="d-flex justify-content-between align-items-center mb-1">
+      <p class="fw-bold mb-0">TÍTULO</p>
+      <div class="d-flex align-items-center gap-2" *ngIf="tarea.porcentaje > 0">
+        <span class="fw-bold text-muted" style="font-size: 0.75rem;">AVANCE GENERAL:</span>
+        <span class="badge" [ngClass]="getProgressColor(tarea.porcentaje)" style="font-size: 0.85rem;">
+          {{ tarea.porcentaje }}%
+        </span>
+      </div>
+    </div>
     <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL TÍTULO DE LA TAREA"
       [(ngModel)]="tarea.titulo" name="titulo"
       [ngClass]="{'p-invalid': formTituloCtrl.invalid && formTituloCtrl.touched}" #formTituloCtrl="ngModel" required
