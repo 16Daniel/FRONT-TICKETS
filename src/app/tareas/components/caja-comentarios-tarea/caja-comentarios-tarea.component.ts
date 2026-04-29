@@ -1,13 +1,15 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 
+import { AvatarModule } from 'ngx-avatars';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
-import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
+import { FormatCommentPipe } from '../../../shared/pipes/format-comment.pipe';
 import { TareasService } from '../../services/tareas.service';
+import { TaskResponsibleService } from '../../services/task-responsible.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
@@ -16,7 +18,7 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 @Component({
   selector: 'app-caja-comentarios-tarea',
   standalone: true,
-  imports: [FormsModule, CommonModule, ModalVisorImagenesComponent, LinkifyPipe],
+  imports: [FormsModule, CommonModule, ModalVisorImagenesComponent, FormatCommentPipe, AvatarModule],
   templateUrl: './caja-comentarios-tarea.component.html',
   styleUrl: './caja-comentarios-tarea.component.scss'
 })
@@ -31,8 +33,16 @@ export class CajaComentariosTareaComponent implements OnInit {
   mostrarModalImagen: boolean = false;
   enviando = false;
 
+  @ViewChild('textareaComentario') textareaComentario!: import('@angular/core').ElementRef<HTMLTextAreaElement>;
+
+  responsablesTarea: ResponsableTarea[] = [];
+  responsablesFiltrados: ResponsableTarea[] = [];
+  mostrarMenciones: boolean = false;
+  textoBusquedaMencion: string = '';
+
   constructor(
     private tareasService: TareasService,
+    private taskResponsibleService: TaskResponsibleService,
     private firebaseStorageService: FirebaseStorageService,
     private cdr: ChangeDetectorRef,
   ) { }
@@ -45,6 +55,14 @@ export class CajaComentariosTareaComponent implements OnInit {
       return {
         ...c,
         fecha: c.fecha instanceof Timestamp ? c.fecha.toDate() : c.fecha
+      }
+    });
+
+    this.taskResponsibleService.responsables$.subscribe(responsables => {
+      if (this.tarea.idsResponsables && this.tarea.idsResponsables.length > 0) {
+        this.responsablesTarea = responsables.filter(r => this.tarea.idsResponsables.includes(r.id!));
+      } else {
+        this.responsablesTarea = [];
       }
     });
   }
@@ -60,12 +78,30 @@ export class CajaComentariosTareaComponent implements OnInit {
     }
 
     try {
+      const mentionRegex = /@\[([^\]]+)\]/g;
+      const menciones: { id: string, nombre: string, correo: string }[] = [];
+      let match;
+      while ((match = mentionRegex.exec(texto)) !== null) {
+        const nombreMencionado = match[1];
+        const responsable = this.responsablesTarea.find(r => r.nombre === nombreMencionado);
+        if (responsable && responsable.id) {
+          if (!menciones.find(m => m.id === responsable.id)) {
+            menciones.push({
+              id: responsable.id,
+              nombre: responsable.nombre,
+              correo: responsable.correo
+            });
+          }
+        }
+      }
+
       const comentario: Comentario = {
         comentario: texto,
         fecha: new Date(),
         idUsuario: this.usuario.id,
         nombre: this.responsableActivo.nombre,
-        imagenesEvidencia: []
+        imagenesEvidencia: [],
+        menciones: menciones.length > 0 ? menciones : undefined
       };
 
       const url = await this.firebaseStorageService.cargarImagenesEvidenciasTareas(this.imagenesComentario);
@@ -73,6 +109,13 @@ export class CajaComentariosTareaComponent implements OnInit {
 
       this.tarea.comentarios.unshift(comentario);
       await this.tareasService.update(this.tarea, this.tarea.id!);
+
+      if (menciones.length > 0) {
+        const correos = menciones.map(m => m.correo).filter(c => c);
+        if (correos.length > 0) {
+          this.enviarNotificacionesMencion(correos);
+        }
+      }
 
       this.nuevoComentario = '';
       this.imagenesComentario = [];
@@ -108,6 +151,60 @@ export class CajaComentariosTareaComponent implements OnInit {
         }
       }
     });
+  }
+
+  onInputTextarea(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    const value = textarea.value;
+    const cursorPos = textarea.selectionStart;
+
+    const textBeforeCursor = value.substring(0, cursorPos);
+    const lastAtSymbolIndex = textBeforeCursor.lastIndexOf('@');
+
+    if (lastAtSymbolIndex !== -1) {
+      const isAtValidPosition = lastAtSymbolIndex === 0 || /[\\s\\n]/.test(textBeforeCursor.charAt(lastAtSymbolIndex - 1));
+
+      if (isAtValidPosition) {
+        const searchText = textBeforeCursor.substring(lastAtSymbolIndex + 1);
+
+        if (!/\\s/.test(searchText)) {
+          this.textoBusquedaMencion = searchText.toLowerCase();
+
+          this.responsablesFiltrados = this.responsablesTarea.filter(r =>
+            r.nombre.toLowerCase().includes(this.textoBusquedaMencion)
+          );
+
+          if (this.responsablesFiltrados.length > 0) {
+            this.mostrarMenciones = true;
+            return;
+          }
+        }
+      }
+    }
+    this.mostrarMenciones = false;
+  }
+
+  seleccionarMencion(responsable: ResponsableTarea) {
+    const textarea = this.textareaComentario.nativeElement;
+    const cursorPos = textarea.selectionStart;
+    const value = this.nuevoComentario;
+
+    const textBeforeCursor = value.substring(0, cursorPos);
+    const lastAtSymbolIndex = textBeforeCursor.lastIndexOf('@');
+
+    const textBeforeMention = value.substring(0, lastAtSymbolIndex);
+    const textAfterCursor = value.substring(cursorPos);
+
+    const mentionText = `@[${responsable.nombre}] `;
+
+    this.nuevoComentario = textBeforeMention + mentionText + textAfterCursor;
+    this.mostrarMenciones = false;
+
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = lastAtSymbolIndex + mentionText.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
   }
 
   async eliminarComentario(comentario: Comentario) {
@@ -169,6 +266,11 @@ export class CajaComentariosTareaComponent implements OnInit {
     c.editando = false;
 
     this.tareasService.update(this.tarea, this.tarea.id!);
+  }
+
+  enviarNotificacionesMencion(correos: string[]) {
+    // TODO: Implementar el envío de correo real más adelante
+    console.log('Correos a notificar por mención:', correos);
   }
 
 }

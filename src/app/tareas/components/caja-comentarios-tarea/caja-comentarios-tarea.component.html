@@ -35,7 +35,7 @@
 
         <!-- MODO VISTA -->
         <div *ngIf="!c.editando">
-          <div [innerHTML]="c.comentario | linkify"></div>
+          <div [innerHTML]="c.comentario | formatComment"></div>
 
           <div *ngIf="c.imagenesEvidencia?.length" class="imagenes">
             <img *ngFor="let img of c.imagenesEvidencia" [src]="img" class="imagen-comentario" (click)="verImagen(img)">
@@ -68,13 +68,18 @@
   </div>
 
   <!-- Caja fija abajo -->
-  <div class="ingresar-comentario">
+  <div class="ingresar-comentario" style="position: relative;">
 
-    <!-- <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..."
-            rows="3"></textarea> -->
+    <!-- Menú de menciones flotante -->
+    <div class="menciones-menu" *ngIf="mostrarMenciones">
+      <div class="mencion-item" *ngFor="let r of responsablesFiltrados" (click)="seleccionarMencion(r)">
+        <ngx-avatars [name]="r.nombre" size="24" [bgColor]="r.color"></ngx-avatars>
+        <span>{{ r.nombre }}</span>
+      </div>
+    </div>
 
-    <textarea class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..." rows="3"
-      (paste)="onPaste($event)">
+    <textarea #textareaComentario class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..." rows="3"
+      (paste)="onPaste($event)" (input)="onInputTextarea($event)">
     </textarea>
 
 
