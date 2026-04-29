@@ -11,6 +11,11 @@
       : r.nombre }}">
     </ngx-avatars>
 
+    <div *ngIf="getProgresoResponsable(r.id!).mostrar" class="progreso-responsable"
+      [pTooltip]="'Avance de subtareas asignadas a ' + r.nombre" tooltipPosition="bottom">
+      {{ getProgresoResponsable(r.id!).porcentaje }}%
+    </div>
+
   </div>
 
 </div>
