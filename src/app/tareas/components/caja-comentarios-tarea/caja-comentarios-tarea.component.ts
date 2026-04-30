@@ -14,6 +14,7 @@ import { FirebaseStorageService } from '../../../shared/services/firebase-storag
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 
 @Component({
   selector: 'app-caja-comentarios-tarea',
@@ -44,6 +45,7 @@ export class CajaComentariosTareaComponent implements OnInit {
     private tareasService: TareasService,
     private taskResponsibleService: TaskResponsibleService,
     private firebaseStorageService: FirebaseStorageService,
+    private mailService: MailService,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -111,10 +113,7 @@ export class CajaComentariosTareaComponent implements OnInit {
       await this.tareasService.update(this.tarea, this.tarea.id!);
 
       if (menciones.length > 0) {
-        const correos = menciones.map(m => m.correo).filter(c => c);
-        if (correos.length > 0) {
-          this.enviarNotificacionesMencion(correos);
-        }
+        this.enviarNotificacionesMencion(menciones, texto);
       }
 
       this.nuevoComentario = '';
@@ -162,12 +161,12 @@ export class CajaComentariosTareaComponent implements OnInit {
     const lastAtSymbolIndex = textBeforeCursor.lastIndexOf('@');
 
     if (lastAtSymbolIndex !== -1) {
-      const isAtValidPosition = lastAtSymbolIndex === 0 || /[\\s\\n]/.test(textBeforeCursor.charAt(lastAtSymbolIndex - 1));
+      const isAtValidPosition = lastAtSymbolIndex === 0 || /\s|\]/.test(textBeforeCursor.charAt(lastAtSymbolIndex - 1));
 
       if (isAtValidPosition) {
         const searchText = textBeforeCursor.substring(lastAtSymbolIndex + 1);
 
-        if (!/\\s/.test(searchText)) {
+        if (!/\s/.test(searchText)) {
           this.textoBusquedaMencion = searchText.toLowerCase();
 
           this.responsablesFiltrados = this.responsablesTarea.filter(r =>
@@ -268,9 +267,47 @@ export class CajaComentariosTareaComponent implements OnInit {
     this.tareasService.update(this.tarea, this.tarea.id!);
   }
 
-  enviarNotificacionesMencion(correos: string[]) {
-    // TODO: Implementar el envío de correo real más adelante
-    console.log('Correos a notificar por mención:', correos);
+  enviarNotificacionesMencion(menciones: { id: string, nombre: string, correo: string }[], comentarioTexto: string) {
+    menciones.forEach(m => {
+      if (!m.correo) return;
+      const request: EnviarCorreoRequest = {
+        titulo: `Has sido mencionado en la tarea: ${this.tarea.titulo}`,
+        body: this.generarBodyCorreoMencion(m.nombre, comentarioTexto),
+        destinatario: m.correo
+      };
+      
+      this.mailService.enviarCorreo(request).subscribe({
+        next: res => console.log('Correo de mención enviado a', m.correo),
+        error: err => console.error('Error al enviar correo de mención', err)
+      });
+    });
+  }
+
+  private generarBodyCorreoMencion(nombre: string, comentario: string): string {
+    const comentarioHtml = comentario.replace(/\n/g, '<br>');
+    return `
+    <div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #333; line-height: 1.4;">
+      <h3 style="color: #2c3e50; margin-bottom: 8px;">
+        📌 Mención en Tarea
+      </h3>
+      <p style="margin: 0 0 8px 0;">
+        Hola <strong>${nombre}</strong>,
+      </p>
+      <p style="margin: 0 0 12px 0;">
+        Se te ha mencionado en un comentario de la tarea <strong>${this.tarea.titulo}</strong>:
+      </p>
+      <div style="padding: 10px 12px; background-color: #f8f9fa; border-radius: 6px; font-style: italic;">
+        ${comentarioHtml}
+      </div>
+      <p style="margin-top: 14px;">
+        Por favor ingresa al sistema para revisar la tarea y responder.
+      </p>
+      <hr style="margin: 16px 0;" />
+      <p style="font-size: 12px; color: #777; margin: 0;">
+        Este correo fue generado automáticamente por el sistema de tickets.
+      </p>
+    </div>
+    `;
   }
 
 }
