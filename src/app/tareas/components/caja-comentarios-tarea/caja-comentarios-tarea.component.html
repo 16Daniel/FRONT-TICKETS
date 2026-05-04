@@ -1,6 +1,6 @@
 <div class="contenedor">
 
-  <h3 class="titulo">HISTÓRICO / COMENTARIOS</h3>
+  <h3 class="titulo">COMENTARIOS</h3>
 
   <!-- Lista de comentarios con scroll -->
   <div class="lista-comentarios">
@@ -72,15 +72,22 @@
 
     <!-- Menú de menciones flotante -->
     <div class="menciones-menu" *ngIf="mostrarMenciones">
-      <div class="mencion-item" *ngFor="let r of responsablesFiltrados" (mousedown)="$event.preventDefault(); seleccionarMencion(r)">
+      <div class="mencion-item" *ngFor="let r of responsablesFiltrados"
+        (mousedown)="$event.preventDefault(); seleccionarMencion(r)">
         <ngx-avatars [name]="r.nombre" size="24" [bgColor]="r.color"></ngx-avatars>
         <span>{{ r.nombre }}</span>
       </div>
     </div>
 
-    <textarea #textareaComentario class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..." rows="3"
-      (paste)="onPaste($event)" (input)="onInputTextarea($event)">
-    </textarea>
+    <div style="flex: 1; display: flex; flex-direction: column;">
+      <textarea #textareaComentario class="texto" [(ngModel)]="nuevoComentario" placeholder="Escribe un comentario..."
+        rows="3" (paste)="onPaste($event)" (input)="onInputTextarea($event)">
+      </textarea>
+
+      <span style="color: red; font-size: 11px; margin-left: 5px; margin-top: 4px;">
+        * Para etiquetar a alguien escribe &#64;...
+      </span>
+    </div>
 
 
     <div class="acciones">
@@ -100,7 +107,6 @@
     </div>
 
   </div>
-
 
 </div>
 

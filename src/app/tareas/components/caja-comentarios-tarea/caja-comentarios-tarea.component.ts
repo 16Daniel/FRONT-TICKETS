@@ -275,7 +275,7 @@ export class CajaComentariosTareaComponent implements OnInit {
         body: this.generarBodyCorreoMencion(m.nombre, comentarioTexto),
         destinatario: m.correo
       };
-      
+
       this.mailService.enviarCorreo(request).subscribe({
         next: res => console.log('Correo de mención enviado a', m.correo),
         error: err => console.error('Error al enviar correo de mención', err)
