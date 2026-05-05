@@ -31,15 +31,23 @@
     <h5 class="text-muted fw-semibold">Ingresa un término para buscar</h5>
   </div>
 
+  <!-- FILTROS DE ESTATUS -->
+  <div *ngIf="!buscando && resultados.length > 0" class="mb-4">
+    <p class="mb-2 text-muted small fw-bold">FILTRAR POR ESTATUS:</p>
+    <p-selectButton [options]="opcionesEstatus" [(ngModel)]="idEstatusFiltro" 
+      optionLabel="label" optionValue="value" styleClass="status-filter-buttons">
+    </p-selectButton>
+  </div>
+
   <!-- RESULTADOS -->
   <div *ngIf="!buscando && resultados.length > 0" class="resultados-container">
     <p class="mb-3 text-muted fw-bold">
-      Se encontraron {{resultados.length}} coincidencia(s)
+      Mostrando {{resultadosFiltrados.length}} de {{resultados.length}} coincidencia(s)
     </p>
 
     <div class="list-group shadow-sm">
-      <button *ngFor="let tarea of resultados" class="list-group-item list-group-item-action p-3 result-item"
-        [ngClass]="'estatus-' + tarea.idEstatus" (click)="abrirTarea(tarea)">
+      <button *ngFor="let tarea of resultadosFiltrados" class="list-group-item list-group-item-action p-3 result-item"
+        [ngClass]="getEstatusClass(tarea.idEstatus)" (click)="abrirTarea(tarea)">
 
         <div class="d-flex w-100 justify-content-between align-items-start">
           <div class="me-3" style="max-width: 80%;">
@@ -51,7 +59,7 @@
 
           <div class="text-end">
             <div class="mb-1">
-              <span class="badge" [ngClass]="'badge-estatus-' + tarea.idEstatus">
+              <span class="badge" [ngClass]="getBadgeClass(tarea.idEstatus)">
                 {{ getEstatusNombre(tarea.idEstatus) }}
               </span>
             </div>
@@ -59,6 +67,10 @@
               <i class="pi pi-calendar me-1" style="font-size: 0.8rem"></i>
               {{ datesHelper.getDate(tarea.fecha) | date:'dd/MM/yyyy'}}
             </span>
+            <div class="mt-2">
+              <app-avatares-responsables-tarea [tarea]="tarea" [responsables]="responsables">
+              </app-avatares-responsables-tarea>
+            </div>
           </div>
         </div>
 

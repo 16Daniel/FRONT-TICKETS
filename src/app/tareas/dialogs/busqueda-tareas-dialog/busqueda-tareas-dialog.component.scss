@@ -63,3 +63,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+:host ::ng-deep .status-filter-buttons {
+  .p-button {
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+  }
+}

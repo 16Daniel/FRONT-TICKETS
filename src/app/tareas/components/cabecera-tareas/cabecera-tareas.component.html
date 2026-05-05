@@ -246,5 +246,6 @@
   (closeEvent)="mostrarModalArchivados = false"></app-tareas-archivadas-dialog>
 
 <app-busqueda-tareas-dialog *ngIf="mostrarModalBusqueda" [mostrarModal]="mostrarModalBusqueda"
-  (closeEvent)="mostrarModalBusqueda = false" (seleccionarTarea)="seleccionarTarea.emit($event)">
+  [responsables]="responsables" (closeEvent)="mostrarModalBusqueda = false"
+  (seleccionarTarea)="seleccionarTarea.emit($event)">
 </app-busqueda-tareas-dialog>
