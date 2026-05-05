@@ -5,7 +5,8 @@
   (responsableChange)="idResponsableSeleccionado = $event; onResponsableChange()"
   (responsablesGlobalesChange)="idsResponsablesFiltro = $event; onResponsablesFiltroChange()"
   (textoBusquedaChange)="onBuscarText($event)" (tipoTableroChange)="tipoTablero = $event"
-  (verProyectosChange)="mostrarProyectos = $event" (verGantChange)="mostrarGant = $event">
+  (verProyectosChange)="mostrarProyectos = $event" (verGantChange)="mostrarGant = $event"
+  (seleccionarTarea)="abrirModalDetalle($event)">
 </app-cabecera-tareas>
 
 <p></p>

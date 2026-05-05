@@ -12,6 +12,8 @@ import { TareasArchivadasDialogComponent } from '../../dialogs/tareas-archivadas
 import { EtiquetasTareaDialogComponent } from '../../dialogs/etiquetas-tarea-dialog/etiquetas-tarea-dialog.component';
 import { CrearTareaDialogComponent } from '../../dialogs/crear-tarea-dialog/crear-tarea-dialog.component';
 import { ResponsablesTareasDialogComponent } from '../../dialogs/responsables-tareas-dialog/responsables-tareas-dialog.component';
+import { BusquedaTareasDialogComponent } from '../../dialogs/busqueda-tareas-dialog/busqueda-tareas-dialog.component';
+import { Tarea } from '../../interfaces/tarea.interface';
 
 @Component({
   selector: 'app-cabecera-tareas',
@@ -25,6 +27,7 @@ import { ResponsablesTareasDialogComponent } from '../../dialogs/responsables-ta
     TareasArchivadasDialogComponent,
     EtiquetasTareaDialogComponent,
     CrearTareaDialogComponent,
+    BusquedaTareasDialogComponent,
     MultiSelectModule
   ],
   templateUrl: './cabecera-tareas.component.html',
@@ -51,6 +54,7 @@ export class CabeceraTareasComponent {
   @Output() responsablesGlobalesChange = new EventEmitter<string[]>();
   @Output() verProyectosChange = new EventEmitter<boolean>();
   @Output() verGantChange = new EventEmitter<boolean>();
+  @Output() seleccionarTarea = new EventEmitter<Tarea>();
 
   tipoTablero: 'TABLERO SUCURSALES' | 'TABLERO RESPONSABLES' | 'MI TABLERO' = 'MI TABLERO';
   responsablesGlobalesOrdenados: ResponsableTarea[] = [];
@@ -59,6 +63,7 @@ export class CabeceraTareasComponent {
   mostrarModalResponsables = false;
   mostrarModalArchivados = false;
   mostrarModalNuevaTarea = false;
+  mostrarModalBusqueda = false;
   mostrarProyectos = false;
   mostrarGant = false;
   usuario!: Usuario;
