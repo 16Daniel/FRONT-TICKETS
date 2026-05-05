@@ -188,4 +188,32 @@ export class TareasService {
   getCurrentTasks() {
     return this.tasksSubject.value;
   }
+
+  async buscarTareasPorCoincidencia(termino: string): Promise<Tarea[]> {
+    termino = termino.toLowerCase().trim();
+    if (!termino) return [];
+
+    const ref = collection(this.firestore, this.pathName);
+    const q = query(
+      ref,
+      where('eliminado', '==', false)
+    );
+
+    const snapshot = await getDocs(q);
+    const resultados: Tarea[] = [];
+
+    snapshot.forEach(docSnap => {
+      const data: any = docSnap.data() as Tarea;
+      data.id = docSnap.id;
+
+      const tituloMatch = data.titulo?.toLowerCase().includes(termino);
+      const descMatch = data.descripcion?.toLowerCase().includes(termino);
+
+      if (tituloMatch || descMatch) {
+        resultados.push(data);
+      }
+    });
+
+    return resultados;
+  }
 }

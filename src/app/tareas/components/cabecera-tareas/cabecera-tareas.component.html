@@ -206,6 +206,10 @@
         </div>
       </div>
 
+      <p-button label="BUSCAR" icon="pi pi-search" outlined (click)="mostrarModalBusqueda = true"
+        pTooltip="Buscar tareas globales" tooltipPosition="top">
+      </p-button>
+
       <p-button label="AGREGAR" icon="pi pi-plus" (click)="mostrarModalNuevaTarea = true">
       </p-button>
 
@@ -240,3 +244,7 @@
 
 <app-tareas-archivadas-dialog *ngIf="mostrarModalArchivados" [mostrarModal]="mostrarModalArchivados"
   (closeEvent)="mostrarModalArchivados = false"></app-tareas-archivadas-dialog>
+
+<app-busqueda-tareas-dialog *ngIf="mostrarModalBusqueda" [mostrarModal]="mostrarModalBusqueda"
+  (closeEvent)="mostrarModalBusqueda = false" (seleccionarTarea)="seleccionarTarea.emit($event)">
+</app-busqueda-tareas-dialog>

@@ -1,0 +1,64 @@
+<p-dialog header="Búsqueda Global de Tareas" [(visible)]="mostrarModal" [modal]="true" [style]="{width: '50vw'}"
+  [draggable]="false" [resizable]="false" (onHide)="cerrarModal()" [breakpoints]="{'960px': '75vw', '640px': '95vw'}">
+
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <span class="p-input-icon-left w-100">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" class="w-100 p-inputtext-lg shadow-sm" [(ngModel)]="terminoBusqueda"
+        (keydown.enter)="onEnter($event)" placeholder="Buscar por nombre o descripción en Firebase..."
+        style="border-radius: 20px;" />
+    </span>
+    <p-button icon="pi pi-search" (onClick)="buscar()" [loading]="buscando" styleClass="p-button-rounded p-button-lg"
+      ariaLabel="Buscar"></p-button>
+  </div>
+
+  <!-- ESTADO: BUSCANDO -->
+  <div *ngIf="buscando" class="text-center p-5">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem; color: #4f6df5;"></i>
+    <p class="mt-3 text-muted fw-semibold">Buscando coincidencias...</p>
+  </div>
+
+  <!-- ESTADO: SIN RESULTADOS -->
+  <div *ngIf="!buscando && terminoBusqueda && resultados.length === 0" class="text-center p-5">
+    <i class="pi pi-folder-open text-muted mb-3" style="font-size: 3rem"></i>
+    <h5 class="text-muted fw-semibold">No se encontraron tareas</h5>
+    <p class="text-muted mb-0">Intenta con otros términos de búsqueda.</p>
+  </div>
+
+  <!-- ESTADO: INICIAL -->
+  <div *ngIf="!buscando && !terminoBusqueda && resultados.length === 0" class="text-center p-5">
+    <i class="pi pi-search text-muted mb-3" style="font-size: 3rem"></i>
+    <h5 class="text-muted fw-semibold">Ingresa un término para buscar</h5>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div *ngIf="!buscando && resultados.length > 0" class="resultados-container">
+    <p class="mb-3 text-muted fw-bold">
+      Se encontraron {{resultados.length}} coincidencia(s)
+    </p>
+
+    <div class="list-group shadow-sm">
+      <button *ngFor="let tarea of resultados" class="list-group-item list-group-item-action p-3 result-item"
+        (click)="abrirTarea(tarea)">
+
+        <div class="d-flex w-100 justify-content-between align-items-start">
+          <div class="me-3" style="max-width: 80%;">
+            <h6 class="mb-1 fw-bold text-primary text-truncate">{{ tarea.titulo }}</h6>
+            <p class="mb-1 text-muted small descripcion-truncada">
+              {{ tarea.descripcion || 'Sin descripción' }}
+            </p>
+          </div>
+
+          <div class="text-end">
+            <span class="badge rounded-pill bg-light text-dark border ms-2">
+              <i class="pi pi-calendar me-1" style="font-size: 0.8rem"></i>
+              {{ datesHelper.getDate(tarea.fecha) | date:'dd/MM/yyyy'}}
+            </span>
+          </div>
+        </div>
+
+      </button>
+    </div>
+  </div>
+
+</p-dialog>
