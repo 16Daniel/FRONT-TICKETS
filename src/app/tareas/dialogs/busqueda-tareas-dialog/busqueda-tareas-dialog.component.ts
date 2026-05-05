@@ -10,6 +10,7 @@ import { AvatarModule } from 'ngx-avatars';
 import { TareasService } from '../../services/tareas.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { StatusTaskService } from '../../services/status-task.service';
 
 @Component({
   selector: 'app-busqueda-tareas-dialog',
@@ -38,6 +39,7 @@ export class BusquedaTareasDialogComponent {
   tareasService = inject(TareasService);
   cdr = inject(ChangeDetectorRef);
   datesHelper = inject(DatesHelperService);
+  statusService = inject(StatusTaskService);
 
   cerrarModal() {
     this.closeEvent.emit();
@@ -69,6 +71,10 @@ export class BusquedaTareasDialogComponent {
 
   abrirTarea(tarea: Tarea) {
     this.seleccionarTarea.emit(tarea);
-    this.cerrarModal();
+    // this.cerrarModal();
+  }
+
+  getEstatusNombre(id: string): string {
+    return this.statusService.estatus.find(s => s.id === id)?.nombre || 'Desconocido';
   }
 }
