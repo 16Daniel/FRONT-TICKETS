@@ -10,7 +10,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { LinkifyPipe } from '../../../shared/pipes/linkify.pipe';
+import { FormatCommentPipe } from '../../../shared/pipes/format-comment.pipe';
 import { Area } from '../../../areas/interfaces/area.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
@@ -47,7 +47,7 @@ import { ChecksPrioridadEinsehowerComponent } from '../../components/checks-prio
     CajaComentariosTareaComponent,
     ChecksPrioridadEinsehowerComponent,
     ContenedorSubtareasComponent,
-    LinkifyPipe,
+    FormatCommentPipe,
     MultiSelectModule,
     AvatarModule,
     AvataresResponsablesTareaComponent

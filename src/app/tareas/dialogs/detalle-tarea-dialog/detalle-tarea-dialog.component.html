@@ -11,13 +11,10 @@
             </i>
           </button>
 
-          <button class="btn"
-            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
-            [class.btn-privado-activo]="!tarea.visibleGlobal"
-            (click)="cambiarVisibilidad()" *ngIf="tareaAsignadaAMi()">
+          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+            [class.btn-privado-activo]="!tarea.visibleGlobal" (click)="cambiarVisibilidad()" *ngIf="tareaAsignadaAMi()">
             <i class="bx bx-sm mt-2" [class.bx-lock-open]="tarea.visibleGlobal" [class.bx-lock]="!tarea.visibleGlobal"
-              style="color: #2e7d32"
-              [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'" tooltipPosition="top">
+              style="color: #2e7d32" [pTooltip]="tarea.visibleGlobal ? 'PÚBLICO' : 'PRIVADO'" tooltipPosition="top">
             </i>
           </button>
 
@@ -25,8 +22,8 @@
             style="background-color: white; border: 1px solid #bdbdbd; margin: 2px;"
             [class.btn-ligado-activo]="tareasRelacionadas.length > 0"
             (click)="mostrarPanelTareasAsociadas = !mostrarPanelTareasAsociadas">
-            <i class="bx bx-list-ul bx-sm mt-2" style="color: #1976d2"
-              pTooltip="VER TAREAS DEL PROYECTO" tooltipPosition="top">
+            <i class="bx bx-list-ul bx-sm mt-2" style="color: #1976d2" pTooltip="VER TAREAS DEL PROYECTO"
+              tooltipPosition="top">
             </i>
           </button>
 
@@ -34,18 +31,16 @@
             style="background-color: white; border: 1px solid #bdbdbd; margin: 2px;"
             [class.btn-ligado-activo]="tarea.idProyectoRelacionado"
             (click)="mostrarPanelProyectos = !mostrarPanelProyectos">
-            <i class="bx bx-network-chart bx-sm mt-2" style="color: #1976d2"
-              pTooltip="LIGAR A PROYECTO" tooltipPosition="top">
+            <i class="bx bx-network-chart bx-sm mt-2" style="color: #1976d2" pTooltip="LIGAR A PROYECTO"
+              tooltipPosition="top">
             </i>
           </button>
 
-          <button class="btn"
-            style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
+          <button class="btn" style="margin: 2px; background-color: white; border: 1px solid #bdbdbd"
             [class.btn-proyecto-activo]="tarea.esProyecto"
             (click)="tarea.esProyecto ? convertirATarea() : convertirAProyecto()">
             <i class="bx bx-sm mt-2" [class.bxs-star]="tarea.esProyecto" [class.bx-task]="!tarea.esProyecto"
-              style="color: #1976d2"
-              [pTooltip]="tarea.esProyecto ? 'PROYECTO' : 'TAREA'" tooltipPosition="top">
+              style="color: #1976d2" [pTooltip]="tarea.esProyecto ? 'PROYECTO' : 'TAREA'" tooltipPosition="top">
             </i>
           </button>
 
@@ -346,7 +341,7 @@
               </div>
 
               <!-- LINKIFY AQUÍ -->
-              <div *ngIf="tarea.descripcion" [innerHTML]="tarea.descripcion | linkify">
+              <div *ngIf="tarea.descripcion" [innerHTML]="tarea.descripcion | formatComment">
               </div>
             </div>
 

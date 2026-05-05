@@ -2,10 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
-  name: 'linkify',
+  name: 'formatComment',
   standalone: true
 })
-export class LinkifyPipe implements PipeTransform {
+export class FormatCommentPipe implements PipeTransform {
 
   constructor(private sanitizer: DomSanitizer) { }
 
@@ -13,6 +13,7 @@ export class LinkifyPipe implements PipeTransform {
     if (!text) return '';
 
     const urlRegex = /((https?:\/\/)|(www\.))[^\s]+/g;
+    const mentionRegex = /@\[([^\]]+)\]/g; // Detects @[Name]
 
     const html = text
       // saltos de línea
@@ -21,6 +22,10 @@ export class LinkifyPipe implements PipeTransform {
       .replace(urlRegex, (url) => {
         const link = url.startsWith('http') ? url : `https://${url}`;
         return `<a href="${link}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+      })
+      // menciones
+      .replace(mentionRegex, (match, name) => {
+        return `<span class="mencion-badge">@${name}</span>`;
       });
 
     return this.sanitizer.bypassSecurityTrustHtml(html);
