@@ -32,6 +32,11 @@
       [todosLosTickets]="todosLosTickets"></app-branches-maintenance-tab>
   </p-tabPanel>
 
+  <p-tabPanel header="CADENA DE SUMINISTROS">
+    <app-sucursal-cadena-suministros-tab [esEspectadorActivo]="esEspectadorActivo"
+      [tickets]="filtrarTicketsPorArea('20')" [todosLosTickets]="todosLosTickets"></app-sucursal-cadena-suministros-tab>
+  </p-tabPanel>
+
   <p-tabPanel header="ADMINISTRACIÓN ">
     <p>Contenido de la tercera pestaña.</p>
   </p-tabPanel>
