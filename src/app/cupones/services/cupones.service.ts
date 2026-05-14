@@ -25,7 +25,7 @@ export class CuponesService {
       body,
       {
         headers: {
-          'x-api-key': environment.apiKeyCupones
+          'x-api-key': environment.cuponesApiKey
         }
       }
     );
@@ -37,7 +37,7 @@ export class CuponesService {
   getLotesInfo(): Observable<LoteInfo[]> {
     return this.http.get<LoteInfo[]>(`${this.apiUrl}/lotes`, {
       headers: {
-        'x-api-key': environment.apiKeyCupones
+        'x-api-key': environment.cuponesApiKey
       }
     });
   }
@@ -45,7 +45,7 @@ export class CuponesService {
   updateLoteReferencia(loteId: string, referencia: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/lotes/${loteId}/referencia`, { referencia }, {
       headers: {
-        'x-api-key': environment.apiKeyCupones
+        'x-api-key': environment.cuponesApiKey
       }
     });
   }
@@ -53,7 +53,7 @@ export class CuponesService {
   getAidaConfig() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-API-Key': environment.apiKeyCupones
+      'X-API-Key': environment.cuponesApiKey
     });
 
     return this.http.get<AidaConfig>(`${this.apiUrl}/aida`, { headers });
@@ -62,7 +62,7 @@ export class CuponesService {
   updateAidaConfig(codigoProducto: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-API-Key': environment.apiKeyCupones
+      'X-API-Key': environment.cuponesApiKey
     });
 
     return this.http.put(`${this.apiUrl}/aida`, { codigoProducto }, { headers });
