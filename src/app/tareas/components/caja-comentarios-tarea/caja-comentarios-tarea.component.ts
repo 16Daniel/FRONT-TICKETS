@@ -70,8 +70,8 @@ export class CajaComentariosTareaComponent implements OnInit {
   }
 
   async enviarComentario() {
-    if (this.enviando) return;      // ⛔ evita doble clic
-    this.enviando = true;           // 🔒 bloquea el botón temporalmente
+    if (this.enviando) return;
+    this.enviando = true;
 
     const texto = this.nuevoComentario.trim();
     if (!texto && this.imagenesComentario.length === 0) {
@@ -103,7 +103,7 @@ export class CajaComentariosTareaComponent implements OnInit {
         idUsuario: this.usuario.id,
         nombre: this.responsableActivo.nombre,
         imagenesEvidencia: [],
-        menciones: menciones.length > 0 ? menciones : undefined
+        menciones: menciones.length > 0 ? menciones : []
       };
 
       const url = await this.firebaseStorageService.cargarImagenesEvidenciasTareas(this.imagenesComentario);

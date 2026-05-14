@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { environment } from '../../../environments/environments';
 
 export interface EnviarCorreoRequest {
@@ -13,11 +14,16 @@ export interface EnviarCorreoRequest {
   providedIn: 'root'
 })
 export class MailService {
-  apiUrl = `${environment.apiURL}Mail/enviarCorreo`;
+  private url: string = environment.ticketsApiConfig.url;
+  private headers = new HttpHeaders({
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'X-API-Key': environment.ticketsApiConfig.apiKey
+  });
 
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   enviarCorreo(data: EnviarCorreoRequest): Observable<any> {
-    return this.http.post<any>(this.apiUrl, data);
+    return this.http.post<any>(this.url + 'mail/enviarCorreo', data, { headers: this.headers });
   }
 }

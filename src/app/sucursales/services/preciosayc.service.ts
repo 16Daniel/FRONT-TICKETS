@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { SucursalRegion } from '../interfaces/sucursal-region.interface';
 import { PreciosAyc } from '../interfaces/precios-AyC.interface';
 import { colorPrecioayc } from '../interfaces/color-precio-ayc.interface';
@@ -10,16 +11,14 @@ import { colorPrecioayc } from '../interfaces/color-precio-ayc.interface';
   providedIn: 'root'
 })
 export class PreciosaycService {
-  // URL to web api
-  public apiURL = environment.apiURL;
-  // URL api server
-  private url: string = environment.apiURL;
-  private headers = new HttpHeaders();
+  private url: string = environment.ticketsApiConfig.url;
+  private headers = new HttpHeaders({
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'X-API-Key': environment.ticketsApiConfig.apiKey
+  });
 
-  constructor(private http: HttpClient) {
-    this.headers.append("Accept", "application/json");
-    this.headers.append("content-type", "application/json");
-  }
+  private http = inject(HttpClient);
 
   getSucursalesRegion(): Observable<SucursalRegion[]> {
     return this.http.get<SucursalRegion[]>(this.url + 'Catalogos/getSucursalesGrupo', { headers: this.headers })
