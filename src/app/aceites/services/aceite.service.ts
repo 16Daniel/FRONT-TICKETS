@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 import { environment } from '../../../environments/environments';
 import { EntregaAceite, ReporteRA } from '../interfaces/aceite.model';
 
@@ -8,16 +9,12 @@ import { EntregaAceite, ReporteRA } from '../interfaces/aceite.model';
   providedIn: 'root'
 })
 export class AceiteService {
-  // URL to web api
-  public apiURL = environment.apiURL;
-  // URL api server
-  private url: string = environment.apiURL;
-  private headers = new HttpHeaders();
+  private url: string = environment.ticketsApiConfig.url;
+  private headers = new HttpHeaders({
+    'X-API-Key': environment.ticketsApiConfig.apiKey
+  });
 
-  constructor(private http: HttpClient) {
-    this.headers.append("Accept", "application/json");
-    this.headers.append("content-type", "application/json");
-  }
+  private http = inject(HttpClient);
 
   getEntregas(idFront: number): Observable<EntregaAceite[]> {
     return this.http.get<EntregaAceite[]>(this.url + 'Aceite/getEntregasAceitePendientes/' + idFront, { headers: this.headers })
@@ -31,11 +28,9 @@ export class AceiteService {
     return this.http.get<EntregaAceite[]>(this.url + 'Aceite/getEntregasAceitePendientesAdminTA/', { headers: this.headers })
   }
 
-
   getEntregasTrampaAceite(idFront: number): Observable<EntregaAceite[]> {
     return this.http.get<EntregaAceite[]>(this.url + 'Aceite/getEntregasTrampaAceitePendientes/' + idFront, { headers: this.headers })
   }
-
 
   getEntregasCedis(): Observable<EntregaAceite[]> {
     return this.http.get<EntregaAceite[]>(this.url + 'Aceite/getEntregasAceitePendientesCedis', { headers: this.headers })

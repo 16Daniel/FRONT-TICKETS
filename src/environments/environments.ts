@@ -10,12 +10,20 @@ export const environment = {
     appId: '1:650592207362:web:44a222eb13766364fc9d1b',
     measurementId: 'G-ZSNCNBN2KL',
   },
-  apiURL: "https://localhost:7165/api/",
-  // apiURL: "https://operamx.no-ip.net/back/api_tickets/api/",
+  ticketsApiConfig: {
+    url: "https://localhost:7165/api/",
+    apiKey: "QG15czNjcjN0QXAxazN5LXJ3LXQxY2szdHMtMjAyNkA="
+  },
+
+  planeacionApiConfig: {
+    url: "https://localhost:7171/api/",
+    apiKey: "QG15czNjcjN0QXAxazN5LXJ3LXAzZDFkMDUtMjAyNkA="
+  },
+  cuponesApiConfig: {
+    url: 'https://localhost:7264',
+    apiKey: 'QG15czNjcjN0QXAxazN5LXJ3LWN1cDBuMzUtMjAyNkA='
+  },
   idAdministracion: "QvSLmxLZjJnaGPPsA7zi",
   idServicio: "hHqyRWm306Zmb5XADbbR",
   idDireccion: "Mcaolq7LySn81CSX4n5L",
-  apiCuponesUrl: 'https://localhost:7264',
-  // apiCuponesUrl: 'https://operamx.no-ip.net/back/rw-cupones-api',
-  cuponesApiKey: 'QG15czNjcjN0QXAxazN5LXJ3LWN1cDBuMzUtMjAyNkA='
 };

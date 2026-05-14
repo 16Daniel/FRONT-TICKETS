@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { environment } from '../../../environments/environments';
 import { EmpleadoHorario, EmpleadoNomina, HistorailPersonal, Marcajes, PuestoNomina, TurnodbNomina, TurnoNomina, UbicacionNomina } from '../interfaces/Nomina';
 import { ChecadaManual, TurnoLargo } from '../interfaces/Checadas';
@@ -9,16 +10,14 @@ import { ChecadaManual, TurnoLargo } from '../interfaces/Checadas';
   providedIn: 'root'
 })
 export class NominaService {
-  // URL to web api
-  public apiURL = environment.apiURL;
-  // URL api server
-  private url: string = environment.apiURL;
-  private headers = new HttpHeaders();
+  private url: string = environment.ticketsApiConfig.url;
+  private headers = new HttpHeaders({
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'X-API-Key': environment.ticketsApiConfig.apiKey
+  });
 
-  constructor(private http: HttpClient) {
-    this.headers.append("Accept", "application/json");
-    this.headers.append("content-type", "application/json");
-  }
+  private http = inject(HttpClient);
 
   getDepartamentos(): Observable<PuestoNomina[]> {
     return this.http.get<PuestoNomina[]>(this.url + 'CalendarioNomina/getDepartamentos', { headers: this.headers })
@@ -107,7 +106,7 @@ export class NominaService {
     return this.http.post<HistorailPersonal[]>(this.url + 'PersonalNominas/HistorialPersonal', formdata, { headers: this.headers })
   }
 
-   obtenerChecadasManuales(fechaini: Date, fechafin: Date): Observable<ChecadaManual[]> {
+  obtenerChecadasManuales(fechaini: Date, fechafin: Date): Observable<ChecadaManual[]> {
     let formdata = new FormData();
     formdata.append("fechaini", fechaini.toDateString());
     formdata.append("fechafin", fechafin.toDateString());
@@ -120,6 +119,5 @@ export class NominaService {
     formdata.append("fechafin", fechafin.toDateString());
     return this.http.post<TurnoLargo[]>(this.url + 'PersonalNominas/getTurnosLargos', formdata, { headers: this.headers })
   }
-
 
 }

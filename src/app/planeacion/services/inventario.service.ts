@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -9,16 +9,14 @@ import { Inventario } from '../interfaces/inventario.model';
   providedIn: 'root'
 })
 export class InventarioService {
-  // URL to web api
-  public apiURL = environment.apiURL;
-  // URL api server
-  private url: string = environment.apiURL;
-  private headers = new HttpHeaders();
+  private url: string = environment.ticketsApiConfig.url;
+  private headers = new HttpHeaders({
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'X-API-Key': environment.ticketsApiConfig.apiKey
+  });
 
-  constructor(private http: HttpClient) {
-    this.headers.append("Accept", "application/json");
-    this.headers.append("content-type", "application/json");
-  }
+  private http = inject(HttpClient);
 
   obtenerArticulos(idSucursal: number): Observable<Inventario[]> {
     return this.http.get<Inventario[]>(this.url + 'Iventario/getArticulos/' + idSucursal, { headers: this.headers })
