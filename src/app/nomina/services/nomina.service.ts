@@ -13,7 +13,6 @@ export class NominaService {
   private url: string = environment.ticketsApiConfig.url;
   private headers = new HttpHeaders({
     'Accept': 'application/json',
-    'Content-Type': 'application/json',
     'X-API-Key': environment.ticketsApiConfig.apiKey
   });
 
