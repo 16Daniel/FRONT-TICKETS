@@ -17,6 +17,7 @@ import { ComensalesPage } from "../../../comensales/pages/comensales-page/comens
 import { BranchesSysTabComponent } from '../branches-sys-tab/branches-sys-tab.component';
 import { BranchesAudioVideoTabComponent } from '../branches-audio-video-tab/branches-audio-video-tab.component';
 import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
+import { SucursalCadenaSuministrosTabComponent } from "../sucursal-cadena-suministros-tab/sucursal-cadena-suministros-tab.component";
 
 @Component({
   selector: 'app-branches-tabs',
@@ -32,8 +33,9 @@ import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/bra
     BranchesOilTabComponent,
     EisenhowerMatrixPageComponent,
     DashboardTasksPageComponent,
-    ComensalesPage
-],
+    ComensalesPage,
+    SucursalCadenaSuministrosTabComponent
+  ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',
 })

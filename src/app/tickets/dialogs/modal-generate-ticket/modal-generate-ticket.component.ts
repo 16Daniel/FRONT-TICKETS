@@ -86,6 +86,8 @@ export class ModalGenerateTicketComponent implements OnInit {
   ngOnInit(): void {
     this.areas = this.areasService.areas;
     this.ticket.idArea = this.areas.find(x => x.id == this.idArea)!.id;
+    console.log(this.ticket.idArea);
+
 
     this.usuarioActivo = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.obtenerSucursales();

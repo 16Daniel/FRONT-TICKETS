@@ -19,7 +19,7 @@ export const environment = {
         apiKey: "QG15czNjcjN0QXAxazN5LXJ3LXAzZDFkMDUtMjAyNkA="
     },
     cuponesApiConfig: {
-        url: 'https://localhost:7264',
+        url: 'https://operamx.no-ip.net/back/rw-cupones-api',
         apiKey: 'QG15czNjcjN0QXAxazN5LXJ3LWN1cDBuMzUtMjAyNkA='
     },
     idAdministracion: "pclOBh7sMdziimACOc1w",

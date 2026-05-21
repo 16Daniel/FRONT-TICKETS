@@ -34,7 +34,7 @@ import { Maintenance10x10Service } from '../../../mantenimientos/services/mainte
 import { ComprasService } from '../../../compras/services/compras.service';
 
 @Component({
-  selector: 'app-admin-audio-video-tab',
+  selector: 'app-admin-cadena-suministro-tab',
   standalone: true,
   imports: [
     ToastModule,
@@ -55,11 +55,10 @@ import { ComprasService } from '../../../compras/services/compras.service';
     AcordeonMantenimientosSisAvComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './admin-audio-video-tab.component.html',
-  styleUrl: './admin-audio-video-tab.component.scss',
+  templateUrl: './admin-cadena-suministro-tab.component.html',
+  styleUrl: './admin-cadena-suministro-tab.component.scss'
 })
-
-export class AdminAudioVideoTabComponent {
+export class AdminCadenaSuministroTabComponent {
   tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
   mostrarMantenimientos: boolean = false;
@@ -80,7 +79,7 @@ export class AdminAudioVideoTabComponent {
   todosLostickets: Ticket[] = [];
   filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  idArea: string = '2';
+  idArea: string = '20';
   ordenarMantenimientosFecha: boolean = false;
   compras: Compra[] = [];
   auxMostrarMantenimientos = true;
