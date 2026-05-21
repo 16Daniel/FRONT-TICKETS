@@ -15,6 +15,7 @@ import { ComensalesPage } from "../../../comensales/pages/comensales-page/comens
 import { AdminSysTabComponent } from '../admin-sys-tab/admin-sys-tab.component';
 import { AdminAudioVideoTabComponent } from '../admin-audio-video-tab/admin-audio-video-tab.component';
 import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-maintenance-tab.component';
+import { AdminCadenaSuministroTabComponent } from '../admin-cadena-suministro-tab/admin-cadena-suministro-tab.component';
 
 @Component({
   selector: 'app-admin-tabs',
@@ -31,7 +32,8 @@ import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-mai
     DashboardTasksPageComponent,
     DropdownModule,
     ComensalesPage,
-],
+    AdminCadenaSuministroTabComponent,
+  ],
   templateUrl: './admin-tabs.component.html',
 })
 
@@ -60,6 +62,8 @@ export class AdminTabsComponent {
       this.tabsActivos['AUDIO Y VIDEO'] = true;
     if (this.usuario.idArea == '4')
       this.tabsActivos['MANTENIMIENTO'] = true;
+    if (this.usuario.idArea == '5')
+      this.tabsActivos['CADENA DE SUMINISTRO'] = true;
   }
 
   ngOnDestroy() {

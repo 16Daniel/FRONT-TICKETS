@@ -10,13 +10,14 @@ export class MantenimientoFactoryService {
     private mantenimientoSys: Maintenance10x10Service,
     private mantenimientoAV: Maintenance6x6AvService,
     private mantenimientoMtto: MaintenanceMtooService
-  ) {}
+  ) { }
 
   getService(idArea: string): IMantenimientoService {
     switch (idArea.toString()) {
       case '1': return this.mantenimientoSys;
       case '2': return this.mantenimientoAV;
       case '4': return this.mantenimientoMtto;
+      case '20': return this.mantenimientoMtto;
       default: throw new Error('Área no soportada');
     }
   }

@@ -24,6 +24,14 @@
     </ng-container>
   </p-tabPanel>
   }
+  @if (usuario.idArea == '20' || usuario.idRol == '1')
+  {
+  <p-tabPanel header="CADENA DE SUMINISTRO">
+    <ng-container *ngIf="tabsActivos['CADENA DE SUMINISTRO']">
+      <app-admin-cadena-suministro-tab></app-admin-cadena-suministro-tab>
+    </ng-container>
+  </p-tabPanel>
+  }
   @if (usuario.idRol == '1' || usuario.idRol == '5')
   {
   <p-tabPanel header="KPIs">

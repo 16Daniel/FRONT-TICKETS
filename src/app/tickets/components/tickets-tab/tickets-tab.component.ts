@@ -130,6 +130,7 @@ export class TicketsTabComponent implements OnInit {
 
 
   ngOnInit(): void {
+    debugger
     this.getTicketsResponsable();
     this.obtnerUltimosMantenimientos();
     this.obtenerSucursales();
@@ -211,11 +212,13 @@ export class TicketsTabComponent implements OnInit {
 
   async getTicketsResponsable(): Promise<void> {
     this.loading = true;
-
+    debugger
     this.subscriptiontk = this.ticketsService
       .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia, this.usuario.idArea)
       .subscribe({
         next: (data) => {
+          debugger
+          console.log('Tickets obtenidos:', data);
           if (
             data.length > this.todosLosTickets.length &&
             !this.paginaCargaPrimeraVez
