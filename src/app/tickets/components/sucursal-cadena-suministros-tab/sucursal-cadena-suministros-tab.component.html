@@ -5,10 +5,6 @@
     <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
         (click)="mostrarModalHistorial = true">
     </p-button>
-
-    <p-button *ngIf="usuario.idRol == '2'" label="EVALUACION GENERAL" icon="pi pi-star" styleClass="p-button-yellow"
-        (click)="mostrarModalRating = true">
-    </p-button>
 </div>
 
 <div *ngIf="tickets.length > 0" class="p-1 mt-3">
