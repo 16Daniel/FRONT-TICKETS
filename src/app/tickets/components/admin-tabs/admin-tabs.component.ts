@@ -62,7 +62,7 @@ export class AdminTabsComponent {
       this.tabsActivos['AUDIO Y VIDEO'] = true;
     if (this.usuario.idArea == '4')
       this.tabsActivos['MANTENIMIENTO'] = true;
-    if (this.usuario.idArea == '5')
+    if (this.usuario.idArea == '20')
       this.tabsActivos['CADENA DE SUMINISTRO'] = true;
   }
 
