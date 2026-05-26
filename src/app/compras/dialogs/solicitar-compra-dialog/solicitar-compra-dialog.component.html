@@ -83,6 +83,7 @@
                 <th>SUCURSAL</th>
                 <th>AREA</th>
                 <th>JUSTIFICACIÓN</th>
+                <th>EVIDENCIAS</th>
                 <th>ESTATUS</th>
                 <th>ACCIONES</th>
             </tr>
@@ -95,14 +96,23 @@
                 <td>{{ obtenerNombreSucursal(compra.idSucursal) }}</td>
                 <td>{{ obtenerNombreAreas(compra.idArea) }}</td>
                 <td>{{ compra.justificacion }}</td>
+                <td style="text-align: center">
+                    <span *ngIf="compra.evidenciaUrls?.length > 0" class="badge bg-success">
+                        <i class='bx bx-image'></i> {{ compra.evidenciaUrls.length }} {{ compra.evidenciaUrls.length ===
+                        1 ? 'imagen' : 'imágenes' }}
+                    </span>
+                    <span *ngIf="!compra.evidenciaUrls || compra.evidenciaUrls.length === 0" class="badge bg-secondary">
+                        Sin evidencias
+                    </span>
+                </td>
                 <td>{{ obtenerNombreEstatus(compra.idEstatusCompra) }}</td>
-                <td>
+                <td style="display: flex; gap: 10px">
                     <button class="btn btn-danger me-3" (click)="confirmaEliminacion(compra.id)"
                         *ngIf="compra.idEstatusCompra == '1'">
                         <i class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i>
                     </button>
                     <button class="btn btn-primary me-3" (click)="abrirModalSubirImagen(compra)"><i
-                            class='bx bx-upload bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
+                            class='bx bx-upload bx-sm' pTooltip="SUBIR EVIDENCIA" tooltipPosition="top"></i></button>
 
                     <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
                         (click)="abrirModalVisorImagenes(compra)">

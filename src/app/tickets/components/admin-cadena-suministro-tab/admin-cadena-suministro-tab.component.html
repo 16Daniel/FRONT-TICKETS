@@ -90,15 +90,15 @@
 
 
 
-<app-modal-request-purchase *ngIf="mostrarModalSolicitarCompra" [mostrarModal]="mostrarModalSolicitarCompra"
-    (closeEvent)="mostrarModalSolicitarCompra = false" [idArea]="idArea"></app-modal-request-purchase>
+<app-solicitar-compra-dialog *ngIf="mostrarModalSolicitarCompra" [mostrarModal]="mostrarModalSolicitarCompra"
+    (closeEvent)="mostrarModalSolicitarCompra = false" [idArea]="idArea"></app-solicitar-compra-dialog>
 
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
     [showModalTicketDetail]="mostrarModalTicketDetail"
     (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-    (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-modal-generate-ticket>
+<app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+    (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>
 
 <app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets"
     [sucursales]="sucursales" (closeEvent)="mostrarModalFilterTickets = false"

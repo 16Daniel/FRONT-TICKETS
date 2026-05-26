@@ -21,7 +21,7 @@ import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 import { ComprasService } from '../../services/compras.service';
 
 @Component({
-  selector: 'app-modal-request-purchase',
+  selector: 'app-solicitar-compra-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -33,10 +33,10 @@ import { ComprasService } from '../../services/compras.service';
     ModalPurchasesImgsUploaderComponent,
     ModalVisorVariasImagenesComponent
   ],
-  templateUrl: './modal-request-purchase.component.html',
-  styleUrl: './modal-request-purchase.component.scss'
+  templateUrl: './solicitar-compra-dialog.component.html',
+  styleUrl: './solicitar-compra-dialog.component.scss'
 })
-export class ModalRequestPurchaseComponent implements OnInit {
+export class SolicitarCompraDialogComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Input() idArea: string = '';
   @Output() closeEvent = new EventEmitter<boolean>();

@@ -101,11 +101,11 @@
 </div>
 
 
-<app-modal-request-purchase *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras"
-  (closeEvent)="mostrarModalCompras = false"></app-modal-request-purchase>
+<app-solicitar-compra-dialog *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras"
+  (closeEvent)="mostrarModalCompras = false"></app-solicitar-compra-dialog>
 
-<app-modal-generate-ticket *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="usuario.idArea"></app-modal-generate-ticket>
+<app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="usuario.idArea"></app-crear-ticket-dialog>
 
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="itemtk"
   [showModalTicketDetail]="mostrarModalTicketDetail"

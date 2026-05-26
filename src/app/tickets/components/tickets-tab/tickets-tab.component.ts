@@ -8,7 +8,6 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { ModalGenerateTicketComponent } from '../../dialogs/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../dialogs/modal-tickets-history/modal-tickets-history.component';
@@ -27,7 +26,6 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { MantenimientoFactoryService } from '../../../mantenimientos/services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
@@ -35,6 +33,8 @@ import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos
 import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { ComprasService } from '../../../compras/services/compras.service';
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
+import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -45,7 +45,7 @@ import { ComprasService } from '../../../compras/services/compras.service';
     ToastModule,
     ConfirmDialogModule,
     CommonModule,
-    ModalGenerateTicketComponent,
+    CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
@@ -57,7 +57,7 @@ import { ComprasService } from '../../../compras/services/compras.service';
     AcordeonMantenimientosSistemasComponent,
     AcordeonMantenimientosAudioVideoComponent,
     AcordeonMantenimientosMantenimientoComponent,
-    ModalRequestPurchaseComponent,
+    SolicitarCompraDialogComponent,
     AcordeonMantenimientosSisAvComponent
   ],
   providers: [MessageService, ConfirmationService],

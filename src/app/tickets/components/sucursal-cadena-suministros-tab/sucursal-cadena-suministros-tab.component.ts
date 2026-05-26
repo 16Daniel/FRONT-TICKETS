@@ -6,7 +6,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
@@ -19,6 +18,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
 @Component({
   selector: 'app-sucursal-cadena-suministros-tab',
@@ -28,7 +28,7 @@ import { Maintenance10x10Service } from '../../../mantenimientos/services/mainte
     ToastModule,
     ConfirmDialogModule,
     CommonModule,
-    ModalGenerateTicketComponent,
+    CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,
