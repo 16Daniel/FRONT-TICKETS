@@ -259,7 +259,7 @@ export class Maintenance6x6AvService implements IMantenimientoService {
         const q = query(
           mantenimientosRef,
           where('idSucursal', '==', idSucursal.toString()),
-          where('estatus', '==', false),
+          // where('estatus', '==', false),
           orderBy('fecha', 'desc'),
           limit(3)
         );

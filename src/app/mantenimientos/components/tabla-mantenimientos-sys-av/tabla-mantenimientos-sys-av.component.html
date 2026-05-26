@@ -25,7 +25,8 @@
       </td>
 
       <td class="text-center">
-        {{ dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}
+        {{ dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' || ('SIN CALIFICAR: ' +
+        (dateHelpder.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a')) }}
       </td>
 
       <!-- PANTALLAS -->

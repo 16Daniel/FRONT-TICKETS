@@ -130,7 +130,6 @@ export class TicketsTabComponent implements OnInit {
 
 
   ngOnInit(): void {
-    debugger
     this.getTicketsResponsable();
     this.obtnerUltimosMantenimientos();
     this.obtenerSucursales();
@@ -164,15 +163,15 @@ export class TicketsTabComponent implements OnInit {
 
     this.loading = true;
 
-    this.obtenerMantenimientosSistemas(idsSucursales);
+    this.obtenerMantenimientos(idsSucursales);
   }
 
-  obtenerMantenimientosSistemas(idsSucursales: string[]) {
+  obtenerMantenimientos(idsSucursales: string[]) {
     const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-
     this.subscriptiontk = servicio
       .getUltimosMantenimientos(idsSucursales)
       .subscribe((result: any) => {
+        console.log(result)
         let data = result.filter((element: any) => element.length > 0);
         this.ultimosmantenimientos = [];
         for (let itemdata of data) {
@@ -212,12 +211,10 @@ export class TicketsTabComponent implements OnInit {
 
   async getTicketsResponsable(): Promise<void> {
     this.loading = true;
-    debugger
     this.subscriptiontk = this.ticketsService
       .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia, this.usuario.idArea)
       .subscribe({
         next: (data) => {
-          debugger
           console.log('Tickets obtenidos:', data);
           if (
             data.length > this.todosLosTickets.length &&

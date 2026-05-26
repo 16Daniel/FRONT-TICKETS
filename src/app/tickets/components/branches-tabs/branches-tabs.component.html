@@ -36,13 +36,13 @@
     <app-sucursal-cadena-suministros-tab [esEspectadorActivo]="esEspectadorActivo"
       [tickets]="filtrarTicketsPorArea('20')" [todosLosTickets]="todosLosTickets"></app-sucursal-cadena-suministros-tab>
   </p-tabPanel>
-
+  <!-- 
   <p-tabPanel header="ADMINISTRACIÓN ">
     <p>Contenido de la tercera pestaña.</p>
   </p-tabPanel>
   <p-tabPanel header="COMPRAS">
     <p>Contenido de la tercera pestaña.</p>
-  </p-tabPanel>
+  </p-tabPanel> -->
 
   <p-tabPanel header="ACEITE" *ngIf="sucursal.controlDeAceite">
     <app-branches-oil-tab></app-branches-oil-tab>

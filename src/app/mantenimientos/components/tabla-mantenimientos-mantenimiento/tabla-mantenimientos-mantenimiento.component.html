@@ -22,7 +22,9 @@
     <tr>
       <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
       </td>
-      <td class="text-center">{{ datesHelper.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+      <td class="text-center">{{ datesHelper.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' || ('SIN
+        CALIFICAR: '
+        + (datesHelper.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a')) }}</td>
       <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'TERMOSTATO')"
         [ngClass]="{'bg-success': mantenimiento.mantenimientoTermostato, 'bg-danger': !mantenimiento.mantenimientoTermostato}">
         <label style="color: white;">{{ mantenimiento.mantenimientoTermostato ? 'Si' : 'No' }}</label>

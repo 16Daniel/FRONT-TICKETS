@@ -24,7 +24,8 @@
         <tr>
             <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
             </td>
-            <td class="text-center">{{ dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+            <td class="text-center">{{ (dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a') ||
+                ('SIN CALIFICAR: ' + (dateHelpder.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a')) }}</td>
             <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CAJA')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoCaja, 'bg-danger': !mantenimiento.mantenimientoCaja}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoCaja ? 'Si' : 'No' }}</label>
