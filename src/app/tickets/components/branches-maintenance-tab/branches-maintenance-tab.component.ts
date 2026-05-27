@@ -5,7 +5,6 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
-import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
@@ -18,6 +17,7 @@ import { ModalMateinanceMttoCheckComponent } from '../../../mantenimientos/dialo
 import { ModalMaintenanceMttoHistoryComponent } from '../../../mantenimientos/dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
 import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
 import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
 @Component({
   selector: 'app-branches-maintenance-tab',
@@ -27,7 +27,7 @@ import { MaintenanceMtooService } from '../../../mantenimientos/services/mainten
     ToastModule,
     ConfirmDialogModule,
     CommonModule,
-    ModalGenerateTicketComponent,
+    CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,

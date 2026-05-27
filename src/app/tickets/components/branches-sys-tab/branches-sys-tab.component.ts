@@ -6,7 +6,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
@@ -23,6 +22,7 @@ import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimien
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
 import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component";
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -32,7 +32,7 @@ import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/di
     ToastModule,
     ConfirmDialogModule,
     CommonModule,
-    ModalGenerateTicketComponent,
+    CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
     ModalTicketsHistoryComponent,

@@ -9,7 +9,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
@@ -24,7 +23,6 @@ import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { ModalRequestPurchaseComponent } from '../../../compras/dialogs/modal-request-purchase/modal-request-purchase.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
@@ -32,6 +30,8 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimient
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
 import { ComprasService } from '../../../compras/services/compras.service';
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
+import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 
 @Component({
   selector: 'app-admin-cadena-suministro-tab',
@@ -43,7 +43,7 @@ import { ComprasService } from '../../../compras/services/compras.service';
     ConfirmDialogModule,
     OverlayPanelModule,
     ModalFilterTicketsComponent,
-    ModalGenerateTicketComponent,
+    CrearTicketDialogComponent,
     ModalTicketsHistoryComponent,
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
@@ -51,7 +51,7 @@ import { ComprasService } from '../../../compras/services/compras.service';
     AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
-    ModalRequestPurchaseComponent,
+    SolicitarCompraDialogComponent,
     AcordeonMantenimientosSisAvComponent
   ],
   providers: [MessageService, ConfirmationService],

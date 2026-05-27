@@ -97,7 +97,7 @@
 
 </p-dialog>
 
-<app-modal-subcategory-create *ngIf="mostrarModalSubcategoria" (subcategoriaEvent)="agregarSubcategoria($event)"
+<app-crear-subcategoria-dialog *ngIf="mostrarModalSubcategoria" (subcategoriaEvent)="agregarSubcategoria($event)"
     [mostrarModalSubcrearCategoria]="mostrarModalSubcategoria" (closeEvent)="mostrarModalSubcategoria = false"
     [esNuevaSubcategoria]="esNuevaSubcategoria"
-    [subcategoria]="subcategoriaSeleccionada"></app-modal-subcategory-create>
+    [subcategoria]="subcategoriaSeleccionada"></app-crear-subcategoria-dialog>

@@ -8,13 +8,13 @@ import { FirebaseStorageService } from '../../../shared/services/firebase-storag
 import { ComprasService } from '../../services/compras.service';
 
 @Component({
-  selector: 'app-modal-purchases-imgs-uploader',
+  selector: 'app-subir-imgs-compras-dialog',
   standalone: true,
   imports: [DialogModule, CommonModule],
-  templateUrl: './modal-purchases-imgs-uploader.component.html',
-  styleUrl: './modal-purchases-imgs-uploader.component.scss'
+  templateUrl: './subir-imgs-compras-dialog.component.html',
+  styleUrl: './subir-imgs-compras-dialog.component.scss'
 })
-export class ModalPurchasesImgsUploaderComponent {
+export class SubirImgsComprasDialogComponent {
   @Input() mostrarModal: boolean = false;
   @Input() compra: Compra | any;
   @Output() closeEvent = new EventEmitter<boolean>();

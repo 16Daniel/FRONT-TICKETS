@@ -46,9 +46,9 @@
     </div>
 </p-dialog>
 
-<app-modal-select-specialist-user *ngIf="mostrarModalEspecialistas" [mostrarModal]="mostrarModalEspecialistas"
+<app-seleccionar-usuario-especialista-dialog *ngIf="mostrarModalEspecialistas" [mostrarModal]="mostrarModalEspecialistas"
     [idSucursal]="idSucursalEspecialista" [ticket]="ticket!" [idArea]="usuario.idArea"
-    (closeEvent)="mostrarModalEspecialistas = false"></app-modal-select-specialist-user>
+    (closeEvent)="mostrarModalEspecialistas = false"></app-seleccionar-usuario-especialista-dialog>
 
 <app-modal-visor-imagenes *ngIf="mostrarModalImagen" [mostrarModal]="mostrarModalImagen" [imagenUrl]="urlVisorImagen"
     (closeEvent)="mostrarModalImagen = false"></app-modal-visor-imagenes>

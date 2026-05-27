@@ -17,14 +17,14 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Rol } from '../../../roles/interfaces/rol.model';
 
 @Component({
-  selector: 'app-modal-user-create',
+  selector: 'app-crear-usuario-dialog',
   standalone: true,
   imports: [DialogModule, FormsModule, MultiSelectModule, CommonModule, DropdownModule],
-  templateUrl: './modal-user-create.component.html',
-  styleUrl: './modal-user-create.component.scss'
+  templateUrl: './crear-usuario-dialog.component.html',
+  styleUrl: './crear-usuario-dialog.component.scss'
 })
 
-export class ModalUserCreateComponent implements OnInit {
+export class CrearUsuarioDialogComponent implements OnInit {
   @Input() mostrarModalCrearUsuario: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() usuario: Usuario = new Usuario;

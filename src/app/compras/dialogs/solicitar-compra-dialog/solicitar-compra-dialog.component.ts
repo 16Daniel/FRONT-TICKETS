@@ -7,7 +7,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
-import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -19,9 +18,11 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 import { ComprasService } from '../../services/compras.service';
+import { SubirImgsComprasDialogComponent } from '../subir-imgs-compras-dialog/subir-imgs-compras-dialog.component';
+import { ComentariosCompraDialogComponent } from "../comentarios-compra-dialog/comentarios-compra-dialog.component";
 
 @Component({
-  selector: 'app-modal-request-purchase',
+  selector: 'app-solicitar-compra-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -30,13 +31,14 @@ import { ComprasService } from '../../services/compras.service';
     FormsModule,
     DropdownModule,
     TooltipModule,
-    ModalPurchasesImgsUploaderComponent,
-    ModalVisorVariasImagenesComponent
-  ],
-  templateUrl: './modal-request-purchase.component.html',
-  styleUrl: './modal-request-purchase.component.scss'
+    SubirImgsComprasDialogComponent,
+    ModalVisorVariasImagenesComponent,
+    ComentariosCompraDialogComponent
+],
+  templateUrl: './solicitar-compra-dialog.component.html',
+  styleUrl: './solicitar-compra-dialog.component.scss'
 })
-export class ModalRequestPurchaseComponent implements OnInit {
+export class SolicitarCompraDialogComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Input() idArea: string = '';
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -49,6 +51,8 @@ export class ModalRequestPurchaseComponent implements OnInit {
   sucursales: Sucursal[] = [];
   mostrarModalSubirImagen = false;
   mostrarModalVisorImagen = false;
+  mostrarComentariosModal = false;
+
   compraSeleccionada!: Compra;
   imagenes: string[] = [];
 
@@ -200,5 +204,10 @@ export class ModalRequestPurchaseComponent implements OnInit {
     this.mostrarModalVisorImagen = true;
     this.compraSeleccionada = compra;
     this.imagenes = compra.evidenciaUrls || [];
+  }
+
+  onClickChat(compra: Compra) {
+    this.mostrarComentariosModal = true;
+    this.compraSeleccionada = compra;
   }
 }

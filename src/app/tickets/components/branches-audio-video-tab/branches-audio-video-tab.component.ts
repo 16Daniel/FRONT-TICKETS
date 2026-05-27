@@ -6,7 +6,6 @@ import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
-import { ModalGenerateTicketComponent } from '../../../tickets/dialogs/modal-generate-ticket/modal-generate-ticket.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
@@ -19,6 +18,7 @@ import { ModalMaintenanceAvHistoryComponent } from '../../../mantenimientos/dial
 import { ModalMaintenanceAvCheckComponent } from '../../../mantenimientos/dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
 import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
 @Component({
   selector: 'app-branches-audio-video-tab',
@@ -28,7 +28,7 @@ import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimi
     ToastModule,
     ConfirmDialogModule,
     CommonModule,
-    ModalGenerateTicketComponent,
+    CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalTicketsHistoryComponent,
     PriorityTicketsAccordionComponent,

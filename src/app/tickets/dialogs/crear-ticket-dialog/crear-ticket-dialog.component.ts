@@ -34,7 +34,7 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
-  selector: 'app-modal-generate-ticket',
+  selector: 'app-crear-ticket-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -43,11 +43,11 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     CommonModule,
     EditorModule,
   ],
-  templateUrl: './modal-generate-ticket.component.html',
-  styleUrl: './modal-generate-ticket.component.scss',
+  templateUrl: './crear-ticket-dialog.component.html',
+  styleUrl: './crear-ticket-dialog.component.scss',
 })
 
-export class ModalGenerateTicketComponent implements OnInit {
+export class CrearTicketDialogComponent implements OnInit {
   @Input() mostrarModalGenerateTicket: boolean = false;
   @Input() idArea: string = '0';
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -173,6 +173,22 @@ export class ModalGenerateTicketComponent implements OnInit {
       this.showMessage('error', 'Error', 'Campos requeridos incompletos');
       return;
     }
+    
+    if (
+      this.incluirEvidenciaCadenaSuministro(this.formCategoria.nombre)
+      && this.archivos.length == 0
+      && this.idArea == '20') {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Acción requerida',
+          text: 'Para la categoria ' + this.formCategoria.nombre + ' es necesario subir evidencia.',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            container: 'swal-topmost'
+          }
+        });
+        return;
+      }
 
     Swal.fire({
       target: document.body,
@@ -352,5 +368,19 @@ export class ModalGenerateTicketComponent implements OnInit {
 
       reader.readAsDataURL(file);
     });
+  }
+
+  incluirEvidenciaCadenaSuministro(categoria: string): boolean {
+    const categoriasPermitidas = [
+      'FACTURA EN PORTAL',
+      'PROVEEDOR SIN FACTURA',
+      'RETRASO DE PROVEEDOR',
+      'COMPRAS ESPECIALES',
+      'MOVIMIENTOS ENTRE SUCURSALES'
+    ];
+
+    return !categoriasPermitidas.includes(
+      categoria.trim().toUpperCase()
+    );
   }
 }

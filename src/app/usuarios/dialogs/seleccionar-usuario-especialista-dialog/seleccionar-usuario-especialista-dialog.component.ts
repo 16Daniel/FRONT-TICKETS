@@ -11,13 +11,13 @@ import { TicketsService } from '../../../tickets/services/tickets.service';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 
 @Component({
-  selector: 'app-modal-select-specialist-user',
+  selector: 'app-seleccionar-usuario-especialista-dialog',
   standalone: true,
   imports: [CommonModule, DialogModule, TableModule],
-  templateUrl: './modal-select-specialist-user.component.html',
-  styleUrl: './modal-select-specialist-user.component.scss'
+  templateUrl: './seleccionar-usuario-especialista-dialog.component.html',
+  styleUrl: './seleccionar-usuario-especialista-dialog.component.scss'
 })
-export class ModalSelectSpecialistUserComponent implements OnInit {
+export class SeleccionarUsuarioEspecialistaComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Input() idSucursal: string = '';
   @Input() idArea: string = '';

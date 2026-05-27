@@ -14,9 +14,9 @@ import { DocumentsService } from '../../../shared/services/documents.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { ModalUserCreateComponent } from '../../../usuarios/dialogs/modal-user-create/modal-user-create.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Rol } from '../../../roles/interfaces/rol.model';
+import { CrearUsuarioDialogComponent } from '../../../usuarios/dialogs/crear-usuario-dialog/crear-usuario-dialog.component';
 
 @Component({
   selector: 'app-control-aceite-tab',
@@ -27,7 +27,7 @@ import { Rol } from '../../../roles/interfaces/rol.model';
     MultiSelectModule,
     TableModule,
     TooltipModule,
-    ModalUserCreateComponent,
+    CrearUsuarioDialogComponent,
     ToastModule,
     ConfirmDialogModule
   ],

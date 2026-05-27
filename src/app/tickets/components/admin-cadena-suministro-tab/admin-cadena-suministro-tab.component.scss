@@ -1,0 +1,76 @@
+/* 🔹 Tabs inactivos (gris claro) */
+::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  color: #999 !important;
+  /* Texto gris para tabs inactivos */
+  font-weight: normal;
+  text-decoration: none !important;
+  transition: color 0.3s ease;
+}
+
+/* 🔹 Tab activo (negro) */
+::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: black !important;
+  /* 🔥 Ahora sí, negro para la pestaña activa */
+  font-weight: bold;
+  border-bottom: 3px solid #007bff !important;
+  /* Línea azul para resaltar */
+}
+
+/* 🔹 Hover en tabs inactivos */
+::ng-deep .p-tabview .p-tabview-nav li:not(.p-highlight) .p-tabview-nav-link:hover {
+  color: #666 !important;
+  /* Gris más oscuro en hover */
+}
+
+/* 🔹 Línea separadora entre los tabs y el contenido */
+::ng-deep .p-tabview .p-tabview-nav {
+  border-bottom: 2px solid #ddd !important;
+}
+
+::ng-deep .p-dialog.p-confirm-dialog {
+  max-width: 500px !important;
+  /* Ajusta el ancho máximo */
+  width: 90% !important;
+  /* Para pantallas pequeñas */
+  text-align: justify;
+  /* Justifica el texto si es necesario */
+}
+
+::ng-deep .btn-compras {
+  background-color: #007bff !important;
+  /* azul bootstrap */
+  border: none !important;
+  color: white !important;
+}
+
+.banner-8x8 {
+  border-radius: 10px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* AV */
+.banner-av {
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  color: white;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+}
+
+/* IT */
+.banner-it {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: white;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

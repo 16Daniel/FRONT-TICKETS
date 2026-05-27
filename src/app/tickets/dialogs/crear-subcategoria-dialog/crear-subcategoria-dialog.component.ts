@@ -6,14 +6,14 @@ import { MessageService } from 'primeng/api';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
 
 @Component({
-  selector: 'app-modal-subcategory-create',
+  selector: 'app-crear-subcategoria-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, DialogModule],
-  templateUrl: './modal-subcategory-create.component.html',
-  styleUrl: './modal-subcategory-create.component.scss'
+  templateUrl: './crear-subcategoria-dialog.component.html',
+  styleUrl: './crear-subcategoria-dialog.component.scss'
 })
 
-export class ModalSubcategoryCreateComponent {
+export class CrearSubcategoriaDialogComponent {
   @Input() mostrarModalSubcrearCategoria: boolean = false;
   @Input() esNuevaSubcategoria: boolean = true;
   @Input() subcategoria: Subcategoria = new Subcategoria;

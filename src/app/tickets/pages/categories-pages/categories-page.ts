@@ -8,10 +8,10 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
-import { ModalCategoryCreateComponent } from '../../dialogs/modal-category-create/modal-category-create.component';
 import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { CategoriesService } from '../../services/categories.service';
+import { CrearCategoriaDialogComponent } from '../../dialogs/crear-categoria-dialog/crear-categoria-dialog.component';
 
 @Component({
   selector: 'app-categories-page',
@@ -23,7 +23,7 @@ import { CategoriesService } from '../../services/categories.service';
     TableModule,
     ToastModule,
     ConfirmDialogModule,
-    ModalCategoryCreateComponent
+    CrearCategoriaDialogComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './categories-page.html',
