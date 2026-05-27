@@ -1,10 +1,10 @@
 <div class="p-3">
     <p>SUCURSALES HABILITADAS</p>,
-<p-multiSelect 
-    [options]="sucursales" 
-    [(ngModel)]="sucursalesSel" 
-    [filter]="true" 
-    optionLabel="nombre" 
+<p-multiSelect
+    [options]="sucursales"
+    [(ngModel)]="sucursalesSel"
+    [filter]="true"
+    optionLabel="nombre"
     placeholder="SELECCIONAR SUCURSALES"
     [style]="{width:'100%'}"
     />
@@ -56,5 +56,5 @@
         </div>
     </ng-template>
 </p-confirmDialog>
-<app-modal-user-create *ngIf="mostrarModalUsuario" [mostrarModalCrearUsuario]="mostrarModalUsuario"
-    (closeEvent)="cerrarModalUsuario()" [usuario]="usuarioSeleccionado" [esNuevoUsuario]="esNuevoUsuario" [choferCedis]="true"></app-modal-user-create>
+<app-crear-usuario-dialog *ngIf="mostrarModalUsuario" [mostrarModalCrearUsuario]="mostrarModalUsuario"
+    (closeEvent)="cerrarModalUsuario()" [usuario]="usuarioSeleccionado" [esNuevoUsuario]="esNuevoUsuario" [choferCedis]="true"></app-crear-usuario-dialog>

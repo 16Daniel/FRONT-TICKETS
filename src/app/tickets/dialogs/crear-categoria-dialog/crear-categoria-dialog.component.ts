@@ -5,21 +5,21 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 
-import { ModalSubcategoryCreateComponent } from '../modal-subcategory-create/modal-subcategory-create.component';
 import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { CategoriesService } from '../../services/categories.service';
+import { CrearSubcategoriaDialogComponent } from '../crear-subcategoria-dialog/crear-subcategoria-dialog.component';
 
 @Component({
-  selector: 'app-modal-category-create',
+  selector: 'app-crear-categoria-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule, ModalSubcategoryCreateComponent, TableModule],
-  templateUrl: './modal-category-create.component.html',
-  styleUrl: './modal-category-create.component.scss'
+  imports: [CommonModule, FormsModule, DialogModule, CrearSubcategoriaDialogComponent, TableModule],
+  templateUrl: './crear-categoria-dialog.component.html',
+  styleUrl: './crear-categoria-dialog.component.scss'
 })
 
-export class ModalCategoryCreateComponent {
+export class CrearCategoriaDialogComponent {
   @Input() mostrarModalCrearCategoria: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() categoria: Categoria | any;

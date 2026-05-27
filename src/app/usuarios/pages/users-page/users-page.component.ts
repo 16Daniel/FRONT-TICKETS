@@ -9,12 +9,12 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 
-import { ModalUserCreateComponent } from '../../dialogs/modal-user-create/modal-user-create.component';
 import { Usuario } from '../../interfaces/usuario.model';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { UsersService } from '../../services/users.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { Rol } from '../../../roles/interfaces/rol.model';
+import { CrearUsuarioDialogComponent } from '../../dialogs/crear-usuario-dialog/crear-usuario-dialog.component';
 
 @Component({
   selector: 'app-users-page',
@@ -26,7 +26,7 @@ import { Rol } from '../../../roles/interfaces/rol.model';
     ConfirmDialogModule,
     TableModule,
     TooltipModule,
-    ModalUserCreateComponent
+    CrearUsuarioDialogComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './users-page.component.html',

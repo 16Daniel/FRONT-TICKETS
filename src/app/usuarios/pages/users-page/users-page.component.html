@@ -56,5 +56,5 @@
     </ng-template>
 </p-confirmDialog>
 
-<app-modal-user-create *ngIf="mostrarModalUsuario" [mostrarModalCrearUsuario]="mostrarModalUsuario"
-    (closeEvent)="cerrarModalUsuario()" [usuario]="usuarioSeleccionado" [esNuevoUsuario]="esNuevoUsuario"></app-modal-user-create>
+<app-crear-usuario-dialog *ngIf="mostrarModalUsuario" [mostrarModalCrearUsuario]="mostrarModalUsuario"
+    (closeEvent)="cerrarModalUsuario()" [usuario]="usuarioSeleccionado" [esNuevoUsuario]="esNuevoUsuario"></app-crear-usuario-dialog>

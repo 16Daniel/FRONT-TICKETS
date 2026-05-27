@@ -54,5 +54,5 @@
     </ng-template>
 </p-confirmDialog>
 
-<app-modal-category-create *ngIf="mostrarModalCategoria" [mostrarModalCrearCategoria]="mostrarModalCategoria"
-    (closeEvent)="cerrarModalCategoria()" [categoria]="categoriaSeleccionada" [esNuevaCategoria]="esNuevaCategoria"></app-modal-category-create>
+<app-crear-categoria-dialog *ngIf="mostrarModalCategoria" [mostrarModalCrearCategoria]="mostrarModalCategoria"
+    (closeEvent)="cerrarModalCategoria()" [categoria]="categoriaSeleccionada" [esNuevaCategoria]="esNuevaCategoria"></app-crear-categoria-dialog>
