@@ -16,11 +16,11 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 import { ComprasService } from '../../services/compras.service';
 import { ComentariosCompraDialogComponent } from '../comentarios-compra-dialog/comentarios-compra-dialog.component';
+import { SubirImgsComprasDialogComponent } from '../subir-imgs-compras-dialog/subir-imgs-compras-dialog.component';
 
 @Component({
   selector: 'app-compras-dialog',
@@ -33,7 +33,7 @@ import { ComentariosCompraDialogComponent } from '../comentarios-compra-dialog/c
     FormsModule,
     ButtonModule,
     CalendarModule,
-    ModalPurchasesImgsUploaderComponent,
+    SubirImgsComprasDialogComponent,
     ModalVisorVariasImagenesComponent,
     ComentariosCompraDialogComponent
   ],

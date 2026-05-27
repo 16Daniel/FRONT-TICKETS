@@ -154,8 +154,8 @@
     </p-table>
 </p-dialog>
 
-<app-modal-purchases-imgs-uploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
-    (closeEvent)="mostrarModalSubirImagen = false" [compra]="compraSeleccionada"></app-modal-purchases-imgs-uploader>
+<app-subir-imgs-compras-dialog *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
+    (closeEvent)="mostrarModalSubirImagen = false" [compra]="compraSeleccionada"></app-subir-imgs-compras-dialog>
 
 <app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
     (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"></app-modal-visor-varias-imagenes>

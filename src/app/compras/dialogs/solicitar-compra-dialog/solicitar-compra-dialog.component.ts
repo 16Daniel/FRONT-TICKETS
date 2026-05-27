@@ -7,7 +7,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
-import { ModalPurchasesImgsUploaderComponent } from '../modal-purchases-imgs-uploader/modal-purchases-imgs-uploader.component';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -19,6 +18,8 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 import { ComprasService } from '../../services/compras.service';
+import { SubirImgsComprasDialogComponent } from '../subir-imgs-compras-dialog/subir-imgs-compras-dialog.component';
+import { ComentariosCompraDialogComponent } from "../comentarios-compra-dialog/comentarios-compra-dialog.component";
 
 @Component({
   selector: 'app-solicitar-compra-dialog',
@@ -30,9 +31,10 @@ import { ComprasService } from '../../services/compras.service';
     FormsModule,
     DropdownModule,
     TooltipModule,
-    ModalPurchasesImgsUploaderComponent,
-    ModalVisorVariasImagenesComponent
-  ],
+    SubirImgsComprasDialogComponent,
+    ModalVisorVariasImagenesComponent,
+    ComentariosCompraDialogComponent
+],
   templateUrl: './solicitar-compra-dialog.component.html',
   styleUrl: './solicitar-compra-dialog.component.scss'
 })
@@ -49,6 +51,8 @@ export class SolicitarCompraDialogComponent implements OnInit {
   sucursales: Sucursal[] = [];
   mostrarModalSubirImagen = false;
   mostrarModalVisorImagen = false;
+  mostrarComentariosModal = false;
+
   compraSeleccionada!: Compra;
   imagenes: string[] = [];
 
@@ -200,5 +204,10 @@ export class SolicitarCompraDialogComponent implements OnInit {
     this.mostrarModalVisorImagen = true;
     this.compraSeleccionada = compra;
     this.imagenes = compra.evidenciaUrls || [];
+  }
+
+  onClickChat(compra: Compra) {
+    this.mostrarComentariosModal = true;
+    this.compraSeleccionada = compra;
   }
 }
