@@ -88,7 +88,7 @@ export class AcordeonMantenimientosAudioVideoComponent {
     // return porcentaje;
     let porcentaje = 0;
     let registro = this.mantenimientos.filter(
-      (x) => x.idSucursal == idSucursal
+      (x) => x.idSucursal == idSucursal && x.estatus === false
     );
     if (registro.length > 0) {
       let fechaM: Date;
@@ -147,7 +147,7 @@ export class AcordeonMantenimientosAudioVideoComponent {
   obtenerDiasPasados(idSucursal: string): number {
     let dias = 0;
     let registro = this.mantenimientos.filter(
-      (x) => x.idSucursal == idSucursal
+      (x) => x.idSucursal == idSucursal && x.estatus === false
     );
     if (registro.length > 0) {
 
