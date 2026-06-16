@@ -1,0 +1,82 @@
+<div>
+
+    <p-toast></p-toast>
+
+<div>
+    <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="Nuevo Cliente" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="clientes" [rows]="10" [paginator]="true" 
+             [globalFilterFields]="['marca','plataforma','codcliente']" responsiveLayout="scroll"
+             [rowHover]="true" dataKey="id">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                <th pSortableColumn="codcliente">Código Cliente <p-sortIcon field="codcliente"></p-sortIcon></th>
+                <th pSortableColumn="marca">Marca <p-sortIcon field="marca"></p-sortIcon></th>
+                <th pSortableColumn="plataforma">Plataforma <p-sortIcon field="plataforma"></p-sortIcon></th>
+                <th>Diseño Ticket</th>
+                <th>Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-cliente>
+            <tr>
+                <td>{{cliente.id}}</td>
+                <td>{{cliente.codcliente}}</td>
+                <td>{{cliente.marca}}</td>
+                <td>{{cliente.plataforma}}</td>
+                <td>{{cliente['diseñoTicket'] || 'Sin diseño asignado'}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editCliente(cliente)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCliente(cliente)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                Total registrado: {{clientes ? clientes.length : 0 }} clientes.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="clienteDialog" [style]="{width: '500px'}" header="Información del Cliente Delivery" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        
+        <div class="field mb-3">
+            <label for="codcliente">Código Cliente</label>
+            <p-inputNumber id="codcliente" [(ngModel)]="cliente.codcliente" locale="es-MX" required></p-inputNumber>
+            <small class="p-error" *ngIf="submitted && !cliente.codcliente">El código de cliente es obligatorio.</small>
+        </div>
+
+        <div class="field mb-3">
+            <label for="marca">Marca</label>
+            <input type="text" pInputText id="marca" [(ngModel)]="cliente.marca" required />
+            <small class="p-error" *ngIf="submitted && !cliente.marca">La marca es obligatoria.</small>
+        </div>
+
+        <div class="field mb-3">
+            <label for="plataforma">Plataforma</label>
+            <input type="text" pInputText id="plataforma" [(ngModel)]="cliente.plataforma" required />
+            <small class="p-error" *ngIf="submitted && !cliente.plataforma">La plataforma es obligatoria.</small>
+        </div>
+
+        <div class="field mb-3">
+            <label for="diseñoTicket">Diseño del Ticket</label>
+            <input type="text" pInputText [(ngModel)]="cliente['diseñoTicket']"/>
+        </div>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveCliente()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+</div>
