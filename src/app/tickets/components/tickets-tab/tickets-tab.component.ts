@@ -171,7 +171,7 @@ export class TicketsTabComponent implements OnInit {
     this.subscriptiontk = servicio
       .getUltimosMantenimientos(idsSucursales)
       .subscribe((result: any) => {
-        console.log(result)
+        // console.log(result)
         let data = result.filter((element: any) => element.length > 0);
         this.ultimosmantenimientos = [];
         for (let itemdata of data) {
@@ -215,7 +215,7 @@ export class TicketsTabComponent implements OnInit {
       .getTicketsResponsable(this.usuario.id, this.usuario.esGuardia, this.usuario.idArea)
       .subscribe({
         next: (data) => {
-          console.log('Tickets obtenidos:', data);
+          // console.log('Tickets obtenidos:', data);
           if (
             data.length > this.todosLosTickets.length &&
             !this.paginaCargaPrimeraVez
