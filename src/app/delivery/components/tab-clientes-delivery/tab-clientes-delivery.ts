@@ -1,5 +1,5 @@
-import { Component, type OnInit } from '@angular/core';
-import { ClientesDelivery } from '../../interfaces/diccionariodelivery';
+import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { CatMarcasDelivery, ClientesDelivery } from '../../interfaces/diccionariodelivery';
 import { DiccionariodeliveryService } from '../../services/diccionariodelivery.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
@@ -12,11 +12,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from "primeng/inputnumber";
+import { DropdownModule } from "primeng/dropdown";
 
 @Component({
   selector: 'app-tab-clientes-delivery',
   standalone: true,
-  imports: [TableModule, DialogModule, ConfirmDialogModule, ToastModule, ButtonModule, InputTextModule, FormsModule, CommonModule, ToolbarModule, InputNumberModule],
+  imports: [TableModule, DialogModule, ConfirmDialogModule, ToastModule, ButtonModule, InputTextModule, FormsModule, CommonModule, ToolbarModule, InputNumberModule, DropdownModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tab-clientes-delivery.html',
   styleUrl: './tab-clientes-delivery.scss',
@@ -26,16 +27,34 @@ export class TabClientesDelivery implements OnInit {
   cliente!: ClientesDelivery;
   clienteDialog: boolean = false;
   submitted: boolean = false;
+  catmarcas:CatMarcasDelivery[] = []; 
 
   constructor(
     private clientesService:DiccionariodeliveryService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.cargarClientes();
+    this.cargarMarcas(); 
   }
+
+    cargarMarcas()
+      {
+        
+            this.clientesService.getMarcasDelivery().subscribe({
+              next: (data) => {
+                this.catmarcas = data;
+                this.cdr.detectChanges(); 
+              },
+              error: (err) => 
+                {
+                  console.error('Error al cargar datos', err)
+                }
+            });
+      }
 
   cargarClientes() {
     this.clientesService.getClientes().subscribe({
@@ -47,7 +66,7 @@ export class TabClientesDelivery implements OnInit {
   }
 
   openNew() {
-    this.cliente = { marca: '', plataforma: '', codcliente: 0, diseñoTicket: '' };
+    this.cliente = { marca: 0, plataforma: '', codcliente: 0, diseñoTicket: '' };
     this.submitted = false;
     this.clienteDialog = true;
   }
@@ -87,7 +106,7 @@ export class TabClientesDelivery implements OnInit {
     this.submitted = true;
 
     // Validación elemental de campos obligatorios
-    if (this.cliente.marca?.trim() && this.cliente.plataforma?.trim() && this.cliente.codcliente) {
+    if (this.cliente.marca && this.cliente.plataforma?.trim() && this.cliente.codcliente) {
       if (this.cliente.id) {
         // Modo Edición
         this.clientesService.updateCliente(this.cliente).subscribe({
@@ -112,6 +131,11 @@ export class TabClientesDelivery implements OnInit {
         });
       }
     }
+  }
+
+  getNombreMarca(id:number)
+  {
+    return this.catmarcas.filter(x=> x.id == id)[0].nombre; 
   }
 
 }
