@@ -47,7 +47,7 @@ export interface CatMarcasDelivery {
 
 export interface ClientesDelivery {
     id?: number;
-    marca: string;
+    marca: number;
     plataforma: string;
     codcliente: number;
     diseñoTicket?: string;

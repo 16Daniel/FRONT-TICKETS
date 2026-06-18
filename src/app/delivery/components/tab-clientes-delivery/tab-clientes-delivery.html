@@ -26,7 +26,7 @@
             <tr>
                 <td>{{cliente.id}}</td>
                 <td>{{cliente.codcliente}}</td>
-                <td>{{cliente.marca}}</td>
+                <td>{{getNombreMarca(cliente.marca)}}</td>
                 <td>{{cliente.plataforma}}</td>
                 <td>{{cliente['diseñoTicket'] || 'Sin diseño asignado'}}</td>
                 <td>
@@ -54,7 +54,13 @@
 
         <div class="field mb-3">
             <label for="marca">Marca</label>
-            <input type="text" pInputText id="marca" [(ngModel)]="cliente.marca" required />
+            <p-dropdown
+                [options]="catmarcas"
+                [(ngModel)]="cliente.marca"
+                optionLabel="nombre"
+                optionValue="id"
+                placeholder="Selecciona la marca"
+                ></p-dropdown>
             <small class="p-error" *ngIf="submitted && !cliente.marca">La marca es obligatoria.</small>
         </div>
 
