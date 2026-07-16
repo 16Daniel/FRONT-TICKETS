@@ -23,12 +23,10 @@ export class Maintenance6x6AvService implements IMantenimientoService {
 
       mantenimientoPantallasSoporte: false,
       mantenimientoSenalVideo: false,
-      mantenimientoParametrosImagen: false,
       mantenimientoFuncionalBocinas: false,
       mantenimientoTransmisionAudio: false,
       mantenimientoOrdenamientoCableado: false,
-      mantenimientoLimpiezaRack: false,
-      mantenimientoElectrico: false,
+      mantenimientoNiveles: false,
 
       observaciones: '',
       comentarios: [],
@@ -51,21 +49,16 @@ export class Maintenance6x6AvService implements IMantenimientoService {
   calcularPorcentaje(mantenimiento: MantenimientoSysAv) {
     if (!mantenimiento) return 0;
 
-    let porcentaje = 0;
-    mantenimiento.mantenimientoPantallasSoporte ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoSenalVideo ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoParametrosImagen ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoFuncionalBocinas
-      ? (porcentaje += 12.5)
-      : porcentaje;
-    mantenimiento.mantenimientoTransmisionAudio
-      ? (porcentaje += 12.5)
-      : porcentaje;
-    mantenimiento.mantenimientoOrdenamientoCableado ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoLimpiezaRack ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoElectrico ? (porcentaje += 12.5) : porcentaje;
+    const totalActividades = 6;
+    let completadas = 0;
+    if (mantenimiento.mantenimientoPantallasSoporte) completadas++;
+    if (mantenimiento.mantenimientoSenalVideo) completadas++;
+    if (mantenimiento.mantenimientoFuncionalBocinas) completadas++;
+    if (mantenimiento.mantenimientoTransmisionAudio) completadas++;
+    if (mantenimiento.mantenimientoOrdenamientoCableado) completadas++;
+    if (mantenimiento.mantenimientoNiveles) completadas++;
 
-    return Math.round(porcentaje);
+    return Math.round((completadas / totalActividades) * 100);
   }
 
   async obtenerMantenimientoVisitaPorFechaArea(

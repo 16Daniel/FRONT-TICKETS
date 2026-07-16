@@ -20,9 +20,6 @@ export interface MantenimientoSys {
   mantenimientoPuntosVentaTabletas: boolean;
   mantenimientoPuntosVentaTabletasEvidenciaUrls?: string[];
 
-  mantenimientoContenidosSistemaCable: boolean;
-  mantenimientoContenidosSistemaCableEvidenciaUrls?: string[];
-
   mantenimientoInternet: boolean;
   mantenimientoInternetEvidenciaUrls?: string[];
 
@@ -34,9 +31,6 @@ export interface MantenimientoSys {
 
   mantenimientoTiemposCocina: boolean;
   mantenimientoTiemposCocinaEvidenciaUrls?: string[];
-
-  mantenimientoConcentradorApps: boolean;
-  mantenimientoConcentradorAppsEvidenciaUrls?: string[];
 
   observaciones: string | undefined;
   estatus: boolean;

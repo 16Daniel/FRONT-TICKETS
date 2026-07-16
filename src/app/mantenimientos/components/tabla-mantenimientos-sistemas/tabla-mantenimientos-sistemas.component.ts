@@ -132,9 +132,7 @@ export class TablaMantenimientosSistemasComponent {
       case 'TPV':
         this.imagenes = mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls || [];
         break;
-      case 'CONTENIDOS':
-        this.imagenes = mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrls || [];
-        break;
+
       case 'INTERNET':
         this.imagenes = mantenimiento.mantenimientoInternetEvidenciaUrls || [];
         break;
@@ -147,9 +145,7 @@ export class TablaMantenimientosSistemasComponent {
       case 'TIEMPOS COCINA':
         this.imagenes = mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls || [];
         break;
-      case 'APPS':
-        this.imagenes = mantenimiento.mantenimientoConcentradorAppsEvidenciaUrls || [];
-        break;
+
     }
 
     this.mostrarModalVisorImagen = true;
@@ -222,10 +218,7 @@ export class TablaMantenimientosSistemasComponent {
           (this.mantenimientoSeleccionado.mantenimientoPuntosVentaTabletasEvidenciaUrls || []).filter(u => u !== url);
         break;
 
-      case 'CONTENIDOS':
-        this.mantenimientoSeleccionado.mantenimientoContenidosSistemaCableEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoContenidosSistemaCableEvidenciaUrls || []).filter(u => u !== url);
-        break;
+
 
       case 'INTERNET':
         this.mantenimientoSeleccionado.mantenimientoInternetEvidenciaUrls =
@@ -247,10 +240,7 @@ export class TablaMantenimientosSistemasComponent {
           (this.mantenimientoSeleccionado.mantenimientoTiemposCocinaEvidenciaUrls || []).filter(u => u !== url);
         break;
 
-      case 'APPS':
-        this.mantenimientoSeleccionado.mantenimientoConcentradorAppsEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoConcentradorAppsEvidenciaUrls || []).filter(u => u !== url);
-        break;
+
     }
 
     await this.maintenance10x10Service.update(this.mantenimientoSeleccionado.id, this.mantenimientoSeleccionado);

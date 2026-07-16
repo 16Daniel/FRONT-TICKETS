@@ -6,20 +6,20 @@
     (click)="mostrarModalHistorial = true">
   </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 10 X 10" icon="pi pi-history" styleClass="p-button-secondary"
+  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8" icon="pi pi-history" styleClass="p-button-secondary"
     (click)="mostrarModalHistorialMantenimientos = true">
   </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8 AV" icon="pi pi-history" styleClass="p-button-secondary"
+  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 6 X 6 AV" icon="pi pi-history" styleClass="p-button-secondary"
     (click)="mostrarModalHistorialMantenimientosAV = true">
   </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="CHECK 10 X 10" icon="pi pi-wrench"
-    styleClass="p-button-danger" (click)="mostrarAlerta10x10()">
+  <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="CHECK 8 X 8" icon="pi pi-wrench"
+    styleClass="p-button-danger" (click)="mostrarAlertaIT()">
   </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2' && mantenimientoAVActivo?.id" label="CHECK 8 X 8" icon="pi pi-wrench"
-    styleClass="p-button-secondary" (click)="mostrarAlerta8x8()">
+  <p-button *ngIf="usuario.idRol == '2' && mantenimientoAVActivo?.id" label="CHECK 6 X 6" icon="pi pi-wrench"
+    styleClass="p-button-secondary" (click)="mostrarAlertaAV()">
   </p-button>
 
   <p-button *ngIf="usuario.idRol == '2'" label="EVALUACION GENERAL" icon="pi pi-star" styleClass="p-button-yellow"

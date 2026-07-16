@@ -154,13 +154,13 @@ export class BranchesSysTabComponent {
     );
   }
 
-  mostrarAlerta10x10() {
+  mostrarAlertaIT() {
     this.confirmationService.confirm({
       header: 'IMPORTANTE',
       message: `
       TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
       <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 8 PUNTOS
       <br><br>
       CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
       acceptLabel: 'Aceptar',
@@ -177,13 +177,13 @@ export class BranchesSysTabComponent {
     });
   }
 
-  mostrarAlerta8x8() {
+  mostrarAlertaAV() {
     this.confirmationService.confirm({
       header: 'IMPORTANTE',
       message: `
       TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
       <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE AUDIO Y VIDEO EN 8 PUNTOS
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE AUDIO Y VIDEO EN 6 PUNTOS
       <br><br>
       CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
       acceptLabel: 'Aceptar',

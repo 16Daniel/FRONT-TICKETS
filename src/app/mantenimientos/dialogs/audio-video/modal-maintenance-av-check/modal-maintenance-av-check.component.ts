@@ -47,11 +47,6 @@ export class ModalMaintenanceAvCheckComponent {
       tooltip: 'COMPROBACIÓN DE QUE LA SEÑAL DE VIDEO LLEGUE CORRECTAMENTE A TODAS LAS PANTALLAS, SIN INTERMITENCIAS, CORTES O DEGRADACIÓN EN AMBOS CONTENIDOS DISTRIBUIDOS.',
     },
     {
-      label: 'AJUSTE DE PARÁMETROS DE IMAGEN',
-      controlName: 'mantenimientoParametrosImagen',
-      tooltip: 'AJUSTE DE BRILLO, CONTRASTE, NITIDEZ, COLOR Y LUMINOSIDAD DE LAS PANTALLAS CUANDO SEA NECESARIO, ASEGURANDO UNIFORMIDAD Y CORRECTA VISUALIZACIÓN EN LA SUCURSAL.',
-    },
-    {
       label: 'REVISIÓN FÍSICA Y FUNCIONAL DE BOCINAS',
       controlName: 'mantenimientoFuncionalBocinas',
       tooltip: 'INSPECCIÓN DEL ESTADO FÍSICO DE LAS BOCINAS, CORRECTA FIJACIÓN, CONEXIONES FIRMES Y AUSENCIA DE GOLPES O DAÑOS VISIBLES.',
@@ -67,14 +62,9 @@ export class ModalMaintenanceAvCheckComponent {
       tooltip: 'INSPECCIÓN DEL CABLEADO DE AUDIO Y VIDEO: DETECCIÓN DE FALSOS CONTACTOS, FUNCIONAMIENTO CORRECTO DE SPLITTERS, CABLES NO COLGADOS NI TENSIONADOS Y PEINADO CUANDO SE REQUIERA.',
     },
     {
-      label: 'REVISIÓN RACK',
-      controlName: 'mantenimientoLimpiezaRack',
-      tooltip: 'LIMPIEZA INTERNA (SOPLETEADO) Y EXTERNA DEL RACK, REVISIÓN FÍSICA DE EQUIPOS (MIXER, AMPLIFICADOR, ACONDICIONADOR DE VOLTAJE, MODULADORES, SWITCH A/B, PLAYERS), CORRECTA ORGANIZACIÓN, ROTULACIÓN Y AUSENCIA DE OBJETOS AJENOS.',
-    },
-    {
-      label: 'VERIFICACIÓN ELÉCTRICA',
-      controlName: 'mantenimientoElectrico',
-      tooltip: 'MEDICIÓN DE LA TENSIÓN ENTREGADA POR EL REGULADOR O ACONDICIONADOR DE VOLTAJE Y REVISIÓN DEL ESTADO Y FUNCIONAMIENTO DE CONTROLES REMOTOS DE PANTALLAS Y EQUIPOS.',
+      label: 'REVISIÓN DE NIVELES',
+      controlName: 'mantenimientoNiveles',
+      tooltip: 'VERIFICACIÓN DE LOS NIVELES ÓPTIMOS DE AUDIO Y TRANSMISIÓN EN LA SUCURSAL.',
     },
   ];
 
@@ -141,9 +131,13 @@ export class ModalMaintenanceAvCheckComponent {
     }
   }
 
-  onCheckboxChange(event: any) {
-    this.progreso = event.checked
-      ? this.progreso + 12.5
-      : this.progreso - 12.5;
+  onCheckboxChange(event?: any) {
+    let completadas = 0;
+    this.opcionesDeMantenimiento.forEach(opcion => {
+      if (this.formularioDeMantenimiento.get(opcion.controlName)?.value) {
+        completadas++;
+      }
+    });
+    this.progreso = Math.round((completadas / this.opcionesDeMantenimiento.length) * 100);
   }
 }

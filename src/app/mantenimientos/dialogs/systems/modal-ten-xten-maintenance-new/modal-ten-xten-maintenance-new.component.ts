@@ -45,8 +45,6 @@ export class ModalTenXtenMaintenanceNewComponent implements OnInit {
       estatus: true,
       mantenimientoCaja: false,
       mantenimientoCCTV: false,
-      mantenimientoConcentradorApps: false,
-      mantenimientoContenidosSistemaCable: false,
       mantenimientoImpresoras: false,
       mantenimientoInternet: false,
       mantenimientoNoBrakes: false,

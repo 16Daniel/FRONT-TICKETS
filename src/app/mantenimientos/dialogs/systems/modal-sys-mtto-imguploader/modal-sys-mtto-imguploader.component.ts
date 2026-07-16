@@ -140,12 +140,7 @@ export class ModalSysMttoImguploaderComponent {
           ...urls
         ];
         break;
-      case 'CONTENIDOS':
-        this.mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoContenidosSistemaCableEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
+
       case 'INTERNET':
         this.mantenimiento.mantenimientoInternetEvidenciaUrls = [
           ...(this.mantenimiento.mantenimientoInternetEvidenciaUrls || []),
@@ -170,12 +165,7 @@ export class ModalSysMttoImguploaderComponent {
           ...urls
         ];
         break;
-      case 'APPS':
-        this.mantenimiento.mantenimientoConcentradorAppsEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoConcentradorAppsEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
+
     }
 
     await this.maintenance10x10Service.update(this.mantenimiento.id, this.mantenimiento);

@@ -58,11 +58,6 @@ export class ModalTenXtenMaintenanceCheckComponent {
       tooltip: 'AREA Y CABLEADO DE PDV ACOMODADOS  / NUMERO DE TABLETAS COMPLETAS Y EN BUEN ESTADO',
     },
     {
-      label: 'MANTENIMIENTO CONTENIDOS A Y B / STREAMING',
-      controlName: 'mantenimientoContenidosSistemaCable',
-      tooltip: 'GARANTIZAR CORRECTA REPRODUCCION DE CONTENIDOS A Y B / STREAMING',
-    },
-    {
       label: 'MANTENIMIENTO DE INTERNET',
       controlName: 'mantenimientoInternet',
       tooltip: 'GARANTIZAR 2 INTERNET ESTABLES Y NOMBRES DE RED CORRECTOS',
@@ -81,11 +76,6 @@ export class ModalTenXtenMaintenanceCheckComponent {
       label: 'MANTENIMIENTO TIEMPOS EN COCINA',
       controlName: 'mantenimientoTiemposCocina',
       tooltip: 'AREA Y CABLEADO DE TIEMPOS EN COCINA ACOMODADOS Y GARANTIZAR FUNCIONAMIENTO',
-    },
-    {
-      label: 'MANTENIMIENTO CONCENTRADOR DE APPS',
-      controlName: 'mantenimientoConcentradorApps',
-      tooltip: 'AREA Y CABLEADO DE CONCENTRADOR DE APPS ACOMODADOS Y GARANTIZAR FUNCIONAMIENTO',
     },
   ];
 
@@ -152,8 +142,13 @@ export class ModalTenXtenMaintenanceCheckComponent {
     }
   }
 
-  onCheckboxChange(event: any) {
-    console.log('Checkbox cambiado:', event.checked);
-    this.progreso = event.checked ? this.progreso + 10 : this.progreso - 10;
+  onCheckboxChange(event?: any) {
+    let completadas = 0;
+    this.opcionesDeMantenimiento.forEach(opcion => {
+      if (this.formularioDeMantenimiento.get(opcion.controlName)?.value) {
+        completadas++;
+      }
+    });
+    this.progreso = Math.round((completadas / this.opcionesDeMantenimiento.length) * 100);
   }
 }

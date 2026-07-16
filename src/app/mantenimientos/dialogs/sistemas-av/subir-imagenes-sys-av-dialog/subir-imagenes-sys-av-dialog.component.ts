@@ -143,11 +143,11 @@ export class SubirImagenesSysAvComponent {
         break;
 
       /* =======================
-         IMAGEN
+         NIVELES
       ======================== */
-      case 'IMAGEN':
-        this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || []),
+      case 'NIVELES':
+        this.mantenimiento.mantenimientoNivelesEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoNivelesEvidenciaUrls || []),
           ...urls
         ];
         break;
@@ -187,25 +187,7 @@ export class SubirImagenesSysAvComponent {
         ];
         break;
 
-      /* =======================
-         RACK
-      ======================== */
-      case 'RACK':
-        this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
 
-      /* =======================
-         ELECTRICO
-      ======================== */
-      case 'ELECTRICO':
-        this.mantenimiento.mantenimientoElectricoEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoElectricoEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
     }
 
     await this.maintenance10x10Service.updateAV(

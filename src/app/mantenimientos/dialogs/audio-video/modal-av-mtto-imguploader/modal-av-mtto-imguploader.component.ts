@@ -143,11 +143,11 @@ export class ModalAvMttoImguploaderComponent {
         break;
 
       /* =======================
-         IMAGEN
+         NIVELES
       ======================== */
-      case 'IMAGEN':
-        this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || []),
+      case 'NIVELES':
+        this.mantenimiento.mantenimientoNivelesEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoNivelesEvidenciaUrls || []),
           ...urls
         ];
         break;
@@ -187,25 +187,7 @@ export class ModalAvMttoImguploaderComponent {
         ];
         break;
 
-      /* =======================
-         RACK
-      ======================== */
-      case 'RACK':
-        this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
 
-      /* =======================
-         ELECTRICO
-      ======================== */
-      case 'ELECTRICO':
-        this.mantenimiento.mantenimientoElectricoEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoElectricoEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
     }
 
     await this.maintenance6x6AvService.update(

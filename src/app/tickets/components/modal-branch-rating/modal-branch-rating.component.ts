@@ -65,24 +65,18 @@ export class ModalBranchRatingComponent {
   }
 
   private calcularPorcentajeMantenimiento(mantenimiento: MantenimientoSys) {
-    let porcentaje = 0;
-    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoPuntosVentaTabletas
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoContenidosSistemaCable
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoConcentradorApps
-      ? (porcentaje += 10)
-      : porcentaje;
+    const totalActividades = 8;
+    let completadas = 0;
+    if (mantenimiento.mantenimientoCaja) completadas++;
+    if (mantenimiento.mantenimientoImpresoras) completadas++;
+    if (mantenimiento.mantenimientoRack) completadas++;
+    if (mantenimiento.mantenimientoPuntosVentaTabletas) completadas++;
+    if (mantenimiento.mantenimientoInternet) completadas++;
+    if (mantenimiento.mantenimientoCCTV) completadas++;
+    if (mantenimiento.mantenimientoNoBrakes) completadas++;
+    if (mantenimiento.mantenimientoTiemposCocina) completadas++;
 
+    const porcentaje = Math.round((completadas / totalActividades) * 100);
     this.calificacionMantenimiento = Math.round((porcentaje / 100) * 5);
   }
 
