@@ -17,7 +17,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
 @Component({
@@ -48,7 +48,7 @@ export class SucursalCadenaSuministrosTabComponent {
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarModal10x10: boolean = false;
+  mostrarModalMtooTI: boolean = false;
   mostrarModal8x8: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalHistorialMantenimientosAV: boolean = false;
@@ -68,7 +68,7 @@ export class SucursalCadenaSuministrosTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoService: MantenimientosTIService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -162,7 +162,7 @@ export class SucursalCadenaSuministrosTabComponent {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-        this.mostrarModal10x10 = true;
+        this.mostrarModalMtooTI = true;
       },
       reject: () => { },
     });

@@ -28,7 +28,7 @@ import { Maintenance6x6AvService } from '../../../mantenimientos/services/mainte
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
@@ -95,7 +95,7 @@ export class AdminAudioVideoTabComponent {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private maintenanceService: Maintenance6x6AvService,
-    private maintenanceSysService: Maintenance10x10Service,
+    private maintenanceSysService: MantenimientosTIService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {

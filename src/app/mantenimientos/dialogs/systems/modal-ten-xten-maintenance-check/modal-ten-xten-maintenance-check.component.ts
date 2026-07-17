@@ -14,7 +14,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { ProgressBarComponent } from '../../../components/progress-bar/progress-bar.component';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../services/mantenimientos-ti.service';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
@@ -33,7 +33,7 @@ import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interfac
   styleUrl: './modal-ten-xten-maintenance-check.component.scss',
 })
 export class ModalTenXtenMaintenanceCheckComponent {
-  @Input() showModal10x10: boolean = false;
+  @Input() mostrarModalMtooTI: boolean = false;
   @Input() mantenimientoActivo: MantenimientoSys | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -81,7 +81,7 @@ export class ModalTenXtenMaintenanceCheckComponent {
 
   constructor(
     private fb: FormBuilder,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoService: MantenimientosTIService,
     private messageService: MessageService
   ) {
     this.crearFormulario();

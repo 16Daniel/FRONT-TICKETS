@@ -6,7 +6,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { TicketsService } from '../../services/tickets.service';
 import { Ticket } from '../../interfaces/ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
@@ -33,7 +33,7 @@ export class ModalBranchRatingComponent {
   calificacion30TicketsSupervisor: number = 0;
 
   constructor(
-    private maintenance10x10Service: Maintenance10x10Service,
+    private mantenimientosTIService: MantenimientosTIService,
     private ticketsService: TicketsService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -50,7 +50,7 @@ export class ModalBranchRatingComponent {
   }
 
   obtenerUltimoMantenimiento() {
-    this.maintenance10x10Service.getLastMaintenanceByBranch(this.sucursal.id).subscribe(result => {
+    this.mantenimientosTIService.getLastMaintenanceByBranch(this.sucursal.id).subscribe(result => {
       if (result) {
         this.calcularPorcentajeMantenimiento(result[0]);
       }

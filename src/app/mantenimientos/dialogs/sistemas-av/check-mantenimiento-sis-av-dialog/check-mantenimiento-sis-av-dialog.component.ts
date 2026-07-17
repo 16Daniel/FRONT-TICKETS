@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../services/mantenimientos-ti.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 import { ProgressBar80Component } from "../../../components/progress-bar-80/progress-bar-80.component";
 
@@ -75,7 +75,7 @@ export class CheckMantenimientoSisAvComponent {
 
   constructor(
     private fb: FormBuilder,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoService: MantenimientosTIService,
     private messageService: MessageService
   ) {
     this.crearFormulario();

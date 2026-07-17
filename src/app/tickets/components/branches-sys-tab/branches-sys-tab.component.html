@@ -64,8 +64,8 @@
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientosAV"
   (closeEvent)="mostrarModalHistorialMantenimientosAV = false"></app-historial-mantenimiento-sys-av-dialog>
 
-<app-modal-ten-xten-maintenance-check *ngIf="mostrarModal10x10" [showModal10x10]="mostrarModal10x10"
-  (closeEvent)="mostrarModal10x10 = false"
+<app-modal-ten-xten-maintenance-check *ngIf="mostrarModalMtooTI" [mostrarModalMtooTI]="mostrarModalMtooTI"
+  (closeEvent)="mostrarModalMtooTI = false"
   [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
 
 <app-check-mantenimiento-sis-av-dialog *ngIf="mostrarModal8x8" [showModal8x8]="mostrarModal8x8"

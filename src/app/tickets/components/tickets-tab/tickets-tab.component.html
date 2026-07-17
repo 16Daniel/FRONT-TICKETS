@@ -122,12 +122,12 @@
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
   (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
 
-<app-modal-ten-xten-maintenance-check *ngIf="mostrarModal10x10" [showModal10x10]="mostrarModal10x10"
-  (closeEvent)="mostrarModal10x10 = false"
+<app-modal-ten-xten-maintenance-check *ngIf="mostrarModalMtooTI" [mostrarModalMtooTI]="mostrarModalMtooTI"
+  (closeEvent)="mostrarModalMtooTI = false"
   [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
 
-<app-modal-ten-xten-maintenance-new *ngIf="mostrarModal10x10New" [mostrarModal10x10New]="mostrarModal10x10New"
-  (closeEvent)="mostrarModal10x10New = false"></app-modal-ten-xten-maintenance-new>
+<app-modal-ten-xten-maintenance-new *ngIf="mostrarModalMtooTINuevo" [mostrarModalMtooTINew]="mostrarModalMtooTINuevo"
+  (closeEvent)="mostrarModalMtooTINuevo = false"></app-modal-ten-xten-maintenance-new>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

@@ -14,7 +14,7 @@ import { ShoppingService } from '../../../pagos/services/shopping.service';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
 import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-chat/admin-compras-chat.component';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { ChatMantenimientoSysAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 
 @Component({
@@ -57,7 +57,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private mantenimientoFactory: MantenimientoFactoryService,
     private shopingService: ShoppingService,
-    private maintenance10x10Service: Maintenance10x10Service
+    private mantenimientosTIService: MantenimientosTIService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -126,7 +126,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
     this.mantenimientoSub?.unsubscribe();
 
     if (tipoOrigen === 'Sistemas-8x8') {
-      this.mantenimientoSub = this.maintenance10x10Service.getByIdAV(id).subscribe((mantenimiento: any) => {
+      this.mantenimientoSub = this.mantenimientosTIService.getByIdAV(id).subscribe((mantenimiento: any) => {
         this.mantenimiento = mantenimiento;
         this.mostrarModalChatMantenimientoAV = true;
         this.cdr.detectChanges();

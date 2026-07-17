@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../services/mantenimientos-ti.service';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
@@ -26,7 +26,7 @@ export class ModalSysMttoImguploaderComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance10x10Service: Maintenance10x10Service
+    private mantenimientosTIService: MantenimientosTIService
   ) { }
 
   onHide() {
@@ -168,6 +168,6 @@ export class ModalSysMttoImguploaderComponent {
 
     }
 
-    await this.maintenance10x10Service.update(this.mantenimiento.id, this.mantenimiento);
+    await this.mantenimientosTIService.update(this.mantenimiento.id, this.mantenimiento);
   }
 }

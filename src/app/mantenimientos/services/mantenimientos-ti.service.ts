@@ -26,7 +26,7 @@ import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.inter
 @Injectable({
   providedIn: 'root',
 })
-export class Maintenance10x10Service implements IMantenimientoService {
+export class MantenimientosTIService implements IMantenimientoService {
   pathName: string = 'mantenimientos-10x10';
   pathNameAv: string = 'mantenimientos-sys-av';
 

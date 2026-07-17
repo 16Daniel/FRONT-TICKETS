@@ -20,7 +20,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { NotificationService } from '../../../shared/services/notification.service';
@@ -69,8 +69,8 @@ export class TicketsTabComponent implements OnInit {
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarModal10x10: boolean = false;
-  mostrarModal10x10New: boolean = false;
+  mostrarModalMtooTI: boolean = false;
+  mostrarModalMtooTINuevo: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
@@ -100,7 +100,7 @@ export class TicketsTabComponent implements OnInit {
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
-    private mantenimientoSysService: Maintenance10x10Service,
+    private mantenimientoSysService: MantenimientosTIService,
     private messageService: MessageService,
     private usersService: UsersService,
     private branchesService: BranchesService,
@@ -108,7 +108,7 @@ export class TicketsTabComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
-    private maintenance10x10Service: Maintenance10x10Service
+    private mantenimientosTIService: MantenimientosTIService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -188,7 +188,7 @@ export class TicketsTabComponent implements OnInit {
         this.cdr.detectChanges();
       });
 
-    this.subscriptiontk = this.maintenance10x10Service
+    this.subscriptiontk = this.mantenimientosTIService
       .getUltimosMantenimientosAV(idsSucursales)
       .subscribe((result: any) => {
         let data = result.filter((element: any) => element.length > 0);

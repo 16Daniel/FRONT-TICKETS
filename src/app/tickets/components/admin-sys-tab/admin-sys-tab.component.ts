@@ -26,7 +26,7 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
@@ -97,7 +97,7 @@ export class AdminSysTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance10x10Service,
+    private maintenanceService: MantenimientosTIService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {
@@ -202,7 +202,7 @@ export class AdminSysTabComponent {
       next: (data) => {
         this.sucursales = data;
 
-        // 10x10
+        // TI
         this.maintenanceService
           .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
@@ -223,7 +223,7 @@ export class AdminSysTabComponent {
             this.cdr.detectChanges();
           });
 
-        // 8x8
+        // AV TI
         this.maintenanceService
           .getUltimosMantenimientosAV(
             this.sucursales.map((sucursal) => sucursal.id)

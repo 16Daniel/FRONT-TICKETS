@@ -20,7 +20,7 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos
 import { CheckMantenimientoSisAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/check-mantenimiento-sis-av-dialog/check-mantenimiento-sis-av-dialog.component';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component";
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
@@ -57,7 +57,7 @@ export class BranchesSysTabComponent {
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarModal10x10: boolean = false;
+  mostrarModalMtooTI: boolean = false;
   mostrarModal8x8: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalHistorialMantenimientosAV: boolean = false;
@@ -76,7 +76,7 @@ export class BranchesSysTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientoService: MantenimientosTIService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -171,7 +171,7 @@ export class BranchesSysTabComponent {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-        this.mostrarModal10x10 = true;
+        this.mostrarModalMtooTI = true;
       },
       reject: () => { },
     });

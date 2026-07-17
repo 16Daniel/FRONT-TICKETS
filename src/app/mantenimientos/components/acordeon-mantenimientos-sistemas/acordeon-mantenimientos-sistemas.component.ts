@@ -6,7 +6,7 @@ import { AccordionModule } from 'primeng/accordion';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../services/mantenimientos-ti.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
@@ -34,7 +34,7 @@ export class AcordeonMantenimientosSistemasComponent {
 
   constructor(
     private usersService: UsersService,
-    private maintenance10x10Service: Maintenance10x10Service,
+    private mantenimientosTIService: MantenimientosTIService,
     private datesHelper: DatesHelperService
 
   ) { this.obtenerUsuariosHelp(); }
@@ -98,7 +98,7 @@ export class AcordeonMantenimientosSistemasComponent {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenance10x10Service.calcularPorcentaje(registro[0]);
+        porcentaje = this.mantenimientosTIService.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;
@@ -124,7 +124,7 @@ export class AcordeonMantenimientosSistemasComponent {
     return dias;
   }
 
-  obtenerColorDeFondoSucursal10x10(value: number): string {
+  obtenerColorDeFondoMantenimientoTI(value: number): string {
     let str = '';
 
     if (value <= 50) {
@@ -146,7 +146,7 @@ export class AcordeonMantenimientosSistemasComponent {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 
-  obtenerColorDeTexto10x10(value: number): string {
+  obtenerColorDeTextoMantenimientoTI(value: number): string {
     let str = '';
 
     if (value <= 50) {

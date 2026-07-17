@@ -21,7 +21,7 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { CategoriesService } from '../../../tickets/services/categories.service';
 import { StatusTicketService } from '../../../tickets/services/status-ticket.service';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 
@@ -71,7 +71,7 @@ export default class AdminReportsTabComponent implements OnInit {
     private usersService: UsersService,
     private categoriesService: CategoriesService,
     private statusTicketService: StatusTicketService,
-    private mantenimientosService: Maintenance10x10Service,
+    private mantenimientosService: MantenimientosTIService,
   ) {
     this.areasService.areas$.subscribe(result => this.areas = result);
   }

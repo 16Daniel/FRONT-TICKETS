@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../services/mantenimientos-ti.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 
 @Component({
@@ -30,7 +30,7 @@ export class SubirImagenesSysAv2Component {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance10x10Service: Maintenance10x10Service
+    private mantenimientosTIService: MantenimientosTIService
   ) { }
 
   onHide() {
@@ -202,7 +202,7 @@ export class SubirImagenesSysAv2Component {
         break;
     }
 
-    await this.maintenance10x10Service.updateAV(
+    await this.mantenimientosTIService.updateAV(
       this.mantenimiento.id,
       this.mantenimiento
     );

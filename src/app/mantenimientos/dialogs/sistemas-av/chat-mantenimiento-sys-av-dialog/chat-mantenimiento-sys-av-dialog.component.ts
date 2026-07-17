@@ -10,7 +10,7 @@ import { MantenimientoFactoryService } from '../../../services/maintenance-facto
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../../shared/services/mensajes-pendientes.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../../services/mantenimientos-ti.service';
 
 @Component({
   selector: 'app-chat-mantenimiento-sys-av-dialog',
@@ -36,7 +36,7 @@ export class ChatMantenimientoSysAvComponent {
   private mantenimientoSub?: Subscription;
 
   constructor(
-    private maintenance10x10Service: Maintenance10x10Service,
+    private mantenimientosTIService: MantenimientosTIService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
     private cdr: ChangeDetectorRef,
@@ -55,13 +55,13 @@ export class ChatMantenimientoSysAvComponent {
       this.userdata.id
     );
 
-    this.mantenimientoSub = this.maintenance10x10Service.getByIdAV(this.idMnatenimiento!).subscribe(
+    this.mantenimientoSub = this.mantenimientosTIService.getByIdAV(this.idMnatenimiento!).subscribe(
       async (mantenimiento) => {
         this.mantenimiento = mantenimiento;
         this.cdr.detectChanges();
 
         try {
-          await this.maintenance10x10Service.updateLastCommentReadAV(
+          await this.mantenimientosTIService.updateLastCommentReadAV(
             this.mantenimiento!.id,
             this.userdata.id,
             this.mantenimiento!.comentarios ? this.mantenimiento!.comentarios.length : 0
@@ -110,13 +110,13 @@ export class ChatMantenimientoSysAvComponent {
     this.mantenimiento!.comentarios.push(data);
 
 
-    this.maintenance10x10Service
+    this.mantenimientosTIService
       .updateAV(this.mantenimiento!.id, this.mantenimiento!)
       .then(async () => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
         this.comentario = '';
 
-        await this.maintenance10x10Service.updateLastCommentReadAV(
+        await this.mantenimientosTIService.updateLastCommentReadAV(
           this.mantenimiento!.id,
           this.userdata.id,
           this.mantenimiento!.comentarios.length

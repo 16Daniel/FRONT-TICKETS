@@ -9,7 +9,7 @@ import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal
 import { ModalMaintenanceChatComponent } from '../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { MantenimientosTIService } from '../../services/mantenimientos-ti.service';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 
@@ -48,7 +48,7 @@ export class TablaMantenimientosSistemasComponent {
   constructor(
     public dateHelpder: DatesHelperService,
     private cdr: ChangeDetectorRef,
-    public maintenance10x10Service: Maintenance10x10Service,
+    public mantenimientosTIService: MantenimientosTIService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
@@ -243,6 +243,6 @@ export class TablaMantenimientosSistemasComponent {
 
     }
 
-    await this.maintenance10x10Service.update(this.mantenimientoSeleccionado.id, this.mantenimientoSeleccionado);
+    await this.mantenimientosTIService.update(this.mantenimientoSeleccionado.id, this.mantenimientoSeleccionado);
   }
 }
