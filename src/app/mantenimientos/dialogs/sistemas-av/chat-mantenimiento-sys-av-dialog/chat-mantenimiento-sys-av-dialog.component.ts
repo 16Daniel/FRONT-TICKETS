@@ -46,8 +46,8 @@ export class ChatMantenimientoSysAvComponent {
   }
 
   async ngOnInit() {
-    let tipoOrigen: 'Sistemas-8x8';
-    tipoOrigen = 'Sistemas-8x8';
+    let tipoOrigen: 'AudioVideo';
+    tipoOrigen = 'AudioVideo';
 
     await this.mensajesPendientesService.marcarComoLeidos(
       this.idMnatenimiento!,
@@ -124,8 +124,8 @@ export class ChatMantenimientoSysAvComponent {
 
         this.cdr.detectChanges();
 
-        let tipoOrigen: 'Sistemas-8x8';
-        tipoOrigen = 'Sistemas-8x8';
+        let tipoOrigen: 'AudioVideo';
+        tipoOrigen = 'AudioVideo';
 
         await this.mensajesPendientesService.crearMensajesPendientes(
           tipoOrigen!,

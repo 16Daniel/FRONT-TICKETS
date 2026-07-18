@@ -68,8 +68,8 @@
   (closeEvent)="mostrarModalMtooTI = false"
   [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
 
-<app-check-mantenimiento-sis-av-dialog *ngIf="mostrarModal8x8" [showModal8x8]="mostrarModal8x8"
-  (closeEvent)="mostrarModal8x8 = false"
+<app-check-mantenimiento-sis-av-dialog *ngIf="mostrarModalAV" [mostrarModalAV]="mostrarModalAV"
+  (closeEvent)="mostrarModalAV = false"
   [mantenimientoActivo]="mantenimientoAVActivo"></app-check-mantenimiento-sis-av-dialog>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"

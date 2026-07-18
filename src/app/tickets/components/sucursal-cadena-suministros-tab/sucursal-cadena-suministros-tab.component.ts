@@ -49,7 +49,7 @@ export class SucursalCadenaSuministrosTabComponent {
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
   mostrarModalMtooTI: boolean = false;
-  mostrarModal8x8: boolean = false;
+  mostrarModalAV: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalHistorialMantenimientosAV: boolean = false;
   mostrarModalRating: boolean = false;
@@ -185,7 +185,7 @@ export class SucursalCadenaSuministrosTabComponent {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-        this.mostrarModal8x8 = true;
+        this.mostrarModalAV = true;
       },
       reject: () => { },
     });

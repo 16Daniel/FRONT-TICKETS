@@ -90,10 +90,8 @@ export class ChatNotificationsButtonComponent implements OnInit {
         this.abrirChatTicket(item.idOrigen);
         break;
 
-      case 'Sistemas-8x8':
-      case '10x10':
-      case '8x8':
-      case 'AudioVideo-8x8':
+      case 'Sistemas':
+      case 'AudioVideo':
         this.abrirChatMantenimiento(item.idOrigen, item.tipoOrigen)
         break;
 
@@ -125,7 +123,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
   abrirChatMantenimiento(id: string, tipoOrigen: string) {
     this.mantenimientoSub?.unsubscribe();
 
-    if (tipoOrigen === 'Sistemas-8x8') {
+    if (tipoOrigen === 'AudioVideo') {
       this.mantenimientoSub = this.mantenimientosSistemasService.getByIdAV(id).subscribe((mantenimiento: any) => {
         this.mantenimiento = mantenimiento;
         this.mostrarModalChatMantenimientoAV = true;
@@ -134,13 +132,13 @@ export class ChatNotificationsButtonComponent implements OnInit {
     }
     else {
       switch (tipoOrigen) {
-        case '10x10':
+        case 'Sistemas':
           this.idArea = '1';
           break;
-        case 'AudioVideo-8x8':
+        case 'AudioVideo':
           this.idArea = '2';
           break;
-        case '8x8':
+        case '6x6':
           this.idArea = '4';
           break;
       }

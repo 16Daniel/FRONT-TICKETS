@@ -46,16 +46,16 @@ export class ModalMaintenanceChatComponent {
   }
 
   async ngOnInit() {
-    let tipoOrigen: '10x10' | '8x8' | 'AudioVideo-8x8';
+    let tipoOrigen: 'Sistemas' | 'AudioVideo';
     switch (this.idArea) {
       case '1':
-        tipoOrigen = '10x10';
+        tipoOrigen = 'Sistemas';
         break;
       case '2':
-        tipoOrigen = 'AudioVideo-8x8';
+        tipoOrigen = 'AudioVideo';
         break;
       case '4':
-        tipoOrigen = '8x8';
+        tipoOrigen = 'AudioVideo';
         break;
     }
 
@@ -137,16 +137,16 @@ export class ModalMaintenanceChatComponent {
 
         this.cdr.detectChanges();
 
-        let tipoOrigen: '10x10' | '8x8' | 'AudioVideo-8x8';
+        let tipoOrigen: 'Sistemas' | 'AudioVideo';
         switch (this.idArea) {
           case '1':
-            tipoOrigen = '10x10';
+            tipoOrigen = 'Sistemas';
             break;
           case '2':
-            tipoOrigen = 'AudioVideo-8x8';
+            tipoOrigen = 'AudioVideo';
             break;
           case '4':
-            tipoOrigen = '8x8';
+            tipoOrigen = 'AudioVideo';
             break;
         }
 

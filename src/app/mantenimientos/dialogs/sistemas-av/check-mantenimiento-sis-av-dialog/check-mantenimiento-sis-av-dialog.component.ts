@@ -33,7 +33,7 @@ import { ProgressBar80Component } from "../../../components/progress-bar-80/prog
   styleUrl: './check-mantenimiento-sis-av-dialog.component.scss',
 })
 export class CheckMantenimientoSisAvComponent {
-  @Input() showModal8x8: boolean = false;
+  @Input() mostrarModalAV: boolean = false;
   @Input() mantenimientoActivo: MantenimientoSysAv | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 

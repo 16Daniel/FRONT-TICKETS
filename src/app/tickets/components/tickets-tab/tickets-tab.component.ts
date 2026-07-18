@@ -86,7 +86,7 @@ export class TicketsTabComponent implements OnInit {
   ultimosmantenimientosAV: any[] = [];
   private unsubscribe!: () => void;
   ordenarxmantenimiento: boolean = false;
-  mostrar8x8av: boolean = false;
+  mostrarAV: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];

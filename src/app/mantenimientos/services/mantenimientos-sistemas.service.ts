@@ -27,8 +27,8 @@ import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.inter
   providedIn: 'root',
 })
 export class MantenimientosSistemasService implements IMantenimientoService {
-  pathName: string = 'mantenimientos-10x10';
-  pathNameAv: string = 'mantenimientos-sys-av';
+  pathName: string = 'mantenimientos-sistemas';
+  pathNameAv: string = 'mantenimientos-audio-video';
 
   constructor(private firestore: Firestore) { }
 
