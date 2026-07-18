@@ -26,7 +26,7 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
@@ -97,7 +97,7 @@ export class AdminSysTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: MantenimientosTIService,
+    private maintenanceService: MantenimientosSistemasService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {

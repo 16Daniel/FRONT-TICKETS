@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { MantenimientosTIService } from '../../../services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 import { TablaMantenimientosSysAvComponent } from "../../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
@@ -43,7 +43,7 @@ export class HistorialMantenimeintoSysAvComponent {
   paginaCargaPrimeraVez: boolean = true;
 
   constructor(
-    private mantenimientosTIService: MantenimientosTIService,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private messageService: MessageService,
     private usersService: UsersService,
     private cdr: ChangeDetectorRef,
@@ -71,7 +71,7 @@ export class HistorialMantenimeintoSysAvComponent {
   }
 
   async obtenerMantenimientosPorSucursal(idSucursal: string): Promise<void> {
-    this.mantenimientosTIService.getHistorialMantenimeintosAV(
+    this.mantenimientosSistemasService.getHistorialMantenimeintosAV(
       this.fechaInicio,
       this.fechaFin,
       idSucursal,
@@ -104,7 +104,7 @@ export class HistorialMantenimeintoSysAvComponent {
   }
 
   obtenerUltimoMantenimiento() {
-    this.mantenimientosTIService.getLastMaintenanceByBranchAV(this.idSucursal).subscribe(result => {
+    this.mantenimientosSistemasService.getLastMaintenanceByBranchAV(this.idSucursal).subscribe(result => {
       this.mantenimientos = result;
     })
   }

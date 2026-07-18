@@ -17,7 +17,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
-import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
 @Component({
@@ -68,7 +68,7 @@ export class SucursalCadenaSuministrosTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientoService: MantenimientosTIService,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -127,7 +127,7 @@ export class SucursalCadenaSuministrosTabComponent {
   }
 
   async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+    this.unsubscribe = this.mantenimientosSistemasService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
@@ -135,7 +135,7 @@ export class SucursalCadenaSuministrosTabComponent {
       }
     );
 
-    this.unsubscribeAV = this.mantenimientoService.getMantenimientoActivoAV(
+    this.unsubscribeAV = this.mantenimientosSistemasService.getMantenimientoActivoAV(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoAVActivo = mantenimiento;

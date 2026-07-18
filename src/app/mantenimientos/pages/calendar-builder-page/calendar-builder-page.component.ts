@@ -35,7 +35,7 @@ import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
-import { MantenimientosTIService } from '../../services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { TarjetaSucursalPorVisitarComponent } from '../../components/tarjeta-sucursal-por-visitar/tarjeta-sucursal-por-visitar.component';
 
@@ -100,7 +100,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private fixedAssetsService: FixedAssetsService,
     private maintenanceMtooService: MaintenanceMtooService,
-    private mantenimientosTIService: MantenimientosTIService,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private datesHelper: DatesHelperService,
     private areasService: AreasService
   ) {
@@ -478,7 +478,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
         });
       });
 
-      await this.mantenimientosTIService.createAv(
+      await this.mantenimientosSistemasService.createAv(
         sucursal.id,
         this.usuarioseleccionado!.id,
         this.fecha,
@@ -597,9 +597,9 @@ export default class CalendarBuilderPageComponent implements OnInit {
           await servicio.delete(element.id);
         });
 
-        let temp2 = await this.mantenimientosTIService.obtenerMantenimientoVisitaPorFechaAreaAV(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
+        let temp2 = await this.mantenimientosSistemasService.obtenerMantenimientoVisitaPorFechaAreaAV(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
         temp2.forEach(async (element: any) => {
-          await this.mantenimientosTIService.deleteAV(element.id);
+          await this.mantenimientosSistemasService.deleteAV(element.id);
         });
       }
 

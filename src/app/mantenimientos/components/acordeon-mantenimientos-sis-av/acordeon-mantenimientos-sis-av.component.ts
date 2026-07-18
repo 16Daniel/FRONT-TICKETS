@@ -6,7 +6,7 @@ import { AccordionModule } from 'primeng/accordion';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { MantenimientosTIService } from '../../services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
@@ -35,7 +35,7 @@ export class AcordeonMantenimientosSisAvComponent {
 
   constructor(
     private usersService: UsersService,
-    private mantenimientosTIService: MantenimientosTIService,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private datesHelper: DatesHelperService
 
   ) { this.obtenerUsuariosHelp(); }
@@ -99,7 +99,7 @@ export class AcordeonMantenimientosSisAvComponent {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.mantenimientosTIService.calcularPorcentajeAV(registro[0]);
+        porcentaje = this.mantenimientosSistemasService.calcularPorcentajeAV(registro[0]);
       }
     }
     return porcentaje;

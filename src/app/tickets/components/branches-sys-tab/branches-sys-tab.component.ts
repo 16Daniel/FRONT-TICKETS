@@ -20,7 +20,7 @@ import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos
 import { CheckMantenimientoSisAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/check-mantenimiento-sis-av-dialog/check-mantenimiento-sis-av-dialog.component';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
-import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component";
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
@@ -76,7 +76,7 @@ export class BranchesSysTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientoService: MantenimientosTIService,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -136,7 +136,7 @@ export class BranchesSysTabComponent {
   }
 
   async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+    this.unsubscribe = this.mantenimientosSistemasService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
@@ -144,7 +144,7 @@ export class BranchesSysTabComponent {
       }
     );
 
-    this.unsubscribeAV = this.mantenimientoService.getMantenimientoActivoAV(
+    this.unsubscribeAV = this.mantenimientosSistemasService.getMantenimientoActivoAV(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoAVActivo = mantenimiento;

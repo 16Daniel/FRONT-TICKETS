@@ -60,7 +60,7 @@
                 <label style="color: white;">{{ mantenimiento.mantenimientoTiemposCocina ? 'Si' : 'No' }}</label>
             </td>
 
-            <td class="text-center">{{ mantenimientosTIService.calcularPorcentaje(mantenimiento) }}%</td>
+            <td class="text-center">{{ mantenimientosSistemasService.calcularPorcentaje(mantenimiento) }}%</td>
             <td style="display: flex; gap: 10px">
                 <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
                     (click)="abrirModalDetalle(mantenimiento)">

@@ -20,7 +20,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
-import { MantenimientosTIService } from '../../../mantenimientos/services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { NotificationService } from '../../../shared/services/notification.service';
@@ -100,7 +100,6 @@ export class TicketsTabComponent implements OnInit {
   constructor(
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
-    private mantenimientoSysService: MantenimientosTIService,
     private messageService: MessageService,
     private usersService: UsersService,
     private branchesService: BranchesService,
@@ -108,7 +107,7 @@ export class TicketsTabComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
-    private mantenimientosTIService: MantenimientosTIService
+    private mantenimientosSistemasService: MantenimientosSistemasService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -188,7 +187,7 @@ export class TicketsTabComponent implements OnInit {
         this.cdr.detectChanges();
       });
 
-    this.subscriptiontk = this.mantenimientosTIService
+    this.subscriptiontk = this.mantenimientosSistemasService
       .getUltimosMantenimientosAV(idsSucursales)
       .subscribe((result: any) => {
         let data = result.filter((element: any) => element.length > 0);
@@ -269,7 +268,7 @@ export class TicketsTabComponent implements OnInit {
   }
 
   async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoSysService.getMantenimientoActivo(
+    this.unsubscribe = this.mantenimientosSistemasService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;

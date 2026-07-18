@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 
 import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { MantenimientosTIService } from '../../../services/mantenimientos-ti.service';
+import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 import { TablaMantenimientosSistemasComponent } from '../../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
@@ -43,7 +43,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   paginaCargaPrimeraVez: boolean = true;
 
   constructor(
-    private mantenimientosTIService: MantenimientosTIService,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private messageService: MessageService,
     private usersService: UsersService,
     private cdr: ChangeDetectorRef,
@@ -71,7 +71,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   async obtenerMantenimientosPorSucursal(idSucursal: string): Promise<void> {
-    this.mantenimientosTIService.getHistorialMantenimeintos(
+    this.mantenimientosSistemasService.getHistorialMantenimeintos(
       this.fechaInicio,
       this.fechaFin,
       idSucursal,
@@ -104,7 +104,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   obtenerUltimoMantenimiento() {
-    this.mantenimientosTIService.getLastMaintenanceByBranch(this.idSucursal).subscribe(result => {
+    this.mantenimientosSistemasService.getLastMaintenanceByBranch(this.idSucursal).subscribe(result => {
       this.mantenimientos = result;
     })
   }
