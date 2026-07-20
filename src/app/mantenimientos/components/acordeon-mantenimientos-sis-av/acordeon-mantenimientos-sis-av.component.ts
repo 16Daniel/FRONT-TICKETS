@@ -12,6 +12,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
 import { TablaMantenimientosSysAvComponent } from "../tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
 import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class AcordeonMantenimientosSisAvComponent {
 
   constructor(
     private usersService: UsersService,
-    private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private datesHelper: DatesHelperService
 
   ) { this.obtenerUsuariosHelp(); }
@@ -99,7 +100,7 @@ export class AcordeonMantenimientosSisAvComponent {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.mantenimientosSistemasService.calcularPorcentajeAV(registro[0]);
+        porcentaje = this.maintenanceAvService.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;

@@ -16,6 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 import { ProgressBar80Component } from "../../../components/progress-bar-80/progress-bar-80.component";
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-check-mantenimiento-sis-av-dialog',
@@ -76,6 +77,7 @@ export class CheckMantenimientoSisAvComponent {
   constructor(
     private fb: FormBuilder,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private messageService: MessageService
   ) {
     this.crearFormulario();
@@ -112,7 +114,7 @@ export class CheckMantenimientoSisAvComponent {
       estatus: false,
     };
 
-    await this.mantenimientosSistemasService.updateAV(mantenimiento.id, mantenimiento);
+    await this.maintenanceAvService.update(mantenimiento.id, mantenimiento);
     // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
     this.closeEvent.emit(false); // Cerrar modal
   }

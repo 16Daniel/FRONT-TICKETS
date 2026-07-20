@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-subir-imagen-sys-av-dialog',
@@ -26,7 +27,8 @@ export class SubirImagenesSysAvComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private mantenimientosSistemasService: MantenimientosSistemasService
+    private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
   ) { }
 
   onHide() {
@@ -190,7 +192,7 @@ export class SubirImagenesSysAvComponent {
 
     }
 
-    await this.mantenimientosSistemasService.updateAV(
+    await this.maintenanceAvService.update(
       this.mantenimiento.id,
       this.mantenimiento
     );

@@ -12,6 +12,7 @@ import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 import { TablaMantenimientosSysAvComponent } from "../../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
 import { ModalMaintenanceDetailComponent } from "../../systems/modal-maintenance-detail/modal-maintenance-detail.component";
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-historial-mantenimiento-sys-av-dialog',
@@ -43,7 +44,7 @@ export class HistorialMantenimeintoSysAvComponent {
   paginaCargaPrimeraVez: boolean = true;
 
   constructor(
-    private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private messageService: MessageService,
     private usersService: UsersService,
     private cdr: ChangeDetectorRef,
@@ -71,7 +72,7 @@ export class HistorialMantenimeintoSysAvComponent {
   }
 
   async obtenerMantenimientosPorSucursal(idSucursal: string): Promise<void> {
-    this.mantenimientosSistemasService.getHistorialMantenimeintosAV(
+    this.maintenanceAvService.getHistorialMantenimeintos(
       this.fechaInicio,
       this.fechaFin,
       idSucursal,
@@ -104,7 +105,7 @@ export class HistorialMantenimeintoSysAvComponent {
   }
 
   obtenerUltimoMantenimiento() {
-    this.mantenimientosSistemasService.getLastMaintenanceByBranchAV(this.idSucursal).subscribe(result => {
+    this.maintenanceAvService.getLastMaintenanceByBranch(this.idSucursal).subscribe(result => {
       this.mantenimientos = result;
     })
   }
