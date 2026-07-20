@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-subir-imagen-av-dialog-2',
@@ -30,7 +30,7 @@ export class SubirImagenesAv2Component {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance6x6AvService: Maintenance6x6AvService
+    private maintenance6x6AvService: MaintenanceAvService
   ) { }
 
   onHide() {

@@ -33,6 +33,7 @@ import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -98,6 +99,7 @@ export class AdminSysTabComponent {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private maintenanceService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {
@@ -224,8 +226,8 @@ export class AdminSysTabComponent {
           });
 
         // AV TI
-        this.maintenanceService
-          .getUltimosMantenimientosAV(
+        this.maintenanceAvService
+          .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {

@@ -23,6 +23,7 @@ import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimi
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component";
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -77,6 +78,7 @@ export class BranchesSysTabComponent {
   constructor(
     public cdr: ChangeDetectorRef,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -144,7 +146,7 @@ export class BranchesSysTabComponent {
       }
     );
 
-    this.unsubscribeAV = this.mantenimientosSistemasService.getMantenimientoActivoAV(
+    this.unsubscribeAV = this.maintenanceAvService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoAVActivo = mantenimiento;

@@ -24,7 +24,7 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
@@ -94,8 +94,9 @@ export class AdminAudioVideoTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance6x6AvService,
+    private maintenanceService: MaintenanceAvService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {
@@ -216,8 +217,8 @@ export class AdminAudioVideoTabComponent {
           });
 
 
-        this.mantenimientosSistemasService
-          .getUltimosMantenimientosAV(
+        this.maintenanceAvService
+          .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {

@@ -7,7 +7,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 import { ProgressBar80Component } from "../../../components/progress-bar-80/progress-bar-80.component";
 
@@ -70,7 +70,7 @@ export class ModalMaintenanceAvCheckComponent {
 
   constructor(
     private fb: FormBuilder,
-    private maintenance6x6AvService: Maintenance6x6AvService,
+    private maintenance6x6AvService: MaintenanceAvService,
     private messageService: MessageService
   ) {
     this.crearFormulario();

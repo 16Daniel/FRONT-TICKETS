@@ -14,6 +14,7 @@ import { ChatMantenimientoSysAvComponent } from '../../dialogs/sistemas-av/chat-
 import { EvidenciaSysAv, VisorImagenesSysAvComponent } from '../../dialogs/sistemas-av/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component';
 import { SubirImagenesSysAv2Component } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog-2/subir-imagenes-sys-av-dialog-2.component';
 import { SubirImagenesSysAvComponent } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-tabla-mantenimientos-sys-av',
@@ -56,7 +57,7 @@ export class TablaMantenimientosSysAvComponent {
   constructor(
     public dateHelpder: DatesHelperService,
     private cdr: ChangeDetectorRef,
-    public mantenimientosSistemasService: MantenimientosSistemasService,
+    public mantenimientosAvService: MaintenanceAvService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
@@ -302,7 +303,7 @@ export class TablaMantenimientosSysAvComponent {
 
     }
 
-    await this.mantenimientosSistemasService.updateAV(
+    await this.mantenimientosAvService.update(
       this.mantenimientoSeleccionado.id,
       this.mantenimientoSeleccionado
     );

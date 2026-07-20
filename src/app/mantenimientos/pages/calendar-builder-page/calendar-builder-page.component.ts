@@ -38,6 +38,7 @@ import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { TarjetaSucursalPorVisitarComponent } from '../../components/tarjeta-sucursal-por-visitar/tarjeta-sucursal-por-visitar.component';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-calendar-builder-page',
@@ -99,8 +100,8 @@ export default class CalendarBuilderPageComponent implements OnInit {
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private fixedAssetsService: FixedAssetsService,
-    private maintenanceMtooService: MaintenanceMtooService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private datesHelper: DatesHelperService,
     private areasService: AreasService
   ) {
@@ -478,7 +479,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
         });
       });
 
-      await this.mantenimientosSistemasService.createAv(
+      await this.maintenanceAvService.create(
         sucursal.id,
         this.usuarioseleccionado!.id,
         this.fecha,
@@ -597,9 +598,9 @@ export default class CalendarBuilderPageComponent implements OnInit {
           await servicio.delete(element.id);
         });
 
-        let temp2 = await this.mantenimientosSistemasService.obtenerMantenimientoVisitaPorFechaAreaAV(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
+        let temp2 = await this.maintenanceAvService.obtenerMantenimientoVisitaPorFechaArea(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
         temp2.forEach(async (element: any) => {
-          await this.mantenimientosSistemasService.deleteAV(element.id);
+          await this.maintenanceAvService.delete(element.id);
         });
       }
 

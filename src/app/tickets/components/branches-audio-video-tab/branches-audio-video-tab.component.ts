@@ -16,7 +16,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ModalMaintenanceAvHistoryComponent } from '../../../mantenimientos/dialogs/audio-video/modal-maintenance-av-history/modal-maintenance-av-history.component';
 import { ModalMaintenanceAvCheckComponent } from '../../../mantenimientos/dialogs/audio-video/modal-maintenance-av-check/modal-maintenance-av-check.component';
-import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
@@ -64,7 +64,7 @@ export class BranchesAudioVideoTabComponent {
   constructor(
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private mantenimientoService: Maintenance6x6AvService
+    private mantenimientoService: MaintenanceAvService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];

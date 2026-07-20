@@ -6,7 +6,7 @@ import { BadgeModule } from 'primeng/badge';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
@@ -30,7 +30,7 @@ export class AcordeonMantenimientosAudioVideoComponent {
 
   constructor(
     private usersService: UsersService,
-    private maintenance6x6AvService: Maintenance6x6AvService,
+    private maintenanceAvService: MaintenanceAvService,
     private datesHelper: DatesHelperService
   ) { this.obtenerUsuariosHelp(); }
 
@@ -98,7 +98,7 @@ export class AcordeonMantenimientosAudioVideoComponent {
 
       let diaspasados = this.obtenerDiasPasados(idSucursal);
       if (diaspasados <= 30) {
-        porcentaje = this.maintenance6x6AvService.calcularPorcentaje(registro[0]);
+        porcentaje = this.maintenanceAvService.calcularPorcentaje(registro[0]);
       }
     }
     return porcentaje;

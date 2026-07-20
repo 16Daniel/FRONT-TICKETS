@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
-import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 
 @Component({
@@ -26,7 +26,7 @@ export class ModalAvMttoImguploaderComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance6x6AvService: Maintenance6x6AvService
+    private maintenance6x6AvService: MaintenanceAvService
   ) { }
 
   onHide() {
