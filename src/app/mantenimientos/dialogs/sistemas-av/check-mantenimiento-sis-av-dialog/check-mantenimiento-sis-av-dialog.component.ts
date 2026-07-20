@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 import { ProgressBar80Component } from "../../../components/progress-bar-80/progress-bar-80.component";
 
@@ -33,7 +33,7 @@ import { ProgressBar80Component } from "../../../components/progress-bar-80/prog
   styleUrl: './check-mantenimiento-sis-av-dialog.component.scss',
 })
 export class CheckMantenimientoSisAvComponent {
-  @Input() showModal8x8: boolean = false;
+  @Input() mostrarModalAV: boolean = false;
   @Input() mantenimientoActivo: MantenimientoSysAv | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -52,11 +52,6 @@ export class CheckMantenimientoSisAvComponent {
       tooltip: 'COMPROBACIÓN DE QUE LA SEÑAL DE VIDEO LLEGUE CORRECTAMENTE A TODAS LAS PANTALLAS, SIN INTERMITENCIAS, CORTES O DEGRADACIÓN EN AMBOS CONTENIDOS DISTRIBUIDOS.',
     },
     {
-      label: 'AJUSTE DE PARÁMETROS DE IMAGEN',
-      controlName: 'mantenimientoParametrosImagen',
-      tooltip: 'AJUSTE DE BRILLO, CONTRASTE, NITIDEZ, COLOR Y LUMINOSIDAD DE LAS PANTALLAS CUANDO SEA NECESARIO, ASEGURANDO UNIFORMIDAD Y CORRECTA VISUALIZACIÓN EN LA SUCURSAL.',
-    },
-    {
       label: 'REVISIÓN FÍSICA Y FUNCIONAL DE BOCINAS',
       controlName: 'mantenimientoFuncionalBocinas',
       tooltip: 'INSPECCIÓN DEL ESTADO FÍSICO DE LAS BOCINAS, CORRECTA FIJACIÓN, CONEXIONES FIRMES Y AUSENCIA DE GOLPES O DAÑOS VISIBLES.',
@@ -72,20 +67,15 @@ export class CheckMantenimientoSisAvComponent {
       tooltip: 'INSPECCIÓN DEL CABLEADO DE AUDIO Y VIDEO: DETECCIÓN DE FALSOS CONTACTOS, FUNCIONAMIENTO CORRECTO DE SPLITTERS, CABLES NO COLGADOS NI TENSIONADOS Y PEINADO CUANDO SE REQUIERA.',
     },
     {
-      label: 'REVISIÓN RACK',
-      controlName: 'mantenimientoLimpiezaRack',
-      tooltip: 'LIMPIEZA INTERNA (SOPLETEADO) Y EXTERNA DEL RACK, REVISIÓN FÍSICA DE EQUIPOS (MIXER, AMPLIFICADOR, ACONDICIONADOR DE VOLTAJE, MODULADORES, SWITCH A/B, PLAYERS), CORRECTA ORGANIZACIÓN, ROTULACIÓN Y AUSENCIA DE OBJETOS AJENOS.',
-    },
-    {
-      label: 'VERIFICACIÓN ELÉCTRICA',
-      controlName: 'mantenimientoElectrico',
-      tooltip: 'MEDICIÓN DE LA TENSIÓN ENTREGADA POR EL REGULADOR O ACONDICIONADOR DE VOLTAJE Y REVISIÓN DEL ESTADO Y FUNCIONAMIENTO DE CONTROLES REMOTOS DE PANTALLAS Y EQUIPOS.',
+      label: 'REVISIÓN DE NIVELES',
+      controlName: 'mantenimientoNiveles',
+      tooltip: 'VERIFICACIÓN DE LOS NIVELES ÓPTIMOS DE AUDIO Y TRANSMISIÓN EN LA SUCURSAL.',
     },
   ];
 
   constructor(
     private fb: FormBuilder,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private messageService: MessageService
   ) {
     this.crearFormulario();
@@ -122,7 +112,7 @@ export class CheckMantenimientoSisAvComponent {
       estatus: false,
     };
 
-    await this.mantenimientoService.updateAV(mantenimiento.id, mantenimiento);
+    await this.mantenimientosSistemasService.updateAV(mantenimiento.id, mantenimiento);
     // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
     this.closeEvent.emit(false); // Cerrar modal
   }
@@ -146,9 +136,13 @@ export class CheckMantenimientoSisAvComponent {
     }
   }
 
-  onCheckboxChange(event: any) {
-    this.progreso = event.checked
-      ? this.progreso + 12.5
-      : this.progreso - 12.5;
+  onCheckboxChange(event?: any) {
+    let completadas = 0;
+    this.opcionesDeMantenimiento.forEach(opcion => {
+      if (this.formularioDeMantenimiento.get(opcion.controlName)?.value) {
+        completadas++;
+      }
+    });
+    this.progreso = Math.round((completadas / this.opcionesDeMantenimiento.length) * 100);
   }
 }

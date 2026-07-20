@@ -26,9 +26,9 @@ import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.inter
 @Injectable({
   providedIn: 'root',
 })
-export class Maintenance10x10Service implements IMantenimientoService {
-  pathName: string = 'mantenimientos-10x10';
-  pathNameAv: string = 'mantenimientos-sys-av';
+export class MantenimientosSistemasService implements IMantenimientoService {
+  pathName: string = 'mantenimientos-sistemas';
+  pathNameAv: string = 'mantenimientos-audio-video';
 
   constructor(private firestore: Firestore) { }
 
@@ -42,8 +42,6 @@ export class Maintenance10x10Service implements IMantenimientoService {
 
       mantenimientoCaja: false,
       mantenimientoCCTV: false,
-      mantenimientoConcentradorApps: false,
-      mantenimientoContenidosSistemaCable: false,
       mantenimientoImpresoras: false,
       mantenimientoInternet: false,
       mantenimientoNoBrakes: false,
@@ -81,12 +79,10 @@ export class Maintenance10x10Service implements IMantenimientoService {
       estatus: true,
       mantenimientoPantallasSoporte: false,
       mantenimientoSenalVideo: false,
-      mantenimientoParametrosImagen: false,
       mantenimientoFuncionalBocinas: false,
       mantenimientoTransmisionAudio: false,
       mantenimientoOrdenamientoCableado: false,
-      mantenimientoLimpiezaRack: false,
-      mantenimientoElectrico: false,
+      mantenimientoNiveles: false,
       observaciones: '',
       comentarios: [],
       tvs,
@@ -104,45 +100,33 @@ export class Maintenance10x10Service implements IMantenimientoService {
   calcularPorcentaje(mantenimiento: MantenimientoSys): number {
     if (!mantenimiento) return 0;
 
-    let porcentaje = 0;
-    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoPuntosVentaTabletas
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoContenidosSistemaCable
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoConcentradorApps
-      ? (porcentaje += 10)
-      : porcentaje;
+    const totalActividades = 8;
+    let completadas = 0;
+    if (mantenimiento.mantenimientoCaja) completadas++;
+    if (mantenimiento.mantenimientoImpresoras) completadas++;
+    if (mantenimiento.mantenimientoRack) completadas++;
+    if (mantenimiento.mantenimientoPuntosVentaTabletas) completadas++;
+    if (mantenimiento.mantenimientoInternet) completadas++;
+    if (mantenimiento.mantenimientoCCTV) completadas++;
+    if (mantenimiento.mantenimientoNoBrakes) completadas++;
+    if (mantenimiento.mantenimientoTiemposCocina) completadas++;
 
-    return porcentaje;
+    return Math.round((completadas / totalActividades) * 100);
   }
 
   calcularPorcentajeAV(mantenimiento: MantenimientoSysAv) {
     if (!mantenimiento) return 0;
 
-    let porcentaje = 0;
-    mantenimiento.mantenimientoPantallasSoporte ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoSenalVideo ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoParametrosImagen ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoFuncionalBocinas
-      ? (porcentaje += 12.5)
-      : porcentaje;
-    mantenimiento.mantenimientoTransmisionAudio
-      ? (porcentaje += 12.5)
-      : porcentaje;
-    mantenimiento.mantenimientoOrdenamientoCableado ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoLimpiezaRack ? (porcentaje += 12.5) : porcentaje;
-    mantenimiento.mantenimientoElectrico ? (porcentaje += 12.5) : porcentaje;
+    const totalActividades = 6;
+    let completadas = 0;
+    if (mantenimiento.mantenimientoPantallasSoporte) completadas++;
+    if (mantenimiento.mantenimientoSenalVideo) completadas++;
+    if (mantenimiento.mantenimientoFuncionalBocinas) completadas++;
+    if (mantenimiento.mantenimientoTransmisionAudio) completadas++;
+    if (mantenimiento.mantenimientoOrdenamientoCableado) completadas++;
+    if (mantenimiento.mantenimientoNiveles) completadas++;
 
-    return Math.round(porcentaje);
+    return Math.round((completadas / totalActividades) * 100);
   }
 
   get(): Observable<MantenimientoSys[]> {

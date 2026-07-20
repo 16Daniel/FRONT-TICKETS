@@ -15,7 +15,7 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 import { TablaMantenimientosSysAvComponent } from "../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { TablaMantenimientosSistemasComponent } from '../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TablaMantenimientosMantenimientoComponent } from '../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
 import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
@@ -66,7 +66,7 @@ export default class ModalEventDetailComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private cdr: ChangeDetectorRef,
     private datesHelper: DatesHelperService,
-    private maintenance10x10Service: Maintenance10x10Service
+    private mantenimientosSistemasService: MantenimientosSistemasService
   ) {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -93,7 +93,7 @@ export default class ModalEventDetailComponent implements OnInit {
       this.cdr.detectChanges();
     });
 
-    await this.maintenance10x10Service.getMantenimientosPorSucursalYFechaAV([this.sucursal.id], this.fecha).subscribe((result: any) => {
+    await this.mantenimientosSistemasService.getMantenimientosPorSucursalYFechaAV([this.sucursal.id], this.fecha).subscribe((result: any) => {
       let data = result.filter((element: any) => element.length > 0);
       this.mantenimientosDelDiaAV = [];
       for (let itemdata of data) {

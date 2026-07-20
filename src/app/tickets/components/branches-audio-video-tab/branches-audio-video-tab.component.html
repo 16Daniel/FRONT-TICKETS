@@ -43,7 +43,7 @@
 [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
 (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-maintenance-av-history>
 
-<app-modal-maintenance-av-check *ngIf="mostrarModalMantenimiento" [showModal8x8]="mostrarModalMantenimiento"
+<app-modal-maintenance-av-check *ngIf="mostrarModalMantenimiento" [mostrarModalAV]="mostrarModalMantenimiento"
   (closeEvent)="mostrarModalMantenimiento = false"
   [mantenimientoActivo]="mantenimientoActivo"></app-modal-maintenance-av-check>
 

@@ -7,7 +7,7 @@ import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Maintenance10x10Service } from '../../services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
 import { ChatMantenimientoSysAvComponent } from '../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
@@ -56,7 +56,7 @@ export class TablaMantenimientosSysAvComponent {
   constructor(
     public dateHelpder: DatesHelperService,
     private cdr: ChangeDetectorRef,
-    public maintenance10x10Service: Maintenance10x10Service,
+    public mantenimientosSistemasService: MantenimientosSistemasService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
@@ -159,9 +159,9 @@ export class TablaMantenimientosSysAvComponent {
 
         break;
 
-      case 'IMAGEN':
+      case 'NIVELES':
 
-        this.imagenes = mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || [];
+        this.imagenes = mantenimiento.mantenimientoNivelesEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
 
         break;
@@ -190,19 +190,7 @@ export class TablaMantenimientosSysAvComponent {
 
         break;
 
-      case 'RACK':
 
-        this.imagenes = mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || [];
-        this.mostrarModalVisorImagen = true;
-
-        break;
-
-      case 'ELECTRICO':
-
-        this.imagenes = mantenimiento.mantenimientoElectricoEvidenciaUrls || [];
-        this.mostrarModalVisorImagen = true;
-
-        break;
     }
 
     this.cdr.detectChanges();
@@ -275,10 +263,10 @@ export class TablaMantenimientosSysAvComponent {
 
         break;
 
-      case 'IMAGEN':
+      case 'NIVELES':
 
-        this.mantenimientoSeleccionado.mantenimientoParametrosImagenEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoParametrosImagenEvidenciaUrls || [])
+        this.mantenimientoSeleccionado.mantenimientoNivelesEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoNivelesEvidenciaUrls || [])
             .filter(u => u !== url);
 
         break;
@@ -311,24 +299,10 @@ export class TablaMantenimientosSysAvComponent {
 
         break;
 
-      case 'RACK':
 
-        this.mantenimientoSeleccionado.mantenimientoLimpiezaRackEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoLimpiezaRackEvidenciaUrls || [])
-            .filter(u => u !== url);
-
-        break;
-
-      case 'ELECTRICO':
-
-        this.mantenimientoSeleccionado.mantenimientoElectricoEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoElectricoEvidenciaUrls || [])
-            .filter(u => u !== url);
-
-        break;
     }
 
-    await this.maintenance10x10Service.updateAV(
+    await this.mantenimientosSistemasService.updateAV(
       this.mantenimientoSeleccionado.id,
       this.mantenimientoSeleccionado
     );

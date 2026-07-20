@@ -161,9 +161,9 @@ export class TablaMantenimientosAudioVideoComponent {
 
         break;
 
-      case 'IMAGEN':
+      case 'NIVELES':
 
-        this.imagenes = mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || [];
+        this.imagenes = mantenimiento.mantenimientoNivelesEvidenciaUrls || [];
         this.mostrarModalVisorImagen = true;
 
         break;
@@ -192,19 +192,7 @@ export class TablaMantenimientosAudioVideoComponent {
 
         break;
 
-      case 'RACK':
 
-        this.imagenes = mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || [];
-        this.mostrarModalVisorImagen = true;
-
-        break;
-
-      case 'ELECTRICO':
-
-        this.imagenes = mantenimiento.mantenimientoElectricoEvidenciaUrls || [];
-        this.mostrarModalVisorImagen = true;
-
-        break;
     }
 
     this.cdr.detectChanges();
@@ -277,10 +265,10 @@ export class TablaMantenimientosAudioVideoComponent {
 
         break;
 
-      case 'IMAGEN':
+      case 'NIVELES':
 
-        this.mantenimientoSeleccionado.mantenimientoParametrosImagenEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoParametrosImagenEvidenciaUrls || [])
+        this.mantenimientoSeleccionado.mantenimientoNivelesEvidenciaUrls =
+          (this.mantenimientoSeleccionado.mantenimientoNivelesEvidenciaUrls || [])
             .filter(u => u !== url);
 
         break;
@@ -313,21 +301,7 @@ export class TablaMantenimientosAudioVideoComponent {
 
         break;
 
-      case 'RACK':
 
-        this.mantenimientoSeleccionado.mantenimientoLimpiezaRackEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoLimpiezaRackEvidenciaUrls || [])
-            .filter(u => u !== url);
-
-        break;
-
-      case 'ELECTRICO':
-
-        this.mantenimientoSeleccionado.mantenimientoElectricoEvidenciaUrls =
-          (this.mantenimientoSeleccionado.mantenimientoElectricoEvidenciaUrls || [])
-            .filter(u => u !== url);
-
-        break;
     }
 
     await this.maintenance6x6AvService.update(

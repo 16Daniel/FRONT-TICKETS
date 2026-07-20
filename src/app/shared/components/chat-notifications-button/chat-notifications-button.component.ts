@@ -14,7 +14,7 @@ import { ShoppingService } from '../../../pagos/services/shopping.service';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
 import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-chat/admin-compras-chat.component';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ChatMantenimientoSysAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 
 @Component({
@@ -57,7 +57,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private mantenimientoFactory: MantenimientoFactoryService,
     private shopingService: ShoppingService,
-    private maintenance10x10Service: Maintenance10x10Service
+    private mantenimientosSistemasService: MantenimientosSistemasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -90,10 +90,8 @@ export class ChatNotificationsButtonComponent implements OnInit {
         this.abrirChatTicket(item.idOrigen);
         break;
 
-      case 'Sistemas-8x8':
-      case '10x10':
-      case '8x8':
-      case 'AudioVideo-8x8':
+      case 'Sistemas':
+      case 'AudioVideo':
         this.abrirChatMantenimiento(item.idOrigen, item.tipoOrigen)
         break;
 
@@ -125,8 +123,8 @@ export class ChatNotificationsButtonComponent implements OnInit {
   abrirChatMantenimiento(id: string, tipoOrigen: string) {
     this.mantenimientoSub?.unsubscribe();
 
-    if (tipoOrigen === 'Sistemas-8x8') {
-      this.mantenimientoSub = this.maintenance10x10Service.getByIdAV(id).subscribe((mantenimiento: any) => {
+    if (tipoOrigen === 'AudioVideo') {
+      this.mantenimientoSub = this.mantenimientosSistemasService.getByIdAV(id).subscribe((mantenimiento: any) => {
         this.mantenimiento = mantenimiento;
         this.mostrarModalChatMantenimientoAV = true;
         this.cdr.detectChanges();
@@ -134,13 +132,13 @@ export class ChatNotificationsButtonComponent implements OnInit {
     }
     else {
       switch (tipoOrigen) {
-        case '10x10':
+        case 'Sistemas':
           this.idArea = '1';
           break;
-        case 'AudioVideo-8x8':
+        case 'AudioVideo':
           this.idArea = '2';
           break;
-        case '8x8':
+        case '6x6':
           this.idArea = '4';
           break;
       }

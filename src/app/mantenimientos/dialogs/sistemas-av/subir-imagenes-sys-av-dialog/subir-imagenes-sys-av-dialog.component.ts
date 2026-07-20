@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
 
 @Component({
@@ -26,7 +26,7 @@ export class SubirImagenesSysAvComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private maintenance10x10Service: Maintenance10x10Service
+    private mantenimientosSistemasService: MantenimientosSistemasService
   ) { }
 
   onHide() {
@@ -143,11 +143,11 @@ export class SubirImagenesSysAvComponent {
         break;
 
       /* =======================
-         IMAGEN
+         NIVELES
       ======================== */
-      case 'IMAGEN':
-        this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoParametrosImagenEvidenciaUrls || []),
+      case 'NIVELES':
+        this.mantenimiento.mantenimientoNivelesEvidenciaUrls = [
+          ...(this.mantenimiento.mantenimientoNivelesEvidenciaUrls || []),
           ...urls
         ];
         break;
@@ -187,28 +187,10 @@ export class SubirImagenesSysAvComponent {
         ];
         break;
 
-      /* =======================
-         RACK
-      ======================== */
-      case 'RACK':
-        this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoLimpiezaRackEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
 
-      /* =======================
-         ELECTRICO
-      ======================== */
-      case 'ELECTRICO':
-        this.mantenimiento.mantenimientoElectricoEvidenciaUrls = [
-          ...(this.mantenimiento.mantenimientoElectricoEvidenciaUrls || []),
-          ...urls
-        ];
-        break;
     }
 
-    await this.maintenance10x10Service.updateAV(
+    await this.mantenimientosSistemasService.updateAV(
       this.mantenimiento.id,
       this.mantenimiento
     );

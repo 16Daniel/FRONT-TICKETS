@@ -17,7 +17,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 
 @Component({
@@ -48,8 +48,8 @@ export class SucursalCadenaSuministrosTabComponent {
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarModal10x10: boolean = false;
-  mostrarModal8x8: boolean = false;
+  mostrarModalMtooTI: boolean = false;
+  mostrarModalAV: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalHistorialMantenimientosAV: boolean = false;
   mostrarModalRating: boolean = false;
@@ -68,7 +68,7 @@ export class SucursalCadenaSuministrosTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -127,7 +127,7 @@ export class SucursalCadenaSuministrosTabComponent {
   }
 
   async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientoService.getMantenimientoActivo(
+    this.unsubscribe = this.mantenimientosSistemasService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoActivo = mantenimiento;
@@ -135,7 +135,7 @@ export class SucursalCadenaSuministrosTabComponent {
       }
     );
 
-    this.unsubscribeAV = this.mantenimientoService.getMantenimientoActivoAV(
+    this.unsubscribeAV = this.mantenimientosSistemasService.getMantenimientoActivoAV(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoAVActivo = mantenimiento;
@@ -145,13 +145,13 @@ export class SucursalCadenaSuministrosTabComponent {
     );
   }
 
-  mostrarAlerta10x10() {
+  mostrarAlertaIT() {
     this.confirmationService.confirm({
       header: 'IMPORTANTE',
       message: `
       TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
       <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 10 PUNTOS
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 8 PUNTOS
       <br><br>
       CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
       acceptLabel: 'Aceptar',
@@ -162,19 +162,19 @@ export class SucursalCadenaSuministrosTabComponent {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-        this.mostrarModal10x10 = true;
+        this.mostrarModalMtooTI = true;
       },
       reject: () => { },
     });
   }
 
-  mostrarAlerta8x8() {
+  mostrarAlertaAV() {
     this.confirmationService.confirm({
       header: 'IMPORTANTE',
       message: `
       TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
       <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE AUDIO Y VIDEO EN 8 PUNTOS
+      ES UNA EVALUACIÓN DE MANTENIMIENTO DE AUDIO Y VIDEO EN 6 PUNTOS
       <br><br>
       CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
       acceptLabel: 'Aceptar',
@@ -185,7 +185,7 @@ export class SucursalCadenaSuministrosTabComponent {
       rejectButtonStyleClass: 'btn btn-light me-3 p-3',
 
       accept: () => {
-        this.mostrarModal8x8 = true;
+        this.mostrarModalAV = true;
       },
       reject: () => { },
     });

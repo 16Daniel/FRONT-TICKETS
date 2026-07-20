@@ -6,7 +6,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Maintenance10x10Service } from '../../../mantenimientos/services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { TicketsService } from '../../services/tickets.service';
 import { Ticket } from '../../interfaces/ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
@@ -33,7 +33,7 @@ export class ModalBranchRatingComponent {
   calificacion30TicketsSupervisor: number = 0;
 
   constructor(
-    private maintenance10x10Service: Maintenance10x10Service,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private ticketsService: TicketsService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -50,7 +50,7 @@ export class ModalBranchRatingComponent {
   }
 
   obtenerUltimoMantenimiento() {
-    this.maintenance10x10Service.getLastMaintenanceByBranch(this.sucursal.id).subscribe(result => {
+    this.mantenimientosSistemasService.getLastMaintenanceByBranch(this.sucursal.id).subscribe(result => {
       if (result) {
         this.calcularPorcentajeMantenimiento(result[0]);
       }
@@ -65,24 +65,18 @@ export class ModalBranchRatingComponent {
   }
 
   private calcularPorcentajeMantenimiento(mantenimiento: MantenimientoSys) {
-    let porcentaje = 0;
-    mantenimiento.mantenimientoCaja ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoImpresoras ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoRack ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoPuntosVentaTabletas
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoContenidosSistemaCable
-      ? (porcentaje += 10)
-      : porcentaje;
-    mantenimiento.mantenimientoInternet ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoCCTV ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoNoBrakes ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoTiemposCocina ? (porcentaje += 10) : porcentaje;
-    mantenimiento.mantenimientoConcentradorApps
-      ? (porcentaje += 10)
-      : porcentaje;
+    const totalActividades = 8;
+    let completadas = 0;
+    if (mantenimiento.mantenimientoCaja) completadas++;
+    if (mantenimiento.mantenimientoImpresoras) completadas++;
+    if (mantenimiento.mantenimientoRack) completadas++;
+    if (mantenimiento.mantenimientoPuntosVentaTabletas) completadas++;
+    if (mantenimiento.mantenimientoInternet) completadas++;
+    if (mantenimiento.mantenimientoCCTV) completadas++;
+    if (mantenimiento.mantenimientoNoBrakes) completadas++;
+    if (mantenimiento.mantenimientoTiemposCocina) completadas++;
 
+    const porcentaje = Math.round((completadas / totalActividades) * 100);
     this.calificacionMantenimiento = Math.round((porcentaje / 100) * 5);
   }
 

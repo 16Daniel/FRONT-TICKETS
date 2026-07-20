@@ -12,7 +12,7 @@ import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interfac
   templateUrl: './modal-ten-xten-maintenance-new.component.html',
 })
 export class ModalTenXtenMaintenanceNewComponent implements OnInit {
-  @Input() mostrarModal10x10New: boolean = false;
+  @Input() mostrarModalMtooTINew: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   sucursales: Sucursal[] = [];
 
@@ -45,8 +45,6 @@ export class ModalTenXtenMaintenanceNewComponent implements OnInit {
       estatus: true,
       mantenimientoCaja: false,
       mantenimientoCCTV: false,
-      mantenimientoConcentradorApps: false,
-      mantenimientoContenidosSistemaCable: false,
       mantenimientoImpresoras: false,
       mantenimientoInternet: false,
       mantenimientoNoBrakes: false,

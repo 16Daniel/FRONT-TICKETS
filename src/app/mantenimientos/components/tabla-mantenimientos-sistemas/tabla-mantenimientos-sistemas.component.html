@@ -9,12 +9,10 @@
             <th>IMPRESORAS</th>
             <th>RACK</th>
             <th>TPV / TABLETAS</th>
-            <th>CONTENIDOS</th>
             <th>INTERNET</th>
             <th>CCTV</th>
             <th>NO BRAKES</th>
             <th>TIEMPOS COCINA</th>
-            <th>CONCENTRADOR APPS</th>
             <th>% DE PROGRESO</th>
             <th>ACCIONES</th>
         </tr>
@@ -44,11 +42,7 @@
                 <label style="color: white;">{{ mantenimiento.mantenimientoPuntosVentaTabletas ? 'Si' : 'No'
                     }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CONTENIDOS')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoContenidosSistemaCable, 'bg-danger': !mantenimiento.mantenimientoContenidosSistemaCable}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoContenidosSistemaCable ? 'Si' : 'No'
-                    }}</label>
-            </td>
+
             <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'INTERNET')"
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoInternet, 'bg-danger': !mantenimiento.mantenimientoInternet}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoInternet ? 'Si' : 'No' }}</label>
@@ -65,11 +59,8 @@
                 [ngClass]="{'bg-success': mantenimiento.mantenimientoTiemposCocina, 'bg-danger': !mantenimiento.mantenimientoTiemposCocina}">
                 <label style="color: white;">{{ mantenimiento.mantenimientoTiemposCocina ? 'Si' : 'No' }}</label>
             </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'APPS')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoConcentradorApps, 'bg-danger': !mantenimiento.mantenimientoConcentradorApps}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoConcentradorApps ? 'Si' : 'No' }}</label>
-            </td>
-            <td class="text-center">{{ maintenance10x10Service.calcularPorcentaje(mantenimiento) }}%</td>
+
+            <td class="text-center">{{ mantenimientosSistemasService.calcularPorcentaje(mantenimiento) }}%</td>
             <td style="display: flex; gap: 10px">
                 <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
                     (click)="abrirModalDetalle(mantenimiento)">

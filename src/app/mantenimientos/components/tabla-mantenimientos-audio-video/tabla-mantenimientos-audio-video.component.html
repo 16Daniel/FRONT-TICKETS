@@ -7,12 +7,10 @@
       <th>FECHA</th>
       <th>PANTALLAS</th>
       <th>VIDEO</th>
-      <th>IMAGEN</th>
+      <th>NIVELES</th>
       <th>BOCINAS</th>
       <th>AUDIO</th>
       <th>CABLEADO</th>
-      <th>RACK</th>
-      <th>ELECTRICO</th>
       <th>% DE PROGRESO</th>
       <th>ACCIONES</th>
     </tr>
@@ -49,13 +47,13 @@
         </label>
       </td>
 
-      <!-- IMAGEN -->
-      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'IMAGEN')" [ngClass]="{
-          'bg-success': mantenimiento.mantenimientoParametrosImagen,
-          'bg-danger': !mantenimiento.mantenimientoParametrosImagen
+      <!-- NIVELES -->
+      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'NIVELES')" [ngClass]="{
+          'bg-success': mantenimiento.mantenimientoNiveles,
+          'bg-danger': !mantenimiento.mantenimientoNiveles
         }">
         <label style="color: white;">
-          {{ mantenimiento.mantenimientoParametrosImagen ? 'Si' : 'No' }}
+          {{ mantenimiento.mantenimientoNiveles ? 'Si' : 'No' }}
         </label>
       </td>
 
@@ -89,25 +87,7 @@
         </label>
       </td>
 
-      <!-- RACK -->
-      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'RACK')" [ngClass]="{
-          'bg-success': mantenimiento.mantenimientoLimpiezaRack,
-          'bg-danger': !mantenimiento.mantenimientoLimpiezaRack
-        }">
-        <label style="color: white;">
-          {{ mantenimiento.mantenimientoLimpiezaRack ? 'Si' : 'No' }}
-        </label>
-      </td>
 
-      <!-- ELECTRICO -->
-      <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'ELECTRICO')" [ngClass]="{
-          'bg-success': mantenimiento.mantenimientoElectrico,
-          'bg-danger': !mantenimiento.mantenimientoElectrico
-        }">
-        <label style="color: white;">
-          {{ mantenimiento.mantenimientoElectrico ? 'Si' : 'No' }}
-        </label>
-      </td>
 
       <!-- PROGRESO -->
       <td class="text-center">

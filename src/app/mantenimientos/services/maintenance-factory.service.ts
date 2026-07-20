@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Maintenance10x10Service } from "./maintenance-10x10.service";
+import { MantenimientosSistemasService } from "./mantenimientos-sistemas.service";
 import { Maintenance6x6AvService } from "./maintenance-av.service";
 import { MaintenanceMtooService } from "./maintenance-mtto.service";
 import { IMantenimientoService } from "../interfaces/manteinance.interface";
@@ -7,7 +7,7 @@ import { IMantenimientoService } from "../interfaces/manteinance.interface";
 @Injectable({ providedIn: 'root' })
 export class MantenimientoFactoryService {
   constructor(
-    private mantenimientoSys: Maintenance10x10Service,
+    private mantenimientoSys: MantenimientosSistemasService,
     private mantenimientoAV: Maintenance6x6AvService,
     private mantenimientoMtto: MaintenanceMtooService
   ) { }

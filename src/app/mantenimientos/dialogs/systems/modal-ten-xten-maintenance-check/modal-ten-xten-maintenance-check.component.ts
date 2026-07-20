@@ -14,7 +14,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { ProgressBarComponent } from '../../../components/progress-bar/progress-bar.component';
-import { Maintenance10x10Service } from '../../../services/maintenance-10x10.service';
+import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
@@ -33,7 +33,7 @@ import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interfac
   styleUrl: './modal-ten-xten-maintenance-check.component.scss',
 })
 export class ModalTenXtenMaintenanceCheckComponent {
-  @Input() showModal10x10: boolean = false;
+  @Input() mostrarModalMtooTI: boolean = false;
   @Input() mantenimientoActivo: MantenimientoSys | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 
@@ -58,11 +58,6 @@ export class ModalTenXtenMaintenanceCheckComponent {
       tooltip: 'AREA Y CABLEADO DE PDV ACOMODADOS  / NUMERO DE TABLETAS COMPLETAS Y EN BUEN ESTADO',
     },
     {
-      label: 'MANTENIMIENTO CONTENIDOS A Y B / STREAMING',
-      controlName: 'mantenimientoContenidosSistemaCable',
-      tooltip: 'GARANTIZAR CORRECTA REPRODUCCION DE CONTENIDOS A Y B / STREAMING',
-    },
-    {
       label: 'MANTENIMIENTO DE INTERNET',
       controlName: 'mantenimientoInternet',
       tooltip: 'GARANTIZAR 2 INTERNET ESTABLES Y NOMBRES DE RED CORRECTOS',
@@ -82,16 +77,11 @@ export class ModalTenXtenMaintenanceCheckComponent {
       controlName: 'mantenimientoTiemposCocina',
       tooltip: 'AREA Y CABLEADO DE TIEMPOS EN COCINA ACOMODADOS Y GARANTIZAR FUNCIONAMIENTO',
     },
-    {
-      label: 'MANTENIMIENTO CONCENTRADOR DE APPS',
-      controlName: 'mantenimientoConcentradorApps',
-      tooltip: 'AREA Y CABLEADO DE CONCENTRADOR DE APPS ACOMODADOS Y GARANTIZAR FUNCIONAMIENTO',
-    },
   ];
 
   constructor(
     private fb: FormBuilder,
-    private mantenimientoService: Maintenance10x10Service,
+    private mantenimientosSistemasService: MantenimientosSistemasService,
     private messageService: MessageService
   ) {
     this.crearFormulario();
@@ -128,7 +118,7 @@ export class ModalTenXtenMaintenanceCheckComponent {
       estatus: false,
     };
 
-    await this.mantenimientoService.update(mantenimiento.id, mantenimiento);
+    await this.mantenimientosSistemasService.update(mantenimiento.id, mantenimiento);
     // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
     this.closeEvent.emit(false); // Cerrar modal
   }
@@ -152,8 +142,13 @@ export class ModalTenXtenMaintenanceCheckComponent {
     }
   }
 
-  onCheckboxChange(event: any) {
-    console.log('Checkbox cambiado:', event.checked);
-    this.progreso = event.checked ? this.progreso + 10 : this.progreso - 10;
+  onCheckboxChange(event?: any) {
+    let completadas = 0;
+    this.opcionesDeMantenimiento.forEach(opcion => {
+      if (this.formularioDeMantenimiento.get(opcion.controlName)?.value) {
+        completadas++;
+      }
+    });
+    this.progreso = Math.round((completadas / this.opcionesDeMantenimiento.length) * 100);
   }
 }
