@@ -18,7 +18,6 @@ import { TablaMantenimientosSysAvComponent } from "../../components/tabla-manten
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { TablaMantenimientosSistemasComponent } from '../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TablaMantenimientosMantenimientoComponent } from '../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
-import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 
 @Component({
   selector: 'app-modal-event-detail',
@@ -32,7 +31,7 @@ import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-m
     EditorModule,
     ModalTicketDetailComponent,
     ModalMaintenanceDetailComponent,
-    TablaMantenimientosAudioVideoComponent,
+    TablaMantenimientosSysAvComponent,
     TablaMantenimientosMantenimientoComponent,
     TablaMantenimientosSysAvComponent
   ],

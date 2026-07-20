@@ -8,8 +8,8 @@ import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.inter
 @Injectable({
   providedIn: 'root'
 })
-export class Maintenance6x6AvService implements IMantenimientoService {
-  pathName: string = 'mantenimientos-av';
+export class MaintenanceAvService implements IMantenimientoService {
+  pathName: string = 'mantenimientos-audio-video';
 
   constructor(private firestore: Firestore) { }
 

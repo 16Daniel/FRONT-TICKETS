@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { MantenimientosSistemasService } from "./mantenimientos-sistemas.service";
-import { Maintenance6x6AvService } from "./maintenance-av.service";
+import { MaintenanceAvService } from "./maintenance-av.service";
 import { MaintenanceMtooService } from "./maintenance-mtto.service";
 import { IMantenimientoService } from "../interfaces/manteinance.interface";
 
@@ -8,14 +8,19 @@ import { IMantenimientoService } from "../interfaces/manteinance.interface";
 export class MantenimientoFactoryService {
   constructor(
     private mantenimientoSys: MantenimientosSistemasService,
-    private mantenimientoAV: Maintenance6x6AvService,
+    private mantenimientoAV: MaintenanceAvService,
     private mantenimientoMtto: MaintenanceMtooService
   ) { }
 
-  getService(idArea: string): IMantenimientoService {
+  getService(idArea: string, itav?: 'sistemas' | 'av'): IMantenimientoService {
     switch (idArea.toString()) {
-      case '1': return this.mantenimientoSys;
-      case '2': return this.mantenimientoAV;
+      case '1': {
+        if (itav == 'sistemas')
+          return this.mantenimientoSys
+        else {
+          return this.mantenimientoAV;
+        }
+      }; case '2': return this.mantenimientoAV;
       case '4': return this.mantenimientoMtto;
       case '20': return this.mantenimientoMtto;
       default: throw new Error('Área no soportada');

@@ -35,6 +35,7 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimient
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -108,6 +109,7 @@ export class TicketsTabComponent implements OnInit {
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private mantenimientosAvService: MaintenanceAvService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -118,7 +120,7 @@ export class TicketsTabComponent implements OnInit {
         break;
 
       case '2':
-        this.tituloMantenimiento = '6X6';
+        this.tituloMantenimiento = 'AV 6X6';
         break;
 
       case '4':
@@ -187,8 +189,8 @@ export class TicketsTabComponent implements OnInit {
         this.cdr.detectChanges();
       });
 
-    this.subscriptiontk = this.mantenimientosSistemasService
-      .getUltimosMantenimientosAV(idsSucursales)
+    this.subscriptiontk = this.mantenimientosAvService
+      .getUltimosMantenimientos(idsSucursales)
       .subscribe((result: any) => {
         let data = result.filter((element: any) => element.length > 0);
         this.ultimosmantenimientosAV = [];

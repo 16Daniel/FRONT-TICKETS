@@ -7,10 +7,10 @@ import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { Maintenance6x6AvService } from '../../../services/maintenance-av.service';
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { TablaMantenimientosAudioVideoComponent } from '../../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
+import { TablaMantenimientosSysAvComponent } from '../../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component';
 ;
 
 @Component({
@@ -22,7 +22,7 @@ import { TablaMantenimientosAudioVideoComponent } from '../../../components/tabl
     DialogModule,
     CalendarModule,
     TableModule,
-    TablaMantenimientosAudioVideoComponent
+    TablaMantenimientosSysAvComponent
   ],
   templateUrl: './modal-maintenance-av-history.component.html',
   styleUrl: './modal-maintenance-av-history.component.scss'
@@ -42,7 +42,7 @@ export class ModalMaintenanceAvHistoryComponent {
   mantenimiento: MantenimientoSysAv | any;
   paginaCargaPrimeraVez: boolean = true;
 
-  constructor(private maintenanceService: Maintenance6x6AvService,
+  constructor(private maintenanceService: MaintenanceAvService,
     private messageService: MessageService,
     private usersService: UsersService,
     private cdr: ChangeDetectorRef,
