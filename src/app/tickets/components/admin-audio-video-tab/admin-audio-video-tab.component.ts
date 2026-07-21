@@ -31,6 +31,8 @@ import { MantenimientosSistemasService } from '../../../mantenimientos/services/
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
+import { AcordeonMantenimientosSistemasComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component";
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -50,8 +52,9 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
-    AcordeonMantenimientosSisAvComponent
-  ],
+    AcordeonMantenimientosSisAvComponent,
+    AcordeonMantenimientosSistemasComponent
+],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-audio-video-tab.component.html',
   styleUrl: './admin-audio-video-tab.component.scss',
@@ -68,7 +71,7 @@ export class AdminAudioVideoTabComponent {
   mostrarModalCompras: boolean = false;
   mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: MantenimientoAudioVideo[] = [];
+  mantenimientos: MantenimientoSys[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -193,6 +196,8 @@ export class AdminAudioVideoTabComponent {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+
+        // TI
         this.maintenanceService
           .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
@@ -211,10 +216,9 @@ export class AdminAudioVideoTabComponent {
               return x;
             });
             this.cdr.detectChanges();
-
           });
 
-
+        // AV TI
         this.maintenanceAvService
           .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
