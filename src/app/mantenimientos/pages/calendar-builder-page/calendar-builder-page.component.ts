@@ -479,14 +479,14 @@ export default class CalendarBuilderPageComponent implements OnInit {
         });
       });
 
-      await this.maintenanceAvService.create(
-        sucursal.id,
-        this.usuarioseleccionado!.id,
-        this.fecha,
+      await this.maintenanceAvService.create({
+        idSucursal: String(sucursal.id),
+        idUsuario: this.usuarioseleccionado!.id,
+        fecha: this.fecha,
         tvs,
         bocinas,
         participantesChat
-      )
+      });
     }
   }
 
