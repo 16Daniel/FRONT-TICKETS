@@ -9,7 +9,7 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../../shared/services/mensajes-pendientes.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
@@ -25,13 +25,13 @@ import { MaintenanceAvService } from '../../../services/maintenance-av.service';
   styleUrl: './chat-mantenimiento-sys-av-dialog.component.scss'
 })
 
-export class ChatMantenimientoSysAvComponent {
+export class ChatMantenimientoAudioVideoComponent {
   @Input() mostrarModal: boolean = false;
   @Input() idMnatenimiento?: string;
   @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 
-  mantenimiento?: MantenimientoSysAv;
+  mantenimiento?: MantenimientoAudioVideo;
   userdata: Usuario;
   comentario: string = '';
   private mantenimientoSub?: Subscription;

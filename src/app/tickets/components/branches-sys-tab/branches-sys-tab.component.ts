@@ -19,7 +19,7 @@ import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/d
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { CheckMantenimientoSisAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/check-mantenimiento-sis-av-dialog/check-mantenimiento-sis-av-dialog.component';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component";
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
@@ -67,7 +67,7 @@ export class BranchesSysTabComponent {
 
   sucursal: Sucursal | undefined;
   mantenimientoActivo: MantenimientoSys | null = null;
-  mantenimientoAVActivo: MantenimientoSysAv | null = null;
+  mantenimientoAVActivo: MantenimientoAudioVideo | null = null;
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;

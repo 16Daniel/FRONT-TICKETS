@@ -9,7 +9,7 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
 import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
@@ -24,13 +24,13 @@ import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-
 })
 
 export class AcordeonMantenimientosSisAvComponent {
-  @Input() mantenimientos: MantenimientoSysAv[] = [];
+  @Input() mantenimientos: MantenimientoAudioVideo[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
   @Input() mostrarChat: boolean = false;
 
-  mantenimientosOriginal: MantenimientoSysAv[] = [];
-  mantenimientosOrdenados: MantenimientoSysAv[] = [];
+  mantenimientosOriginal: MantenimientoAudioVideo[] = [];
+  mantenimientosOrdenados: MantenimientoAudioVideo[] = [];
 
   usuariosHelp: Usuario[] = [];
 
@@ -144,7 +144,7 @@ export class AcordeonMantenimientosSisAvComponent {
     return str;
   }
 
-  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoSysAv[] {
+  filtrarMantenimientoPorSucursal(idSucursal: string): MantenimientoAudioVideo[] {
     return this.mantenimientos.filter((x) => x.idSucursal == idSucursal);
   }
 

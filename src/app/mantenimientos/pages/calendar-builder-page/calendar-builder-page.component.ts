@@ -436,7 +436,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
                 participantesChat
               });
 
-              this.registrarMantenimientoSysAv(sucursal, participantesChat);
+              this.registrarMantenimientoAudioVideo(sucursal, participantesChat);
             }
           }
 
@@ -459,7 +459,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  async registrarMantenimientoSysAv(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
+  async registrarMantenimientoAudioVideo(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
     if (this.usuario.idArea == '1') {
       let tvs: any[] = [];
       let bocinas: any[] = [];

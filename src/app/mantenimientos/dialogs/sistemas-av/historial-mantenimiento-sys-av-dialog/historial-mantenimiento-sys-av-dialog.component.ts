@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../../usuarios/services/users.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
 import { ModalMaintenanceDetailComponent } from "../../systems/modal-maintenance-detail/modal-maintenance-detail.component";
 import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
@@ -34,12 +34,12 @@ export class HistorialMantenimeintoSysAvComponent {
 
   fechaInicio: Date = new Date();
   fechaFin: Date = new Date();
-  mantenimientos: MantenimientoSysAv[] = [];
+  mantenimientos: MantenimientoAudioVideo[] = [];
   usuario: Usuario;
   idSucursal: string;
   usuariosHelp: Usuario[] = [];
   mostrarModalDetalleMantenimeinto: boolean = false;
-  mantenimiento: MantenimientoSysAv | any;
+  mantenimiento: MantenimientoAudioVideo | any;
   paginaCargaPrimeraVez: boolean = true;
 
   constructor(
@@ -56,7 +56,7 @@ export class HistorialMantenimeintoSysAvComponent {
     this.obtenerUsuariosHelp();
   }
 
-  abrirModalDetalleMantenimiento(mantenimiento: MantenimientoSysAv | any) {
+  abrirModalDetalleMantenimiento(mantenimiento: MantenimientoAudioVideo | any) {
     this.mantenimiento = mantenimiento;
     this.mostrarModalDetalleMantenimeinto = true;
   }

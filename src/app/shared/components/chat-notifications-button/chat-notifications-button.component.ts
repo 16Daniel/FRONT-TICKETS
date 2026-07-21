@@ -15,7 +15,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
 import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-chat/admin-compras-chat.component';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
-import { ChatMantenimientoSysAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
+import { ChatMantenimientoAudioVideoComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 
 @Component({
@@ -27,7 +27,7 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
     ModalTicketChatComponent,
     ModalMaintenanceChatComponent,
     AdminComprasChatComponent,
-    ChatMantenimientoSysAvComponent
+    ChatMantenimientoAudioVideoComponent
   ],
   providers: [MessageService],
   templateUrl: './chat-notifications-button.component.html',

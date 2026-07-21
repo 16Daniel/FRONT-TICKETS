@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
 import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
@@ -17,7 +17,7 @@ import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 })
 export class SubirImagenesSysAvComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() mantenimiento: MantenimientoSysAv | undefined;
+  @Input() mantenimiento: MantenimientoAudioVideo | undefined;
   @Input() titulo: string | undefined;
   @Output() closeEvent = new EventEmitter<boolean>();
 

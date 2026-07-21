@@ -16,7 +16,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
@@ -59,7 +59,7 @@ export class SucursalCadenaSuministrosTabComponent {
 
   sucursal: Sucursal | undefined;
   mantenimientoActivo: MantenimientoSys | null = null;
-  mantenimientoAVActivo: MantenimientoSysAv | null = null;
+  mantenimientoAVActivo: MantenimientoAudioVideo | null = null;
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;

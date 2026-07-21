@@ -79,11 +79,6 @@
       [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
     </app-acordeon-mantenimientos-sistemas>
 
-    <app-acordeon-mantenimientos-audio-video *ngIf="usuario.idArea == '2' && auxMostrarMantenimientos"
-      [mantenimientos]="ultimosmantenimientos" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
-    </app-acordeon-mantenimientos-audio-video>
-
     <app-acordeon-mantenimientos-mantenimiento *ngIf="usuario.idArea == '4' && auxMostrarMantenimientos"
       [mantenimientos]="ultimosmantenimientos" [sucursales]="sucursalesMantenimeintosActivos()"
       [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">

@@ -3,7 +3,7 @@ import { Comentario } from "../../shared/interfaces/comentario-chat.model";
 import { ParticipanteChat } from "../../shared/interfaces/participante-chat.model";
 import { Dispositivo } from "../../activos-fijos/interfaces/dispositivo.interface";
 
-export interface MantenimientoSysAv {
+export interface MantenimientoAudioVideo {
   id?: string | any;
   idSucursal: string | undefined;
   idUsuarioSoporte: string | undefined;

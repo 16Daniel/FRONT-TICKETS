@@ -31,7 +31,6 @@ import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimien
 import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
 import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
 import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
-import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
@@ -56,7 +55,6 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
     PriorityTicketsAccordionAnalystComponent,
     ModalTenXtenMaintenanceNewComponent,
     AcordeonMantenimientosSistemasComponent,
-    AcordeonMantenimientosAudioVideoComponent,
     AcordeonMantenimientosMantenimientoComponent,
     SolicitarCompraDialogComponent,
     AcordeonMantenimientosSisAvComponent

@@ -25,8 +25,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
-import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
-import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
 import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ComprasService } from '../../../compras/services/compras.service';
@@ -48,7 +47,6 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
@@ -70,7 +68,7 @@ export class AdminAudioVideoTabComponent {
   mostrarModalCompras: boolean = false;
   mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: MantenimientoSysAv[] = [];
+  mantenimientos: MantenimientoAudioVideo[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -86,7 +84,7 @@ export class AdminAudioVideoTabComponent {
   auxMostrarMantenimientos = true;
   mostrarMantenimientosAV: boolean = false;
   auxMostrarMantenimientosAV = true;
-  mantenimientosAV: MantenimientoSysAv[] = [];
+  mantenimientosAV: MantenimientoAudioVideo[] = [];
 
   constructor(
     public cdr: ChangeDetectorRef,
