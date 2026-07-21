@@ -58,16 +58,16 @@
 
 @if(mostrarMantenimientos) {
 <div class="mt-4">
-    <app-acordeon-mantenimientos-sis-av *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
+    <app-acordeon-mantenimientos-sistemas *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
         [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
-        [mostrarChat]="true"></app-acordeon-mantenimientos-sis-av>
+        [mostrarChat]="true"></app-acordeon-mantenimientos-sistemas>
 </div>
 }
 @else if(mostrarMantenimientosAV) {
 <div class="mt-4">
-    <app-acordeon-mantenimientos-sis-av *ngIf="auxMostrarMantenimientosAV" [mantenimientos]="mantenimientosAV"
+    <app-acordeon-mantenimientos-audio-video *ngIf="auxMostrarMantenimientosAV" [mantenimientos]="mantenimientosAV"
         [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
-        [mostrarChat]="true"></app-acordeon-mantenimientos-sis-av>
+        [mostrarChat]="true"></app-acordeon-mantenimientos-audio-video>
 </div>
 }
 @else {

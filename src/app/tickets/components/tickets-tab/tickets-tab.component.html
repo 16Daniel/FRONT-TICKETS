@@ -80,10 +80,10 @@
   </div>
 
   <div class="p-1 mt-4" *ngIf="mostrarAV && usuario.idArea == '1'">
-    <app-acordeon-mantenimientos-sis-av *ngIf="usuario.idArea == '1' && auxMostrarMantenimientos"
+    <app-acordeon-mantenimientos-audio-video *ngIf="usuario.idArea == '1' && auxMostrarMantenimientos"
       [mantenimientos]="ultimosmantenimientosAV" [sucursales]="sucursalesMantenimeintosActivos()"
       [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
-    </app-acordeon-mantenimientos-sis-av>
+    </app-acordeon-mantenimientos-audio-video>
   </div>
 
 </div>

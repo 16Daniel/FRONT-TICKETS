@@ -26,13 +26,13 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
-import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 import { AcordeonMantenimientosSistemasComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component";
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
+import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -52,7 +52,7 @@ import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimien
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
-    AcordeonMantenimientosSisAvComponent,
+    AcordeonMantenimientosAudioVideoComponent,
     AcordeonMantenimientosSistemasComponent
 ],
   providers: [MessageService, ConfirmationService],

@@ -82,9 +82,9 @@
 }
 @else if(mostrarMantenimientosAV) {
 <div class="mt-4">
-  <app-acordeon-mantenimientos-sis-av *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientosAV"
+  <app-acordeon-mantenimientos-audio-video *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientosAV"
     [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
-    [mostrarChat]="true"></app-acordeon-mantenimientos-sis-av>
+    [mostrarChat]="true"></app-acordeon-mantenimientos-audio-video>
 </div>
 }
 @else {

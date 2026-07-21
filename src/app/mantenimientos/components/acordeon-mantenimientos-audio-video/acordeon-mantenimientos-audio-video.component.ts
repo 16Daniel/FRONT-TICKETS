@@ -6,24 +6,22 @@ import { AccordionModule } from 'primeng/accordion';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
-import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 
 
 @Component({
-  selector: 'app-acordeon-mantenimientos-sis-av',
+  selector: 'app-acordeon-mantenimientos-audio-video',
   standalone: true,
-  imports: [TablaMantenimientosSistemasComponent, BadgeModule, CommonModule, AccordionModule, TablaMantenimientosAudioVideoComponent],
-  templateUrl: './acordeon-mantenimientos-sis-av.component.html',
-  styleUrl: './acordeon-mantenimientos-sis-av.component.scss',
+  imports: [BadgeModule, CommonModule, AccordionModule, TablaMantenimientosAudioVideoComponent],
+  templateUrl: './acordeon-mantenimientos-audio-video.component.html',
+  styleUrl: './acordeon-mantenimientos-audio-video.component.scss',
 })
 
-export class AcordeonMantenimientosSisAvComponent {
+export class AcordeonMantenimientosAudioVideoComponent {
   @Input() mantenimientos: MantenimientoAudioVideo[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() ordenarMantenimientosFecha: boolean = true;
