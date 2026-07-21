@@ -256,7 +256,7 @@ export class AdminSysTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsuariosPorRol(['4', '7'], this.usuario.idArea)
+    this.usersService.getUsuariosPorRol(['4', '7'], this.idArea)
       .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 

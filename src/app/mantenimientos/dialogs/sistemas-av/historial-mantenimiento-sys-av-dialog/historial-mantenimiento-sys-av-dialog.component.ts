@@ -7,12 +7,11 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { TablaMantenimientosSysAvComponent } from "../../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
 import { ModalMaintenanceDetailComponent } from "../../systems/modal-maintenance-detail/modal-maintenance-detail.component";
 import { MaintenanceAvService } from '../../../services/maintenance-av.service';
+import { TablaMantenimientosAudioVideoComponent } from "../../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 
 @Component({
   selector: 'app-historial-mantenimiento-sys-av-dialog',
@@ -23,8 +22,8 @@ import { MaintenanceAvService } from '../../../services/maintenance-av.service';
     CalendarModule,
     FormsModule,
     TableModule,
-    TablaMantenimientosSysAvComponent,
-    ModalMaintenanceDetailComponent
+    ModalMaintenanceDetailComponent,
+    TablaMantenimientosAudioVideoComponent
 ],
   templateUrl: './historial-mantenimiento-sys-av-dialog.component.html',
   styleUrl: './historial-mantenimiento-sys-av-dialog.component.scss',

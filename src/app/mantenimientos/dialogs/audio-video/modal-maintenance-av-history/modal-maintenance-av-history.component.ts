@@ -10,7 +10,7 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
 import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { TablaMantenimientosSysAvComponent } from '../../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component';
+import { TablaMantenimientosAudioVideoComponent } from "../../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 ;
 
 @Component({
@@ -22,8 +22,8 @@ import { TablaMantenimientosSysAvComponent } from '../../../components/tabla-man
     DialogModule,
     CalendarModule,
     TableModule,
-    TablaMantenimientosSysAvComponent
-  ],
+    TablaMantenimientosAudioVideoComponent
+],
   templateUrl: './modal-maintenance-av-history.component.html',
   styleUrl: './modal-maintenance-av-history.component.scss'
 })

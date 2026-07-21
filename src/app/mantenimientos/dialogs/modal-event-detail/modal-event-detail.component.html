@@ -25,13 +25,9 @@
       [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
       (clickEvent)="abrirModalDetalleMantenimiento($event)" [mostrarChat]="true"></app-tabla-mantenimientos-sistemas>
 
-    <app-tabla-mantenimientos-sys-av *ngIf=" usuarioSeleccionado.idArea == '1'"
+    <tabla-mantenimientos-audio-video *ngIf="usuarioSeleccionado.idArea == '1' || usuarioSeleccionado.idArea == '2'"
       [mantenimientos]="mantenimientosDelDiaAV" [usuariosHelp]="usuariosHelp"
-      (clickEvent)="abrirModalDetalleMantenimiento($event)" [mostrarChat]="true"></app-tabla-mantenimientos-sys-av>
-
-    <app-tabla-mantenimientos-sys-av *ngIf="usuarioSeleccionado.idArea == '2'"
-      [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"
-      (clickEvent)="abrirModalDetalleMantenimiento($event)" [mostrarChat]="true"></app-tabla-mantenimientos-sys-av>
+      (clickEvent)="abrirModalDetalleMantenimiento($event)" [mostrarChat]="true"></tabla-mantenimientos-audio-video>
 
     <app-tabla-mantenimientos-mantenimiento *ngIf="usuarioSeleccionado.idArea == '4'"
       [mantenimientos]="mantenimientosDelDia" [usuariosHelp]="usuariosHelp"

@@ -10,12 +10,12 @@ import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
-import { TablaMantenimientosSysAvComponent } from '../tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component';
+import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 
 @Component({
   selector: 'app-acordeon-mantenimientos-audio-video',
   standalone: true,
-  imports: [CommonModule, AccordionModule, BadgeModule, TablaMantenimientosSysAvComponent],
+  imports: [CommonModule, AccordionModule, BadgeModule, TablaMantenimientosAudioVideoComponent],
   templateUrl: './acordeon-mantenimientos-audio-video.component.html',
   styleUrl: './acordeon-mantenimientos-audio-video.component.scss'
 })

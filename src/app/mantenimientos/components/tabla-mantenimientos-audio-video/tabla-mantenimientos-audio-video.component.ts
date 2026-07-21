@@ -17,8 +17,8 @@ import { SubirImagenesSysAvComponent } from '../../dialogs/sistemas-av/subir-ima
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 @Component({
-  selector: 'app-tabla-mantenimientos-sys-av',
-  styleUrl: './tabla-mantenimientos-sys-av.component.scss',
+  selector: 'tabla-mantenimientos-audio-video',
+  styleUrl: './tabla-mantenimientos-audio-video.component.scss',
   standalone: true,
   imports: [
     TableModule,
@@ -30,9 +30,9 @@ import { MaintenanceAvService } from '../../services/maintenance-av.service';
     SubirImagenesSysAv2Component,
     VisorImagenesSysAvComponent
   ],
-  templateUrl: './tabla-mantenimientos-sys-av.component.html',
+  templateUrl: './tabla-mantenimientos-audio-video.component.html',
 })
-export class TablaMantenimientosSysAvComponent {
+export class TablaMantenimientosAudioVideoComponent {
   @Input() mantenimientos: MantenimientoSysAv[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idSucursal?: string;
