@@ -86,7 +86,7 @@
                                 </ng-template>
                                 </p-dropdown>
 </div>
- <div class="col-auto" *ngIf="usuario.id == idAdmin">
+ <div class="col-auto" *ngIf="usuario.id == idAdmin || usuario.idRol == '1'">
                                 <p>PROVEEDOR INTERNO</p>
                                 <p-dropdown [options]="catareas" [(ngModel)]="filtroArea" name="proveedor" optionLabel="nombre" [filter]="true"
                                 filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR"
