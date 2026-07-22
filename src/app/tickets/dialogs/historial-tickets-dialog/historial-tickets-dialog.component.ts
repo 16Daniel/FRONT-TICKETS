@@ -29,7 +29,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
-  selector: 'app-modal-tickets-history',
+  selector: 'app-historial-tickets-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -42,10 +42,10 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     DropdownModule,
     MultiSelectModule
   ],
-  templateUrl: './modal-tickets-history.component.html',
-  styleUrl: './modal-tickets-history.component.scss',
+  templateUrl: './historial-tickets-dialog.component.html',
+  styleUrl: './historial-tickets-dialog.component.scss',
 })
-export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
+export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
   @Input() showModalHistorial: boolean = false;
   @Input() idArea: string = '';
   @Output() closeEvent = new EventEmitter<boolean>();

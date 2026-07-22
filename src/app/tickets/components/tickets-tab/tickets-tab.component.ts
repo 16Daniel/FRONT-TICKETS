@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 
 import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../dialogs/modal-tickets-history/modal-tickets-history.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
@@ -35,6 +34,7 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -48,7 +48,7 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimient
     CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
     FormsModule,

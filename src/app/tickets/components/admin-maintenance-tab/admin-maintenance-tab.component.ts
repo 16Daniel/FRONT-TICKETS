@@ -9,7 +9,6 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
@@ -31,6 +30,7 @@ import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimi
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-admin-maintenance-tab',
@@ -43,7 +43,7 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
     OverlayPanelModule,
     ModalFilterTicketsComponent,
     CrearTicketDialogComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,

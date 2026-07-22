@@ -121,8 +121,8 @@
   [sucursales]="sucursales" (closeEvent)="mostrarModalFilterTickets = false"
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
-<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-modal-tickets-history>
+<app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-historial-tickets-dialog>
 
 <app-compras-dialog *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras" [idArea]="idArea"
   (closeEvent)="mostrarModalCompras = false"></app-compras-dialog>

@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
@@ -34,6 +33,7 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-admin-sys-tab',
@@ -46,7 +46,7 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimient
     OverlayPanelModule,
     ModalFilterTicketsComponent,
     CrearTicketDialogComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     AcordeonMantenimientosSistemasComponent,

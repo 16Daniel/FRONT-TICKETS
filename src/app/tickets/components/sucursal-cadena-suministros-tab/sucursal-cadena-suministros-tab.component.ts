@@ -8,7 +8,6 @@ import { ToastModule } from 'primeng/toast';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -20,6 +19,7 @@ import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mant
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-sucursal-cadena-suministros-tab',
@@ -32,7 +32,7 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
     CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
     FormsModule,

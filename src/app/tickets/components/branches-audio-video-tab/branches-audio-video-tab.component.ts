@@ -7,7 +7,6 @@ import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -19,6 +18,7 @@ import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mant
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { HistorialMantenimeintoSysAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component';
 import { CheckMantenimientoSisAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/check-mantenimiento-sis-av-dialog/check-mantenimiento-sis-av-dialog.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-branches-audio-video-tab',
@@ -30,7 +30,7 @@ import { CheckMantenimientoSisAvComponent } from '../../../mantenimientos/dialog
     CommonModule,
     CrearTicketDialogComponent,
     ModalTicketDetailComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
     HistorialMantenimeintoSysAvComponent,
