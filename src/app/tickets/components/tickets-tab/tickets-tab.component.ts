@@ -72,8 +72,8 @@ export class TicketsTabComponent implements OnInit {
   mostrarModalMtooTINuevo: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
   mostrarModalCompras: boolean = false;
-  mostrarAV: boolean = false;
-  mostrarSistemas: boolean = false;
+  mostrarMantenimientosAV: boolean = false;
+  mostrarMantenimientosSistemas: boolean = false;
 
   itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
@@ -87,13 +87,12 @@ export class TicketsTabComponent implements OnInit {
   loading: boolean = false;
   ultimosmantenimientos: any[] = [];
   ultimosmantenimientosAV: any[] = [];
+  ultimosmantenimientosSistemas: any[] = [];
   private unsubscribe!: () => void;
-  ordenarxmantenimiento: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];
   todasSucursales: Sucursal[] = [];
-  tituloMantenimiento: string = '';
   ordenarMantenimientosFecha: boolean = false;
   auxMostrarMantenimientos = true;
   compras: Compra[] = [];
@@ -105,7 +104,6 @@ export class TicketsTabComponent implements OnInit {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private notificationService: NotificationService,
-    private mantenimientoFactory: MantenimientoFactoryService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
@@ -113,20 +111,6 @@ export class TicketsTabComponent implements OnInit {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-
-    switch (this.usuario.idArea) {
-      case '1':
-        this.tituloMantenimiento = 'IT: 8X8';
-        break;
-
-      case '2':
-        this.tituloMantenimiento = 'AV: 6X6';
-        break;
-
-      case '4':
-        this.tituloMantenimiento = '6X6';
-        break;
-    }
   }
 
 
@@ -168,26 +152,6 @@ export class TicketsTabComponent implements OnInit {
   }
 
   obtenerMantenimientos(idsSucursales: string[]) {
-    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-    this.subscriptiontk = servicio
-      .getUltimosMantenimientos(idsSucursales)
-      .subscribe((result: any) => {
-        // console.log(result)
-        let data = result.filter((element: any) => element.length > 0);
-        this.ultimosmantenimientos = [];
-        for (let itemdata of data) {
-          for (let item of itemdata) {
-            this.ultimosmantenimientos.push(item);
-          }
-        }
-
-        this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
-          x.fecha = this.datesHelper.getDate(x.fecha);
-          return x;
-        });
-
-        this.cdr.detectChanges();
-      });
 
     this.subscriptiontk = this.mantenimientosAvService
       .getUltimosMantenimientos(idsSucursales)
@@ -201,6 +165,25 @@ export class TicketsTabComponent implements OnInit {
         }
 
         this.ultimosmantenimientosAV = this.ultimosmantenimientosAV.map(x => {
+          x.fecha = this.datesHelper.getDate(x.fecha);
+          return x;
+        });
+
+        this.cdr.detectChanges();
+      });
+
+      this.subscriptiontk = this.mantenimientosSistemasService
+      .getUltimosMantenimientos(idsSucursales)
+      .subscribe((result: any) => {
+        let data = result.filter((element: any) => element.length > 0);
+        this.ultimosmantenimientosSistemas = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.ultimosmantenimientosSistemas.push(item);
+          }
+        }
+
+        this.ultimosmantenimientosSistemas = this.ultimosmantenimientosSistemas.map(x => {
           x.fecha = this.datesHelper.getDate(x.fecha);
           return x;
         });
