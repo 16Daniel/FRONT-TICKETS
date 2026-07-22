@@ -1,0 +1,86 @@
+
+   <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+           <p-button label="Agregar Artículo" icon="pi pi-plus" severity="success" (onClick)="mostrarmodalAgregar()" />
+        </ng-template>
+    </p-toolbar>
+
+<p-table [value]="articulos" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh"  [rowHover]="true">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="tienda" 
+                    placeholder="MARCA" 
+                    ariaLabel="MARCA" />
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="nombre" 
+                    placeholder="NOMBRE" 
+                    ariaLabel="NOMBRE" />
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="codIcg" 
+                    placeholder="COD ARTÍCULO" 
+                    ariaLabel="COD ARTÍCULO" />
+            </th>
+             <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="nombreicg" 
+                    placeholder="NOMBRE ICG" 
+                    ariaLabel="NOMBRE ICG" />
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th pSortableColumn="tienda" >MARCA <p-sortIcon field="tienda" /></th>
+            <th pSortableColumn="nombre" >NOMBRE APP <p-sortIcon field="nombre" /></th>
+            <th pSortableColumn="codiIcg" >COD ARTÍCULO <p-sortIcon field="codIcg" /></th>
+            <th pSortableColumn="nombreicg" >NOMBRE ICG <p-sortIcon field="nombreicg" /></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>
+            <td>{{ getNombreMarca(product.tienda) }}</td>
+            <td>{{ product.nombre }}</td>
+            <td>{{ product.codIcg }}</td>
+            <td>{{ product.nombreicg }}</td>
+            <td> <p-button icon="pi pi-pen-to-square" severity="info" [style]="{'border-radius':'20%'}" (onClick)="mostrarModificadores(product)"/></td>
+            <td> <p-button icon="pi pi-times"  severity="danger" [style]="{'border-radius':'20%'}" (onClick)="borrarArticulo(product.id)" /></td>
+        </tr>
+    </ng-template>
+     <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                Total registrado: {{articulos ? articulos.length : 0 }} articulos.
+            </div>
+        </ng-template>
+</p-table>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+  <p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p [innerHTML]="message.message"></p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+
+<app-modal-modificadores *ngIf="modalModificadores" (closeEvent)="modalModificadores = false" [visible]="modalModificadores"
+ [data]="itemModificadores" [itemDetalles]="itemdetalles" (UpdateEvent)="cargarDatos()"></app-modal-modificadores>
+
+<app-modal-agregar-articulo-diccionario *ngIf="modalAgregarDiccionario" (closeEvent)="modalAgregarDiccionario = false"
+ [visible]="modalAgregarDiccionario" (UpdateEvent)="cargarDatos()"></app-modal-agregar-articulo-diccionario>

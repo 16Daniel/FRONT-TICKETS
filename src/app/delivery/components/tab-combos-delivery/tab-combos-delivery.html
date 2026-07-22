@@ -1,0 +1,110 @@
+<p-toast></p-toast>
+
+<div>
+    <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="Nuevo Combo" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="combos" [rows]="10" [paginator]="true" 
+             [globalFilterFields]="['idcombo','articulos']" responsiveLayout="scroll"
+             [rowHover]="true" dataKey="id">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0">Administrar Combos Delivery</h5>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id">ID (Registro) <p-sortIcon field="id"></p-sortIcon></th>
+                <th pSortableColumn="idcombo">ID Combo <p-sortIcon field="idcombo"></p-sortIcon></th>
+                <th pSortableColumn="nombrecombo">Nombre <p-sortIcon field="nombrecombo"></p-sortIcon></th>
+                <th pSortableColumn="articulos">Artículos <p-sortIcon field="articulos"></p-sortIcon></th>
+                <th>Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-combo>
+            <tr>
+                <td>{{combo.id}}</td>
+                <td>{{combo.idcombo}}</td>
+                 <td>{{combo.nombrecombo}}</td>
+                <td>{{gtenombrearticulos(combo.articulos)}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editCombo(combo)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCombo(combo)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                Total: {{combos ? combos.length : 0 }} combos registrados.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="comboDialog" [style]="{width: '70%'}" header="Detalles del Combo" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        
+     <div class="p-3" style="min-height: 400px;">
+
+           <div class="row">
+            <div class="col-md-6">
+                <p>MARCA</p>
+                 <p-dropdown [options]="catmarcas" [(ngModel)]="marcasel" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR MARCA" (onChange)="cargarArticulos()"
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+            </div>
+            <div class="col-md-6">
+                <p>ARTICULO ICG</p>
+                <p-dropdown [options]="articulos" [(ngModel)]="articulosel" optionLabel="descripcion" [filter]="true"
+            filterBy="descripcion" [showClear]="false" placeholder="SELECCIONAR ARTICULO ICG"
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.descripcion }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.descripcion }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+            </div>
+        </div>
+   
+    <div class="mt-3">
+        <p>ARTICULOS RELACIONADOS</p>
+            <p-multiSelect 
+    [options]="articulos" 
+    [(ngModel)]="articulosSel" 
+    [filter]="true" 
+    optionLabel="descripcion" 
+    placeholder="" />
+    
+    </div>
+
+     </div>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveCombo()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

@@ -103,6 +103,9 @@
         <li (click)="closemenu()"><a [routerLink]="'/nomina/reportes'">
             <i class='bx bx-bar-chart-square bx-sm'></i>&nbsp;Reportes nomina</a></li>
 
+        <li (click)="closemenu()" *ngIf="usuario.idArea == '1'"><a [routerLink]="'/main/diccionario-delivery'">
+        <i class='bx bx-book bx-sm'></i>&nbsp;Diccionario delivery</a></li>
+
         <i class='bx bx-user-circle bx-md'></i>
         <div class="">{{usuario.nombre +' ' + usuario.apellidoP}}</div>
         <div class="d-flex justify-content-center mt-3 mb-3">

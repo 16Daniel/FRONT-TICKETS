@@ -53,6 +53,10 @@ export const routes: Routes = [
         path: '',
         loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_MAIN_ROUTES),
       },
+       {
+        path: '',
+        loadChildren: () => import('./delivery/delivery.routes')
+      },
       {
         path: '',
         redirectTo: '/main/home-a',

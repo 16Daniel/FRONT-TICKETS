@@ -1,0 +1,147 @@
+<p-dialog header="MODIFICADORES" [modal]="true" [(visible)]="visible" [style]="{ width: '80%' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+    <div class="p-3" style="min-height: 400px;">
+     
+          <div class="row mb-3">
+            <div class="col-md-3">
+                <p>MARCA</p>
+                 <p-dropdown [options]="catmarcas" [(ngModel)]="marcasel" optionLabel="nombre" [filter]="true"
+            filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR MARCA" [disabled]="true"
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.nombre }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.nombre }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+            </div>
+            <div class="col-md-3">
+                <p>NOMBRE EN APP</p>
+                <input class="form-control p-1 h-42" type="text" [(ngModel)]="formnombreapp">
+            </div>
+            <div class="col-md-4">
+                <p>ARTICULO ICG</p>
+                <input type="text" class="form-control h-42" [(ngModel)]="itemDetalles!.nombreicg" disabled/>
+            </div>
+            <div class="col-md-2">
+                <p>&nbsp;</p>
+                <p-button icon="pi pi-save"  severity="success" [style]="{'border-radius':'20%'}" (onClick)="actualizarA()"/>
+            </div>
+        </div>
+  
+    
+    <div class="row mt-3 mb-3">
+        <p>AGREGAR MODIFICADOR</p>
+        <div class="col-md-4">
+            <P>ARTÍCULO ICG</P>
+             <p-dropdown [options]="modificadoresart" [(ngModel)]="modificadorSel" optionLabel="descripcion" [filter]="true"
+            filterBy="descripcion" [showClear]="false" placeholder="SELECCIONAR ARTICULO ICG"
+            [style]="{width:'100%'}">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption.descripcion }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ dep.descripcion }}</div>
+                </div>
+            </ng-template>
+             </p-dropdown>
+        </div>
+        <div class="col-md-4" *ngIf="modificadorSel != undefined">
+            <p>NOMBRE EN APP</p>
+            <input type="text" class="form-control h-42"  [(ngModel)]="modificadorSel!.nombreapp"/>
+        </div>
+        <div class="col-md-4">
+            <p>&nbsp;</p>
+            <p-button icon="pi pi-plus"  severity="success" [style]="{'border-radius':'20%'}"  (onClick)="agregarModificador()"
+            [disabled]="marcasel == undefined || modificadorSel == undefined || modificadorSel.nombreapp == ''"/>
+        </div>
+    </div>
+
+    <p-table [value]="data" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="tienda" 
+                    placeholder="MARCA" 
+                    ariaLabel="MARCA" />
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="nombre" 
+                    placeholder="NOMBRE" 
+                    ariaLabel="NOMBRE" />
+            </th>
+            <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="codIcg" 
+                    placeholder="COD ARTÍCULO" 
+                    ariaLabel="COD ARTÍCULO" />
+            </th>
+             <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="nombreicg" 
+                    placeholder="NOMBRE ICG" 
+                    ariaLabel="NOMBRE ICG" />
+            </th>
+             <th>
+                <p-columnFilter 
+                    type="text" 
+                    field="nombremodificador" 
+                    placeholder="NOMBRE MODIFICADOR" 
+                    ariaLabel="NOMBRE MODIFICADOR" />
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th pSortableColumn="tienda" >MARCA <p-sortIcon field="tienda" /></th>
+            <th pSortableColumn="nombre" >NOMBRE APP <p-sortIcon field="nombre" /></th>
+            <th pSortableColumn="codIcg" >COD ARTÍCULO <p-sortIcon field="codIcg" /></th>
+            <th pSortableColumn="nombreicg" >NOMBRE ICG <p-sortIcon field="nombreicg" /></th>
+            <th pSortableColumn="nombremodificador" >NOMBRE MODIFICADOR <p-sortIcon field="nombremodificador" /></th>
+            <th></th>   
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>
+            <td>{{ getNombreMarca(product.tienda)  }}</td>
+             <td><input type="text" class="form-control p-2" [(ngModel)]="product.nombre" [ngClass]="{'border border-danger': product.nombre == ''}"></td>
+            <td>{{ product.codIcg }}</td>
+            <td>{{ product.nombreicg }}</td>
+            <td>{{ product.nombremodificador }}</td>
+            <td> <p-button icon="pi pi-save"  severity="success" [style]="{'border-radius':'20%'}" (onClick)="actualizarM(product)"/></td>
+            <td> <p-button icon="pi pi-times"  severity="danger" [style]="{'border-radius':'20%'}"  (onClick)="borrarmodifcador(product.id)" /></td>
+        </tr>
+    </ng-template>
+</p-table>
+
+   
+    </div>
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+  <p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p [innerHTML]="message.message"></p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
