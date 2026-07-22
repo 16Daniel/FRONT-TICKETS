@@ -95,7 +95,7 @@ export class AdminAudioVideoTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: MaintenanceAvService,
+    private maintenanceService: MantenimientosSistemasService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private maintenanceAvService: MaintenanceAvService,
     private purchaseService: ComprasService,

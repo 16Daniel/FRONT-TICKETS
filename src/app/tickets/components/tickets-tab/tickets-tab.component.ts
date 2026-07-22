@@ -71,6 +71,10 @@ export class TicketsTabComponent implements OnInit {
   mostrarModalMtooTI: boolean = false;
   mostrarModalMtooTINuevo: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
+  mostrarModalCompras: boolean = false;
+  mostrarAV: boolean = false;
+  mostrarSistemas: boolean = false;
+
   itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
@@ -85,7 +89,6 @@ export class TicketsTabComponent implements OnInit {
   ultimosmantenimientosAV: any[] = [];
   private unsubscribe!: () => void;
   ordenarxmantenimiento: boolean = false;
-  mostrarAV: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];
@@ -93,7 +96,6 @@ export class TicketsTabComponent implements OnInit {
   tituloMantenimiento: string = '';
   ordenarMantenimientosFecha: boolean = false;
   auxMostrarMantenimientos = true;
-  mostrarModalCompras: boolean = false;
   compras: Compra[] = [];
 
   constructor(
@@ -118,7 +120,7 @@ export class TicketsTabComponent implements OnInit {
         break;
 
       case '2':
-        this.tituloMantenimiento = 'AV 6X6';
+        this.tituloMantenimiento = 'AV: 6X6';
         break;
 
       case '4':

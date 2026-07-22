@@ -13,11 +13,11 @@
        'banner-it': mostrarMantenimientosAV
      }">
 
-  <span *ngIf="mostrarMantenimientos">
+  <span *ngIf="mostrarMantenimientosAV">
     🔊 MODO ACTIVO: 6x6 AUDIO Y VIDEO
   </span>
 
-  <span *ngIf="mostrarMantenimientosAV">
+  <span *ngIf="mostrarMantenimientos">
     💻 MODO ACTIVO: 8x8 SISTEMAS (IT)
   </span>
 
@@ -57,14 +57,14 @@
 <div class="d-flex flex-wrap gap-2 align-items-center">
   <div class="form-check form-switch d-flex align-items-center gap-3">
     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-      style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientos"
-      (ngModelChange)="mostrarMantenimientosAV = false">
+      style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientosAV"
+      (ngModelChange)="mostrarMantenimientos = false">
     <label class="form-check-label fs-4" for="flexSwitchCheckChecked">AV: 6X6</label>
   </div>
 
   <div class="form-check form-switch d-flex align-items-center gap-2">
     <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
-      [(ngModel)]="mostrarMantenimientosAV" (ngModelChange)="mostrarMantenimientos = false">
+      [(ngModel)]="mostrarMantenimientos" (ngModelChange)="mostrarMantenimientosAV = false">
     <label class="form-check-label fs-4">IT: 8X8</label>
   </div>
 </div>

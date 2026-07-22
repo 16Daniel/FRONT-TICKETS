@@ -67,7 +67,7 @@
 
   <div class="p-1 mt-4" *ngIf="ordenarxmantenimiento">
 
-    <app-acordeon-mantenimientos-sistemas *ngIf="usuario.idArea == '1' && auxMostrarMantenimientos"
+    <app-acordeon-mantenimientos-sistemas *ngIf="(usuario.idArea == '1' || usuario.idArea == '2') && auxMostrarMantenimientos"
       [mantenimientos]="ultimosmantenimientos" [sucursales]="sucursalesMantenimeintosActivos()"
       [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
     </app-acordeon-mantenimientos-sistemas>
@@ -79,8 +79,8 @@
 
   </div>
 
-  <div class="p-1 mt-4" *ngIf="mostrarAV && usuario.idArea == '1'">
-    <app-acordeon-mantenimientos-audio-video *ngIf="usuario.idArea == '1' && auxMostrarMantenimientos"
+  <div class="p-1 mt-4" *ngIf="mostrarAV && usuario.idArea == '1' || usuario.idArea == '2'">
+    <app-acordeon-mantenimientos-audio-video *ngIf="(usuario.idArea == '1' || usuario.idArea == '2') && auxMostrarMantenimientos"
       [mantenimientos]="ultimosmantenimientosAV" [sucursales]="sucursalesMantenimeintosActivos()"
       [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
     </app-acordeon-mantenimientos-audio-video>
