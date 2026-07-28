@@ -228,6 +228,12 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
     }
   }
 
+  truncateExcelText(val: any): string {
+    if (val === null || val === undefined) return '';
+    const str = String(val);
+    return str.length > 32700 ? str.substring(0, 32700) + '... [TRUNCADO]' : str;
+  }
+
   exportToExcel(filename: string = 'historial_tickets.xlsx'): void {
     if (this.ticketsFiltrados.length === 0) {
       this.showMessage('warn', 'Atención', 'No hay datos para exportar');
@@ -246,7 +252,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
       SUBCATEGORÍA: t.idSubcategoria == null ? 'N/A' : t.nombreSubcategoria,
       ESTATUS: this.obtenerNombreEstatusTicket(t.idEstatusTicket),
       CALIFICACIÓN: t.calificacion || 0,
-      DESCRIPCIÓN: t.descripcion || ''
+      DESCRIPCIÓN: this.truncateExcelText(t.descripcion)
     }));
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);
