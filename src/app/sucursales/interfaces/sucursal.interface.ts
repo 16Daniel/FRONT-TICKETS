@@ -14,4 +14,5 @@ export class Sucursal {
   tpvsRequeridos?: number = 0;
   tvs?: Dispositivo[] = [];
   bocinas?: Dispositivo[] = [];
+  imagenesNivelesAudio?: string[] = [];
 }
