@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { AnalystTabsComponent } from '../../components/analyst-tabs/analyst-tabs.component';
+import { AnalistaTabsComponent } from '../../components/analista-tabs/analista-tabs.component';
 
 @Component({
   selector: 'app-analyst-home-page',
   standalone: true,
   imports: [
-    AnalystTabsComponent
+    AnalistaTabsComponent
   ],
   templateUrl: './analyst-home-page.html',
 })
