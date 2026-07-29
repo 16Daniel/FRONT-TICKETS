@@ -41,7 +41,7 @@ import { TarjetaSucursalPorVisitarComponent } from '../../components/tarjeta-suc
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 @Component({
-  selector: 'app-calendar-builder-page',
+  selector: 'app-constructor-calendario-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -58,10 +58,10 @@ import { MaintenanceAvService } from '../../services/maintenance-av.service';
     ModalActivityComponent
   ],
   providers: [MessageService],
-  templateUrl: './calendar-builder-page.component.html',
+  templateUrl: './constructor-calendario-page.component.html',
 })
 
-export default class CalendarBuilderPageComponent implements OnInit {
+export default class ContructorCalendarioPageComponent implements OnInit {
   sucursales: Sucursal[] = [];
   sucursalesOrdenadas: Sucursal[] = [];
   sucursalesSeleccionadas: Sucursal[] = [];
