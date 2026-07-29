@@ -43,7 +43,7 @@
     </div>
 
     <!-- SECCION: NIVELES DE AUDIO -->
-    <div class="mt-3 p-3 border rounded shadow-sm bg-light" *ngIf="mostrarRadiografiaMap[item.id]">
+    <div class="mt-3 p-3 border rounded shadow-sm bg-light" *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '2'">
       <h6 class="fw-bold mb-2 text-primary">
         <i class="fas fa-volume-up me-2"></i>Niveles de Audio
       </h6>
