@@ -59,4 +59,67 @@ export class TablaTvsBocinasComponent implements OnInit {
       this.tipo = tipo;
     }
   }
+
+  agregarDispositivo(tipo: 'TV' | 'BOCINA') {
+    import('sweetalert2').then(SwalModule => {
+      const Swal = SwalModule.default;
+      Swal.fire({
+        title: `Agregar ${tipo === 'TV' ? 'TV' : 'Bocina'}`,
+        input: 'text',
+        inputLabel: 'Nombre del dispositivo o número de serie',
+        inputPlaceholder: 'Ej. TV Sala Principal',
+        showCancelButton: true,
+        confirmButtonText: 'Agregar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+          if (!value) {
+            return '¡Necesitas escribir un nombre!';
+          }
+          return null;
+        }
+      }).then((result) => {
+        if (result.isConfirmed && result.value) {
+          const nuevoDispositivo = new Dispositivo();
+          nuevoDispositivo.nombre = result.value;
+          nuevoDispositivo.estatus = '1'; // Default status (e.g. active)
+
+          if (tipo === 'TV') {
+            if (!this.sucursal.tvs) this.sucursal.tvs = [];
+            this.sucursal.tvs.push(nuevoDispositivo);
+          } else {
+            if (!this.sucursal.bocinas) this.sucursal.bocinas = [];
+            this.sucursal.bocinas.push(nuevoDispositivo);
+          }
+          this.cdr.detectChanges();
+        }
+      });
+    });
+  }
+
+  eliminarDispositivo(dispositivo: Dispositivo, tipo: 'TV' | 'BOCINA', event: Event) {
+    event.stopPropagation();
+    import('sweetalert2').then(SwalModule => {
+      const Swal = SwalModule.default;
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: `Se eliminará el dispositivo: ${dispositivo.nombre}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (tipo === 'TV' && this.sucursal.tvs) {
+            this.sucursal.tvs = this.sucursal.tvs.filter(d => d.id !== dispositivo.id);
+          } else if (tipo === 'BOCINA' && this.sucursal.bocinas) {
+            this.sucursal.bocinas = this.sucursal.bocinas.filter(d => d.id !== dispositivo.id);
+          }
+          this.cdr.detectChanges();
+          Swal.fire('Eliminado!', 'El dispositivo ha sido eliminado.', 'success');
+        }
+      });
+    });
+  }
 }

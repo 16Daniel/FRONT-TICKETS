@@ -1,49 +1,71 @@
-<!-- TABLA TVS -->
-<table class="w-100 text-center mb-3" style="border-collapse: collapse;" *ngIf="!isLoading">
-  <thead>
-    <tr>
-      <th [attr.colspan]="sucursal.tvs?.length || 0" style="padding: 0.5rem; font-size: 1.2rem;">
-        📺 TVs ({{ sucursal.tvs?.length || 0 }})
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td *ngFor="let tv of sucursal.tvs" style="padding: 0.5rem;"
-        [style.backgroundColor]="getColorEstatus(tv.estatus)">
-        <span style="font-size: 2.5rem; cursor: pointer;" [pTooltip]="tv.nombre + ' - ' + getNombreEstatus(tv.estatus)"
-          tooltipPosition="top" (click)="verDetallesDispositivo(tv, 'TV')">
-          📺
-        </span>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="devices-dashboard" *ngIf="!isLoading">
+  <!-- Sección TVs -->
+  <div class="device-section">
+    <div class="section-header">
+      <h3 class="section-title">📺 TVs ({{ sucursal.tvs?.length || 0 }})</h3>
+      <button class="btn-add" (click)="agregarDispositivo('TV')" title="Agregar TV">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        <span>Agregar</span>
+      </button>
+    </div>
+    
+    <div class="devices-grid">
+      <div 
+        class="device-card" 
+        *ngFor="let tv of sucursal.tvs"
+        [style.backgroundColor]="getColorEstatus(tv.estatus)"
+        (click)="verDetallesDispositivo(tv, 'TV')"
+        [pTooltip]="tv.nombre + ' - ' + getNombreEstatus(tv.estatus)"
+        tooltipPosition="top"
+      >
+        <button class="btn-remove" (click)="eliminarDispositivo(tv, 'TV', $event)" title="Quitar dispositivo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <span class="device-icon">📺</span>
+        <span class="device-name">{{ tv.nombre || 'TV' }}</span>
+      </div>
+      
+      <div class="device-empty" *ngIf="!sucursal.tvs || sucursal.tvs.length === 0">
+        No hay TVs registrados
+      </div>
+    </div>
+  </div>
 
-<!-- TABLA BOCINAS -->
-<table class="w-100 text-center mb-3" style="border-collapse: collapse;" *ngIf="!isLoading">
-  <thead>
-    <tr>
-      <th [attr.colspan]="sucursal.bocinas?.length || 0" style="padding: 0.5rem; font-size: 1.2rem;">
-        🔊 Bocinas ({{ sucursal.bocinas?.length || 0 }})
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td *ngFor="let bocina of sucursal.bocinas" style="padding: 0.5rem;"
-        [style.backgroundColor]="getColorEstatus(bocina.estatus)">
-        <span style="font-size: 2.5rem; cursor: pointer;"
-          [pTooltip]="bocina.nombre + ' - ' + getNombreEstatus(bocina.estatus)" tooltipPosition="top"
-          (click)="verDetallesDispositivo(bocina, 'BOCINA')">
-          🔊
-        </span>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <!-- Sección Bocinas -->
+  <div class="device-section">
+    <div class="section-header">
+      <h3 class="section-title">🔊 Bocinas ({{ sucursal.bocinas?.length || 0 }})</h3>
+      <button class="btn-add" (click)="agregarDispositivo('BOCINA')" title="Agregar Bocina">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        <span>Agregar</span>
+      </button>
+    </div>
+    
+    <div class="devices-grid">
+      <div 
+        class="device-card" 
+        *ngFor="let bocina of sucursal.bocinas"
+        [style.backgroundColor]="getColorEstatus(bocina.estatus)"
+        (click)="verDetallesDispositivo(bocina, 'BOCINA')"
+        [pTooltip]="bocina.nombre + ' - ' + getNombreEstatus(bocina.estatus)"
+        tooltipPosition="top"
+      >
+        <button class="btn-remove" (click)="eliminarDispositivo(bocina, 'BOCINA', $event)" title="Quitar dispositivo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <span class="device-icon">🔊</span>
+        <span class="device-name">{{ bocina.nombre || 'Bocina' }}</span>
+      </div>
+
+      <div class="device-empty" *ngIf="!sucursal.bocinas || sucursal.bocinas.length === 0">
+        No hay Bocinas registradas
+      </div>
+    </div>
+  </div>
+</div>
 
 <app-modal-color-estatus-dispositivo-tpv *ngIf="mostrarModaalEstatus" [mostrarModal]="mostrarModaalEstatus"
   (closeEvent)="mostrarModaalEstatus = false" [sucursal]="sucursal" [dispositivo]="dispositivoSeleccionado"
   [tipo]="tipo">
 </app-modal-color-estatus-dispositivo-tpv>
+
