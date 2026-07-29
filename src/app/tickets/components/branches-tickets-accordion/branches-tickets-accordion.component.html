@@ -41,6 +41,29 @@
             </div>
         </div>
 
+        <!-- SECCION: NIVELES DE AUDIO -->
+        <div class="mt-3 p-3 border rounded shadow-sm bg-light" *ngIf="mostrarRadiografiaMap[item.id] && idArea == '2'">
+            <h6 class="fw-bold mb-2 text-primary">
+                <i class="fas fa-volume-up me-2"></i>Niveles de Audio
+            </h6>
+            <p class="text-muted small mb-3">
+                Sube o visualiza imágenes que sirvan como ejemplo de cómo deben estar correctamente nivelados los equipos de audio en esta sucursal.
+            </p>
+
+            <div class="d-flex gap-2 align-items-center">
+                <!-- Input para subir (oculto y accionado por botón) -->
+                <input type="file" #fileInputNiveles multiple accept="image/*" class="d-none" (change)="onFileSelected($event, item)">
+
+                <button class="btn btn-outline-primary btn-sm" (click)="fileInputNiveles.click()">
+                    <i class="fas fa-upload me-1"></i> Subir imágenes
+                </button>
+
+                <button class="btn btn-outline-danger btn-sm" (click)="verImagenes(item)" [disabled]="!item.imagenesNivelesAudio || item.imagenesNivelesAudio.length === 0">
+                    <i class="fas fa-images me-1"></i> Ver imágenes ({{ item.imagenesNivelesAudio?.length || 0 }})
+                </button>
+            </div>
+        </div>
+
         <br />
 
         <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea == '1'" [sucursal]="item"></app-tpvs-devices-table>
@@ -51,3 +74,13 @@
             [idArea]="idArea"></app-admin-tickets-list>
     </p-accordionTab>
 </p-accordion>
+
+<app-modal-visor-varias-imagenes
+  *ngIf="mostrarVisorImagenes"
+  [mostrarModal]="mostrarVisorImagenes"
+  [imagenes]="imagenesVisor"
+  titulo="Niveles de Audio - {{ sucursalSeleccionada?.nombre }}"
+  [mostrarBotonEliminar]="true"
+  (closeEvent)="mostrarVisorImagenes = false"
+  (imagenEliminadaEvent)="onImagenEliminada($event)">
+</app-modal-visor-varias-imagenes>
