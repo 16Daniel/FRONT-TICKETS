@@ -3,6 +3,11 @@ export class Dispositivo {
     nombre: string = '';
     estatus: string = '1';
     eliminado: boolean = false;
+    marca?: string = '';
+    pulgadas?: string = '';
+    modelo?: string = '';
+    numeroSerie?: string = '';
+    comentarios?: string = '';
 
     constructor() {
         this.id = generateGUID();

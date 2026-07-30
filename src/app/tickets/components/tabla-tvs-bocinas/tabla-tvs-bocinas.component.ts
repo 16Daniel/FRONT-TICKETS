@@ -106,22 +106,55 @@ export class TablaTvsBocinasComponent implements OnInit, OnChanges {
       const Swal = SwalModule.default;
       Swal.fire({
         title: `Agregar ${tipo === 'TV' ? 'TV' : 'Bocina'}`,
-        input: 'text',
-        inputLabel: 'Nombre del dispositivo o número de serie',
-        inputPlaceholder: 'Ej. TV Sala Principal',
+        html: `
+          <div style="text-align: left; font-size: 14px;">
+            <label style="display:block; margin-bottom: 4px; font-weight: 600;">Nombre *</label>
+            <input id="swal-input-nombre" class="swal2-input" placeholder="Ej. TV Sala Principal" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+            
+            <label style="display:block; margin-bottom: 4px; font-weight: 600;">Marca</label>
+            <input id="swal-input-marca" class="swal2-input" placeholder="Ej. Samsung, LG" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+            
+            <label style="display:block; margin-bottom: 4px; font-weight: 600;">Pulgadas</label>
+            <input id="swal-input-pulgadas" class="swal2-input" placeholder="Ej. 55&quot;" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+            
+            <label style="display:block; margin-bottom: 4px; font-weight: 600;">Modelo</label>
+            <input id="swal-input-modelo" class="swal2-input" placeholder="Ej. UN55TU7000" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+            
+            <label style="display:block; margin-bottom: 4px; font-weight: 600;">Número de Serie</label>
+            <input id="swal-input-serie" class="swal2-input" placeholder="Ej. SN123456789" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+            
+            <label style="display:block; margin-bottom: 4px; font-weight: 600;">Comentarios</label>
+            <textarea id="swal-input-comentarios" class="swal2-textarea" placeholder="Comentarios adicionales" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box; height: 70px;"></textarea>
+          </div>
+        `,
+        focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: 'Agregar',
         cancelButtonText: 'Cancelar',
-        inputValidator: (value) => {
-          if (!value) {
-            return '¡Necesitas escribir un nombre!';
+        preConfirm: () => {
+          const nombre = (document.getElementById('swal-input-nombre') as HTMLInputElement).value;
+          const marca = (document.getElementById('swal-input-marca') as HTMLInputElement).value;
+          const pulgadas = (document.getElementById('swal-input-pulgadas') as HTMLInputElement).value;
+          const modelo = (document.getElementById('swal-input-modelo') as HTMLInputElement).value;
+          const numeroSerie = (document.getElementById('swal-input-serie') as HTMLInputElement).value;
+          const comentarios = (document.getElementById('swal-input-comentarios') as HTMLTextAreaElement).value;
+
+          if (!nombre) {
+            Swal.showValidationMessage('¡Necesitas escribir un nombre!');
+            return false;
           }
-          return null;
+
+          return { nombre, marca, pulgadas, modelo, numeroSerie, comentarios };
         }
       }).then(async (result) => {
         if (result.isConfirmed && result.value) {
           const nuevoDispositivo = new Dispositivo();
-          nuevoDispositivo.nombre = result.value;
+          nuevoDispositivo.nombre = result.value.nombre;
+          nuevoDispositivo.marca = result.value.marca;
+          nuevoDispositivo.pulgadas = result.value.pulgadas;
+          nuevoDispositivo.modelo = result.value.modelo;
+          nuevoDispositivo.numeroSerie = result.value.numeroSerie;
+          nuevoDispositivo.comentarios = result.value.comentarios;
           nuevoDispositivo.estatus = '1';
 
           if (!this.dispositivosSucursal.tvs) this.dispositivosSucursal.tvs = [];
