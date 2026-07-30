@@ -87,19 +87,20 @@ export class TablaTvsBocinasComponent implements OnInit {
 
           if (tipo === 'TV') {
             if (!this.sucursal.tvs) this.sucursal.tvs = [];
-            this.sucursal.tvs.push(nuevoDispositivo);
+            this.sucursal.tvs.push({ ...nuevoDispositivo });
           } else {
             if (!this.sucursal.bocinas) this.sucursal.bocinas = [];
-            this.sucursal.bocinas.push(nuevoDispositivo);
+            this.sucursal.bocinas.push({ ...nuevoDispositivo });
           }
-          
+
           try {
             await this.branchesService.update(this.sucursal, this.sucursal.id);
           } catch (error) {
             console.error('Error actualizando sucursal', error);
           }
-          
+
           this.cdr.detectChanges();
+          Swal.fire('Registrado!', 'El dispositivo ha sido registrado.', 'success');
         }
       });
     });
@@ -125,13 +126,13 @@ export class TablaTvsBocinasComponent implements OnInit {
           } else if (tipo === 'BOCINA' && this.sucursal.bocinas) {
             this.sucursal.bocinas = this.sucursal.bocinas.filter(d => d.id !== dispositivo.id);
           }
-          
+
           try {
             await this.branchesService.update(this.sucursal, this.sucursal.id);
           } catch (error) {
             console.error('Error actualizando sucursal', error);
           }
-          
+
           this.cdr.detectChanges();
           Swal.fire('Eliminado!', 'El dispositivo ha sido eliminado.', 'success');
         }
