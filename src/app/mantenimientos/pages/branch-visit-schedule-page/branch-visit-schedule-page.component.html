@@ -1,25 +1,35 @@
-<div style="margin-top: 80px;" class="p-3">
-  <div class="row" *ngIf="usuario.idRol == '1'">
-    <div class="col-md-6">
+<div class="schedule-page-container">
 
-      <p-dropdown [options]="areas" [(ngModel)]="idArea" [optionValue]="'id'" name="area" optionLabel="nombre"
-        [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}"
-        (onChange)="onChangeArea()">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-          <div class="flex align-items-center gap-2">
-            <div>{{ selectedOption.nombre }}</div>
-          </div>
-        </ng-template>
-        <ng-template let-dep pTemplate="item">
-          <div class="flex align-items-center gap-2">
-            <div>{{ dep.nombre }}</div>
-          </div>
-        </ng-template>
-      </p-dropdown>
+  <div class="page-header">
+    <h1>Calendario de Visitas</h1>
+    <!-- <p>Visualiza y gestiona las visitas programadas a las sucursales</p> -->
+  </div>
+
+  <div class="filter-card" *ngIf="usuario.idRol == '1'">
+    <label class="filter-label">Filtrar por Área</label>
+    <div class="row">
+      <div class="col-md-6 col-lg-4">
+        <p-dropdown [options]="areas" [(ngModel)]="idArea" [optionValue]="'id'" name="area" optionLabel="nombre"
+          [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccionar un área" [style]="{width:'100%'}"
+          (onChange)="onChangeArea()">
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              <div>{{ selectedOption.nombre }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-dep pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div>{{ dep.nombre }}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
     </div>
   </div>
-  <p class="m-0">&nbsp;</p>
-  <app-calendario [usuariosHelp]="usuariosHelp" [tickets]="tickets" [idArea]="idArea"></app-calendario>
+
+  <div class="calendar-card">
+    <app-calendario [usuariosHelp]="usuariosHelp" [tickets]="tickets" [idArea]="idArea"></app-calendario>
+  </div>
 </div>
 
 <app-modal-event-detail *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"

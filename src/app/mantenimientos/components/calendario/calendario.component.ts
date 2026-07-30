@@ -25,6 +25,8 @@ import { SucursalProgramada } from '../../interfaces/sucursal-programada.interfa
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { Area } from '../../../areas/interfaces/area.model';
 
 @Component({
   selector: 'app-calendario',
@@ -48,6 +50,7 @@ export class CalendarioComponent implements OnInit {
   colores: ColorUsuario[] = [];
   usuario: Usuario;
   usuarioSeleccionado: Usuario | any;
+  areas: Area[] = [];
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
   calendarOptions: CalendarOptions = {
@@ -74,9 +77,11 @@ export class CalendarioComponent implements OnInit {
     private branchesService: BranchesService,
     private datesHelper: DatesHelperService,
     private usuariosService: UsersService,
-    private maintenanceAvService: MaintenanceAvService
+    private maintenanceAvService: MaintenanceAvService,
+    private areasService: AreasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.obtenerAreas();
   }
 
   ngOnInit(): void {
@@ -94,6 +99,16 @@ export class CalendarioComponent implements OnInit {
     }
   }
 
+  obtenerAreas() {
+    this.areasService.areas$.subscribe({
+      next: (data) => {
+        this.areas
+        this.areas = data;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   obtenerSucursales() {
     this.branchesService.get().subscribe({
       next: (data) => {
@@ -104,6 +119,11 @@ export class CalendarioComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+
+  obtenerNombreArea(idArea: string): string {
+    const area = this.areas.find(a => a.id == idArea);
+    return area ? area.nombre : '';
   }
 
   async obtenerFechas(info: any) {
@@ -328,11 +348,11 @@ export class CalendarioComponent implements OnInit {
   textoMantenimiento(idArea: string) {
     switch (idArea) {
       case '1':
-        return 'IT: 10X10';
+        return 'IT: 8X8';
       case '2':
-        return '8X8';
+        return 'AV: 6X6';
       case '4':
-        return '8X8';
+        return '6X6';
       default:
         return 'XXX';
     }

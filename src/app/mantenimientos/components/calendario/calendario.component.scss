@@ -1,5 +1,123 @@
+$color-bg: #F7F8FA;
+$color-white: #FFFFFF;
+$color-text: #111827;
+$color-text-secondary: #6B7280;
+$border-radius: 12px;
+
 .evento-calendario {
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  font-family: 'Inter', sans-serif;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .evento-header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  .evento-user {
+    margin: 0;
+    font-size: 0.75rem;
+    opacity: 0.9;
+    font-weight: 500;
+  }
+
+  .evento-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: $color-text;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+
+      i {
+        font-size: 0.8rem;
+        color: $color-text-secondary;
+      }
+    }
+  }
+}
+
+.calendar-event-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+::ng-deep {
+  .fc {
+    font-family: 'Inter', sans-serif;
+    
+    .fc-toolbar-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: $color-text;
+    }
+    
+    .fc-button-primary {
+      background-color: #0F62FE;
+      border-color: #0F62FE;
+      border-radius: 8px;
+      text-transform: capitalize;
+      
+      &:hover {
+        background-color: darken(#0F62FE, 5%);
+        border-color: darken(#0F62FE, 5%);
+      }
+      
+      &:disabled {
+        background-color: lighten(#0F62FE, 20%);
+        border-color: lighten(#0F62FE, 20%);
+      }
+    }
+
+    .fc-event {
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin: 1px 0;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+    }
+
+    .fc-daygrid-day-number {
+      font-weight: 500;
+      color: $color-text;
+    }
+
+    .fc-col-header-cell-cushion {
+      font-weight: 600;
+      color: $color-text-secondary;
+      text-transform: capitalize;
+    }
+    
+    .fc-theme-standard td, .fc-theme-standard th {
+      border-color: #E5E7EB;
+    }
+  }
 }
