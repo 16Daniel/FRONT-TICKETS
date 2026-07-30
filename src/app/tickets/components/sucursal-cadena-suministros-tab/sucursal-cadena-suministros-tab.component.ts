@@ -8,7 +8,6 @@ import { ToastModule } from 'primeng/toast';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -16,9 +15,11 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-sucursal-cadena-suministros-tab',
@@ -31,7 +32,7 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
     CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
     FormsModule,
@@ -58,7 +59,7 @@ export class SucursalCadenaSuministrosTabComponent {
 
   sucursal: Sucursal | undefined;
   mantenimientoActivo: MantenimientoSys | null = null;
-  mantenimientoAVActivo: MantenimientoSysAv | null = null;
+  mantenimientoAVActivo: MantenimientoAudioVideo | null = null;
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;
@@ -68,8 +69,9 @@ export class SucursalCadenaSuministrosTabComponent {
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private mantenimientosSistemasService: MantenimientosSistemasService,
-    private confirmationService: ConfirmationService
+    private mantenimientosAvService: MaintenanceAvService,
+    private confirmationService: ConfirmationService,
+    private mantenimientosSistemasService: MantenimientosSistemasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -135,7 +137,7 @@ export class SucursalCadenaSuministrosTabComponent {
       }
     );
 
-    this.unsubscribeAV = this.mantenimientosSistemasService.getMantenimientoActivoAV(
+    this.unsubscribeAV = this.mantenimientosAvService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoAVActivo = mantenimiento;

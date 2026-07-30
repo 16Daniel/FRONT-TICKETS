@@ -7,11 +7,11 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { UsersService } from '../../../../usuarios/services/users.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
-import { TablaMantenimientosSysAvComponent } from "../../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
+import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
 import { ModalMaintenanceDetailComponent } from "../../systems/modal-maintenance-detail/modal-maintenance-detail.component";
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
+import { TablaMantenimientosAudioVideoComponent } from "../../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 
 @Component({
   selector: 'app-historial-mantenimiento-sys-av-dialog',
@@ -22,8 +22,8 @@ import { ModalMaintenanceDetailComponent } from "../../systems/modal-maintenance
     CalendarModule,
     FormsModule,
     TableModule,
-    TablaMantenimientosSysAvComponent,
-    ModalMaintenanceDetailComponent
+    ModalMaintenanceDetailComponent,
+    TablaMantenimientosAudioVideoComponent
 ],
   templateUrl: './historial-mantenimiento-sys-av-dialog.component.html',
   styleUrl: './historial-mantenimiento-sys-av-dialog.component.scss',
@@ -34,16 +34,16 @@ export class HistorialMantenimeintoSysAvComponent {
 
   fechaInicio: Date = new Date();
   fechaFin: Date = new Date();
-  mantenimientos: MantenimientoSysAv[] = [];
+  mantenimientos: MantenimientoAudioVideo[] = [];
   usuario: Usuario;
   idSucursal: string;
   usuariosHelp: Usuario[] = [];
   mostrarModalDetalleMantenimeinto: boolean = false;
-  mantenimiento: MantenimientoSysAv | any;
+  mantenimiento: MantenimientoAudioVideo | any;
   paginaCargaPrimeraVez: boolean = true;
 
   constructor(
-    private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private messageService: MessageService,
     private usersService: UsersService,
     private cdr: ChangeDetectorRef,
@@ -56,7 +56,7 @@ export class HistorialMantenimeintoSysAvComponent {
     this.obtenerUsuariosHelp();
   }
 
-  abrirModalDetalleMantenimiento(mantenimiento: MantenimientoSysAv | any) {
+  abrirModalDetalleMantenimiento(mantenimiento: MantenimientoAudioVideo | any) {
     this.mantenimiento = mantenimiento;
     this.mostrarModalDetalleMantenimeinto = true;
   }
@@ -71,7 +71,7 @@ export class HistorialMantenimeintoSysAvComponent {
   }
 
   async obtenerMantenimientosPorSucursal(idSucursal: string): Promise<void> {
-    this.mantenimientosSistemasService.getHistorialMantenimeintosAV(
+    this.maintenanceAvService.getHistorialMantenimeintos(
       this.fechaInicio,
       this.fechaFin,
       idSucursal,
@@ -104,7 +104,7 @@ export class HistorialMantenimeintoSysAvComponent {
   }
 
   obtenerUltimoMantenimiento() {
-    this.mantenimientosSistemasService.getLastMaintenanceByBranchAV(this.idSucursal).subscribe(result => {
+    this.maintenanceAvService.getLastMaintenanceByBranch(this.idSucursal).subscribe(result => {
       this.mantenimientos = result;
     })
   }

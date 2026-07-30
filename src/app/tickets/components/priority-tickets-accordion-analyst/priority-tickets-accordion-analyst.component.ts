@@ -12,6 +12,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TpvsDevicesTableComponent } from "../tpvs-devices-table/tpvs-devices-table.component";
 import { TablaTvsBocinasComponent } from "../tabla-tvs-bocinas/tabla-tvs-bocinas.component";
+import { NivelesAudioComponent } from '../../../mantenimientos/components/niveles-audio/niveles-audio.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',
@@ -25,7 +26,8 @@ import { TablaTvsBocinasComponent } from "../tabla-tvs-bocinas/tabla-tvs-bocinas
     FormsModule,
     GraficaTickets30DiasComponent,
     TpvsDevicesTableComponent,
-    TablaTvsBocinasComponent
+    TablaTvsBocinasComponent,
+    NivelesAudioComponent
 ],
   templateUrl: './priority-tickets-accordion-analyst.component.html',
   styleUrl: './priority-tickets-accordion-analyst.component.scss',
@@ -42,6 +44,8 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
   showModalTicketDetail: boolean = false;
   usuario: Usuario | any;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
+
+  constructor() {}
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -119,4 +123,5 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
       return false;
     });
   }
+
 }

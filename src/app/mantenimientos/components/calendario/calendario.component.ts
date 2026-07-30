@@ -24,6 +24,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-calendario',
@@ -73,7 +74,7 @@ export class CalendarioComponent implements OnInit {
     private branchesService: BranchesService,
     private datesHelper: DatesHelperService,
     private usuariosService: UsersService,
-    private mantenimientosSistemasService: MantenimientosSistemasService
+    private maintenanceAvService: MaintenanceAvService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -172,8 +173,8 @@ export class CalendarioComponent implements OnInit {
       const mantenimientosTotales = await servicio
         .obtenerMantenimientoVisitaPorFecha(this.datesHelper.getDate(visita.fecha), false);
 
-      const mantenimientosTotalesSysAV = await this.mantenimientosSistemasService
-        .obtenerMantenimientoVisitaPorFechaAV(this.datesHelper.getDate(visita.fecha), false);
+      const mantenimientosTotalesSysAV = await this.maintenanceAvService
+        .obtenerMantenimientoVisitaPorFecha(this.datesHelper.getDate(visita.fecha), false);
 
       for (let sucursal of visita.sucursalesProgramadas) {
 
@@ -314,7 +315,7 @@ export class CalendarioComponent implements OnInit {
   calcularPorcentajeSysAv(mantenimiento: any) {
     if (mantenimiento) {
 
-      return this.mantenimientosSistemasService.calcularPorcentajeAV(mantenimiento);
+      return this.maintenanceAvService.calcularPorcentaje(mantenimiento);
     }
     else
       return 0

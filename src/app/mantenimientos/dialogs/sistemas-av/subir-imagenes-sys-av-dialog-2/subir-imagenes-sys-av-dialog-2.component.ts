@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
 
 import { FirebaseStorageService } from '../../../../shared/services/firebase-storage.service';
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-subir-imagen-sys-av-dialog-2',
@@ -17,7 +18,7 @@ import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.int
 export class SubirImagenesSysAv2Component {
 
   @Input() mostrarModal: boolean = false;
-  @Input() mantenimiento: MantenimientoSysAv | undefined;
+  @Input() mantenimiento: MantenimientoAudioVideo | undefined;
   @Input() titulo: string | undefined;
 
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -30,7 +31,8 @@ export class SubirImagenesSysAv2Component {
   constructor(
     private cdr: ChangeDetectorRef,
     private firebaseStorage: FirebaseStorageService,
-    private mantenimientosSistemasService: MantenimientosSistemasService
+    private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
   ) { }
 
   onHide() {
@@ -202,7 +204,7 @@ export class SubirImagenesSysAv2Component {
         break;
     }
 
-    await this.mantenimientosSistemasService.updateAV(
+    await this.maintenanceAvService.update(
       this.mantenimiento.id,
       this.mantenimiento
     );

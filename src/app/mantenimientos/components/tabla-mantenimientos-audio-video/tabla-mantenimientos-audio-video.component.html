@@ -22,10 +22,8 @@
         {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
       </td>
 
-      <td class="text-center">
-        {{ dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' || ('SIN CALIFICAR: ' +
-        (dateHelpder.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a')) }}
-      </td>
+      <td class="text-center">{{ (dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a') ||
+                ('SIN CALIFICAR: ' + (dateHelpder.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a')) }}</td>
 
       <!-- PANTALLAS -->
       <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'PANTALLAS')" [ngClass]="{
@@ -91,7 +89,7 @@
 
       <!-- PROGRESO -->
       <td class="text-center">
-        {{ maintenance6x6AvService.calcularPorcentaje(mantenimiento) }}%
+        {{ mantenimientosAvService.calcularPorcentaje(mantenimiento) }}%
       </td>
 
       <!-- ACCIONES -->
@@ -111,17 +109,16 @@
   </ng-template>
 </p-table>
 
-
-<app-subir-imagen-av-dialog-2 *ngIf="mostrarModalSubirImagen2" [mostrarModal]="mostrarModalSubirImagen2"
-  (closeEvent)="mostrarModalSubirImagen2 = false" [titulo]="tituloEvidencia"
-  [mantenimiento]="mantenimientoSeleccionado"></app-subir-imagen-av-dialog-2>
-
 <app-modal-final-comments *ngIf="mostrarModalComentarios" [mostrarModal]="mostrarModalComentarios"
   [mantenimiento]="mantenimientoSeleccionado" (closeEvent)="mostrarModalComentarios = false"></app-modal-final-comments>
 
-<app-modal-av-mtto-imguploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
+<app-subir-imagen-sys-av-dialog *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
   (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
-  [mantenimiento]="mantenimientoSeleccionado"></app-modal-av-mtto-imguploader>
+  [mantenimiento]="mantenimientoSeleccionado"></app-subir-imagen-sys-av-dialog>
+
+<app-subir-imagen-sys-av-dialog-2 *ngIf="mostrarModalSubirImagen2" [mostrarModal]="mostrarModalSubirImagen2"
+  (closeEvent)="mostrarModalSubirImagen2 = false" [titulo]="tituloEvidencia"
+  [mantenimiento]="mantenimientoSeleccionado"></app-subir-imagen-sys-av-dialog-2>
 
 <app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
   [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"
@@ -134,6 +131,6 @@
   [evidencias]="evidencias">
 </app-visor-imagenes-sys-av-dialog>
 
-<app-modal-maintenance-chat *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
-  (closeEvent)="mostrarModalChat = false" [idMnatenimiento]="mantenimientoSeleccionado?.id"
-  [idArea]="'2'"></app-modal-maintenance-chat>
+<app-chat-mantenimiento-sys-av-dialog *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
+  (closeEvent)="mostrarModalChat = false"
+  [idMnatenimiento]="mantenimientoSeleccionado?.id"></app-chat-mantenimiento-sys-av-dialog>

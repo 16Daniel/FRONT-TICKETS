@@ -8,7 +8,6 @@ import { ToastModule } from 'primeng/toast';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -19,10 +18,12 @@ import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/d
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { CheckMantenimientoSisAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/check-mantenimiento-sis-av-dialog/check-mantenimiento-sis-av-dialog.component';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { HistorialMantenimeintoSysAvComponent } from "../../../mantenimientos/dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component";
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-branches-sys-tab',
@@ -35,7 +36,7 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
     CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
     PriorityTicketsAccordionComponent,
@@ -66,7 +67,7 @@ export class BranchesSysTabComponent {
 
   sucursal: Sucursal | undefined;
   mantenimientoActivo: MantenimientoSys | null = null;
-  mantenimientoAVActivo: MantenimientoSysAv | null = null;
+  mantenimientoAVActivo: MantenimientoAudioVideo | null = null;
   areas: Area[] = [];
   usuario: Usuario;
   ticket: Ticket | undefined;
@@ -77,6 +78,7 @@ export class BranchesSysTabComponent {
   constructor(
     public cdr: ChangeDetectorRef,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -144,7 +146,7 @@ export class BranchesSysTabComponent {
       }
     );
 
-    this.unsubscribeAV = this.mantenimientosSistemasService.getMantenimientoActivoAV(
+    this.unsubscribeAV = this.maintenanceAvService.getMantenimientoActivo(
       this.sucursal?.id,
       (mantenimiento) => {
         this.mantenimientoAVActivo = mantenimiento;

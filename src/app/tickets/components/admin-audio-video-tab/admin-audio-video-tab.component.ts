@@ -9,7 +9,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
@@ -24,14 +23,16 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Maintenance6x6AvService } from '../../../mantenimientos/services/maintenance-av.service';
-import { MantenimientoSysAv } from '../../../mantenimientos/interfaces/mantenimiento-sys-av.interface';
-import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
-import { AcordeonMantenimientosSisAvComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component";
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
+import { AcordeonMantenimientosSistemasComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component";
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
+import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-admin-audio-video-tab',
@@ -44,16 +45,16 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
     OverlayPanelModule,
     ModalFilterTicketsComponent,
     CrearTicketDialogComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     BranchesTicketsAccordionComponent,
     UserTicketsAccordionComponent,
     ModalTicketDetailComponent,
-    AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
-    AcordeonMantenimientosSisAvComponent
-  ],
+    AcordeonMantenimientosAudioVideoComponent,
+    AcordeonMantenimientosSistemasComponent
+],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-audio-video-tab.component.html',
   styleUrl: './admin-audio-video-tab.component.scss',
@@ -70,7 +71,7 @@ export class AdminAudioVideoTabComponent {
   mostrarModalCompras: boolean = false;
   mostrarModalSolicitarCompra: boolean = false;
   sucursales: Sucursal[] = [];
-  mantenimientos: MantenimientoSysAv[] = [];
+  mantenimientos: MantenimientoSys[] = [];
   catStatusT: EstatusTicket[] = [];
   subscripcionTicket: Subscription | undefined;
   ticket: Ticket | undefined;
@@ -86,7 +87,7 @@ export class AdminAudioVideoTabComponent {
   auxMostrarMantenimientos = true;
   mostrarMantenimientosAV: boolean = false;
   auxMostrarMantenimientosAV = true;
-  mantenimientosAV: MantenimientoSysAv[] = [];
+  mantenimientosAV: MantenimientoAudioVideo[] = [];
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -94,8 +95,9 @@ export class AdminAudioVideoTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: Maintenance6x6AvService,
+    private maintenanceService: MantenimientosSistemasService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService
   ) {
@@ -194,6 +196,8 @@ export class AdminAudioVideoTabComponent {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
+
+        // TI
         this.maintenanceService
           .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
@@ -212,12 +216,11 @@ export class AdminAudioVideoTabComponent {
               return x;
             });
             this.cdr.detectChanges();
-
           });
 
-
-        this.mantenimientosSistemasService
-          .getUltimosMantenimientosAV(
+        // AV TI
+        this.maintenanceAvService
+          .getUltimosMantenimientos(
             this.sucursales.map((sucursal) => sucursal.id)
           )
           .subscribe((result) => {
@@ -246,7 +249,7 @@ export class AdminAudioVideoTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsuariosPorRol(['4', '7'], this.usuario.idArea)
+    this.usersService.getUsuariosPorRol(['4', '7'], this.idArea)
       .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 

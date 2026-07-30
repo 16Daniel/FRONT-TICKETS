@@ -11,7 +11,7 @@ import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-
 import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
 
 @Component({
-  selector: 'app-analyst-tabs',
+  selector: 'app-analista-tabs',
   standalone: true,
   imports: [
     FormsModule,
@@ -22,10 +22,10 @@ import { ComensalesPage } from "../../../comensales/pages/comensales-page/comens
     TicketsTabComponent,
     ComensalesPage,
 ],
-  templateUrl: './analyst-tabs.component.html',
-  styleUrl: './analyst-tabs.component.scss'
+  templateUrl: './analista-tabs.component.html',
+  styleUrl: './analista-tabs.component.scss'
 })
-export class AnalystTabsComponent {
+export class AnalistaTabsComponent {
   public tabindex: number = 0;
   verEisenhower: boolean = false;
   sucursal: Sucursal;

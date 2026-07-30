@@ -42,6 +42,9 @@
       </div>
     </div>
 
+    <!-- SECCION: NIVELES DE AUDIO -->
+    <app-niveles-audio [sucursal]="item" *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '1'"></app-niveles-audio>
+
     <br />
 
     <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '1'"

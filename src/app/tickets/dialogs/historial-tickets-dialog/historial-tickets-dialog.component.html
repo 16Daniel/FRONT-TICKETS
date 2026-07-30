@@ -118,15 +118,20 @@
         <input type="text" class="form-control" (ngModelChange)="applyFiltroTexto($event)" [(ngModel)]="textoBusqueda"
           placeholder="BUSCAR POR DESCRIPCIÓN">
       </div>
-      <div>
+      <div class="d-flex gap-2">
         <button class="btn bg-p-b p-2" (click)="buscar()">BUSCAR</button>
+        <button class="btn btn-success p-2 d-flex align-items-center" (click)="exportToExcel()">
+          <img width="20" height="20" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="excel" />
+          &nbsp;EXCEL
+        </button>
       </div>
     </div>
   </div>
 
   <br>
   <app-requester-tickets-list [tickets]="ticketsFiltrados" (clickEvent)="abrirModalDetalleTicket($event)"
-    [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false" [mostrarSucursal]="true"></app-requester-tickets-list>
+    [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false" [mostrarSucursal]="true"
+    [mostrarFechaSolicitud]="true" [mostrarFechaTermino]="true" [mostrarDescripcion]="true"></app-requester-tickets-list>
 </p-dialog>
 
 

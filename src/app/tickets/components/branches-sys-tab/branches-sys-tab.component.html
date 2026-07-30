@@ -53,8 +53,8 @@
   (closeEvent)="mostrarModalFilterTickets = false"
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
-<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false" idArea="1"></app-modal-tickets-history>
+<app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false" idArea="1"></app-historial-tickets-dialog>
 
 <app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"

@@ -9,6 +9,7 @@ import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
 import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv.interface';
+import { BranchesService } from '../../../sucursales/services/branches.service';
 
 @Component({
   selector: 'app-tabla-tvs-bocinas',
@@ -29,7 +30,8 @@ export class TablaTvsBocinasComponent implements OnInit {
 
   constructor(
     private estatusService: StatusTpvsDevicesService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private branchesService: BranchesService
   ) { }
 
   ngOnInit(): void {
@@ -58,5 +60,82 @@ export class TablaTvsBocinasComponent implements OnInit {
       this.dispositivoSeleccionado = dispositivo;
       this.tipo = tipo;
     }
+  }
+
+  agregarDispositivo(tipo: 'TV' | 'BOCINA') {
+    import('sweetalert2').then(SwalModule => {
+      const Swal = SwalModule.default;
+      Swal.fire({
+        title: `Agregar ${tipo === 'TV' ? 'TV' : 'Bocina'}`,
+        input: 'text',
+        inputLabel: 'Nombre del dispositivo o número de serie',
+        inputPlaceholder: 'Ej. TV Sala Principal',
+        showCancelButton: true,
+        confirmButtonText: 'Agregar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+          if (!value) {
+            return '¡Necesitas escribir un nombre!';
+          }
+          return null;
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed && result.value) {
+          const nuevoDispositivo = new Dispositivo();
+          nuevoDispositivo.nombre = result.value;
+          nuevoDispositivo.estatus = '1'; // Default status (e.g. active)
+
+          if (tipo === 'TV') {
+            if (!this.sucursal.tvs) this.sucursal.tvs = [];
+            this.sucursal.tvs.push(nuevoDispositivo);
+          } else {
+            if (!this.sucursal.bocinas) this.sucursal.bocinas = [];
+            this.sucursal.bocinas.push(nuevoDispositivo);
+          }
+          
+          try {
+            await this.branchesService.update(this.sucursal, this.sucursal.id);
+          } catch (error) {
+            console.error('Error actualizando sucursal', error);
+          }
+          
+          this.cdr.detectChanges();
+        }
+      });
+    });
+  }
+
+  eliminarDispositivo(dispositivo: Dispositivo, tipo: 'TV' | 'BOCINA', event: Event) {
+    event.stopPropagation();
+    import('sweetalert2').then(SwalModule => {
+      const Swal = SwalModule.default;
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: `Se eliminará el dispositivo: ${dispositivo.nombre}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          if (tipo === 'TV' && this.sucursal.tvs) {
+            this.sucursal.tvs = this.sucursal.tvs.filter(d => d.id !== dispositivo.id);
+          } else if (tipo === 'BOCINA' && this.sucursal.bocinas) {
+            this.sucursal.bocinas = this.sucursal.bocinas.filter(d => d.id !== dispositivo.id);
+          }
+          
+          try {
+            await this.branchesService.update(this.sucursal, this.sucursal.id);
+          } catch (error) {
+            console.error('Error actualizando sucursal', error);
+          }
+          
+          this.cdr.detectChanges();
+          Swal.fire('Eliminado!', 'El dispositivo ha sido eliminado.', 'success');
+        }
+      });
+    });
   }
 }

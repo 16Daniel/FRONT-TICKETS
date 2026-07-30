@@ -160,4 +160,42 @@ export class FirebaseStorageService {
 
     return Promise.all(promesas);
   }
+
+  async cargarImagenesNivelesAudio(archivos: File[], idSucursal: string): Promise<string[]> {
+    const storage = getStorage();
+
+    const now = new Date();
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    const promesas = archivos.map((archivo) => {
+      return new Promise<string>((resolve, reject) => {
+        const timestamp = Date.now();
+        const nombreUnico = `${timestamp}_${archivo.name}`;
+
+        const rutaFinal = `imagenes/sucursales/${idSucursal}/niveles-audio/${yearMonth}/${nombreUnico}`;
+        const fileRef = ref(storage, rutaFinal);
+        const uploadTask = uploadBytesResumable(fileRef, archivo);
+
+        uploadTask.on(
+          'state_changed',
+          null,
+          (error) => {
+            console.error(`Error al subir ${archivo.name}`, error);
+            reject(error);
+          },
+          async () => {
+            try {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              console.log(`Imagen ${archivo.name} cargada correctamente como ${nombreUnico}`);
+              resolve(url);
+            } catch (err) {
+              reject(err);
+            }
+          }
+        );
+      });
+    });
+
+    return Promise.all(promesas);
+  }
 }

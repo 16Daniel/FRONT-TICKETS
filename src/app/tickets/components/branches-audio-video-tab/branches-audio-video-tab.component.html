@@ -36,16 +36,16 @@
   [showModalTicketDetail]="mostrarModalTicketDetail"
   (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false" idArea="2"></app-modal-tickets-history>
+<app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false" idArea="2"></app-historial-tickets-dialog>
 
-<app-modal-maintenance-av-history *ngIf="mostrarModalHistorialMantenimientos"
+<app-historial-mantenimiento-sys-av-dialog *ngIf="mostrarModalHistorialMantenimientos"
 [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
-(closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-maintenance-av-history>
+(closeEvent)="mostrarModalHistorialMantenimientos = false"></app-historial-mantenimiento-sys-av-dialog>
 
-<app-modal-maintenance-av-check *ngIf="mostrarModalMantenimiento" [mostrarModalAV]="mostrarModalMantenimiento"
+<app-check-mantenimiento-sis-av-dialog *ngIf="mostrarModalMantenimiento" [mostrarModalAV]="mostrarModalMantenimiento"
   (closeEvent)="mostrarModalMantenimiento = false"
-  [mantenimientoActivo]="mantenimientoActivo"></app-modal-maintenance-av-check>
+  [mantenimientoActivo]="mantenimientoActivo"></app-check-mantenimiento-sis-av-dialog>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

@@ -9,8 +9,9 @@ import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
 import { MantenimientoFactoryService } from '../../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../../shared/helpers/dates-helper.service';
 import { MensajesPendientesService } from '../../../../shared/services/mensajes-pendientes.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-chat-mantenimiento-sys-av-dialog',
@@ -24,19 +25,20 @@ import { MantenimientosSistemasService } from '../../../services/mantenimientos-
   styleUrl: './chat-mantenimiento-sys-av-dialog.component.scss'
 })
 
-export class ChatMantenimientoSysAvComponent {
+export class ChatMantenimientoAudioVideoComponent {
   @Input() mostrarModal: boolean = false;
   @Input() idMnatenimiento?: string;
   @Output() closeEvent = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer: any;
 
-  mantenimiento?: MantenimientoSysAv;
+  mantenimiento?: MantenimientoAudioVideo;
   userdata: Usuario;
   comentario: string = '';
   private mantenimientoSub?: Subscription;
 
   constructor(
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
     private cdr: ChangeDetectorRef,
@@ -55,13 +57,13 @@ export class ChatMantenimientoSysAvComponent {
       this.userdata.id
     );
 
-    this.mantenimientoSub = this.mantenimientosSistemasService.getByIdAV(this.idMnatenimiento!).subscribe(
+    this.mantenimientoSub = this.maintenanceAvService.getById(this.idMnatenimiento!).subscribe(
       async (mantenimiento) => {
         this.mantenimiento = mantenimiento;
         this.cdr.detectChanges();
 
         try {
-          await this.mantenimientosSistemasService.updateLastCommentReadAV(
+          await this.maintenanceAvService.updateLastCommentRead(
             this.mantenimiento!.id,
             this.userdata.id,
             this.mantenimiento!.comentarios ? this.mantenimiento!.comentarios.length : 0
@@ -110,13 +112,13 @@ export class ChatMantenimientoSysAvComponent {
     this.mantenimiento!.comentarios.push(data);
 
 
-    this.mantenimientosSistemasService
-      .updateAV(this.mantenimiento!.id, this.mantenimiento!)
+    this.maintenanceAvService
+      .update(this.mantenimiento!.id, this.mantenimiento!)
       .then(async () => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
         this.comentario = '';
 
-        await this.mantenimientosSistemasService.updateLastCommentReadAV(
+        await this.maintenanceAvService.updateLastCommentRead(
           this.mantenimiento!.id,
           this.userdata.id,
           this.mantenimiento!.comentarios.length

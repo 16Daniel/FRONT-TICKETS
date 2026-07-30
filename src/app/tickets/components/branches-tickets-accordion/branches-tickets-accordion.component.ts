@@ -9,6 +9,9 @@ import { TooltipModule } from 'primeng/tooltip';
 
 
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
+import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { NivelesAudioComponent } from '../../../mantenimientos/components/niveles-audio/niveles-audio.component';
 import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
 import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../interfaces/ticket.model';
@@ -31,7 +34,8 @@ import { TablaTvsBocinasComponent } from "../tabla-tvs-bocinas/tabla-tvs-bocinas
     TooltipModule,
     TpvsDevicesTableComponent,
     GraficaTickets30DiasComponent,
-    TablaTvsBocinasComponent
+    TablaTvsBocinasComponent,
+    NivelesAudioComponent
 ],
   templateUrl: './branches-tickets-accordion.component.html',
   styleUrl: './branches-tickets-accordion.component.scss',
@@ -48,6 +52,11 @@ export class BranchesTicketsAccordionComponent {
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
+
+  constructor(
+    private firebaseStorage: FirebaseStorageService,
+    private branchesService: BranchesService
+  ) {}
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

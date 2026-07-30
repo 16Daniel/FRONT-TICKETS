@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 
 import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { ModalFilterTicketsComponent } from '../../dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketsHistoryComponent } from '../../dialogs/modal-tickets-history/modal-tickets-history.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
@@ -28,13 +27,14 @@ import { MantenimientoFactoryService } from '../../../mantenimientos/services/ma
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { AcordeonMantenimientosSisAvComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sis-av/acordeon-mantenimientos-sis-av.component';
 import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
 import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
-import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -48,17 +48,16 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
     CrearTicketDialogComponent,
     ModalTicketDetailComponent,
     ModalFilterTicketsComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
     FormsModule,
     PriorityTicketsAccordionAnalystComponent,
     ModalTenXtenMaintenanceNewComponent,
     AcordeonMantenimientosSistemasComponent,
-    AcordeonMantenimientosAudioVideoComponent,
     AcordeonMantenimientosMantenimientoComponent,
     SolicitarCompraDialogComponent,
-    AcordeonMantenimientosSisAvComponent
+    AcordeonMantenimientosAudioVideoComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',
@@ -72,6 +71,10 @@ export class TicketsTabComponent implements OnInit {
   mostrarModalMtooTI: boolean = false;
   mostrarModalMtooTINuevo: boolean = false;
   mostrarModalHistorialMantenimientos: boolean = false;
+  mostrarModalCompras: boolean = false;
+  mostrarMantenimientosAV: boolean = false;
+  mostrarMantenimientosSistemas: boolean = false;
+
   itemtk: Ticket | undefined;
   sucursal: Sucursal | undefined;
   tickets: Ticket[] = [];
@@ -84,17 +87,14 @@ export class TicketsTabComponent implements OnInit {
   loading: boolean = false;
   ultimosmantenimientos: any[] = [];
   ultimosmantenimientosAV: any[] = [];
+  ultimosmantenimientosSistemas: any[] = [];
   private unsubscribe!: () => void;
-  ordenarxmantenimiento: boolean = false;
-  mostrarAV: boolean = false;
   paginaCargaPrimeraVez: boolean = true;
   ultimoNuevoTicket: Ticket | null = null;
   sucursales: Sucursal[] = [];
   todasSucursales: Sucursal[] = [];
-  tituloMantenimiento: string = '';
   ordenarMantenimientosFecha: boolean = false;
   auxMostrarMantenimientos = true;
-  mostrarModalCompras: boolean = false;
   compras: Compra[] = [];
 
   constructor(
@@ -104,27 +104,13 @@ export class TicketsTabComponent implements OnInit {
     private usersService: UsersService,
     private branchesService: BranchesService,
     private notificationService: NotificationService,
-    private mantenimientoFactory: MantenimientoFactoryService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private mantenimientosAvService: MaintenanceAvService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
-
-    switch (this.usuario.idArea) {
-      case '1':
-        this.tituloMantenimiento = 'IT: 8X8';
-        break;
-
-      case '2':
-        this.tituloMantenimiento = '6X6';
-        break;
-
-      case '4':
-        this.tituloMantenimiento = '6X6';
-        break;
-    }
   }
 
 
@@ -166,29 +152,9 @@ export class TicketsTabComponent implements OnInit {
   }
 
   obtenerMantenimientos(idsSucursales: string[]) {
-    const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-    this.subscriptiontk = servicio
+
+    this.subscriptiontk = this.mantenimientosAvService
       .getUltimosMantenimientos(idsSucursales)
-      .subscribe((result: any) => {
-        // console.log(result)
-        let data = result.filter((element: any) => element.length > 0);
-        this.ultimosmantenimientos = [];
-        for (let itemdata of data) {
-          for (let item of itemdata) {
-            this.ultimosmantenimientos.push(item);
-          }
-        }
-
-        this.ultimosmantenimientos = this.ultimosmantenimientos.map(x => {
-          x.fecha = this.datesHelper.getDate(x.fecha);
-          return x;
-        });
-
-        this.cdr.detectChanges();
-      });
-
-    this.subscriptiontk = this.mantenimientosSistemasService
-      .getUltimosMantenimientosAV(idsSucursales)
       .subscribe((result: any) => {
         let data = result.filter((element: any) => element.length > 0);
         this.ultimosmantenimientosAV = [];
@@ -199,6 +165,25 @@ export class TicketsTabComponent implements OnInit {
         }
 
         this.ultimosmantenimientosAV = this.ultimosmantenimientosAV.map(x => {
+          x.fecha = this.datesHelper.getDate(x.fecha);
+          return x;
+        });
+
+        this.cdr.detectChanges();
+      });
+
+      this.subscriptiontk = this.mantenimientosSistemasService
+      .getUltimosMantenimientos(idsSucursales)
+      .subscribe((result: any) => {
+        let data = result.filter((element: any) => element.length > 0);
+        this.ultimosmantenimientosSistemas = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.ultimosmantenimientosSistemas.push(item);
+          }
+        }
+
+        this.ultimosmantenimientosSistemas = this.ultimosmantenimientosSistemas.map(x => {
           x.fecha = this.datesHelper.getDate(x.fecha);
           return x;
         });

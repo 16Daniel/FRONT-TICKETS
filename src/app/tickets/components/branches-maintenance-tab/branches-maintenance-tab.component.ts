@@ -6,7 +6,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalTicketsHistoryComponent } from '../../../tickets/dialogs/modal-tickets-history/modal-tickets-history.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -18,6 +17,7 @@ import { ModalMaintenanceMttoHistoryComponent } from '../../../mantenimientos/di
 import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
 import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 @Component({
   selector: 'app-branches-maintenance-tab',
@@ -29,7 +29,7 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
     CommonModule,
     CrearTicketDialogComponent,
     ModalTicketDetailComponent,
-    ModalTicketsHistoryComponent,
+    HistorialTicketsDialogComponent,
     PriorityTicketsAccordionComponent,
     ModalBranchRatingComponent,
     ModalMateinanceMttoCheckComponent,

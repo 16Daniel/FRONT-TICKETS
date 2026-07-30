@@ -27,9 +27,13 @@ import { CategoriesService } from '../../services/categories.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
+import * as XLSX from 'xlsx';
 
 @Component({
-  selector: 'app-modal-tickets-history',
+  selector: 'app-historial-tickets-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -42,10 +46,10 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     DropdownModule,
     MultiSelectModule
   ],
-  templateUrl: './modal-tickets-history.component.html',
-  styleUrl: './modal-tickets-history.component.scss',
+  templateUrl: './historial-tickets-dialog.component.html',
+  styleUrl: './historial-tickets-dialog.component.scss',
 })
-export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
+export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
   @Input() showModalHistorial: boolean = false;
   @Input() idArea: string = '';
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -59,6 +63,8 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
   categorias: Categoria[] = [];
   areas: Area[] = [];
   sucursales: Sucursal[] = [];
+  usuariosHelp: Usuario[] = [];
+  estatusTickets: EstatusTicket[] = [];
 
   idCategoria: string = ''
   idsucursales: string[] = [];
@@ -87,7 +93,9 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
     private messageService: MessageService,
     private categoriesService: CategoriesService,
     private areasService: AreasService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private usersService: UsersService,
+    private statusTicketsService: StatusTicketService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -99,6 +107,8 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
       this.sucursales = sucursales;
       this.idsucursales = [this.usuario.sucursales[0].id];
     });
+    this.obtenerUsuariosHelp();
+    this.obtenerCatalogoEstatusTickets();
   }
 
   ngOnDestroy() {
@@ -164,6 +174,92 @@ export class ModalTicketsHistoryComponent implements OnDestroy, OnInit {
     this.ticketsFiltrados = this.tickets.filter(t =>
       t.descripcion?.toLowerCase().includes(txt)
     );
+  }
+
+  obtenerUsuariosHelp() {
+    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+  }
+
+  obtenerCatalogoEstatusTickets() {
+    this.statusTicketsService.get().subscribe(result => this.estatusTickets = result);
+  }
+
+  getDate(tsmp: any): Date | null {
+    if (!tsmp) return null;
+    try {
+      return tsmp.toDate();
+    } catch {
+      return tsmp;
+    }
+  }
+
+  obtenerNombreArea(idArea: string): string {
+    return this.areas.find(x => x.id == idArea)?.nombre || '';
+  }
+
+  obtenerNombreSucursal(idSucursal: string): string {
+    return this.sucursales.find(x => x.id == idSucursal)?.nombre || '';
+  }
+
+  obtenerNombreResponsable(id: string): string {
+    const user = this.usuariosHelp.find(x => x.id == id);
+    return user ? `${user.nombre} ${user.apellidoP}` : '';
+  }
+
+  obtenerNombreEstatusTicket(idEstatusTicket: string): string {
+    return this.estatusTickets.find(x => x.id == idEstatusTicket)?.nombre || '';
+  }
+
+  formatDate(date: any): string {
+    const d = this.getDate(date);
+    if (!d) return '';
+    try {
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      let hours = d.getHours();
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'p. m.' : 'a. m.';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+    } catch {
+      return '';
+    }
+  }
+
+  truncateExcelText(val: any): string {
+    if (val === null || val === undefined) return '';
+    const str = String(val);
+    return str.length > 32700 ? str.substring(0, 32700) + '... [TRUNCADO]' : str;
+  }
+
+  exportToExcel(filename: string = 'historial_tickets.xlsx'): void {
+    if (this.ticketsFiltrados.length === 0) {
+      this.showMessage('warn', 'Atención', 'No hay datos para exportar');
+      return;
+    }
+
+    const datosExportar = this.ticketsFiltrados.map(t => ({
+      FOLIO: t.folio,
+      'FECHA DE SOLICITUD': this.formatDate(t.fecha),
+      'FECHA DE TERMINO': t.fechaFin ? this.formatDate(t.fechaFin) : 'N/A',
+      SUCURSAL: this.obtenerNombreSucursal(t.idSucursal),
+      AREA: this.obtenerNombreArea(t.idArea),
+      SOLICITANTE: t.solicitante ? t.solicitante.toUpperCase() : '',
+      RESPONSABLE: this.obtenerNombreResponsable(t.idResponsableFinaliza),
+      CATEGORÍA: t.nombreCategoria || '',
+      SUBCATEGORÍA: t.idSubcategoria == null ? 'N/A' : t.nombreSubcategoria,
+      ESTATUS: this.obtenerNombreEstatusTicket(t.idEstatusTicket),
+      CALIFICACIÓN: t.calificacion || 0,
+      DESCRIPCIÓN: this.truncateExcelText(t.descripcion)
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Historial');
+
+    XLSX.writeFile(wb, filename);
   }
 
 }

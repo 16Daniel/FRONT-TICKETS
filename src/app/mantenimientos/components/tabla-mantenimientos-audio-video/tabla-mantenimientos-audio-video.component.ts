@@ -1,45 +1,45 @@
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
+
 import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
-import { ModalAvMttoImguploaderComponent } from '../../dialogs/audio-video/modal-av-mtto-imguploader/modal-av-mtto-imguploader.component';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { ModalMaintenanceChatComponent } from '../../dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Maintenance6x6AvService } from '../../services/maintenance-av.service';
-import { MantenimientoSysAv } from '../../interfaces/mantenimiento-sys-av.interface';
-import { EvidenciaSysAv, VisorImagenesSysAvComponent } from '../../dialogs/sistemas-av/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component';
+import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
-import { SubirImagenesAv2Component } from "../../dialogs/audio-video/subir-imagenes-av-dialog-2/subir-imagenes-av-dialog-2.component";
-
+import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
+import { ChatMantenimientoAudioVideoComponent } from '../../dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
+import { EvidenciaSysAv, VisorImagenesSysAvComponent } from '../../dialogs/sistemas-av/visor-imagenes-sys-av-dialog/visor-imagenes-sys-av-dialog.component';
+import { SubirImagenesSysAv2Component } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog-2/subir-imagenes-sys-av-dialog-2.component';
+import { SubirImagenesSysAvComponent } from '../../dialogs/sistemas-av/subir-imagenes-sys-av-dialog/subir-imagenes-sys-av-dialog.component';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 @Component({
-  selector: 'app-tabla-mantenimientos-audio-video',
+  selector: 'tabla-mantenimientos-audio-video',
+  styleUrl: './tabla-mantenimientos-audio-video.component.scss',
   standalone: true,
   imports: [
     TableModule,
     CommonModule,
     ModalFinalCommentsComponent,
-    ModalAvMttoImguploaderComponent,
     ModalVisorVariasImagenesComponent,
-    ModalMaintenanceChatComponent,
-    VisorImagenesSysAvComponent,
-    SubirImagenesAv2Component
+    ChatMantenimientoAudioVideoComponent,
+    SubirImagenesSysAvComponent,
+    SubirImagenesSysAv2Component,
+    VisorImagenesSysAvComponent
   ],
   templateUrl: './tabla-mantenimientos-audio-video.component.html',
-  styleUrl: './tabla-mantenimientos-audio-video.component.scss'
 })
-
 export class TablaMantenimientosAudioVideoComponent {
-  @Input() mantenimientos: MantenimientoSysAv[] = [];
+  @Input() mantenimientos: MantenimientoAudioVideo[] = [];
   @Input() usuariosHelp: Usuario[] = [];
   @Input() idSucursal?: string;
   @Input() mostrarChat: boolean = false;
-  @Output() clickEvent = new EventEmitter<MantenimientoSysAv>();
+  @Output() clickEvent = new EventEmitter<MantenimientoAudioVideo>();
 
-  mantenimientoSeleccionado: MantenimientoSysAv | undefined;
+  mantenimientoSeleccionado: MantenimientoAudioVideo | undefined;
   mostrarModalComentarios: boolean = false;
   mostrarModalChat: boolean = false;
   mostrarModalSubirImagen: boolean = false;
@@ -57,7 +57,7 @@ export class TablaMantenimientosAudioVideoComponent {
   constructor(
     public dateHelpder: DatesHelperService,
     private cdr: ChangeDetectorRef,
-    public maintenance6x6AvService: Maintenance6x6AvService,
+    public mantenimientosAvService: MaintenanceAvService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private datesHelper: DatesHelperService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
@@ -117,7 +117,6 @@ export class TablaMantenimientosAudioVideoComponent {
 
         }
         else if (result.isDenied) {
-          debugger
           if (this.tituloEvidencia == 'PANTALLAS' || this.tituloEvidencia == 'BOCINAS')
             this.mostrarModalSubirImagen2 = true;
           else
@@ -134,7 +133,7 @@ export class TablaMantenimientosAudioVideoComponent {
     }
   }
 
-  abrirModalVisorImagen(mantenimiento: MantenimientoSysAv, campo: string) {
+  abrirModalVisorImagen(mantenimiento: MantenimientoAudioVideo, campo: string) {
 
     this.imagenes = [];
     this.imagenesPorDispositivo = [];
@@ -208,7 +207,7 @@ export class TablaMantenimientosAudioVideoComponent {
     this.mostrarModalChat = true;
   }
 
-  verificarChatNoLeido(mantenimiento: MantenimientoSysAv) {
+  verificarChatNoLeido(mantenimiento: MantenimientoAudioVideo) {
     if (!mantenimiento.participantesChat)
       mantenimiento.participantesChat = [];
 
@@ -304,7 +303,7 @@ export class TablaMantenimientosAudioVideoComponent {
 
     }
 
-    await this.maintenance6x6AvService.update(
+    await this.mantenimientosAvService.update(
       this.mantenimientoSeleccionado.id,
       this.mantenimientoSeleccionado
     );

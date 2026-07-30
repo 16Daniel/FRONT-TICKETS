@@ -38,9 +38,10 @@ import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { TarjetaSucursalPorVisitarComponent } from '../../components/tarjeta-sucursal-por-visitar/tarjeta-sucursal-por-visitar.component';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 
 @Component({
-  selector: 'app-calendar-builder-page',
+  selector: 'app-constructor-calendario-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -57,10 +58,10 @@ import { TarjetaSucursalPorVisitarComponent } from '../../components/tarjeta-suc
     ModalActivityComponent
   ],
   providers: [MessageService],
-  templateUrl: './calendar-builder-page.component.html',
+  templateUrl: './constructor-calendario-page.component.html',
 })
 
-export default class CalendarBuilderPageComponent implements OnInit {
+export default class ContructorCalendarioPageComponent implements OnInit {
   sucursales: Sucursal[] = [];
   sucursalesOrdenadas: Sucursal[] = [];
   sucursalesSeleccionadas: Sucursal[] = [];
@@ -99,8 +100,8 @@ export default class CalendarBuilderPageComponent implements OnInit {
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService,
     private fixedAssetsService: FixedAssetsService,
-    private maintenanceMtooService: MaintenanceMtooService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private datesHelper: DatesHelperService,
     private areasService: AreasService
   ) {
@@ -398,34 +399,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
               });
             }
             else if (this.usuario.idArea == '2') {
-              const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-
-              let tvs: any[] = [];
-              let bocinas: any[] = [];
-              const registroSucursal = this.sucursales.find(x => x.id == sucursal.id);
-
-              registroSucursal!.tvs?.forEach(tv => {
-                tvs.push({
-                  dispositivo: tv,
-                  evidenciaUrls: []
-                });
-              });
-
-              registroSucursal!.bocinas?.forEach(bocina => {
-                bocinas.push({
-                  dispositivo: bocina,
-                  evidenciaUrls: []
-                });
-              });
-
-              await servicio.create({
-                idSucursal: sucursal.id,
-                idUsuario: this.usuarioseleccionado!.id,
-                fecha: this.fecha,
-                participantesChat,
-                tvs,
-                bocinas
-              });
+              // ...Se quitó la creación de mantenimiento para Audio y Video, ya que se está manejando en otro servicio
             }
             else {
               await await servicio.create({
@@ -435,7 +409,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
                 participantesChat
               });
 
-              this.registrarMantenimientoSysAv(sucursal, participantesChat);
+              this.registrarMantenimientoAudioVideo(sucursal, participantesChat);
             }
           }
 
@@ -458,7 +432,7 @@ export default class CalendarBuilderPageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  async registrarMantenimientoSysAv(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
+  async registrarMantenimientoAudioVideo(sucursal: Sucursal, participantesChat: ParticipanteChat[]) {
     if (this.usuario.idArea == '1') {
       let tvs: any[] = [];
       let bocinas: any[] = [];
@@ -478,14 +452,14 @@ export default class CalendarBuilderPageComponent implements OnInit {
         });
       });
 
-      await this.mantenimientosSistemasService.createAv(
-        sucursal.id,
-        this.usuarioseleccionado!.id,
-        this.fecha,
+      await this.maintenanceAvService.create({
+        idSucursal: String(sucursal.id),
+        idUsuario: this.usuarioseleccionado!.id,
+        fecha: this.fecha,
         tvs,
         bocinas,
         participantesChat
-      )
+      });
     }
   }
 
@@ -597,9 +571,9 @@ export default class CalendarBuilderPageComponent implements OnInit {
           await servicio.delete(element.id);
         });
 
-        let temp2 = await this.mantenimientosSistemasService.obtenerMantenimientoVisitaPorFechaAreaAV(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
+        let temp2 = await this.maintenanceAvService.obtenerMantenimientoVisitaPorFechaArea(this.datesHelper.getDate(this.registroDeVisita.fecha), sucursal.id);
         temp2.forEach(async (element: any) => {
-          await this.mantenimientosSistemasService.deleteAV(element.id);
+          await this.maintenanceAvService.delete(element.id);
         });
       }
 

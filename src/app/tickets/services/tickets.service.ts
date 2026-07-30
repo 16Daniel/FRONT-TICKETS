@@ -144,6 +144,16 @@ export class TicketsService {
     });
   }
 
+  private parseTimestampToDate(tsmp: any): Date {
+    if (tsmp instanceof Timestamp) {
+      return tsmp.toDate();
+    }
+    if (tsmp && typeof tsmp.toDate === 'function') {
+      return tsmp.toDate();
+    }
+    return new Date(tsmp);
+  }
+
   async getHistorialTickets(
     fechaInicio: Date,
     fechaFin: Date,
@@ -152,40 +162,57 @@ export class TicketsService {
     idCategoria?: string,
     calificacion?: number
   ): Promise<Ticket[]> {
+    if (!idsSucursales || idsSucursales.length === 0) {
+      return [];
+    }
+
     fechaInicio.setHours(0, 0, 0, 0);
 
     const collectionRef = collection(this.firestore, 'tickets');
 
-    // Filtros base
-    const filtros: any[] = [
-      where('idSucursal', 'in', idsSucursales),
-      where('idEstatusTicket', '==', '3'),
-      where('fechaFin', '>=', fechaInicio),
-      where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
-      orderBy('fecha', 'desc')
-    ];
-
-    // Filtros opcionales
-    if (idArea) filtros.push(where('idArea', '==', idArea));
-    if (idCategoria) filtros.push(where('idCategoria', '==', idCategoria));
-    if (calificacion) filtros.push(where('calificacion', '==', calificacion));
-
-    const q = query(collectionRef, ...filtros);
-
-    // Ejecutar promesa
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      return [];
+    // Dividir idsSucursales en grupos de máximo 30 para cumplir con la limitación de Firestore
+    const chunks: string[][] = [];
+    const chunkSize = 30;
+    for (let i = 0; i < idsSucursales.length; i += chunkSize) {
+      chunks.push(idsSucursales.slice(i, i + chunkSize));
     }
 
-    return querySnapshot.docs.map((doc) => {
-      const data = doc.data() as DocumentData;
-      return {
-        id: doc.id,
-        ...data
-      } as Ticket;
+    const promesas = chunks.map(async (chunk) => {
+      const filtros: any[] = [
+        where('idSucursal', 'in', chunk),
+        where('idEstatusTicket', '==', '3'),
+        where('fechaFin', '>=', fechaInicio),
+        where('fechaFin', '<', new Date(fechaFin.getTime() + 24 * 60 * 60 * 1000)),
+        orderBy('fecha', 'desc')
+      ];
+
+      if (idArea) filtros.push(where('idArea', '==', idArea));
+      if (idCategoria) filtros.push(where('idCategoria', '==', idCategoria));
+      if (calificacion) filtros.push(where('calificacion', '==', calificacion));
+
+      const q = query(collectionRef, ...filtros);
+      const querySnapshot = await getDocs(q);
+
+      return querySnapshot.docs.map((doc) => {
+        const data = doc.data() as DocumentData;
+        return {
+          id: doc.id,
+          ...data
+        } as Ticket;
+      });
     });
+
+    const resultadosPorChunk = await Promise.all(promesas);
+    const todosLosTickets = resultadosPorChunk.flat();
+
+    // Reordenar por fecha descendente
+    todosLosTickets.sort((a, b) => {
+      const fechaA = this.parseTimestampToDate(a.fecha).getTime();
+      const fechaB = this.parseTimestampToDate(b.fecha).getTime();
+      return fechaB - fechaA;
+    });
+
+    return todosLosTickets;
   }
 
   getTicketsPorUsuario(userId: string): Observable<any[]> {

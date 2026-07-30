@@ -34,8 +34,8 @@
   (closeEvent)="mostrarModalFilterTickets = false"
   (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets> -->
 
-<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-  (closeEvent)="mostrarModalHistorial = false" idArea="4"></app-modal-tickets-history>
+<app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false" idArea="4"></app-historial-tickets-dialog>
 
 <app-modal-maintenance-mtto-history *ngIf="mostrarModalHistorialMantenimientos"
   [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"

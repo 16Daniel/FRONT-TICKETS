@@ -14,8 +14,9 @@ import { Timestamp } from '@angular/fire/firestore';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
-import { MantenimientoSysAv } from '../../../interfaces/mantenimiento-sys-av.interface';
+import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
 import { ProgressBar80Component } from "../../../components/progress-bar-80/progress-bar-80.component";
+import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
   selector: 'app-check-mantenimiento-sis-av-dialog',
@@ -34,11 +35,11 @@ import { ProgressBar80Component } from "../../../components/progress-bar-80/prog
 })
 export class CheckMantenimientoSisAvComponent {
   @Input() mostrarModalAV: boolean = false;
-  @Input() mantenimientoActivo: MantenimientoSysAv | null = null;
+  @Input() mantenimientoActivo: MantenimientoAudioVideo | null = null;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   progreso: number = 0;
-  mantenimientos: MantenimientoSysAv[] = [];
+  mantenimientos: MantenimientoAudioVideo[] = [];
   formularioDeMantenimiento: FormGroup | any;
   opcionesDeMantenimiento = [
     {
@@ -76,6 +77,7 @@ export class CheckMantenimientoSisAvComponent {
   constructor(
     private fb: FormBuilder,
     private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
     private messageService: MessageService
   ) {
     this.crearFormulario();
@@ -101,7 +103,7 @@ export class CheckMantenimientoSisAvComponent {
       return;
     }
 
-    const mantenimiento: MantenimientoSysAv = {
+    const mantenimiento: MantenimientoAudioVideo = {
       ...this.formularioDeMantenimiento.value,
       id: this.mantenimientoActivo?.id,
       participantesChat: this.mantenimientoActivo?.participantesChat,
@@ -112,7 +114,7 @@ export class CheckMantenimientoSisAvComponent {
       estatus: false,
     };
 
-    await this.mantenimientosSistemasService.updateAV(mantenimiento.id, mantenimiento);
+    await this.maintenanceAvService.update(mantenimiento.id, mantenimiento);
     // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
     this.closeEvent.emit(false); // Cerrar modal
   }

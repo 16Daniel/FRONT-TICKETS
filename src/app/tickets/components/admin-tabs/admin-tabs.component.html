@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <p-tabView (onChange)="onTabChange($event)" [activeIndex]="activeIndex">
-  @if (usuario.idArea == '1' || usuario.idRol == '1')
+  @if ((usuario.idArea == '1' || usuario.idArea == '2') || usuario.idRol == '1')
   {
   <p-tabPanel header="SISTEMAS">
     <ng-container *ngIf="tabsActivos['SISTEMAS']">

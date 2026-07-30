@@ -5,14 +5,16 @@
     <tr class="text-center">
       <th><span class="fs-1">🚥</span></th>
       <th>FOLIO</th>
-      <th>FECHA</th>
+      <th>{{ mostrarFechaSolicitud ? 'FECHA DE SOLICITUD' : 'FECHA' }}</th>
       <th *ngIf="mostrarFedchaEstimacion">FECHA FIN</th>
+      <th *ngIf="mostrarFechaTermino">FECHA DE TERMINO</th>
       <th>AREA</th>
       <th *ngIf="esEspectadorActivo || mostrarSucursal">SUCURSAL</th>
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
       <th>CATEGORÍA</th>
       <th>SUBCATEGORÍA</th>
+      <th *ngIf="mostrarDescripcion">DESCRIPCIÓN</th>
       <th>ESTATUS</th>
       <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
       <th *ngIf="mostrarAcciones">ACCIONES</th>
@@ -45,6 +47,9 @@
       <td class="text-center" *ngIf="mostrarFedchaEstimacion">
         {{ getDate(ticket!.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}
       </td>
+      <td class="text-center" *ngIf="mostrarFechaTermino">
+        {{ ticket.fechaFin ? (getDate(ticket.fechaFin) | date: 'dd/MM/yyyy hh:mm a') : 'N/A' }}
+      </td>
       <td class="text-center">
         {{ obtenerNombreArea(ticket.idArea) }}
       </td>
@@ -60,6 +65,9 @@
       </td>
       <td class="text-center">
         {{ ticket.idSubcategoria == null ? "N/A" : ticket.nombreSubcategoria }}
+      </td>
+      <td class="text-center" *ngIf="mostrarDescripcion" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" [pTooltip]="ticket.descripcion" tooltipPosition="top">
+        {{ ticket.descripcion }}
       </td>
       <td class="text-center">
         <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm"

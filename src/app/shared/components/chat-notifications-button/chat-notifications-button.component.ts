@@ -15,7 +15,8 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
 import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-chat/admin-compras-chat.component';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
-import { ChatMantenimientoSysAvComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
+import { ChatMantenimientoAudioVideoComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 
 @Component({
   selector: 'app-chat-notifications-button',
@@ -26,7 +27,7 @@ import { ChatMantenimientoSysAvComponent } from '../../../mantenimientos/dialogs
     ModalTicketChatComponent,
     ModalMaintenanceChatComponent,
     AdminComprasChatComponent,
-    ChatMantenimientoSysAvComponent
+    ChatMantenimientoAudioVideoComponent
   ],
   providers: [MessageService],
   templateUrl: './chat-notifications-button.component.html',
@@ -57,7 +58,8 @@ export class ChatNotificationsButtonComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private mantenimientoFactory: MantenimientoFactoryService,
     private shopingService: ShoppingService,
-    private mantenimientosSistemasService: MantenimientosSistemasService
+    private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -124,7 +126,7 @@ export class ChatNotificationsButtonComponent implements OnInit {
     this.mantenimientoSub?.unsubscribe();
 
     if (tipoOrigen === 'AudioVideo') {
-      this.mantenimientoSub = this.mantenimientosSistemasService.getByIdAV(id).subscribe((mantenimiento: any) => {
+      this.mantenimientoSub = this.maintenanceAvService.getById(id).subscribe((mantenimiento: any) => {
         this.mantenimiento = mantenimiento;
         this.mostrarModalChatMantenimientoAV = true;
         this.cdr.detectChanges();

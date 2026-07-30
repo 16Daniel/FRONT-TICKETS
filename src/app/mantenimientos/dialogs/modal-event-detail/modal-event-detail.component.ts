@@ -14,10 +14,10 @@ import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
-import { TablaMantenimientosSysAvComponent } from "../../components/tabla-mantenimientos-sys-av/tabla-mantenimientos-sys-av.component";
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { TablaMantenimientosSistemasComponent } from '../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TablaMantenimientosMantenimientoComponent } from '../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
+import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 
 @Component({
@@ -34,7 +34,6 @@ import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-m
     ModalMaintenanceDetailComponent,
     TablaMantenimientosAudioVideoComponent,
     TablaMantenimientosMantenimientoComponent,
-    TablaMantenimientosSysAvComponent
   ],
   templateUrl: './modal-event-detail.component.html',
 })
@@ -66,7 +65,8 @@ export default class ModalEventDetailComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private cdr: ChangeDetectorRef,
     private datesHelper: DatesHelperService,
-    private mantenimientosSistemasService: MantenimientosSistemasService
+    private mantenimientosSistemasService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
   ) {
     registerLocaleData(localeEs);
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -93,7 +93,7 @@ export default class ModalEventDetailComponent implements OnInit {
       this.cdr.detectChanges();
     });
 
-    await this.mantenimientosSistemasService.getMantenimientosPorSucursalYFechaAV([this.sucursal.id], this.fecha).subscribe((result: any) => {
+    await this.maintenanceAvService.getMantenimientosPorSucursalYFecha([this.sucursal.id], this.fecha).subscribe((result: any) => {
       let data = result.filter((element: any) => element.length > 0);
       this.mantenimientosDelDiaAV = [];
       for (let itemdata of data) {

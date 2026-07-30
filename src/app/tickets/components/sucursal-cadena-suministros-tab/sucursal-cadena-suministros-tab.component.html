@@ -25,8 +25,8 @@
     (closeEvent)="mostrarModalFilterTickets = false"
     (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
-<app-modal-tickets-history *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
-    (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-modal-tickets-history>
+<app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+    (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-historial-tickets-dialog>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
     [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
