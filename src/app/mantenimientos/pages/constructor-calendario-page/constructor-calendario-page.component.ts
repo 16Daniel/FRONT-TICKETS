@@ -399,34 +399,7 @@ export default class ContructorCalendarioPageComponent implements OnInit {
               });
             }
             else if (this.usuario.idArea == '2') {
-              const servicio = this.mantenimientoFactory.getService(this.usuario.idArea);
-
-              let tvs: any[] = [];
-              let bocinas: any[] = [];
-              const registroSucursal = this.sucursales.find(x => x.id == sucursal.id);
-
-              registroSucursal!.tvs?.forEach(tv => {
-                tvs.push({
-                  dispositivo: tv,
-                  evidenciaUrls: []
-                });
-              });
-
-              registroSucursal!.bocinas?.forEach(bocina => {
-                bocinas.push({
-                  dispositivo: bocina,
-                  evidenciaUrls: []
-                });
-              });
-
-              await servicio.create({
-                idSucursal: sucursal.id,
-                idUsuario: this.usuarioseleccionado!.id,
-                fecha: this.fecha,
-                participantesChat,
-                tvs,
-                bocinas
-              });
+              // ...Se quitó la creación de mantenimiento para Audio y Video, ya que se está manejando en otro servicio
             }
             else {
               await await servicio.create({
