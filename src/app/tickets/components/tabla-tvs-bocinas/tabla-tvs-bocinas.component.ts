@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { StatusTpvsDevicesService } from '../../../activos-fijos/services/status-tpvs-devices.service';
@@ -9,7 +10,8 @@ import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
 import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv.interface';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
+import { DispositivosSucursal } from '../../../sucursales/interfaces/dispositivos-sucursal.interface';
 
 @Component({
   selector: 'app-tabla-tvs-bocinas',
@@ -18,8 +20,14 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
   templateUrl: './tabla-tvs-bocinas.component.html',
   styleUrl: './tabla-tvs-bocinas.component.scss'
 })
-export class TablaTvsBocinasComponent implements OnInit {
+export class TablaTvsBocinasComponent implements OnInit, OnChanges {
   @Input() sucursal!: Sucursal;
+
+  dispositivosSucursal: DispositivosSucursal = {
+    idSucursal: '',
+    tvs: [],
+    bocinas: []
+  };
 
   dispositivoSeleccionado!: Dispositivo;
   estatus: EstatusTPV[] = [];
@@ -28,10 +36,12 @@ export class TablaTvsBocinasComponent implements OnInit {
   tipo!: string;
   usuario!: Usuario;
 
+  private dispositivosSub?: Subscription;
+
   constructor(
     private estatusService: StatusTpvsDevicesService,
     private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService
+    private dispositivosSucursalesService: DispositivosSucursalesService
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +52,35 @@ export class TablaTvsBocinasComponent implements OnInit {
     });
 
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.cargarDispositivos();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sucursal'] && !changes['sucursal'].firstChange) {
+      this.cargarDispositivos();
+    }
+  }
+
+  cargarDispositivos(): void {
+    if (!this.sucursal || !this.sucursal.id) return;
+
+    if (this.dispositivosSub) {
+      this.dispositivosSub.unsubscribe();
+    }
+
+    const idSucursal = this.sucursal.id;
+    this.dispositivosSub = this.dispositivosSucursalesService.getBySucursalId(idSucursal).subscribe((data) => {
+      if (data && data.length > 0) {
+        this.dispositivosSucursal = data[0];
+      } else {
+        this.dispositivosSucursal = {
+          idSucursal: idSucursal,
+          tvs: [],
+          bocinas: []
+        };
+      }
+      this.cdr.detectChanges();
+    });
   }
 
   getColorEstatus(idEstatus: string): string {
@@ -83,20 +122,21 @@ export class TablaTvsBocinasComponent implements OnInit {
         if (result.isConfirmed && result.value) {
           const nuevoDispositivo = new Dispositivo();
           nuevoDispositivo.nombre = result.value;
-          nuevoDispositivo.estatus = '1'; // Default status (e.g. active)
+          nuevoDispositivo.estatus = '1';
+
+          if (!this.dispositivosSucursal.tvs) this.dispositivosSucursal.tvs = [];
+          if (!this.dispositivosSucursal.bocinas) this.dispositivosSucursal.bocinas = [];
 
           if (tipo === 'TV') {
-            if (!this.sucursal.tvs) this.sucursal.tvs = [];
-            this.sucursal.tvs.push({ ...nuevoDispositivo });
+            this.dispositivosSucursal.tvs.push({ ...nuevoDispositivo });
           } else {
-            if (!this.sucursal.bocinas) this.sucursal.bocinas = [];
-            this.sucursal.bocinas.push({ ...nuevoDispositivo });
+            this.dispositivosSucursal.bocinas.push({ ...nuevoDispositivo });
           }
 
           try {
-            await this.branchesService.update(this.sucursal, this.sucursal.id);
+            await this.dispositivosSucursalesService.saveOrUpdate(this.dispositivosSucursal);
           } catch (error) {
-            console.error('Error actualizando sucursal', error);
+            console.error('Error guardando en dispositivos-sucursal', error);
           }
 
           this.cdr.detectChanges();
@@ -121,16 +161,16 @@ export class TablaTvsBocinasComponent implements OnInit {
         cancelButtonText: 'Cancelar'
       }).then(async (result) => {
         if (result.isConfirmed) {
-          if (tipo === 'TV' && this.sucursal.tvs) {
-            this.sucursal.tvs = this.sucursal.tvs.filter(d => d.id !== dispositivo.id);
-          } else if (tipo === 'BOCINA' && this.sucursal.bocinas) {
-            this.sucursal.bocinas = this.sucursal.bocinas.filter(d => d.id !== dispositivo.id);
+          if (tipo === 'TV' && this.dispositivosSucursal.tvs) {
+            this.dispositivosSucursal.tvs = this.dispositivosSucursal.tvs.filter(d => d.id !== dispositivo.id);
+          } else if (tipo === 'BOCINA' && this.dispositivosSucursal.bocinas) {
+            this.dispositivosSucursal.bocinas = this.dispositivosSucursal.bocinas.filter(d => d.id !== dispositivo.id);
           }
 
           try {
-            await this.branchesService.update(this.sucursal, this.sucursal.id);
+            await this.dispositivosSucursalesService.saveOrUpdate(this.dispositivosSucursal);
           } catch (error) {
-            console.error('Error actualizando sucursal', error);
+            console.error('Error actualizando dispositivos-sucursal', error);
           }
 
           this.cdr.detectChanges();
@@ -139,4 +179,9 @@ export class TablaTvsBocinasComponent implements OnInit {
       });
     });
   }
+
+  onEstatusGuardado(event: any): void {
+    this.dispositivosSucursalesService.saveOrUpdate(this.dispositivosSucursal);
+  }
 }
+

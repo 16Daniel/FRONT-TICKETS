@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 
 import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Dispositivo } from '../../interfaces/dispositivo.interface';
 import { EstatusTPV } from '../../interfaces/estatus-tpv.interface';
@@ -23,7 +24,7 @@ export class ModalColorEstatusDispositivoTpvComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Input() sucursal!: Sucursal;
   @Input() dispositivo!: Dispositivo;
-  @Input() tipo!: string; // TPV | TABLETA
+  @Input() tipo!: string; // TPV | TABLETA | TV | BOCINA
   @Output() closeEvent = new EventEmitter<boolean>();
 
   estatusTPVList: EstatusTPV[] = [];
@@ -31,7 +32,8 @@ export class ModalColorEstatusDispositivoTpvComponent implements OnInit {
 
   constructor(
     private statusService: StatusTpvsDevicesService,
-    private branchesServices: BranchesService
+    private branchesServices: BranchesService,
+    private dispositivosSucursalesService: DispositivosSucursalesService
   ) { }
 
   ngOnInit(): void {
@@ -59,30 +61,36 @@ export class ModalColorEstatusDispositivoTpvComponent implements OnInit {
       return;
     }
 
-    let lista: Dispositivo[] | undefined;
+    if (this.tipo === 'TV' || this.tipo === 'BOCINA') {
+      const dispDoc = await this.dispositivosSucursalesService.getOnceBySucursalId(this.sucursal.id);
+      if (dispDoc) {
+        const list = this.tipo === 'TV' ? dispDoc.tvs : dispDoc.bocinas;
+        const item = list?.find(d => d.id === this.dispositivo.id);
+        if (item) {
+          item.estatus = this.estatusSeleccionado.id;
+        }
+        this.dispositivo.estatus = this.estatusSeleccionado.id;
+        await this.dispositivosSucursalesService.saveOrUpdate(dispDoc);
+      }
+    } else {
+      let lista: Dispositivo[] | undefined;
+      switch (this.tipo) {
+        case 'TPV':
+          lista = this.sucursal.tpvs;
+          break;
+        case 'TABLETA':
+          lista = this.sucursal.tabletas;
+          break;
+      }
 
-    switch (this.tipo) {
-      case 'TPV':
-        lista = this.sucursal.tpvs;
-        break;
-      case 'TABLETA':
-        lista = this.sucursal.tabletas;
-        break;
-      case 'TV':
-        lista = this.sucursal.tvs;
-        break;
-      case 'BOCINA':
-        lista = this.sucursal.bocinas;
-        break;
+      const index = lista?.findIndex(d => d.id === this.dispositivo.id);
+
+      if (index !== undefined && index >= 0 && lista) {
+        lista[index].estatus = this.estatusSeleccionado.id;
+      }
+
+      await this.branchesServices.update(this.sucursal, this.sucursal.id);
     }
-
-    const index = lista?.findIndex(d => d.id === this.dispositivo.id);
-
-    if (index !== undefined && index >= 0 && lista) {
-      lista[index].estatus = this.estatusSeleccionado.id;
-    }
-
-    this.branchesServices.update(this.sucursal, this.sucursal.id);
 
     this.closeEvent.emit(false);
   }
@@ -90,3 +98,4 @@ export class ModalColorEstatusDispositivoTpvComponent implements OnInit {
   onHide = () => this.closeEvent.emit();
 
 }
+
