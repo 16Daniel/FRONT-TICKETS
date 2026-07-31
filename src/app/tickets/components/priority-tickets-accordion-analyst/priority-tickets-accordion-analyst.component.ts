@@ -11,7 +11,7 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TpvsDevicesTableComponent } from "../tpvs-devices-table/tpvs-devices-table.component";
-import { TablaTvsBocinasComponent } from "../tabla-tvs-bocinas/tabla-tvs-bocinas.component";
+import { TablaTvsBocinasComponent } from "../../../mantenimientos/components/tabla-tvs-bocinas/tabla-tvs-bocinas.component";
 import { NivelesAudioComponent } from '../../../mantenimientos/components/niveles-audio/niveles-audio.component';
 
 @Component({
