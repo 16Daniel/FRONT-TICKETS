@@ -52,6 +52,8 @@ export class BranchesTicketsAccordionComponent {
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
+  mostrarSistemasMap: { [idSucursal: string]: boolean } = {};
+  mostrarAudioVideoMap: { [idSucursal: string]: boolean } = {};
 
   constructor(
     private firebaseStorage: FirebaseStorageService,
@@ -60,7 +62,11 @@ export class BranchesTicketsAccordionComponent {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursales.forEach(s => this.mostrarRadiografiaMap[s.id] = false);
+    this.sucursales.forEach(s => {
+      this.mostrarRadiografiaMap[s.id] = false;
+      this.mostrarSistemasMap[s.id] = false;
+      this.mostrarAudioVideoMap[s.id] = false;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
