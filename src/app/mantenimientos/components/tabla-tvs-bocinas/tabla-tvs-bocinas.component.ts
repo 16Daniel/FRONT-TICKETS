@@ -95,9 +95,96 @@ export class TablaTvsBocinasComponent implements OnInit, OnChanges {
 
   verDetallesDispositivo(dispositivo: Dispositivo, tipo: string): void {
     if (this.usuario.idRol == '1' || this.usuario.idRol == '5' || this.usuario.idRol == '4') {
-      this.mostrarModaalEstatus = true;
-      this.dispositivoSeleccionado = dispositivo;
-      this.tipo = tipo;
+      import('sweetalert2').then(SwalModule => {
+        const Swal = SwalModule.default;
+        
+        const estatusOptions = this.estatus.map(e => 
+          `<option value="${e.id}" ${dispositivo.estatus === e.id ? 'selected' : ''} style="background-color: ${e.color}; color: #000; font-weight: 600;">
+            ${e.nombre}
+          </option>`
+        ).join('');
+
+        Swal.fire({
+          title: `Editar Dispositivo: ${dispositivo.nombre || ''}`,
+          html: `
+            <div style="text-align: left; font-size: 14px;">
+              <label style="display:block; margin-bottom: 4px; font-weight: 600;">Nombre *</label>
+              <input id="swal-input-nombre" class="swal2-input" value="${dispositivo.nombre || ''}" placeholder="Ej. TV Sala Principal" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+              
+              <label style="display:block; margin-bottom: 4px; font-weight: 600;">Estatus</label>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <span id="swal-color-indicator" style="display: inline-block; width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ccc; background-color: ${this.getColorEstatus(dispositivo.estatus)}; flex-shrink: 0;"></span>
+                <select id="swal-input-estatus" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;">
+                  ${estatusOptions}
+                </select>
+              </div>
+
+              <label style="display:block; margin-bottom: 4px; font-weight: 600;">Marca</label>
+              <input id="swal-input-marca" class="swal2-input" value="${dispositivo.marca || ''}" placeholder="Ej. Samsung, LG" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+              
+              <label style="display:block; margin-bottom: 4px; font-weight: 600;">Pulgadas</label>
+              <input id="swal-input-pulgadas" class="swal2-input" value="${dispositivo.pulgadas || ''}" placeholder="Ej. 55&quot;" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+              
+              <label style="display:block; margin-bottom: 4px; font-weight: 600;">Modelo</label>
+              <input id="swal-input-modelo" class="swal2-input" value="${dispositivo.modelo || ''}" placeholder="Ej. UN55TU7000" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+              
+              <label style="display:block; margin-bottom: 4px; font-weight: 600;">Número de Serie</label>
+              <input id="swal-input-serie" class="swal2-input" value="${dispositivo.numeroSerie || ''}" placeholder="Ej. SN123456789" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box;">
+              
+              <label style="display:block; margin-bottom: 4px; font-weight: 600;">Comentarios</label>
+              <textarea id="swal-input-comentarios" class="swal2-textarea" placeholder="Comentarios adicionales" style="margin: 0 0 12px 0; width: 100%; box-sizing: border-box; height: 70px;">${dispositivo.comentarios || ''}</textarea>
+            </div>
+          `,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: 'Guardar',
+          cancelButtonText: 'Cancelar',
+          didOpen: () => {
+            const select = document.getElementById('swal-input-estatus') as HTMLSelectElement;
+            const indicator = document.getElementById('swal-color-indicator') as HTMLSpanElement;
+            if (select && indicator) {
+              select.addEventListener('change', () => {
+                indicator.style.backgroundColor = this.getColorEstatus(select.value);
+              });
+            }
+          },
+          preConfirm: () => {
+            const nombre = (document.getElementById('swal-input-nombre') as HTMLInputElement).value;
+            const estatus = (document.getElementById('swal-input-estatus') as HTMLSelectElement).value;
+            const marca = (document.getElementById('swal-input-marca') as HTMLInputElement).value;
+            const pulgadas = (document.getElementById('swal-input-pulgadas') as HTMLInputElement).value;
+            const modelo = (document.getElementById('swal-input-modelo') as HTMLInputElement).value;
+            const numeroSerie = (document.getElementById('swal-input-serie') as HTMLInputElement).value;
+            const comentarios = (document.getElementById('swal-input-comentarios') as HTMLTextAreaElement).value;
+
+            if (!nombre) {
+              Swal.showValidationMessage('¡Necesitas escribir un nombre!');
+              return false;
+            }
+
+            return { nombre, estatus, marca, pulgadas, modelo, numeroSerie, comentarios };
+          }
+        }).then(async (result) => {
+          if (result.isConfirmed && result.value) {
+            dispositivo.nombre = result.value.nombre;
+            dispositivo.estatus = result.value.estatus;
+            dispositivo.marca = result.value.marca;
+            dispositivo.pulgadas = result.value.pulgadas;
+            dispositivo.modelo = result.value.modelo;
+            dispositivo.numeroSerie = result.value.numeroSerie;
+            dispositivo.comentarios = result.value.comentarios;
+
+            try {
+              await this.dispositivosSucursalesService.saveOrUpdate(this.dispositivosSucursal);
+            } catch (error) {
+              console.error('Error guardando en dispositivos-sucursal', error);
+            }
+
+            this.cdr.detectChanges();
+            Swal.fire('Guardado!', 'El dispositivo ha sido actualizado.', 'success');
+          }
+        });
+      });
     }
   }
 
