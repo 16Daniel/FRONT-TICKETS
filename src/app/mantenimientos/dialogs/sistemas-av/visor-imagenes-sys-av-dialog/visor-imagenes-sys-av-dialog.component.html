@@ -54,5 +54,14 @@
         </div>
       </div>
     </div>
+<!-- Detalles del dispositivo (solo TV o Bocina) -->
+<div class="detalles-dispositivo" *ngIf="usandoEvidencias && evidencias[dispositivoIndex]?.dispositivo">
+  <h4>Detalles del dispositivo</h4>
+  <p><strong>Marca:</strong> {{ evidencias[dispositivoIndex].dispositivo.marca }}</p>
+  <p><strong>Pulgadas:</strong> {{ evidencias[dispositivoIndex].dispositivo.pulgadas }}</p>
+  <p><strong>Modelo:</strong> {{ evidencias[dispositivoIndex].dispositivo.modelo }}</p>
+  <p><strong>Número de serie:</strong> {{ evidencias[dispositivoIndex].dispositivo.numeroSerie }}</p>
+  <p><strong>Comentarios:</strong> {{ evidencias[dispositivoIndex].dispositivo.comentarios }}</p>
+</div>
   </div>
 </p-dialog>
