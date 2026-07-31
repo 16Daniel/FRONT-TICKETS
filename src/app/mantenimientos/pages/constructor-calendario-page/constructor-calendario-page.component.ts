@@ -184,7 +184,12 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     this.usersService.getUsuariosPorRol(['4', '7', '5'])
       .subscribe(usuarios => {
         this.usuariosHelp = usuarios;
-        this.usuariosHelpDropDown = usuarios.filter(x => x.idArea == this.usuario.idArea);
+
+        this.usuariosHelpDropDown = usuarios.filter(usuario =>
+          this.usuario.idArea === '1'
+            ? ['1', '2'].includes(usuario.idArea)
+            : usuario.idArea === this.usuario.idArea
+        );
       });
   }
 
@@ -590,5 +595,9 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     texto = `ACTIVIDAD: ${texto}`;
     let actividad: any = { id: '-998', nombre: texto }
     this.sucursalesSeleccionadas = [actividad, ...this.sucursalesSeleccionadas];
+  }
+
+  obtenerNombreArea(idArea: string): string {
+    return this.areas.find(a => a.id === idArea)?.nombre ?? idArea ?? '';
   }
 }
