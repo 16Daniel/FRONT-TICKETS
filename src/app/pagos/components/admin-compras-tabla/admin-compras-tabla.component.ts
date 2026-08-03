@@ -13,11 +13,12 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-admin-compras-tabla',
   standalone: true,
-  imports: [CommonModule, TableModule, SubirdocumentoComponent, ArchivosComponent, DetallesComponent, AdminComprasChatComponent],
+  imports: [CommonModule, TableModule, SubirdocumentoComponent, ArchivosComponent, DetallesComponent, AdminComprasChatComponent,TooltipModule],
   templateUrl: './admin-compras-tabla.component.html',
   styleUrl: './admin-compras-tabla.component.scss',
 })
@@ -180,4 +181,26 @@ export class AdminComprasTablaComponent implements OnInit {
     await this.shopServ.updateCompra(item);
   }
 
+  actualizarValidacionGerente(valor:boolean, item:AdministracionCompra)
+  {
+    let text = "AUTORIZAR"
+    if (valor == false) { text = "RECHAZAR"; }
+    Swal.fire({
+      title: "ESTÁS SEGURO?",
+      text: "ESTÁ SEGURO QUE DESEA " + text + " LA SOLICITUD?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, " + text.toLowerCase(),
+      customClass: {
+        container: 'swal-topmost'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        item.validacionGerente = valor; 
+        this.actualizarReg(item);
+      }
+    });
+  }
 }
