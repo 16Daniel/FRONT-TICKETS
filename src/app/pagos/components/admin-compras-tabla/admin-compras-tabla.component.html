@@ -18,6 +18,7 @@
             <th>FECHA ENTREGA</th>
             <th>PALABRA CLAVE</th>
             <th>TOTAL</th>
+            <th>VALIDACIÓN GERENCIA</th>
             @if(autorizado == true)
             {
              <th>FACTURA</th>
@@ -47,6 +48,12 @@
             <td><span *ngIf="item.fechaEntrega != null"> {{ obtenerFecha(item.fechaEntrega) | date}} </span></td>
             <td>{{ item.palabraclave }}</td>
             <td>${{obtenerTotalCompras(item.articulos)| number:'1.0-2'}}</td>
+            <td>
+                <i class='bx bx-x-circle bx-sm text-danger' *ngIf="(!item.validacionGerente || item.validacionGerente == false) && usuario.idRol != '1'"></i>
+                <i class='bx bx-check-circle bx-sm text-success' *ngIf="item.validacionGerente == true && usuario.idRol != '1'" ></i>
+                <button class="btn btn-danger" pTooltip="RECHAZAR"  (click)="actualizarValidacionGerente(false,item)" *ngIf="usuario.idRol == '1' && item.validacionGerente == true"><i class='bx bx-x-circle bx-sm'></i></button>
+                <button class="btn btn-success" pTooltip="AUTORIZAR"  (click)="actualizarValidacionGerente(true,item)" *ngIf="(!item.validacionGerente || item.validacionGerente == false) && usuario.idRol == '1'"><i class='bx bx-check-circle bx-sm'></i></button>
+                </td>
             @if(autorizado == true)
             {
                 <td>

@@ -27,7 +27,8 @@ export interface AdministracionCompra {
   regiones: string[];
   validado: number;
   idSucursalSolicitante: string | null;
-  validacionServico: boolean
+  validacionServico: boolean;
+  validacionGerente?: boolean; 
 }
 
 export interface ArticuloCompra {
@@ -72,6 +73,7 @@ export interface PagoAdicional {
   participantesChat: ParticipanteChat[];
   tipoPago: number;
   fechaPago: Timestamp | null;
+  validacionGerente?: boolean; 
 }
 
 
