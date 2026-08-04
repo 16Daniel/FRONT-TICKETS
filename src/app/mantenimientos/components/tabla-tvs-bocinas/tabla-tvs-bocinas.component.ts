@@ -32,7 +32,6 @@ export class TablaTvsBocinasComponent implements OnInit, OnChanges {
   dispositivoSeleccionado!: Dispositivo;
   estatus: EstatusTPV[] = [];
   isLoading: boolean = true;
-  mostrarModaalEstatus: boolean = false;
   tipo!: string;
   usuario!: Usuario;
 
