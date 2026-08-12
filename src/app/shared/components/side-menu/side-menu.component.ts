@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, type OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -18,15 +18,25 @@ import { AvatarModule } from 'ngx-avatars';
 @Component({
   selector: 'app-side-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, MenubarModule, VersionButtonComponent, ButtonModule, ChatNotificationsButtonComponent, AvatarModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    MenubarModule, 
+    VersionButtonComponent, 
+    ButtonModule, 
+    ChatNotificationsButtonComponent, 
+    AvatarModule,
+    RouterLink
+  ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class SideMenuComponent implements OnInit {
+export class SideMenuComponent implements OnInit, OnDestroy {
   items: MenuItem[] = [];
   showmenu: boolean = false;
+  isPinned: boolean = true;
   usuario: Usuario;
   urlbase: string = '';
   tituloBanner: string;
@@ -47,10 +57,19 @@ export class SideMenuComponent implements OnInit {
     else {
       this.tituloBanner = `${this.usuario.nombre} ${this.usuario.apellidoP}`;
     }
-
   }
 
   ngOnInit(): void {
+    // Read pinned status from localStorage (default to true)
+    const savedPin = localStorage.getItem('rw_sidebar_pinned');
+    this.isPinned = savedPin !== null ? savedPin === 'true' : true;
+
+    if (this.isPinned && window.innerWidth > 1024) {
+      this.showmenu = true;
+    }
+
+    this.updateBodyPinClass();
+
     this.items = [
       {
         label: 'Inicio',
@@ -73,14 +92,58 @@ export class SideMenuComponent implements OnInit {
     this.urlbase = origin + url + '/#/main/ticket/';
   }
 
-  logout() {
+  ngOnDestroy(): void {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('sidebar-pinned');
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(): void {
+    this.updateBodyPinClass();
+  }
+
+  togglePin(): void {
+    this.isPinned = !this.isPinned;
+    localStorage.setItem('rw_sidebar_pinned', String(this.isPinned));
+    if (this.isPinned) {
+      this.showmenu = true;
+    }
+    this.updateBodyPinClass();
+    this.cdr.markForCheck();
+  }
+
+  toggleMenu(): void {
+    this.showmenu = !this.showmenu;
+    this.updateBodyPinClass();
+    this.cdr.markForCheck();
+  }
+
+  closemenu(): void {
+    if (!this.isPinned || window.innerWidth <= 1024) {
+      this.showmenu = false;
+      this.updateBodyPinClass();
+    }
+    this.cdr.markForCheck();
+  }
+
+  updateBodyPinClass(): void {
+    if (typeof document !== 'undefined') {
+      if (this.isPinned && this.showmenu && window.innerWidth > 1024) {
+        document.body.classList.add('sidebar-pinned');
+      } else {
+        document.body.classList.remove('sidebar-pinned');
+      }
+    }
+  }
+
+  logout(): void {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('sidebar-pinned');
+    }
     localStorage.removeItem('rwuserdatatk');
     localStorage.removeItem('catRutastk');
     localStorage.removeItem('responsable-tareas');
     this.router.navigate(['/auth/login']);
-  }
-
-  closemenu() {
-    this.showmenu = false;
   }
 }
