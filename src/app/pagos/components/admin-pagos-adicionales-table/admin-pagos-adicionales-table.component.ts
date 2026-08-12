@@ -10,6 +10,8 @@ import { PagoAdicionalDetallesComponent } from "../../dialogs/pago-adicional-det
 import { PagoAdicional } from '../../interfaces/AdministracionCompra';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
+import Swal from 'sweetalert2';
+import { ShoppingService } from '../../services/shopping.service';
 
 @Component({
   selector: 'app-admin-pagos-adicionales-table',
@@ -30,7 +32,7 @@ export class AdminPagosAdicionalesTableComponent {
   public modalDetalles: boolean = false;
   public idAdmin: string = environment.idAdministracion;
 
-  constructor() {
+  constructor(private shopServ: ShoppingService) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
@@ -80,5 +82,32 @@ export class AdminPagosAdicionalesTableComponent {
     this.itemReg = item;
     this.modalDetalles = true;
   }
+
+  async actualizarReg(item: PagoAdicional) {
+      await this.shopServ.updatePagoAdicional(item);
+    }
+
+  actualizarValidacionGerente(valor:boolean, item:PagoAdicional)
+    {
+      let text = "AUTORIZAR"
+      if (valor == false) { text = "RECHAZAR"; }
+      Swal.fire({
+        title: "ESTÁS SEGURO?",
+        text: "ESTÁ SEGURO QUE DESEA " + text + " LA SOLICITUD?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, " + text.toLowerCase(),
+        customClass: {
+          container: 'swal-topmost'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          item.validacionGerente = valor; 
+          this.actualizarReg(item);
+        }
+      });
+    }
 
 }
