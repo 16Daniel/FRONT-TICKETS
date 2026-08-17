@@ -40,8 +40,10 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   usuario: Usuario;
   urlbase: string = '';
   tituloBanner: string;
+  isCheckingValidadorConsumos: boolean = false;
+  isCheckingValidadorCupones: boolean = false;
 
-  responsableTarea!: ResponsableTarea;
+  responsableTarea: ResponsableTarea | null = null;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -135,6 +137,59 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         document.body.classList.remove('sidebar-pinned');
       }
     }
+  }
+
+  abrirValidador(tipo: 'consumos' | 'cupones', event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (tipo === 'consumos') {
+      if (this.isCheckingValidadorConsumos) return;
+      this.isCheckingValidadorConsumos = true;
+    } else {
+      if (this.isCheckingValidadorCupones) return;
+      this.isCheckingValidadorCupones = true;
+    }
+
+    this.closemenu();
+    this.cdr.markForCheck();
+
+    const targetUrl = tipo === 'consumos' ? 'http://localhost:3002/validador' : 'http://localhost:3001';
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+    const finishCheck = (success: boolean) => {
+      clearTimeout(timeoutId);
+      if (tipo === 'consumos') {
+        this.isCheckingValidadorConsumos = false;
+      } else {
+        this.isCheckingValidadorCupones = false;
+      }
+      this.cdr.markForCheck();
+
+      if (success) {
+        window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      } else {
+        this.router.navigate(['/main/validador-api-local'], { queryParams: { tipo } });
+      }
+    };
+
+    fetch(targetUrl, { method: 'GET', signal: controller.signal })
+      .then(() => finishCheck(true))
+      .catch(() => {
+        fetch(targetUrl, { method: 'GET', mode: 'no-cors', signal: controller.signal })
+          .then(() => finishCheck(true))
+          .catch(() => finishCheck(false));
+      });
+  }
+
+  abrirValidadorConsumos(event?: Event): void {
+    this.abrirValidador('consumos', event);
+  }
+
+  abrirValidadorCupones(event?: Event): void {
+    this.abrirValidador('cupones', event);
   }
 
   logout(): void {

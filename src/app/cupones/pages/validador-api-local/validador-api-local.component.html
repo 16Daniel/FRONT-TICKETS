@@ -1,0 +1,87 @@
+<div class="validador-container">
+  <div class="validador-card">
+    
+    <!-- Hero / Header Badge -->
+    <div class="header-section">
+      <div class="badge-branch">
+        <i class="bx bx-store-alt"></i>
+        <span>Disponibilidad restringida a API Local en Sucursales</span>
+      </div>
+    </div>
+
+    <!-- Main Icon & Title -->
+    <div class="content-section">
+      <div class="icon-avatar">
+        <div class="pulse-ring"></div>
+        <i class="bx main-icon" [ngClass]="iconClass"></i>
+        <span class="offline-badge-pill" title="Sin respuesta de la API local">
+          <i class="bx bx-wifi-off"></i>
+        </span>
+      </div>
+
+      <h1 class="main-title">{{ titulo }}</h1>
+      <p class="subtitle">
+        Esta opción se encuentra disponible <strong>únicamente mediante la API local dentro de la red de sucursales</strong>.
+      </p>
+
+      <!-- Detailed Info Box -->
+      <div class="info-box">
+        <div class="info-header">
+          <i class="bx bx-info-circle info-icon"></i>
+          <span>¿Por qué veo esta página?</span>
+        </div>
+        <ul class="info-list">
+          <li>
+            <i class="bx bx-check-circle check-icon"></i>
+            <div>
+              <strong>Conexión a API Local:</strong> El {{ titulo }} requiere comunicación directa con la API local ejecutada en la sucursal.
+            </div>
+          </li>
+          <li>
+            <i class="bx bx-check-circle check-icon"></i>
+            <div>
+              <strong>Puerto de Servicio:</strong> Se realiza la comprobación de estado contra <code>{{ validadorUrl }}</code>.
+            </div>
+          </li>
+          <li>
+            <i class="bx bx-check-circle check-icon"></i>
+            <div>
+              <strong>Acceso Remoto:</strong> Al acceder desde fuera de la red de sucursal o si la API local no responde, el sistema redirige a esta pantalla explicativa.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Status Indicator Bar -->
+      <div class="status-bar">
+        <div class="status-left">
+          <span class="status-dot offline"></span>
+          <span class="status-text">Estado: <strong>Sin respuesta de la API local ({{ validadorUrl }})</strong></span>
+        </div>
+        <span class="status-time" *ngIf="lastTestedAt">Última prueba: {{ lastTestedAt }}</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-wrapper">
+        <button 
+          type="button" 
+          class="btn-retry" 
+          (click)="reintentarConexion()"
+          [disabled]="isTesting">
+          <i class="bx" [ngClass]="isTesting ? 'bx-loader-alt bx-spin' : 'bx-refresh'"></i>
+          <span>{{ isTesting ? 'Verificando API local...' : 'Reintentar conexión' }}</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="btn-secondary" 
+          (click)="irAlInicio()">
+          <i class="bx bx-home-alt"></i>
+          <span>Volver al inicio</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

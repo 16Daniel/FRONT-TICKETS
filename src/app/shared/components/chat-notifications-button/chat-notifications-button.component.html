@@ -1,29 +1,46 @@
-<div class="notification-wrapper" (click)="toggleNotifications()">
-  <div class="boton-mensajes-wrapper">
-    <p-button severity="secondary" outlined="true">
-      <ng-template pTemplate="content">
-        <span class="icono-con-badge">
-          <i class="pi pi-comments"></i>
-          <span *ngIf="notificaciones?.length" class="badge-inline">{{ notificaciones.length }}</span>
-        </span>
-        <span class="label">MENSAJES</span>
-      </ng-template>
-    </p-button>
-  </div>
+<div class="notification-wrapper">
+  <!-- Notification Trigger Button -->
+  <button 
+    type="button" 
+    class="notification-trigger-btn" 
+    [class.active]="showNotifications"
+    (click)="toggleNotifications()"
+    aria-label="Notificaciones de chat"
+    [attr.aria-expanded]="showNotifications">
+    <div class="trigger-icon-container">
+      <i class="pi pi-comments trigger-icon"></i>
+      <span *ngIf="notificaciones?.length" class="notification-badge">{{ notificaciones.length }}</span>
+    </div>
+    <span class="trigger-label">Mensajes</span>
+  </button>
 
-  <!-- Dropdown -->
+  <!-- Notification Dropdown Menu -->
   <div class="notification-dropdown" *ngIf="showNotifications" (click)="$event.stopPropagation()">
-    <div *ngIf="!notificaciones?.length" class="empty">No hay notificaciones</div>
+    <div class="dropdown-header">
+      <div class="header-title">
+        <i class="pi pi-bell"></i>
+        <span>Notificaciones</span>
+      </div>
+      <span class="count-badge" *ngIf="notificaciones?.length">{{ notificaciones.length }} nuevas</span>
+    </div>
+
+    <div *ngIf="!notificaciones?.length" class="empty-state">
+      <i class="pi pi-inbox empty-icon"></i>
+      <span class="empty-text">No tienes mensajes pendientes</span>
+    </div>
+
     <ul *ngIf="notificaciones?.length" class="notification-list">
-      <li *ngFor="let item of notificaciones" (click)="seleccionarNotificacion(item)">
-        <span>
-          <i class="pi pi-comments icon-chat"></i>
-          {{ 'Tienes un nuevo mensaje en ' + item.tipoOrigen }}
-        </span>
-        <small>
-          <i class="pi pi-user icon-user"></i>
-          {{ 'De: ' + item.nombreRemitente }}
-        </small>
+      <li *ngFor="let item of notificaciones" (click)="seleccionarNotificacion(item)" class="notification-item">
+        <div class="item-icon-wrapper">
+          <i class="pi pi-comments"></i>
+        </div>
+        <div class="item-content">
+          <span class="item-title">Nuevo mensaje en <strong>{{ item.tipoOrigen }}</strong></span>
+          <span class="item-author">
+            <i class="pi pi-user"></i> {{ item.nombreRemitente }}
+          </span>
+        </div>
+        <i class="pi pi-chevron-right item-arrow"></i>
       </li>
     </ul>
   </div>

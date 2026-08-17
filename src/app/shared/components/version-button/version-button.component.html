@@ -1,10 +1,7 @@
-<a [routerLink]="['/main/version-history']">
-  <p-button
-    [label]="'VERSIÓN ' + (versionActual != null ? versionActual?.version : '')"
-    icon="pi pi-bell"
-    [badge]="mostrarNotificacion ? ' ' : ''"
-    badgeClass="p-badge-danger"
-    outlined="true"
-    severity="secondary"
-  />
+<a [routerLink]="['/main/version-history']" class="version-badge-link" title="Historial de versiones">
+  <div class="version-badge" [class.has-update]="mostrarNotificacion">
+    <i class="pi pi-sparkles version-icon"></i>
+    <span class="version-text">v{{ versionActual?.version || '1.0.0' }}</span>
+    <span class="update-dot" *ngIf="mostrarNotificacion"></span>
+  </div>
 </a>

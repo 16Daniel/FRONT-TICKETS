@@ -1,139 +1,211 @@
-.boton-mensajes {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    color: #333;
-    font-size: 0.95rem;
-    transition: all 0.2s ease-in-out;
-    background: transparent;
-}
-
-.boton-mensajes:hover {
-    background-color: #f5f5f5;
+:host {
+  display: inline-flex;
+  align-items: center;
 }
 
 .notification-wrapper {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 0.3rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
+.notification-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease-in-out;
+}
+
+.notification-trigger-btn:hover,
+.notification-trigger-btn.active {
+  background-color: #e5e7eb;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.trigger-icon-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.trigger-icon {
+  font-size: 15px;
+  color: #0f62fe;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+.trigger-label {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* Dropdown Container */
 .notification-dropdown {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    min-width: 250px;
-    z-index: 1000;
-    padding: 0.5rem 0;
-    animation: fadeIn 0.15s ease-in-out;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 310px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #fafafa;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.header-title i {
+  color: #0f62fe;
+}
+
+.count-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0f62fe;
+  background-color: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px;
+  gap: 8px;
+}
+
+.empty-icon {
+  font-size: 28px;
+  color: #9ca3af;
+}
+
+.empty-text {
+  font-size: 13px;
+  color: #6b7280;
 }
 
 .notification-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-height: 250px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  max-height: 280px;
+  overflow-y: auto;
 }
 
-.notification-list::-webkit-scrollbar {
-    width: 6px;
+.notification-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f3f4f6;
 }
 
-.notification-list::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 3px;
+.notification-item:last-child {
+  border-bottom: none;
 }
 
-.notification-list::-webkit-scrollbar-thumb:hover {
-    background-color: #aaa;
+.notification-item:hover {
+  background-color: #f9fafb;
 }
 
-.notification-list li {
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.item-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #eff6ff;
+  color: #0f62fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
 }
 
-.notification-list li:hover {
-    background-color: #f5f5f5;
+.item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  overflow: hidden;
 }
 
-.notification-list small {
-    color: #888;
-    font-size: 0.75rem;
+.item-title {
+  font-size: 12.5px;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.notification-dropdown .empty {
-    padding: 1rem;
-    text-align: center;
-    color: #777;
+.item-author {
+  font-size: 11px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.icon-chat {
-    margin-right: 0.5rem;
-    color: #007ad9;
-    font-size: 1.2rem;
-}
-
-.icon-user {
-    margin-right: 0.3rem;
-    color: #555;
-    font-size: 1rem;
-}
-
-.icono-con-badge {
-    display: inline-flex;
-    align-items: center;
-    position: relative;
-    margin-right: 0.4rem;
-}
-
-.icono-con-badge i {
-    font-size: 1.2rem;
-}
-
-.badge-inline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ef4444ed;
-    color: white;
-    font-size: 0.85rem;
-    border-radius: 50%;
-    min-width: 1.1rem;
-    height: 1.1rem;
-    font-weight: bold;
-    line-height: 1;
-    margin-top: -15px;
-    margin-left: -3px;
-}
-
-.label {
-    font-weight: 650;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.item-arrow {
+  font-size: 12px;
+  color: #9ca3af;
 }

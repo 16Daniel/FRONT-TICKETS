@@ -328,7 +328,7 @@
 
     <!-- Grupo: Cupones y Herramientas -->
     <div class="nav-group">
-      <span class="nav-group-title">Cupones y Validación</span>
+      <span class="nav-group-title">Cupones y Consumos</span>
 
       <a 
         [routerLink]="'/main/cupones'" 
@@ -341,25 +341,21 @@
       </a>
 
       <a 
-        href="http://localhost:3001" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        (click)="closemenu()" 
+        href="javascript:void(0)" 
+        (click)="abrirValidadorCupones($event)" 
         class="nav-item">
-        <i class="bx bx-check-shield nav-icon"></i>
+        <i class="bx nav-icon" [ngClass]="isCheckingValidadorCupones ? 'bx-loader-alt bx-spin' : 'bx-check-shield'"></i>
         <span class="nav-label">Validador cupones</span>
-        <i class="bx bx-link-external external-icon"></i>
+        <i class="bx bx-link-external external-icon" *ngIf="!isCheckingValidadorCupones"></i>
       </a>
 
       <a 
-        href="http://localhost:3002/validador" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        (click)="closemenu()" 
+        href="javascript:void(0)" 
+        (click)="abrirValidadorConsumos($event)" 
         class="nav-item">
-        <i class="bx bx-receipt nav-icon"></i>
+        <i class="bx nav-icon" [ngClass]="isCheckingValidadorConsumos ? 'bx-loader-alt bx-spin' : 'bx-receipt'"></i>
         <span class="nav-label">Validador consumos</span>
-        <i class="bx bx-link-external external-icon"></i>
+        <i class="bx bx-link-external external-icon" *ngIf="!isCheckingValidadorConsumos"></i>
       </a>
     </div>
 
