@@ -12,7 +12,5 @@ export class Sucursal {
   tabletasRequeridas?: number = 0;
   tpvs?: Dispositivo[] = [];
   tpvsRequeridos?: number = 0;
-  tvs?: Dispositivo[] = [];
-  bocinas?: Dispositivo[] = [];
   imagenesNivelesAudio?: string[] = [];
 }

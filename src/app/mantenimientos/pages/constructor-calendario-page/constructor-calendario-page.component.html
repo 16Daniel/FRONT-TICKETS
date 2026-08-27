@@ -8,13 +8,18 @@
         (onChange)="llenarInfoUsuario()">
         <ng-template pTemplate="selectedItem" let-selectedOption>
           <div class="flex align-items-center gap-2">
-            <div>{{ selectedOption.nombre + ' ' + selectedOption.apellidoP +' '+selectedOption.apellidoM}}
-            </div>
+            <div>{{ selectedOption.nombre + ' ' + selectedOption.apellidoP + ' ' + selectedOption.apellidoM }}</div>
+            <span style="font-size: 0.75rem; background:#8B5CF6; color:#fff; border-radius:4px; padding: 1px 7px; margin-left:-1px;">
+              {{ obtenerNombreArea(selectedOption.idArea) }}
+            </span>
           </div>
         </ng-template>
         <ng-template let-usuario pTemplate="item">
           <div class="flex align-items-center gap-2">
-            <div>{{usuario.nombre + ' ' + usuario.apellidoP +' '+usuario.apellidoM}}</div>
+            <div>{{ usuario.nombre + ' ' + usuario.apellidoP + ' ' + usuario.apellidoM }}</div>
+            <span style="font-size: 0.75rem; background:#8B5CF6; color:#fff; border-radius:4px; padding: 1px 7px; margin-left:-1px;">
+              {{ obtenerNombreArea(usuario.idArea) }}
+            </span>
           </div>
         </ng-template>
       </p-dropdown>

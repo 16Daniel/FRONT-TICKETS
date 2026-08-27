@@ -1,0 +1,76 @@
+$color-bg: #F7F8FA;
+$color-white: #FFFFFF;
+$color-text: #111827;
+$color-text-secondary: #6B7280;
+$border-radius: 12px;
+
+.schedule-page-container {
+  margin-top: 80px;
+  padding: 2rem;
+  background-color: $color-bg;
+  min-height: calc(100vh - 80px);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $color-text;
+    margin: 0;
+  }
+
+  p {
+    color: $color-text-secondary;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.filter-card {
+  background-color: $color-white;
+  padding: 1.5rem;
+  border-radius: $border-radius;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  .filter-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $color-text;
+    margin: 0;
+  }
+}
+
+::ng-deep .p-dropdown {
+  border-radius: 8px;
+  border-color: #E5E7EB;
+  box-shadow: none;
+  
+  &:hover {
+    border-color: #0F62FE;
+  }
+}
+
+::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  box-shadow: 0 0 0 0.2rem rgba(15, 98, 254, 0.25);
+  border-color: #0F62FE;
+}
+
+.calendar-card {
+  background-color: $color-white;
+  padding: 2rem;
+  border-radius: $border-radius;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  flex-grow: 1;
+}

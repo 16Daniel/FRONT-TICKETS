@@ -39,6 +39,7 @@ import { MantenimientosSistemasService } from '../../services/mantenimientos-sis
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { TarjetaSucursalPorVisitarComponent } from '../../components/tarjeta-sucursal-por-visitar/tarjeta-sucursal-por-visitar.component';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
+import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
 
 @Component({
   selector: 'app-constructor-calendario-page',
@@ -102,6 +103,7 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     private fixedAssetsService: FixedAssetsService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private maintenanceAvService: MaintenanceAvService,
+    private dispositivosSucursalesService: DispositivosSucursalesService,
     private datesHelper: DatesHelperService,
     private areasService: AreasService
   ) {
@@ -182,7 +184,12 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     this.usersService.getUsuariosPorRol(['4', '7', '5'])
       .subscribe(usuarios => {
         this.usuariosHelp = usuarios;
-        this.usuariosHelpDropDown = usuarios.filter(x => x.idArea == this.usuario.idArea);
+
+        this.usuariosHelpDropDown = usuarios.filter(usuario =>
+          this.usuario.idArea === '1'
+            ? ['1', '2'].includes(usuario.idArea)
+            : usuario.idArea === this.usuario.idArea
+        );
       });
   }
 
@@ -409,7 +416,7 @@ export default class ContructorCalendarioPageComponent implements OnInit {
                 participantesChat
               });
 
-              this.registrarMantenimientoAudioVideo(sucursal, participantesChat);
+              await this.registrarMantenimientoAudioVideo(sucursal, participantesChat);
             }
           }
 
@@ -426,7 +433,6 @@ export default class ContructorCalendarioPageComponent implements OnInit {
       this.indicacionesVisitas = [];
     } catch (error) {
       this.showMessage('error', 'Error', 'Error al guardar');
-      console.log(error);
     }
     this.loading = false;
     this.cdr.detectChanges();
@@ -436,16 +442,16 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     if (this.usuario.idArea == '1') {
       let tvs: any[] = [];
       let bocinas: any[] = [];
-      const registroSucursal = this.sucursales.find(x => x.id == sucursal.id);
+      const dispDoc = await this.dispositivosSucursalesService.getOnceBySucursalId(sucursal.id);
 
-      registroSucursal!.tvs?.forEach(tv => {
+      dispDoc?.tvs?.forEach(tv => {
         tvs.push({
           dispositivo: tv,
           evidenciaUrls: []
         });
       });
 
-      registroSucursal!.bocinas?.forEach(bocina => {
+      dispDoc?.bocinas?.forEach(bocina => {
         bocinas.push({
           dispositivo: bocina,
           evidenciaUrls: []
@@ -589,5 +595,9 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     texto = `ACTIVIDAD: ${texto}`;
     let actividad: any = { id: '-998', nombre: texto }
     this.sucursalesSeleccionadas = [actividad, ...this.sucursalesSeleccionadas];
+  }
+
+  obtenerNombreArea(idArea: string): string {
+    return this.areas.find(a => a.id === idArea)?.nombre ?? idArea ?? '';
   }
 }

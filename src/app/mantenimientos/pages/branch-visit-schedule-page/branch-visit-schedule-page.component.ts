@@ -26,6 +26,7 @@ import { CalendarioComponent } from '../../components/calendario/calendario.comp
   imports: [CommonModule, FullCalendarModule, ModalEventDetailComponent, CalendarioComponent, DropdownModule, FormsModule],
   providers: [MessageService],
   templateUrl: './branch-visit-schedule-page.component.html',
+  styleUrl: './branch-visit-schedule-page.component.scss'
 })
 
 export default class BranchVisitSchedulePageComponent implements OnInit {
