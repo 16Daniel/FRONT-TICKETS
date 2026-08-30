@@ -155,7 +155,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.closemenu();
     this.cdr.markForCheck();
 
-    const targetUrl = tipo === 'consumos' ? 'http://localhost:3002/validador' : 'http://localhost:3001';
+    const targetUrl = tipo === 'consumos' ? 'http://localhost:3003/validador' : 'http://localhost:3001';
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2500);
 

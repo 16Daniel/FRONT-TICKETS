@@ -23,7 +23,7 @@ export default class ValidadorApiLocalComponent implements OnInit {
   tipo: 'consumos' | 'cupones' = 'consumos';
   titulo: string = 'Validador de Consumos';
   iconClass: string = 'bx-receipt';
-  validadorUrl: string = 'http://localhost:3002/validador';
+  validadorUrl: string = 'http://localhost:3003/validador';
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -37,7 +37,7 @@ export default class ValidadorApiLocalComponent implements OnInit {
         this.tipo = 'consumos';
         this.titulo = 'Validador de Consumos';
         this.iconClass = 'bx-receipt';
-        this.validadorUrl = 'http://localhost:3002/validador';
+        this.validadorUrl = 'http://localhost:3003/validador';
       }
       this.cdr.markForCheck();
     });

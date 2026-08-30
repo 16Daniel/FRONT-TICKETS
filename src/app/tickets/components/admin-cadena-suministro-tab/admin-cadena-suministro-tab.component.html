@@ -1,123 +1,161 @@
-@if(mostrarMantenimientos==false && mostrarMantenimientosAV==false)
-{
-<h3 class="m-3 text-center">TICKETS</h3>
-}@else
-{
-<h3 class="m-3 text-center">MANTENIMIENTOS</h3>
-}
+<div class="tickets-tab-container">
 
-<div class="d-flex justify-content-between align-items-center p-2 flex-wrap">
+  <!-- Header Card with Title, Dashboard Cards & Actions -->
+  <div class="tickets-header-card">
+    
+    <!-- Top Row: Page Title & User Badge -->
+    <div class="header-top-row">
+      <div class="header-title-group">
+        <h2 class="header-main-title">
+          <i class="bx bx-purchase-tag-alt"></i>
+          <span>TICKETS</span>
+        </h2>
 
-    <div class="d-flex flex-wrap gap-2 align-items-center">
-        <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary"
-            (click)="mostrarModalGenerateTicket = true">
-        </p-button>
-
-        <p-button label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
-            (click)="mostrarModalHistorial = true">
-        </p-button>
-
-        <p-button label="FILTRAR TICKETS" icon="pi pi-filter" styleClass="p-button-success"
-            (click)="mostrarModalFilterTickets = true">
-        </p-button>
-
-        <p-button (onClick)="opg.toggle($event)" icon="pi pi-users" label="AGRUPAR" styleClass="p-button-danger" />
-
-        <p-button label="COMPRAS" icon="pi pi-shopping-cart" styleClass="btn-compras"
-            (click)="mostrarModalCompras = true">
-        </p-button>
-
-        <p-button label="SOLICITAR COMPRA" icon="pi pi-plus" styleClass="p-button-secondary"
-            (click)="mostrarModalSolicitarCompra = true">
-        </p-button>
+        <span class="user-group-badge" *ngIf="usergroup">
+          <i class="bx bxs-user"></i>
+          <span>{{ usergroup.nombre }} {{ usergroup.apellidoP }}</span>
+        </span>
+      </div>
     </div>
 
-    <div class="d-flex gap-3">
-        <app-iconos-notificaciones-tickets [tickets]="tickets" [usuario]="usergroup"
-            [compras]="compras"></app-iconos-notificaciones-tickets>
+    <!-- Middle Row: Dashboard KPI Cards -->
+    <div class="header-kpi-row">
+      <app-iconos-notificaciones-tickets 
+        [tickets]="tickets" 
+        [usuario]="usergroup"
+        [compras]="compras">
+      </app-iconos-notificaciones-tickets>
     </div>
-</div>
 
-<p-overlayPanel #opg>
+    <!-- Bottom Row: Action Buttons -->
+    <div class="header-bottom-row">
+      
+      <!-- Actions Group -->
+      <div class="actions-buttons-container">
+        <p-button 
+          label="CREAR TICKET" 
+          icon="pi pi-plus" 
+          styleClass="p-button-primary action-btn-custom"
+          (click)="mostrarModalGenerateTicket = true">
+        </p-button>
+
+        <p-button 
+          label="HISTORIAL TICKETS" 
+          icon="pi pi-history" 
+          styleClass="p-button-warning action-btn-custom"
+          (click)="mostrarModalHistorial = true">
+        </p-button>
+
+        <p-button 
+          label="FILTRAR TICKETS" 
+          icon="pi pi-filter" 
+          styleClass="p-button-success action-btn-custom"
+          (click)="mostrarModalFilterTickets = true">
+        </p-button>
+
+        <p-button 
+          (onClick)="opg.toggle($event)" 
+          icon="pi pi-users" 
+          label="AGRUPAR" 
+          styleClass="p-button-danger action-btn-custom">
+        </p-button>
+
+        <p-button 
+          label="COMPRAS" 
+          icon="pi pi-shopping-cart" 
+          styleClass="btn-compras action-btn-custom" 
+          (click)="mostrarModalCompras = true">
+        </p-button>
+
+        <p-button 
+          label="SOLICITAR COMPRA" 
+          icon="pi pi-plus" 
+          styleClass="p-button-secondary action-btn-custom"
+          (click)="mostrarModalSolicitarCompra = true">
+        </p-button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Overlay Panel for Agrupar -->
+  <p-overlayPanel #opg>
     <div class="d-flex flex-column justify-content-center p-3 gap-2">
-        <button class="btn p-2 btn-light" (click)="agruparPorSucursal()">
-            <i class="bx bx-buildings"></i>&nbsp;VER TODO
-        </button>
+      <button class="btn p-2 btn-light" (click)="agruparPorSucursal()">
+        <i class="bx bx-buildings"></i>&nbsp;VER TODO
+      </button>
 
-        <button *ngFor="let item of usuariosHelp" class="btn p-2 btn-light" (click)="agrupar(item)">
-            <i class="bx bxs-user"></i>&nbsp;{{
-            item.nombre + " " + item.apellidoP | uppercase
-            }}
-        </button>
+      <button *ngFor="let item of usuariosHelp" class="btn p-2 btn-light" (click)="agrupar(item)">
+        <i class="bx bxs-user"></i>&nbsp;{{ item.nombre + " " + item.apellidoP | uppercase }}
+      </button>
     </div>
-</p-overlayPanel>
+  </p-overlayPanel>
 
-<H4 class="text-center text-primary fw-bold" *ngIf="usergroup !=undefined">{{
-    usergroup.nombre + " " + usergroup.apellidoP
-    }}</H4>
-
-@if(mostrarMantenimientos) {
-<div class="mt-4">
+  <!-- Accordions Content -->
+  @if(mostrarMantenimientos) {
+  <div class="mt-4">
     <app-acordeon-mantenimientos-sistemas *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
-        [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
-        [mostrarChat]="true"></app-acordeon-mantenimientos-sistemas>
-</div>
-}
-@else if(mostrarMantenimientosAV) {
-<div class="mt-4">
+      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+      [mostrarChat]="true"></app-acordeon-mantenimientos-sistemas>
+  </div>
+  }
+  @else if(mostrarMantenimientosAV) {
+  <div class="mt-4">
     <app-acordeon-mantenimientos-audio-video *ngIf="auxMostrarMantenimientosAV" [mantenimientos]="mantenimientosAV"
-        [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
-        [mostrarChat]="true"></app-acordeon-mantenimientos-audio-video>
-</div>
-}
-@else {
-<div *ngIf="usergroup == undefined" class="mt-4">
+      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+      [mostrarChat]="true"></app-acordeon-mantenimientos-audio-video>
+  </div>
+  }
+  @else {
+  <div *ngIf="usergroup == undefined" class="mt-4">
     <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales"
-        [idArea]="idArea"></app-branches-tickets-accordion>
-</div>
+      [idArea]="idArea"></app-branches-tickets-accordion>
+  </div>
 
-<div *ngIf="usergroup != undefined" class="mt-4">
+  <div *ngIf="usergroup != undefined" class="mt-4">
     <app-user-tickets-accordion [tickets]="tickets" [usuarioAgrupacion]="usergroup" [sucursales]="sucursales"
-        [idArea]="idArea"></app-user-tickets-accordion>
-</div>
+      [idArea]="idArea"></app-user-tickets-accordion>
+  </div>
 
-<div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+  <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
     *ngIf="tickets.length == 0">
     <i class="bx bx-file-blank bx-md" style="color: rgb(107, 107, 107)"></i>
     <p>SIN TICKETS PENDIENTES</p>
-</div>
-}
+  </div>
+  }
 
-
-
-<app-solicitar-compra-dialog *ngIf="mostrarModalSolicitarCompra" [mostrarModal]="mostrarModalSolicitarCompra"
+  <!-- Modals & Dialogs -->
+  <app-solicitar-compra-dialog *ngIf="mostrarModalSolicitarCompra" [mostrarModal]="mostrarModalSolicitarCompra"
     (closeEvent)="mostrarModalSolicitarCompra = false" [idArea]="idArea"></app-solicitar-compra-dialog>
 
-<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
+  <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
     [showModalTicketDetail]="mostrarModalTicketDetail"
     (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
 
-<app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
     (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>
 
-<app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets"
+  <app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets"
     [sucursales]="sucursales" (closeEvent)="mostrarModalFilterTickets = false"
     (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
 
-<app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  <app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
     (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-historial-tickets-dialog>
 
-<app-compras-dialog *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras" [idArea]="idArea"
+  <app-compras-dialog *ngIf="mostrarModalCompras" [mostrarModal]="mostrarModalCompras" [idArea]="idArea"
     (closeEvent)="mostrarModalCompras = false"></app-compras-dialog>
 
-<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
     [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
     [showTransformOptions]="'translateX(100%)'"></p-toast>
-<p-confirmDialog>
+  <p-confirmDialog>
     <ng-template pTemplate="message" let-message>
-        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
-            <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
-            <p>{{ message.message }}</p>
-        </div>
+      <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+        <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+        <p>{{ message.message }}</p>
+      </div>
     </ng-template>
-</p-confirmDialog>
+  </p-confirmDialog>
+
+</div>

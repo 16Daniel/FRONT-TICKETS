@@ -1,57 +1,118 @@
-<div class="d-flex gap-3">
+<div class="dashboard-kpi-container">
 
-    <div class="position-relative d-flex justify-content-center align-items-center"
-        style="width: 40px; height: 40px; background-color: #007bff; color: white; border-radius: 8px;">
-
-        <i class="bx bxs-cart bx-sm" pTooltip="TICKETS COMPRANDO" tooltipPosition="top"></i>
-
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
-            {{ticketsNotificacionComprando}}
-        </span>
+  <!-- 1. Nuevos Tickets -->
+  <div 
+    class="kpi-dashboard-card card-nuevos" 
+    [class.has-alerts]="ticketsNotificacionNuevo > 0"
+    pTooltip="Tickets recién creados pendientes de atención" 
+    tooltipPosition="top">
+    <div class="card-header-row">
+      <div class="card-top-icon">
+        <i class="bx bx-bell"></i>
+      </div>
+      <span class="live-status-dot" *ngIf="ticketsNotificacionNuevo > 0" title="Atención requerida"></span>
     </div>
-
-    <div class="position-relative d-flex justify-content-center align-items-center"
-        style="width: 40px; height: 40px; background-color: rgb(138, 0, 218); color: white; border-radius: 8px;">
-
-        <i class="bx bxs-badge-check bx-sm" pTooltip="TICKETS TERMINADOS (POR VALIDAR DE UN ADMIN)" tooltipPosition="top"></i>
-
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
-            {{ticketsNotificacionTerminadoAdmin}}
-        </span>
+    <div class="card-content-body">
+      <span class="card-category-label">Nuevos Tickets</span>
+      <span class="card-metric-value">{{ ticketsNotificacionNuevo }}</span>
+      <div class="card-footer-meta">
+        <span class="card-helper-note">{{ ticketsNotificacionNuevo > 0 ? '⚠️ Atender ya' : '✓ Sin pendientes' }}</span>
+        <i class="bx bx-right-arrow-alt arrow-icon"></i>
+      </div>
     </div>
+    <div class="hover-accent-line"></div>
+  </div>
 
-    <div class="position-relative d-flex justify-content-center align-items-center"
-        style="width: 40px; height: 40px; background-color: yellow; color: black; border-radius: 8px;">
-
-        <i class="bx bx-check-circle bx-sm" pTooltip="TICKETS POR VALIDAR" tooltipPosition="top"></i>
-
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
-            {{ticketsNotificacionPorValidar}}
-        </span>
+  <!-- 2. En Proceso -->
+  <div 
+    class="kpi-dashboard-card card-proceso" 
+    [class.has-alerts]="ticketsNotificacionTrabajando > 0"
+    pTooltip="Tickets actualmente en proceso de atención" 
+    tooltipPosition="top">
+    <div class="card-header-row">
+      <div class="card-top-icon">
+        <i class="bx bx-sync"></i>
+      </div>
+      <span class="live-status-dot" *ngIf="ticketsNotificacionTrabajando > 0"></span>
     </div>
-
-    <div class="position-relative d-flex justify-content-center align-items-center"
-        style="width: 40px; height: 40px; background-color: darkorange; color: white; border-radius: 8px;">
-
-        <i class="bx bx-sync bx-sm" pTooltip="TICKETS TRABAJANDO" tooltipPosition="top"></i>
-
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
-            {{ticketsNotificacionTrabajando}}
-        </span>
+    <div class="card-content-body">
+      <span class="card-category-label">En Proceso</span>
+      <span class="card-metric-value">{{ ticketsNotificacionTrabajando }}</span>
+      <div class="card-footer-meta">
+        <span class="card-helper-note">Atención activa</span>
+        <i class="bx bx-right-arrow-alt arrow-icon"></i>
+      </div>
     </div>
+    <div class="hover-accent-line"></div>
+  </div>
 
-    <div class="position-relative d-flex justify-content-center align-items-center"
-        style="width: 40px; height: 40px; background-color: red; color: white; border-radius: 8px;">
-
-        <i class="bx bx-dots-horizontal-rounded bx-sm" pTooltip="NUEVOS TICKETS" tooltipPosition="top"></i>
-
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            style="font-size: 0.75rem; padding: 0.35em 0.55em;">
-            {{ticketsNotificacionNuevo}}
-        </span>
+  <!-- 3. Por Validar -->
+  <div 
+    class="kpi-dashboard-card card-validar" 
+    [class.has-alerts]="ticketsNotificacionPorValidar > 0"
+    pTooltip="Tickets pendientes de validación por la sucursal" 
+    tooltipPosition="top">
+    <div class="card-header-row">
+      <div class="card-top-icon">
+        <i class="bx bx-check-circle"></i>
+      </div>
+      <span class="live-status-dot" *ngIf="ticketsNotificacionPorValidar > 0"></span>
     </div>
+    <div class="card-content-body">
+      <span class="card-category-label">Por Validar</span>
+      <span class="card-metric-value">{{ ticketsNotificacionPorValidar }}</span>
+      <div class="card-footer-meta">
+        <span class="card-helper-note">Por sucursal</span>
+        <i class="bx bx-right-arrow-alt arrow-icon"></i>
+      </div>
+    </div>
+    <div class="hover-accent-line"></div>
+  </div>
+
+  <!-- 4. Validación Admin -->
+  <div 
+    class="kpi-dashboard-card card-admin" 
+    [class.has-alerts]="ticketsNotificacionTerminadoAdmin > 0"
+    pTooltip="Tickets terminados por validar por administrador" 
+    tooltipPosition="top">
+    <div class="card-header-row">
+      <div class="card-top-icon">
+        <i class="bx bxs-badge-check"></i>
+      </div>
+      <span class="live-status-dot" *ngIf="ticketsNotificacionTerminadoAdmin > 0"></span>
+    </div>
+    <div class="card-content-body">
+      <span class="card-category-label">Validación Admin</span>
+      <span class="card-metric-value">{{ ticketsNotificacionTerminadoAdmin }}</span>
+      <div class="card-footer-meta">
+        <span class="card-helper-note">Por administrador</span>
+        <i class="bx bx-right-arrow-alt arrow-icon"></i>
+      </div>
+    </div>
+    <div class="hover-accent-line"></div>
+  </div>
+
+  <!-- 5. Compras -->
+  <div 
+    class="kpi-dashboard-card card-compras" 
+    [class.has-alerts]="ticketsNotificacionComprando > 0"
+    pTooltip="Solicitudes o tickets en proceso de compra" 
+    tooltipPosition="top">
+    <div class="card-header-row">
+      <div class="card-top-icon">
+        <i class="bx bxs-cart"></i>
+      </div>
+      <span class="live-status-dot" *ngIf="ticketsNotificacionComprando > 0"></span>
+    </div>
+    <div class="card-content-body">
+      <span class="card-category-label">Compras</span>
+      <span class="card-metric-value">{{ ticketsNotificacionComprando }}</span>
+      <div class="card-footer-meta">
+        <span class="card-helper-note">Compras activas</span>
+        <i class="bx bx-right-arrow-alt arrow-icon"></i>
+      </div>
+    </div>
+    <div class="hover-accent-line"></div>
+  </div>
+
 </div>
