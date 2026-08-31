@@ -1,18 +1,197 @@
-.icon-circle {
+.custom-branches-accordion {
+  ::ng-deep .p-accordion-header-link {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-bottom: 0.4rem !important;
+    text-decoration: none !important;
+    position: relative !important;
+    display: flex !important;
+    width: 100% !important;
+
+    .p-accordion-toggle-icon {
+      position: absolute !important;
+      right: 1.25rem !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      color: #64748b !important;
+      font-size: 0.85rem !important;
+      z-index: 5 !important;
+      transition: transform 0.2s ease !important;
+    }
+  }
+
+  ::ng-deep .p-accordion-tab-active .p-accordion-header-link .p-accordion-toggle-icon {
+    transform: translateY(-50%) rotate(180deg) !important;
+  }
+
+  ::ng-deep .p-accordion-content {
+    border-radius: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+    padding: 1.25rem !important;
+    margin-top: 0.35rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+}
+
+.branch-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.85rem 3rem 0.85rem 1.25rem;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Status Colors & Rich Background Tints */
+
+  /* Critical (>= 5 tickets) - Soft Rose Background */
+  &.status-critical {
+    background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+    border-color: rgba(244, 63, 94, 0.3);
+    &::before { background-color: #ef4444; }
+    .branch-count-badge {
+      background-color: #ffe4e6;
+      color: #e11d48;
+      border: 1px solid #fecdd3;
+    }
+  }
+
+  /* Warning (1 - 4 tickets) - Soft Amber Background */
+  &.status-warning {
+    background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+    border-color: rgba(245, 158, 11, 0.3);
+    &::before { background-color: #f59e0b; }
+    .branch-count-badge {
+      background-color: #fef3c7;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+  }
+
+  /* Success (0 tickets) - Soft Emerald Background */
+  &.status-success {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    border-color: rgba(16, 185, 129, 0.25);
+    &::before { background-color: #10b981; }
+    .branch-count-badge {
+      background-color: #d1fae5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+  }
+}
+
+.branch-info-group {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+}
+
+.branch-count-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  margin-right: 5px;
-  margin-left: auto;
-
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.5rem;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
-.icon-circle i{
-  font-size: 18px;
-  color: #333;
+.branch-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.branch-actions-indicators {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.indicator-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+
+  &.badge-pending {
+    background-color: #f3e8ff;
+    color: #8a00da;
+    border: 1px solid #e9d5ff;
+  }
+
+  &.badge-new {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border: 1px solid #fca5a5;
+  }
+
+  &.badge-chat {
+    background-color: #e0f2fe;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
+  }
+}
+
+/* Sub-toggles Strip Inside Accordion Body */
+.accordion-subtoggles-strip {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+
+  .form-check-label {
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .custom-switch {
+    width: 2.3rem;
+    height: 1.3rem;
+    cursor: pointer;
+  }
+}
+
+.accordion-tables-wrapper {
+  width: 100%;
 }

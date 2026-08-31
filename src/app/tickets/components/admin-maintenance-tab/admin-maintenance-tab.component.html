@@ -1,105 +1,97 @@
 <div class="tickets-tab-container">
 
-  <!-- Header Card with Title, Toggles, Dashboard Cards & Actions -->
-  <div class="tickets-header-card">
-    
-    <!-- Top Row: Page Title & Maintenance Toggles -->
-    <div class="header-top-row">
-      <div class="header-title-group">
-        <h2 class="header-main-title">
-          <i class="bx bx-purchase-tag-alt"></i>
-          <span>TICKETS</span>
-        </h2>
+  <!-- Top Bar: Title & Maintenance Switches -->
+  <div class="tickets-top-bar">
+    <div class="header-title-group">
+      <h2 class="header-main-title">
+        <i class="bx bx-purchase-tag-alt"></i>
+        <span>TICKETS</span>
+      </h2>
 
-        <span class="active-view-badge" *ngIf="mostrarMantenimientos">
-          <i class="bx bx-wrench"></i>
-          <span>Mantenimiento (8X8)</span>
-        </span>
+      <span class="active-view-badge" *ngIf="mostrarMantenimientos">
+        <i class="bx bx-wrench"></i>
+        <span>Mantenimiento (8X8)</span>
+      </span>
 
-        <span class="user-group-badge" *ngIf="usergroup">
-          <i class="bx bxs-user"></i>
-          <span>{{ usergroup.nombre }} {{ usergroup.apellidoP }}</span>
-        </span>
-      </div>
-
-      <!-- Toggles for 8X8 -->
-      <div class="switches-toggle-group">
-        <span class="switches-title">
-          <i class="bx bx-wrench"></i> Mantenimientos:
-        </span>
-
-        <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientos">
-          <input 
-            type="checkbox" 
-            class="toggle-checkbox"
-            [(ngModel)]="mostrarMantenimientos">
-          <span class="toggle-pill-btn">
-            <i class="bx bx-laptop"></i>
-            <span>8X8</span>
-          </span>
-        </label>
-      </div>
+      <span class="user-group-badge" *ngIf="usergroup">
+        <i class="bx bxs-user"></i>
+        <span>{{ usergroup.nombre }} {{ usergroup.apellidoP }}</span>
+      </span>
     </div>
 
-    <!-- Middle Row: Dashboard KPI Cards -->
-    <div class="header-kpi-row">
-      <app-iconos-notificaciones-tickets 
-        [tickets]="tickets" 
-        [usuario]="usergroup"
-        [compras]="compras">
-      </app-iconos-notificaciones-tickets>
+    <!-- Toggles for 8X8 -->
+    <div class="switches-toggle-group">
+      <span class="switches-title">
+        <i class="bx bx-wrench"></i> Mantenimientos:
+      </span>
+
+      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientos">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="mostrarMantenimientos">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-laptop"></i>
+          <span>8X8</span>
+        </span>
+      </label>
     </div>
+  </div>
 
-    <!-- Bottom Row: Action Buttons -->
-    <div class="header-bottom-row">
-      
-      <!-- Actions Group -->
-      <div class="actions-buttons-container">
-        <p-button 
-          label="CREAR TICKET" 
-          icon="pi pi-plus" 
-          styleClass="p-button-primary action-btn-custom"
-          (click)="mostrarModalGenerateTicket = true">
-        </p-button>
+  <!-- Dashboard KPI Cards Row (Floating directly on canvas) -->
+  <div class="dashboard-kpi-section mb-3">
+    <app-iconos-notificaciones-tickets 
+      [tickets]="tickets" 
+      [usuario]="usergroup"
+      [compras]="compras">
+    </app-iconos-notificaciones-tickets>
+  </div>
 
-        <p-button 
-          label="HISTORIAL TICKETS" 
-          icon="pi pi-history" 
-          styleClass="p-button-warning action-btn-custom"
-          (click)="mostrarModalHistorial = true">
-        </p-button>
+  <!-- Action Buttons Toolbar Row (Floating directly on canvas) -->
+  <div class="actions-toolbar-row mb-4">
+    <div class="actions-buttons-container">
+      <p-button 
+        label="CREAR TICKET" 
+        icon="pi pi-plus" 
+        styleClass="p-button-primary action-btn-custom"
+        (click)="mostrarModalGenerateTicket = true">
+      </p-button>
 
-        <p-button 
-          label="FILTRAR TICKETS" 
-          icon="pi pi-filter" 
-          styleClass="p-button-success action-btn-custom"
-          (click)="mostrarModalFilterTickets = true">
-        </p-button>
+      <p-button 
+        label="HISTORIAL TICKETS" 
+        icon="pi pi-history" 
+        styleClass="p-button-warning action-btn-custom"
+        (click)="mostrarModalHistorial = true">
+      </p-button>
 
-        <p-button 
-          (onClick)="opg.toggle($event)" 
-          icon="pi pi-users" 
-          label="AGRUPAR" 
-          styleClass="p-button-danger action-btn-custom">
-        </p-button>
+      <p-button 
+        label="FILTRAR TICKETS" 
+        icon="pi pi-filter" 
+        styleClass="p-button-success action-btn-custom"
+        (click)="mostrarModalFilterTickets = true">
+      </p-button>
 
-        <p-button 
-          label="COMPRAS" 
-          icon="pi pi-shopping-cart" 
-          styleClass="btn-compras action-btn-custom" 
-          (click)="mostrarModalCompras = true">
-        </p-button>
+      <p-button 
+        (onClick)="opg.toggle($event)" 
+        icon="pi pi-users" 
+        label="AGRUPAR" 
+        styleClass="p-button-danger action-btn-custom">
+      </p-button>
 
-        <p-button 
-          label="SOLICITAR COMPRA" 
-          icon="pi pi-plus" 
-          styleClass="p-button-secondary action-btn-custom"
-          (click)="mostrarModalSolicitarCompra = true">
-        </p-button>
-      </div>
+      <p-button 
+        label="COMPRAS" 
+        icon="pi pi-shopping-cart" 
+        styleClass="btn-compras action-btn-custom" 
+        (click)="mostrarModalCompras = true">
+      </p-button>
 
+      <p-button 
+        label="SOLICITAR COMPRA" 
+        icon="pi pi-plus" 
+        styleClass="p-button-secondary action-btn-custom"
+        (click)="mostrarModalSolicitarCompra = true">
+      </p-button>
     </div>
-
   </div>
 
   <!-- Overlay Panel for Agrupar -->
@@ -117,19 +109,19 @@
 
   <!-- Accordions Content -->
   @if(mostrarMantenimientos) {
-  <div class="mt-4">
+  <div class="mt-2">
     <app-acordeon-mantenimientos-mantenimiento *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
       [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
       [mostrarChat]="true"></app-acordeon-mantenimientos-mantenimiento>
   </div>
   }
   @else {
-  <div *ngIf="usergroup == undefined" class="mt-4">
+  <div *ngIf="usergroup == undefined" class="mt-2">
     <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales"
       [idArea]="idArea"></app-branches-tickets-accordion>
   </div>
 
-  <div *ngIf="usergroup != undefined" class="mt-4">
+  <div *ngIf="usergroup != undefined" class="mt-2">
     <app-user-tickets-accordion [tickets]="tickets" [usuarioAgrupacion]="usergroup" [sucursales]="sucursales"
       [idArea]="idArea"></app-user-tickets-accordion>
   </div>

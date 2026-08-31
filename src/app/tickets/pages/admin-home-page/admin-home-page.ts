@@ -6,6 +6,7 @@ import { AdminTabsComponent } from '../../components/admin-tabs/admin-tabs.compo
   standalone: true,
   imports: [AdminTabsComponent],
   templateUrl: './admin-home-page.html',
+  styleUrl: './admin-home-page.scss',
 })
 
 export default class AdminHomePageComponent {

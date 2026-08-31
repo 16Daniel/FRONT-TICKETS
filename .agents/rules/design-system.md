@@ -1,33 +1,30 @@
-# Rebel Wings ERP - Design System & Brand Identity Guidelines
+# Rule: Sistema de Diseño e Identidad de Marca Rebel Wings
 
-Este archivo contiene el Sistema de Diseño oficial e Identidad de Marca de **Rebel Wings** para el ERP FRONT-TICKETS.
+Esta regla establece las directrices globales de diseño, paleta de colores oficial y componentes visuales para el proyecto FRONT-TICKETS de Rebel Wings.
 
 ---
 
-## 🎨 Paleta de Colores Oficiales de Marca
+## 🎨 Paleta de Colores Oficiales (Rebel Wings)
 
-Basado en el logotipo e identidad visual oficial de **Rebel Wings**:
-
-| Token CSS | Color | Código HEX | Uso Exclusivo |
+| Token | Nombre | Código HEX | Uso Exclusivo |
 | :--- | :--- | :--- | :--- |
-| `$rw-primary` | **Rojo Rebel (Bandera)** | `#D3152A` | Identidad corporativa, botón principal `+ CREAR TICKET`, resaltados activos y marca. |
-| `$rw-accent` | **Amarillo Dorado (Asta)** | `#FDB813` | Acentos secundarios de marca, insignias institucionales y destacados decorativos. |
-| `$rw-dark` | **Carbón Rebel (Fondo)** | `#1E1E24` | Encabezados de módulo, barras de herramientas contrastantes y tipografía principal. |
-| `$rw-canvas` | **Gris Lienzo Neumórfico** | `#F4F6FA` | Fondo principal de pantalla (canvas) para flotación de tarjetas e instrumentos. |
-| `$rw-surface` | **Blanco Puro** | `#FFFFFF` | Fondo de tarjetas KPI, contenedores de acordeón y modales. |
+| `$rw-primary` | **Rojo Rebel (Bandera)** | `#D3152A` | Identidad institucional, botón principal `+ CREAR TICKET`, marcas activas, logotipos. |
+| `$rw-accent` | **Amarillo Dorado (Asta)** | `#FDB813` | Acentos secundarios de marca, insignias institucionales, resaltados decorativos. |
+| `$rw-dark` | **Carbón Rebel (Fondo)** | `#1E1E24` | Encabezados de módulo, barras de herramientas contrastantes, tipografía principal. |
+| `$rw-canvas` | **Gris Lienzo Neumórfico** | `#F4F6FA` | Fondo de pantalla principal (canvas) donde flotan las tarjetas y pestañas. |
 
 ---
 
-## ⚠️ Regla Fundamental: Separación entre Marca y Semáforo de Prioridades
+## ⚠️ Regla de Oro: Separación entre Marca y Semáforo de Prioridades
 
 > [!IMPORTANT]
-> **Los colores institucionales de la marca NUNCA deben utilizarse para indicar urgencia o estado del semáforo de tickets.**
+> **NUNCA utilizar los colores institucionales de marca para indicar estados o niveles de urgencia del semáforo de tickets.**
 
-1. **Identidad Corporativa**:
-   - **Rojo Rebel (`#D3152A`)**: Utilizado para el botón de acción principal (`+ CREAR TICKET`), logotipos y elementos de marca.
-   - **Carbón Rebel (`#1E1E24`)**: Para tipografía y estructuras de encabezado.
+1. **Colores de Marca (Corporativo)**:
+   - **Rojo Rebel (`#D3152A`)** se reserva para CTAs primarios de marca (`+ CREAR TICKET`), logotipos y elementos de identidad.
+   - **Carbón Rebel (`#1E1E24`)** y **Amarillo Dorado (`#FDB813`)** se usan para acentos corporativos.
 
-2. **Semáforo de Prioridades (Semántica de Datos)**:
+2. **Colores del Semáforo de Prioridades (Semántica de Datos)**:
    - **Crítico / Alerta Alta**: Rosa/Carmesí de estado (`#EF4444` / `#E11D48`).
    - **Atención / En Proceso**: Ámbar de estado (`#F59E0B` / `#D97706`).
    - **Resuelto / Al Día**: Verde Esmeralda de estado (`#10B981` / `#059669`).

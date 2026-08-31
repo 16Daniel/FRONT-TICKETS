@@ -35,6 +35,7 @@ import { AdminCadenaSuministroTabComponent } from '../admin-cadena-suministro-ta
     AdminCadenaSuministroTabComponent,
   ],
   templateUrl: './admin-tabs.component.html',
+  styleUrl: './admin-tabs.component.scss',
 })
 
 export class AdminTabsComponent {
