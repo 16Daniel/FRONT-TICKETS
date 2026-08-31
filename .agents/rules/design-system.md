@@ -1,55 +1,24 @@
-# Rule: Sistema de Diseño e Identidad de Marca Rebel Wings
+# Rule: Design System Guidelines for Rebel Wings FRONT-TICKETS
 
-Esta regla establece las directrices globales de diseño, paleta de colores oficial y componentes visuales para el proyecto FRONT-TICKETS de Rebel Wings.
+When working on components or pages in this project, follow these design rules strictly:
 
----
+1. **Brand Identity Colors**:
+   - Primary Corporate Red: `#D3152A` (Brand logo, primary CTAs like `+ CREAR TICKET`, active tab highlights, user avatar background).
+   - Secondary Accent Gold: `#FDB813`.
+   - Dark Accent Charcoal: `#1E1E24`.
+   - Canvas Background: `#F4F6FA`.
+   - Soft Brand Tint: `#FFF1F2`.
 
-## 🎨 Paleta de Colores Oficiales (Rebel Wings)
+2. **Data Priority Semáforo (STRICT SEPARATION)**:
+   - Do NOT use brand colors for data priority/status.
+   - Priority & Status colors: Critical `#EF4444`, Warning `#F59E0B`, Success `#10B981`, Admin `#8A00DA`, Info `#0F62FE`.
 
-| Token | Nombre | Código HEX | Uso Exclusivo |
-| :--- | :--- | :--- | :--- |
-| `$rw-primary` | **Rojo Rebel (Bandera)** | `#D3152A` | Identidad institucional, botón principal `+ CREAR TICKET`, marcas activas, logotipos. |
-| `$rw-accent` | **Amarillo Dorado (Asta)** | `#FDB813` | Acentos secundarios de marca, insignias institucionales, resaltados decorativos. |
-| `$rw-dark` | **Carbón Rebel (Fondo)** | `#1E1E24` | Encabezados de módulo, barras de herramientas contrastantes, tipografía principal. |
-| `$rw-canvas` | **Gris Lienzo Neumórfico** | `#F4F6FA` | Fondo de pantalla principal (canvas) donde flotan las tarjetas y pestañas. |
+3. **Floating Canvas & Dashboard Elements**:
+   - Navigation tabs, KPI cards, toolbar buttons, and accordion headers float directly on `#F4F6FA` canvas. Avoid enclosing header cards with flat white container boxes.
 
----
+4. **Floating Card Rows for Tables**:
+   - Use `border-collapse: separate; border-spacing: 0 0.55rem;` for tables like `admin-tickets-list`.
+   - Each `<tr>` must be a floating card with `14px` border radius, `#e2e8f0` border, soft shadow, and hover elevation `transform: translateY(-2px)`.
 
-## ⚠️ Regla de Oro: Separación entre Marca y Semáforo de Prioridades
-
-> [!IMPORTANT]
-> **NUNCA utilizar los colores institucionales de marca para indicar estados o niveles de urgencia del semáforo de tickets.**
-
-1. **Colores de Marca (Corporativo)**:
-   - **Rojo Rebel (`#D3152A`)** se reserva para CTAs primarios de marca (`+ CREAR TICKET`), logotipos y elementos de identidad.
-   - **Carbón Rebel (`#1E1E24`)** y **Amarillo Dorado (`#FDB813`)** se usan para acentos corporativos.
-
-2. **Colores del Semáforo de Prioridades (Semántica de Datos)**:
-   - **Crítico / Alerta Alta**: Rosa/Carmesí de estado (`#EF4444` / `#E11D48`).
-   - **Atención / En Proceso**: Ámbar de estado (`#F59E0B` / `#D97706`).
-   - **Resuelto / Al Día**: Verde Esmeralda de estado (`#10B981` / `#059669`).
-   - **Validación Admin**: Púrpura de estado (`#8A00DA` / `#7E22CE`).
-
----
-
-## 📐 Estructura de Componentes
-
-### 1. Canvas y Tarjetas Flotantes
-- El fondo de pantalla siempre debe ser `#F4F6FA` (Gris Lienzo Neumórfico).
-- Las tarjetas, toolbars y contenedores flotan con `background: #FFFFFF`, `border-radius: 14px - 16px`, `border: 1px solid #E2E8F0` y sombras muy suaves (`box-shadow: 0 4px 18px rgba(0,0,0,0.03)`).
-
-### 2. Acordeones de Sucursales
-- **Encabezado Minimalista Directo**: Estructurado como `[Badge Numérico Conteo]` + `[Nombre de Sucursal]` + `[Insignias de Alerta Circulares a la derecha]`.
-- **Sin Texto Repetitivo**: NUNCA agregar palabras como "TICKETS" o nombres de responsables en la cabecera del acordeón.
-- **Fondo con Tinte Pastel de Estado**:
-  - Crítico: Degradado suave rosa pastel (`#FFF1F2`).
-  - Atención: Degradado suave ámbar pastel (`#FFFBEB`).
-  - Al Día: Degradado suave verde pastel (`#F0FDF4`).
-
----
-
-## ⚡ Reglas de Desarrollo UI
-
-1. Preservar siempre la lógica de negocio, servicios, modelos e interfaces de Angular.
-2. Todo nuevo componente o rediseño debe alinearse estrictamente a estos tokens visuales.
-3. Priorizar el contraste de lectura (estándar WCAG AA) y usabilidad de alto nivel.
+5. **Select Controls**:
+   - Select dropdowns must use `.table-select-custom` capsule inputs with centered text and property fallback `selectedOption?.nombre || selectedOption?.name`.
