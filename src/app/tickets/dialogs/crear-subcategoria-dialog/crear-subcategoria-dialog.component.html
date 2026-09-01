@@ -1,25 +1,60 @@
-<p-dialog [header]="!esNuevaSubcategoria ? 'ACTUALIZAR SUBCATEGORIA' :'CREAR SUBCATEGORIA'"
-    [(visible)]="mostrarModalSubcrearCategoria" [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true"
-    (onHide)="onHide()">
-    <form #form="ngForm" (ngSubmit)="enviar(form)">
+<p-dialog 
+  [(visible)]="mostrarModalSubcrearCategoria" 
+  [modal]="true" 
+  [style]="{ width: '520px', maxWidth: '95vw' }" 
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="rw-modern-dialog"
+  (onHide)="onHide()">
 
-        <p class="fw-bold">SUBCATEGORIA</p>
-        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE DE LA SUBCATEGORIA"
-            [(ngModel)]="subcategoria.nombre" name="subcategoria"
-            [ngClass]="{'p-invalid': formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched}"
-            #formSubcategoriaCtrl="ngModel" required>
-        <small *ngIf="formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched" class="p-error">
-            Campo requerido.
-        </small>
-        <p></p>
+  <ng-template pTemplate="header">
+    <div class="dialog-header-title">
+      <div class="dialog-header-icon" [class.is-edit]="!esNuevaSubcategoria">
+        <i class="bx" [ngClass]="!esNuevaSubcategoria ? 'bx-edit-alt' : 'bx-git-repo-forked'"></i>
+      </div>
+      <div class="dialog-header-texts">
+        <h4>{{ !esNuevaSubcategoria ? 'ACTUALIZAR SUBCATEGORÍA' : 'NUEVA SUBCATEGORÍA' }}</h4>
+        <span>Asigna un nombre descriptivo para esta subcategoría</span>
+      </div>
+    </div>
+  </ng-template>
 
-        <div class="d-flex justify-content-end mt-3">
-            <button class="btn bg-p-b p-3 d-flex align-items-center gap-2">
-                <i class='bx bx-send fs-4'></i>
-                <label class="m-0" *ngIf="esNuevaSubcategoria">ENVIAR</label>
-                <label class="m-0" *ngIf="!esNuevaSubcategoria">ACTUALIZAR</label>
-            </button>
-        </div>
-    </form>
+  <form #form="ngForm" (ngSubmit)="enviar(form)" class="dialog-form-content">
+    <div class="form-group-item mt-1">
+      <label class="form-label-custom">NOMBRE DE LA SUBCATEGORÍA <span class="required-star">*</span></label>
+      <div class="input-container">
+        <i class="bx bx-subdirectory-right input-lead-icon"></i>
+        <input 
+          class="form-control-custom" 
+          type="text" 
+          placeholder="Escribe el nombre de la subcategoría..."
+          [(ngModel)]="subcategoria.nombre" 
+          name="subcategoria"
+          [ngClass]="{'is-invalid-input': formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched}"
+          #formSubcategoriaCtrl="ngModel" 
+          required>
+      </div>
+      <small *ngIf="formSubcategoriaCtrl.invalid && formSubcategoriaCtrl.touched" class="field-error-msg">
+        <i class="bx bx-error-circle"></i> El nombre de la subcategoría es requerido.
+      </small>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="dialog-actions-footer mt-4">
+      <button 
+        type="button" 
+        class="btn-dialog-cancel" 
+        (click)="onHide()">
+        Cancelar
+      </button>
+
+      <button 
+        type="submit" 
+        class="btn-rw-cta">
+        <i class='bx' [ngClass]="esNuevaSubcategoria ? 'bx-check' : 'bx-save'"></i>
+        <span>{{ esNuevaSubcategoria ? 'AGREGAR SUBCATEGORÍA' : 'ACTUALIZAR' }}</span>
+      </button>
+    </div>
+  </form>
 
 </p-dialog>

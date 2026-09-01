@@ -241,8 +241,10 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.idUsuario = this.usuarioActivo.id;
     this.ticket.nombreCategoria = this.formCategoria.nombre;
 
-    if (this.formCategoria.activarSubcategorias)
-      this.ticket.nombreSubcategoria = this.formCategoria.subcategorias.find((x: Subcategoria) => x.id == this.ticket.idSubcategoria).nombre
+    if (this.formCategoria.activarSubcategorias && this.ticket.idSubcategoria) {
+      const sub = this.obtenerSubcategoriasFiltradas().find((x: Subcategoria) => String(x.id) === String(this.ticket.idSubcategoria));
+      this.ticket.nombreSubcategoria = sub ? sub.nombre : '';
+    }
 
     this.ticket.folio = folio;
     this.ticket.participantesChat = participantesChat;
@@ -324,8 +326,25 @@ export class CrearTicketDialogComponent implements OnInit {
     this.mostrarCampoSubcategoria = categoria.activarSubcategorias;
   }
 
-  obtenerSubcategoriasFiltradas = (): Subcategoria[] =>
-    this.formCategoria.subcategorias.filter((x: Subcategoria) => x.eliminado == false)
+  obtenerSubcategoriasFiltradas = (): Subcategoria[] => {
+    if (!this.formCategoria || !this.formCategoria.subcategorias) return [];
+    const resultado: Subcategoria[] = [];
+    const aplanar = (lista: Subcategoria[], rutaPadre: string = '') => {
+      for (const sub of lista) {
+        if (sub.eliminado) continue;
+        const nombreCompleto = rutaPadre ? `${rutaPadre} > ${sub.nombre}` : sub.nombre;
+        const tieneHijos = sub.subcategorias && sub.subcategorias.some((h) => !h.eliminado);
+        if (!tieneHijos || sub.tipo === 'hoja') {
+          resultado.push({ ...sub, nombre: nombreCompleto });
+        }
+        if (tieneHijos) {
+          aplanar(sub.subcategorias || [], nombreCompleto);
+        }
+      }
+    };
+    aplanar(this.formCategoria.subcategorias);
+    return resultado;
+  };
 
   buscarActivoFijo() {
     this.fixedAssetsService

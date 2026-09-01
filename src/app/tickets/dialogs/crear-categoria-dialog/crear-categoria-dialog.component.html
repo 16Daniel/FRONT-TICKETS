@@ -1,103 +1,213 @@
-<p-dialog [header]="!esNuevaCategoria ? 'ACTUALIZAR CATEGORIA' :'CREAR CATEGORIA'"
-    [(visible)]="mostrarModalCrearCategoria" [modal]="true" [style]="{ 'width': '95vh' }" [maximizable]="true"
-    (onHide)="onHide()">
-    <form #form="ngForm" (ngSubmit)="enviar(form)">
+<p-dialog 
+  [(visible)]="mostrarModalCrearCategoria" 
+  [modal]="true" 
+  [style]="{ width: '680px', maxWidth: '95vw' }" 
+  [breakpoints]="{ '960px': '75vw', '640px': '92vw' }"
+  [maximizable]="true" 
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="rw-modern-dialog"
+  (onHide)="onHide()">
+  
+  <ng-template pTemplate="header">
+    <div class="dialog-header-title">
+      <div class="dialog-header-icon" [class.is-edit]="!esNuevaCategoria">
+        <i class="bx" [ngClass]="!esNuevaCategoria ? 'bx-edit-alt' : 'bx-folder-plus'"></i>
+      </div>
+      <div class="dialog-header-texts">
+        <h4>{{ !esNuevaCategoria ? 'ACTUALIZAR CATEGORÍA' : 'CREAR NUEVA CATEGORÍA' }}</h4>
+        <span>Configuración de categoría y tiempos de estimación</span>
+      </div>
+    </div>
+  </ng-template>
 
-        <p class="fw-bold">ID</p>
-        <input [disabled]="true" class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL ID"
-            [(ngModel)]="categoria.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
-            #formidCtrl="ngModel" required>
-        <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error">
-            Campo requerido.
-        </small>
-        <p></p>
+  <form #form="ngForm" (ngSubmit)="enviar(form)" class="dialog-form-content">
 
-        <p class="fw-bold">NOMBRE</p>
-        <input class="form-control" style="height: 48px;" type="text" placeholder="ESCRIBE EL NOMBRE"
-            [(ngModel)]="categoria.nombre" name="nombre"
-            [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
+    <div class="form-grid-row">
+      <!-- ID Field -->
+      <div class="form-group-item col-id">
+        <label class="form-label-custom">ID CATEGORÍA</label>
+        <div class="input-container-readonly">
+          <i class="bx bx-hash input-lead-icon"></i>
+          <input 
+            [disabled]="true" 
+            class="form-control-custom readonly-input" 
+            type="text" 
+            placeholder="ID"
+            [(ngModel)]="categoria.id" 
+            name="id" 
+            #formidCtrl="ngModel" 
             required>
-        <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error">
-            Campo requerido.
+        </div>
+      </div>
+
+      <!-- Estimation Field -->
+      <div class="form-group-item col-estimation">
+        <label class="form-label-custom">ESTIMACIÓN (HORAS) <span class="required-star">*</span></label>
+        <div class="input-container">
+          <i class="bx bx-time-five input-lead-icon"></i>
+          <input 
+            class="form-control-custom" 
+            type="number" 
+            placeholder="Ej. 24"
+            [(ngModel)]="categoria.estimacion" 
+            name="estimacion"
+            [ngClass]="{'is-invalid-input': formEstimacionCtrl.invalid && formEstimacionCtrl.touched}"
+            #formEstimacionCtrl="ngModel" 
+            required>
+        </div>
+        <small *ngIf="formEstimacionCtrl.invalid && formEstimacionCtrl.touched" class="field-error-msg">
+          <i class="bx bx-error-circle"></i> Estimación requerida
         </small>
-        <p></p>
+      </div>
+    </div>
 
-        <p class="fw-bold">ESTIMACIÓN</p>
-        <input class="form-control" style="height: 48px;" type="number" placeholder="ESCRIBE EL TIEMPO DE ESTIMACIÓN"
-            [(ngModel)]="categoria.estimacion" name="estimacion"
-            [ngClass]="{'p-invalid': formEstimacionCtrl.invalid && formEstimacionCtrl.touched}"
-            #formEstimacionCtrl="ngModel" required>
-        <small *ngIf="formEstimacionCtrl.invalid && formEstimacionCtrl.touched" class="p-error">
-            Campo requerido.
-        </small>
-        <p></p>
+    <!-- Category Name -->
+    <div class="form-group-item mt-3">
+      <label class="form-label-custom">NOMBRE DE LA CATEGORÍA <span class="required-star">*</span></label>
+      <div class="input-container">
+        <i class="bx bx-folder input-lead-icon"></i>
+        <input 
+          class="form-control-custom" 
+          type="text" 
+          placeholder="Escribe el nombre de la categoría..."
+          [(ngModel)]="categoria.nombre" 
+          name="nombre"
+          [ngClass]="{'is-invalid-input': formNombreCtrl.invalid && formNombreCtrl.touched}" 
+          #formNombreCtrl="ngModel"
+          required>
+      </div>
+      <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="field-error-msg">
+        <i class="bx bx-error-circle"></i> Nombre requerido
+      </small>
+    </div>
 
-
-        <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="!esNuevaCategoria">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                style="width: 3rem; height: 2rem;" name="activoMantenimientos"
-                [checked]="categoria.activarSubcategorias"
-                (change)="categoria.activarSubcategorias = !categoria.activarSubcategorias">
-            <label class="form-check-label fs-4" for="flexSwitchCheckChecked">¿ACTIVAR SUBCATEGORIAS?</label>
+    <!-- Switch: Activar Subcategorías (Only when editing) -->
+    <div class="subcategories-toggle-box mt-4" *ngIf="!esNuevaCategoria">
+      <div class="toggle-box-info">
+        <div class="toggle-icon">
+          <i class="bx bx-git-repo-forked"></i>
         </div>
-
-        <div *ngIf="categoria.activarSubcategorias">
-            <br>
-            <hr>
-            <br>
-
-            <div class="d-flex justify-content-end mt-3">
-                <button type="button" class="btn bg-p-b p-3 d-flex align-items-center gap-2"
-                    (click)="abrirModalNuevaSubcategoria()">
-                    <i class='bx bx-plus fs-4'></i>
-                    <label class="m-0">AGREGAR</label>
-                </button>
-            </div>
-
-            <br>
-
-            <p-table [value]="obtenerSubcategorias()" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>NOMBRE</th>
-                        <th class="text-end">ACCIONES</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-subcategoria>
-                    <tr [pSelectableRow]="subcategoria">
-                        <td>{{subcategoria.nombre}}</td>
-                        <td class="align-middle">
-                            <div class="d-flex justify-content-end align-items-center">
-                                <button type="button" class="btn btn-primary me-2"
-                                    (click)="mostrarModalSubcategoria = true; esNuevaSubcategoria = false; subcategoriaSeleccionada = subcategoria">
-                                    <i class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i>
-                                </button>
-
-                                <button type="button" class="btn btn-danger" (click)="confirmaEliminacion(subcategoria)">
-                                    <i class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i>
-                                </button>
-                            </div>
-                        </td>
-
-                    </tr>
-                </ng-template>
-            </p-table>
+        <div class="toggle-text">
+          <h6>¿Activar Subcategorías?</h6>
+          <p>Permite asociar subcategorías hijas a esta categoría principal.</p>
         </div>
+      </div>
+      <div class="form-check form-switch m-0">
+        <input 
+          class="form-check-input custom-switch-input" 
+          type="checkbox" 
+          role="switch" 
+          id="toggleSubcategoriesSwitch"
+          name="activoSubcategorias"
+          [checked]="categoria.activarSubcategorias"
+          (change)="categoria.activarSubcategorias = !categoria.activarSubcategorias">
+      </div>
+    </div>
 
-        <div class="d-flex justify-content-end mt-3">
-            <button class="btn bg-p-b p-3 d-flex align-items-center gap-2">
-                <i class='bx bx-send fs-4'></i>
-                <label class="m-0" *ngIf="esNuevaCategoria">ENVIAR</label>
-                <label class="m-0" *ngIf="!esNuevaCategoria">ACTUALIZAR</label>
-            </button>
+    <!-- Subcategories Section -->
+    <div class="subcategories-panel mt-3" *ngIf="categoria.activarSubcategorias && !esNuevaCategoria">
+      <div class="subcategories-panel-header">
+        <div class="sub-header-left">
+          <span class="sub-panel-title">SUBCATEGORÍAS ASOCIADAS</span>
+          <span class="sub-count-badge">{{ (obtenerSubcategorias() || []).length }}</span>
         </div>
+        <button 
+          type="button" 
+          class="btn-add-sub"
+          (click)="abrirModalNuevaSubcategoria()">
+          <i class='bx bx-plus'></i>
+          <span>AGREGAR</span>
+        </button>
+      </div>
 
-    </form>
+      <!-- Subcategories Table -->
+      <div class="subcategories-table-wrapper">
+        <p-table 
+          [value]="obtenerSubcategorias()" 
+          [tableStyle]="{ 'min-width': '100%' }"
+          styleClass="p-datatable-gridlines table-tk sub-table" 
+          [scrollable]="true" 
+          scrollHeight="30vh">
+          
+          <ng-template pTemplate="header">
+            <tr>
+              <th>NOMBRE DE SUBCATEGORÍA</th>
+              <th style="width: 100px;" class="text-center">ACCIONES</th>
+            </tr>
+          </ng-template>
 
+          <ng-template pTemplate="body" let-subcategoria>
+            <tr [pSelectableRow]="subcategoria">
+              <td>
+                <div class="sub-name-cell">
+                  <i class="bx bx-subdirectory-right"></i>
+                  <span>{{ subcategoria.nombre }}</span>
+                </div>
+              </td>
+              <td class="text-center">
+                <div class="actions-cell-group">
+                  <button 
+                    type="button" 
+                    class="category-action-btn btn-edit btn-sm-action"
+                    (click)="mostrarModalSubcategoria = true; esNuevaSubcategoria = false; subcategoriaSeleccionada = subcategoria"
+                    pTooltip="Editar" 
+                    tooltipPosition="top">
+                    <i class='bx bx-edit-alt'></i>
+                  </button>
+
+                  <button 
+                    type="button" 
+                    class="category-action-btn btn-delete btn-sm-action" 
+                    (click)="confirmaEliminacion(subcategoria)"
+                    pTooltip="Eliminar" 
+                    tooltipPosition="top">
+                    <i class='bx bx-trash'></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="2">
+                <div class="empty-sub-state">
+                  <i class="bx bx-git-branch"></i>
+                  <span>No hay subcategorías agregadas. Haz clic en "AGREGAR" para crear una.</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="dialog-actions-footer mt-4">
+      <button 
+        type="button" 
+        class="btn-dialog-cancel" 
+        (click)="onHide()">
+        Cancelar
+      </button>
+
+      <button 
+        type="submit" 
+        class="btn-rw-cta">
+        <i class='bx' [ngClass]="esNuevaCategoria ? 'bx-check' : 'bx-save'"></i>
+        <span>{{ esNuevaCategoria ? 'GUARDAR CATEGORÍA' : 'ACTUALIZAR CATEGORÍA' }}</span>
+      </button>
+    </div>
+
+  </form>
 </p-dialog>
 
-<app-crear-subcategoria-dialog *ngIf="mostrarModalSubcategoria" (subcategoriaEvent)="agregarSubcategoria($event)"
-    [mostrarModalSubcrearCategoria]="mostrarModalSubcategoria" (closeEvent)="mostrarModalSubcategoria = false"
-    [esNuevaSubcategoria]="esNuevaSubcategoria"
-    [subcategoria]="subcategoriaSeleccionada"></app-crear-subcategoria-dialog>
+<app-crear-subcategoria-dialog 
+  *ngIf="mostrarModalSubcategoria" 
+  (subcategoriaEvent)="agregarSubcategoria($event)"
+  [mostrarModalSubcrearCategoria]="mostrarModalSubcategoria" 
+  (closeEvent)="mostrarModalSubcategoria = false"
+  [esNuevaSubcategoria]="esNuevaSubcategoria"
+  [subcategoria]="subcategoriaSeleccionada">
+</app-crear-subcategoria-dialog>

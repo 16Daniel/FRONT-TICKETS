@@ -5,6 +5,9 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+
 import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
@@ -14,7 +17,15 @@ import { CrearSubcategoriaDialogComponent } from '../crear-subcategoria-dialog/c
 @Component({
   selector: 'app-crear-categoria-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule, CrearSubcategoriaDialogComponent, TableModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DialogModule,
+    CrearSubcategoriaDialogComponent,
+    TableModule,
+    TooltipModule,
+    InputTextModule
+  ],
   templateUrl: './crear-categoria-dialog.component.html',
   styleUrl: './crear-categoria-dialog.component.scss'
 })
@@ -140,12 +151,13 @@ export class CrearCategoriaDialogComponent {
 
   confirmaEliminacion(subcategoria: Subcategoria | any) {
     this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: '¿Está seguro que desea eliminar?',
+      header: 'Confirmar Eliminación',
+      message: '¿Está seguro de que desea eliminar esta subcategoría?',
+      icon: 'pi pi-exclamation-triangle',
       acceptIcon: 'pi pi-check mr-2',
       rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      acceptButtonStyleClass: 'btn btn-confirm-accept',
+      rejectButtonStyleClass: 'btn btn-confirm-reject',
       accept: () => {
         this.eliminarSubcategoria(subcategoria);
       },

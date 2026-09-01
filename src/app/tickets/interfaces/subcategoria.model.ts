@@ -2,13 +2,21 @@ export class Subcategoria {
     id: string = '';
     nombre: string = '';
     eliminado: boolean = false;
+    tipo?: 'rama' | 'hoja' = 'hoja';
+    subcategorias?: Subcategoria[] = [];
+    activarSubcategorias?: boolean = false;
+    urgencia?: number;
+    criticidad?: number;
+    score?: number;
+    prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
 
     constructor() {
         this.id = generateGUID();
+        this.subcategorias = [];
     }
 }
 
-function generateGUID(): string {
+export function generateGUID(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         const r = (Math.random() * 16) | 0;
         const v = c === 'x' ? r : (r & 0x3) | 0x8;
