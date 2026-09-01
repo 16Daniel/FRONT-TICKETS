@@ -1,44 +1,34 @@
-<div class="categories-page-wrapper">
+<div class="categories-tree-page-wrapper">
   <div class="categories-content-container">
 
-    <!-- Top Header: Title & Area Switcher -->
-    <div class="categories-top-bar">
-      <div class="header-title-group">
-        <h2 class="header-main-title">
-          <i class="bx bx-git-repo-forked"></i>
-          <span>ÁRBOL Y CONSTRUCTOR</span>
-        </h2>
-        <span class="area-indicator-badge">
-          <i class="bx bx-buildings"></i>
-          <span>{{ areaActual?.nombre || 'Área Seleccionada' }}</span>
-        </span>
+    <!-- Barra Selector de Áreas por Chips -->
+    <div class="areas-selector-bar mb-4">
+      <div class="selector-header-title">
+        <span class="sub-title">Árbol de Categorías & Constructor</span>
+        <h2 class="main-title">Configuración por Área Operativa</h2>
       </div>
 
-      <!-- Area Selection Chips -->
-      <div class="area-switcher-group">
-        <span class="area-switcher-label">Área:</span>
-        <div class="area-chips-scroll">
-          <button 
-            *ngFor="let a of areas" 
-            type="button" 
-            class="area-chip-btn" 
-            [class.is-active]="a.id == areaSeleccionadaId"
-            (click)="seleccionarArea(a.id)">
-            <span class="area-dot"></span>
-            <span>{{ a.nombre }}</span>
-          </button>
-        </div>
+      <div class="areas-chips-track">
+        <button 
+          *ngFor="let area of areas" 
+          type="button" 
+          class="chip-area-pill"
+          [class.is-active]="String(area.id) === areaSeleccionadaId"
+          (click)="cambiarArea(area.id)">
+          <span class="area-dot"></span>
+          <span class="area-name">{{ area.nombre }}</span>
+        </button>
       </div>
     </div>
 
-    <!-- Summary KPI Cards -->
+    <!-- Fila de Tarjetas KPI (Fuera del cuadro blanco) -->
     <div class="tree-kpi-grid mb-4">
       <div class="tree-kpi-card card-total">
         <div class="kpi-icon-wrap">
-          <i class="bx bx-layer"></i>
+          <i class="bx bx-git-repo-forked"></i>
         </div>
         <div class="kpi-info-wrap">
-          <span class="kpi-label">CATEGORÍAS TOTALES</span>
+          <span class="kpi-label">Categorías Totales</span>
           <span class="kpi-value">{{ totalCategorias }}</span>
           <span class="kpi-sub">formadas en este árbol</span>
         </div>
@@ -46,42 +36,41 @@
 
       <div class="tree-kpi-card card-leaves">
         <div class="kpi-icon-wrap">
-          <i class="bx bx-tag"></i>
+          <i class="bx bx-check-double"></i>
         </div>
         <div class="kpi-info-wrap">
-          <span class="kpi-label">CATEGORÍAS FINALES</span>
+          <span class="kpi-label">Categorías Finales</span>
           <span class="kpi-value">{{ totalCategoriasFinales }}</span>
-          <span class="kpi-sub">reciben tickets con SLA</span>
+          <span class="kpi-sub">formadas en este árbol</span>
         </div>
       </div>
 
       <div class="tree-kpi-card card-tickets">
         <div class="kpi-icon-wrap">
-          <i class="bx bx-purchase-tag-alt"></i>
+          <i class="bx bx-time-five"></i>
         </div>
         <div class="kpi-info-wrap">
-          <span class="kpi-label">TICKETS ACTIVOS</span>
+          <span class="kpi-label">Tickets Activos</span>
           <span class="kpi-value">{{ totalTicketsActivos }}</span>
-          <span class="kpi-sub">en proceso en esta área</span>
+          <span class="kpi-sub">formadas en este árbol</span>
         </div>
       </div>
     </div>
 
-    <!-- Toolbar: Search, Matrix Guide Toggle, Expand All, New Root Button -->
-    <div class="tree-toolbar-bar mb-3">
+    <!-- Barra de Herramientas y Filtros (Fuera del cuadro blanco) -->
+    <div class="tree-toolbar-bar mb-4">
       <div class="toolbar-left">
-        <!-- Live Filter Search -->
-        <div class="tree-search-box">
+        <div class="search-input-wrapper">
           <i class="bx bx-search search-icon"></i>
           <input 
             type="text" 
             [(ngModel)]="filtroTexto" 
-            placeholder="Filtrar por nombre en el árbol..." 
+            placeholder="Buscar categoría o subcategoría..." 
             class="tree-search-input" />
           <button 
             *ngIf="filtroTexto" 
             type="button" 
-            class="clear-search-btn" 
+            class="clear-search-btn"
             (click)="filtroTexto = ''">
             <i class="bx bx-x"></i>
           </button>
@@ -89,28 +78,28 @@
       </div>
 
       <div class="toolbar-right">
-        <!-- Toggle Matrix Guide -->
+        <!-- Alternar Guía de Matriz -->
         <button 
           type="button" 
           class="btn-tool-outline" 
           [class.is-active]="mostrarGuiaMatriz"
           (click)="mostrarGuiaMatriz = !mostrarGuiaMatriz"
-          pTooltip="Ver matriz de criticidad 3x3 y tiempos SLA" 
+          pTooltip="Ver matriz de criticidad 3x3 y prioridades" 
           tooltipPosition="top">
           <i class="bx bx-grid-alt"></i>
           <span>Matriz de Criticidad (3×3)</span>
         </button>
 
-        <!-- Toggle Expand All -->
+        <!-- Alternar Expandir Todo -->
         <button 
           type="button" 
           class="btn-tool-outline" 
-          (click)="toggleExpandAll()">
-          <i class="bx" [ngClass]="allExpanded ? 'bx-collapse-vertical' : 'bx-expand-vertical'"></i>
-          <span>{{ allExpanded ? 'Colapsar todo' : 'Expandir todo' }}</span>
+          (click)="alternarExpandirTodos()">
+          <i class="bx" [ngClass]="todosExpandidos ? 'bx-collapse-vertical' : 'bx-expand-vertical'"></i>
+          <span>{{ todosExpandidos ? 'Colapsar todo' : 'Expandir todo' }}</span>
         </button>
 
-        <!-- Create Root Category CTA -->
+        <!-- Botón Nueva Categoría Raíz -->
         <button 
           type="button" 
           class="btn-rw-cta" 
@@ -121,447 +110,58 @@
       </div>
     </div>
 
-    <!-- Matrix Guide Card (Collapsible) -->
-    <div class="matrix-guide-card mb-4" *ngIf="mostrarGuiaMatriz">
-      <div class="guide-header">
-        <div class="guide-title">
-          <i class="bx bx-info-circle"></i>
-          <span>Matriz de Criticidad 3×3 y Tiempos de Resolución SLA</span>
-        </div>
-        <button type="button" class="btn-close-guide" (click)="mostrarGuiaMatriz = false">
-          <i class="bx bx-x"></i>
-        </button>
-      </div>
-      <p class="guide-desc">
-        La prioridad y tiempo de atención de cada ticket se calculan automáticamente multiplicando <b>Impacto (1-3)</b> × <b>Urgencia (1-3)</b>.
-      </p>
+    <!-- Componente Ficha Guía Desplegable -->
+    <app-tarjeta-guia-matriz 
+      [mostrar]="mostrarGuiaMatriz" 
+      (cerrar)="mostrarGuiaMatriz = false">
+    </app-tarjeta-guia-matriz>
 
-      <div class="quadrants-grid">
-        <div *ngFor="let q of CUADRANTES" class="quadrant-card" [style.background]="q.bg" [style.color]="q.text">
-          <div class="q-card-head">
-            <div class="q-icon-box" [style.color]="q.text">
-              <i class="bx {{ q.icon }}"></i>
-            </div>
-            <span class="q-name">{{ q.label }}</span>
-            <span class="q-score">Score {{ q.min }}–{{ q.max }}</span>
-          </div>
-          <div class="q-sla-range">
-            Resolución: <b>{{ q.slaMin }}h – {{ q.slaMax }}h</b>
-          </div>
-          <p class="q-desc">{{ q.desc }}</p>
-        </div>
-      </div>
+    <!-- Formulario In-line para Crear Categoría Raíz -->
+    <div class="mb-4" *ngIf="idNodoParaAgregar === 'RAIZ'">
+      <app-formulario-nodo-categoria
+        modo="crear-raiz"
+        [nombreArea]="areaActual?.nombre"
+        (guardar)="guardarNuevoNodo('RAIZ', $event)"
+        (cancelar)="cancelarFormulario()">
+      </app-formulario-nodo-categoria>
     </div>
 
-    <!-- Inline Add Root Category Form -->
-    <div class="tree-inline-form-card mb-4" *ngIf="openAddFormFor === 'ROOT'">
-      <div class="form-card-header">
-        <div class="form-title">
-          <i class="bx bx-folder-plus"></i>
-          <span>Nueva Categoría Raíz en <b>{{ areaActual?.nombre }}</b></span>
-        </div>
-        <button type="button" class="btn-close-form" (click)="cancelarFormulario()">
-          <i class="bx bx-x"></i>
-        </button>
-      </div>
-
-      <div class="form-card-body">
-        <div class="form-group-custom mb-3">
-          <label class="form-label-custom">NOMBRE DE LA CATEGORÍA <span class="req">*</span></label>
-          <input 
-            type="text" 
-            [(ngModel)]="addForm.nombre" 
-            placeholder="Ej. Cocina, Infraestructura, Mobiliario..." 
-            class="form-input-text" 
-            autofocus />
-        </div>
-
-        <div class="form-group-custom mb-3">
-          <label class="form-label-custom">¿QUÉ TIPO DE CATEGORÍA ES?</label>
-          <div class="type-selector-buttons">
-            <button 
-              type="button" 
-              class="type-btn" 
-              [class.is-chosen]="addForm.tipo === 'rama'" 
-              (click)="addForm.tipo = 'rama'">
-              <i class="bx bx-folder"></i>
-              <div class="type-btn-texts">
-                <b>Solo agrupar (Rama)</b>
-                <span>Agrupará subcategorías dentro</span>
-              </div>
-            </button>
-
-            <button 
-              type="button" 
-              class="type-btn" 
-              [class.is-chosen]="addForm.tipo === 'hoja'" 
-              (click)="addForm.tipo = 'hoja'">
-              <i class="bx bx-tag"></i>
-              <div class="type-btn-texts">
-                <b>Categoría final (Recibe tickets)</b>
-                <span>Tendrá SLA y criticidad fija</span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Matrix 3x3 Picker (Only for Leaves) -->
-        <div class="matrix-picker-section mt-3" *ngIf="addForm.tipo === 'hoja'">
-          <label class="form-label-custom">SELECCIONA SU CRITICIDAD Y TIEMPO OBJETIVO EN LA MATRIZ (3×3):</label>
-          <div class="matrix-grid-picker">
-            <div class="matrix-header-corner"></div>
-            <div class="matrix-header-col" *ngFor="let col of MATRIZ_COLUMNAS">
-              <span>Urgencia: {{ col.label }}</span>
-            </div>
-
-            <ng-container *ngFor="let row of MATRIZ_FILAS">
-              <div class="matrix-header-row">
-                <span>Impacto: {{ row.label }}</span>
-              </div>
-
-              <div *ngFor="let col of MATRIZ_COLUMNAS" 
-                class="matrix-cell-btn"
-                [class.is-selected]="addForm.impacto === row.impacto && addForm.urgencia === col.urgencia"
-                [style.background]="clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).bg"
-                [style.color]="clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).text"
-                (click)="seleccionarCeldaMatriz('add', row.impacto, col.urgencia)">
-                <b class="cell-sla-res">{{ clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).label }}</b>
-                <span class="cell-q-label">Score {{ calcularScore(row.impacto, col.urgencia) }}</span>
-              </div>
-            </ng-container>
-          </div>
-
-          <!-- Selected SLA Summary Chip -->
-          <div class="selected-sla-preview mt-2" *ngIf="addForm.impacto && addForm.urgencia">
-            <span class="preview-badge" [style.background]="clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).bg" [style.color]="clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).text">
-              <i class="bx {{ clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).icon }}"></i>
-              <span>Prioridad: <b>{{ clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).label }}</b></span>
-            </span>
-            <span class="preview-sla">
-              Score: <b>{{ calcularScore(addForm.impacto, addForm.urgencia) }}</b> (Impacto {{ addForm.impacto }} × Urgencia {{ addForm.urgencia }})
-            </span>
-          </div>
-        </div>
-
-        <div class="form-actions-footer mt-4">
-          <button type="button" class="btn-cancel-inline" (click)="cancelarFormulario()">Cancelar</button>
-          <button type="button" class="btn-save-inline" (click)="guardarNuevoNodo(null)">
-            <i class="bx bx-check"></i>
-            <span>Guardar Categoría Raíz</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tree View Container -->
+    <!-- Contenedor del Árbol de Nodos -->
     <div class="tree-nodes-container">
 
-      <!-- Empty State -->
+      <!-- Estado Vacío -->
       <div class="tree-empty-state" *ngIf="categorias.length === 0">
         <div class="empty-icon">
           <i class="bx bx-git-repo-forked"></i>
         </div>
         <h4>Este árbol aún no tiene categorías</h4>
-        <p>Comienza agregando la primera categoría raíz para organizar las incidencias y tickets de <b>{{ areaActual?.nombre }}</b>.</p>
+        <p>Comienza agregando la primera categoría raíz para organizar los tickets de <b>{{ areaActual?.nombre }}</b>.</p>
         <button type="button" class="btn-rw-cta" (click)="abrirFormularioCrearRaiz()">
           <i class="bx bx-plus"></i>
           <span>CREAR PRIMERA CATEGORÍA RAÍZ</span>
         </button>
       </div>
 
-      <!-- Recursive Node Template -->
-      <ng-template #nodeTemplate let-nodo="nodo" let-depth="depth" let-rootCat="rootCat">
-        <div class="tree-node-item" *ngIf="coincideFiltro(nodo)" [class.is-child-node]="depth > 0">
-          
-          <!-- Node Card Row -->
-          <div class="tree-node-card" 
-            [class.is-branch]="esRama(nodo)" 
-            [class.is-leaf]="!esRama(nodo)" 
-            [class.is-expanded]="isExpanded(nodo.id)"
-            [class.is-sub-node]="depth > 0">
-            
-            <div class="node-card-main">
-              <!-- Left Info -->
-              <div class="node-left-group">
-                <!-- Connector line for child subcategories -->
-                <div class="tree-connector-line" *ngIf="depth > 0"></div>
-
-                <!-- Expand / Collapse Toggle Button -->
-                <button 
-                  *ngIf="obtenerHijosActivos(nodo).length > 0 || esRama(nodo)" 
-                  type="button" 
-                  class="node-toggle-btn"
-                  (click)="toggleNode(nodo.id)">
-                  <i class="bx" [ngClass]="isExpanded(nodo.id) ? 'bx-chevron-down' : 'bx-chevron-right'"></i>
-                </button>
-
-                <span class="node-toggle-placeholder" *ngIf="obtenerHijosActivos(nodo).length === 0 && !esRama(nodo)"></span>
-
-                <!-- Icon Badge -->
-                <div class="node-icon-badge" 
-                  [class.is-rama]="esRama(nodo)" 
-                  [class.is-sub]="depth > 0"
-                  [style.background]="!esRama(nodo) ? clasificarCuadrante(nodo.score || 4).bg : null" 
-                  [style.color]="!esRama(nodo) ? clasificarCuadrante(nodo.score || 4).text : null">
-                  <i class="bx" [ngClass]="esRama(nodo) ? 'bx-folder' : 'bx-tag'"></i>
-                </div>
-
-                <!-- Details -->
-                <div class="node-details">
-                  <span class="node-name-text">{{ nodo.nombre }}</span>
-
-                  <div class="node-meta-row">
-                    <!-- Type Badge -->
-                    <span *ngIf="esRama(nodo)" class="node-pill pill-rama">
-                      <i class="bx bx-folder"></i> Rama
-                    </span>
-
-                    <span *ngIf="!esRama(nodo)" class="node-pill" [style.background]="clasificarCuadrante(nodo.score || 4).bg" [style.color]="clasificarCuadrante(nodo.score || 4).text">
-                      <i class="bx {{ clasificarCuadrante(nodo.score || 4).icon }}"></i>
-                      {{ clasificarCuadrante(nodo.score || 4).label }}
-                    </span>
-
-
-                    <!-- Subcategories Count for branches -->
-                    <span *ngIf="esRama(nodo)" class="node-sub-count-badge">
-                      <i class="bx bx-git-branch"></i>
-                      <span>{{ obtenerHijosActivos(nodo).length }} subcategorías</span>
-                    </span>
-
-                    <!-- Hierarchy Level Badge if deeply nested -->
-                    <span *ngIf="depth > 1" class="node-depth-badge">
-                      Nivel {{ depth + 1 }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Right Actions & Ticket Count -->
-              <div class="node-right-group">
-                <!-- Ticket Count Chip -->
-                <div class="node-ticket-counter" [class.has-tickets]="obtenerConteoTickets(nodo, rootCat) > 0">
-                  <span class="ticket-count-num">{{ obtenerConteoTickets(nodo, rootCat) }}</span>
-                  <span class="ticket-count-label">tickets</span>
-                </div>
-
-                <!-- Actions Toolbar -->
-                <div class="node-actions-toolbar">
-                  <!-- Add Child Button (Any branch or leaf can have subcategories inside) -->
-                  <button 
-                    type="button" 
-                    class="btn-tree-action btn-add-child"
-                    (click)="abrirFormularioAgregarHijo(nodo)"
-                    pTooltip="Agregar subcategoría dentro" 
-                    tooltipPosition="top">
-                    <i class="bx bx-plus"></i>
-                    <span>Agregar dentro</span>
-                  </button>
-
-                  <!-- Edit Button -->
-                  <button 
-                    type="button" 
-                    class="btn-tree-action btn-edit-node"
-                    (click)="abrirFormularioEditar(nodo)"
-                    pTooltip="Editar nodo" 
-                    tooltipPosition="top">
-                    <i class="bx bx-edit-alt"></i>
-                    <span>Editar</span>
-                  </button>
-
-                  <!-- Delete Button -->
-                  <button 
-                    type="button" 
-                    class="btn-tree-action btn-delete-node"
-                    (click)="eliminarNodo(nodo)"
-                    pTooltip="Eliminar nodo" 
-                    tooltipPosition="top">
-                    <i class="bx bx-trash"></i>
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- Inline Edit Form for this Node -->
-          <div class="tree-inline-form-card is-nested my-2" *ngIf="openEditFormFor == nodo.id">
-            <div class="form-card-header">
-              <div class="form-title">
-                <i class="bx bx-edit-alt"></i>
-                <span>Editar: <b>{{ nodo.nombre }}</b></span>
-              </div>
-              <button type="button" class="btn-close-form" (click)="cancelarFormulario()">
-                <i class="bx bx-x"></i>
-              </button>
-            </div>
-
-            <div class="form-card-body">
-              <div class="form-group-custom mb-3">
-                <label class="form-label-custom">NOMBRE <span class="req">*</span></label>
-                <input type="text" [(ngModel)]="editForm.nombre" class="form-input-text" />
-              </div>
-
-              <!-- Only allow changing type if it doesn't currently have active children -->
-              <div class="form-group-custom mb-3" *ngIf="obtenerHijosActivos(nodo).length === 0">
-                <label class="form-label-custom">TIPO DE CATEGORÍA:</label>
-                <div class="type-selector-buttons">
-                  <button type="button" class="type-btn" [class.is-chosen]="editForm.tipo === 'rama'" (click)="editForm.tipo = 'rama'">
-                    <i class="bx bx-folder"></i>
-                    <div class="type-btn-texts"><b>Solo agrupar (Rama)</b></div>
-                  </button>
-                  <button type="button" class="type-btn" [class.is-chosen]="editForm.tipo === 'hoja'" (click)="editForm.tipo = 'hoja'">
-                    <i class="bx bx-tag"></i>
-                    <div class="type-btn-texts"><b>Categoría final (Recibe tickets)</b></div>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Matrix 3x3 Picker if editing as leaf -->
-              <div class="matrix-picker-section mt-3" *ngIf="editForm.tipo === 'hoja'">
-                <label class="form-label-custom">AJUSTAR CRITICIDAD Y TIEMPO OBJETIVO SLA (3×3):</label>
-                <div class="matrix-grid-picker">
-                  <div class="matrix-header-corner"></div>
-                  <div class="matrix-header-col" *ngFor="let col of MATRIZ_COLUMNAS">
-                    <span>{{ col.label }}</span>
-                  </div>
-
-                  <ng-container *ngFor="let row of MATRIZ_FILAS">
-                    <div class="matrix-header-row">
-                      <span>{{ row.label }}</span>
-                    </div>
-
-                    <div *ngFor="let col of MATRIZ_COLUMNAS" 
-                      class="matrix-cell-btn"
-                      [class.is-selected]="editForm.impacto === row.impacto && editForm.urgencia === col.urgencia"
-                      [style.background]="clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).bg"
-                      [style.color]="clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).text"
-                      (click)="seleccionarCeldaMatriz('edit', row.impacto, col.urgencia)">
-                      <b class="cell-sla-res">{{ clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).label }}</b>
-                      <span class="cell-q-label">Score {{ calcularScore(row.impacto, col.urgencia) }}</span>
-                    </div>
-                  </ng-container>
-                </div>
-
-                <div class="selected-sla-preview mt-2">
-                  <span class="preview-badge" [style.background]="clasificarCuadrante(calcularScore(editForm.impacto, editForm.urgencia)).bg" [style.color]="clasificarCuadrante(calcularScore(editForm.impacto, editForm.urgencia)).text">
-                    <i class="bx {{ clasificarCuadrante(calcularScore(editForm.impacto, editForm.urgencia)).icon }}"></i>
-                    <span>Prioridad: <b>{{ clasificarCuadrante(calcularScore(editForm.impacto, editForm.urgencia)).label }}</b></span>
-                  </span>
-                  <span class="preview-sla">
-                    Score: <b>{{ calcularScore(editForm.impacto, editForm.urgencia) }}</b> (Impacto {{ editForm.impacto }} × Urgencia {{ editForm.urgencia }})
-                  </span>
-                </div>
-              </div>
-
-              <div class="form-actions-footer mt-4">
-                <button type="button" class="btn-cancel-inline" (click)="cancelarFormulario()">Cancelar</button>
-                <button type="button" class="btn-save-inline" (click)="guardarEdicionNodo(nodo.id)">
-                  <i class="bx bx-check"></i>
-                  <span>Guardar Cambios</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Inline Add Child Form inside this node -->
-          <div class="tree-inline-form-card is-nested my-2" *ngIf="openAddFormFor == nodo.id">
-            <div class="form-card-header">
-              <div class="form-title">
-                <i class="bx bx-plus"></i>
-                <span>Agregar subcategoría dentro de <b>{{ nodo.nombre }}</b></span>
-              </div>
-              <button type="button" class="btn-close-form" (click)="cancelarFormulario()">
-                <i class="bx bx-x"></i>
-              </button>
-            </div>
-
-            <div class="form-card-body">
-              <div class="form-group-custom mb-3">
-                <label class="form-label-custom">NOMBRE DE LA SUBCATEGORÍA <span class="req">*</span></label>
-                <input type="text" [(ngModel)]="addForm.nombre" placeholder="Ej. Impresoras, Redes, Falla eléctrica..." class="form-input-text" autofocus />
-              </div>
-
-              <div class="form-group-custom mb-3">
-                <label class="form-label-custom">¿QUÉ TIPO DE SUBCATEGORÍA ES?</label>
-                <div class="type-selector-buttons">
-                  <button type="button" class="type-btn" [class.is-chosen]="addForm.tipo === 'rama'" (click)="addForm.tipo = 'rama'">
-                    <i class="bx bx-folder"></i>
-                    <div class="type-btn-texts">
-                      <b>Rama intermedia</b>
-                      <span>Tendrá más subcategorías dentro</span>
-                    </div>
-                  </button>
-
-                  <button type="button" class="type-btn" [class.is-chosen]="addForm.tipo === 'hoja'" (click)="addForm.tipo = 'hoja'">
-                    <i class="bx bx-tag"></i>
-                    <div class="type-btn-texts">
-                      <b>Categoría final (Recibe tickets)</b>
-                      <span>Tendrá SLA y criticidad fija</span>
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Matrix 3x3 Picker if child is leaf -->
-              <div class="matrix-picker-section mt-3" *ngIf="addForm.tipo === 'hoja'">
-                <label class="form-label-custom">CRITICIDAD Y TIEMPO OBJETIVO SLA (3×3):</label>
-                <div class="matrix-grid-picker">
-                  <div class="matrix-header-corner"></div>
-                  <div class="matrix-header-col" *ngFor="let col of MATRIZ_COLUMNAS">
-                    <span>{{ col.label }}</span>
-                  </div>
-
-                  <ng-container *ngFor="let row of MATRIZ_FILAS">
-                    <div class="matrix-header-row">
-                      <span>{{ row.label }}</span>
-                    </div>
-
-                    <div *ngFor="let col of MATRIZ_COLUMNAS" 
-                      class="matrix-cell-btn"
-                      [class.is-selected]="addForm.impacto === row.impacto && addForm.urgencia === col.urgencia"
-                      [style.background]="clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).bg"
-                      [style.color]="clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).text"
-                      (click)="seleccionarCeldaMatriz('add', row.impacto, col.urgencia)">
-                      <b class="cell-sla-res">{{ clasificarCuadrante(calcularScore(row.impacto, col.urgencia)).label }}</b>
-                      <span class="cell-q-label">Score {{ calcularScore(row.impacto, col.urgencia) }}</span>
-                    </div>
-                  </ng-container>
-                </div>
-
-                <div class="selected-sla-preview mt-2">
-                  <span class="preview-badge" [style.background]="clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).bg" [style.color]="clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).text">
-                    <i class="bx {{ clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).icon }}"></i>
-                    <span>Prioridad: <b>{{ clasificarCuadrante(calcularScore(addForm.impacto, addForm.urgencia)).label }}</b></span>
-                  </span>
-                  <span class="preview-sla">
-                    Score: <b>{{ calcularScore(addForm.impacto, addForm.urgencia) }}</b> (Impacto {{ addForm.impacto }} × Urgencia {{ addForm.urgencia }})
-                  </span>
-                </div>
-              </div>
-
-              <div class="form-actions-footer mt-4">
-                <button type="button" class="btn-cancel-inline" (click)="cancelarFormulario()">Cancelar</button>
-                <button type="button" class="btn-save-inline" (click)="guardarNuevoNodo(nodo.id)">
-                  <i class="bx bx-check"></i>
-                  <span>Agregar Subcategoría</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Recursive Children Branches -->
-          <div class="tree-children-wrapper" *ngIf="isExpanded(nodo.id) && obtenerHijosActivos(nodo).length > 0">
-            <div *ngFor="let hijo of obtenerHijosActivos(nodo)" class="tree-sub-block">
-              <ng-container *ngTemplateOutlet="nodeTemplate; context: { nodo: hijo, depth: depth + 1, rootCat: rootCat }"></ng-container>
-            </div>
-          </div>
-
-        </div>
-      </ng-template>
-
-      <!-- Root Nodes Loop -->
+      <!-- Iteración de Nodos Raíz -->
       <div *ngFor="let cat of categorias" class="tree-root-block mb-3">
-        <ng-container *ngTemplateOutlet="nodeTemplate; context: { nodo: cat, depth: 0, rootCat: cat }"></ng-container>
+        <app-nodo-arbol-categoria
+          [nodo]="cat"
+          [profundidad]="0"
+          [categoriaRaiz]="cat"
+          [estaExpandido]="estaExpandido(cat.id)"
+          [conteoTickets]="obtenerConteoTickets(cat, cat)"
+          [filtroTexto]="filtroTexto"
+          [idNodoEnEdicion]="idNodoEnEdicion"
+          [idNodoParaAgregar]="idNodoParaAgregar"
+          [nodosExpandidosIds]="nodosExpandidosIds"
+          (alternarNodo)="alternarNodo($event)"
+          (abrirCrearHijo)="abrirFormularioAgregarHijo($event)"
+          (abrirEditar)="abrirFormularioEditar($event)"
+          (eliminar)="eliminarNodo($event)"
+          (guardarHijo)="guardarNuevoNodo($event.parentId, $event.datos)"
+          (guardarEdicion)="guardarEdicionNodo($event.nodoId, $event.datos)"
+          (cancelarFormulario)="cancelarFormulario()">
+        </app-nodo-arbol-categoria>
       </div>
 
     </div>
@@ -573,8 +173,8 @@
   [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" 
   [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'300ms'" 
-  [hideTransitionOptions]="'300ms'"></p-toast>
+  [hideTransitionOptions]="'300ms'">
+</p-toast>
 
 <p-confirmDialog [style]="{ width: '450px' }">
 </p-confirmDialog>
-
