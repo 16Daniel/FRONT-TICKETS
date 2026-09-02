@@ -179,43 +179,7 @@ $rw-primary: #d3152a;
   .grupo-derecho-nodo {
     display: flex;
     align-items: center;
-    gap: 1.15rem;
-  }
-
-  .contador-tickets-nodo {
-    display: flex;
-    align-items: baseline;
-    gap: 0.3rem;
-    padding: 0.25rem 0.65rem;
-    border-radius: 10px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-
-    .numero-tickets {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #64748b;
-      font-family: monospace;
-    }
-
-    .etiqueta-tickets {
-      font-size: 0.725rem;
-      font-weight: 600;
-      color: #94a3b8;
-    }
-
-    &.tiene-tickets {
-      background-color: #fff1f2;
-      border-color: #fecdd3;
-
-      .numero-tickets {
-        color: $rw-primary;
-      }
-
-      .etiqueta-tickets {
-        color: #e11d48;
-      }
-    }
+    gap: 0.75rem;
   }
 
   .barra-acciones-nodo {

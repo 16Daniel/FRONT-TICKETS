@@ -60,14 +60,8 @@
         </div>
       </div>
 
-      <!-- Grupo Derecho: Contador de Tickets y Acciones -->
+      <!-- Grupo Derecho: Acciones -->
       <div class="grupo-derecho-nodo">
-        <!-- Contador de Tickets -->
-        <!-- <div class="contador-tickets-nodo" [class.tiene-tickets]="conteoTickets > 0">
-          <span class="numero-tickets">{{ conteoTickets }}</span>
-          <span class="etiqueta-tickets">tickets</span>
-        </div> -->
-
         <!-- Barra de Acciones -->
         <div class="barra-acciones-nodo">
           <!-- Botón Agregar Subcategoría -->
@@ -138,7 +132,6 @@
         [profundidad]="profundidad + 1"
         [categoriaRaiz]="categoriaRaiz"
         [estaExpandido]="hijoEstaExpandido(hijo.id)"
-        [conteoTickets]="conteoTickets"
         [filtroTexto]="filtroTexto"
         [idNodoEnEdicion]="idNodoEnEdicion"
         [idNodoParaAgregar]="idNodoParaAgregar"

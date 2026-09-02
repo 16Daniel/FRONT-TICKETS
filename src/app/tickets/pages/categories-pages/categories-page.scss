@@ -162,9 +162,9 @@ $rw-canvas: #f4f6fa;
     }
   }
 
-  &.card-total .kpi-icon-wrap {
-    background-color: #eff6ff;
-    color: #2563eb;
+  &.card-root .kpi-icon-wrap {
+    background-color: #fff1f2;
+    color: $rw-primary;
   }
 
   &.card-leaves .kpi-icon-wrap {
@@ -172,9 +172,9 @@ $rw-canvas: #f4f6fa;
     color: #ca8a04;
   }
 
-  &.card-tickets .kpi-icon-wrap {
-    background-color: #fff1f2;
-    color: $rw-primary;
+  &.card-total .kpi-icon-wrap {
+    background-color: #eff6ff;
+    color: #2563eb;
   }
 }
 

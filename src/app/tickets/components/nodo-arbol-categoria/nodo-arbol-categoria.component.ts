@@ -24,7 +24,6 @@ export class NodoArbolCategoriaComponent {
   @Input() profundidad: number = 0;
   @Input() categoriaRaiz!: Categoria;
   @Input() estaExpandido: boolean = false;
-  @Input() conteoTickets: number = 0;
   @Input() filtroTexto: string = '';
   @Input() idNodoEnEdicion: string | null = null;
   @Input() idNodoParaAgregar: string | null = null;

@@ -23,36 +23,36 @@
 
     <!-- Fila de Tarjetas KPI (Fuera del cuadro blanco) -->
     <div class="tree-kpi-grid mb-4">
-      <div class="tree-kpi-card card-total">
+      <div class="tree-kpi-card card-root">
         <div class="kpi-icon-wrap">
-          <i class="bx bx-git-repo-forked"></i>
+          <i class="bx bx-folder"></i>
         </div>
         <div class="kpi-info-wrap">
           <span class="kpi-label">Categorías Totales</span>
-          <span class="kpi-value">{{ totalCategorias }}</span>
-          <span class="kpi-sub">formadas en este árbol</span>
+          <span class="kpi-value">{{ totalCategoriasRaiz }}</span>
+          <span class="kpi-sub">en esta área operativa</span>
         </div>
       </div>
 
       <div class="tree-kpi-card card-leaves">
         <div class="kpi-icon-wrap">
-          <i class="bx bx-check-double"></i>
+          <i class="bx bx-tag"></i>
         </div>
         <div class="kpi-info-wrap">
-          <span class="kpi-label">Categorías Finales</span>
+          <span class="kpi-label">Hojas Finales</span>
           <span class="kpi-value">{{ totalCategoriasFinales }}</span>
-          <span class="kpi-sub">formadas en este árbol</span>
+          <span class="kpi-sub">reciben tickets asignados</span>
         </div>
       </div>
 
-      <div class="tree-kpi-card card-tickets">
+      <div class="tree-kpi-card card-total">
         <div class="kpi-icon-wrap">
-          <i class="bx bx-time-five"></i>
+          <i class="bx bx-layer"></i>
         </div>
         <div class="kpi-info-wrap">
-          <span class="kpi-label">Tickets Activos</span>
-          <span class="kpi-value">{{ totalTicketsActivos }}</span>
-          <span class="kpi-sub">formadas en este árbol</span>
+          <span class="kpi-label">Categorías Totales</span>
+          <span class="kpi-value">{{ totalCategorias }}</span>
+          <span class="kpi-sub">raíces, ramas y hojas</span>
         </div>
       </div>
     </div>
@@ -149,7 +149,6 @@
           [profundidad]="0"
           [categoriaRaiz]="cat"
           [estaExpandido]="estaExpandido(cat.id)"
-          [conteoTickets]="obtenerConteoTickets(cat, cat)"
           [filtroTexto]="filtroTexto"
           [idNodoEnEdicion]="idNodoEnEdicion"
           [idNodoParaAgregar]="idNodoParaAgregar"

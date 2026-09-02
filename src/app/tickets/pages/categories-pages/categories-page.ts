@@ -15,8 +15,6 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { CategoriesService } from '../../services/categories.service';
-import { TicketsService } from '../../services/tickets.service';
-import { Ticket } from '../../interfaces/ticket.model';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 
 import { TarjetaGuiaMatrizComponent } from '../../components/tarjeta-guia-matriz/tarjeta-guia-matriz.component';
@@ -48,7 +46,6 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
   areas: Area[] = [];
   areaSeleccionadaId: string = '1';
   categorias: Categoria[] = [];
-  tickets: Ticket[] = [];
   filtroTexto: string = '';
 
   mostrarGuiaMatriz: boolean = false;
@@ -59,13 +56,11 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
 
   private subscripcionAreas?: Subscription;
   private subscripcionCategorias?: Subscription;
-  private subscripcionTickets?: Subscription;
 
   constructor(
     private messageService: MessageService,
     private categoriesService: CategoriesService,
     private areasService: AreasService,
-    private ticketsService: TicketsService,
     private confirmationService: ConfirmationService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -77,13 +72,11 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     }
     this.cargarAreas();
     this.cargarCategorias();
-    this.cargarTickets();
   }
 
   ngOnDestroy(): void {
     this.subscripcionAreas?.unsubscribe();
     this.subscripcionCategorias?.unsubscribe();
-    this.subscripcionTickets?.unsubscribe();
   }
 
   /* Carga de Datos */
@@ -93,7 +86,6 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
       if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
         this.areaSeleccionadaId = String(this.areas[0].id);
         this.cargarCategorias();
-        this.cargarTickets();
       }
       this.cdr.detectChanges();
     });
@@ -108,17 +100,6 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar categorías:', err)
-    });
-  }
-
-  private cargarTickets(): void {
-    this.subscripcionTickets?.unsubscribe();
-    this.subscripcionTickets = this.ticketsService.get(this.areaSeleccionadaId).subscribe({
-      next: (tickets) => {
-        this.tickets = tickets.filter((t) => !t.eliminado);
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error('Error al cargar tickets:', err)
     });
   }
 
@@ -148,23 +129,15 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     this.idNodoEnEdicion = null;
     this.nodosExpandidosIds.clear();
     this.cargarCategorias();
-    this.cargarTickets();
   }
 
   get areaActual(): Area | undefined {
     return this.areas.find((a) => String(a.id) === this.areaSeleccionadaId);
   }
 
-  /* Estadísticas y Conteo */
-  get totalCategorias(): number {
-    const contar = (n: Categoria | Subcategoria): number => {
-      let c = 1;
-      if (n.subcategorias) {
-        n.subcategorias.filter((h) => !h.eliminado).forEach((h) => (c += contar(h)));
-      }
-      return c;
-    };
-    return this.categorias.reduce((acc, cat) => acc + contar(cat), 0);
+  /* Estadísticas y Conteo de Categorías */
+  get totalCategoriasRaiz(): number {
+    return this.categorias.filter((c) => !c.eliminado).length;
   }
 
   get totalCategoriasFinales(): number {
@@ -176,26 +149,15 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     return this.categorias.reduce((acc, cat) => acc + contarHojas(cat), 0);
   }
 
-  get totalTicketsActivos(): number {
-    return this.tickets.filter((t) => t.idEstatusTicket !== '3' && t.idEstatusTicket !== '5').length;
-  }
-
-  obtenerConteoTickets(nodo: Categoria | Subcategoria, categoriaRaiz: Categoria): number {
-    const recolectarIds = (n: Categoria | Subcategoria, acc: Set<string>): void => {
-      acc.add(String(n.id));
+  get totalCategorias(): number {
+    const contar = (n: Categoria | Subcategoria): number => {
+      let c = 1;
       if (n.subcategorias) {
-        n.subcategorias.filter((h) => !h.eliminado).forEach((h) => recolectarIds(h, acc));
+        n.subcategorias.filter((h) => !h.eliminado).forEach((h) => (c += contar(h)));
       }
+      return c;
     };
-    const ids = new Set<string>();
-    recolectarIds(nodo, ids);
-
-    return this.tickets.filter((t) => {
-      if (t.idEstatusTicket === '3' || t.idEstatusTicket === '5') return false;
-      if (t.idSubcategoria && ids.has(String(t.idSubcategoria))) return true;
-      if (String(t.idCategoria) === String(categoriaRaiz.id) && ids.has(String(categoriaRaiz.id))) return true;
-      return false;
-    }).length;
+    return this.categorias.reduce((acc, cat) => acc + contar(cat), 0);
   }
 
   /* Expansión del Árbol */
@@ -366,26 +328,19 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* Eliminación Recursiva Segura */
+  /* Eliminación Recursiva */
   eliminarNodo(nodo: Categoria | Subcategoria): void {
     const info = this.buscarInfoNodo(String(nodo.id));
     if (!info) return;
 
-    const ticketsAsociados = this.obtenerConteoTickets(nodo, info.categoriaRaiz);
-    if (ticketsAsociados > 0) {
-      this.confirmationService.confirm({
-        header: 'Categoría con tickets activos',
-        message: `Este nodo o sus subcategorías tienen ${ticketsAsociados} ticket(s) activo(s). No se puede eliminar.`,
-        icon: 'pi pi-exclamation-circle',
-        acceptLabel: 'Entendido',
-        rejectVisible: false
-      });
-      return;
-    }
+    const tieneHijos = info.nodo.subcategorias && info.nodo.subcategorias.some((s) => !s.eliminado);
+    const mensajeConfirmacion = tieneHijos
+      ? `¿Estás seguro de eliminar "${nodo.nombre}"? También se eliminarán sus subcategorías descendientes.`
+      : `¿Estás seguro de eliminar "${nodo.nombre}"?`;
 
     this.confirmationService.confirm({
       header: '¿Eliminar categoría?',
-      message: `¿Estás seguro de eliminar "${nodo.nombre}"?`,
+      message: mensajeConfirmacion,
       icon: 'pi pi-trash',
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
