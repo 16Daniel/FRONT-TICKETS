@@ -31,9 +31,27 @@ export class TicketsService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(ticket: Ticket) {
+  /**
+   * Elimina campos con valor undefined para evitar errores de Firestore:
+   * "Function updateDoc() called with invalid data. Unsupported field value: undefined"
+   */
+  private sanitizarParaFirestore(data: any): any {
+    if (!data || typeof data !== 'object') return data;
+    const limpio: any = Array.isArray(data) ? [] : {};
+    Object.keys(data).forEach((key) => {
+      const valor = data[key];
+      if (valor !== undefined) {
+        limpio[key] = valor;
+      }
+    });
+    return limpio;
+  }
+
+  async create(ticket: any) {
     const ref = collection(this.firestore, 'tickets');
-    const docRef = await addDoc(ref, ticket);
+    const ticketLimpio = this.sanitizarParaFirestore(ticket);
+    delete ticketLimpio.id;
+    const docRef = await addDoc(ref, ticketLimpio);
     return docRef.id;
   }
 
@@ -90,7 +108,9 @@ export class TicketsService {
     let collectionName = 'tickets';
     let docId = data.id;
     const documentRef = doc(this.firestore, `${collectionName}/${docId}`);
-    return updateDoc(documentRef, data);
+    const dataLimpia = this.sanitizarParaFirestore(data);
+    delete dataLimpia.id;
+    return updateDoc(documentRef, dataLimpia);
   }
 
   getByBranchId(idSucursal: string): Observable<any[]> {

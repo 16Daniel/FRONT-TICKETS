@@ -4,7 +4,8 @@ import {
   MATRIZ_FILAS,
   MATRIZ_COLUMNAS,
   calcularScore,
-  clasificarCuadrante
+  clasificarCuadrante,
+  obtenerTiempoSla
 } from '../../helpers/matriz-criticidad.helper';
 import { CuadranteInfo } from '../../interfaces/cuadrante-info.interface';
 import { EventoSeleccionMatriz } from '../../interfaces/evento-seleccion-matriz.interface';
@@ -26,6 +27,7 @@ export class SelectorMatrizCriticidadComponent {
   readonly MATRIZ_COLUMNAS = MATRIZ_COLUMNAS;
   readonly calcularScore = calcularScore;
   readonly clasificarCuadrante = clasificarCuadrante;
+  readonly obtenerTiempoSla = obtenerTiempoSla;
 
   seleccionar(imp: number, urg: number): void {
     this.impacto = imp;
@@ -46,5 +48,9 @@ export class SelectorMatrizCriticidadComponent {
 
   get cuadranteActual(): CuadranteInfo {
     return clasificarCuadrante(this.scoreActual);
+  }
+
+  get tiempoSlaActual(): { horas: number; label: string } {
+    return obtenerTiempoSla(this.impacto, this.urgencia);
   }
 }

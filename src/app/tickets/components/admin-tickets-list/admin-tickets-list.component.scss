@@ -9,8 +9,9 @@
   /* Separate table cells to turn each row into a floating card */
   .p-datatable-table {
     border-collapse: separate !important;
-    border-spacing: 0 0.55rem !important;
+    border-spacing: 0 0.35rem !important;
     background: transparent !important;
+    height: auto !important;
   }
 
   .p-datatable-thead > tr > th {
@@ -19,7 +20,7 @@
     font-size: 0.725rem !important;
     font-weight: 800 !important;
     letter-spacing: 0.06em !important;
-    padding: 0.5rem 0.75rem !important;
+    padding: 0.4rem 0.65rem !important;
     border: none !important;
     text-align: center !important;
   }
@@ -27,28 +28,30 @@
   /* Floating Card Rows */
   .p-datatable-tbody > tr {
     background: #ffffff !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    height: auto !important;
 
     > td {
-      padding: 0.75rem 0.65rem !important;
-      font-size: 0.85rem !important;
+      padding: 0.4rem 0.65rem !important;
+      font-size: 0.825rem !important;
       color: #1e293b !important;
       border-top: 1px solid #e2e8f0 !important;
       border-bottom: 1px solid #e2e8f0 !important;
       border-left: none !important;
       border-right: none !important;
       vertical-align: middle !important;
+      height: auto !important;
 
       &:first-child {
-        border-top-left-radius: 14px !important;
-        border-bottom-left-radius: 14px !important;
+        border-top-left-radius: 10px !important;
+        border-bottom-left-radius: 10px !important;
         border-left: 1px solid #e2e8f0 !important;
       }
 
       &:last-child {
-        border-top-right-radius: 14px !important;
-        border-bottom-right-radius: 14px !important;
+        border-top-right-radius: 10px !important;
+        border-bottom-right-radius: 10px !important;
         border-right: 1px solid #e2e8f0 !important;
       }
     }
@@ -156,4 +159,99 @@
 
 .texto-negro {
   color: #4b5563 !important;
+}
+
+/* ==========================================================================
+   Mini Matriz 3x3 y Badge de Criticidad en Tabla de Tickets
+   ========================================================================== */
+.celda-criticidad-matriz {
+  padding: 0.5rem 0.65rem !important;
+  // min-width: 140px;
+}
+
+.contenedor-criticidad-celda {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.mini-matriz-wrapper {
+  cursor: help;
+  display: inline-flex;
+  padding: 3.5px;
+  border-radius: 7px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.mini-matriz-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 9px);
+  grid-template-rows: repeat(3, 9px);
+  gap: 2.5px;
+}
+
+.celda-mm {
+  width: 9px;
+  height: 9px;
+  border-radius: 2.5px;
+  background-color: #e2e8f0;
+  transition: all 0.15s ease;
+
+  &.activa {
+    box-shadow: 0 0 0 1.5px #ffffff, 0 0 0 2.5px #0f172a;
+  }
+}
+
+.badge-prioridad-cuadrante {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+
+  &.cuadrante-critico {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+  }
+
+  &.cuadrante-alto {
+    background-color: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fcd34d;
+  }
+
+  &.cuadrante-medio {
+    background-color: #fef9c3;
+    color: #a16207;
+    border: 1px solid #fde047;
+  }
+
+  &.cuadrante-bajo {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+  }
+}
+
+.badge-especialista {
+  background-color: #ffffff;
+  color: #ef4444;
+  font-size: 1rem;
+  font-weight: 800;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  padding: 0 4px;
 }

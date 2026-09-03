@@ -261,7 +261,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           tipo: datos.tipo,
           urgencia: datos.urgencia,
           score: datos.score,
-          criticidad: datos.score,
+          criticidad: datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2),
           prioridad: datos.prioridad as any
         };
         await this.categoriesService.create(nuevaCat);
@@ -281,7 +281,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           ...(datos.tipo === 'hoja' ? {
             urgencia: datos.urgencia,
             score: datos.score,
-            criticidad: datos.score,
+            criticidad: datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2),
             prioridad: datos.prioridad as any
           } : {})
         };
@@ -310,7 +310,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
       if (datos.tipo === 'hoja') {
         objetivo.urgencia = datos.urgencia;
         objetivo.score = datos.score;
-        objetivo.criticidad = datos.score;
+        objetivo.criticidad = datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
         objetivo.prioridad = datos.prioridad as any;
       } else {
         objetivo.activarSubcategorias = true;

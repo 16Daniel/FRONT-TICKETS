@@ -1,12 +1,10 @@
 <p-table *ngIf="usuariosHelp.length>0" [value]="tickets" [tableStyle]="{
-    'min-width': '10rem',
-    padding: '10px',
-    'min-height': '500px'
+    'min-width': '10rem'
   }" styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="65vh" selectionMode="single"
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th><i class="bx bx-slider-alt text-muted fs-5" title="Prioridad"></i></th>
+            <th>CRITICIDAD</th>
             <th>FOLIO</th>
             <th>FECHA</th>
             <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
@@ -23,16 +21,28 @@
     <ng-template pTemplate="body" let-tk>
         <tr [pSelectableRow]="tk" class="bg-opacity-25"
             [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
-            <td class="text-center">
-                <i *ngIf="!tk.esAsignadoEspecialista && tk.idPrioridadTicket != '1'" class="bx bxs-circle bx-sm"
-                    [style]="{ color: obtenerBackgroundColorPrioridad(tk.idPrioridadTicket) }">
-                </i>
-                <i class="bx bxs-hot bx-sm" style="color: red"
-                    *ngIf="tk.idPrioridadTicket == '1' && !tk.esAsignadoEspecialista"></i>
+            <td class="text-center celda-criticidad-matriz">
+                <div class="contenedor-criticidad-celda">
+                    <!-- Mini Matriz 3x3 -->
+                    <div class="mini-matriz-wrapper" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
+                        <div class="mini-matriz-grid">
+                            <span *ngFor="let celda of celdasMatriz"
+                                class="celda-mm"
+                                [class.activa]="esCeldaActiva(tk, celda.impacto, celda.urgencia)"
+                                [style.backgroundColor]="esCeldaActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatriz(tk) : ''">
+                            </span>
+                        </div>
+                    </div>
 
-                <div *ngIf="tk.esAsignadoEspecialista" ticket.esAsignadoEspecialista
-                    [pTooltip]="obtenerNombreResponsable(tk.idUsuarioEspecialista)" tooltipPosition="top"
-                    style="margin: 2px; background-color: white; color: red; font-size: 1.5em;"> ✚
+                    <!-- Badge de Prioridad del Cuadrante -->
+                    <!-- <span class="badge-prioridad-cuadrante" [ngClass]="obtenerClaseCuadrante(tk)">
+                        {{ obtenerNombrePrioridad(tk) }}
+                    </span> -->
+
+                    <div *ngIf="tk.esAsignadoEspecialista"
+                        [pTooltip]="obtenerNombreResponsable(tk.idUsuarioEspecialista)" tooltipPosition="top"
+                        class="badge-especialista"> ✚
+                    </div>
                 </div>
             </td>
             <td class="text-center fw-bold">{{tk.folio}}</td>
@@ -166,7 +176,7 @@
                         (click)="abrirModalDetalleTicket(tk)">
                         <i class="bx bx-show"></i>
                     </button>
-                    <button *ngIf="(tk != undefined && tk!.idPrioridadTicket != '1')" class="btn btn-dark btn-sm rounded-2"
+                    <button *ngIf="(tk != undefined && obtenerNombrePrioridad(tk) != 'CRÍTICO')" class="btn btn-dark btn-sm rounded-2"
                         (click)="onPanicoClick(tk!.id)">
                         <i class="bx bxs-hot text-white" pTooltip="PÁNICO" tooltipPosition="top"></i>
                     </button>

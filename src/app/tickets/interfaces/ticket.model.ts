@@ -12,7 +12,10 @@ export class Ticket {
   idSubcategoria: string | null = null;
   idTipoSoporte: string | null = '';
   idEstatusTicket: string = '1';
-  idPrioridadTicket: string = '';
+  criticidad?: number;
+  urgencia?: number;
+  score?: number;
+  idPrioridadTicket?: string;
   fecha: Timestamp | any = new Date();
   fechaEstimacion: Timestamp | any;
   fechaFin: Timestamp | null = null;

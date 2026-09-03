@@ -1,0 +1,434 @@
+$rw-primary: #d3152a;
+$rw-accent: #fdb813;
+$rw-dark: #1e1e24;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.selector-arbol-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Cabecera y Migas de Pan (Breadcrumbs)
+   ========================================================================== */
+.navegador-cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  .etiqueta-campo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #334155;
+    letter-spacing: -0.01em;
+
+    i {
+      color: $rw-primary;
+      font-size: 1.05rem;
+    }
+  }
+
+  .miga-pan-contenedor {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.2rem 0;
+  }
+
+  .miga-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 0.775rem;
+    font-weight: 600;
+    padding: 0.2rem 0.45rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    i {
+      font-size: 0.85rem;
+    }
+
+    &:hover {
+      background-color: #f1f5f9;
+      color: $rw-primary;
+    }
+
+    &.es-activo {
+      color: #0f172a;
+      font-weight: 700;
+      background-color: #f8fafc;
+    }
+  }
+
+  .miga-separador {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    user-select: none;
+  }
+}
+
+/* ==========================================================================
+   Buscador Predictivo
+   ========================================================================== */
+.buscador-caja {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .icono-buscador {
+    position: absolute;
+    left: 0.85rem;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    pointer-events: none;
+  }
+
+  .input-buscador {
+    width: 100%;
+    padding: 0.55rem 2.2rem 0.55rem 2.4rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #1e293b;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+
+    &::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $rw-primary;
+      box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+    }
+  }
+
+  .btn-limpiar-busqueda {
+    position: absolute;
+    right: 0.65rem;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.15rem;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: #334155;
+    }
+  }
+}
+
+/* ==========================================================================
+   Lista de Navegación del Árbol
+   ========================================================================== */
+.lista-navegacion-arbol {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 6px;
+  }
+}
+
+.fila-nodo-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.95rem;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  &.esta-seleccionado {
+    background-color: #fff1f2;
+    border-color: #fecdd3;
+
+    .nodo-nombre {
+      color: $rw-primary;
+      font-weight: 700;
+    }
+  }
+
+  .nodo-info-principal {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex: 1;
+    min-width: 0;
+
+    .icono-tipo-rama {
+      font-size: 1.15rem;
+      color: #64748b;
+      flex-shrink: 0;
+    }
+
+    .icono-tipo-hoja {
+      font-size: 1.05rem;
+      color: $rw-primary;
+      flex-shrink: 0;
+    }
+
+    .nodo-nombre {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nodo-ruta-padre {
+      font-size: 0.725rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-left: 0.35rem;
+    }
+  }
+
+  .nodo-metadatos {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+
+    .conteo-hijos-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+    }
+
+    .icono-flecha-rama {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      transition: transform 0.15s ease;
+    }
+  }
+
+  &.es-carpeta:hover .icono-flecha-rama {
+    transform: translateX(2px);
+    color: #334155;
+  }
+}
+
+.estado-vacio-arbol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  color: #94a3b8;
+  text-align: center;
+  gap: 0.35rem;
+
+  i {
+    font-size: 1.75rem;
+    color: #cbd5e1;
+  }
+
+  p {
+    font-size: 0.825rem;
+    margin: 0;
+  }
+}
+
+/* ==========================================================================
+   Insignias de Prioridad
+   ========================================================================== */
+.insignia-prioridad {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.675rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+
+  &.prioridad-critico {
+    background-color: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
+  }
+
+  &.prioridad-alto {
+    background-color: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+  }
+
+  &.prioridad-medio {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+  }
+
+  &.prioridad-bajo {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+  }
+}
+
+/* ==========================================================================
+   Ficha de Previsualización (Preview Box)
+   ========================================================================== */
+.ficha-previsualizacion {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  padding: 0.65rem 0.95rem;
+  transition: all 0.2s ease;
+
+  .ficha-vacia {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.775rem;
+    color: #94a3b8;
+    font-weight: 500;
+
+    i {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+    }
+  }
+
+  &.tiene-seleccion {
+    border-color: #cbd5e1;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+    &.prioridad-critico {
+      background-color: #fff1f2;
+      border-color: #fecdd3;
+    }
+
+    &.prioridad-alto {
+      background-color: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    &.prioridad-medio {
+      background-color: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    &.prioridad-bajo {
+      background-color: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+  }
+
+  .ficha-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .ficha-superior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+
+    .ficha-etiqueta-ruta {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #0f172a;
+
+      i {
+        color: $rw-primary;
+        font-size: 1.1rem;
+      }
+    }
+
+    .btn-deseleccionar {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 1.15rem;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: #0f172a;
+      }
+    }
+  }
+
+  .ficha-inferior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.775rem;
+
+    .ficha-prioridad-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+
+      .ficha-titulo-prioridad {
+        font-weight: 600;
+        color: #64748b;
+      }
+    }
+  }
+}

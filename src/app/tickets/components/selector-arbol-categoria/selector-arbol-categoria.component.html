@@ -1,0 +1,146 @@
+<div class="selector-arbol-wrapper">
+  
+  <!-- Encabezado del Navegador de Categorías -->
+  <div class="navegador-cabecera">
+    <div class="etiqueta-campo">
+      <i class="bx bx-git-repo-forked"></i>
+      <span>Categoría — recorre el árbol o busca</span>
+    </div>
+
+    <!-- Fila de Migas de Pan (Breadcrumbs) si no hay búsqueda activa -->
+    <div class="miga-pan-contenedor" *ngIf="!busquedaTexto.trim()">
+      <button 
+        type="button" 
+        class="miga-item" 
+        [class.es-activo]="rutaNavegacionIds.length === 0"
+        (click)="navegarNivel(-1)">
+        <i class="bx bx-home-alt"></i>
+        <span>Inicio</span>
+      </button>
+
+      <ng-container *ngFor="let paso of obtenerRutaActual(); let i = index">
+        <span class="miga-separador">›</span>
+        <button 
+          type="button" 
+          class="miga-item"
+          [class.es-activo]="i === rutaNavegacionIds.length - 1"
+          (click)="navegarNivel(i)">
+          {{ paso.nombre }}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Buscador Predictivo -->
+  <div class="buscador-caja">
+    <i class="bx bx-search icono-buscador"></i>
+    <input 
+      type="text" 
+      class="input-buscador" 
+      placeholder="Buscar categoría… (ej. impresora, terminal, fuga)"
+      [(ngModel)]="busquedaTexto"
+      name="busquedaCategoria">
+    <button 
+      *ngIf="busquedaTexto.trim()" 
+      type="button" 
+      class="btn-limpiar-busqueda" 
+      (click)="busquedaTexto = ''"
+      title="Limpiar búsqueda">
+      <i class="bx bx-x"></i>
+    </button>
+  </div>
+
+  <!-- Lista de Navegación del Árbol -->
+  <div class="lista-navegacion-arbol">
+
+    <!-- Modo 1: Resultados de Búsqueda Rápida -->
+    <ng-container *ngIf="busquedaTexto.trim()">
+      <div *ngIf="obtenerResultadosBusqueda().length === 0" class="estado-vacio-arbol">
+        <i class="bx bx-search-alt"></i>
+        <p>No se encontraron categorías para "{{ busquedaTexto }}"</p>
+      </div>
+
+      <div 
+        *ngFor="let item of obtenerResultadosBusqueda()" 
+        class="fila-nodo-nav es-hoja"
+        [class.esta-seleccionado]="estaNodoSeleccionado(item.nodo.id)"
+        (click)="seleccionarHoja(item.nodo, item.categoriaRaiz, item.rutaIds)">
+        <div class="nodo-info-principal">
+          <i class="bx bx-tag icono-tipo-hoja"></i>
+          <span class="nodo-nombre">{{ item.nodo.nombre }}</span>
+          <span class="nodo-ruta-padre">{{ item.rutaCompleta }}</span>
+        </div>
+        <div class="nodo-metadatos">
+          <span class="insignia-prioridad" [ngClass]="obtenerClasePrioridad(item.nodo.prioridad)">
+            {{ item.nodo.prioridad || 'Medio' }}
+          </span>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Modo 2: Exploración Jerárquica del Árbol -->
+    <ng-container *ngIf="!busquedaTexto.trim()">
+      <div *ngIf="obtenerHijosNivelActual().length === 0" class="estado-vacio-arbol">
+        <i class="bx bx-folder-open"></i>
+        <p>No hay categorías en este nivel</p>
+      </div>
+
+      <div 
+        *ngFor="let n of obtenerHijosNivelActual()" 
+        class="fila-nodo-nav"
+        [class.es-carpeta]="esRama(n)"
+        [class.es-hoja]="!esRama(n)"
+        [class.esta-seleccionado]="estaNodoSeleccionado(n.id)"
+        (click)="esRama(n) ? profundizarRama(n) : seleccionarHoja(n)">
+        
+        <!-- Icono + Nombre -->
+        <div class="nodo-info-principal">
+          <i class="bx" [ngClass]="esRama(n) ? 'bx-folder icono-tipo-rama' : 'bx-tag icono-tipo-hoja'"></i>
+          <span class="nodo-nombre">{{ n.nombre }}</span>
+        </div>
+
+        <!-- Indicador Derecho -->
+        <div class="nodo-metadatos">
+          <span *ngIf="esRama(n)" class="conteo-hijos-badge">
+            {{ (n.subcategorias || []).length }} subcat.
+          </span>
+          <i *ngIf="esRama(n)" class="bx bx-chevron-right icono-flecha-rama"></i>
+
+          <span *ngIf="!esRama(n)" class="insignia-prioridad" [ngClass]="obtenerClasePrioridad(n.prioridad)">
+            {{ n.prioridad || 'Medio' }}
+          </span>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+
+  <!-- Ficha de Previsualización de la Categoría Seleccionada -->
+  <div class="ficha-previsualizacion" [class.tiene-seleccion]="!!nodoSeleccionado" [ngClass]="obtenerClasePrioridad(nodoSeleccionado?.prioridad)">
+    <div class="ficha-contenido" *ngIf="nodoSeleccionado">
+      <div class="ficha-superior">
+        <div class="ficha-etiqueta-ruta">
+          <i class="bx bx-check-circle"></i>
+          <span>{{ nodoSeleccionado.rutaCompleta }}</span>
+        </div>
+        <button type="button" class="btn-deseleccionar" (click)="limpiarSeleccion()" title="Cambiar categoría">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="ficha-inferior">
+        <div class="ficha-prioridad-wrap">
+          <span class="ficha-titulo-prioridad">Prioridad sugerida:</span>
+          <span class="insignia-prioridad" [ngClass]="obtenerClasePrioridad(nodoSeleccionado.prioridad)">
+            {{ nodoSeleccionado.prioridad || 'Medio' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha-vacia" *ngIf="!nodoSeleccionado">
+      <i class="bx bx-info-circle"></i>
+      <span>Elige una categoría del árbol para clasificar el ticket</span>
+    </div>
+  </div>
+
+</div>

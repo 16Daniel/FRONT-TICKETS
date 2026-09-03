@@ -39,6 +39,20 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       this.urgencia = this.nodoEditar.urgencia || 2;
       this.score = this.nodoEditar.score || 4;
       this.prioridad = this.nodoEditar.prioridad || 'Medio';
+
+      // Resolver impacto/criticidad (1, 2 o 3)
+      let imp = (this.nodoEditar as any).impacto || this.nodoEditar.criticidad;
+      if (!imp || imp > 3) {
+        if (this.nodoEditar.score && this.nodoEditar.urgencia) {
+          imp = Math.round(this.nodoEditar.score / this.nodoEditar.urgencia);
+        } else if (this.nodoEditar.prioridad) {
+          const p = this.nodoEditar.prioridad.toUpperCase();
+          imp = p.includes('CRÍT') || p.includes('CRIT') ? 3 : p.includes('ALT') ? 3 : p.includes('MED') ? 2 : 1;
+        } else {
+          imp = 2;
+        }
+      }
+      this.impacto = Math.min(3, Math.max(1, imp || 2));
     } else if (this.modo === 'crear-hijo') {
       this.tipo = 'hoja';
     }
@@ -58,6 +72,8 @@ export class FormularioNodoCategoriaComponent implements OnInit {
     this.guardar.emit({
       nombre: nombreLimpio,
       tipo: this.tipo,
+      impacto: this.tipo === 'hoja' ? this.impacto : undefined,
+      criticidad: this.tipo === 'hoja' ? this.impacto : undefined,
       urgencia: this.tipo === 'hoja' ? this.urgencia : undefined,
       score: this.tipo === 'hoja' ? this.score : undefined,
       prioridad: this.tipo === 'hoja' ? this.prioridad : undefined
