@@ -20,6 +20,7 @@ import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-n
 import { TarjetaGuiaMatrizComponent } from '../../components/tarjeta-guia-matriz/tarjeta-guia-matriz.component';
 import { FormularioNodoCategoriaComponent } from '../../components/formulario-nodo-categoria/formulario-nodo-categoria.component';
 import { NodoArbolCategoriaComponent } from '../../components/nodo-arbol-categoria/nodo-arbol-categoria.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-categories-page',
@@ -34,7 +35,8 @@ import { NodoArbolCategoriaComponent } from '../../components/nodo-arbol-categor
     InputTextModule,
     TarjetaGuiaMatrizComponent,
     FormularioNodoCategoriaComponent,
-    NodoArbolCategoriaComponent
+    NodoArbolCategoriaComponent,
+    PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './categories-page.html',

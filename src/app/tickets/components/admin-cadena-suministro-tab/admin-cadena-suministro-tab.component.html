@@ -1,12 +1,8 @@
 <div class="tickets-tab-container">
 
-  <!-- Top Bar: Title & User Badge -->
-  <div class="tickets-top-bar">
+  <!-- Top Bar: User Badge -->
+  <div class="tickets-top-bar" *ngIf="usergroup">
     <div class="header-title-group">
-      <h2 class="header-main-title">
-        <i class="bx bx-purchase-tag-alt"></i>
-        <span>TICKETS</span>
-      </h2>
 
       <span class="user-group-badge" *ngIf="usergroup">
         <i class="bx bxs-user"></i>

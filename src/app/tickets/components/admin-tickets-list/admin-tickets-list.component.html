@@ -53,7 +53,8 @@
                     (onSelect)="ManejadorDeFecha($event,tk)"
                     placeholder="{{datesHelper.getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
                     title="{{datesHelper.getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
-                    styleClass="table-calendar-custom" />
+                    styleClass="table-calendar-custom"
+                    appendTo="body" />
             </td>
             <td class="text-center">
                 <p-dropdown 
@@ -64,7 +65,8 @@
                     optionValue="id" 
                     [disabled]="true" 
                     (onChange)="actualizaTicket(tk)" 
-                    styleClass="table-select-custom">
+                    styleClass="table-select-custom"
+                    appendTo="body">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <span>{{ selectedOption?.nombre }}</span>
                     </ng-template>
@@ -81,7 +83,8 @@
                     [showClear]="false"
                     optionValue="id" 
                     styleClass="table-select-custom" 
-                    (onChange)="actualizaTicket(tk)">
+                    (onChange)="actualizaTicket(tk)"
+                    appendTo="body">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <span>{{ selectedOption?.nombre || selectedOption?.name }}</span>
                     </ng-template>
@@ -98,7 +101,8 @@
                     [showClear]="false" 
                     optionValue="id" 
                     styleClass="table-select-custom"
-                    (onChange)="actualizaTicket(tk)">
+                    (onChange)="actualizaTicket(tk)"
+                    appendTo="body">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <span>{{ selectedOption?.nombre || selectedOption?.name || 'SELECCIONAR' }}</span>
                     </ng-template>
@@ -115,7 +119,8 @@
                     [showClear]="false" 
                     optionValue="id" 
                     (onChange)="actualizarEstatus(tk, $event.value)" 
-                    styleClass="table-select-custom">
+                    styleClass="table-select-custom"
+                    appendTo="body">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <div class="d-flex align-items-center gap-1 justify-content-center">
                             <i class="bx {{ selectedOption?.icon }} {{ selectedOption?.animation }}" [style.color]="selectedOption?.color"></i>
@@ -142,7 +147,8 @@
                     optionValue="id"
                     [showClear]="false" 
                     (onChange)="actualizaTicket(tk)" 
-                    styleClass="table-select-custom">
+                    styleClass="table-select-custom"
+                    appendTo="body">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <span>{{ selectedOption?.name || selectedOption?.nombre }}</span>
                     </ng-template>

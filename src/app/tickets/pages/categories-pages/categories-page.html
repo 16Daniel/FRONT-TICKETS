@@ -1,24 +1,23 @@
 <div class="categories-tree-page-wrapper">
   <div class="categories-content-container">
 
-    <!-- Barra Selector de Áreas por Chips -->
-    <div class="areas-selector-bar mb-4">
-      <div class="selector-header-title">
-        <span class="sub-title">Árbol de Categorías & Constructor</span>
-        <h2 class="main-title">Configuración por Área Operativa</h2>
-      </div>
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Árbol de Categorías & Constructor" 
+      title="Configuración por Área Operativa">
+    </app-page-header>
 
-      <div class="areas-chips-track">
-        <button 
-          *ngFor="let area of areas" 
-          type="button" 
-          class="chip-area-pill"
-          [class.is-active]="String(area.id) === areaSeleccionadaId"
-          (click)="cambiarArea(area.id)">
-          <span class="area-dot"></span>
-          <span class="area-name">{{ area.nombre }}</span>
-        </button>
-      </div>
+    <!-- Barra Selector de Áreas por Chips (debajo del título) -->
+    <div class="areas-chips-track mb-4">
+      <button 
+        *ngFor="let area of areas" 
+        type="button" 
+        class="chip-area-pill"
+        [class.is-active]="String(area.id) === areaSeleccionadaId"
+        (click)="cambiarArea(area.id)">
+        <span class="area-dot"></span>
+        <span class="area-name">{{ area.nombre }}</span>
+      </button>
     </div>
 
     <!-- Fila de Tarjetas KPI (Fuera del cuadro blanco) -->
