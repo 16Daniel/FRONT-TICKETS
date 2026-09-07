@@ -210,6 +210,25 @@
   }
 }
 
+.mini-matriz-2x2-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 14px);
+  grid-template-rows: repeat(2, 14px);
+  gap: 2.5px;
+}
+
+.celda-mm-2x2 {
+  width: 14px;
+  height: 14px;
+  border-radius: 2.5px;
+  background-color: #e2e8f0;
+  transition: all 0.15s ease;
+
+  &.activa {
+    box-shadow: 0 0 0 1.5px #ffffff, 0 0 0 2.5px #0f172a;
+  }
+}
+
 .badge-prioridad-cuadrante {
   font-size: 0.7rem;
   font-weight: 800;
@@ -254,4 +273,124 @@
   border: 1px solid #fee2e2;
   border-radius: 6px;
   padding: 0 4px;
+}
+
+/* ==========================================================================
+   Columna CATEGORÍA / RUTA - Chip Interactivo
+   ========================================================================== */
+.celda-categoria-ruta {
+  padding: 0.35rem 0.5rem !important;
+  min-width: 170px;
+  max-width: 250px;
+}
+
+.btn-categoria-ruta-chip {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    border-color: #94a3b8;
+    background-color: #f8fafc;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+
+    .icono-dropdown-cambio {
+      color: #2563eb;
+      transform: translateY(1px);
+    }
+  }
+
+  .categoria-chip-body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    line-height: 1.25;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .categoria-chip-trail {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.68rem;
+    color: #64748b;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    i {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .trail-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .categoria-chip-hoja {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.785rem;
+    font-weight: 700;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    i {
+      font-size: 0.82rem;
+      color: #0284c7;
+      flex-shrink: 0;
+    }
+
+    .hoja-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .icono-dropdown-cambio {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+}
+
+::ng-deep .dialog-cambiar-categoria {
+  .p-dialog-header {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+    font-weight: 700;
+  }
+
+  .p-dialog-content {
+    padding: 1.25rem;
+    background: #ffffff;
+  }
+
+  .p-dialog-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 0.75rem 1.25rem;
+    background: #f8fafc;
+  }
 }

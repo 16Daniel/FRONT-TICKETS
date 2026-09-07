@@ -33,6 +33,10 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
+import { DialogModule } from 'primeng/dialog';
+import { SelectorArbolCategoriaComponent } from '../selector-arbol-categoria/selector-arbol-categoria.component';
+import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
+
 @Component({
   selector: 'app-admin-tickets-list',
   standalone: true,
@@ -48,7 +52,9 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     ConfirmDialogModule,
     ModalTicketDetailComponent,
     TooltipModule,
-    CalendarModule
+    CalendarModule,
+    DialogModule,
+    SelectorArbolCategoriaComponent
   ],
   templateUrl: './admin-tickets-list.component.html',
   styleUrl: './admin-tickets-list.component.scss',
@@ -71,6 +77,11 @@ export class AdminTicketsListComponent {
   mostrarModalTicketDetail: boolean = false;
   mostrarModalValidarTicket: boolean = false;
   showModalChatTicket: boolean = false;
+  mostrarModalCambiarCategoria: boolean = false;
+  ticketEnCambioCategoria: Ticket | null = null;
+  nuevaSeleccionCategoria: SeleccionArbolCategoria | null = null;
+  private rutaCache = new WeakMap<Ticket, { key: string; info: { ruta: string; categoriaRaiz: string; rutaPadres: string; hoja: string } }>();
+
   areas: Area[] = [];
   ticket: Ticket | undefined;
   ticketAccion: Ticket | any;
@@ -213,12 +224,12 @@ export class AdminTicketsListComponent {
     const cat = this.categorias.find(x => String(x.id) === String(ticket.idCategoria));
     const nombreCategoria = cat?.nombre || ticket.nombreCategoria || '';
 
-    let nombreSubcategoria = '';
+    let nombreSubcategoria = ticket.nombreSubcategoria || '';
     if (cat?.subcategorias && ticket.idSubcategoria) {
-      const sub = cat.subcategorias.find(x => String(x.id) === String(ticket.idSubcategoria));
-      nombreSubcategoria = sub?.nombre || ticket.nombreSubcategoria || '';
-    } else {
-      nombreSubcategoria = ticket.nombreSubcategoria || '';
+      const sub = this.buscarSubcategoriaRecursiva(cat.subcategorias, String(ticket.idSubcategoria));
+      if (sub?.nombre) {
+        nombreSubcategoria = sub.nombre;
+      }
     }
 
     ticket = {
@@ -349,6 +360,13 @@ export class AdminTicketsListComponent {
     { impacto: 1, urgencia: 3 }, { impacto: 1, urgencia: 2 }, { impacto: 1, urgencia: 1 }
   ];
 
+  readonly celdasMatrizAtencion: Array<{ prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'; color: string }> = [
+    { prioridad: 'Crítico', color: '#EF4444' },
+    { prioridad: 'Alto', color: '#EA580C' },
+    { prioridad: 'Bajo', color: '#10B981' },
+    { prioridad: 'Medio', color: '#EAB308' }
+  ];
+
   obtenerCoordenadasTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
     // 1. Si el ticket tiene criticidad y urgencia guardados directamente
     if (tk.criticidad && tk.urgencia) {
@@ -396,7 +414,7 @@ export class AdminTicketsListComponent {
       const cat = this.categorias.find(c => String(c.id) === String(tk.idCategoria));
       if (cat) {
         if (tk.idSubcategoria && cat.subcategorias) {
-          const sub = cat.subcategorias.find(s => String(s.id) === String(tk.idSubcategoria));
+          const sub = this.buscarSubcategoriaRecursiva(cat.subcategorias, String(tk.idSubcategoria));
           if (sub && (sub.criticidad || sub.score)) {
             const urg = Math.min(3, Math.max(1, sub.urgencia || 2));
             const sc = sub.score || ((sub.criticidad || 2) * urg);
@@ -484,7 +502,38 @@ export class AdminTicketsListComponent {
 
   obtenerTooltipMatriz(tk: Ticket): string {
     const coord = this.obtenerCoordenadasTicket(tk);
-    return `Criticidad: ${coord.impacto} × Urgencia: ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}`;
+    return `Urgencia (Inicio): Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}`;
+  }
+
+  obtenerPrioridadAtencionTicket(tk: Ticket): 'Crítico' | 'Alto' | 'Medio' | 'Bajo' {
+    if ((tk as any).prioridadAtencion) {
+      return (tk as any).prioridadAtencion;
+    }
+    if (tk.idCategoria) {
+      const cat = this.categorias.find((c) => String(c.id) === String(tk.idCategoria));
+      if (cat) {
+        if (tk.idSubcategoria && cat.subcategorias) {
+          const sub = this.buscarSubcategoriaRecursiva(cat.subcategorias, String(tk.idSubcategoria));
+          if (sub && sub.prioridadAtencion) {
+            return sub.prioridadAtencion;
+          }
+        }
+        if (cat.prioridadAtencion) {
+          return cat.prioridadAtencion;
+        }
+      }
+    }
+    const coord = this.obtenerCoordenadasTicket(tk);
+    return (coord.prioridad as any) || 'Medio';
+  }
+
+  esCeldaAtencionActiva(tk: Ticket, prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'): boolean {
+    return this.obtenerPrioridadAtencionTicket(tk) === prioridad;
+  }
+
+  obtenerTooltipMatrizAtencion(tk: Ticket): string {
+    const p = this.obtenerPrioridadAtencionTicket(tk);
+    return `Atención (Resolución): Prioridad ${p}`;
   }
 
   obtenerBackgroundColorPrioridad(value: string): string {
@@ -523,5 +572,164 @@ export class AdminTicketsListComponent {
       },
       reject: () => { },
     });
+  }
+
+  buscarSubcategoriaRecursiva(subcategorias: any[], idBuscado: string): any | null {
+    if (!subcategorias || !subcategorias.length) return null;
+    for (const sub of subcategorias) {
+      if (String(sub.id) === idBuscado) return sub;
+      if (sub.subcategorias && sub.subcategorias.length > 0) {
+        const found = this.buscarSubcategoriaRecursiva(sub.subcategorias, idBuscado);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  abrirModalCambiarCategoria(tk: Ticket) {
+    this.ticketEnCambioCategoria = tk;
+    this.nuevaSeleccionCategoria = null;
+    this.mostrarModalCambiarCategoria = true;
+  }
+
+  cerrarModalCambiarCategoria() {
+    this.mostrarModalCambiarCategoria = false;
+    this.ticketEnCambioCategoria = null;
+    this.nuevaSeleccionCategoria = null;
+  }
+
+  onSeleccionarEnModal(seleccion: SeleccionArbolCategoria) {
+    this.nuevaSeleccionCategoria = seleccion;
+  }
+
+  guardarNuevaCategoria() {
+    if (!this.ticketEnCambioCategoria || !this.nuevaSeleccionCategoria) return;
+
+    const tk = this.ticketEnCambioCategoria;
+    const sel = this.nuevaSeleccionCategoria;
+
+    tk.idCategoria = sel.idCategoria;
+    tk.idSubcategoria = sel.idSubcategoria ?? null;
+    tk.nombreCategoria = sel.nombreCategoria;
+    tk.nombreSubcategoria = sel.nombreSubcategoria ?? '';
+
+    const nodo = sel.subcategoria || sel.categoria;
+    if (nodo) {
+      if (nodo.criticidad && nodo.urgencia) {
+        tk.criticidad = nodo.criticidad;
+        tk.urgencia = Math.min(3, Math.max(1, nodo.urgencia));
+        tk.score = nodo.score || (nodo.criticidad * tk.urgencia);
+      }
+      if (nodo.prioridadAtencion) {
+        (tk as any).prioridadAtencion = nodo.prioridadAtencion;
+      }
+    }
+
+    this.rutaCache.delete(tk);
+
+    this.ticketsService
+      .update({ ...tk })
+      .then(() => {
+        this.showMessage('success', 'Categoría actualizada', `Se asignó: ${sel.rutaCompleta}`);
+        this.cdr.detectChanges();
+        this.cerrarModalCambiarCategoria();
+      })
+      .catch((error) => {
+        console.error('Error al actualizar categoría:', error);
+        this.showMessage('error', 'Error', 'Error al guardar la categoría');
+      });
+  }
+
+  obtenerInfoRutaTicket(tk: Ticket): { ruta: string; categoriaRaiz: string; rutaPadres: string; hoja: string } {
+    if (!tk) {
+      return { ruta: 'Sin Categoría', categoriaRaiz: '', rutaPadres: '', hoja: 'Sin Categoría' };
+    }
+
+    const cacheKey = `${tk.idCategoria}_${tk.idSubcategoria}_${tk.nombreCategoria}_${tk.nombreSubcategoria}_${this.categorias.length}`;
+    const cached = this.rutaCache.get(tk);
+    if (cached && cached.key === cacheKey) {
+      return cached.info;
+    }
+
+    let resultado = { ruta: 'Sin Categoría', categoriaRaiz: '', rutaPadres: '', hoja: 'Sin Categoría' };
+
+    if (this.categorias && this.categorias.length > 0) {
+      const idSubBuscado = tk.idSubcategoria ? String(tk.idSubcategoria) : null;
+      const idCatBuscado = tk.idCategoria ? String(tk.idCategoria) : null;
+
+      if (idSubBuscado) {
+        for (const cat of this.categorias) {
+          const buscarTrail = (lista: any[], trail: string[]): string[] | null => {
+            for (const sub of lista) {
+              if (sub.eliminado) continue;
+              const nuevoTrail = [...trail, sub.nombre];
+              if (String(sub.id) === idSubBuscado) {
+                return nuevoTrail;
+              }
+              if (sub.subcategorias && sub.subcategorias.length > 0) {
+                const res = buscarTrail(sub.subcategorias, nuevoTrail);
+                if (res) return res;
+              }
+            }
+            return null;
+          };
+
+          if (cat.subcategorias && cat.subcategorias.length > 0) {
+            const trail = buscarTrail(cat.subcategorias, [cat.nombre]);
+            if (trail) {
+              const ruta = trail.join(' › ');
+              const categoriaRaiz = cat.nombre;
+              const hoja = trail[trail.length - 1];
+              const rutaPadres = trail.length > 1 ? trail.slice(0, -1).join(' › ') : '';
+              resultado = { ruta, categoriaRaiz, rutaPadres, hoja };
+              this.rutaCache.set(tk, { key: cacheKey, info: resultado });
+              return resultado;
+            }
+          }
+        }
+      }
+
+      if (idCatBuscado) {
+        const cat = this.categorias.find(c => String(c.id) === idCatBuscado);
+        if (cat) {
+          if (tk.nombreSubcategoria) {
+            resultado = {
+              ruta: `${cat.nombre} › ${tk.nombreSubcategoria}`,
+              categoriaRaiz: cat.nombre,
+              rutaPadres: cat.nombre,
+              hoja: tk.nombreSubcategoria
+            };
+          } else {
+            resultado = {
+              ruta: cat.nombre,
+              categoriaRaiz: cat.nombre,
+              rutaPadres: '',
+              hoja: cat.nombre
+            };
+          }
+          this.rutaCache.set(tk, { key: cacheKey, info: resultado });
+          return resultado;
+        }
+      }
+    }
+
+    if (tk.nombreCategoria && tk.nombreSubcategoria) {
+      resultado = {
+        ruta: `${tk.nombreCategoria} › ${tk.nombreSubcategoria}`,
+        categoriaRaiz: tk.nombreCategoria,
+        rutaPadres: tk.nombreCategoria,
+        hoja: tk.nombreSubcategoria
+      };
+    } else if (tk.nombreCategoria) {
+      resultado = {
+        ruta: tk.nombreCategoria,
+        categoriaRaiz: tk.nombreCategoria,
+        rutaPadres: '',
+        hoja: tk.nombreCategoria
+      };
+    }
+
+    this.rutaCache.set(tk, { key: cacheKey, info: resultado });
+    return resultado;
   }
 }

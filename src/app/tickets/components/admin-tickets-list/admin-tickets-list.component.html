@@ -4,13 +4,12 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th>CRITICIDAD</th>
+            <th pTooltip="Urgencia (3×3) · Atención (2×2)" tooltipPosition="top">MATRICES</th>
             <th>FOLIO</th>
             <th>FECHA</th>
             <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
             <th>AREA</th>
-            <th>CATEGORÍA</th>
-            <th>SUBCATEGORÍA</th>
+            <th>CATEGORÍA / RUTA</th>
             <th>ESTATUS</th>
             <th>SOLICITANTE</th>
             <th>RESPONSABLE</th>
@@ -23,13 +22,24 @@
             [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
             <td class="text-center celda-criticidad-matriz">
                 <div class="contenedor-criticidad-celda">
-                    <!-- Mini Matriz 3x3 -->
-                    <div class="mini-matriz-wrapper" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
+                    <!-- Mini Matriz 3x3 (Urgencia) -->
+                    <div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
                         <div class="mini-matriz-grid">
                             <span *ngFor="let celda of celdasMatriz"
                                 class="celda-mm"
                                 [class.activa]="esCeldaActiva(tk, celda.impacto, celda.urgencia)"
                                 [style.backgroundColor]="esCeldaActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatriz(tk) : ''">
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Mini Matriz 2x2 (Atención) -->
+                    <div class="mini-matriz-wrapper mini-matriz-atencion" [pTooltip]="obtenerTooltipMatrizAtencion(tk)" tooltipPosition="top">
+                        <div class="mini-matriz-2x2-grid">
+                            <span *ngFor="let celda of celdasMatrizAtencion"
+                                class="celda-mm-2x2"
+                                [class.activa]="esCeldaAtencionActiva(tk, celda.prioridad)"
+                                [style.backgroundColor]="esCeldaAtencionActiva(tk, celda.prioridad) ? celda.color : ''">
                             </span>
                         </div>
                     </div>
@@ -75,41 +85,25 @@
                     </ng-template>
                 </p-dropdown>
             </td>
-            <td class="text-center">
-                <p-dropdown 
-                    [options]="categorias" 
-                    [(ngModel)]="tk.idCategoria" 
-                    optionLabel="nombre" 
-                    [showClear]="false"
-                    optionValue="id" 
-                    styleClass="table-select-custom" 
-                    (onChange)="actualizaTicket(tk)"
-                    appendTo="body">
-                    <ng-template pTemplate="selectedItem" let-selectedOption>
-                        <span>{{ selectedOption?.nombre || selectedOption?.name }}</span>
-                    </ng-template>
-                    <ng-template let-categoria pTemplate="item">
-                        <span>{{ categoria.nombre || categoria.name }}</span>
-                    </ng-template>
-                </p-dropdown>
-            </td>
-            <td class="text-center">
-                <p-dropdown 
-                    [options]="obtenerSubcategorias(tk.idCategoria)" 
-                    [(ngModel)]="tk.idSubcategoria"
-                    optionLabel="nombre" 
-                    [showClear]="false" 
-                    optionValue="id" 
-                    styleClass="table-select-custom"
-                    (onChange)="actualizaTicket(tk)"
-                    appendTo="body">
-                    <ng-template pTemplate="selectedItem" let-selectedOption>
-                        <span>{{ selectedOption?.nombre || selectedOption?.name || 'SELECCIONAR' }}</span>
-                    </ng-template>
-                    <ng-template let-subcategoria pTemplate="item">
-                        <span>{{ subcategoria.nombre || subcategoria.name }}</span>
-                    </ng-template>
-                </p-dropdown>
+            <td class="celda-categoria-ruta text-start">
+                <button 
+                    type="button" 
+                    class="btn-categoria-ruta-chip"
+                    (click)="abrirModalCambiarCategoria(tk)"
+                    [pTooltip]="obtenerInfoRutaTicket(tk).ruta" 
+                    tooltipPosition="top">
+                    <div class="categoria-chip-body">
+                        <div class="categoria-chip-trail" *ngIf="obtenerInfoRutaTicket(tk).rutaPadres">
+                            <i class="bx bx-folder"></i>
+                            <span class="trail-text">{{ obtenerInfoRutaTicket(tk).rutaPadres }}</span>
+                        </div>
+                        <div class="categoria-chip-hoja">
+                            <i class="bx bx-tag"></i>
+                            <span class="hoja-text">{{ obtenerInfoRutaTicket(tk).hoja }}</span>
+                        </div>
+                    </div>
+                    <i class="bx bx-chevron-down icono-dropdown-cambio"></i>
+                </button>
             </td>
             <td class="text-center">
                 <p-dropdown 
@@ -202,3 +196,58 @@
 <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
     [showModalTicketDetail]="mostrarModalTicketDetail"
     (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+
+<p-dialog 
+    header="CAMBIAR CATEGORÍA / RUTA" 
+    [modal]="true" 
+    [(visible)]="mostrarModalCambiarCategoria" 
+    [style]="{ width: '56rem', maxWidth: '95vw' }"
+    [maximizable]="true" 
+    (onHide)="cerrarModalCambiarCategoria()"
+    styleClass="dialog-cambiar-categoria">
+    
+    <div class="mb-3 p-3 bg-light rounded border d-flex align-items-center justify-content-between flex-wrap gap-2" *ngIf="ticketEnCambioCategoria">
+        <div>
+            <span class="text-muted small d-block fw-bold text-uppercase">Ticket</span>
+            <strong class="fs-6 text-dark">{{ ticketEnCambioCategoria.folio }}</strong>
+            <span class="text-muted small ms-2">({{ ticketEnCambioCategoria.solicitante }})</span>
+        </div>
+        <div>
+            <span class="text-muted small d-block fw-bold text-uppercase">Ruta actual</span>
+            <span class="badge bg-secondary p-2">
+                <i class="bx bx-map-pin me-1"></i>{{ obtenerInfoRutaTicket(ticketEnCambioCategoria).ruta }}
+            </span>
+        </div>
+    </div>
+
+    <app-selector-arbol-categoria
+        *ngIf="mostrarModalCambiarCategoria && ticketEnCambioCategoria"
+        [idArea]="ticketEnCambioCategoria.idArea || idArea"
+        [categoriasExternas]="categorias"
+        [idCategoriaInicial]="ticketEnCambioCategoria.idCategoria"
+        [idSubcategoriaInicial]="ticketEnCambioCategoria.idSubcategoria"
+        (alSeleccionar)="onSeleccionarEnModal($event)">
+    </app-selector-arbol-categoria>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex justify-content-between align-items-center w-100 mt-2">
+            <div class="text-start">
+                <span *ngIf="nuevaSeleccionCategoria" class="small text-muted">
+                    Selección: <strong class="text-primary">{{ nuevaSeleccionCategoria.rutaCompleta }}</strong>
+                </span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-light px-3 py-2" (click)="cerrarModalCambiarCategoria()">
+                    <i class="bx bx-x me-1"></i> Cancelar
+                </button>
+                <button 
+                    type="button" 
+                    class="btn btn-primary px-3 py-2" 
+                    [disabled]="!nuevaSeleccionCategoria"
+                    (click)="guardarNuevaCategoria()">
+                    <i class="bx bx-check me-1"></i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>
