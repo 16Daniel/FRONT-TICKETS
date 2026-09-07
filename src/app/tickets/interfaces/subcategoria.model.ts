@@ -10,7 +10,6 @@ export class Subcategoria {
     score?: number;
     prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
     prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-    tiempoAtencion?: string;
 
     constructor() {
         this.id = generateGUID();

@@ -32,6 +32,7 @@ export class CategoriesService {
     delete obj.slaResp;
     delete obj.estimacion;
     delete obj.impacto;
+    delete obj.tiempoAtencion;
     if (Array.isArray(obj.subcategorias)) {
       obj.subcategorias.forEach((s: any) => this.limpiarCamposNoDeseados(s));
     }

@@ -46,9 +46,9 @@
               {{ clasificarCuadrante(nodo.score || 4).label }}
             </span>
 
-            <span *ngIf="!esRama(nodo) && (nodo.tiempoAtencion || nodo.prioridadAtencion)" class="insignia-pildora insignia-atencion" pTooltip="SLA de resolución (Matriz de Atención)" tooltipPosition="top">
+            <span *ngIf="!esRama(nodo) && nodo.prioridadAtencion" class="insignia-pildora insignia-atencion" pTooltip="SLA de resolución (Matriz de Atención)" tooltipPosition="top">
               <i class="bx bx-timer"></i>
-              <span>Atención: {{ nodo.tiempoAtencion || nodo.prioridadAtencion }}</span>
+              <span>Atención: {{ nodo.prioridadAtencion }}</span>
             </span>
 
             <!-- Conteo de subcategorías para ramas -->

@@ -9,7 +9,6 @@ import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
 import { SelectorMatrizCriticidadComponent } from '../selector-matriz-criticidad/selector-matriz-criticidad.component';
 import { SelectorMatrizAtencionComponent } from '../selector-matriz-atencion/selector-matriz-atencion.component';
-import { MatrizAtencionService } from '../../services/matriz-atencion.service';
 
 @Component({
   selector: 'app-formulario-nodo-categoria',
@@ -44,9 +43,6 @@ export class FormularioNodoCategoriaComponent implements OnInit {
   score: number = 4;
   prioridad: string = 'Medio';
   prioridadAtencion: 'Crítico' | 'Alto' | 'Medio' | 'Bajo' = 'Medio';
-  tiempoAtencion?: string;
-
-  constructor(private matrizAtencionService: MatrizAtencionService) {}
 
   ngOnInit(): void {
     if (this.modo === 'editar' && this.nodoEditar) {
@@ -56,7 +52,6 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       this.score = this.nodoEditar.score || 4;
       this.prioridad = this.nodoEditar.prioridadUrgencia || (this.nodoEditar as any).prioridad || 'Medio';
       this.prioridadAtencion = (this.nodoEditar as any).prioridadAtencion || (this.prioridad as any) || 'Medio';
-      this.tiempoAtencion = (this.nodoEditar as any).tiempoAtencion;
 
       // Resolver impacto/criticidad (1, 2 o 3)
       let imp = (this.nodoEditar as any).impacto || this.nodoEditar.criticidad;
@@ -74,10 +69,6 @@ export class FormularioNodoCategoriaComponent implements OnInit {
     } else if (this.modo === 'crear-hijo') {
       this.tipo = 'hoja';
     }
-
-    if (this.tipo === 'hoja' && !this.tiempoAtencion) {
-      this.tiempoAtencion = this.matrizAtencionService.obtenerCeldaPorPrioridad(this.matrizAtencion, this.prioridadAtencion).label;
-    }
   }
 
   alCambiarMatriz(evento: EventoSeleccionMatriz): void {
@@ -87,24 +78,15 @@ export class FormularioNodoCategoriaComponent implements OnInit {
     this.prioridad = evento.prioridad;
     // Sincronizar automáticamente la prioridad de atención con la prioridad calculada del 3x3
     this.prioridadAtencion = evento.prioridad as any;
-    const celda = this.matrizAtencionService.obtenerCeldaPorPrioridad(this.matrizAtencion, this.prioridadAtencion);
-    if (celda) {
-      this.tiempoAtencion = celda.label;
-    }
   }
 
   alCambiarMatrizAtencion(evento: { prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'; tiempo: string; horas: number }): void {
     this.prioridadAtencion = evento.prioridad;
-    this.tiempoAtencion = evento.tiempo;
   }
 
   alGuardar(): void {
     const nombreLimpio = this.nombre.trim();
     if (!nombreLimpio) return;
-
-    const tiempoAtencionFinal = this.tipo === 'hoja'
-      ? (this.tiempoAtencion || this.matrizAtencionService.obtenerCeldaPorPrioridad(this.matrizAtencion, this.prioridadAtencion).label)
-      : undefined;
 
     this.guardar.emit({
       nombre: nombreLimpio,
@@ -115,8 +97,7 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       score: this.tipo === 'hoja' ? this.score : undefined,
       prioridad: this.tipo === 'hoja' ? this.prioridad : undefined,
       prioridadUrgencia: this.tipo === 'hoja' ? (this.prioridad as any) : undefined,
-      prioridadAtencion: this.tipo === 'hoja' ? this.prioridadAtencion : undefined,
-      tiempoAtencion: tiempoAtencionFinal
+      prioridadAtencion: this.tipo === 'hoja' ? this.prioridadAtencion : undefined
     });
   }
 }

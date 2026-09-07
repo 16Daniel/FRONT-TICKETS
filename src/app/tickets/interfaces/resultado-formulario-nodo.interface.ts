@@ -8,6 +8,5 @@ export interface ResultadoFormularioNodo {
   prioridad?: string;
   prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
   prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-  tiempoAtencion?: string;
 }
 

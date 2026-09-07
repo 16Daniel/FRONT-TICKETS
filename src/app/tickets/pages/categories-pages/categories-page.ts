@@ -179,6 +179,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     delete (nodo as any).slaRes;
     delete (nodo as any).slaResp;
     delete (nodo as any).impacto;
+    delete (nodo as any).tiempoAtencion;
 
     nodo.subcategorias.forEach((h) => this.normalizarNodo(h));
   }
@@ -337,8 +338,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           score: datos.score,
           criticidad: datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2),
           prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
-          prioridadAtencion: datos.prioridadAtencion,
-          tiempoAtencion: datos.tiempoAtencion
+          prioridadAtencion: datos.prioridadAtencion
         };
         (nuevaCat as any).prioridad = nuevaCat.prioridadUrgencia;
         await this.categoriesService.create(nuevaCat);
@@ -360,8 +360,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
             score: datos.score,
             criticidad: datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2),
             prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
-            prioridadAtencion: datos.prioridadAtencion,
-            tiempoAtencion: datos.tiempoAtencion
+            prioridadAtencion: datos.prioridadAtencion
           } : {})
         };
         if (datos.tipo === 'hoja') {
@@ -396,7 +395,6 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
         objetivo.prioridadUrgencia = (datos.prioridadUrgencia || datos.prioridad) as any;
         (objetivo as any).prioridad = objetivo.prioridadUrgencia;
         objetivo.prioridadAtencion = datos.prioridadAtencion;
-        objetivo.tiempoAtencion = datos.tiempoAtencion;
       } else {
         objetivo.activarSubcategorias = true;
       }
