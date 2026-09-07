@@ -151,6 +151,14 @@ $rw-primary: #d3152a;
         color: #475569;
         border: 1px solid #e2e8f0;
       }
+
+      &.insignia-atencion {
+        background: #f0fdf4;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+        font-weight: 700;
+        text-transform: none;
+      }
     }
 
     .insignia-conteo-hijos {

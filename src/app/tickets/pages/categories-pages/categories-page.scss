@@ -346,3 +346,57 @@ $rw-canvas: #f4f6fa;
     line-height: 1.5;
   }
 }
+
+/* ==========================================================================
+   Pestañas de Selección de Matriz (3x3 Urgencia vs 2x2 Atención)
+   ========================================================================== */
+.contenedor-pestanas-matrices {
+  display: flex;
+  align-items: center;
+}
+
+.matriz-selector-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #ffffff;
+  padding: 0.4rem 0.5rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+  .tab-matriz-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    i {
+      font-size: 1.15rem;
+    }
+
+    &:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    &.is-active {
+      background: #0f172a;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+
+      i {
+        color: #f97316;
+      }
+    }
+  }
+}
+

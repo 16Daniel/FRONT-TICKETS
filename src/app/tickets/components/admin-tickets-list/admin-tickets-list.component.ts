@@ -406,7 +406,7 @@ export class AdminTicketsListComponent {
               impacto: imp,
               urgencia: urg,
               score: sc,
-              prioridad: sub.prioridad || this.clasificarPrioridad(sc)
+              prioridad: sub.prioridadUrgencia || (sub as any).prioridad || this.clasificarPrioridad(sc)
             };
           }
         }
@@ -419,7 +419,7 @@ export class AdminTicketsListComponent {
             impacto: imp,
             urgencia: urg,
             score: sc,
-            prioridad: cat.prioridad || this.clasificarPrioridad(sc)
+            prioridad: cat.prioridadUrgencia || (cat as any).prioridad || this.clasificarPrioridad(sc)
           };
         }
       }

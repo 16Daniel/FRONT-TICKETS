@@ -120,8 +120,12 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
     if (!nodo.tipo) {
       nodo.tipo = tieneHijos || (nodo as any).activarSubcategorias ? 'rama' : 'hoja';
     }
-    if (nodo.tipo === 'hoja' && !nodo.prioridad) {
-      nodo.prioridad = 'Medio';
+    if (nodo.tipo === 'hoja') {
+      if (!nodo.prioridadUrgencia && !(nodo as any).prioridad) {
+        nodo.prioridadUrgencia = 'Medio';
+      } else if (!nodo.prioridadUrgencia && (nodo as any).prioridad) {
+        nodo.prioridadUrgencia = (nodo as any).prioridad;
+      }
     }
     nodo.subcategorias.forEach((h) => this.normalizarNodo(h));
   }
@@ -274,7 +278,7 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       nombreCategoria: raiz.nombre,
       nombreSubcategoria: esSub ? nodo.nombre : null,
       rutaCompleta,
-      prioridad: nodo.prioridad || 'Medio',
+      prioridad: nodo.prioridadUrgencia || (nodo as any).prioridad || 'Medio',
       score: nodo.score || 4,
     };
 

@@ -1,0 +1,25 @@
+<div class="contenedor-selector-matriz-atencion">
+  <label class="etiqueta-selector-atencion">TIEMPO DE ATENCIÓN Y RESOLUCIÓN (MATRIZ 2×2):</label>
+
+  <div class="cuadricula-matriz-atencion">
+    <div *ngFor="let c of cuadrantes2x2"
+      class="celda-boton-atencion"
+      [class.esta-seleccionado]="prioridadSeleccionada === c.prioridad"
+      [style.background]="c.bg"
+      [style.color]="c.text"
+      (click)="seleccionar(c.prioridad)">
+      <b class="texto-prioridad-atencion">{{ c.prioridad }}</b>
+      <span class="etiqueta-tiempo-atencion">{{ obtenerCelda(c.prioridad).label }}</span>
+    </div>
+  </div>
+
+  <div class="vista-previa-seleccion-atencion mt-2" *ngIf="prioridadSeleccionada">
+    <span class="insignia-previa" [style.background]="estiloActual.bg" [style.color]="estiloActual.text">
+      <i class="bx {{ estiloActual.icon }}"></i>
+      <span>Atención: <b>{{ prioridadSeleccionada }}</b></span>
+    </span>
+    <span class="detalle-tiempo-previo">
+      Tiempo objetivo de resolución: <b>{{ celdaActual.label }}</b> ({{ celdaActual.horas }} h estimadas)
+    </span>
+  </div>
+</div>

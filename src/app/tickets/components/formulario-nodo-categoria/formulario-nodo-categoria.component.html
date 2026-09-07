@@ -54,15 +54,26 @@
       </div>
     </div>
 
-    <!-- Selector Matriz 3x3 (si es hoja) -->
-    <div class="seccion-selector-matriz mt-3" *ngIf="tipo === 'hoja'">
-      <app-selector-matriz-criticidad
-        [idArea]="idArea"
-        [matrizUrgencia]="matrizUrgencia"
-        [impacto]="impacto"
-        [urgencia]="urgencia"
-        (cambioSeleccion)="alCambiarMatriz($event)">
-      </app-selector-matriz-criticidad>
+    <!-- Selectores de Matrices (si es hoja) -->
+    <div class="seccion-selectores-matrices mt-3" *ngIf="tipo === 'hoja'">
+      <div class="mb-3">
+        <app-selector-matriz-criticidad
+          [idArea]="idArea"
+          [matrizUrgencia]="matrizUrgencia"
+          [impacto]="impacto"
+          [urgencia]="urgencia"
+          (cambioSeleccion)="alCambiarMatriz($event)">
+        </app-selector-matriz-criticidad>
+      </div>
+
+      <div class="mb-2">
+        <app-selector-matriz-atencion
+          [idArea]="idArea"
+          [matrizAtencion]="matrizAtencion"
+          [prioridadSeleccionada]="prioridadAtencion"
+          (cambioSeleccion)="alCambiarMatrizAtencion($event)">
+        </app-selector-matriz-atencion>
+      </div>
     </div>
 
     <!-- Botones Guardar / Cancelar -->
