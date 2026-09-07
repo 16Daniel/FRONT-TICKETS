@@ -5,6 +5,7 @@ import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { clasificarCuadrante } from '../../helpers/matriz-criticidad.helper';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { FormularioNodoCategoriaComponent } from '../formulario-nodo-categoria/formulario-nodo-categoria.component';
 
 @Component({
@@ -23,6 +24,8 @@ export class NodoArbolCategoriaComponent {
   @Input() nodo!: Categoria | Subcategoria;
   @Input() profundidad: number = 0;
   @Input() categoriaRaiz!: Categoria;
+  @Input() idArea?: string = '';
+  @Input() matrizUrgencia?: MatrizUrgencia | null = null;
   @Input() estaExpandido: boolean = false;
   @Input() filtroTexto: string = '';
   @Input() idNodoEnEdicion: string | null = null;

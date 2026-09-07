@@ -126,6 +126,7 @@
       *ngIf="mostrarConfiguracionMatriz"
       [idArea]="areaSeleccionadaId"
       [nombreArea]="areaActual?.nombre || ''"
+      (guardado)="alGuardarMatriz($event)"
       (cerrar)="mostrarConfiguracionMatriz = false">
     </app-configuracion-matriz-urgencia>
 
@@ -140,6 +141,8 @@
       <app-formulario-nodo-categoria
         modo="crear-raiz"
         [nombreArea]="areaActual?.nombre"
+        [idArea]="areaSeleccionadaId"
+        [matrizUrgencia]="matrizUrgenciaActual"
         (guardar)="guardarNuevoNodo('RAIZ', $event)"
         (cancelar)="cancelarFormulario()">
       </app-formulario-nodo-categoria>
@@ -167,6 +170,8 @@
           [nodo]="cat"
           [profundidad]="0"
           [categoriaRaiz]="cat"
+          [idArea]="areaSeleccionadaId"
+          [matrizUrgencia]="matrizUrgenciaActual"
           [estaExpandido]="estaExpandido(cat.id)"
           [filtroTexto]="filtroTexto"
           [idNodoEnEdicion]="idNodoEnEdicion"

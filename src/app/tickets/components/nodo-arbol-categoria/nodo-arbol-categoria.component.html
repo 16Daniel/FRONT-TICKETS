@@ -105,6 +105,8 @@
   <div class="my-2" *ngIf="idNodoEnEdicion == nodo.id">
     <app-formulario-nodo-categoria
       modo="editar"
+      [idArea]="idArea"
+      [matrizUrgencia]="matrizUrgencia"
       [nodoEditar]="nodo"
       [bloquearCambioTipo]="obtenerHijosActivos(nodo).length > 0"
       [esAnidado]="profundidad > 0"
@@ -117,6 +119,8 @@
   <div class="my-2" *ngIf="idNodoParaAgregar == nodo.id">
     <app-formulario-nodo-categoria
       modo="crear-hijo"
+      [idArea]="idArea"
+      [matrizUrgencia]="matrizUrgencia"
       [nombrePadre]="nodo.nombre"
       [esAnidado]="true"
       (guardar)="alGuardarHijo($event)"
@@ -131,6 +135,8 @@
         [nodo]="hijo"
         [profundidad]="profundidad + 1"
         [categoriaRaiz]="categoriaRaiz"
+        [idArea]="idArea"
+        [matrizUrgencia]="matrizUrgencia"
         [estaExpandido]="hijoEstaExpandido(hijo.id)"
         [filtroTexto]="filtroTexto"
         [idNodoEnEdicion]="idNodoEnEdicion"

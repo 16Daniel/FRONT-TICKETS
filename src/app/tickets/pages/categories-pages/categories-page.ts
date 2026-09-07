@@ -22,6 +22,7 @@ import { FormularioNodoCategoriaComponent } from '../../components/formulario-no
 import { NodoArbolCategoriaComponent } from '../../components/nodo-arbol-categoria/nodo-arbol-categoria.component';
 import { ConfiguracionMatrizUrgenciaComponent } from '../../components/configuracion-matriz-urgencia/configuracion-matriz-urgencia.component';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
@@ -53,6 +54,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
   categorias: Categoria[] = [];
   filtroTexto: string = '';
 
+  matrizUrgenciaActual: MatrizUrgencia | null = null;
   mostrarGuiaMatriz: boolean = false;
   mostrarConfiguracionMatriz: boolean = false;
   nodosExpandidosIds = new Set<string>();
@@ -62,11 +64,13 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
 
   private subscripcionAreas?: Subscription;
   private subscripcionCategorias?: Subscription;
+  private subscripcionMatriz?: Subscription;
 
   constructor(
     private messageService: MessageService,
     private categoriesService: CategoriesService,
     private areasService: AreasService,
+    private matrizUrgenciaService: MatrizUrgenciaService,
     private confirmationService: ConfirmationService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -78,11 +82,13 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     }
     this.cargarAreas();
     this.cargarCategorias();
+    this.cargarMatrizArea();
   }
 
   ngOnDestroy(): void {
     this.subscripcionAreas?.unsubscribe();
     this.subscripcionCategorias?.unsubscribe();
+    this.subscripcionMatriz?.unsubscribe();
   }
 
   /* Carga de Datos */
@@ -92,9 +98,28 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
       if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
         this.areaSeleccionadaId = String(this.areas[0].id);
         this.cargarCategorias();
+        this.cargarMatrizArea();
       }
       this.cdr.detectChanges();
     });
+  }
+
+  private cargarMatrizArea(): void {
+    this.subscripcionMatriz?.unsubscribe();
+    this.subscripcionMatriz = this.matrizUrgenciaService
+      .obtenerMatrizPorArea(this.areaSeleccionadaId, this.areaActual?.nombre || '')
+      .subscribe({
+        next: (matriz) => {
+          this.matrizUrgenciaActual = matriz;
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Error al cargar la matriz de urgencia en CategoriesPage:', err)
+      });
+  }
+
+  alGuardarMatriz(matriz: MatrizUrgencia): void {
+    this.matrizUrgenciaActual = matriz;
+    this.cdr.detectChanges();
   }
 
   private cargarCategorias(): void {
@@ -135,6 +160,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     this.idNodoEnEdicion = null;
     this.nodosExpandidosIds.clear();
     this.cargarCategorias();
+    this.cargarMatrizArea();
   }
 
   get areaActual(): Area | undefined {

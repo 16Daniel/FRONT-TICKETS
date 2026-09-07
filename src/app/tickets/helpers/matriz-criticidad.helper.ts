@@ -8,9 +8,9 @@ export const MATRIZ_FILAS = [
 ];
 
 export const MATRIZ_COLUMNAS = [
-  { urgencia: 1, label: '1 · Baja' },
+  { urgencia: 3, label: '3 · Inmediata' },
   { urgencia: 2, label: '2 · Media' },
-  { urgencia: 3, label: '3 · Inmediata' }
+  { urgencia: 1, label: '1 · Baja' }
 ];
 
 export const CUADRANTES: CuadranteInfo[] = [

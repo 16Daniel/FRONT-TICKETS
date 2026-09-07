@@ -15,7 +15,7 @@ export class Ticket {
   criticidad?: number;
   urgencia?: number;
   score?: number;
-  idPrioridadTicket?: string;
+  idPrioridadTicket?: string; // se quitara
   fecha: Timestamp | any = new Date();
   fechaEstimacion: Timestamp | any;
   fechaFin: Timestamp | null = null;

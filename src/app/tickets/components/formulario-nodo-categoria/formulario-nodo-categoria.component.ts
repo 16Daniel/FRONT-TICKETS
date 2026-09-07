@@ -5,6 +5,7 @@ import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 import { EventoSeleccionMatriz } from '../../interfaces/evento-seleccion-matriz.interface';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { SelectorMatrizCriticidadComponent } from '../selector-matriz-criticidad/selector-matriz-criticidad.component';
 
 @Component({
@@ -18,6 +19,8 @@ export class FormularioNodoCategoriaComponent implements OnInit {
   @Input() modo: 'crear-raiz' | 'crear-hijo' | 'editar' = 'crear-raiz';
   @Input() nombrePadre?: string = '';
   @Input() nombreArea?: string = '';
+  @Input() idArea?: string = '';
+  @Input() matrizUrgencia?: MatrizUrgencia | null = null;
   @Input() nodoEditar?: Categoria | Subcategoria;
   @Input() bloquearCambioTipo: boolean = false;
   @Input() esAnidado: boolean = false;

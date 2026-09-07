@@ -19,7 +19,7 @@
         [style.color]="clasificarCuadrante(calcularScore(fila.impacto, col.urgencia)).text"
         (click)="seleccionar(fila.impacto, col.urgencia)">
         <b class="texto-prioridad-celda">{{ clasificarCuadrante(calcularScore(fila.impacto, col.urgencia)).label }}</b>
-        <span class="etiqueta-score-celda">{{ obtenerTiempoSla(fila.impacto, col.urgencia).label }}</span>
+        <span class="etiqueta-score-celda">{{ obtenerTiempoSlaCelda(fila.impacto, col.urgencia).label }}</span>
       </div>
     </ng-container>
   </div>

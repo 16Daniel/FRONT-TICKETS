@@ -57,6 +57,8 @@
     <!-- Selector Matriz 3x3 (si es hoja) -->
     <div class="seccion-selector-matriz mt-3" *ngIf="tipo === 'hoja'">
       <app-selector-matriz-criticidad
+        [idArea]="idArea"
+        [matrizUrgencia]="matrizUrgencia"
         [impacto]="impacto"
         [urgencia]="urgencia"
         (cambioSeleccion)="alCambiarMatriz($event)">

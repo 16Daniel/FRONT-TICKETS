@@ -344,9 +344,9 @@ export class AdminTicketsListComponent {
   obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
 
   readonly celdasMatriz = [
-    { impacto: 3, urgencia: 1 }, { impacto: 3, urgencia: 2 }, { impacto: 3, urgencia: 3 },
-    { impacto: 2, urgencia: 1 }, { impacto: 2, urgencia: 2 }, { impacto: 2, urgencia: 3 },
-    { impacto: 1, urgencia: 1 }, { impacto: 1, urgencia: 2 }, { impacto: 1, urgencia: 3 }
+    { impacto: 3, urgencia: 3 }, { impacto: 3, urgencia: 2 }, { impacto: 3, urgencia: 1 },
+    { impacto: 2, urgencia: 3 }, { impacto: 2, urgencia: 2 }, { impacto: 2, urgencia: 1 },
+    { impacto: 1, urgencia: 3 }, { impacto: 1, urgencia: 2 }, { impacto: 1, urgencia: 1 }
   ];
 
   obtenerCoordenadasTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
