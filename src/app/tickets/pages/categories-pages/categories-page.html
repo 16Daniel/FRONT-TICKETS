@@ -77,16 +77,28 @@
       </div>
 
       <div class="toolbar-right">
+        <!-- Configurar Matriz de Urgencia por Área -->
+        <button 
+          type="button" 
+          class="btn-tool-outline" 
+          [class.is-active]="mostrarConfiguracionMatriz"
+          (click)="alternarConfiguracionMatriz()"
+          pTooltip="Configurar tiempos de la matriz de urgencia para esta área" 
+          tooltipPosition="top">
+          <i class="bx bx-slider-alt"></i>
+          <span>Configurar Matriz</span>
+        </button>
+
         <!-- Alternar Guía de Matriz -->
         <button 
           type="button" 
           class="btn-tool-outline" 
           [class.is-active]="mostrarGuiaMatriz"
           (click)="mostrarGuiaMatriz = !mostrarGuiaMatriz"
-          pTooltip="Ver matriz de criticidad 3x3 y prioridades" 
+          pTooltip="Ver guía de criticidad 3x3 y prioridades" 
           tooltipPosition="top">
           <i class="bx bx-grid-alt"></i>
-          <span>Matriz de Criticidad (3×3)</span>
+          <span>Guía Matriz</span>
         </button>
 
         <!-- Alternar Expandir Todo -->
@@ -108,6 +120,14 @@
         </button>
       </div>
     </div>
+
+    <!-- Componente de Configuración de Matriz de Urgencia por Área -->
+    <app-configuracion-matriz-urgencia
+      *ngIf="mostrarConfiguracionMatriz"
+      [idArea]="areaSeleccionadaId"
+      [nombreArea]="areaActual?.nombre || ''"
+      (cerrar)="mostrarConfiguracionMatriz = false">
+    </app-configuracion-matriz-urgencia>
 
     <!-- Componente Ficha Guía Desplegable -->
     <app-tarjeta-guia-matriz 

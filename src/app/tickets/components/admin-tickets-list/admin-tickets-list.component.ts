@@ -452,7 +452,7 @@ export class AdminTicketsListComponent {
       case 'Crítico':
         return '#EF4444';
       case 'Alto':
-        return '#F59E0B';
+        return '#EA580C';
       case 'Medio':
         return '#EAB308';
       case 'Bajo':

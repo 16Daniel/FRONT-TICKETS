@@ -1,4 +1,5 @@
 import { CuadranteInfo } from '../interfaces/cuadrante-info.interface';
+import { TiempoSlaCelda } from '../interfaces/tiempo-sla-celda.interface';
 
 export const MATRIZ_FILAS = [
   { impacto: 3, label: '3 · Crítico' },
@@ -22,22 +23,18 @@ export const CUADRANTES: CuadranteInfo[] = [
     bg: '#FFF1F2',
     text: '#E11D48',
     icon: 'bx-flame',
-    desc: 'Impacto alto + urgencia alta. Detiene operación o pone en riesgo personas o activos.',
-    slaMin: 2,
-    slaMax: 2
+    desc: 'Impacto alto + urgencia alta. Detiene operación o pone en riesgo personas o activos.'
   },
   {
     key: 'alto',
     min: 5,
     max: 6,
     label: 'Alto',
-    fill: '#F59E0B',
-    bg: '#FFFBEB',
-    text: '#D97706',
+    fill: '#EA580C',
+    bg: '#FFEDD5',
+    text: '#C2410C',
     icon: 'bx-error-alt',
-    desc: 'Afecta a un equipo o proceso completo sin detener toda la sucursal.',
-    slaMin: 8,
-    slaMax: 12
+    desc: 'Afecta a un equipo o proceso completo sin detener toda la sucursal.'
   },
   {
     key: 'medio',
@@ -48,9 +45,7 @@ export const CUADRANTES: CuadranteInfo[] = [
     bg: '#FEFCE8',
     text: '#CA8A04',
     icon: 'bx-time-five',
-    desc: 'Incidencia molesta pero manejable. Entra a la fila normal.',
-    slaMin: 24,
-    slaMax: 48
+    desc: 'Incidencia molesta pero manejable. Entra a la fila normal.'
   },
   {
     key: 'bajo',
@@ -61,9 +56,7 @@ export const CUADRANTES: CuadranteInfo[] = [
     bg: '#F0FDF4',
     text: '#059669',
     icon: 'bx-check-circle',
-    desc: 'Cosmético o de mejora. No afecta la operación diaria.',
-    slaMin: 72,
-    slaMax: 120
+    desc: 'Cosmético o de mejora. No afecta la operación diaria.'
   }
 ];
 
@@ -76,13 +69,8 @@ export function clasificarCuadrante(score: number): CuadranteInfo {
   return q || CUADRANTES[3];
 }
 
-export interface TiempoSlaCelda {
-  horas: number;
-  label: string;
-}
-
 /**
- * Tiempos SLA exactos por celda de la matriz (Impacto × Urgencia):
+ * Tiempos SLA predeterminados por celda (Impacto × Urgencia):
  * [2 d]   [12 h]  [2 h]
  * [4 d]   [1 d]   [8 h]
  * [5 d]   [3 d]   [1.5 d]
@@ -115,4 +103,3 @@ export function calcularFechaEstimacion(fechaBase: Date, impacto: number, urgenc
   fecha.setHours(fecha.getHours() + sla.horas);
   return fecha;
 }
-

@@ -35,6 +35,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SelectorArbolCategoriaComponent } from '../../components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { calcularFechaEstimacion } from '../../helpers/matriz-criticidad.helper';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-ticket-dialog',
@@ -82,7 +84,8 @@ export class CrearTicketDialogComponent implements OnInit {
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
     private fixedAssetsService: FixedAssetsService,
-    private firebaseStorage: FirebaseStorageService
+    private firebaseStorage: FirebaseStorageService,
+    private matrizUrgenciaService: MatrizUrgenciaService
   ) {}
 
   ngOnInit(): void {
@@ -249,11 +252,24 @@ export class CrearTicketDialogComponent implements OnInit {
       count
     );
 
-    const fechaEstimacion = calcularFechaEstimacion(
-      new Date(),
-      this.ticket.criticidad || 2,
-      this.ticket.urgencia || 2
-    );
+    let fechaEstimacion = new Date();
+    try {
+      const matrizArea = await firstValueFrom(
+        this.matrizUrgenciaService.obtenerMatrizPorArea(String(this.ticket.idArea))
+      );
+      fechaEstimacion = this.matrizUrgenciaService.calcularFechaEstimacionConMatriz(
+        new Date(),
+        this.ticket.criticidad || 2,
+        this.ticket.urgencia || 2,
+        matrizArea
+      );
+    } catch {
+      fechaEstimacion = calcularFechaEstimacion(
+        new Date(),
+        this.ticket.criticidad || 2,
+        this.ticket.urgencia || 2
+      );
+    }
 
     const idsResponsablesTicket = this.obtenerResponsablesTicket(
       String(this.ticket.idSucursal),

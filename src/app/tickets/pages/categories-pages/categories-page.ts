@@ -20,6 +20,8 @@ import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-n
 import { TarjetaGuiaMatrizComponent } from '../../components/tarjeta-guia-matriz/tarjeta-guia-matriz.component';
 import { FormularioNodoCategoriaComponent } from '../../components/formulario-nodo-categoria/formulario-nodo-categoria.component';
 import { NodoArbolCategoriaComponent } from '../../components/nodo-arbol-categoria/nodo-arbol-categoria.component';
+import { ConfiguracionMatrizUrgenciaComponent } from '../../components/configuracion-matriz-urgencia/configuracion-matriz-urgencia.component';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
@@ -36,6 +38,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
     TarjetaGuiaMatrizComponent,
     FormularioNodoCategoriaComponent,
     NodoArbolCategoriaComponent,
+    ConfiguracionMatrizUrgenciaComponent,
     PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],
@@ -51,6 +54,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
   filtroTexto: string = '';
 
   mostrarGuiaMatriz: boolean = false;
+  mostrarConfiguracionMatriz: boolean = false;
   nodosExpandidosIds = new Set<string>();
 
   idNodoParaAgregar: string | null = null;
@@ -227,9 +231,21 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
   }
 
   /* Control de Formularios In-line */
+  alternarConfiguracionMatriz(): void {
+    this.mostrarConfiguracionMatriz = !this.mostrarConfiguracionMatriz;
+    if (this.mostrarConfiguracionMatriz) {
+      this.mostrarGuiaMatriz = false;
+      this.idNodoParaAgregar = null;
+      this.idNodoEnEdicion = null;
+    }
+  }
+
   abrirFormularioCrearRaiz(): void {
     this.idNodoEnEdicion = null;
     this.idNodoParaAgregar = this.idNodoParaAgregar === 'RAIZ' ? null : 'RAIZ';
+    if (this.idNodoParaAgregar) {
+      this.mostrarConfiguracionMatriz = false;
+    }
   }
 
   abrirFormularioAgregarHijo(nodo: Categoria | Subcategoria): void {

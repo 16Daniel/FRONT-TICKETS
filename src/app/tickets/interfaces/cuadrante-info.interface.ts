@@ -8,6 +8,4 @@ export interface CuadranteInfo {
   text: string;
   icon: string;
   desc: string;
-  slaMin: number;
-  slaMax: number;
 }

@@ -33,6 +33,8 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
 import { SelectorArbolCategoriaComponent } from '../../../tickets/components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
 import { calcularFechaEstimacion } from '../../../tickets/helpers/matriz-criticidad.helper';
+import { MatrizUrgenciaService } from '../../../tickets/services/matriz-urgencia.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -45,6 +47,7 @@ import { calcularFechaEstimacion } from '../../../tickets/helpers/matriz-critici
     EditorModule,
     SelectorArbolCategoriaComponent
   ],
+  providers: [MessageService],
   templateUrl: './modal-fa-generate-ticket.component.html',
   styleUrl: './modal-fa-generate-ticket.component.scss'
 })
@@ -76,7 +79,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
-    private firebaseStorage: FirebaseStorageService
+    private firebaseStorage: FirebaseStorageService,
+    private matrizUrgenciaService: MatrizUrgenciaService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -216,11 +220,24 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       count
     );
 
-    const fechaEstimacion = calcularFechaEstimacion(
-      new Date(),
-      this.ticket.criticidad || 2,
-      this.ticket.urgencia || 2
-    );
+    let fechaEstimacion = new Date();
+    try {
+      const matrizArea = await firstValueFrom(
+        this.matrizUrgenciaService.obtenerMatrizPorArea(String(this.ticket.idArea))
+      );
+      fechaEstimacion = this.matrizUrgenciaService.calcularFechaEstimacionConMatriz(
+        new Date(),
+        this.ticket.criticidad || 2,
+        this.ticket.urgencia || 2,
+        matrizArea
+      );
+    } catch {
+      fechaEstimacion = calcularFechaEstimacion(
+        new Date(),
+        this.ticket.criticidad || 2,
+        this.ticket.urgencia || 2
+      );
+    }
 
     const idsResponsablesTicket = this.obtenerResponsablesTicket(
       String(this.ticket.idSucursal),
