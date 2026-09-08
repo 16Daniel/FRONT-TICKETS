@@ -34,6 +34,7 @@ import { SelectorArbolCategoriaComponent } from '../../../tickets/components/sel
 import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
 import { calcularFechaEstimacion } from '../../../tickets/helpers/matriz-criticidad.helper';
 import { MatrizUrgenciaService } from '../../../tickets/services/matriz-urgencia.service';
+import { MatrizAtencionService } from '../../../tickets/services/matriz-atencion.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -80,7 +81,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
     private firebaseStorage: FirebaseStorageService,
-    private matrizUrgenciaService: MatrizUrgenciaService
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private matrizAtencionService: MatrizAtencionService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -176,6 +178,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     }
     this.ticket.criticidad = Math.min(3, Math.max(1, imp || 2));
     this.ticket.urgencia = Math.min(3, Math.max(1, seleccion.subcategoria?.urgencia || seleccion.categoria?.urgencia || 2));
+    this.ticket.prioridadAtencion = seleccion.prioridadAtencion || seleccion.subcategoria?.prioridadAtencion || seleccion.categoria?.prioridadAtencion || 'Medio';
   }
 
   onLimpiarCategoria(): void {
@@ -187,6 +190,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.score = undefined;
     this.ticket.criticidad = undefined;
     this.ticket.urgencia = undefined;
+    this.ticket.prioridadAtencion = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {
@@ -222,20 +226,24 @@ export class ModalFaGenerateTicketComponent implements OnInit {
 
     let fechaEstimacion = new Date();
     try {
-      const matrizArea = await firstValueFrom(
-        this.matrizUrgenciaService.obtenerMatrizPorArea(String(this.ticket.idArea))
-      );
-      fechaEstimacion = this.matrizUrgenciaService.calcularFechaEstimacionConMatriz(
+      const [matrizUrgencia, matrizAtencion] = await Promise.all([
+        firstValueFrom(this.matrizUrgenciaService.obtenerMatrizPorArea(String(this.ticket.idArea))),
+        firstValueFrom(this.matrizAtencionService.obtenerMatrizPorArea(String(this.ticket.idArea)))
+      ]);
+      fechaEstimacion = this.matrizUrgenciaService.calcularFechaEstimacionCombinadaConMatrices(
         new Date(),
         this.ticket.criticidad || 2,
         this.ticket.urgencia || 2,
-        matrizArea
+        this.ticket.prioridadAtencion,
+        matrizUrgencia,
+        matrizAtencion
       );
     } catch {
       fechaEstimacion = calcularFechaEstimacion(
         new Date(),
         this.ticket.criticidad || 2,
-        this.ticket.urgencia || 2
+        this.ticket.urgencia || 2,
+        this.ticket.prioridadAtencion
       );
     }
 

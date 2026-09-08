@@ -279,6 +279,7 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       nombreSubcategoria: esSub ? nodo.nombre : null,
       rutaCompleta,
       prioridad: nodo.prioridadUrgencia || (nodo as any).prioridad || 'Medio',
+      prioridadAtencion: nodo.prioridadAtencion || raiz.prioridadAtencion || 'Medio',
       score: nodo.score || 4,
     };
 

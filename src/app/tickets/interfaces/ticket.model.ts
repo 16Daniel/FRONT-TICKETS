@@ -15,6 +15,7 @@ export class Ticket {
   criticidad?: number;
   urgencia?: number;
   score?: number;
+  prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
   idPrioridadTicket?: string; // se quitara
   fecha: Timestamp | any = new Date();
   fechaEstimacion: Timestamp | any;

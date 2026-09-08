@@ -10,5 +10,6 @@ export interface SeleccionArbolCategoria {
   nombreSubcategoria?: string | null;
   rutaCompleta: string;
   prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo' | string;
+  prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
   score?: number;
 }

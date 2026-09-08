@@ -506,8 +506,8 @@ export class AdminTicketsListComponent {
   }
 
   obtenerPrioridadAtencionTicket(tk: Ticket): 'Crítico' | 'Alto' | 'Medio' | 'Bajo' {
-    if ((tk as any).prioridadAtencion) {
-      return (tk as any).prioridadAtencion;
+    if (tk.prioridadAtencion) {
+      return tk.prioridadAtencion;
     }
     if (tk.idCategoria) {
       const cat = this.categorias.find((c) => String(c.id) === String(tk.idCategoria));
@@ -621,7 +621,7 @@ export class AdminTicketsListComponent {
         tk.score = nodo.score || (nodo.criticidad * tk.urgencia);
       }
       if (nodo.prioridadAtencion) {
-        (tk as any).prioridadAtencion = nodo.prioridadAtencion;
+        tk.prioridadAtencion = nodo.prioridadAtencion;
       }
     }
 
