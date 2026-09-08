@@ -9,6 +9,7 @@ import {
 import { Observable, of } from 'rxjs';
 import { MatrizAtencion } from '../interfaces/matriz-atencion.interface';
 import { CeldaMatrizAtencion } from '../interfaces/celda-matriz-atencion.interface';
+import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -19,44 +20,27 @@ export class MatrizAtencionService {
   constructor(private firestore: Firestore) {}
 
   /**
-   * Genera la matriz de atención predeterminada 2×2 con el orden exacto:
-   * [ Crítico (Rojo) ]   [ Alto (Naranja) ]
-   * [ Bajo (Verde) ]     [ Medio (Amarillo) ]
+   * Genera la matriz de atención predeterminada 3×3 con los tiempos SLA base:
+   * [ 2 d ]  [ 12 h ]  [ 2 h ]
+   * [ 4 d ]  [ 1 d ]   [ 8 h ]
+   * [ 5 d ]  [ 3 d ]   [ 1.5 d ]
    */
   obtenerMatrizPredeterminada(idArea: string, nombreArea: string = ''): MatrizAtencion {
     const celdasBase: CeldaMatrizAtencion[] = [
-      {
-        posicion: 'arriba-izquierda',
-        prioridad: 'Crítico',
-        valor: 2,
-        unidad: 'h',
-        horas: 2,
-        label: '2 h'
-      },
-      {
-        posicion: 'arriba-derecha',
-        prioridad: 'Alto',
-        valor: 24,
-        unidad: 'h',
-        horas: 24,
-        label: '24 h'
-      },
-      {
-        posicion: 'abajo-izquierda',
-        prioridad: 'Bajo',
-        valor: 3,
-        unidad: 'd',
-        horas: 72,
-        label: '3 d'
-      },
-      {
-        posicion: 'abajo-derecha',
-        prioridad: 'Medio',
-        valor: 2,
-        unidad: 'd',
-        horas: 48,
-        label: '2 d'
-      }
+      // Fila Impacto 3 (Crítico)
+      { impacto: 3, urgencia: 1, valor: 2, unidad: 'd', horas: 48, label: '2 d', score: 3, prioridad: 'Medio' },
+      { impacto: 3, urgencia: 2, valor: 12, unidad: 'h', horas: 12, label: '12 h', score: 6, prioridad: 'Alto' },
+      { impacto: 3, urgencia: 3, valor: 2, unidad: 'h', horas: 2, label: '2 h', score: 9, prioridad: 'Crítico' },
+
+      // Fila Impacto 2 (Moderado)
+      { impacto: 2, urgencia: 1, valor: 4, unidad: 'd', horas: 96, label: '4 d', score: 2, prioridad: 'Bajo' },
+      { impacto: 2, urgencia: 2, valor: 1, unidad: 'd', horas: 24, label: '1 d', score: 4, prioridad: 'Medio' },
+      { impacto: 2, urgencia: 3, valor: 8, unidad: 'h', horas: 8, label: '8 h', score: 6, prioridad: 'Alto' },
+
+      // Fila Impacto 1 (Leve)
+      { impacto: 1, urgencia: 1, valor: 5, unidad: 'd', horas: 120, label: '5 d', score: 1, prioridad: 'Bajo' },
+      { impacto: 1, urgencia: 2, valor: 3, unidad: 'd', horas: 72, label: '3 d', score: 2, prioridad: 'Bajo' },
+      { impacto: 1, urgencia: 3, valor: 1.5, unidad: 'd', horas: 36, label: '1.5 d', score: 3, prioridad: 'Medio' }
     ];
 
     return {
@@ -67,7 +51,7 @@ export class MatrizAtencionService {
   }
 
   /**
-   * Obtiene y escucha en tiempo real la configuración de la matriz de atención (2×2) de un área.
+   * Obtiene y escucha en tiempo real la configuración de la matriz de atención (3×3) de un área.
    */
   obtenerMatrizPorArea(idArea: string, nombreArea: string = ''): Observable<MatrizAtencion> {
     if (!idArea) {
@@ -91,10 +75,12 @@ export class MatrizAtencionService {
             return;
           }
 
-          // Completar con valores predeterminados si faltase alguna de las 4 celdas
+          // Completar con valores predeterminados si faltase alguna celda o viniera en formato legacy
           const defecto = this.obtenerMatrizPredeterminada(idArea, nombreArea || data.nombreArea);
           const celdasCompletas = defecto.celdas.map((cDef) => {
-            const encontrada = data.celdas.find((c) => c.prioridad === cDef.prioridad);
+            const encontrada = data.celdas.find(
+              (c) => c.impacto === cDef.impacto && c.urgencia === cDef.urgencia
+            );
             return encontrada || cDef;
           });
 
@@ -124,9 +110,13 @@ export class MatrizAtencionService {
 
     const celdasNormalizadas: CeldaMatrizAtencion[] = matriz.celdas.map((c) => {
       const horas = c.unidad === 'd' ? Math.round(c.valor * 24 * 10) / 10 : c.valor;
+      const score = (c.impacto || 2) * (c.urgencia || 2);
+      const prioridad = (c.prioridad || clasificarCuadrante(score).label) as any;
       return {
-        posicion: c.posicion,
-        prioridad: c.prioridad,
+        impacto: c.impacto || 2,
+        urgencia: c.urgencia || 2,
+        score,
+        prioridad,
         valor: c.valor,
         unidad: c.unidad,
         horas,
@@ -145,17 +135,33 @@ export class MatrizAtencionService {
   }
 
   /**
-   * Obtiene la celda correspondiente para un nivel de prioridad dado.
+   * Encuentra la celda correspondiente para un par (impacto, urgencia) dentro de una matriz de atención.
+   */
+  obtenerCelda(matriz: MatrizAtencion | null | undefined, impacto: number, urgencia: number): CeldaMatrizAtencion {
+    const imp = Math.min(3, Math.max(1, impacto || 2));
+    const urg = Math.min(3, Math.max(1, urgencia || 2));
+
+    if (matriz && matriz.celdas && matriz.celdas.length > 0) {
+      const celda = matriz.celdas.find((c) => c.impacto === imp && c.urgencia === urg);
+      if (celda) return celda;
+    }
+
+    const predeterminada = this.obtenerMatrizPredeterminada(matriz?.idArea || '1');
+    return predeterminada.celdas.find((c) => c.impacto === imp && c.urgencia === urg)!;
+  }
+
+  /**
+   * Obtiene la celda correspondiente para un nivel de prioridad dado (compatibilidad legacy).
    */
   obtenerCeldaPorPrioridad(
     matriz: MatrizAtencion | null | undefined,
     prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'
   ): CeldaMatrizAtencion {
-    if (matriz && matriz.celdas) {
+    if (matriz && matriz.celdas && matriz.celdas.length > 0) {
       const encontrada = matriz.celdas.find((c) => c.prioridad === prioridad);
       if (encontrada) return encontrada;
     }
     const defecto = this.obtenerMatrizPredeterminada(matriz?.idArea || '1');
-    return defecto.celdas.find((c) => c.prioridad === prioridad)!;
+    return defecto.celdas.find((c) => c.prioridad === prioridad) || defecto.celdas[0];
   }
 }

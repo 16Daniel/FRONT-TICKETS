@@ -70,6 +70,8 @@
         <app-selector-matriz-atencion
           [idArea]="idArea"
           [matrizAtencion]="matrizAtencion"
+          [impacto]="criticidadAtencion"
+          [urgencia]="urgenciaAtencion"
           [prioridadSeleccionada]="prioridadAtencion"
           (cambioSeleccion)="alCambiarMatrizAtencion($event)">
         </app-selector-matriz-atencion>

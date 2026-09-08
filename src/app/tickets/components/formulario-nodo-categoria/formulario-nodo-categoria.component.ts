@@ -42,19 +42,22 @@ export class FormularioNodoCategoriaComponent implements OnInit {
   urgencia: number = 2;
   score: number = 4;
   prioridad: string = 'Medio';
+
+  criticidadAtencion: number = 2;
+  urgenciaAtencion: number = 2;
+  scoreAtencion: number = 4;
   prioridadAtencion: 'Crítico' | 'Alto' | 'Medio' | 'Bajo' = 'Medio';
 
   ngOnInit(): void {
     if (this.modo === 'editar' && this.nodoEditar) {
       this.nombre = this.nodoEditar.nombre || '';
       this.tipo = this.nodoEditar.tipo || 'rama';
-      this.urgencia = this.nodoEditar.urgencia || 2;
-      this.score = this.nodoEditar.score || 4;
+      this.urgencia = this.nodoEditar.urgenciaUrgencia || this.nodoEditar.urgencia || 2;
+      this.score = this.nodoEditar.scoreUrgencia || this.nodoEditar.score || 4;
       this.prioridad = this.nodoEditar.prioridadUrgencia || (this.nodoEditar as any).prioridad || 'Medio';
-      this.prioridadAtencion = (this.nodoEditar as any).prioridadAtencion || (this.prioridad as any) || 'Medio';
 
-      // Resolver impacto/criticidad (1, 2 o 3)
-      let imp = (this.nodoEditar as any).impacto || this.nodoEditar.criticidad;
+      // Resolver impacto/criticidad de urgencia (1, 2 o 3)
+      let imp = this.nodoEditar.criticidadUrgencia || (this.nodoEditar as any).impacto || this.nodoEditar.criticidad;
       if (!imp || imp > 3) {
         if (this.nodoEditar.score && this.nodoEditar.urgencia) {
           imp = Math.round(this.nodoEditar.score / this.nodoEditar.urgencia);
@@ -66,6 +69,12 @@ export class FormularioNodoCategoriaComponent implements OnInit {
         }
       }
       this.impacto = Math.min(3, Math.max(1, imp || 2));
+
+      // Resolver coordenadas de atención (3×3)
+      this.criticidadAtencion = this.nodoEditar.criticidadAtencion || this.impacto;
+      this.urgenciaAtencion = this.nodoEditar.urgenciaAtencion || this.urgencia;
+      this.scoreAtencion = this.nodoEditar.scoreAtencion || (this.criticidadAtencion * this.urgenciaAtencion);
+      this.prioridadAtencion = (this.nodoEditar as any).prioridadAtencion || (this.prioridad as any) || 'Medio';
     } else if (this.modo === 'crear-hijo') {
       this.tipo = 'hoja';
     }
@@ -76,17 +85,27 @@ export class FormularioNodoCategoriaComponent implements OnInit {
     this.urgencia = evento.urgencia;
     this.score = evento.score;
     this.prioridad = evento.prioridad;
-    // Sincronizar automáticamente la prioridad de atención con la prioridad calculada del 3x3
-    this.prioridadAtencion = evento.prioridad as any;
   }
 
-  alCambiarMatrizAtencion(evento: { prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'; tiempo: string; horas: number }): void {
+  alCambiarMatrizAtencion(evento: {
+    impacto: number;
+    urgencia: number;
+    score: number;
+    prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+    tiempo: string;
+    horas: number;
+  }): void {
+    this.criticidadAtencion = evento.impacto;
+    this.urgenciaAtencion = evento.urgencia;
+    this.scoreAtencion = evento.score;
     this.prioridadAtencion = evento.prioridad;
   }
 
   alGuardar(): void {
     const nombreLimpio = this.nombre.trim();
     if (!nombreLimpio) return;
+
+    const scoreGlobal = (this.score || 4) + (this.scoreAtencion || 4);
 
     this.guardar.emit({
       nombre: nombreLimpio,
@@ -96,8 +115,21 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       urgencia: this.tipo === 'hoja' ? this.urgencia : undefined,
       score: this.tipo === 'hoja' ? this.score : undefined,
       prioridad: this.tipo === 'hoja' ? this.prioridad : undefined,
+
+      // Urgencia (3×3)
+      criticidadUrgencia: this.tipo === 'hoja' ? this.impacto : undefined,
+      urgenciaUrgencia: this.tipo === 'hoja' ? this.urgencia : undefined,
+      scoreUrgencia: this.tipo === 'hoja' ? this.score : undefined,
       prioridadUrgencia: this.tipo === 'hoja' ? (this.prioridad as any) : undefined,
-      prioridadAtencion: this.tipo === 'hoja' ? this.prioridadAtencion : undefined
+
+      // Atención (3×3)
+      criticidadAtencion: this.tipo === 'hoja' ? this.criticidadAtencion : undefined,
+      urgenciaAtencion: this.tipo === 'hoja' ? this.urgenciaAtencion : undefined,
+      scoreAtencion: this.tipo === 'hoja' ? this.scoreAtencion : undefined,
+      prioridadAtencion: this.tipo === 'hoja' ? this.prioridadAtencion : undefined,
+
+      // Global
+      scoreGlobal: this.tipo === 'hoja' ? scoreGlobal : undefined
     });
   }
 }

@@ -97,7 +97,7 @@
     }
   }
 
-  /* Columna Cuadrícula 2x2 */
+  /* Columna Cuadrícula 3x3 */
   .columna-cuadricula {
     .encabezado-seccion-cuadricula {
       display: flex;
@@ -117,19 +117,44 @@
       }
     }
 
-    .cuadricula-matriz-2x2 {
+    .cuadricula-matriz-3x3 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.65rem;
+      grid-template-columns: 80px repeat(3, 1fr);
+      gap: 0.5rem;
       background: #f8fafc;
       padding: 0.75rem;
       border-radius: 14px;
       border: 1px solid #e2e8f0;
 
+      .esquina-vacia {
+        background: transparent;
+      }
+
+      .col-header {
+        font-size: 0.725rem;
+        font-weight: 800;
+        color: #64748b;
+        text-align: center;
+        padding: 0.35rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .fila-header {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        padding-right: 0.5rem;
+        text-align: right;
+        justify-content: flex-end;
+      }
+
       .celda-tiempo-interactiva {
-        min-height: 96px;
+        min-height: 76px;
         border-radius: 12px;
-        padding: 0.85rem 0.5rem;
+        padding: 0.5rem;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -157,12 +182,12 @@
           line-height: 1;
 
           .num {
-            font-size: 1.55rem;
+            font-size: 1.35rem;
             font-weight: 900;
           }
 
           .unit {
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: 800;
           }
         }

@@ -33,13 +33,13 @@
                         </div>
                     </div>
 
-                    <!-- Mini Matriz 2x2 (Atención) -->
+                    <!-- Mini Matriz 3x3 (Atención) -->
                     <div class="mini-matriz-wrapper mini-matriz-atencion" [pTooltip]="obtenerTooltipMatrizAtencion(tk)" tooltipPosition="top">
-                        <div class="mini-matriz-2x2-grid">
+                        <div class="mini-matriz-grid">
                             <span *ngFor="let celda of celdasMatrizAtencion"
-                                class="celda-mm-2x2"
-                                [class.activa]="esCeldaAtencionActiva(tk, celda.prioridad)"
-                                [style.backgroundColor]="esCeldaAtencionActiva(tk, celda.prioridad) ? celda.color : ''">
+                                class="celda-mm"
+                                [class.activa]="esCeldaAtencionActiva(tk, celda.impacto, celda.urgencia)"
+                                [style.backgroundColor]="esCeldaAtencionActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatrizAtencion(tk) : ''">
                             </span>
                         </div>
                     </div>
@@ -61,8 +61,8 @@
             <td class="text-center" *ngIf="mostrarFedchaEstimacion">
                 <p-calendar [showTime]="false" [touchUI]="true" [hourFormat]="'12'"
                     (onSelect)="ManejadorDeFecha($event,tk)"
-                    placeholder="{{datesHelper.getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
-                    title="{{datesHelper.getDate(tk!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
+                    placeholder="{{datesHelper.getDate($any(tk)!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
+                    title="{{datesHelper.getDate($any(tk)!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
                     styleClass="table-calendar-custom"
                     appendTo="body" />
             </td>

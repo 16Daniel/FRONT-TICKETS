@@ -9,8 +9,7 @@ import {
 import { Observable, of } from 'rxjs';
 import { MatrizUrgencia } from '../interfaces/matriz-urgencia.interface';
 import { CeldaMatrizUrgencia } from '../interfaces/celda-matriz-urgencia.interface';
-import { MatrizAtencion } from '../interfaces/matriz-atencion.interface';
-import { clasificarCuadrante, TIEMPOS_ATENCION_SLA } from '../helpers/matriz-criticidad.helper';
+import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -153,50 +152,5 @@ export class MatrizUrgenciaService {
 
     const predeterminada = this.obtenerMatrizPredeterminada(matriz?.idArea || '1');
     return predeterminada.celdas.find((c) => c.impacto === imp && c.urgencia === urg)!;
-  }
-
-  /**
-   * Calcula la fecha estimada exacta a partir de la matriz de urgencia del área.
-   */
-  calcularFechaEstimacionConMatriz(
-    fechaBase: Date,
-    impacto: number,
-    urgencia: number,
-    matriz?: MatrizUrgencia | null
-  ): Date {
-    const fecha = new Date(fechaBase);
-    const celda = this.obtenerCelda(matriz, impacto, urgencia);
-    fecha.setHours(fecha.getHours() + celda.horas);
-    return fecha;
-  }
-
-  /**
-   * Calcula la fecha estimada sumando las horas de Urgencia (3×3) + Atención (2×2)
-   */
-  calcularFechaEstimacionCombinadaConMatrices(
-    fechaBase: Date,
-    impacto: number,
-    urgencia: number,
-    prioridadAtencion?: string,
-    matrizUrgencia?: MatrizUrgencia | null,
-    matrizAtencion?: MatrizAtencion | null
-  ): Date {
-    const fecha = new Date(fechaBase);
-    const celdaUrgencia = this.obtenerCelda(matrizUrgencia, impacto, urgencia);
-    const horasUrgencia = celdaUrgencia?.horas || 24;
-
-    let horasAtencion = 0;
-    if (prioridadAtencion) {
-      if (matrizAtencion && matrizAtencion.celdas && matrizAtencion.celdas.length > 0) {
-        const celdaAtencion = matrizAtencion.celdas.find((c) => c.prioridad === prioridadAtencion);
-        horasAtencion = celdaAtencion?.horas ?? 24;
-      } else {
-        horasAtencion = (TIEMPOS_ATENCION_SLA as any)[prioridadAtencion]?.horas ?? 24;
-      }
-    }
-
-    const totalHoras = horasUrgencia + horasAtencion;
-    fecha.setHours(fecha.getHours() + totalHoras);
-    return fecha;
   }
 }

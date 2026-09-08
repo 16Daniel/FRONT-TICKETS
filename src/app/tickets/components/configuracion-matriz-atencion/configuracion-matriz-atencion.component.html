@@ -8,7 +8,7 @@
       </div>
       <h3 class="titulo-matriz">
         <i class="bx bx-timer mr-1"></i>
-        Configuración de Matriz de Atención (2×2)
+        Configuración de Matriz de Atención (3×3)
       </h3>
       <p class="subtitulo-matriz">
         Personaliza los tiempos de resolución objetivo de los tickets una vez iniciado el soporte en esta área.
@@ -34,73 +34,41 @@
 
   <div class="cuerpo-panel" *ngIf="!cargando && matrizEditable">
     <div class="seccion-matriz-editor">
-      <!-- Columna Izquierda: Cuadrícula 2x2 Interactiva -->
+      <!-- Columna Izquierda: Cuadrícula 3x3 Interactiva -->
       <div class="columna-cuadricula">
         <div class="encabezado-seccion-cuadricula">
           <label class="etiqueta-bloque">Su criticidad y tiempo en la matriz:</label>
           <span class="pista-click">Haz clic en una celda para editar su tiempo</span>
         </div>
 
-        <div class="cuadricula-matriz-2x2">
-          <!-- Cuadrante 1: Arriba a la Izquierda -> CRÍTICO (Rojo) -->
-          <div 
-            class="celda-tiempo-interactiva"
-            [class.celda-activa]="celdaSeleccionada?.prioridad === 'Crítico'"
-            [style.background]="obtenerEstilo('Crítico').bg"
-            (click)="seleccionarCelda('Crítico')">
-            <div class="valor-principal" [style.color]="obtenerEstilo('Crítico').text">
-              <span class="num">{{ obtenerCeldaPorPrioridad('Crítico').valor }}</span>
-              <span class="unit">{{ obtenerCeldaPorPrioridad('Crítico').unidad }}</span>
-            </div>
-            <span class="badge-prioridad-mini" [style.color]="obtenerEstilo('Crítico').text">
-              CRÍTICO
-            </span>
+        <div class="cuadricula-matriz-3x3">
+          <div class="esquina-vacia"></div>
+          <div class="col-header" *ngFor="let col of MATRIZ_COLUMNAS">
+            <span>{{ col.label }}</span>
           </div>
 
-          <!-- Cuadrante 2: Arriba a la Derecha -> ALTO (Naranja) -->
-          <div 
-            class="celda-tiempo-interactiva"
-            [class.celda-activa]="celdaSeleccionada?.prioridad === 'Alto'"
-            [style.background]="obtenerEstilo('Alto').bg"
-            (click)="seleccionarCelda('Alto')">
-            <div class="valor-principal" [style.color]="obtenerEstilo('Alto').text">
-              <span class="num">{{ obtenerCeldaPorPrioridad('Alto').valor }}</span>
-              <span class="unit">{{ obtenerCeldaPorPrioridad('Alto').unidad }}</span>
+          <ng-container *ngFor="let fila of MATRIZ_FILAS">
+            <div class="fila-header">
+              <span>{{ fila.label }}</span>
             </div>
-            <span class="badge-prioridad-mini" [style.color]="obtenerEstilo('Alto').text">
-              ALTO
-            </span>
-          </div>
 
-          <!-- Cuadrante 3: Abajo a la Izquierda -> BAJO (Verde) -->
-          <div 
-            class="celda-tiempo-interactiva"
-            [class.celda-activa]="celdaSeleccionada?.prioridad === 'Bajo'"
-            [style.background]="obtenerEstilo('Bajo').bg"
-            (click)="seleccionarCelda('Bajo')">
-            <div class="valor-principal" [style.color]="obtenerEstilo('Bajo').text">
-              <span class="num">{{ obtenerCeldaPorPrioridad('Bajo').valor }}</span>
-              <span class="unit">{{ obtenerCeldaPorPrioridad('Bajo').unidad }}</span>
-            </div>
-            <span class="badge-prioridad-mini" [style.color]="obtenerEstilo('Bajo').text">
-              BAJO
-            </span>
-          </div>
+            <div 
+              *ngFor="let col of MATRIZ_COLUMNAS"
+              class="celda-tiempo-interactiva"
+              [class.celda-activa]="celdaSeleccionada?.impacto === fila.impacto && celdaSeleccionada?.urgencia === col.urgencia"
+              [style.background]="clasificarCuadrante(fila.impacto * col.urgencia).bg"
+              (click)="seleccionarCelda(fila.impacto, col.urgencia)">
+              
+              <div class="valor-principal" [style.color]="clasificarCuadrante(fila.impacto * col.urgencia).text">
+                <span class="num">{{ obtenerCelda(fila.impacto, col.urgencia).valor }}</span>
+                <span class="unit">{{ obtenerCelda(fila.impacto, col.urgencia).unidad }}</span>
+              </div>
 
-          <!-- Cuadrante 4: Abajo a la Derecha -> MEDIO (Amarillo) -->
-          <div 
-            class="celda-tiempo-interactiva"
-            [class.celda-activa]="celdaSeleccionada?.prioridad === 'Medio'"
-            [style.background]="obtenerEstilo('Medio').bg"
-            (click)="seleccionarCelda('Medio')">
-            <div class="valor-principal" [style.color]="obtenerEstilo('Medio').text">
-              <span class="num">{{ obtenerCeldaPorPrioridad('Medio').valor }}</span>
-              <span class="unit">{{ obtenerCeldaPorPrioridad('Medio').unidad }}</span>
+              <span class="badge-prioridad-mini" [style.color]="clasificarCuadrante(fila.impacto * col.urgencia).text">
+                {{ clasificarCuadrante(fila.impacto * col.urgencia).label }}
+              </span>
             </div>
-            <span class="badge-prioridad-mini" [style.color]="obtenerEstilo('Medio').text">
-              MEDIO
-            </span>
-          </div>
+          </ng-container>
         </div>
       </div>
 
@@ -111,25 +79,25 @@
             <span class="etiqueta-editor">EDITANDO CELDA SELECCIONADA</span>
             <span 
               class="badge-cuadrante-activo" 
-              [style.background]="obtenerEstilo(celdaSeleccionada.prioridad).bg" 
-              [style.color]="obtenerEstilo(celdaSeleccionada.prioridad).text">
+              [style.background]="clasificarCuadrante(celdaSeleccionada.score).bg" 
+              [style.color]="clasificarCuadrante(celdaSeleccionada.score).text">
               <i class="bx bx-check-shield mr-1"></i>
-              Prioridad: {{ celdaSeleccionada.prioridad }}
+              Prioridad: {{ clasificarCuadrante(celdaSeleccionada.score).label }}
             </span>
           </div>
 
           <div class="coordenadas-celda">
             <div class="dato-coord">
-              <span class="k">Prioridad:</span>
-              <span class="v">{{ celdaSeleccionada.prioridad }}</span>
+              <span class="k">Impacto:</span>
+              <span class="v">{{ celdaSeleccionada.impacto }} ({{ celdaSeleccionada.impacto === 3 ? 'Crítico' : celdaSeleccionada.impacto === 2 ? 'Moderado' : 'Leve' }})</span>
             </div>
             <div class="dato-coord">
-              <span class="k">Cuadrante:</span>
-              <span class="v">{{ celdaSeleccionada.posicion === 'arriba-izquierda' ? 'Sup. Izq. (Crítico)' : celdaSeleccionada.posicion === 'arriba-derecha' ? 'Sup. Der. (Alto)' : celdaSeleccionada.posicion === 'abajo-izquierda' ? 'Inf. Izq. (Bajo)' : 'Inf. Der. (Medio)' }}</span>
+              <span class="k">Urgencia:</span>
+              <span class="v">{{ celdaSeleccionada.urgencia }} ({{ celdaSeleccionada.urgencia === 3 ? 'Inmediata' : celdaSeleccionada.urgencia === 2 ? 'Media' : 'Baja' }})</span>
             </div>
             <div class="dato-coord">
-              <span class="k">Objetivo:</span>
-              <span class="v">{{ celdaSeleccionada.label }}</span>
+              <span class="k">Score:</span>
+              <span class="v">{{ celdaSeleccionada.score }}</span>
             </div>
           </div>
 

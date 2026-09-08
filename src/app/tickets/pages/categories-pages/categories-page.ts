@@ -326,6 +326,14 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     try {
       if (idPadre === null || idPadre === 'RAIZ') {
         const nuevoSecuencial = await this.categoriesService.obtenerSecuencial();
+        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
+        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
+        const criticidadAten = datos.criticidadAtencion || 2;
+        const urgenciaAten = datos.urgenciaAtencion || 2;
+        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
+        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+
         const nuevaCat: Categoria = {
           id: nuevoSecuencial,
           idArea: parseInt(this.areaSeleccionadaId, 10),
@@ -334,11 +342,18 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           subcategorias: [],
           activarSubcategorias: datos.tipo === 'rama',
           tipo: datos.tipo,
-          urgencia: datos.urgencia,
-          score: datos.score,
-          criticidad: datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2),
+          urgencia: urgenciaUrg,
+          score: scoreUrg,
+          criticidad: criticidadUrg,
+          criticidadUrgencia: criticidadUrg,
+          urgenciaUrgencia: urgenciaUrg,
+          scoreUrgencia: scoreUrg,
           prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
-          prioridadAtencion: datos.prioridadAtencion
+          criticidadAtencion: criticidadAten,
+          urgenciaAtencion: urgenciaAten,
+          scoreAtencion: scoreAten,
+          prioridadAtencion: datos.prioridadAtencion,
+          scoreGlobal: scoreGlob
         };
         (nuevaCat as any).prioridad = nuevaCat.prioridadUrgencia;
         await this.categoriesService.create(nuevaCat);
@@ -348,6 +363,15 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
         if (!info) return;
 
         if (!info.nodo.subcategorias) info.nodo.subcategorias = [];
+
+        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
+        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
+        const criticidadAten = datos.criticidadAtencion || 2;
+        const urgenciaAten = datos.urgenciaAtencion || 2;
+        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
+        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+
         const nuevaSub: Subcategoria = {
           id: generateGUID(),
           nombre: datos.nombre,
@@ -356,11 +380,18 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           subcategorias: [],
           activarSubcategorias: datos.tipo === 'rama',
           ...(datos.tipo === 'hoja' ? {
-            urgencia: datos.urgencia,
-            score: datos.score,
-            criticidad: datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2),
+            urgencia: urgenciaUrg,
+            score: scoreUrg,
+            criticidad: criticidadUrg,
+            criticidadUrgencia: criticidadUrg,
+            urgenciaUrgencia: urgenciaUrg,
+            scoreUrgencia: scoreUrg,
             prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
-            prioridadAtencion: datos.prioridadAtencion
+            criticidadAtencion: criticidadAten,
+            urgenciaAtencion: urgenciaAten,
+            scoreAtencion: scoreAten,
+            prioridadAtencion: datos.prioridadAtencion,
+            scoreGlobal: scoreGlob
           } : {})
         };
         if (datos.tipo === 'hoja') {
@@ -389,12 +420,28 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
       objetivo.nombre = datos.nombre;
       objetivo.tipo = datos.tipo;
       if (datos.tipo === 'hoja') {
-        objetivo.urgencia = datos.urgencia;
-        objetivo.score = datos.score;
-        objetivo.criticidad = datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
+        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
+        const criticidadAten = datos.criticidadAtencion || 2;
+        const urgenciaAten = datos.urgenciaAtencion || 2;
+        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
+        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+
+        objetivo.urgencia = urgenciaUrg;
+        objetivo.score = scoreUrg;
+        objetivo.criticidad = criticidadUrg;
+        objetivo.criticidadUrgencia = criticidadUrg;
+        objetivo.urgenciaUrgencia = urgenciaUrg;
+        objetivo.scoreUrgencia = scoreUrg;
         objetivo.prioridadUrgencia = (datos.prioridadUrgencia || datos.prioridad) as any;
         (objetivo as any).prioridad = objetivo.prioridadUrgencia;
+
+        objetivo.criticidadAtencion = criticidadAten;
+        objetivo.urgenciaAtencion = urgenciaAten;
+        objetivo.scoreAtencion = scoreAten;
         objetivo.prioridadAtencion = datos.prioridadAtencion;
+        objetivo.scoreGlobal = scoreGlob;
       } else {
         objetivo.activarSubcategorias = true;
       }

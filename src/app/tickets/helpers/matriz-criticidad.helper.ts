@@ -97,28 +97,3 @@ export function obtenerTiempoSla(impacto: number, urgencia: number): TiempoSlaCe
   return TIEMPOS_MATRIZ_SLA[key] || { horas: 24, label: '1 d' };
 }
 
-export const TIEMPOS_ATENCION_SLA: Record<string, { horas: number; label: string }> = {
-  'Crítico': { horas: 2, label: '2 h' },
-  'Alto': { horas: 24, label: '24 h' },
-  'Medio': { horas: 48, label: '2 d' },
-  'Bajo': { horas: 72, label: '3 d' }
-};
-
-export function obtenerTiempoAtencionSla(prioridad?: string): { horas: number; label: string } {
-  const p = prioridad || 'Medio';
-  return TIEMPOS_ATENCION_SLA[p] || TIEMPOS_ATENCION_SLA['Medio'];
-}
-
-export function calcularFechaEstimacion(
-  fechaBase: Date,
-  impacto: number,
-  urgencia: number,
-  prioridadAtencion?: string
-): Date {
-  const fecha = new Date(fechaBase);
-  const slaUrgencia = obtenerTiempoSla(impacto, urgencia);
-  const slaAtencion = prioridadAtencion ? obtenerTiempoAtencionSla(prioridadAtencion) : { horas: 0, label: '0 h' };
-  const horasTotales = slaUrgencia.horas + slaAtencion.horas;
-  fecha.setHours(fecha.getHours() + horasTotales);
-  return fecha;
-}

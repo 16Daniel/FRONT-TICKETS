@@ -17,14 +17,11 @@ import Swal from 'sweetalert2';
 import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
 import { CeldaMatrizAtencion } from '../../interfaces/celda-matriz-atencion.interface';
 import { MatrizAtencionService } from '../../services/matriz-atencion.service';
-
-interface InfoEstiloCuadrante {
-  bg: string;
-  text: string;
-  border: string;
-  icon: string;
-  label: string;
-}
+import {
+  MATRIZ_FILAS,
+  MATRIZ_COLUMNAS,
+  clasificarCuadrante
+} from '../../helpers/matriz-criticidad.helper';
 
 @Component({
   selector: 'app-configuracion-matriz-atencion',
@@ -39,6 +36,10 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
 
   @Output() cerrar = new EventEmitter<void>();
   @Output() guardado = new EventEmitter<MatrizAtencion>();
+
+  readonly MATRIZ_FILAS = MATRIZ_FILAS;
+  readonly MATRIZ_COLUMNAS = MATRIZ_COLUMNAS;
+  readonly clasificarCuadrante = clasificarCuadrante;
 
   matrizEditable!: MatrizAtencion;
   celdaSeleccionada: CeldaMatrizAtencion | null = null;
@@ -84,7 +85,7 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
       this.idArea,
       this.nombreArea
     );
-    this.celdaSeleccionada = this.obtenerCeldaPorPrioridad('Crítico');
+    this.celdaSeleccionada = this.obtenerCelda(3, 3);
     this.cargando = false;
     this.cdr.detectChanges();
 
@@ -98,8 +99,14 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
           }
           this.cargando = false;
 
-          const prioridadActual = this.celdaSeleccionada?.prioridad || 'Crítico';
-          this.celdaSeleccionada = this.obtenerCeldaPorPrioridad(prioridadActual);
+          if (!this.celdaSeleccionada) {
+            this.celdaSeleccionada = this.obtenerCelda(3, 3);
+          } else {
+            this.celdaSeleccionada = this.obtenerCelda(
+              this.celdaSeleccionada.impacto,
+              this.celdaSeleccionada.urgencia
+            );
+          }
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -110,54 +117,19 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
       });
   }
 
-  obtenerCeldaPorPrioridad(prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'): CeldaMatrizAtencion {
-    if (this.matrizEditable && this.matrizEditable.celdas) {
-      const encontrada = this.matrizEditable.celdas.find((c) => c.prioridad === prioridad);
-      if (encontrada) return encontrada;
+  obtenerCelda(impacto: number, urgencia: number): CeldaMatrizAtencion {
+    if (!this.matrizEditable || !this.matrizEditable.celdas) {
+      const def = this.matrizAtencionService.obtenerMatrizPredeterminada(this.idArea, this.nombreArea);
+      return def.celdas.find((c) => c.impacto === impacto && c.urgencia === urgencia)!;
     }
-    const def = this.matrizAtencionService.obtenerMatrizPredeterminada(this.idArea, this.nombreArea);
-    return def.celdas.find((c) => c.prioridad === prioridad)!;
+    const celda = this.matrizEditable.celdas.find(
+      (c) => c.impacto === impacto && c.urgencia === urgencia
+    );
+    return celda || this.matrizAtencionService.obtenerCelda(this.matrizEditable, impacto, urgencia);
   }
 
-  seleccionarCelda(prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'): void {
-    this.celdaSeleccionada = this.obtenerCeldaPorPrioridad(prioridad);
-  }
-
-  obtenerEstilo(prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'): InfoEstiloCuadrante {
-    switch (prioridad) {
-      case 'Crítico':
-        return {
-          bg: '#FFF1F2',
-          text: '#E11D48',
-          border: '#FECDD3',
-          icon: 'bx-check-shield',
-          label: 'Crítico'
-        };
-      case 'Alto':
-        return {
-          bg: '#FFEDD5',
-          text: '#C2410C',
-          border: '#FED7AA',
-          icon: 'bx-check-shield',
-          label: 'Alto'
-        };
-      case 'Medio':
-        return {
-          bg: '#FEFCE8',
-          text: '#CA8A04',
-          border: '#FEF08A',
-          icon: 'bx-check-shield',
-          label: 'Medio'
-        };
-      case 'Bajo':
-        return {
-          bg: '#F0FDF4',
-          text: '#059669',
-          border: '#BBF7D0',
-          icon: 'bx-check-shield',
-          label: 'Bajo'
-        };
-    }
+  seleccionarCelda(impacto: number, urgencia: number): void {
+    this.celdaSeleccionada = this.obtenerCelda(impacto, urgencia);
   }
 
   aplicarPreset(preset: { valor: number; unidad: 'h' | 'd' }): void {
@@ -202,7 +174,7 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
   restablecerValoresPredeterminados(): void {
     Swal.fire({
       title: '¿Restablecer matriz a valores base?',
-      text: 'Se cargarán los tiempos de atención base (Crítico: 2h, Alto: 24h, Medio: 48h, Bajo: 72h).',
+      text: 'Se cargarán los tiempos predeterminados de atención (2d, 12h, 2h, 4d, 1d, 8h, 5d, 3d, 1.5d).',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, restablecer',
@@ -215,7 +187,10 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
           this.nombreArea
         );
         if (this.celdaSeleccionada) {
-          this.celdaSeleccionada = this.obtenerCeldaPorPrioridad(this.celdaSeleccionada.prioridad);
+          this.celdaSeleccionada = this.obtenerCelda(
+            this.celdaSeleccionada.impacto,
+            this.celdaSeleccionada.urgencia
+          );
         }
         this.cdr.detectChanges();
       }

@@ -133,10 +133,10 @@ export class AdminMaintenanceTabComponent {
     this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
-        // Ordenar por score de criticidad (mayor a menor) y luego por fecha más reciente
+        // Ordenar por score global/urgencia (mayor a menor) y luego por fecha más reciente
         this.tickets.sort((a, b) => {
-          const scoreA = a.score || ((a.criticidad && a.urgencia) ? a.criticidad * a.urgencia : 4);
-          const scoreB = b.score || ((b.criticidad && b.urgencia) ? b.criticidad * b.urgencia : 4);
+          const scoreA = a.scoreGlobal || a.scoreUrgencia || (a as any).score || (((a as any).criticidad && (a as any).urgencia) ? (a as any).criticidad * (a as any).urgencia : 4);
+          const scoreB = b.scoreGlobal || b.scoreUrgencia || (b as any).score || (((b as any).criticidad && (b as any).urgencia) ? (b as any).criticidad * (b as any).urgencia : 4);
           if (scoreB !== scoreA) {
             return scoreB - scoreA;
           }

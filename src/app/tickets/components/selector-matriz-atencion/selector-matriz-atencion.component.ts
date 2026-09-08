@@ -11,16 +11,17 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { Subscription } from 'rxjs';
+import {
+  MATRIZ_FILAS,
+  MATRIZ_COLUMNAS,
+  calcularScore,
+  clasificarCuadrante,
+  obtenerTiempoSla
+} from '../../helpers/matriz-criticidad.helper';
+import { CuadranteInfo } from '../../interfaces/cuadrante-info.interface';
 import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
 import { CeldaMatrizAtencion } from '../../interfaces/celda-matriz-atencion.interface';
 import { MatrizAtencionService } from '../../services/matriz-atencion.service';
-
-interface InfoCuadrante2x2 {
-  prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-  bg: string;
-  text: string;
-  icon: string;
-}
 
 @Component({
   selector: 'app-selector-matriz-atencion',
@@ -30,22 +31,25 @@ interface InfoCuadrante2x2 {
   styleUrl: './selector-matriz-atencion.component.scss'
 })
 export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() prioridadSeleccionada: 'Crítico' | 'Alto' | 'Medio' | 'Bajo' = 'Medio';
+  @Input() impacto: number = 2;
+  @Input() urgencia: number = 2;
   @Input() idArea?: string;
   @Input() matrizAtencion?: MatrizAtencion | null;
+  @Input() prioridadSeleccionada?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
 
   @Output() cambioSeleccion = new EventEmitter<{
+    impacto: number;
+    urgencia: number;
+    score: number;
     prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
     tiempo: string;
     horas: number;
   }>();
 
-  readonly cuadrantes2x2: InfoCuadrante2x2[] = [
-    { prioridad: 'Crítico', bg: '#FFF1F2', text: '#E11D48', icon: 'bx-flame' },
-    { prioridad: 'Alto', bg: '#FFEDD5', text: '#C2410C', icon: 'bx-error-alt' },
-    { prioridad: 'Bajo', bg: '#F0FDF4', text: '#059669', icon: 'bx-check-circle' },
-    { prioridad: 'Medio', bg: '#FEFCE8', text: '#CA8A04', icon: 'bx-time-five' }
-  ];
+  readonly MATRIZ_FILAS = MATRIZ_FILAS;
+  readonly MATRIZ_COLUMNAS = MATRIZ_COLUMNAS;
+  readonly calcularScore = calcularScore;
+  readonly clasificarCuadrante = clasificarCuadrante;
 
   private subscripcionMatriz?: Subscription;
 
@@ -55,6 +59,9 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
   ) {}
 
   ngOnInit(): void {
+    if (this.prioridadSeleccionada && (!this.impacto || !this.urgencia)) {
+      this.mapearPrioridadACoordenadas(this.prioridadSeleccionada);
+    }
     this.sincronizarMatriz();
   }
 
@@ -65,10 +72,35 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
     } else if (changes['idArea'] && !this.matrizAtencion) {
       this.sincronizarMatriz();
     }
+
+    if (changes['prioridadSeleccionada'] && this.prioridadSeleccionada && !changes['impacto'] && !changes['urgencia']) {
+      this.mapearPrioridadACoordenadas(this.prioridadSeleccionada);
+    }
   }
 
   ngOnDestroy(): void {
     this.subscripcionMatriz?.unsubscribe();
+  }
+
+  private mapearPrioridadACoordenadas(p: string): void {
+    switch (p) {
+      case 'Crítico':
+        this.impacto = 3;
+        this.urgencia = 3;
+        break;
+      case 'Alto':
+        this.impacto = 2;
+        this.urgencia = 3;
+        break;
+      case 'Medio':
+        this.impacto = 2;
+        this.urgencia = 2;
+        break;
+      case 'Bajo':
+        this.impacto = 1;
+        this.urgencia = 1;
+        break;
+    }
   }
 
   private sincronizarMatriz(): void {
@@ -85,25 +117,49 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
     }
   }
 
-  obtenerCelda(prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'): CeldaMatrizAtencion {
-    return this.matrizAtencionService.obtenerCeldaPorPrioridad(this.matrizAtencion, prioridad);
-  }
-
-  seleccionar(prioridad: 'Crítico' | 'Alto' | 'Medio' | 'Bajo'): void {
+  seleccionar(imp: number, urg: number): void {
+    this.impacto = imp;
+    this.urgencia = urg;
+    const celda = this.obtenerCelda(imp, urg);
+    const score = calcularScore(imp, urg);
+    const prioridad = (celda.prioridad || clasificarCuadrante(score).label) as any;
     this.prioridadSeleccionada = prioridad;
-    const celda = this.obtenerCelda(prioridad);
+
     this.cambioSeleccion.emit({
+      impacto: imp,
+      urgencia: urg,
+      score,
       prioridad,
       tiempo: celda.label,
       horas: celda.horas
     });
   }
 
-  get celdaActual(): CeldaMatrizAtencion {
-    return this.obtenerCelda(this.prioridadSeleccionada);
+  obtenerCelda(imp: number, urg: number): CeldaMatrizAtencion {
+    return this.matrizAtencionService.obtenerCelda(this.matrizAtencion, imp, urg);
   }
 
-  get estiloActual(): InfoCuadrante2x2 {
-    return this.cuadrantes2x2.find((c) => c.prioridad === this.prioridadSeleccionada) || this.cuadrantes2x2[3];
+  obtenerTiempoSlaCelda(imp: number, urg: number): { horas: number; label: string } {
+    const celda = this.obtenerCelda(imp, urg);
+    if (celda) {
+      return { horas: celda.horas, label: celda.label };
+    }
+    return obtenerTiempoSla(imp, urg);
+  }
+
+  get celdaActual(): CeldaMatrizAtencion {
+    return this.obtenerCelda(this.impacto, this.urgencia);
+  }
+
+  get scoreActual(): number {
+    return calcularScore(this.impacto, this.urgencia);
+  }
+
+  get cuadranteActual(): CuadranteInfo {
+    return clasificarCuadrante(this.scoreActual);
+  }
+
+  get tiempoSlaActual(): { horas: number; label: string } {
+    return this.obtenerTiempoSlaCelda(this.impacto, this.urgencia);
   }
 }

@@ -269,6 +269,17 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
     const esSub = String(raiz.id) !== String(nodo.id);
     const rutaCompleta = rutaNombres.join(' › ');
 
+    const critUrg = nodo.criticidadUrgencia || (nodo as any).criticidad || (nodo as any).impacto || 2;
+    const urgUrg = nodo.urgenciaUrgencia || nodo.urgencia || 2;
+    const scUrg = nodo.scoreUrgencia || nodo.score || (critUrg * urgUrg);
+    const pUrg = nodo.prioridadUrgencia || (nodo as any).prioridad || 'Medio';
+
+    const critAten = nodo.criticidadAtencion || critUrg;
+    const urgAten = nodo.urgenciaAtencion || urgUrg;
+    const scAten = nodo.scoreAtencion || (critAten * urgAten);
+    const pAten = (nodo.prioridadAtencion || raiz.prioridadAtencion || 'Medio') as any;
+    const scGlobal = nodo.scoreGlobal || (scUrg + scAten);
+
     this.nodoSeleccionadoId = String(nodo.id);
     this.nodoSeleccionado = {
       categoria: raiz,
@@ -278,9 +289,19 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       nombreCategoria: raiz.nombre,
       nombreSubcategoria: esSub ? nodo.nombre : null,
       rutaCompleta,
-      prioridad: nodo.prioridadUrgencia || (nodo as any).prioridad || 'Medio',
-      prioridadAtencion: nodo.prioridadAtencion || raiz.prioridadAtencion || 'Medio',
-      score: nodo.score || 4,
+      prioridad: pUrg,
+      prioridadUrgencia: pUrg,
+      prioridadAtencion: pAten,
+      criticidadUrgencia: critUrg,
+      urgenciaUrgencia: urgUrg,
+      scoreUrgencia: scUrg,
+      criticidadAtencion: critAten,
+      urgenciaAtencion: urgAten,
+      scoreAtencion: scAten,
+      scoreGlobal: scGlobal,
+      score: scUrg,
+      criticidad: critUrg,
+      urgencia: urgUrg
     };
 
     this.alSeleccionar.emit(this.nodoSeleccionado);

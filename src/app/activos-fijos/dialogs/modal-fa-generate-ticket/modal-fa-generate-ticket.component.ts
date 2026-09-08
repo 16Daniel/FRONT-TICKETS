@@ -32,10 +32,6 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { SelectorArbolCategoriaComponent } from '../../../tickets/components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
-import { calcularFechaEstimacion } from '../../../tickets/helpers/matriz-criticidad.helper';
-import { MatrizUrgenciaService } from '../../../tickets/services/matriz-urgencia.service';
-import { MatrizAtencionService } from '../../../tickets/services/matriz-atencion.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -80,9 +76,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
-    private firebaseStorage: FirebaseStorageService,
-    private matrizUrgenciaService: MatrizUrgenciaService,
-    private matrizAtencionService: MatrizAtencionService
+    private firebaseStorage: FirebaseStorageService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -161,24 +155,30 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.idSubcategoria = seleccion.idSubcategoria || null;
     this.ticket.nombreSubcategoria = seleccion.nombreSubcategoria || '';
 
-    // Guardar criticidad, urgencia y score calculados desde la matriz
-    this.ticket.score = seleccion.score || 4;
-    let imp = seleccion.subcategoria?.criticidad || seleccion.categoria?.criticidad;
-    if (!imp || imp > 3) {
-      if (seleccion.subcategoria?.score && seleccion.subcategoria?.urgencia) {
-        imp = Math.round(seleccion.subcategoria.score / seleccion.subcategoria.urgencia);
-      } else if (seleccion.categoria?.score && seleccion.categoria?.urgencia) {
-        imp = Math.round(seleccion.categoria.score / seleccion.categoria.urgencia);
-      } else if (seleccion.prioridad) {
-        const p = seleccion.prioridad.toUpperCase();
-        imp = p.includes('CRÍT') || p.includes('CRIT') ? 3 : p.includes('ALT') ? 3 : p.includes('MED') ? 2 : 1;
-      } else {
-        imp = 2;
-      }
-    }
-    this.ticket.criticidad = Math.min(3, Math.max(1, imp || 2));
-    this.ticket.urgencia = Math.min(3, Math.max(1, seleccion.subcategoria?.urgencia || seleccion.categoria?.urgencia || 2));
-    this.ticket.prioridadAtencion = seleccion.prioridadAtencion || seleccion.subcategoria?.prioridadAtencion || seleccion.categoria?.prioridadAtencion || 'Medio';
+    // Urgencia (3×3)
+    const critUrg = seleccion.criticidadUrgencia || seleccion.subcategoria?.criticidadUrgencia || seleccion.categoria?.criticidadUrgencia || seleccion.criticidad || 2;
+    const urgUrg = seleccion.urgenciaUrgencia || seleccion.subcategoria?.urgenciaUrgencia || seleccion.categoria?.urgenciaUrgencia || seleccion.urgencia || 2;
+    const scoreUrg = seleccion.scoreUrgencia || seleccion.score || (critUrg * urgUrg);
+    const prioUrg = seleccion.prioridadUrgencia || seleccion.prioridad || 'Medio';
+
+    this.ticket.criticidadUrgencia = Math.min(3, Math.max(1, critUrg));
+    this.ticket.urgenciaUrgencia = Math.min(3, Math.max(1, urgUrg));
+    this.ticket.scoreUrgencia = scoreUrg;
+    this.ticket.prioridadUrgencia = prioUrg as any;
+
+    // Atención (3×3)
+    const critAten = seleccion.criticidadAtencion || seleccion.subcategoria?.criticidadAtencion || seleccion.categoria?.criticidadAtencion || this.ticket.criticidadUrgencia;
+    const urgAten = seleccion.urgenciaAtencion || seleccion.subcategoria?.urgenciaAtencion || seleccion.categoria?.urgenciaAtencion || this.ticket.urgenciaUrgencia;
+    const scoreAten = seleccion.scoreAtencion || (critAten * urgAten);
+    const prioAten = seleccion.prioridadAtencion || seleccion.subcategoria?.prioridadAtencion || seleccion.categoria?.prioridadAtencion || 'Medio';
+
+    this.ticket.criticidadAtencion = Math.min(3, Math.max(1, critAten));
+    this.ticket.urgenciaAtencion = Math.min(3, Math.max(1, urgAten));
+    this.ticket.scoreAtencion = scoreAten;
+    this.ticket.prioridadAtencion = prioAten as any;
+
+    // Global
+    this.ticket.scoreGlobal = seleccion.scoreGlobal || (scoreUrg + scoreAten);
   }
 
   onLimpiarCategoria(): void {
@@ -187,10 +187,15 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.nombreCategoria = '';
     this.ticket.idSubcategoria = null;
     this.ticket.nombreSubcategoria = '';
-    this.ticket.score = undefined;
-    this.ticket.criticidad = undefined;
-    this.ticket.urgencia = undefined;
+    this.ticket.criticidadUrgencia = undefined;
+    this.ticket.urgenciaUrgencia = undefined;
+    this.ticket.scoreUrgencia = undefined;
+    this.ticket.prioridadUrgencia = undefined;
+    this.ticket.criticidadAtencion = undefined;
+    this.ticket.urgenciaAtencion = undefined;
+    this.ticket.scoreAtencion = undefined;
     this.ticket.prioridadAtencion = undefined;
+    this.ticket.scoreGlobal = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {
@@ -224,29 +229,6 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       count
     );
 
-    let fechaEstimacion = new Date();
-    try {
-      const [matrizUrgencia, matrizAtencion] = await Promise.all([
-        firstValueFrom(this.matrizUrgenciaService.obtenerMatrizPorArea(String(this.ticket.idArea))),
-        firstValueFrom(this.matrizAtencionService.obtenerMatrizPorArea(String(this.ticket.idArea)))
-      ]);
-      fechaEstimacion = this.matrizUrgenciaService.calcularFechaEstimacionCombinadaConMatrices(
-        new Date(),
-        this.ticket.criticidad || 2,
-        this.ticket.urgencia || 2,
-        this.ticket.prioridadAtencion,
-        matrizUrgencia,
-        matrizAtencion
-      );
-    } catch {
-      fechaEstimacion = calcularFechaEstimacion(
-        new Date(),
-        this.ticket.criticidad || 2,
-        this.ticket.urgencia || 2,
-        this.ticket.prioridadAtencion
-      );
-    }
-
     const idsResponsablesTicket = this.obtenerResponsablesTicket(
       String(this.ticket.idSucursal),
       String(this.ticket.idArea)
@@ -276,7 +258,6 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.idCategoria = this.ticket.idCategoria.toString();
     this.ticket.idSubcategoria = this.ticket.idSubcategoria ? this.ticket.idSubcategoria.toString() : null;
     this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
-    this.ticket.fechaEstimacion = fechaEstimacion;
     this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
     this.ticket.idUsuario = this.usuarioActivo?.id;
     this.ticket.folio = folio;
