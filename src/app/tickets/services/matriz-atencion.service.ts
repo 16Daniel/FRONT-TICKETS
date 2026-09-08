@@ -6,7 +6,7 @@ import {
   setDoc,
   Timestamp
 } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Observable, of, shareReplay } from 'rxjs';
 import { MatrizAtencion } from '../interfaces/matriz-atencion.interface';
 import { CeldaMatrizAtencion } from '../interfaces/celda-matriz-atencion.interface';
 import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
@@ -16,6 +16,7 @@ import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
 })
 export class MatrizAtencionService {
   private readonly nombreColeccion = 'cat_matriz_atencion';
+  private cacheObservables = new Map<string, Observable<MatrizAtencion>>();
 
   constructor(private firestore: Firestore) {}
 
@@ -54,29 +55,30 @@ export class MatrizAtencionService {
    * Obtiene y escucha en tiempo real la configuración de la matriz de atención (3×3) de un área.
    */
   obtenerMatrizPorArea(idArea: string, nombreArea: string = ''): Observable<MatrizAtencion> {
-    if (!idArea) {
-      return of(this.obtenerMatrizPredeterminada('1', nombreArea));
+    const areaKey = String(idArea || '1');
+    if (this.cacheObservables.has(areaKey)) {
+      return this.cacheObservables.get(areaKey)!;
     }
 
-    return new Observable<MatrizAtencion>((observer) => {
-      const documentoRef = doc(this.firestore, `${this.nombreColeccion}/${String(idArea)}`);
+    const obs$ = new Observable<MatrizAtencion>((observer) => {
+      const documentoRef = doc(this.firestore, `${this.nombreColeccion}/${areaKey}`);
 
       const unsubscribe = onSnapshot(
         documentoRef,
         (snapshot) => {
           if (!snapshot.exists()) {
-            observer.next(this.obtenerMatrizPredeterminada(idArea, nombreArea));
+            observer.next(this.obtenerMatrizPredeterminada(areaKey, nombreArea));
             return;
           }
 
           const data = snapshot.data() as MatrizAtencion;
           if (!data || !data.celdas || data.celdas.length === 0) {
-            observer.next(this.obtenerMatrizPredeterminada(idArea, nombreArea || data?.nombreArea));
+            observer.next(this.obtenerMatrizPredeterminada(areaKey, nombreArea || data?.nombreArea));
             return;
           }
 
           // Completar con valores predeterminados si faltase alguna celda o viniera en formato legacy
-          const defecto = this.obtenerMatrizPredeterminada(idArea, nombreArea || data.nombreArea);
+          const defecto = this.obtenerMatrizPredeterminada(areaKey, nombreArea || data.nombreArea);
           const celdasCompletas = defecto.celdas.map((cDef) => {
             const encontrada = data.celdas.find(
               (c) => c.impacto === cDef.impacto && c.urgencia === cDef.urgencia
@@ -86,19 +88,24 @@ export class MatrizAtencionService {
 
           observer.next({
             ...data,
-            idArea: String(idArea),
+            idArea: areaKey,
             nombreArea: nombreArea || data.nombreArea || '',
             celdas: celdasCompletas
           });
         },
         (error) => {
           console.error('Error al escuchar matriz de atención:', error);
-          observer.next(this.obtenerMatrizPredeterminada(idArea, nombreArea));
+          observer.next(this.obtenerMatrizPredeterminada(areaKey, nombreArea));
         }
       );
 
       return () => unsubscribe();
-    });
+    }).pipe(
+      shareReplay({ bufferSize: 1, refCount: false })
+    );
+
+    this.cacheObservables.set(areaKey, obs$);
+    return obs$;
   }
 
   /**

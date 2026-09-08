@@ -36,6 +36,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { DialogModule } from 'primeng/dialog';
 import { SelectorArbolCategoriaComponent } from '../selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
+import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 
 @Component({
   selector: 'app-admin-tickets-list',
@@ -54,7 +55,8 @@ import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-catego
     TooltipModule,
     CalendarModule,
     DialogModule,
-    SelectorArbolCategoriaComponent
+    SelectorArbolCategoriaComponent,
+    TicketSlaGaugeComponent
   ],
   templateUrl: './admin-tickets-list.component.html',
   styleUrl: './admin-tickets-list.component.scss',

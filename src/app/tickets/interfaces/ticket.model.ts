@@ -29,6 +29,7 @@ export class Ticket {
 
   idPrioridadTicket?: string; // se quitara
   fecha: Timestamp | any = new Date();
+  fechaAtencion?: Timestamp | any;
   fechaFin: Timestamp | null = null;
   solicitante: string = '';
   idResponsableFinaliza: string = '';

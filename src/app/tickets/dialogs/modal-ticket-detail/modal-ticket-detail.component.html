@@ -1,54 +1,213 @@
-<p-dialog header="DETALLES TICKET" [modal]="true" [(visible)]="showModalTicketDetail" [style]="{ width: '50rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog
+  [modal]="true"
+  [(visible)]="showModalTicketDetail"
+  [style]="{ width: '56rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '80vw', '575px': '95vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="modal-ticket-detail-dialog"
+  (onHide)="onHide()">
 
-    <div *ngIf="ticket" class="modal-ticket-content">
+  <!-- Cabecera Personalizada -->
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header" *ngIf="ticket">
+      <div class="header-left">
+        <div class="folio-badge">
+          <i class="bx bx-hash"></i>
+          <span>{{ ticket.folio }}</span>
+        </div>
+        <div
+          class="status-pill"
+          [ngStyle]="{
+            'background-color': obtenerStatusColor(ticket.idEstatusTicket).bg,
+            'color': obtenerStatusColor(ticket.idEstatusTicket).text,
+            'border': '1px solid ' + obtenerStatusColor(ticket.idEstatusTicket).border
+          }">
+          <span class="status-dot" [ngStyle]="{'background-color': obtenerStatusColor(ticket.idEstatusTicket).dot}"></span>
+          {{ obtenerStatusLabel(ticket.idEstatusTicket) }}
+        </div>
+      </div>
 
-        <!-- Descripción -->
-        <section class="ticket-section">
-            <h4>DESCRIPCIÓN</h4>
-            <ng-container *ngIf="ticket.descripcion; else noDescripcion">
-                <p [innerHTML]="ticket.descripcion"></p>
-            </ng-container>
-            <ng-template #noDescripcion>
-                <p>No hay descripción</p>
-            </ng-template>
-        </section>
-
-        <!-- Imágenes de evidencia -->
-        <section class="ticket-section" *ngIf="ticket.imagenesEvidencia?.length">
-            <h4>EVIDENCIA</h4>
-            <div class="evidencias-container">
-                <ng-container *ngFor="let url of ticket.imagenesEvidencia">
-                    <img [src]="url" alt="Evidencia" class="imagen-evidencia" (click)="abrirModalImagen(url)" />
-                </ng-container>
-            </div>
-        </section>
-
-        <!-- Comentarios Finales -->
-        <section class="ticket-section" *ngIf="ticket.idEstatusTicket == '3'">
-            <h4>COMENTARIOS FINALES</h4>
-            <p [innerHTML]="ticket.comentariosFinales"></p>
-        </section>
-
-        <!-- Botón TRABAJAR -->
-        <div class="d-flex justify-content-end mt-3"
-            *ngIf="usuario?.idRol == '4' && !['2', '3', '5', '7'].includes(ticket?.idEstatusTicket!)"
-            (click)="onClick()">
-            <button class="btn bg-p-b p-3">TRABAJAR</button>
+      <div class="header-right">
+        <div
+          *ngIf="ticket.prioridadUrgencia"
+          class="priority-badge"
+          [pTooltip]="'Prioridad Urgencia: ' + ticket.prioridadUrgencia"
+          tooltipPosition="bottom"
+          [ngStyle]="{
+            'background-color': obtenerPrioridadColor(ticket.prioridadUrgencia).bg,
+            'color': obtenerPrioridadColor(ticket.prioridadUrgencia).text,
+            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridadUrgencia).border
+          }">
+          <i class="bx bxs-circle"></i>
+          <span>Urgencia: {{ ticket.prioridadUrgencia }}</span>
         </div>
 
-        <!-- Botón ASIGNAR A ESPECIALISTA -->
-        <div class="d-flex mt-3"
-            *ngIf="usuario?.idArea == '4' && usuario?.idRol == '5' && ticket?.idEstatusTicket == '2' && !ticket?.esAsignadoEspecialista"
-            (click)="onClickAsignarEspecialista()">
-            <button class="btn btn-danger p-3">ASIGNAR A ESPECIALISTA</button>
+        <div
+          *ngIf="ticket.prioridadAtencion"
+          class="priority-badge"
+          [pTooltip]="'Prioridad Atención: ' + ticket.prioridadAtencion"
+          tooltipPosition="bottom"
+          [ngStyle]="{
+            'background-color': obtenerPrioridadColor(ticket.prioridadAtencion).bg,
+            'color': obtenerPrioridadColor(ticket.prioridadAtencion).text,
+            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridadAtencion).border
+          }">
+          <i class="bx bxs-circle"></i>
+          <span>Atención: {{ ticket.prioridadAtencion }}</span>
         </div>
+      </div>
     </div>
+  </ng-template>
+
+  <!-- Cuerpo del Modal -->
+  <div *ngIf="ticket" class="modal-ticket-body">
+
+    <!-- Tarjeta Principal de Información + SLA Gauge -->
+    <div class="ticket-card summary-card">
+      <div class="summary-info-grid">
+        <div class="info-item">
+          <span class="info-label"><i class="bx bx-user"></i> Solicitante</span>
+          <span class="info-value text-uppercase">{{ ticket.solicitante || 'No registrado' }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label"><i class="bx bx-store-alt"></i> Sucursal</span>
+          <span class="info-value">{{ obtenerNombreSucursal(ticket.idSucursal) }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label"><i class="bx bx-briefcase"></i> Área</span>
+          <span class="info-value">{{ obtenerNombreArea(ticket.idArea) }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label"><i class="bx bx-folder"></i> Categoría</span>
+          <span class="info-value">
+            {{ ticket.nombreCategoria || 'Sin categoría' }}
+            <span *ngIf="ticket.nombreSubcategoria" class="subcategoria-tag">
+              <i class="bx bx-chevron-right"></i> {{ ticket.nombreSubcategoria }}
+            </span>
+          </span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label"><i class="bx bx-calendar"></i> Creación</span>
+          <span class="info-value">{{ datesHelper.getDate(ticket.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label"><i class="bx bx-time-five"></i> Inicio Atención</span>
+          <span class="info-value" [class.text-muted]="!ticket.fechaAtencion">
+            {{ ticket.fechaAtencion ? (datesHelper.getDate(ticket.fechaAtencion) | date: 'dd/MM/yyyy hh:mm a') : 'Pendiente de inicio' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- SLA Dual Gauge -->
+      <div class="summary-sla-side">
+        <div class="sla-side-title">Cumplimiento SLA</div>
+        <app-ticket-sla-gauge [ticket]="ticket" [size]="82"></app-ticket-sla-gauge>
+        <div class="sla-legends">
+          <span class="legend-item"><span class="legend-dot exterior"></span> Urgencia</span>
+          <span class="legend-item"><span class="legend-dot interior"></span> Atención</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de Descripción -->
+    <div class="ticket-card description-card">
+      <div class="card-header-strip">
+        <i class="bx bx-detail section-icon"></i>
+        <h4 class="section-title">DESCRIPCIÓN</h4>
+      </div>
+      <div class="card-body-content">
+        <ng-container *ngIf="ticket.descripcion; else noDescripcion">
+          <div class="description-text" [innerHTML]="ticket.descripcion"></div>
+        </ng-container>
+        <ng-template #noDescripcion>
+          <div class="empty-description">
+            <i class="bx bx-info-circle"></i>
+            <span>Sin descripción registrada en este ticket.</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Tarjeta de Evidencias -->
+    <div class="ticket-card evidencias-card" *ngIf="ticket.imagenesEvidencia?.length">
+      <div class="card-header-strip">
+        <i class="bx bx-images section-icon"></i>
+        <h4 class="section-title">EVIDENCIA FOTOGRÁFICA</h4>
+        <span class="badge-count">{{ ticket.imagenesEvidencia.length }}</span>
+      </div>
+      <div class="card-body-content">
+        <div class="evidencias-grid">
+          <div
+            *ngFor="let url of ticket.imagenesEvidencia"
+            class="evidencia-thumbnail-wrapper"
+            (click)="abrirModalImagen(url)"
+            pTooltip="Clic para ampliar"
+            tooltipPosition="top">
+            <img [src]="url" alt="Evidencia ticket" class="evidencia-img" />
+            <div class="img-overlay">
+              <i class="bx bx-zoom-in"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de Comentarios Finales (si está cerrado) -->
+    <div class="ticket-card comentarios-finales-card" *ngIf="ticket.idEstatusTicket == '3' && ticket.comentariosFinales">
+      <div class="card-header-strip">
+        <i class="bx bx-check-circle section-icon"></i>
+        <h4 class="section-title">COMENTARIOS FINALES / RESOLUCIÓN</h4>
+      </div>
+      <div class="card-body-content">
+        <div class="comentarios-finales-text" [innerHTML]="ticket.comentariosFinales"></div>
+      </div>
+    </div>
+
+    <!-- Botonera de Acciones (Footer) -->
+    <div class="modal-footer-actions">
+      <!-- Botón ASIGNAR A ESPECIALISTA -->
+      <button
+        *ngIf="usuario?.idArea == '4' && usuario?.idRol == '5' && ticket?.idEstatusTicket == '2' && !ticket?.esAsignadoEspecialista"
+        class="btn-action btn-secondary-rebel"
+        (click)="onClickAsignarEspecialista()">
+        <i class="bx bx-user-pin"></i>
+        <span>ASIGNAR A ESPECIALISTA</span>
+      </button>
+
+      <!-- Botón TRABAJAR (Inicia atención y registra fechaAtencion) -->
+      <button
+        *ngIf="usuario?.idRol == '4' && !['2', '3', '5', '7'].includes(ticket?.idEstatusTicket!)"
+        class="btn-action btn-primary-rebel"
+        (click)="onClick()">
+        <i class="bx bx-play-circle"></i>
+        <span>TRABAJAR TICKET</span>
+      </button>
+    </div>
+
+  </div>
 </p-dialog>
 
-<app-seleccionar-usuario-especialista-dialog *ngIf="mostrarModalEspecialistas" [mostrarModal]="mostrarModalEspecialistas"
-    [idSucursal]="idSucursalEspecialista" [ticket]="ticket!" [idArea]="usuario.idArea"
-    (closeEvent)="mostrarModalEspecialistas = false"></app-seleccionar-usuario-especialista-dialog>
+<!-- Modal Asignar Especialista -->
+<app-seleccionar-usuario-especialista-dialog
+  *ngIf="mostrarModalEspecialistas"
+  [mostrarModal]="mostrarModalEspecialistas"
+  [idSucursal]="idSucursalEspecialista"
+  [ticket]="ticket!"
+  [idArea]="usuario.idArea"
+  (closeEvent)="mostrarModalEspecialistas = false">
+</app-seleccionar-usuario-especialista-dialog>
 
-<app-modal-visor-imagenes *ngIf="mostrarModalImagen" [mostrarModal]="mostrarModalImagen" [imagenUrl]="urlVisorImagen"
-    (closeEvent)="mostrarModalImagen = false"></app-modal-visor-imagenes>
+<!-- Modal Visor de Imágenes -->
+<app-modal-visor-imagenes
+  *ngIf="mostrarModalImagen"
+  [mostrarModal]="mostrarModalImagen"
+  [imagenUrl]="urlVisorImagen"
+  (closeEvent)="mostrarModalImagen = false">
+</app-modal-visor-imagenes>

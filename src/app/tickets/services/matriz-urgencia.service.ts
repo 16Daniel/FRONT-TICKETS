@@ -6,7 +6,7 @@ import {
   setDoc,
   Timestamp
 } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Observable, of, shareReplay } from 'rxjs';
 import { MatrizUrgencia } from '../interfaces/matriz-urgencia.interface';
 import { CeldaMatrizUrgencia } from '../interfaces/celda-matriz-urgencia.interface';
 import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
@@ -16,6 +16,7 @@ import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
 })
 export class MatrizUrgenciaService {
   private readonly nombreColeccion = 'cat_matriz_urgencia';
+  private cacheObservables = new Map<string, Observable<MatrizUrgencia>>();
 
   constructor(private firestore: Firestore) {}
 
@@ -55,29 +56,30 @@ export class MatrizUrgenciaService {
    * Si aún no existe configuración personalizada, emite de inmediato la predeterminada.
    */
   obtenerMatrizPorArea(idArea: string, nombreArea: string = ''): Observable<MatrizUrgencia> {
-    if (!idArea) {
-      return of(this.obtenerMatrizPredeterminada('1', nombreArea));
+    const areaKey = String(idArea || '1');
+    if (this.cacheObservables.has(areaKey)) {
+      return this.cacheObservables.get(areaKey)!;
     }
 
-    return new Observable<MatrizUrgencia>((observer) => {
-      const documentoRef = doc(this.firestore, `${this.nombreColeccion}/${String(idArea)}`);
+    const obs$ = new Observable<MatrizUrgencia>((observer) => {
+      const documentoRef = doc(this.firestore, `${this.nombreColeccion}/${areaKey}`);
 
       const unsubscribe = onSnapshot(
         documentoRef,
         (snapshot) => {
           if (!snapshot.exists()) {
-            observer.next(this.obtenerMatrizPredeterminada(idArea, nombreArea));
+            observer.next(this.obtenerMatrizPredeterminada(areaKey, nombreArea));
             return;
           }
 
           const data = snapshot.data() as MatrizUrgencia;
           if (!data || !data.celdas || data.celdas.length === 0) {
-            observer.next(this.obtenerMatrizPredeterminada(idArea, nombreArea || data?.nombreArea));
+            observer.next(this.obtenerMatrizPredeterminada(areaKey, nombreArea || data?.nombreArea));
             return;
           }
 
           // Asegurar que las 9 celdas existan, completando con valores por defecto si faltase alguna
-          const matrizDefecto = this.obtenerMatrizPredeterminada(idArea, nombreArea || data.nombreArea);
+          const matrizDefecto = this.obtenerMatrizPredeterminada(areaKey, nombreArea || data.nombreArea);
           const celdasCompletas = matrizDefecto.celdas.map((celdaDefecto) => {
             const encontrada = data.celdas.find(
               (c) => c.impacto === celdaDefecto.impacto && c.urgencia === celdaDefecto.urgencia
@@ -87,19 +89,24 @@ export class MatrizUrgenciaService {
 
           observer.next({
             ...data,
-            idArea: String(idArea),
+            idArea: areaKey,
             nombreArea: nombreArea || data.nombreArea || '',
             celdas: celdasCompletas
           });
         },
         (error) => {
           console.error('Error al escuchar matriz de urgencia:', error);
-          observer.next(this.obtenerMatrizPredeterminada(idArea, nombreArea));
+          observer.next(this.obtenerMatrizPredeterminada(areaKey, nombreArea));
         }
       );
 
       return () => unsubscribe();
-    });
+    }).pipe(
+      shareReplay({ bufferSize: 1, refCount: false })
+    );
+
+    this.cacheObservables.set(areaKey, obs$);
+    return obs$;
   }
 
   /**

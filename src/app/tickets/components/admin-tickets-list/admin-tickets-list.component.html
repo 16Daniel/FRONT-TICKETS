@@ -4,7 +4,7 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Urgencia (3×3) · Atención (3×3)" tooltipPosition="top">MATRICES</th>
+            <th pTooltip="Tiempos SLA: Urgencia (Exterior) · Atención (Interior)" tooltipPosition="top">TIEMPOS SLA</th>
             <th>FOLIO</th>
             <th>FECHA</th>
             <th>AREA</th>
@@ -21,7 +21,10 @@
             [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
             <td class="text-center celda-criticidad-matriz">
                 <div class="contenedor-criticidad-celda">
-                    <!-- Mini Matriz 3x3 (Urgencia) -->
+                    <!-- Gráfica Circular Dual SLA (Urgencia exterior + Atención interior) -->
+                    <app-ticket-sla-gauge [ticket]="tk" [size]="50"></app-ticket-sla-gauge>
+
+                    <!-- Matrices 3x3 ocultas temporalmente
                     <div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
                         <div class="mini-matriz-grid">
                             <span *ngFor="let celda of celdasMatriz"
@@ -32,7 +35,6 @@
                         </div>
                     </div>
 
-                    <!-- Mini Matriz 3x3 (Atención) -->
                     <div class="mini-matriz-wrapper mini-matriz-atencion" [pTooltip]="obtenerTooltipMatrizAtencion(tk)" tooltipPosition="top">
                         <div class="mini-matriz-grid">
                             <span *ngFor="let celda of celdasMatrizAtencion"
@@ -42,6 +44,7 @@
                             </span>
                         </div>
                     </div>
+                    -->
 
                     <!-- Badge de Prioridad del Cuadrante -->
                     <!-- <span class="badge-prioridad-cuadrante" [ngClass]="obtenerClaseCuadrante(tk)">
