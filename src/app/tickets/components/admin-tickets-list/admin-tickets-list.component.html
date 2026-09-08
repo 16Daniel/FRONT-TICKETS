@@ -4,10 +4,9 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Urgencia (3×3) · Atención (2×2)" tooltipPosition="top">MATRICES</th>
+            <th pTooltip="Urgencia (3×3) · Atención (3×3)" tooltipPosition="top">MATRICES</th>
             <th>FOLIO</th>
             <th>FECHA</th>
-            <th *ngIf="mostrarFedchaEstimacion">DEATHLINE</th>
             <th>AREA</th>
             <th>CATEGORÍA / RUTA</th>
             <th>ESTATUS</th>
@@ -57,14 +56,6 @@
             </td>
             <td class="text-center fw-bold">{{tk.folio}}</td>
             <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
-            </td>
-            <td class="text-center" *ngIf="mostrarFedchaEstimacion">
-                <p-calendar [showTime]="false" [touchUI]="true" [hourFormat]="'12'"
-                    (onSelect)="ManejadorDeFecha($event,tk)"
-                    placeholder="{{datesHelper.getDate($any(tk)!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
-                    title="{{datesHelper.getDate($any(tk)!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a'}}"
-                    styleClass="table-calendar-custom"
-                    appendTo="body" />
             </td>
             <td class="text-center">
                 <p-dropdown 

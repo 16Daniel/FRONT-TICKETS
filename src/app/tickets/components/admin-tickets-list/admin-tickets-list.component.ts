@@ -347,11 +347,6 @@ export class AdminTicketsListComponent {
     this.ticket = itemticket;
   }
 
-  ManejadorDeFecha(date: Date, tk: Ticket) {
-    (tk as any).fechaEstimacion = Timestamp.fromDate(date);
-    this.actualizaTicket(tk);
-  }
-
   obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
 
   readonly celdasMatriz = [
