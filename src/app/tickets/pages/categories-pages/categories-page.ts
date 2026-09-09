@@ -1,108 +1,501 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 
 import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Subcategoria, generateGUID } from '../../interfaces/subcategoria.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Area } from '../../../areas/interfaces/area.model';
+import { AreasService } from '../../../areas/services/areas.service';
 import { CategoriesService } from '../../services/categories.service';
-import { CrearCategoriaDialogComponent } from '../../dialogs/crear-categoria-dialog/crear-categoria-dialog.component';
+import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
+
+import { TarjetaGuiaMatrizComponent } from '../../components/tarjeta-guia-matriz/tarjeta-guia-matriz.component';
+import { FormularioNodoCategoriaComponent } from '../../components/formulario-nodo-categoria/formulario-nodo-categoria.component';
+import { NodoArbolCategoriaComponent } from '../../components/nodo-arbol-categoria/nodo-arbol-categoria.component';
+import { ConfiguracionMatrizUrgenciaComponent } from '../../components/configuracion-matriz-urgencia/configuracion-matriz-urgencia.component';
+import { ConfiguracionMatrizAtencionComponent } from '../../components/configuracion-matriz-atencion/configuracion-matriz-atencion.component';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
+import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
+import { MatrizAtencionService } from '../../services/matriz-atencion.service';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-categories-page',
   standalone: true,
   imports: [
-    FormsModule,
     CommonModule,
+    FormsModule,
     ButtonModule,
-    TableModule,
     ToastModule,
     ConfirmDialogModule,
-    CrearCategoriaDialogComponent
+    TooltipModule,
+    InputTextModule,
+    TarjetaGuiaMatrizComponent,
+    FormularioNodoCategoriaComponent,
+    NodoArbolCategoriaComponent,
+    ConfiguracionMatrizUrgenciaComponent,
+    ConfiguracionMatrizAtencionComponent,
+    PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './categories-page.html',
   styleUrl: './categories-page.scss'
 })
-export default class CategoriesPageComponent {
-  esNuevaCategoria: boolean = false;
-  mostrarModalCategoria: boolean = false;
+export default class CategoriesPageComponent implements OnInit, OnDestroy {
+  readonly String = String;
+  usuario!: Usuario;
+  areas: Area[] = [];
+  areaSeleccionadaId: string = '1';
   categorias: Categoria[] = [];
-  categoriaSeleccionada: Categoria = new Categoria;
-  subscripcion: Subscription | undefined;
-  usuario: Usuario;
+  filtroTexto: string = '';
+
+  matrizUrgenciaActual: MatrizUrgencia | null = null;
+  matrizAtencionActual: MatrizAtencion | null = null;
+  mostrarGuiaMatriz: boolean = false;
+  mostrarConfiguracionMatriz: boolean = false;
+  tipoMatrizConfiguracion: 'urgencia' | 'atencion' = 'urgencia';
+  nodosExpandidosIds = new Set<string>();
+
+  idNodoParaAgregar: string | null = null;
+  idNodoEnEdicion: string | null = null;
+
+  private subscripcionAreas?: Subscription;
+  private subscripcionCategorias?: Subscription;
+  private subscripcionMatriz?: Subscription;
+  private subscripcionMatrizAtencion?: Subscription;
 
   constructor(
-    private confirmationService: ConfirmationService,
-    private categoriesServicce: CategoriesService,
-    public cdr: ChangeDetectorRef,
     private messageService: MessageService,
-  ) {
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-  }
+    private categoriesService: CategoriesService,
+    private areasService: AreasService,
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private matrizAtencionService: MatrizAtencionService,
+    private confirmationService: ConfirmationService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.obtenerCategorias();
+    const rawUser = localStorage.getItem('rwuserdatatk');
+    if (rawUser) {
+      this.usuario = JSON.parse(rawUser);
+    }
+    this.cargarAreas();
+    this.cargarCategorias();
+    this.cargarMatrizArea();
   }
 
-  ngOnDestroy() {
-    if (this.subscripcion != undefined) {
-      this.subscripcion.unsubscribe();
+  ngOnDestroy(): void {
+    this.subscripcionAreas?.unsubscribe();
+    this.subscripcionCategorias?.unsubscribe();
+    this.subscripcionMatriz?.unsubscribe();
+    this.subscripcionMatrizAtencion?.unsubscribe();
+  }
+
+  /* Carga de Datos */
+  private cargarAreas(): void {
+    this.subscripcionAreas = this.areasService.areas$.subscribe((areas: Area[]) => {
+      this.areas = areas.filter((a: Area) => !a.eliminado);
+      if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
+        this.areaSeleccionadaId = String(this.areas[0].id);
+        this.cargarCategorias();
+        this.cargarMatrizArea();
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  private cargarMatrizArea(): void {
+    this.subscripcionMatriz?.unsubscribe();
+    this.subscripcionMatriz = this.matrizUrgenciaService
+      .obtenerMatrizPorArea(this.areaSeleccionadaId, this.areaActual?.nombre || '')
+      .subscribe({
+        next: (matriz) => {
+          this.matrizUrgenciaActual = matriz;
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Error al cargar la matriz de urgencia en CategoriesPage:', err)
+      });
+
+    this.subscripcionMatrizAtencion?.unsubscribe();
+    this.subscripcionMatrizAtencion = this.matrizAtencionService
+      .obtenerMatrizPorArea(this.areaSeleccionadaId, this.areaActual?.nombre || '')
+      .subscribe({
+        next: (matriz) => {
+          this.matrizAtencionActual = matriz;
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Error al cargar la matriz de atención en CategoriesPage:', err)
+      });
+  }
+
+  alGuardarMatriz(matriz: MatrizUrgencia): void {
+    this.matrizUrgenciaActual = matriz;
+    this.cdr.detectChanges();
+  }
+
+  alGuardarMatrizAtencion(matriz: MatrizAtencion): void {
+    this.matrizAtencionActual = matriz;
+    this.cdr.detectChanges();
+  }
+
+  private cargarCategorias(): void {
+    this.subscripcionCategorias?.unsubscribe();
+    this.subscripcionCategorias = this.categoriesService.get(this.areaSeleccionadaId).subscribe({
+      next: (cats) => {
+        this.categorias = cats;
+        this.categorias.forEach((c) => this.normalizarNodo(c));
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error al cargar categorías:', err)
+    });
+  }
+
+  private normalizarNodo(nodo: Categoria | Subcategoria): void {
+    if (!nodo.subcategorias) nodo.subcategorias = [];
+    const tieneHijos = nodo.subcategorias.some((s) => !s.eliminado);
+    if (!nodo.tipo) {
+      nodo.tipo = tieneHijos || (nodo as any).activarSubcategorias ? 'rama' : 'hoja';
+    }
+    if (nodo.tipo === 'hoja') {
+      if (!nodo.score) {
+        nodo.urgencia = 2;
+        nodo.score = 4;
+        nodo.prioridadUrgencia = 'Medio';
+      }
+      if (!nodo.prioridadUrgencia && (nodo as any).prioridad) {
+        nodo.prioridadUrgencia = (nodo as any).prioridad;
+      }
+    }
+    delete (nodo as any).estimacion;
+    delete (nodo as any).slaRes;
+    delete (nodo as any).slaResp;
+    delete (nodo as any).impacto;
+    delete (nodo as any).tiempoAtencion;
+
+    nodo.subcategorias.forEach((h) => this.normalizarNodo(h));
+  }
+
+  /* Selector de Área */
+  cambiarArea(areaId: string | number): void {
+    this.areaSeleccionadaId = String(areaId);
+    this.idNodoParaAgregar = null;
+    this.idNodoEnEdicion = null;
+    this.nodosExpandidosIds.clear();
+    this.cargarCategorias();
+    this.cargarMatrizArea();
+  }
+
+  get areaActual(): Area | undefined {
+    return this.areas.find((a) => String(a.id) === this.areaSeleccionadaId);
+  }
+
+  /* Estadísticas y Conteo de Categorías */
+  get totalCategoriasRaiz(): number {
+    return this.categorias.filter((c) => !c.eliminado).length;
+  }
+
+  get totalCategoriasFinales(): number {
+    const contarHojas = (n: Categoria | Subcategoria): number => {
+      const tieneHijos = n.subcategorias && n.subcategorias.some((s) => !s.eliminado);
+      if (n.tipo === 'hoja' || !tieneHijos) return 1;
+      return (n.subcategorias || []).filter((h) => !h.eliminado).reduce((acc, h) => acc + contarHojas(h), 0);
+    };
+    return this.categorias.reduce((acc, cat) => acc + contarHojas(cat), 0);
+  }
+
+  get totalCategorias(): number {
+    const contar = (n: Categoria | Subcategoria): number => {
+      let c = 1;
+      if (n.subcategorias) {
+        n.subcategorias.filter((h) => !h.eliminado).forEach((h) => (c += contar(h)));
+      }
+      return c;
+    };
+    return this.categorias.reduce((acc, cat) => acc + contar(cat), 0);
+  }
+
+  /* Expansión del Árbol */
+  estaExpandido(id: string | number): boolean {
+    return this.nodosExpandidosIds.has(String(id));
+  }
+
+  alternarNodo(id: string | number): void {
+    const idStr = String(id);
+    if (this.nodosExpandidosIds.has(idStr)) {
+      this.nodosExpandidosIds.delete(idStr);
+    } else {
+      this.nodosExpandidosIds.add(idStr);
     }
   }
 
-  obtenerCategorias = () =>
-    this.subscripcion = this.categoriesServicce.get(this.usuario.idArea).subscribe(result => {
-      this.categorias = result;
-      this.cdr.detectChanges();
-    }, (error) => {
-      console.log(error);
-      this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-    });
-
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  alternarExpandirTodos(): void {
+    if (this.todosExpandidos) {
+      this.nodosExpandidosIds.clear();
+    } else {
+      const recolectar = (n: Categoria | Subcategoria): void => {
+        if (n.tipo === 'rama' || (n.subcategorias && n.subcategorias.some((s) => !s.eliminado))) {
+          this.nodosExpandidosIds.add(String(n.id));
+        }
+        n.subcategorias?.filter((h) => !h.eliminado).forEach(recolectar);
+      };
+      this.categorias.forEach(recolectar);
+    }
   }
 
-  abrirModalCrearCategoria() {
-    this.esNuevaCategoria = true;
-    this.mostrarModalCategoria = true;
+  get todosExpandidos(): boolean {
+    const ramas: string[] = [];
+    const recolectar = (n: Categoria | Subcategoria): void => {
+      if (n.tipo === 'rama' || (n.subcategorias && n.subcategorias.some((s) => !s.eliminado))) {
+        ramas.push(String(n.id));
+      }
+      n.subcategorias?.filter((h) => !h.eliminado).forEach(recolectar);
+    };
+    this.categorias.forEach(recolectar);
+    return ramas.length > 0 && ramas.every((id) => this.nodosExpandidosIds.has(id));
   }
 
-  abrirModalEditarCategoria(categoria: Categoria) {
-    this.esNuevaCategoria = false;
-    this.mostrarModalCategoria = true;
-    this.categoriaSeleccionada = categoria;
+  /* Búsqueda Jerárquica */
+  buscarInfoNodo(idNodo: string): { nodo: Categoria | Subcategoria; padre: Categoria | Subcategoria | null; categoriaRaiz: Categoria } | null {
+    const idBuscado = String(idNodo);
+    for (const cat of this.categorias) {
+      if (String(cat.id) === idBuscado) return { nodo: cat, padre: null, categoriaRaiz: cat };
+
+      const buscar = (lista: Subcategoria[], p: Categoria | Subcategoria): any => {
+        for (const sub of lista) {
+          if (String(sub.id) === idBuscado) return { nodo: sub, padre: p, categoriaRaiz: cat };
+          if (sub.subcategorias?.length) {
+            const r = buscar(sub.subcategorias, sub);
+            if (r) return r;
+          }
+        }
+        return null;
+      };
+      if (cat.subcategorias?.length) {
+        const res = buscar(cat.subcategorias, cat);
+        if (res) return res;
+      }
+    }
+    return null;
   }
 
-  confirmaEliminacion(id: string | any) {
+  /* Control de Formularios In-line */
+  alternarConfiguracionMatriz(): void {
+    this.mostrarConfiguracionMatriz = !this.mostrarConfiguracionMatriz;
+    if (this.mostrarConfiguracionMatriz) {
+      this.mostrarGuiaMatriz = false;
+      this.idNodoParaAgregar = null;
+      this.idNodoEnEdicion = null;
+    }
+  }
+
+  abrirFormularioCrearRaiz(): void {
+    this.idNodoEnEdicion = null;
+    this.idNodoParaAgregar = this.idNodoParaAgregar === 'RAIZ' ? null : 'RAIZ';
+    if (this.idNodoParaAgregar) {
+      this.mostrarConfiguracionMatriz = false;
+    }
+  }
+
+  abrirFormularioAgregarHijo(nodo: Categoria | Subcategoria): void {
+    this.idNodoEnEdicion = null;
+    this.idNodoParaAgregar = this.idNodoParaAgregar === String(nodo.id) ? null : String(nodo.id);
+    this.nodosExpandidosIds.add(String(nodo.id));
+  }
+
+  abrirFormularioEditar(nodo: Categoria | Subcategoria): void {
+    this.idNodoParaAgregar = null;
+    this.idNodoEnEdicion = this.idNodoEnEdicion === String(nodo.id) ? null : String(nodo.id);
+  }
+
+  cancelarFormulario(): void {
+    this.idNodoParaAgregar = null;
+    this.idNodoEnEdicion = null;
+  }
+
+  /* Persistencia: Guardar y Editar */
+  async guardarNuevoNodo(idPadre: string | null, datos: ResultadoFormularioNodo): Promise<void> {
+    try {
+      if (idPadre === null || idPadre === 'RAIZ') {
+        const nuevoSecuencial = await this.categoriesService.obtenerSecuencial();
+        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
+        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
+        const criticidadAten = datos.criticidadAtencion || 2;
+        const urgenciaAten = datos.urgenciaAtencion || 2;
+        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
+        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+
+        const nuevaCat: Categoria = {
+          id: nuevoSecuencial,
+          idArea: parseInt(this.areaSeleccionadaId, 10),
+          nombre: datos.nombre,
+          eliminado: false,
+          subcategorias: [],
+          activarSubcategorias: datos.tipo === 'rama',
+          tipo: datos.tipo,
+          urgencia: urgenciaUrg,
+          score: scoreUrg,
+          criticidad: criticidadUrg,
+          criticidadUrgencia: criticidadUrg,
+          urgenciaUrgencia: urgenciaUrg,
+          scoreUrgencia: scoreUrg,
+          prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
+          criticidadAtencion: criticidadAten,
+          urgenciaAtencion: urgenciaAten,
+          scoreAtencion: scoreAten,
+          prioridadAtencion: datos.prioridadAtencion,
+          scoreGlobal: scoreGlob
+        };
+        (nuevaCat as any).prioridad = nuevaCat.prioridadUrgencia;
+        await this.categoriesService.create(nuevaCat);
+        this.mostrarMensaje('success', 'Éxito', `Categoría "${datos.nombre}" creada.`);
+      } else {
+        const info = this.buscarInfoNodo(idPadre);
+        if (!info) return;
+
+        if (!info.nodo.subcategorias) info.nodo.subcategorias = [];
+
+        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
+        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
+        const criticidadAten = datos.criticidadAtencion || 2;
+        const urgenciaAten = datos.urgenciaAtencion || 2;
+        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
+        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+
+        const nuevaSub: Subcategoria = {
+          id: generateGUID(),
+          nombre: datos.nombre,
+          eliminado: false,
+          tipo: datos.tipo,
+          subcategorias: [],
+          activarSubcategorias: datos.tipo === 'rama',
+          ...(datos.tipo === 'hoja' ? {
+            urgencia: urgenciaUrg,
+            score: scoreUrg,
+            criticidad: criticidadUrg,
+            criticidadUrgencia: criticidadUrg,
+            urgenciaUrgencia: urgenciaUrg,
+            scoreUrgencia: scoreUrg,
+            prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
+            criticidadAtencion: criticidadAten,
+            urgenciaAtencion: urgenciaAten,
+            scoreAtencion: scoreAten,
+            prioridadAtencion: datos.prioridadAtencion,
+            scoreGlobal: scoreGlob
+          } : {})
+        };
+        if (datos.tipo === 'hoja') {
+          (nuevaSub as any).prioridad = nuevaSub.prioridadUrgencia;
+        }
+        info.nodo.subcategorias.push(nuevaSub);
+        info.nodo.tipo = 'rama';
+        info.nodo.activarSubcategorias = true;
+
+        await this.categoriesService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
+        this.mostrarMensaje('success', 'Éxito', `Subcategoría "${datos.nombre}" agregada.`);
+        this.nodosExpandidosIds.add(String(info.nodo.id));
+      }
+      this.cancelarFormulario();
+    } catch (err: any) {
+      this.mostrarMensaje('error', 'Error', err.message || 'Error al guardar');
+    }
+  }
+
+  async guardarEdicionNodo(idNodo: string, datos: ResultadoFormularioNodo): Promise<void> {
+    const info = this.buscarInfoNodo(idNodo);
+    if (!info) return;
+
+    try {
+      const objetivo = info.nodo;
+      objetivo.nombre = datos.nombre;
+      objetivo.tipo = datos.tipo;
+      if (datos.tipo === 'hoja') {
+        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
+        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
+        const criticidadAten = datos.criticidadAtencion || 2;
+        const urgenciaAten = datos.urgenciaAtencion || 2;
+        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
+        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+
+        objetivo.urgencia = urgenciaUrg;
+        objetivo.score = scoreUrg;
+        objetivo.criticidad = criticidadUrg;
+        objetivo.criticidadUrgencia = criticidadUrg;
+        objetivo.urgenciaUrgencia = urgenciaUrg;
+        objetivo.scoreUrgencia = scoreUrg;
+        objetivo.prioridadUrgencia = (datos.prioridadUrgencia || datos.prioridad) as any;
+        (objetivo as any).prioridad = objetivo.prioridadUrgencia;
+
+        objetivo.criticidadAtencion = criticidadAten;
+        objetivo.urgenciaAtencion = urgenciaAten;
+        objetivo.scoreAtencion = scoreAten;
+        objetivo.prioridadAtencion = datos.prioridadAtencion;
+        objetivo.scoreGlobal = scoreGlob;
+      } else {
+        objetivo.activarSubcategorias = true;
+      }
+      delete (objetivo as any).estimacion;
+      delete (objetivo as any).slaRes;
+      delete (objetivo as any).slaResp;
+      delete (objetivo as any).impacto;
+
+      await this.categoriesService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
+      this.mostrarMensaje('success', 'Actualizado', `"${datos.nombre}" actualizado.`);
+      this.cancelarFormulario();
+    } catch (err: any) {
+      this.mostrarMensaje('error', 'Error', err.message || 'Error al actualizar');
+    }
+  }
+
+  /* Eliminación Recursiva */
+  eliminarNodo(nodo: Categoria | Subcategoria): void {
+    const info = this.buscarInfoNodo(String(nodo.id));
+    if (!info) return;
+
+    const tieneHijos = info.nodo.subcategorias && info.nodo.subcategorias.some((s) => !s.eliminado);
+    const mensajeConfirmacion = tieneHijos
+      ? `¿Estás seguro de eliminar "${nodo.nombre}"? También se eliminarán sus subcategorías descendientes.`
+      : `¿Estás seguro de eliminar "${nodo.nombre}"?`;
+
     this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: '¿Está seguro que desea eliminar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.eliminarCategoria(id);
-      },
-      reject: () => { },
+      header: '¿Eliminar categoría?',
+      message: mensajeConfirmacion,
+      icon: 'pi pi-trash',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      accept: async () => {
+        try {
+          const marcarEliminado = (n: Categoria | Subcategoria): void => {
+            n.eliminado = true;
+            n.subcategorias?.forEach(marcarEliminado);
+          };
+          marcarEliminado(info.nodo);
+
+          if (!info.padre) {
+            await this.categoriesService.delete(String(info.categoriaRaiz.id));
+          } else {
+            await this.categoriesService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
+          }
+          this.mostrarMensaje('success', 'Eliminado', `"${nodo.nombre}" eliminado.`);
+        } catch (err: any) {
+          this.mostrarMensaje('error', 'Error', err.message || 'Error al eliminar');
+        }
+      }
     });
   }
 
-  async eliminarCategoria(idCategoria: string) {
-    await this.categoriesServicce.delete(idCategoria);
-    this.showMessage('success', 'Success', 'Eliminada correctamente');
+  private mostrarMensaje(severity: string, summary: string, detail: string): void {
+    this.messageService.add({ severity, summary, detail, life: 3000 });
   }
-
-  cerrarModalCategoria() {
-    this.mostrarModalCategoria = false;
-    this.categoriaSeleccionada = new Categoria;
-  }
-
 }

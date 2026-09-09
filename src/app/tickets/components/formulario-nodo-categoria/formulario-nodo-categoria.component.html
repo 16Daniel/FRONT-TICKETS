@@ -1,0 +1,94 @@
+<div class="tarjeta-formulario-nodo" [class.es-anidado]="esAnidado">
+  <div class="encabezado-formulario">
+    <div class="titulo-formulario">
+      <i class="bx" [ngClass]="modo === 'editar' ? 'bx-edit-alt' : (modo === 'crear-raiz' ? 'bx-folder-plus' : 'bx-plus')"></i>
+      <span *ngIf="modo === 'crear-raiz'">Nueva Categoría Raíz en <b>{{ nombreArea }}</b></span>
+      <span *ngIf="modo === 'crear-hijo'">Agregar subcategoría dentro de <b>{{ nombrePadre }}</b></span>
+      <span *ngIf="modo === 'editar'">Editar: <b>{{ nodoEditar?.nombre }}</b></span>
+    </div>
+    <button type="button" class="btn-cerrar-formulario" (click)="cancelar.emit()">
+      <i class="bx bx-x"></i>
+    </button>
+  </div>
+
+  <div class="cuerpo-formulario">
+    <!-- Input Nombre -->
+    <div class="grupo-campo mb-3">
+      <label class="etiqueta-campo">NOMBRE <span class="requerido">*</span></label>
+      <input 
+        type="text" 
+        [(ngModel)]="nombre" 
+        placeholder="Nombre de la categoría..." 
+        class="input-texto-nodo" 
+        (keyup.enter)="alGuardar()"
+        autofocus />
+    </div>
+
+    <!-- Selector de Tipo (Rama vs Hoja) -->
+    <div class="grupo-campo mb-3" *ngIf="!bloquearCambioTipo">
+      <label class="etiqueta-campo">¿QUÉ TIPO DE CATEGORÍA ES?</label>
+      <div class="botones-seleccion-tipo">
+        <button 
+          type="button" 
+          class="boton-tipo" 
+          [class.esta-elegido]="tipo === 'rama'" 
+          (click)="tipo = 'rama'">
+          <i class="bx bx-folder"></i>
+          <div class="textos-boton-tipo">
+            <b>Rama (Solo agrupar)</b>
+            <span>Tendrá más subcategorías dentro</span>
+          </div>
+        </button>
+
+        <button 
+          type="button" 
+          class="boton-tipo" 
+          [class.esta-elegido]="tipo === 'hoja'" 
+          (click)="tipo = 'hoja'">
+          <i class="bx bx-tag"></i>
+          <div class="textos-boton-tipo">
+            <b>Categoría final (Recibe tickets)</b>
+            <span>Tendrá prioridad y criticidad fija</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Selectores de Matrices (si es hoja) -->
+    <div class="seccion-selectores-matrices mt-3" *ngIf="tipo === 'hoja'">
+      <div class="mb-3">
+        <app-selector-matriz-criticidad
+          [idArea]="idArea"
+          [matrizUrgencia]="matrizUrgencia"
+          [impacto]="impacto"
+          [urgencia]="urgencia"
+          (cambioSeleccion)="alCambiarMatriz($event)">
+        </app-selector-matriz-criticidad>
+      </div>
+
+      <div class="mb-2">
+        <app-selector-matriz-atencion
+          [idArea]="idArea"
+          [matrizAtencion]="matrizAtencion"
+          [impacto]="criticidadAtencion"
+          [urgencia]="urgenciaAtencion"
+          [prioridadSeleccionada]="prioridadAtencion"
+          (cambioSeleccion)="alCambiarMatrizAtencion($event)">
+        </app-selector-matriz-atencion>
+      </div>
+    </div>
+
+    <!-- Botones Guardar / Cancelar -->
+    <div class="pie-acciones-formulario mt-4">
+      <button type="button" class="btn-cancelar-formulario" (click)="cancelar.emit()">Cancelar</button>
+      <button 
+        type="button" 
+        class="btn-guardar-formulario" 
+        [disabled]="!nombre.trim()"
+        (click)="alGuardar()">
+        <i class="bx bx-check"></i>
+        <span>{{ modo === 'editar' ? 'Guardar Cambios' : (modo === 'crear-raiz' ? 'Guardar Categoría Raíz' : 'Agregar Subcategoría') }}</span>
+      </button>
+    </div>
+  </div>
+</div>

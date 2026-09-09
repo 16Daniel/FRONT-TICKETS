@@ -1,0 +1,166 @@
+<form [formGroup]="devForm" (ngSubmit)="onSubmit()" class="grid p-fluid">
+  
+  <!-- Banner Instrucciones -->
+  <div class="col-12 bg-bluegreen-50 p-3 border-round" style="background-color: #f3f8f3;">
+    <h4 class="text-green-800 m-0 mb-2">FORMATO DEVOLUCIÓN DE ALA DE POLLO A PROVEEDOR (FSUPR-0501)</h4>
+    <p class="text-xs text-600 m-0">1.- Este formato ha de ser llenado en su totalidad por el receptor de producto y/o quien hace el reclamo.</p>
+    <p class="text-xs text-600 m-0">2.- Se deberá enviar al correo del área de compras con el formato adjunto.</p>
+  </div>
+
+    <div class="col-12 md:col-8 field mt-3">
+    <label for="proveedor">SUCURSAL</label>
+    <!-- <input id="proveedor" type="text" pInputText formControlName="proveedor" /> -->
+     <p-dropdown 
+  [disabled]="usuario.idRol == '2'"
+  [options]="sucursales" 
+  formControlName="sucursal" 
+  optionLabel="nombre" 
+  optionValue="id" 
+  [filter]="true" 
+  filterBy="nombre" 
+  placeholder="Selecciona una sucursal"
+  emptyFilterMessage="No se encontraron resultados">
+</p-dropdown>
+
+  </div>
+
+  <!-- 1. INFORMACIÓN DEL PROVEEDOR -->
+  <div class="col-12 mt-3">
+    <div class="p-2 text-dark fw-bold rounded-3 mb-2" style="background-color: #ccc;">
+      1.- INFORMACIÓN DEL PROVEEDOR
+    </div>
+  </div>
+
+  <div class="col-12 md:col-8 field mt-3">
+    <label for="proveedor">PROVEEDOR:</label>
+    <!-- <input id="proveedor" type="text" pInputText formControlName="proveedor" /> -->
+     <p-dropdown 
+     [disabled]="usuario.idRol == '2' && devolucion != null"
+  [options]="proveedores" 
+  formControlName="proveedor" 
+  optionLabel="nombre" 
+  optionValue="codproveedor" 
+  [filter]="true" 
+  filterBy="nombre" 
+  placeholder="Selecciona un proveedor"
+  emptyFilterMessage="No se encontraron resultados">
+</p-dropdown>
+
+  </div>
+
+  <div class="col-12 md:col-4 field mt-3">
+    <label for="fechaReporte">FECHA DEL REPORTE:</label>
+    <p-calendar id="fechaReporte" formControlName="fechaReporte" dateFormat="dd/mm/yy" [showIcon]="true" [disabled]="usuario.idRol == '2' && devolucion != null"></p-calendar>
+  </div>
+
+  <!-- 2. DESCRIPCIÓN -->
+  <div class="col-12 mt-3">
+    <div class="p-2 text-dark fw-bold rounded-3" style="background-color: #ccc;">
+      2.- DESCRIPCIÓN
+    </div>
+  </div>
+
+  <div class="col-12 md:col-4 field mt-3">
+    <label for="lote">LOTE:</label>
+    <input id="lote" type="text" pInputText formControlName="lote" [disabled]="usuario.idRol == '2' && devolucion != null" />
+  </div>
+
+  <div class="col-12 md:col-4 field mt-3">
+    <label for="fechaEntrega">FECHA DE ENTREGA:</label>
+    <p-calendar id="fechaEntrega" formControlName="fechaEntrega" dateFormat="dd/mm/yy" [showIcon]="true" [disabled]="usuario.idRol == '2' && devolucion != null"></p-calendar>
+  </div>
+
+  <div class="col-12 md:col-4 field mt-3">
+    <label for="noFacturaRemision">No. DE FACTURA O REMISIÓN:</label>
+    <input id="noFacturaRemision" type="text" pInputText formControlName="noFacturaRemision" [disabled]="usuario.idRol == '2' && devolucion != null"/>
+  </div>
+
+  <div class="col-12 md:col-6 field mt-3">
+    <label for="cantidadEntregadaKg">CANTIDAD ENTREGADA (KG):</label>
+    <p-inputNumber id="cantidadEntregadaKg" formControlName="cantidadEntregadaKg" mode="decimal" [minFractionDigits]="2" [disabled]="usuario.idRol == '2' && devolucion != null"></p-inputNumber>
+  </div>
+
+  <div class="col-12 md:col-6 field mt-3">
+    <label for="cantidadRechazadaKg">CANTIDAD RECHAZADA (KG):</label>
+    <p-inputNumber id="cantidadRechazadaKg" formControlName="cantidadRechazadaKg" mode="decimal" [minFractionDigits]="2" [disabled]="usuario.idRol == '2' && devolucion != null"></p-inputNumber>
+  </div>
+
+  <!-- MOTIVO DE RECHAZO (CARACTERÍSTICAS ORGANOLÉPTICAS) -->
+  <div class="col-12 mt-3">
+    <div class="p-2 text-dark fw-bold rounded-3" style="background-color: #ccc;">
+      MOTIVO DE RECHAZO DE ACUERDO A LA TABLA DE CARACTERÍSTICAS ORGANOLÉPTICAS
+    </div>
+  </div>
+
+  <div class="col-12 md:col-6 field mt-3">
+    <label for="color" class="font-bold">COLOR</label>
+    <textarea id="color" pInputTextarea formControlName="color" rows="2" [disabled]="usuario.idRol == '2' && devolucion != null"></textarea>
+  </div>
+
+  <div class="col-12 md:col-6 field mt-3">
+    <label for="textura" class="font-bold">TEXTURA</label>
+    <textarea id="textura" pInputTextarea formControlName="textura" rows="2"   [disabled]="usuario.idRol == '2' && devolucion != null"></textarea>
+  </div>
+
+  <div class="col-12 md:col-6 field mt-3">
+    <label for="corte" class="font-bold">CORTE</label>
+    <textarea id="corte" pInputTextarea formControlName="corte" rows="2"   [disabled]="usuario.idRol == '2' && devolucion != null"></textarea>
+  </div>
+
+  <div class="col-12 md:col-6 field mt-3">
+    <label for="olor" class="font-bold">OLOR</label>
+    <textarea id="olor" pInputTextarea formControlName="olor" rows="2"    [disabled]="usuario.idRol == '2' && devolucion != null"></textarea>
+  </div>
+
+  <!-- FOTOS (3 MÁXIMO) -->
+  <div class="col-12 mt-3">
+    <div class="p-2 text-dark fw-bold rounded-3" style="background-color: #ccc;">
+      FOTOS (3 MÁXIMO)
+    </div>
+  </div>
+
+  <div class="col-12 field mt-3">
+    <div *ngIf="existingPhotos.length > 0" class="d-flex gap-3 mt-3">
+      <div *ngFor="let photo of existingPhotos; let i = index" class="relative">
+        <p-image [src]="photo" alt="Foto existente" width="100" preview></p-image>
+        <button    [disabled]="usuario.idRol == '2' && devolucion != null" type="button" pButton icon="pi pi-times" class="p-button-danger p-button-rounded p-button-sm absolute top-0 right-0" (click)="removeExistingPhoto(i)"></button>
+      </div>
+    </div>
+
+    <div>
+  <p class="mt-3">Imágenes seleccionadas: {{ selectedFiles.length + existingPhotos.length }} / 3</p>
+
+  <p-fileUpload 
+    [disabled]="usuario.idRol == '2' && devolucion != null"
+    name="fotos[]" 
+    accept="image/*" 
+    [customUpload]="true"
+    [multiple]="true"
+    (onSelect)="onSelectFiles($event)"
+    [showUploadButton]="false"
+    [showCancelButton]="false"
+    chooseLabel="Seleccionar Fotos">
+  </p-fileUpload>
+</div>
+
+  </div>
+
+  <div class="col-12 md:col-6 field mt-3">
+    <p>ESTATUS</p>
+    <p-dropdown
+    [options]="catStatus"
+    formControlName="estatus"
+    placeholder="Selecciona un estado"
+      [disabled]="usuario.idRol == '2'"
+  ></p-dropdown>
+  </div>
+
+  <!-- BOTONES ACCIÓN -->
+  <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+    <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="cancel.emit()"></button>
+    <button pButton type="submit" label="Guardar" [loading]="isSaving" class="p-button-success"></button>
+  </div>
+
+</form>
+
+<p-toast></p-toast>

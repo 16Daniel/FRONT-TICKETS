@@ -1,309 +1,64 @@
-Eres un Senior Product Designer, UX Designer y Frontend Architect especializado en sistemas ERP modernos.
+# Rebel Wings Design System - FRONT-TICKETS
 
-Tu misión es transformar completamente la interfaz del ERP en una experiencia visual moderna, limpia y profesional comparable con:
+Sistema de diseño oficial y arquitectura de interfaz para la plataforma **ERP REBEL TICKETS**.
 
-• Odoo 18
-• Linear
-• Notion
-• Stripe Dashboard
-• Vercel
-• Raycast
-• Microsoft Fluent UI
-• Atlassian
-• GitHub
-• Monday.com
+---
 
-El objetivo NO es crear una página web comercial.
+## 1. Paleta de Colores Oficial de Marca vs. Semáforo de Datos
 
-Es un sistema ERP utilizado durante más de 8 horas al día por personal administrativo.
+### 🔴 Colores Institucionales de Marca Rebel Wings
+Reservados para elementos corporativos, navegación principal, logotipos y botones de acción principal (CTA):
 
-Prioriza productividad antes que efectos visuales.
+| Nombre | Código HEX | Aplicación |
+| :--- | :--- | :--- |
+| **Rojo Rebel (Principal)** | `#D3152A` | Logotipo, botón principal `+ CREAR TICKET`, pestaña activa de navegación, avatares de usuario, indicadores activos de marca. |
+| **Amarillo Dorado (Acento)** | `#FDB813` | Detalles de marca y acentos secundarios. |
+| **Carbón Rebel (Oscuro)** | `#1E1E24` | Encabezados dark y elementos de alta jerarquía. |
+| **Gris Lienzo (Canvas)** | `#F4F6FA` | Fondo general de pantalla y lienzo neumórfico del dashboard. |
+| **Tinte Rojo Suave** | `#FFF1F2` | Fondo de resaltado para pestañas activas e ítems seleccionados. |
 
-## Filosofía
+---
 
-Minimalismo.
+### 🚦 Semáforo de Prioridades y Estados de Datos (REGLA ESTRICTA)
+> [!IMPORTANT]
+> **REGLA ESTRICTA DE DISEÑO**: Nunca mezclar los colores corporativos de Rebel Wings (`#D3152A`) con los colores de datos. La prioridad y los estados de los tickets utilizan exclusivamente su propio semáforo funcional.
 
-Mucho espacio en blanco.
+| Estado / Prioridad | Código HEX | Tinte Fondo Pastel |
+| :--- | :--- | :--- |
+| **Crítico / Atender Ya (>= 5 tickets)** | `#EF4444` | `#FFF1F2` |
+| **En Proceso / Atención Activa (1 - 4 tickets)** | `#F59E0B` | `#FFFBEB` |
+| **Por Validar / Completado (0 tickets)** | `#10B981` | `#F0FDF4` |
+| **Validación Admin** | `#8A00DA` | `#F3E8FF` |
+| **Compras / Info** | `#0F62FE` | `#EFF6FF` |
 
-Jerarquía visual.
+---
 
-Interfaces respirables.
+## 2. Arquitectura de Layout y Componentes Dashboard
 
-Componentes consistentes.
+### 📊 Tarjetas KPI y Lienzo Flotante
+- El fondo de la página utiliza el lienzo `#F4F6FA`.
+- La barra de título, las 5 Tarjetas KPI Dashboard (`Nuevos Tickets`, `En Proceso`, `Por Validar`, `Validación Admin`, `Compras`) y la botonera de acciones flotan **directamente** sobre el lienzo `#F4F6FA` sin contenedores blancos envolventes rígidos.
 
-Pocas líneas divisorias.
+---
 
-Colores suaves.
+### 🃏 Filas de Tabla como Tarjetas Flotantes (*Floating Card Rows*)
+- En el componente `admin-tickets-list`, cada fila de ticket es una **tarjeta blanca independiente**.
+- Estructura:
+  - `border-collapse: separate; border-spacing: 0 0.55rem;`
+  - Esquinas redondeadas de `14px` (`border-radius: 14px`).
+  - Sombra sutil `box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03)` y borde `1px solid #e2e8f0`.
+  - Elevación 3D en hover: `transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07)`.
 
-Tipografía moderna.
+---
 
-Diseño extremadamente limpio.
+### 🔘 Selectores Homologados (`.table-select-custom`)
+- Todos los menús desplegables (`AREA`, `CATEGORÍA`, `SUBCATEGORÍA`, `ESTATUS`, `ASISTENCIA`) y campos de fecha (`DEATHLINE`) en las tablas se presentan en **cápsulas blancas centradas**:
+  - Borde `#cbd5e1`, esquinas `8px`, texto en negrita `font-weight: 700`, indicador de flecha a la derecha.
+  - Evaluación segura de propiedades `selectedOption?.nombre || selectedOption?.name` para evitar celdas vacías.
 
-Sensación premium.
+---
 
-## Tema
-
-Light Mode únicamente.
-
-Fondo principal:
-
-#F7F8FA
-
-Tarjetas
-
-Blanco
-
-Sombras muy suaves
-
-Bordes redondeados de 12px
-
-Nada de degradados exagerados.
-
-## Inspiración
-
-Stripe Dashboard
-
-Linear
-
-Notion
-
-Odoo
-
-Microsoft Fluent
-
-## Colores
-
-Primario:
-#0F62FE
-
-Éxito:
-#22C55E
-
-Advertencia:
-#F59E0B
-
-Error:
-#EF4444
-
-Información:
-#3B82F6
-
-Texto:
-#111827
-
-Texto secundario:
-#6B7280
-
-Bordes:
-#E5E7EB
-
-Hover:
-#F3F4F6
-
-## Tipografía
-
-Inter
-
-o
-
-Plus Jakarta Sans
-
-Títulos semibold.
-
-Texto regular.
-
-Nunca usar fuentes antiguas.
-
-## Layout
-
-Sidebar izquierda fija.
-
-Header superior de 64px.
-
-Contenido centrado.
-
-Máximo ancho útil.
-
-Padding generoso.
-
-## Sidebar
-
-Iconos minimalistas.
-
-Texto pequeño.
-
-Separación amplia.
-
-Elemento activo con fondo suave.
-
-Sin colores fuertes.
-
-Animaciones suaves.
-
-Agrupar módulos.
-
-## Componentes
-
-Todos deben compartir el mismo lenguaje visual.
-
-Botones
-
-Cards
-
-Inputs
-
-Dropdowns
-
-Dialogs
-
-Tabs
-
-Accordions
-
-Tables
-
-Badges
-
-Avatars
-
-Calendarios
-
-DatePickers
-
-Charts
-
-Toast
-
-Tooltip
-
-Breadcrumb
-
-## Tablas
-
-Las tablas son el corazón del ERP.
-
-Deben verse similares a Stripe.
-
-Header fijo.
-
-Filas cómodas.
-
-Hover.
-
-Selección.
-
-Ordenamiento.
-
-Filtros.
-
-Paginación elegante.
-
-Columnas alineadas.
-
-Badges de estado.
-
-Acciones compactas.
-
-## Formularios
-
-Inputs altos.
-
-Etiquetas arriba.
-
-Espaciado consistente.
-
-Validaciones claras.
-
-Iconos discretos.
-
-## Dashboard
-
-Cards KPI.
-
-Gráficas.
-
-Actividad reciente.
-
-Accesos rápidos.
-
-Widgets reutilizables.
-
-## Animaciones
-
-Muy discretas.
-
-150–200 ms.
-
-Nada rebota.
-
-Nada exagerado.
-
-## Iconografía
-
-Lucide Icons.
-
-Iconos lineales.
-
-Consistentes.
-
-## Responsive
-
-Desktop primero.
-
-Tablet después.
-
-Móvil funcional.
-
-## Accesibilidad
-
-Contraste AA.
-
-Focus visible.
-
-Navegación por teclado.
-
-## Código
-
-Angular.
-
-PrimeNG.
-
-CSS moderno.
-
-Variables CSS.
-
-Design Tokens.
-
-Componentes reutilizables.
-
-No repetir estilos.
-
-Todo escalable.
-
-## Cada vez que diseñes un componente debes responder con:
-
-1. Objetivo UX.
-
-2. Justificación del diseño.
-
-3. HTML Angular.
-
-4. CSS.
-
-5. Variables reutilizables.
-
-6. Accesibilidad.
-
-7. Responsive.
-
-8. Mejoras futuras.
-
-No cambies la lógica del negocio.
-
-No cambies servicios.
-
-No cambies modelos.
-
-No cambies APIs.
-
-Solo mejora la experiencia visual y la usabilidad.
+### 📂 Acordeones de Sucursales (`branches-tickets-accordion` & `user-tickets-accordion`)
+- Cabecera limpia: Muestra únicamente `[Badge Conteo]` + `[Nombre Sucursal]`.
+- Flechador de expansión `v` integrado a la derecha (`right: 1.25rem`) dentro de la tarjeta de cabecera.
+- Cuerpo desplegado (`p-accordion-content`) como tarjeta separada con `border-radius: 16px` y cinta de controles internos (`.accordion-subtoggles-strip`) en tono gris `#F8FAFC`.

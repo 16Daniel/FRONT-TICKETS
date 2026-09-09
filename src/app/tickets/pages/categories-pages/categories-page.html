@@ -1,58 +1,237 @@
-<div class="pt-5">
-    <div class="pt-3 container">
-        <div class="m-2 mt-3 bg-white p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2>LISTA DE CATEGORIAS</h2>
-                <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-info"
-                    (click)="abrirModalCrearCategoria()">
-                </p-button>
-            </div>
-            <br>
+<div class="categories-tree-page-wrapper">
+  <div class="categories-content-container">
 
-            <p-table [value]="categorias" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>ID</th>
-                        <th>NOMBRE</th>
-                        <th>ACCIONES</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-sucursal>
-                    <tr [pSelectableRow]="sucursal">
-                        <td>{{ sucursal.id }}</td>
-                        <td>{{ sucursal.nombre }}</td>
-                        <td>
-                            <button class="btn btn-primary me-3" (click)="abrirModalEditarCategoria(sucursal)"><i
-                                    class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Árbol de Categorías & Constructor" 
+      title="Configuración por Área Operativa">
+    </app-page-header>
 
-                            <button class="btn btn-danger" (click)="confirmaEliminacion(sucursal.id)"><i
-                                    class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
+    <!-- Barra Selector de Áreas por Chips (debajo del título) -->
+    <div class="areas-chips-track mb-4">
+      <button 
+        *ngFor="let area of areas" 
+        type="button" 
+        class="chip-area-pill"
+        [class.is-active]="String(area.id) === areaSeleccionadaId"
+        (click)="cambiarArea(area.id)">
+        <span class="area-dot"></span>
+        <span class="area-name">{{ area.nombre }}</span>
+      </button>
     </div>
+
+    <!-- Fila de Tarjetas KPI (Fuera del cuadro blanco) -->
+    <div class="tree-kpi-grid mb-4">
+      <div class="tree-kpi-card card-root">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-folder"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Categorías Totales</span>
+          <span class="kpi-value">{{ totalCategoriasRaiz }}</span>
+          <span class="kpi-sub">en esta área operativa</span>
+        </div>
+      </div>
+
+      <div class="tree-kpi-card card-leaves">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-tag"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Hojas Finales</span>
+          <span class="kpi-value">{{ totalCategoriasFinales }}</span>
+          <span class="kpi-sub">reciben tickets asignados</span>
+        </div>
+      </div>
+
+      <div class="tree-kpi-card card-total">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-layer"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Categorías Totales</span>
+          <span class="kpi-value">{{ totalCategorias }}</span>
+          <span class="kpi-sub">raíces, ramas y hojas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Herramientas y Filtros (Fuera del cuadro blanco) -->
+    <div class="tree-toolbar-bar mb-4">
+      <div class="toolbar-left">
+        <div class="search-input-wrapper">
+          <i class="bx bx-search search-icon"></i>
+          <input 
+            type="text" 
+            [(ngModel)]="filtroTexto" 
+            placeholder="Buscar categoría o subcategoría..." 
+            class="tree-search-input" />
+          <button 
+            *ngIf="filtroTexto" 
+            type="button" 
+            class="clear-search-btn"
+            (click)="filtroTexto = ''">
+            <i class="bx bx-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar-right">
+        <!-- Configurar Matriz de Urgencia por Área -->
+        <button 
+          type="button" 
+          class="btn-tool-outline" 
+          [class.is-active]="mostrarConfiguracionMatriz"
+          (click)="alternarConfiguracionMatriz()"
+          pTooltip="Configurar tiempos de la matriz de urgencia para esta área" 
+          tooltipPosition="top">
+          <i class="bx bx-slider-alt"></i>
+          <span>Configurar Matriz</span>
+        </button>
+
+        <!-- Alternar Guía de Matriz -->
+        <button 
+          type="button" 
+          class="btn-tool-outline" 
+          [class.is-active]="mostrarGuiaMatriz"
+          (click)="mostrarGuiaMatriz = !mostrarGuiaMatriz"
+          pTooltip="Ver guía de criticidad 3x3 y prioridades" 
+          tooltipPosition="top">
+          <i class="bx bx-grid-alt"></i>
+          <span>Guía Matriz</span>
+        </button>
+
+        <!-- Alternar Expandir Todo -->
+        <button 
+          type="button" 
+          class="btn-tool-outline" 
+          (click)="alternarExpandirTodos()">
+          <i class="bx" [ngClass]="todosExpandidos ? 'bx-collapse-vertical' : 'bx-expand-vertical'"></i>
+          <span>{{ todosExpandidos ? 'Colapsar todo' : 'Expandir todo' }}</span>
+        </button>
+
+        <!-- Botón Nueva Categoría Raíz -->
+        <button 
+          type="button" 
+          class="btn-rw-cta" 
+          (click)="abrirFormularioCrearRaiz()">
+          <i class="bx bx-plus"></i>
+          <span>NUEVA CATEGORÍA</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pestañas Selectoras de Tipo de Matriz (cuando el panel está abierto) -->
+    <div class="contenedor-pestanas-matrices mb-3" *ngIf="mostrarConfiguracionMatriz">
+      <div class="matriz-selector-tabs">
+        <button 
+          type="button" 
+          class="tab-matriz-btn"
+          [class.is-active]="tipoMatrizConfiguracion === 'urgencia'"
+          (click)="tipoMatrizConfiguracion = 'urgencia'">
+          <i class="bx bx-grid-alt"></i>
+          <span>Matriz de Urgencia (3×3) · Inicio</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="tab-matriz-btn"
+          [class.is-active]="tipoMatrizConfiguracion === 'atencion'"
+          (click)="tipoMatrizConfiguracion = 'atencion'">
+          <i class="bx bx-timer"></i>
+          <span>Matriz de Atención (2×2) · Resolución</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Componente de Configuración de Matriz de Urgencia por Área (3x3) -->
+    <app-configuracion-matriz-urgencia
+      *ngIf="mostrarConfiguracionMatriz && tipoMatrizConfiguracion === 'urgencia'"
+      [idArea]="areaSeleccionadaId"
+      [nombreArea]="areaActual?.nombre || ''"
+      (guardado)="alGuardarMatriz($event)"
+      (cerrar)="mostrarConfiguracionMatriz = false">
+    </app-configuracion-matriz-urgencia>
+
+    <!-- Componente de Configuración de Matriz de Atención por Área (2x2) -->
+    <app-configuracion-matriz-atencion
+      *ngIf="mostrarConfiguracionMatriz && tipoMatrizConfiguracion === 'atencion'"
+      [idArea]="areaSeleccionadaId"
+      [nombreArea]="areaActual?.nombre || ''"
+      (guardado)="alGuardarMatrizAtencion($event)"
+      (cerrar)="mostrarConfiguracionMatriz = false">
+    </app-configuracion-matriz-atencion>
+
+    <!-- Componente Ficha Guía Desplegable -->
+    <app-tarjeta-guia-matriz 
+      [mostrar]="mostrarGuiaMatriz" 
+      (cerrar)="mostrarGuiaMatriz = false">
+    </app-tarjeta-guia-matriz>
+
+    <!-- Formulario In-line para Crear Categoría Raíz -->
+    <div class="mb-4" *ngIf="idNodoParaAgregar === 'RAIZ'">
+      <app-formulario-nodo-categoria
+        modo="crear-raiz"
+        [nombreArea]="areaActual?.nombre"
+        [idArea]="areaSeleccionadaId"
+        [matrizUrgencia]="matrizUrgenciaActual"
+        [matrizAtencion]="matrizAtencionActual"
+        (guardar)="guardarNuevoNodo('RAIZ', $event)"
+        (cancelar)="cancelarFormulario()">
+      </app-formulario-nodo-categoria>
+    </div>
+
+    <!-- Contenedor del Árbol de Nodos -->
+    <div class="tree-nodes-container">
+
+      <!-- Estado Vacío -->
+      <div class="tree-empty-state" *ngIf="categorias.length === 0">
+        <div class="empty-icon">
+          <i class="bx bx-git-repo-forked"></i>
+        </div>
+        <h4>Este árbol aún no tiene categorías</h4>
+        <p>Comienza agregando la primera categoría raíz para organizar los tickets de <b>{{ areaActual?.nombre }}</b>.</p>
+        <button type="button" class="btn-rw-cta" (click)="abrirFormularioCrearRaiz()">
+          <i class="bx bx-plus"></i>
+          <span>CREAR PRIMERA CATEGORÍA RAÍZ</span>
+        </button>
+      </div>
+
+      <!-- Iteración de Nodos Raíz -->
+      <div *ngFor="let cat of categorias" class="tree-root-block mb-3">
+        <app-nodo-arbol-categoria
+          [nodo]="cat"
+          [profundidad]="0"
+          [categoriaRaiz]="cat"
+          [idArea]="areaSeleccionadaId"
+          [matrizUrgencia]="matrizUrgenciaActual"
+          [matrizAtencion]="matrizAtencionActual"
+          [estaExpandido]="estaExpandido(cat.id)"
+          [filtroTexto]="filtroTexto"
+          [idNodoEnEdicion]="idNodoEnEdicion"
+          [idNodoParaAgregar]="idNodoParaAgregar"
+          [nodosExpandidosIds]="nodosExpandidosIds"
+          (alternarNodo)="alternarNodo($event)"
+          (abrirCrearHijo)="abrirFormularioAgregarHijo($event)"
+          (abrirEditar)="abrirFormularioEditar($event)"
+          (eliminar)="eliminarNodo($event)"
+          (guardarHijo)="guardarNuevoNodo($event.parentId, $event.datos)"
+          (guardarEdicion)="guardarEdicionNodo($event.nodoId, $event.datos)"
+          (cancelarFormulario)="cancelarFormulario()">
+        </app-nodo-arbol-categoria>
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
+<p-toast 
+  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" 
+  [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'300ms'" 
+  [hideTransitionOptions]="'300ms'">
+</p-toast>
 
-
-
-
-
-
-<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
-    [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-    [showTransformOptions]="'translateX(100%)'"></p-toast>
-<p-confirmDialog>
-    <ng-template pTemplate="message" let-message>
-        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
-            <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
-            <p>{{ message.message }}</p>
-        </div>
-    </ng-template>
+<p-confirmDialog [style]="{ width: '450px' }">
 </p-confirmDialog>
-
-<app-crear-categoria-dialog *ngIf="mostrarModalCategoria" [mostrarModalCrearCategoria]="mostrarModalCategoria"
-    (closeEvent)="cerrarModalCategoria()" [categoria]="categoriaSeleccionada" [esNuevaCategoria]="esNuevaCategoria"></app-crear-categoria-dialog>

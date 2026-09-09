@@ -12,9 +12,24 @@ export class Ticket {
   idSubcategoria: string | null = null;
   idTipoSoporte: string | null = '';
   idEstatusTicket: string = '1';
-  idPrioridadTicket: string = '';
+  // --- MATRIZ DE URGENCIA (3×3) ---
+  criticidadUrgencia?: number;
+  urgenciaUrgencia?: number;
+  scoreUrgencia?: number;
+  prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+
+  // --- MATRIZ DE ATENCIÓN (3×3) ---
+  criticidadAtencion?: number;
+  urgenciaAtencion?: number;
+  scoreAtencion?: number;
+  prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+
+  // --- SCORE GLOBAL MAESTRO ---
+  scoreGlobal?: number; // scoreUrgencia + scoreAtencion (2 a 18)
+
+  idPrioridadTicket?: string; // se quitara
   fecha: Timestamp | any = new Date();
-  fechaEstimacion: Timestamp | any;
+  fechaAtencion?: Timestamp | any;
   fechaFin: Timestamp | null = null;
   solicitante: string = '';
   idResponsableFinaliza: string = '';

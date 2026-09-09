@@ -1,0 +1,207 @@
+$rw-primary: #d3152a;
+
+:host {
+  display: block;
+}
+
+.tarjeta-formulario-nodo {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid #cbd5e1;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  animation: deslizarAbajo 0.18s ease;
+
+  &.es-anidado {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    margin-left: 2rem;
+
+    @media (max-width: 600px) {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .encabezado-formulario {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .titulo-formulario {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        color: $rw-primary;
+        font-size: 1.2rem;
+      }
+    }
+
+    .btn-cerrar-formulario {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.25rem;
+      cursor: pointer;
+
+      &:hover {
+        color: #0f172a;
+      }
+    }
+  }
+
+  .etiqueta-campo {
+    font-size: 0.725rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: #475569;
+    margin-bottom: 0.4rem;
+    display: block;
+
+    .requerido {
+      color: $rw-primary;
+    }
+  }
+
+  .input-texto-nodo {
+    width: 100%;
+    max-width: 480px;
+    padding: 0.6rem 0.85rem;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    background: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $rw-primary;
+      box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+    }
+  }
+
+  .botones-seleccion-tipo {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    .boton-tipo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.75rem 1.15rem;
+      border-radius: 12px;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.18s ease;
+
+      i {
+        font-size: 1.35rem;
+        color: #64748b;
+      }
+
+      .textos-boton-tipo {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+
+        b {
+          font-size: 0.85rem;
+          color: #1e293b;
+        }
+
+        span {
+          font-size: 0.725rem;
+          color: #94a3b8;
+          font-weight: 500;
+        }
+      }
+
+      &:hover {
+        border-color: #cbd5e1;
+        background-color: #f8fafc;
+      }
+
+      &.esta-elegido {
+        border-color: #0f172a;
+        background-color: #f8fafc;
+        box-shadow: 0 0 0 2px #0f172a;
+
+        i {
+          color: $rw-primary;
+        }
+      }
+    }
+  }
+
+  .pie-acciones-formulario {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.65rem;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 1rem;
+
+    .btn-cancelar-formulario {
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #64748b;
+      font-weight: 700;
+      font-size: 0.825rem;
+      cursor: pointer;
+
+      &:hover {
+        background: #f8fafc;
+        color: #0f172a;
+      }
+    }
+
+    .btn-guardar-formulario {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.55rem 1.25rem;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.825rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(211, 21, 42, 0.25);
+
+      &:hover {
+        background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+    }
+  }
+}
+
+@keyframes deslizarAbajo {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

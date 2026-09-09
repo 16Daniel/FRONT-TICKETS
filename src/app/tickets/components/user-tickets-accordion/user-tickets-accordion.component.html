@@ -1,57 +1,59 @@
-<p-accordion class="w-full" [activeIndex]="activeIndex">
+<p-accordion class="custom-branches-accordion w-full" [activeIndex]="activeIndex">
     <p-accordionTab *ngFor="let item of ordenarSucursalesUser(usuarioAgrupacion.sucursales)">
 
         <ng-template pTemplate="header">
-            <div class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 justify-content-between" [style]="{
-            'background-color': obtenerBackGroundSucursal(contarTickets(item.id))
-          }">
+            <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(contarTickets(item.id))">
 
-                <div>
-                    <p-badge [value]="contarTickets(item.id)" class="ml-auto mr-2" [size]="'large'"
-                        [style]="{ 'background-color': 'white', color: 'black' }" />
-                    <span class="fw-bold" [style]="{ color: obtenerColorTexto(contarTickets(item.id)) }">
-                        {{ item.nombre }}
-                    </span>
+                <div class="branch-info-group">
+                    <!-- Clean Number Badge ONLY -->
+                    <div class="branch-count-badge">
+                        {{ contarTickets(item.id) }}
+                    </div>
+
+                    <!-- Branch Name ONLY -->
+                    <span class="branch-title">{{ item.nombre }}</span>
                 </div>
 
-                <span class="icon-circle bx-tada"
-                    *ngIf="verificarTicketsPendientesValidar(filtrarTicketsPorSucursal(item.id))">
-                    <i class="pi pi-check" style="font-size: 1.5rem; color: #7C3AED;" pTooltip="PENDIENTE VALIDAR"
-                        tooltipPosition="top"></i>
-                </span>
-
-                <div class="d-flex justify-content-center gap-3">
-                    <span class="icon-circle bx-tada"
-                        *ngIf="verificarTicketsNuevos(filtrarTicketsPorSucursal(item.id))">
-                        <!-- <i class="pi pi-headphones" pTooltip="NUEVO TICKET" tooltipPosition="top"></i> -->
-                        <i class="fas fa-headset" style="font-size: 1.5rem; color: #FF0000;" pTooltip="NUEVO TICKET"
-                            tooltipPosition="top"></i>
+                <!-- Action / Alert Badges -->
+                <div class="branch-actions-indicators">
+                    <span class="indicator-badge badge-pending" 
+                        *ngIf="verificarTicketsPendientesValidar(filtrarTicketsPorSucursal(item.id))" 
+                        pTooltip="PENDIENTE VALIDAR" tooltipPosition="top">
+                        <i class="bx bx-check-double"></i>
                     </span>
 
-                    <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(filtrarTicketsPorSucursal(item.id))">
-                        <i class="pi pi-comments" style="font-size: 1.5rem; color: #0F99E4;" pTooltip="NUEVO CHAT"
-                            tooltipPosition="top"></i>
+                    <span class="indicator-badge badge-new" 
+                        *ngIf="verificarTicketsNuevos(filtrarTicketsPorSucursal(item.id))" 
+                        pTooltip="NUEVO TICKET" tooltipPosition="top">
+                        <i class="bx bx-bell"></i>
                     </span>
 
+                    <span class="indicator-badge badge-chat" 
+                        *ngIf="verificarChatNoLeido(filtrarTicketsPorSucursal(item.id))" 
+                        pTooltip="NUEVO CHAT" tooltipPosition="top">
+                        <i class="bx bx-message-square-dots"></i>
+                    </span>
                 </div>
 
             </div>
-
         </ng-template>
 
-        <div class="form-check form-switch d-flex align-items-center gap-2">
-            <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;"
-                [(ngModel)]="mostrarRadiografiaMap[item.id]">
-            <label class="form-check-label fs-6">MÁS INFORMACIÓN</label>
-
+        <!-- Sub-toggles inside accordion body -->
+        <div class="accordion-subtoggles-strip">
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+                <input class="form-check-input custom-switch" type="checkbox" role="switch"
+                    [(ngModel)]="mostrarRadiografiaMap[item.id]">
+                <label class="form-check-label m-0">📊 MÁS INFORMACIÓN</label>
+            </div>
         </div>
-        <br>
 
-        <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea == '1'"
-            [sucursal]="obtenerSucursal(item.id)!"></app-tpvs-devices-table>
-        <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
-            [idArea]="idArea"></app-grafica-tickets-30-dias>
-        <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" [idArea]="idArea"
-            *ngIf="!mostrarRadiografiaMap[item.id]"></app-admin-tickets-list>
+        <div class="accordion-tables-wrapper">
+            <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea == '1'"
+                [sucursal]="obtenerSucursal(item.id)!"></app-tpvs-devices-table>
+            <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
+                [idArea]="idArea"></app-grafica-tickets-30-dias>
+            <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" [idArea]="idArea"
+                *ngIf="!mostrarRadiografiaMap[item.id]"></app-admin-tickets-list>
+        </div>
     </p-accordionTab>
 </p-accordion>

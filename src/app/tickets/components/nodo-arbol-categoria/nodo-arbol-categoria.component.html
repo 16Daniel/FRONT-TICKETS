@@ -1,0 +1,164 @@
+<div class="elemento-nodo-arbol" *ngIf="coincideFiltro(nodo)" [class.es-nodo-hijo]="profundidad > 0">
+  
+  <!-- Tarjeta Fila del Nodo -->
+  <div class="tarjeta-nodo-arbol" 
+    [class.es-rama]="esRama(nodo)" 
+    [class.es-hoja]="!esRama(nodo)" 
+    [class.esta-expandido]="estaExpandido"
+    [class.es-sub-nodo]="profundidad > 0">
+    
+    <div class="fila-principal-nodo">
+      <!-- Información Izquierda -->
+      <div class="grupo-izquierdo-nodo">
+
+        <!-- Botón Desplegar / Contraer -->
+        <button 
+          *ngIf="obtenerHijosActivos(nodo).length > 0 || esRama(nodo)" 
+          type="button" 
+          class="btn-alternar-nodo"
+          (click)="alternarNodo.emit(nodo.id)">
+          <i class="bx" [ngClass]="estaExpandido ? 'bx-chevron-down' : 'bx-chevron-right'"></i>
+        </button>
+
+        <span class="espaciador-alternar" *ngIf="obtenerHijosActivos(nodo).length === 0 && !esRama(nodo)"></span>
+
+        <!-- Insignia Ícono -->
+        <div class="insignia-icono-nodo" 
+          [class.es-rama]="esRama(nodo)" 
+          [class.es-sub]="profundidad > 0"
+          [style.background]="!esRama(nodo) ? clasificarCuadrante(nodo.score || 4).bg : null" 
+          [style.color]="!esRama(nodo) ? clasificarCuadrante(nodo.score || 4).text : null">
+          <i class="bx" [ngClass]="esRama(nodo) ? 'bx-folder' : 'bx-tag'"></i>
+        </div>
+
+        <!-- Detalles del Nodo -->
+        <div class="detalles-nodo">
+          <span class="texto-nombre-nodo">{{ nodo.nombre }}</span>
+
+          <div class="fila-metadatos-nodo">
+            <!-- Insignia de Tipo -->
+            <span *ngIf="esRama(nodo)" class="insignia-pildora pildora-rama">
+              <i class="bx bx-folder"></i> Rama
+            </span>
+
+            <span *ngIf="!esRama(nodo)" class="insignia-pildora" [style.background]="clasificarCuadrante(nodo.score || 4).bg" [style.color]="clasificarCuadrante(nodo.score || 4).text" pTooltip="SLA de inicio de atención (Matriz de Urgencia)" tooltipPosition="top">
+              <i class="bx {{ clasificarCuadrante(nodo.score || 4).icon }}"></i>
+              {{ clasificarCuadrante(nodo.score || 4).label }}
+            </span>
+
+            <span *ngIf="!esRama(nodo) && nodo.prioridadAtencion" class="insignia-pildora insignia-atencion" pTooltip="SLA de resolución (Matriz de Atención)" tooltipPosition="top">
+              <i class="bx bx-timer"></i>
+              <span>Atención: {{ nodo.prioridadAtencion }}</span>
+            </span>
+
+            <!-- Conteo de subcategorías para ramas -->
+            <span *ngIf="esRama(nodo)" class="insignia-conteo-hijos">
+              <i class="bx bx-git-branch"></i>
+              <span>{{ obtenerHijosActivos(nodo).length }} subcategorías</span>
+            </span>
+
+            <!-- Nivel de Profundidad si está profundamente anidado -->
+            <span *ngIf="profundidad > 1" class="insignia-profundidad">
+              Nivel {{ profundidad + 1 }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grupo Derecho: Acciones -->
+      <div class="grupo-derecho-nodo">
+        <!-- Barra de Acciones -->
+        <div class="barra-acciones-nodo">
+          <!-- Botón Agregar Subcategoría -->
+          <button 
+            type="button" 
+            class="btn-accion-arbol btn-agregar-hijo"
+            (click)="abrirCrearHijo.emit(nodo)"
+            pTooltip="Agregar subcategoría dentro" 
+            tooltipPosition="top">
+            <i class="bx bx-plus"></i>
+            <span>Agregar dentro</span>
+          </button>
+
+          <!-- Botón Editar -->
+          <button 
+            type="button" 
+            class="btn-accion-arbol btn-editar-nodo"
+            (click)="abrirEditar.emit(nodo)"
+            pTooltip="Editar nodo" 
+            tooltipPosition="top">
+            <i class="bx bx-edit-alt"></i>
+            <span>Editar</span>
+          </button>
+
+          <!-- Botón Eliminar -->
+          <button 
+            type="button" 
+            class="btn-accion-arbol btn-eliminar-nodo"
+            (click)="eliminar.emit(nodo)"
+            pTooltip="Eliminar nodo" 
+            tooltipPosition="top">
+            <i class="bx bx-trash"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Formulario In-line de Edición -->
+  <div class="my-2" *ngIf="idNodoEnEdicion == nodo.id">
+    <app-formulario-nodo-categoria
+      modo="editar"
+      [idArea]="idArea"
+      [matrizUrgencia]="matrizUrgencia"
+      [matrizAtencion]="matrizAtencion"
+      [nodoEditar]="nodo"
+      [bloquearCambioTipo]="obtenerHijosActivos(nodo).length > 0"
+      [esAnidado]="profundidad > 0"
+      (guardar)="alGuardarEdicion($event)"
+      (cancelar)="cancelarFormulario.emit()">
+    </app-formulario-nodo-categoria>
+  </div>
+
+  <!-- Formulario In-line para Agregar Subcategoría -->
+  <div class="my-2" *ngIf="idNodoParaAgregar == nodo.id">
+    <app-formulario-nodo-categoria
+      modo="crear-hijo"
+      [idArea]="idArea"
+      [matrizUrgencia]="matrizUrgencia"
+      [matrizAtencion]="matrizAtencion"
+      [nombrePadre]="nodo.nombre"
+      [esAnidado]="true"
+      (guardar)="alGuardarHijo($event)"
+      (cancelar)="cancelarFormulario.emit()">
+    </app-formulario-nodo-categoria>
+  </div>
+
+  <!-- Ramas Descendientes Recursivas -->
+  <div class="contenedor-hijos-arbol" *ngIf="estaExpandido && obtenerHijosActivos(nodo).length > 0">
+    <div *ngFor="let hijo of obtenerHijosActivos(nodo)" class="bloque-sub-nodo">
+      <app-nodo-arbol-categoria
+        [nodo]="hijo"
+        [profundidad]="profundidad + 1"
+        [categoriaRaiz]="categoriaRaiz"
+        [idArea]="idArea"
+        [matrizUrgencia]="matrizUrgencia"
+        [matrizAtencion]="matrizAtencion"
+        [estaExpandido]="hijoEstaExpandido(hijo.id)"
+        [filtroTexto]="filtroTexto"
+        [idNodoEnEdicion]="idNodoEnEdicion"
+        [idNodoParaAgregar]="idNodoParaAgregar"
+        [nodosExpandidosIds]="nodosExpandidosIds"
+        (alternarNodo)="alternarNodo.emit($event)"
+        (abrirCrearHijo)="abrirCrearHijo.emit($event)"
+        (abrirEditar)="abrirEditar.emit($event)"
+        (eliminar)="eliminar.emit($event)"
+        (guardarHijo)="guardarHijo.emit($event)"
+        (guardarEdicion)="guardarEdicion.emit($event)"
+        (cancelarFormulario)="cancelarFormulario.emit()">
+      </app-nodo-arbol-categoria>
+    </div>
+  </div>
+
+</div>

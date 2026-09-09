@@ -1,0 +1,120 @@
+:host {
+  display: block;
+}
+
+.tarjeta-guia-matriz {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 1.35rem 1.5rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  animation: deslizarAbajo 0.2s ease;
+
+  .encabezado-guia {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.65rem;
+
+    .titulo-guia {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        color: #2563eb;
+        font-size: 1.25rem;
+      }
+    }
+
+    .btn-cerrar-guia {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.35rem;
+      cursor: pointer;
+
+      &:hover {
+        color: #0f172a;
+      }
+    }
+  }
+
+  .descripcion-guia {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 1.15rem;
+    line-height: 1.45;
+  }
+
+  .cuadricula-cuadrantes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.85rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 550px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .tarjeta-cuadrante {
+    border-radius: 14px;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    .encabezado-cuadrante {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+
+      .icono-cuadrante {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+      }
+
+      .nombre-cuadrante {
+        font-weight: 800;
+        font-size: 0.925rem;
+      }
+
+      .score-cuadrante {
+        margin-left: auto;
+        font-size: 0.725rem;
+        font-weight: 700;
+        opacity: 0.75;
+        font-family: monospace;
+      }
+    }
+
+    .descripcion-cuadrante {
+      font-size: 0.75rem;
+      line-height: 1.4;
+      margin: 0;
+      opacity: 0.85;
+    }
+  }
+}
+
+@keyframes deslizarAbajo {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

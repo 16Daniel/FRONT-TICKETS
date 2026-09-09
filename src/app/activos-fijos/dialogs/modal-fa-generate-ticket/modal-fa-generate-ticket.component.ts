@@ -27,10 +27,11 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { TicketsPriorityService } from '../../../tickets/services/tickets-priority.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
-import { Subcategoria } from '../../../tickets/interfaces/subcategoria.model';
 import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
+import { SelectorArbolCategoriaComponent } from '../../../tickets/components/selector-arbol-categoria/selector-arbol-categoria.component';
+import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -41,24 +42,24 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
     FormsModule,
     CommonModule,
     EditorModule,
+    SelectorArbolCategoriaComponent
   ],
+  providers: [MessageService],
   templateUrl: './modal-fa-generate-ticket.component.html',
   styleUrl: './modal-fa-generate-ticket.component.scss'
 })
-
 export class ModalFaGenerateTicketComponent implements OnInit {
   @Input() mostrarModalGenerateTicket: boolean = false;
-  @Input() activoFijo: ActivoFijo = new ActivoFijo;
+  @Input() activoFijo: ActivoFijo = new ActivoFijo();
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  ticket: Ticket = new Ticket
+  ticket: Ticket = new Ticket();
   sucursales: Sucursal[] = [];
   usuarioActivo?: Usuario | null;
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
-  mostrarCampoSubcategoria = false;
-  formCategoria: any;
+  formCategoria: any = null;
   catUsuariosHelp: Usuario[] = [];
 
   imagenesEvidencia: string[] = [];
@@ -76,18 +77,20 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
     private firebaseStorage: FirebaseStorageService
-  ) { }
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.areas = this.areasService.areas;
-    this.ticket.idArea = this.areas.find(x => x.id == this.activoFijo.idArea)!.id;
+    const areaEncontrada = this.areas.find(x => String(x.id) === String(this.activoFijo.idArea));
+    if (areaEncontrada) {
+      this.ticket.idArea = areaEncontrada.id;
+    }
 
     this.usersService.usuarios$.subscribe(usuarios => {
       const usuarioEncontrado = usuarios.find(usuario =>
         usuario.idRol === '2' &&
-        usuario.sucursales?.some(s => s.id == this.activoFijo.idSucursal)
+        usuario.sucursales?.some(s => String(s.id) === String(this.activoFijo.idSucursal))
       );
-
       this.usuarioActivo = usuarioEncontrado || null;
     });
 
@@ -98,81 +101,114 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.obtenerPrioridadesTicket();
   }
 
-  obtenerSucursales() {
+  obtenerSucursales(): void {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
         this.ticket.idSucursal = this.activoFijo.idSucursal;
         this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: () => {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
   }
 
-  obtenerPrioridadesTicket() {
+  obtenerPrioridadesTicket(): void {
     this.ticketsPriorityService.get().subscribe({
       next: (data) => {
         this.prioridadesTicket = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
   }
 
-  onChangeArea() {
-    this.ticket.idCategoria = '';
-    this.cdr.detectChanges();
-  }
-
-  obtenerCategorias() {
+  obtenerCategorias(): void {
     this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data;
         this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: () => {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
   }
 
-  obtenerCategoriasPorArea(): Categoria[] {
-    let arr: Categoria[] = [];
-    if (this.ticket.idArea) {
-      arr = this.categorias.filter((x) => x.idArea == this.ticket.idArea);
-    }
-    return arr;
+  obtenerBackgroundColorPrioridad(value: string): string {
+    const val = value?.toUpperCase() || '';
+    if (val === 'ALTA' || val === 'PÁNICO') return '#d3152a';
+    if (val === 'MEDIA') return '#fdb813';
+    if (val === 'BAJA') return '#16a34a';
+    return '#64748b';
   }
 
-  obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
+  /* Selección de Categoría desde el Árbol */
+  onSeleccionarCategoria(seleccion: SeleccionArbolCategoria): void {
+    this.formCategoria = seleccion.categoria;
+    this.ticket.idCategoria = seleccion.idCategoria;
+    this.ticket.nombreCategoria = seleccion.nombreCategoria;
+    this.ticket.idSubcategoria = seleccion.idSubcategoria || null;
+    this.ticket.nombreSubcategoria = seleccion.nombreSubcategoria || '';
 
-    if (value == 'ALTA') {
-      str = '#ff0000';
-    }
+    // Urgencia (3×3)
+    const critUrg = seleccion.criticidadUrgencia || seleccion.subcategoria?.criticidadUrgencia || seleccion.categoria?.criticidadUrgencia || seleccion.criticidad || 2;
+    const urgUrg = seleccion.urgenciaUrgencia || seleccion.subcategoria?.urgenciaUrgencia || seleccion.categoria?.urgenciaUrgencia || seleccion.urgencia || 2;
+    const scoreUrg = seleccion.scoreUrgencia || seleccion.score || (critUrg * urgUrg);
+    const prioUrg = seleccion.prioridadUrgencia || seleccion.prioridad || 'Medio';
 
-    if (value == 'MEDIA') {
-      str = '#ffe800';
-    }
+    this.ticket.criticidadUrgencia = Math.min(3, Math.max(1, critUrg));
+    this.ticket.urgenciaUrgencia = Math.min(3, Math.max(1, urgUrg));
+    this.ticket.scoreUrgencia = scoreUrg;
+    this.ticket.prioridadUrgencia = prioUrg as any;
 
-    if (value == 'BAJA') {
-      str = '#61ff00';
-    }
-    return str;
+    // Atención (3×3)
+    const critAten = seleccion.criticidadAtencion || seleccion.subcategoria?.criticidadAtencion || seleccion.categoria?.criticidadAtencion || this.ticket.criticidadUrgencia;
+    const urgAten = seleccion.urgenciaAtencion || seleccion.subcategoria?.urgenciaAtencion || seleccion.categoria?.urgenciaAtencion || this.ticket.urgenciaUrgencia;
+    const scoreAten = seleccion.scoreAtencion || (critAten * urgAten);
+    const prioAten = seleccion.prioridadAtencion || seleccion.subcategoria?.prioridadAtencion || seleccion.categoria?.prioridadAtencion || 'Medio';
+
+    this.ticket.criticidadAtencion = Math.min(3, Math.max(1, critAten));
+    this.ticket.urgenciaAtencion = Math.min(3, Math.max(1, urgAten));
+    this.ticket.scoreAtencion = scoreAten;
+    this.ticket.prioridadAtencion = prioAten as any;
+
+    // Global
+    this.ticket.scoreGlobal = seleccion.scoreGlobal || (scoreUrg + scoreAten);
+  }
+
+  onLimpiarCategoria(): void {
+    this.formCategoria = null;
+    this.ticket.idCategoria = '';
+    this.ticket.nombreCategoria = '';
+    this.ticket.idSubcategoria = null;
+    this.ticket.nombreSubcategoria = '';
+    this.ticket.criticidadUrgencia = undefined;
+    this.ticket.urgenciaUrgencia = undefined;
+    this.ticket.scoreUrgencia = undefined;
+    this.ticket.prioridadUrgencia = undefined;
+    this.ticket.criticidadAtencion = undefined;
+    this.ticket.urgenciaAtencion = undefined;
+    this.ticket.scoreAtencion = undefined;
+    this.ticket.prioridadAtencion = undefined;
+    this.ticket.scoreGlobal = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {
-    if (form.form.status == 'INVALID') {
+    if (form.form.status === 'INVALID') {
       Object.values(form.controls).forEach((control) => {
         control.markAsTouched();
       });
-
       this.showMessage('error', 'Error', 'Campos requeridos incompletos');
+      return;
+    }
+
+    if (!this.ticket.idCategoria) {
+      this.showMessage('error', 'Categoría requerida', 'Por favor selecciona una categoría del árbol');
       return;
     }
 
@@ -187,24 +223,23 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       }
     });
 
-    let count = await this.ticketsService.obtenerSecuencialTickets();
-    let folio = this.folioGeneratorService.generarFolio(
-      parseInt(this.ticket.idSucursal),
+    const count = await this.ticketsService.obtenerSecuencialTickets();
+    const folio = this.folioGeneratorService.generarFolio(
+      parseInt(String(this.ticket.idSucursal), 10),
       count
     );
 
-    const fechaEstimacion = new Date(); // Obtiene la fecha actual
-    fechaEstimacion.setDate(fechaEstimacion.getDate() + 5);
-
-    let idsResponsablesTicket = this.obtenerResponsablesTicket(this.ticket.idSucursal, this.ticket.idArea);
-    if (idsResponsablesTicket.length == 0) {
+    const idsResponsablesTicket = this.obtenerResponsablesTicket(
+      String(this.ticket.idSucursal),
+      String(this.ticket.idArea)
+    );
+    if (idsResponsablesTicket.length === 0) {
+      Swal.close();
       this.showMessage('error', 'Error', 'No hay analistas disponibles para el área seleccionada');
       return;
     }
 
-
-
-    let participantesChat: ParticipanteChat[] = [];
+    const participantesChat: ParticipanteChat[] = [];
     participantesChat.push({
       idUsuario: this.usuarioActivo?.id,
       ultimoComentarioLeido: 0,
@@ -221,128 +256,112 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.idSucursal = this.ticket.idSucursal.toString();
     this.ticket.idArea = this.ticket.idArea.toString();
     this.ticket.idCategoria = this.ticket.idCategoria.toString();
+    this.ticket.idSubcategoria = this.ticket.idSubcategoria ? this.ticket.idSubcategoria.toString() : null;
     this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
-    this.ticket.fechaEstimacion = fechaEstimacion;
     this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
     this.ticket.idUsuario = this.usuarioActivo?.id;
-    this.ticket.nombreCategoria = this.formCategoria.nombre;
-
-    if (this.formCategoria.activarSubcategorias)
-      this.ticket.nombreSubcategoria = this.formCategoria.subcategorias.find((x: Subcategoria) => x.id == this.ticket.idSubcategoria).nombre
-
     this.ticket.folio = folio;
     this.ticket.participantesChat = participantesChat;
 
-    this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
-      .then(async urls => {
-        this.ticket.imagenesEvidencia = urls;
-        await this.ticketsService.create({ ...this.ticket });
-        Swal.close();
-        // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-        await this.ticketsService.incrementarContadorTickets();
-
-        Swal.fire("OK", "TICKET CREADO!", "success");
-        this.closeEvent.emit();
-      })
-      .catch(async err => {
-        console.error('Error al subir una o más imágenes:', err);
-        this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
-        await this.ticketsService.incrementarContadorTickets();
-
-        await this.ticketsService.create({ ...this.ticket });
-        Swal.fire("OK", "TICKET CREADO!", "success");
-        this.closeEvent.emit();
-      });
+    if (this.archivos.length > 0) {
+      this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
+        .then(async urls => {
+          this.ticket.imagenesEvidencia = urls;
+          await this.ticketsService.create({ ...this.ticket });
+          await this.ticketsService.incrementarContadorTickets();
+          Swal.close();
+          Swal.fire('OK', 'TICKET CREADO!', 'success');
+          this.closeEvent.emit();
+        })
+        .catch(async err => {
+          console.error('Error al subir una o más imágenes:', err);
+          this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
+          await this.ticketsService.incrementarContadorTickets();
+          await this.ticketsService.create({ ...this.ticket });
+          Swal.close();
+          Swal.fire('OK', 'TICKET CREADO!', 'success');
+          this.closeEvent.emit();
+        });
+    } else {
+      this.ticket.imagenesEvidencia = [];
+      await this.ticketsService.create({ ...this.ticket });
+      await this.ticketsService.incrementarContadorTickets();
+      Swal.close();
+      Swal.fire('OK', 'TICKET CREADO!', 'success');
+      this.closeEvent.emit();
+    }
   }
 
-  obtenerTipoSoporte(idArea: string) {
-
-    if (idArea == '1') return '2';
-    else if (idArea == '2') return '1';
-    else return '1';
+  obtenerTipoSoporte(idArea: string): string {
+    if (idArea === '1') return '2';
+    return '1';
   }
 
   obtenerIdResponsableTicket(): string {
     let id = '';
-    for (let item of this.catUsuariosHelp) {
-      if (item.idRol == '4') {
-        const existeSucursal = item.sucursales.some(
-          (x) => x.id == this.ticket.idSucursal
-        );
-        if (existeSucursal && item.idArea == this.ticket.idArea) {
-          id = item.id;
-        }
+    const rol2 = this.catUsuariosHelp.find(x => x.idRol === '2');
+    if (rol2) {
+      id = rol2.id;
+    } else {
+      const resp = this.catUsuariosHelp.find(x => x.idArea === this.ticket.idArea);
+      if (resp) {
+        id = resp.id;
       }
     }
-
     return id;
   }
 
-  showMessage(sev: string, summ: string, det: string) {
+  showMessage(sev: string, summ: string, det: string): void {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  obtenerUsuariosHelp() {
+  obtenerUsuariosHelp = (): void => {
     this.usersService.usuarios$.subscribe(usuarios => this.catUsuariosHelp = usuarios);
-  }
+  };
 
-  onHide() {
-    this.closeEvent.emit(false); // Cerrar modal
-  }
+  onHide = (): void => this.closeEvent.emit(false);
 
   obtenerResponsablesTicket(idSucursal: string, idArea: string): string[] {
-    let idsResponsables: string[] = [];
-
-    for (let usuario of this.catUsuariosHelp) {
+    const idsResponsables: string[] = [];
+    for (const usuario of this.catUsuariosHelp) {
       const existeSucursal = usuario.sucursales.some(
-        (sucursal) => sucursal.id == idSucursal
+        (sucursal) => String(sucursal.id) === String(idSucursal)
       );
 
       if (
-        ((existeSucursal && usuario.idArea == idArea) || (usuario.esGuardia && usuario.idArea == this.ticket.idArea)) && usuario.idRol !== '2') {
+        ((existeSucursal && String(usuario.idArea) === String(idArea)) ||
+          (usuario.esGuardia && String(usuario.idArea) === String(this.ticket.idArea))) &&
+        usuario.idRol !== '2'
+      ) {
         idsResponsables.push(usuario.id);
       }
     }
-
     return idsResponsables;
   }
 
-  onCategoriaChange(categoria: Categoria) {
-    this.ticket.idCategoria = categoria.id;
-    this.ticket.idSubcategoria = null;
-    this.mostrarCampoSubcategoria = categoria.activarSubcategorias;
-  }
-
-  obtenerSubcategoriasFiltradas = (): Subcategoria[] =>
-    this.formCategoria.subcategorias.filter((x: Subcategoria) => x.eliminado == false)
-
-  onSeleccionarImagenes() {
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  onSeleccionarImagenes(): void {
+    const fileInput = document.getElementById('fileInputFA') as HTMLInputElement;
     if (fileInput) {
       fileInput.click();
     }
   }
 
-  onFileChange(event: Event) {
+  onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
     this.archivos = Array.from(input.files);
-
     this.imagenesBase64 = [];
 
     this.archivos.forEach(file => {
       const reader = new FileReader();
-
       reader.onload = () => {
         if (typeof reader.result === 'string') {
           this.imagenesBase64.push(reader.result);
           this.cdr.detectChanges();
         }
       };
-
       reader.readAsDataURL(file);
     });
   }
-
 }

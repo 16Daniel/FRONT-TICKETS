@@ -87,46 +87,28 @@ export class BranchesTabsComponent implements OnDestroy {
     });
   }
 
+  private ordenarTickets(tickets: Ticket[]): Ticket[] {
+    return [...tickets].sort((a, b) => {
+      const scoreA = a.scoreGlobal || a.scoreUrgencia || (a as any).score || (((a as any).criticidad && (a as any).urgencia) ? (a as any).criticidad * (a as any).urgencia : 4);
+      const scoreB = b.scoreGlobal || b.scoreUrgencia || (b as any).score || (((b as any).criticidad && (b as any).urgencia) ? (b as any).criticidad * (b as any).urgencia : 4);
+      if (scoreB !== scoreA) {
+        return scoreB - scoreA;
+      }
+      const timeA = a.fecha?.toDate ? a.fecha.toDate().getTime() : (a.fecha ? new Date(a.fecha).getTime() : 0);
+      const timeB = b.fecha?.toDate ? b.fecha.toDate().getTime() : (b.fecha ? new Date(b.fecha).getTime() : 0);
+      return timeB - timeA;
+    });
+  }
+
   async obtenerTicketsPorSucursal(idSucursal: string | any): Promise<void> {
     this.loading = true;
     this.subscripcionTicket = this.ticketsService
       .getByBranchId(idSucursal)
       .subscribe({
         next: (data) => {
-          // console.log(data);
-          this.tickets = data;
-          let arr_temp: Ticket[] = [];
-          let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '1'
-          );
-          let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '2'
-          );
-          let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '3'
-          );
-          let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '4'
-          );
-
-          temp1 = temp1.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp2 = temp2.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp3 = temp3.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp4 = temp4.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.todosLosTickets = [...arr_temp];
-          this.tickets = arr_temp;
+          console.log(data)
+          this.tickets = this.ordenarTickets(data);
+          this.todosLosTickets = [...this.tickets];
 
           if (this.ticket != undefined) {
             let temp = this.tickets.filter((x) => x.id == this.ticket!.id);
@@ -151,40 +133,8 @@ export class BranchesTabsComponent implements OnDestroy {
       .get()
       .subscribe({
         next: (data) => {
-          // console.log(data);
-          this.tickets = data;
-          let arr_temp: Ticket[] = [];
-          let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '1'
-          );
-          let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '2'
-          );
-          let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '3'
-          );
-          let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '4'
-          );
-
-          temp1 = temp1.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp2 = temp2.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp3 = temp3.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-
-          temp4 = temp4.sort(
-            (a, b) => b.fecha.toDate().getTime() - a.fecha.toDate().getTime()
-          );
-          arr_temp = [...temp1, ...temp2, ...temp3, ...temp4];
-          this.todosLosTickets = [...arr_temp];
-          this.tickets = arr_temp;
+          this.tickets = this.ordenarTickets(data);
+          this.todosLosTickets = [...this.tickets];
 
           if (this.ticket != undefined) {
             let temp = this.tickets.filter((x) => x.id == this.ticket!.id);

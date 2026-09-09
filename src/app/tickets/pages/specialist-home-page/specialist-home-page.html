@@ -33,7 +33,7 @@
                         </td>
                         <td class="text-center">{{ ticket.folio }}</td>
                         <td class="text-center">{{ this.datesHelper.getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
-                        <td class="text-center">{{ this.datesHelper.getDate(ticket!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+                        <td class="text-center">{{ this.datesHelper.getDate($any(ticket)!.fechaEstimacion) | date: 'dd/MM/yyyy hh:mm a' }}</td>
                         <td class="text-center">{{ obtenerNombreArea(ticket.idArea) }}</td>
                         <td class="text-center">{{obtenerNombreSucursal(ticket.idSucursal)}}</td>
                         <td class="text-center">{{ ticket.solicitante | uppercase }}</td>

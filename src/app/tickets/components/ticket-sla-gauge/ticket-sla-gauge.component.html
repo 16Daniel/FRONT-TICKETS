@@ -1,0 +1,56 @@
+<div class="ticket-sla-gauge-wrapper" [pTooltip]="tooltipTexto" tooltipPosition="top" [tooltipStyleClass]="'sla-gauge-custom-tooltip'">
+  <svg [attr.width]="size" [attr.height]="size" viewBox="0 0 76 76" class="sla-gauge-svg">
+    <!-- Pista de fondo Urgencia (Exterior) -->
+    <circle
+      cx="38"
+      cy="38"
+      [attr.r]="radioExterior"
+      class="gauge-track"
+      [attr.stroke]="trackColorExterior"
+      stroke-width="5"
+      fill="none"
+    />
+
+    <!-- Arco de progreso Urgencia (Exterior) -->
+    <circle
+      cx="38"
+      cy="38"
+      [attr.r]="radioExterior"
+      class="gauge-progress gauge-exterior"
+      [attr.stroke]="colorExterior"
+      stroke-width="5"
+      fill="none"
+      stroke-linecap="round"
+      [attr.stroke-dasharray]="perimetroExterior"
+      [attr.stroke-dashoffset]="offsetExterior"
+      transform="rotate(-90 38 38)"
+    />
+
+    <!-- Pista de fondo Atención (Interior) -->
+    <circle
+      cx="38"
+      cy="38"
+      [attr.r]="radioInterior"
+      class="gauge-track"
+      [attr.stroke]="trackColorInterior"
+      stroke-width="5"
+      fill="none"
+    />
+
+    <!-- Arco de progreso Atención (Interior) -->
+    <circle
+      cx="38"
+      cy="38"
+      [attr.r]="radioInterior"
+      class="gauge-progress gauge-interior"
+      [attr.stroke]="colorInterior"
+      stroke-width="5"
+      fill="none"
+      stroke-linecap="round"
+      [attr.stroke-dasharray]="perimetroInterior"
+      [attr.stroke-dashoffset]="offsetInterior"
+      transform="rotate(-90 38 38)"
+    />
+
+  </svg>
+</div>

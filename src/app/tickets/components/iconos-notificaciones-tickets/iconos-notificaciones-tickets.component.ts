@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { Ticket } from '../../interfaces/ticket.model';
@@ -8,7 +9,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 @Component({
   selector: 'app-iconos-notificaciones-tickets',
   standalone: true,
-  imports: [TooltipModule],
+  imports: [CommonModule, TooltipModule],
   templateUrl: './iconos-notificaciones-tickets.component.html',
   styleUrl: './iconos-notificaciones-tickets.component.scss'
 })

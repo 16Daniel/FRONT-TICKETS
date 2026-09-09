@@ -6,6 +6,7 @@
 @import "../node_modules/quill/dist/quill.snow.css";
 
 :root {
+  --erp-navbar-height: 64px;
   --white-color: #111827;
   --grey-color: #707070;
   --grey-color-light: #555;
@@ -19,14 +20,24 @@
      --tran-05: all 0.3s ease;
 }
 
+.home {
+  padding-top: var(--erp-navbar-height, 64px) !important;
+}
+
 
 
  $ptc:#0e98e7fb; 
 //$ptc:#d30202; 
 body {
   background-color: #e5ebed;
-  transition: all 0.3s ease;
+  transition: padding-left 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
   color: var(--text-color) !important;
+}
+
+@media (min-width: 1025px) {
+  body.sidebar-pinned {
+    padding-left: 280px !important;
+  }
 }
 
 .bg-p-b
@@ -403,4 +414,43 @@ html, body {
 .h-42
 {
   height: 42px;
+}
+
+/* PrimeNG Dropdown Overlays - Solid, Clean Floating Layer */
+.p-dropdown-panel {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08) !important;
+  z-index: 10000 !important;
+
+  .p-dropdown-items-wrapper {
+    background-color: #ffffff !important;
+    border-radius: 10px !important;
+  }
+
+  .p-dropdown-items {
+    padding: 0.35rem !important;
+    background-color: #ffffff !important;
+
+    .p-dropdown-item {
+      background-color: #ffffff !important;
+      border-radius: 6px !important;
+      padding: 0.45rem 0.75rem !important;
+      font-size: 0.8rem !important;
+      font-weight: 600 !important;
+      color: #334155 !important;
+      transition: all 0.15s ease !important;
+
+      &:hover {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+      }
+
+      &.p-highlight {
+        background-color: #fff1f2 !important;
+        color: #d3152a !important;
+      }
+    }
+  }
 }

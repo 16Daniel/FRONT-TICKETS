@@ -26,6 +26,18 @@ export class CategoriesService {
   constructor(private firestore: Firestore) {
   }
 
+  private limpiarCamposNoDeseados(obj: any): void {
+    if (!obj || typeof obj !== 'object') return;
+    delete obj.slaRes;
+    delete obj.slaResp;
+    delete obj.estimacion;
+    delete obj.impacto;
+    delete obj.tiempoAtencion;
+    if (Array.isArray(obj.subcategorias)) {
+      obj.subcategorias.forEach((s: any) => this.limpiarCamposNoDeseados(s));
+    }
+  }
+
   async create(categoria: Categoria): Promise<void> {
     const documentRef = doc(this.firestore, `${this.pathName}/${categoria.id}`);
 
@@ -35,7 +47,10 @@ export class CategoriesService {
       throw new Error(`La categoria con id ${categoria.id} ya existe.`);
     }
 
-    await setDoc(documentRef, categoria);
+    const payload = JSON.parse(JSON.stringify(categoria));
+    this.limpiarCamposNoDeseados(payload);
+    console.log('[CategoriesService] Payload POST create (limpio):', JSON.stringify(payload, null, 2));
+    await setDoc(documentRef, payload);
   }
 
   get(idArea?: string): Observable<Categoria[]> {
@@ -74,7 +89,10 @@ export class CategoriesService {
 
   async update(categoria: Categoria | any, idCategoria: string): Promise<void> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idCategoria}`);
-    return updateDoc(documentRef, categoria);
+    const payload = JSON.parse(JSON.stringify(categoria));
+    this.limpiarCamposNoDeseados(payload);
+    console.log(`[CategoriesService] Payload PUT update (${idCategoria}) (limpio):`, JSON.stringify(payload, null, 2));
+    return setDoc(documentRef, payload);
   }
 
   async delete(idCategoria: string): Promise<void> {

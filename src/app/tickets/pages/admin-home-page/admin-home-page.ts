@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { AdminTabsComponent } from '../../components/admin-tabs/admin-tabs.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-admin-home-page',
   standalone: true,
-  imports: [AdminTabsComponent],
+  imports: [AdminTabsComponent, PageHeaderComponent],
   templateUrl: './admin-home-page.html',
+  styleUrl: './admin-home-page.scss',
 })
 
 export default class AdminHomePageComponent {

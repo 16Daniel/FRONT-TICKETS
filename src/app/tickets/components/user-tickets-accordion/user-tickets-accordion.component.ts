@@ -67,6 +67,12 @@ export class UserTicketsAccordionComponent {
     return str;
   }
 
+  obtenerClaseEstado(value: number): string {
+    if (value >= 5) return 'status-critical';
+    if (value > 0 && value <= 4) return 'status-warning';
+    return 'status-success';
+  }
+
   obtenerBackGroundSucursal(value: number): string {
     let str = '';
 
