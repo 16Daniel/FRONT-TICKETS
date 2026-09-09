@@ -579,6 +579,37 @@ export class AdminTicketsListComponent {
     return `Atención (Resolución): Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}${scoreGlobal}`;
   }
 
+  obtenerScoreGlobal(tk: Ticket): number {
+    if (tk.scoreGlobal && tk.scoreGlobal >= 2) {
+      return tk.scoreGlobal;
+    }
+    const coordUrg = this.obtenerCoordenadasTicket(tk);
+    const coordAten = this.obtenerCoordenadasAtencionTicket(tk);
+    const score = (coordUrg.score || 4) + (coordAten.score || 4);
+    return Math.min(18, Math.max(2, score));
+  }
+
+  obtenerClaseScoreGlobal(tk: Ticket): string {
+    const score = this.obtenerScoreGlobal(tk);
+    if (score >= 14) return 'score-critico';
+    if (score >= 10) return 'score-alto';
+    if (score >= 6) return 'score-medio';
+    return 'score-bajo';
+  }
+
+  obtenerTooltipScoreGlobal(tk: Ticket): string {
+    const total = this.obtenerScoreGlobal(tk);
+    const coordUrg = this.obtenerCoordenadasTicket(tk);
+    const coordAten = this.obtenerCoordenadasAtencionTicket(tk);
+
+    let nivel = 'Bajo';
+    if (total >= 14) nivel = 'Crítico';
+    else if (total >= 10) nivel = 'Alto';
+    else if (total >= 6) nivel = 'Medio';
+
+    return `⚡ Score Global: ${total}/18 pts (Nivel ${nivel})\n• Urgencia: ${coordUrg.score} pts (${coordUrg.prioridad})\n• Atención: ${coordAten.score} pts (${coordAten.prioridad})`;
+  }
+
   obtenerBackgroundColorPrioridad(value: string): string {
     if (value == '2') return '#EF4444';
     if (value == '3') return '#EAB308';

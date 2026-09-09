@@ -4,7 +4,7 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Tiempos SLA: Urgencia (Exterior) · Atención (Interior)" tooltipPosition="top">TIEMPOS SLA</th>
+            <th pTooltip="Tiempos SLA (Urgencia exterior · Atención interior) y Score Global ponderado (2-18 pts)" tooltipPosition="top">SLA / SCORE</th>
             <th>FOLIO</th>
             <th>FECHA</th>
             <th>AREA</th>
@@ -23,6 +23,16 @@
                 <div class="contenedor-criticidad-celda">
                     <!-- Gráfica Circular Dual SLA (Urgencia exterior + Atención interior) -->
                     <app-ticket-sla-gauge [ticket]="tk" [size]="50"></app-ticket-sla-gauge>
+
+                    <!-- Micro-Pill / Badge de Score Global (2 a 18 pts) -->
+                    <div class="badge-score-global"
+                         [ngClass]="obtenerClaseScoreGlobal(tk)"
+                         [pTooltip]="obtenerTooltipScoreGlobal(tk)"
+                         tooltipPosition="top">
+                        <i class="bx bxs-zap"></i>
+                        <span class="score-valor">{{ obtenerScoreGlobal(tk) }}</span>
+                        <span class="score-label">pts</span>
+                    </div>
 
                     <!-- Matrices 3x3 ocultas temporalmente
                     <div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
@@ -170,10 +180,10 @@
                         (click)="abrirModalDetalleTicket(tk)">
                         <i class="bx bx-show"></i>
                     </button>
-                    <button *ngIf="(tk != undefined && obtenerNombrePrioridad(tk) != 'CRÍTICO')" class="btn btn-dark btn-sm rounded-2"
+                    <!-- <button *ngIf="(tk != undefined && obtenerNombrePrioridad(tk) != 'CRÍTICO')" class="btn btn-dark btn-sm rounded-2"
                         (click)="onPanicoClick(tk!.id)">
                         <i class="bx bxs-hot text-white" pTooltip="PÁNICO" tooltipPosition="top"></i>
-                    </button>
+                    </button> -->
                 </div>
             </td>
         </tr>
