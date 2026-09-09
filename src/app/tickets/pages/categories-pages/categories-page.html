@@ -136,10 +136,10 @@
         <button 
           type="button" 
           class="tab-matriz-btn"
-          [class.is-active]="tipoMatrizConfiguracion === 'atencion'"
-          (click)="tipoMatrizConfiguracion = 'atencion'">
+          [class.is-active]="tipoMatrizConfiguracion === 'resolucion'"
+          (click)="tipoMatrizConfiguracion = 'resolucion'">
           <i class="bx bx-timer"></i>
-          <span>Matriz de Atención (2×2) · Resolución</span>
+          <span>Matriz de Resolución (3×3) · Resolución</span>
         </button>
       </div>
     </div>
@@ -153,14 +153,14 @@
       (cerrar)="mostrarConfiguracionMatriz = false">
     </app-configuracion-matriz-urgencia>
 
-    <!-- Componente de Configuración de Matriz de Atención por Área (2x2) -->
-    <app-configuracion-matriz-atencion
-      *ngIf="mostrarConfiguracionMatriz && tipoMatrizConfiguracion === 'atencion'"
+    <!-- Componente de Configuración de Matriz de Resolución por Área (3x3) -->
+    <app-configuracion-matriz-resolucion
+      *ngIf="mostrarConfiguracionMatriz && tipoMatrizConfiguracion === 'resolucion'"
       [idArea]="areaSeleccionadaId"
       [nombreArea]="areaActual?.nombre || ''"
-      (guardado)="alGuardarMatrizAtencion($event)"
+      (guardado)="alGuardarMatrizResolucion($event)"
       (cerrar)="mostrarConfiguracionMatriz = false">
-    </app-configuracion-matriz-atencion>
+    </app-configuracion-matriz-resolucion>
 
     <!-- Componente Ficha Guía Desplegable -->
     <app-tarjeta-guia-matriz 

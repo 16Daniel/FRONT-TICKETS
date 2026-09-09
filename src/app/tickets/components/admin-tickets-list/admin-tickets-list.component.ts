@@ -357,11 +357,12 @@ export class AdminTicketsListComponent {
     { impacto: 1, urgencia: 3 }, { impacto: 1, urgencia: 2 }, { impacto: 1, urgencia: 1 }
   ];
 
-  readonly celdasMatrizAtencion = [
+  readonly celdasMatrizResolucion = [
     { impacto: 3, urgencia: 3 }, { impacto: 3, urgencia: 2 }, { impacto: 3, urgencia: 1 },
     { impacto: 2, urgencia: 3 }, { impacto: 2, urgencia: 2 }, { impacto: 2, urgencia: 1 },
     { impacto: 1, urgencia: 3 }, { impacto: 1, urgencia: 2 }, { impacto: 1, urgencia: 1 }
   ];
+  readonly celdasMatrizAtencion = this.celdasMatrizResolucion;
 
   obtenerCoordenadasTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
     const critRaw = tk.criticidadUrgencia ?? (tk as any).criticidad;
@@ -506,7 +507,10 @@ export class AdminTicketsListComponent {
     return `Urgencia (Inicio): Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}${scoreGlobal}`;
   }
 
-  obtenerPrioridadAtencionTicket(tk: Ticket): 'Crítico' | 'Alto' | 'Medio' | 'Bajo' {
+  obtenerPrioridadResolucionTicket(tk: Ticket): 'Crítico' | 'Alto' | 'Medio' | 'Bajo' {
+    if (tk.prioridadResolucion) {
+      return tk.prioridadResolucion;
+    }
     if (tk.prioridadAtencion) {
       return tk.prioridadAtencion;
     }
@@ -515,12 +519,12 @@ export class AdminTicketsListComponent {
       if (cat) {
         if (tk.idSubcategoria && cat.subcategorias) {
           const sub = this.buscarSubcategoriaRecursiva(cat.subcategorias, String(tk.idSubcategoria));
-          if (sub && sub.prioridadAtencion) {
-            return sub.prioridadAtencion;
+          if (sub && (sub.prioridadResolucion || sub.prioridadAtencion)) {
+            return (sub.prioridadResolucion || sub.prioridadAtencion)!;
           }
         }
-        if (cat.prioridadAtencion) {
-          return cat.prioridadAtencion;
+        if (cat.prioridadResolucion || cat.prioridadAtencion) {
+          return (cat.prioridadResolucion || cat.prioridadAtencion)!;
         }
       }
     }
@@ -528,17 +532,24 @@ export class AdminTicketsListComponent {
     return (coord.prioridad as any) || 'Medio';
   }
 
-  obtenerCoordenadasAtencionTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
-    if (tk.criticidadAtencion && tk.urgenciaAtencion) {
-      const urgencia = Math.min(3, Math.max(1, tk.urgenciaAtencion));
-      let impacto = Math.min(3, Math.max(1, tk.criticidadAtencion));
-      let score = tk.scoreAtencion || (impacto * urgencia);
-      const prioridad = tk.prioridadAtencion || this.clasificarPrioridad(score);
+  // Compatibilidad legacy
+  obtenerPrioridadAtencionTicket(tk: Ticket): 'Crítico' | 'Alto' | 'Medio' | 'Bajo' {
+    return this.obtenerPrioridadResolucionTicket(tk);
+  }
+
+  obtenerCoordenadasResolucionTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
+    const crit = tk.criticidadResolucion || tk.criticidadAtencion;
+    const urg = tk.urgenciaResolucion || tk.urgenciaAtencion;
+    if (crit && urg) {
+      const urgencia = Math.min(3, Math.max(1, urg));
+      let impacto = Math.min(3, Math.max(1, crit));
+      let score = tk.scoreResolucion || tk.scoreAtencion || (impacto * urgencia);
+      const prioridad = tk.prioridadResolucion || tk.prioridadAtencion || this.clasificarPrioridad(score);
       return { impacto, urgencia, score, prioridad };
     }
 
-    // Fallback si solo tiene prioridadAtencion o categoría
-    const prioridad = this.obtenerPrioridadAtencionTicket(tk);
+    // Fallback si solo tiene prioridad o categoría
+    const prioridad = this.obtenerPrioridadResolucionTicket(tk);
     switch (prioridad) {
       case 'Crítico':
         return { impacto: 3, urgencia: 3, score: 9, prioridad: 'Crítico' };
@@ -552,13 +563,23 @@ export class AdminTicketsListComponent {
     }
   }
 
-  esCeldaAtencionActiva(tk: Ticket, impacto: number, urgencia: number): boolean {
-    const coord = this.obtenerCoordenadasAtencionTicket(tk);
+  // Compatibilidad legacy
+  obtenerCoordenadasAtencionTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
+    return this.obtenerCoordenadasResolucionTicket(tk);
+  }
+
+  esCeldaResolucionActiva(tk: Ticket, impacto: number, urgencia: number): boolean {
+    const coord = this.obtenerCoordenadasResolucionTicket(tk);
     return coord.impacto === impacto && coord.urgencia === urgencia;
   }
 
-  obtenerColorMatrizAtencion(tk: Ticket): string {
-    const coord = this.obtenerCoordenadasAtencionTicket(tk);
+  // Compatibilidad legacy
+  esCeldaAtencionActiva(tk: Ticket, impacto: number, urgencia: number): boolean {
+    return this.esCeldaResolucionActiva(tk, impacto, urgencia);
+  }
+
+  obtenerColorMatrizResolucion(tk: Ticket): string {
+    const coord = this.obtenerCoordenadasResolucionTicket(tk);
     switch (coord.prioridad) {
       case 'Crítico':
         return '#EF4444';
@@ -573,10 +594,20 @@ export class AdminTicketsListComponent {
     }
   }
 
-  obtenerTooltipMatrizAtencion(tk: Ticket): string {
-    const coord = this.obtenerCoordenadasAtencionTicket(tk);
+  // Compatibilidad legacy
+  obtenerColorMatrizAtencion(tk: Ticket): string {
+    return this.obtenerColorMatrizResolucion(tk);
+  }
+
+  obtenerTooltipMatrizResolucion(tk: Ticket): string {
+    const coord = this.obtenerCoordenadasResolucionTicket(tk);
     const scoreGlobal = tk.scoreGlobal ? ` · Score Global: ${tk.scoreGlobal}` : '';
-    return `Atención (Resolución): Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}${scoreGlobal}`;
+    return `Resolución: Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}${scoreGlobal}`;
+  }
+
+  // Compatibilidad legacy
+  obtenerTooltipMatrizAtencion(tk: Ticket): string {
+    return this.obtenerTooltipMatrizResolucion(tk);
   }
 
   obtenerScoreGlobal(tk: Ticket): number {
@@ -584,8 +615,8 @@ export class AdminTicketsListComponent {
       return tk.scoreGlobal;
     }
     const coordUrg = this.obtenerCoordenadasTicket(tk);
-    const coordAten = this.obtenerCoordenadasAtencionTicket(tk);
-    const score = (coordUrg.score || 4) + (coordAten.score || 4);
+    const coordRes = this.obtenerCoordenadasResolucionTicket(tk);
+    const score = (coordUrg.score || 4) + (coordRes.score || 4);
     return Math.min(18, Math.max(2, score));
   }
 
@@ -600,14 +631,14 @@ export class AdminTicketsListComponent {
   obtenerTooltipScoreGlobal(tk: Ticket): string {
     const total = this.obtenerScoreGlobal(tk);
     const coordUrg = this.obtenerCoordenadasTicket(tk);
-    const coordAten = this.obtenerCoordenadasAtencionTicket(tk);
+    const coordRes = this.obtenerCoordenadasResolucionTicket(tk);
 
     let nivel = 'Bajo';
     if (total >= 14) nivel = 'Crítico';
     else if (total >= 10) nivel = 'Alto';
     else if (total >= 6) nivel = 'Medio';
 
-    return `⚡ Score Global: ${total}/18 pts (Nivel ${nivel})\n• Urgencia: ${coordUrg.score} pts (${coordUrg.prioridad})\n• Atención: ${coordAten.score} pts (${coordAten.prioridad})`;
+    return `⚡ Score Global: ${total}/18 pts (Nivel ${nivel})\n• Urgencia: ${coordUrg.score} pts (${coordUrg.prioridad})\n• Resolución: ${coordRes.score} pts (${coordRes.prioridad})`;
   }
 
   obtenerBackgroundColorPrioridad(value: string): string {
@@ -706,19 +737,24 @@ export class AdminTicketsListComponent {
     tk.scoreUrgencia = scoreUrg;
     tk.prioridadUrgencia = prioUrg as any;
 
-    // Atención (3×3)
-    const critAten = sel.criticidadAtencion || sel.subcategoria?.criticidadAtencion || sel.categoria?.criticidadAtencion || tk.criticidadUrgencia;
-    const urgAten = sel.urgenciaAtencion || sel.subcategoria?.urgenciaAtencion || sel.categoria?.urgenciaAtencion || tk.urgenciaUrgencia;
-    const scoreAten = sel.scoreAtencion || (critAten * urgAten);
-    const prioAten = sel.prioridadAtencion || sel.subcategoria?.prioridadAtencion || sel.categoria?.prioridadAtencion || 'Medio';
+    // Resolución (3×3) y Atención (3×3)
+    const critRes = sel.criticidadResolucion || sel.criticidadAtencion || sel.subcategoria?.criticidadResolucion || sel.subcategoria?.criticidadAtencion || sel.categoria?.criticidadResolucion || sel.categoria?.criticidadAtencion || tk.criticidadUrgencia || 2;
+    const urgRes = sel.urgenciaResolucion || sel.urgenciaAtencion || sel.subcategoria?.urgenciaResolucion || sel.subcategoria?.urgenciaAtencion || sel.categoria?.urgenciaResolucion || sel.categoria?.urgenciaAtencion || tk.urgenciaUrgencia || 2;
+    const scoreRes = sel.scoreResolucion || sel.scoreAtencion || (critRes * urgRes);
+    const prioRes = sel.prioridadResolucion || sel.prioridadAtencion || sel.subcategoria?.prioridadResolucion || sel.subcategoria?.prioridadAtencion || sel.categoria?.prioridadResolucion || sel.categoria?.prioridadAtencion || 'Medio';
 
-    tk.criticidadAtencion = Math.min(3, Math.max(1, critAten));
-    tk.urgenciaAtencion = Math.min(3, Math.max(1, urgAten));
-    tk.scoreAtencion = scoreAten;
-    tk.prioridadAtencion = prioAten as any;
+    tk.criticidadResolucion = Math.min(3, Math.max(1, critRes));
+    tk.urgenciaResolucion = Math.min(3, Math.max(1, urgRes));
+    tk.scoreResolucion = scoreRes;
+    tk.prioridadResolucion = prioRes as any;
+
+    tk.criticidadAtencion = tk.criticidadResolucion;
+    tk.urgenciaAtencion = tk.urgenciaResolucion;
+    tk.scoreAtencion = scoreRes;
+    tk.prioridadAtencion = prioRes as any;
 
     // Global
-    tk.scoreGlobal = sel.scoreGlobal || (scoreUrg + scoreAten);
+    tk.scoreGlobal = sel.scoreGlobal || (scoreUrg + scoreRes);
 
     (tk as any).prioridad = prioUrg;
 

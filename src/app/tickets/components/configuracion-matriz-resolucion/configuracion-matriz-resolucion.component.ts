@@ -14,9 +14,9 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
-import { CeldaMatrizAtencion } from '../../interfaces/celda-matriz-atencion.interface';
-import { MatrizAtencionService } from '../../services/matriz-atencion.service';
+import { MatrizResolucion } from '../../interfaces/matriz-resolucion.interface';
+import { CeldaMatrizResolucion } from '../../interfaces/celda-matriz-resolucion.interface';
+import { MatrizResolucionService } from '../../services/matriz-resolucion.service';
 import {
   MATRIZ_FILAS,
   MATRIZ_COLUMNAS,
@@ -24,25 +24,25 @@ import {
 } from '../../helpers/matriz-criticidad.helper';
 
 @Component({
-  selector: 'app-configuracion-matriz-atencion',
+  selector: 'app-configuracion-matriz-resolucion',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './configuracion-matriz-atencion.component.html',
-  styleUrl: './configuracion-matriz-atencion.component.scss'
+  templateUrl: './configuracion-matriz-resolucion.component.html',
+  styleUrl: './configuracion-matriz-resolucion.component.scss'
 })
-export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, OnDestroy {
+export class ConfiguracionMatrizResolucionComponent implements OnInit, OnChanges, OnDestroy {
   @Input() idArea: string = '1';
   @Input() nombreArea: string = '';
 
   @Output() cerrar = new EventEmitter<void>();
-  @Output() guardado = new EventEmitter<MatrizAtencion>();
+  @Output() guardado = new EventEmitter<MatrizResolucion>();
 
   readonly MATRIZ_FILAS = MATRIZ_FILAS;
   readonly MATRIZ_COLUMNAS = MATRIZ_COLUMNAS;
   readonly clasificarCuadrante = clasificarCuadrante;
 
-  matrizEditable!: MatrizAtencion;
-  celdaSeleccionada: CeldaMatrizAtencion | null = null;
+  matrizEditable!: MatrizResolucion;
+  celdaSeleccionada: CeldaMatrizResolucion | null = null;
   cargando: boolean = false;
   guardando: boolean = false;
 
@@ -62,7 +62,7 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
   private subscripcionMatriz?: Subscription;
 
   constructor(
-    private matrizAtencionService: MatrizAtencionService,
+    private matrizResolucionService: MatrizResolucionService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -81,7 +81,7 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
   }
 
   cargarMatrizArea(): void {
-    this.matrizEditable = this.matrizAtencionService.obtenerMatrizPredeterminada(
+    this.matrizEditable = this.matrizResolucionService.obtenerMatrizPredeterminada(
       this.idArea,
       this.nombreArea
     );
@@ -90,7 +90,7 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
     this.cdr.detectChanges();
 
     this.subscripcionMatriz?.unsubscribe();
-    this.subscripcionMatriz = this.matrizAtencionService
+    this.subscripcionMatriz = this.matrizResolucionService
       .obtenerMatrizPorArea(this.idArea, this.nombreArea)
       .subscribe({
         next: (matriz) => {
@@ -110,22 +110,22 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error al cargar la matriz de atención:', err);
+          console.error('Error al cargar la matriz de resolución:', err);
           this.cargando = false;
           this.cdr.detectChanges();
         }
       });
   }
 
-  obtenerCelda(impacto: number, urgencia: number): CeldaMatrizAtencion {
+  obtenerCelda(impacto: number, urgencia: number): CeldaMatrizResolucion {
     if (!this.matrizEditable || !this.matrizEditable.celdas) {
-      const def = this.matrizAtencionService.obtenerMatrizPredeterminada(this.idArea, this.nombreArea);
+      const def = this.matrizResolucionService.obtenerMatrizPredeterminada(this.idArea, this.nombreArea);
       return def.celdas.find((c) => c.impacto === impacto && c.urgencia === urgencia)!;
     }
     const celda = this.matrizEditable.celdas.find(
       (c) => c.impacto === impacto && c.urgencia === urgencia
     );
-    return celda || this.matrizAtencionService.obtenerCelda(this.matrizEditable, impacto, urgencia);
+    return celda || this.matrizResolucionService.obtenerCelda(this.matrizEditable, impacto, urgencia);
   }
 
   seleccionarCelda(impacto: number, urgencia: number): void {
@@ -174,7 +174,7 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
   restablecerValoresPredeterminados(): void {
     Swal.fire({
       title: '¿Restablecer matriz a valores base?',
-      text: 'Se cargarán los tiempos predeterminados de atención (2d, 12h, 2h, 4d, 1d, 8h, 5d, 3d, 1.5d).',
+      text: 'Se cargarán los tiempos predeterminados de resolución (2d, 12h, 2h, 4d, 1d, 8h, 5d, 3d, 1.5d).',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, restablecer',
@@ -182,7 +182,7 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
       confirmButtonColor: '#ea580c'
     }).then((res) => {
       if (res.isConfirmed) {
-        this.matrizEditable = this.matrizAtencionService.obtenerMatrizPredeterminada(
+        this.matrizEditable = this.matrizResolucionService.obtenerMatrizPredeterminada(
           this.idArea,
           this.nombreArea
         );
@@ -206,11 +206,11 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
       this.matrizEditable.idArea = String(this.idArea);
       this.matrizEditable.nombreArea = this.nombreArea;
 
-      await this.matrizAtencionService.guardarMatrizPorArea(this.matrizEditable);
+      await this.matrizResolucionService.guardarMatrizPorArea(this.matrizEditable);
 
       Swal.fire({
-        title: '¡Matriz de Atención Guardada!',
-        text: `Los tiempos de atención para el área "${this.nombreArea}" han sido actualizados en Firebase.`,
+        title: '¡Matriz de Resolución Guardada!',
+        text: `Los tiempos de resolución para el área "${this.nombreArea}" han sido actualizados en Firebase.`,
         icon: 'success',
         timer: 2000,
         showConfirmButton: false
@@ -218,10 +218,10 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
 
       this.guardado.emit(this.matrizEditable);
     } catch (err: any) {
-      console.error('Error al guardar la matriz de atención:', err);
+      console.error('Error al guardar la matriz de resolución:', err);
       Swal.fire({
         title: 'Error al guardar',
-        text: err.message || 'No fue posible guardar la matriz de atención.',
+        text: err.message || 'No fue posible guardar la matriz de resolución.',
         icon: 'error'
       });
     } finally {
@@ -230,3 +230,6 @@ export class ConfiguracionMatrizAtencionComponent implements OnInit, OnChanges, 
     }
   }
 }
+
+// Alias de retrocompatibilidad
+export { ConfiguracionMatrizResolucionComponent as ConfiguracionMatrizAtencionComponent };

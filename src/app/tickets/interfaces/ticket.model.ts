@@ -18,7 +18,13 @@ export class Ticket {
   scoreUrgencia?: number;
   prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
 
-  // --- MATRIZ DE ATENCIÓN (3×3) ---
+  // --- MATRIZ DE RESOLUCIÓN (3×3) ---
+  criticidadResolucion?: number;
+  urgenciaResolucion?: number;
+  scoreResolucion?: number;
+  prioridadResolucion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+
+  // --- MATRIZ DE ATENCIÓN (3×3) [Compatibilidad] ---
   criticidadAtencion?: number;
   urgenciaAtencion?: number;
   scoreAtencion?: number;

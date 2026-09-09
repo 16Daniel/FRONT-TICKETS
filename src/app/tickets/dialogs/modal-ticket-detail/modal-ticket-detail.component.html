@@ -45,17 +45,17 @@
         </div>
 
         <div
-          *ngIf="ticket.prioridadAtencion"
+          *ngIf="ticket.prioridadResolucion || ticket.prioridadAtencion"
           class="priority-badge"
-          [pTooltip]="'Prioridad Atención: ' + ticket.prioridadAtencion"
+          [pTooltip]="'Prioridad Resolución: ' + (ticket.prioridadResolucion || ticket.prioridadAtencion)"
           tooltipPosition="bottom"
           [ngStyle]="{
-            'background-color': obtenerPrioridadColor(ticket.prioridadAtencion).bg,
-            'color': obtenerPrioridadColor(ticket.prioridadAtencion).text,
-            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridadAtencion).border
+            'background-color': obtenerPrioridadColor(ticket.prioridadResolucion || ticket.prioridadAtencion).bg,
+            'color': obtenerPrioridadColor(ticket.prioridadResolucion || ticket.prioridadAtencion).text,
+            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridadResolucion || ticket.prioridadAtencion).border
           }">
           <i class="bx bxs-circle"></i>
-          <span>Atención: {{ ticket.prioridadAtencion }}</span>
+          <span>Resolución: {{ ticket.prioridadResolucion || ticket.prioridadAtencion }}</span>
         </div>
       </div>
     </div>
@@ -111,7 +111,7 @@
         <app-ticket-sla-gauge [ticket]="ticket" [size]="82"></app-ticket-sla-gauge>
         <div class="sla-legends">
           <span class="legend-item"><span class="legend-dot exterior"></span> Urgencia</span>
-          <span class="legend-item"><span class="legend-dot interior"></span> Atención</span>
+          <span class="legend-item"><span class="legend-dot interior"></span> Resolución</span>
         </div>
       </div>
     </div>

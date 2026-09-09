@@ -202,9 +202,9 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   private calcularAtencion(): void {
     const fechaAtencion = this.extraerFecha(this.ticket.fechaAtencion);
 
-    // Meta SLA Atención (3×3)
-    const impactoAten = Math.min(3, Math.max(1, this.ticket.criticidadAtencion || this.ticket.criticidadUrgencia || 2));
-    const urgenciaAten = Math.min(3, Math.max(1, this.ticket.urgenciaAtencion || this.ticket.urgenciaUrgencia || 2));
+    // Meta SLA Resolución (3×3)
+    const impactoAten = Math.min(3, Math.max(1, this.ticket.criticidadResolucion || this.ticket.criticidadAtencion || this.ticket.criticidadUrgencia || 2));
+    const urgenciaAten = Math.min(3, Math.max(1, this.ticket.urgenciaResolucion || this.ticket.urgenciaAtencion || this.ticket.urgenciaUrgencia || 2));
 
     const matriz = this.matrizAtencion || this.matrizAtencionLocal;
     if (matriz && matriz.celdas && matriz.celdas.length > 0) {
@@ -282,8 +282,8 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
 
     const detalleUrg = `⭕ Urgencia (Exterior): ${this.horasUrgenciaTranscurridas}h / ${this.horasUrgenciaSla}h (${this.porcentajeUrgencia}%) — ${estadoUrg}`;
     const detalleAten = this.atencionIniciada
-      ? `⭕ Atención (Interior): ${this.horasAtencionTranscurridas}h / ${this.horasAtencionSla}h (${this.porcentajeAtencion}%) — ${estadoAten}`
-      : `⭕ Atención (Interior): ${estadoAten} (SLA Meta: ${this.horasAtencionSla}h)`;
+      ? `⭕ Resolución (Interior): ${this.horasAtencionTranscurridas}h / ${this.horasAtencionSla}h (${this.porcentajeAtencion}%) — ${estadoAten}`
+      : `⭕ Resolución (Interior): ${estadoAten} (SLA Meta: ${this.horasAtencionSla}h)`;
 
     this.tooltipTexto = `${detalleUrg}\n${detalleAten}`;
   }

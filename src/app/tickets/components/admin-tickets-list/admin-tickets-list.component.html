@@ -4,7 +4,7 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Tiempos SLA (Urgencia exterior · Atención interior) y Score Global ponderado (2-18 pts)" tooltipPosition="top">SLA / SCORE</th>
+            <th pTooltip="Tiempos SLA (Urgencia exterior · Resolución interior) y Score Global ponderado (2-18 pts)" tooltipPosition="top">SLA / SCORE</th>
             <th>FOLIO</th>
             <th>FECHA</th>
             <th>AREA</th>
@@ -21,7 +21,7 @@
             [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
             <td class="text-center celda-criticidad-matriz">
                 <div class="contenedor-criticidad-celda">
-                    <!-- Gráfica Circular Dual SLA (Urgencia exterior + Atención interior) -->
+                    <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
                     <app-ticket-sla-gauge [ticket]="tk" [size]="50"></app-ticket-sla-gauge>
 
                     <!-- Micro-Pill / Badge de Score Global (2 a 18 pts) -->
@@ -45,12 +45,12 @@
                         </div>
                     </div>
 
-                    <div class="mini-matriz-wrapper mini-matriz-atencion" [pTooltip]="obtenerTooltipMatrizAtencion(tk)" tooltipPosition="top">
+                    <div class="mini-matriz-wrapper mini-matriz-resolucion" [pTooltip]="obtenerTooltipMatrizResolucion(tk)" tooltipPosition="top">
                         <div class="mini-matriz-grid">
-                            <span *ngFor="let celda of celdasMatrizAtencion"
+                            <span *ngFor="let celda of celdasMatrizResolucion"
                                 class="celda-mm"
-                                [class.activa]="esCeldaAtencionActiva(tk, celda.impacto, celda.urgencia)"
-                                [style.backgroundColor]="esCeldaAtencionActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatrizAtencion(tk) : ''">
+                                [class.activa]="esCeldaResolucionActiva(tk, celda.impacto, celda.urgencia)"
+                                [style.backgroundColor]="esCeldaResolucionActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatrizResolucion(tk) : ''">
                             </span>
                         </div>
                     </div>

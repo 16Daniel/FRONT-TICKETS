@@ -14,6 +14,10 @@ export interface SeleccionArbolCategoria {
   criticidadUrgencia?: number;
   urgenciaUrgencia?: number;
   scoreUrgencia?: number;
+  prioridadResolucion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+  criticidadResolucion?: number;
+  urgenciaResolucion?: number;
+  scoreResolucion?: number;
   prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
   criticidadAtencion?: number;
   urgenciaAtencion?: number;

@@ -67,14 +67,14 @@
       </div>
 
       <div class="mb-2">
-        <app-selector-matriz-atencion
+        <app-selector-matriz-resolucion
           [idArea]="idArea"
-          [matrizAtencion]="matrizAtencion"
-          [impacto]="criticidadAtencion"
-          [urgencia]="urgenciaAtencion"
-          [prioridadSeleccionada]="prioridadAtencion"
-          (cambioSeleccion)="alCambiarMatrizAtencion($event)">
-        </app-selector-matriz-atencion>
+          [matrizResolucion]="matrizResolucion || matrizAtencion"
+          [impacto]="criticidadResolucion"
+          [urgencia]="urgenciaResolucion"
+          [prioridadSeleccionada]="prioridadResolucion"
+          (cambioSeleccion)="alCambiarMatrizResolucion($event)">
+        </app-selector-matriz-resolucion>
       </div>
     </div>
 

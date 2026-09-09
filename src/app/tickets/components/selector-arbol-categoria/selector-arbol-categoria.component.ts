@@ -274,11 +274,11 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
     const scUrg = nodo.scoreUrgencia || nodo.score || (critUrg * urgUrg);
     const pUrg = nodo.prioridadUrgencia || (nodo as any).prioridad || 'Medio';
 
-    const critAten = nodo.criticidadAtencion || critUrg;
-    const urgAten = nodo.urgenciaAtencion || urgUrg;
-    const scAten = nodo.scoreAtencion || (critAten * urgAten);
-    const pAten = (nodo.prioridadAtencion || raiz.prioridadAtencion || 'Medio') as any;
-    const scGlobal = nodo.scoreGlobal || (scUrg + scAten);
+    const critRes = nodo.criticidadResolucion || nodo.criticidadAtencion || critUrg;
+    const urgRes = nodo.urgenciaResolucion || nodo.urgenciaAtencion || urgUrg;
+    const scRes = nodo.scoreResolucion || nodo.scoreAtencion || (critRes * urgRes);
+    const pRes = (nodo.prioridadResolucion || nodo.prioridadAtencion || raiz.prioridadResolucion || raiz.prioridadAtencion || 'Medio') as any;
+    const scGlobal = nodo.scoreGlobal || (scUrg + scRes);
 
     this.nodoSeleccionadoId = String(nodo.id);
     this.nodoSeleccionado = {
@@ -291,13 +291,17 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       rutaCompleta,
       prioridad: pUrg,
       prioridadUrgencia: pUrg,
-      prioridadAtencion: pAten,
+      prioridadResolucion: pRes,
+      prioridadAtencion: pRes,
       criticidadUrgencia: critUrg,
       urgenciaUrgencia: urgUrg,
       scoreUrgencia: scUrg,
-      criticidadAtencion: critAten,
-      urgenciaAtencion: urgAten,
-      scoreAtencion: scAten,
+      criticidadResolucion: critRes,
+      urgenciaResolucion: urgRes,
+      scoreResolucion: scRes,
+      criticidadAtencion: critRes,
+      urgenciaAtencion: urgRes,
+      scoreAtencion: scRes,
       scoreGlobal: scGlobal,
       score: scUrg,
       criticidad: critUrg,

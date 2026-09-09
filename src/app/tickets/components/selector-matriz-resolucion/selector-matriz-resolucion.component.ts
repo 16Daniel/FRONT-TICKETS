@@ -19,22 +19,26 @@ import {
   obtenerTiempoSla
 } from '../../helpers/matriz-criticidad.helper';
 import { CuadranteInfo } from '../../interfaces/cuadrante-info.interface';
-import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
-import { CeldaMatrizAtencion } from '../../interfaces/celda-matriz-atencion.interface';
-import { MatrizAtencionService } from '../../services/matriz-atencion.service';
+import { MatrizResolucion } from '../../interfaces/matriz-resolucion.interface';
+import { CeldaMatrizResolucion } from '../../interfaces/celda-matriz-resolucion.interface';
+import { MatrizResolucionService } from '../../services/matriz-resolucion.service';
 
 @Component({
-  selector: 'app-selector-matriz-atencion',
+  selector: 'app-selector-matriz-resolucion',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './selector-matriz-atencion.component.html',
-  styleUrl: './selector-matriz-atencion.component.scss'
+  templateUrl: './selector-matriz-resolucion.component.html',
+  styleUrl: './selector-matriz-resolucion.component.scss'
 })
-export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDestroy {
+export class SelectorMatrizResolucionComponent implements OnInit, OnChanges, OnDestroy {
   @Input() impacto: number = 2;
   @Input() urgencia: number = 2;
   @Input() idArea?: string;
-  @Input() matrizAtencion?: MatrizAtencion | null;
+  @Input() matrizResolucion?: MatrizResolucion | null;
+  // Compatibilidad legacy input
+  @Input() set matrizAtencion(val: MatrizResolucion | null | undefined) {
+    if (val !== undefined) this.matrizResolucion = val;
+  }
   @Input() prioridadSeleccionada?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
 
   @Output() cambioSeleccion = new EventEmitter<{
@@ -54,7 +58,7 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
   private subscripcionMatriz?: Subscription;
 
   constructor(
-    private matrizAtencionService: MatrizAtencionService,
+    private matrizResolucionService: MatrizResolucionService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -66,10 +70,10 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['matrizAtencion']) {
+    if (changes['matrizResolucion'] || changes['matrizAtencion']) {
       this.subscripcionMatriz?.unsubscribe();
       this.cdr.detectChanges();
-    } else if (changes['idArea'] && !this.matrizAtencion) {
+    } else if (changes['idArea'] && !this.matrizResolucion) {
       this.sincronizarMatriz();
     }
 
@@ -104,14 +108,14 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
   }
 
   private sincronizarMatriz(): void {
-    if (this.matrizAtencion) return;
+    if (this.matrizResolucion) return;
 
     if (this.idArea) {
       this.subscripcionMatriz?.unsubscribe();
-      this.subscripcionMatriz = this.matrizAtencionService
+      this.subscripcionMatriz = this.matrizResolucionService
         .obtenerMatrizPorArea(this.idArea)
         .subscribe((m) => {
-          this.matrizAtencion = m;
+          this.matrizResolucion = m;
           this.cdr.detectChanges();
         });
     }
@@ -135,8 +139,8 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
     });
   }
 
-  obtenerCelda(imp: number, urg: number): CeldaMatrizAtencion {
-    return this.matrizAtencionService.obtenerCelda(this.matrizAtencion, imp, urg);
+  obtenerCelda(imp: number, urg: number): CeldaMatrizResolucion {
+    return this.matrizResolucionService.obtenerCelda(this.matrizResolucion, imp, urg);
   }
 
   obtenerTiempoSlaCelda(imp: number, urg: number): { horas: number; label: string } {
@@ -147,7 +151,7 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
     return obtenerTiempoSla(imp, urg);
   }
 
-  get celdaActual(): CeldaMatrizAtencion {
+  get celdaActual(): CeldaMatrizResolucion {
     return this.obtenerCelda(this.impacto, this.urgencia);
   }
 
@@ -163,3 +167,6 @@ export class SelectorMatrizAtencionComponent implements OnInit, OnChanges, OnDes
     return this.obtenerTiempoSlaCelda(this.impacto, this.urgencia);
   }
 }
+
+// Alias de retrocompatibilidad
+export { SelectorMatrizResolucionComponent as SelectorMatrizAtencionComponent };

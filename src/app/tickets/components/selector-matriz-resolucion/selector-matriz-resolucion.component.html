@@ -1,5 +1,5 @@
-<div class="contenedor-selector-matriz-atencion">
-  <label class="etiqueta-selector-atencion">TIEMPO DE ATENCIÓN Y RESOLUCIÓN (MATRIZ 3×3):</label>
+<div class="contenedor-selector-matriz-resolucion">
+  <label class="etiqueta-selector-resolucion">TIEMPO DE RESOLUCIÓN (MATRIZ 3×3):</label>
 
   <div class="cuadricula-matriz">
     <div class="esquina-encabezado"></div>
@@ -24,10 +24,10 @@
     </ng-container>
   </div>
 
-  <div class="vista-previa-seleccion-atencion mt-2" *ngIf="impacto && urgencia">
+  <div class="vista-previa-seleccion-resolucion mt-2" *ngIf="impacto && urgencia">
     <span class="insignia-previa" [style.background]="cuadranteActual.bg" [style.color]="cuadranteActual.text">
       <i class="bx {{ cuadranteActual.icon }}"></i>
-      <span>Atención: <b>{{ cuadranteActual.label }}</b></span>
+      <span>Resolución: <b>{{ cuadranteActual.label }}</b></span>
     </span>
     <span class="detalle-tiempo-previo">
       Score: <b>{{ scoreActual }}</b> · Tiempo objetivo: <b>{{ tiempoSlaActual.label }}</b> ({{ tiempoSlaActual.horas }} h estimadas)

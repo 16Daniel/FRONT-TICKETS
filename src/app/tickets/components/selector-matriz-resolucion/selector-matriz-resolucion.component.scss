@@ -2,13 +2,13 @@
   display: block;
 }
 
-.contenedor-selector-matriz-atencion {
+.contenedor-selector-matriz-resolucion {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.etiqueta-selector-atencion {
+.etiqueta-selector-resolucion {
   font-size: 0.725rem;
   font-weight: 800;
   color: #475569;
@@ -86,7 +86,7 @@
   }
 }
 
-.vista-previa-seleccion-atencion {
+.vista-previa-seleccion-resolucion {
   display: flex;
   align-items: center;
   gap: 0.75rem;

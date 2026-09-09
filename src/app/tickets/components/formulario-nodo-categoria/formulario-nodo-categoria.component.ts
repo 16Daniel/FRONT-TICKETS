@@ -6,9 +6,9 @@ import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 import { EventoSeleccionMatriz } from '../../interfaces/evento-seleccion-matriz.interface';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
-import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
+import { MatrizResolucion } from '../../interfaces/matriz-resolucion.interface';
 import { SelectorMatrizCriticidadComponent } from '../selector-matriz-criticidad/selector-matriz-criticidad.component';
-import { SelectorMatrizAtencionComponent } from '../selector-matriz-atencion/selector-matriz-atencion.component';
+import { SelectorMatrizResolucionComponent } from '../selector-matriz-resolucion/selector-matriz-resolucion.component';
 
 @Component({
   selector: 'app-formulario-nodo-categoria',
@@ -17,7 +17,7 @@ import { SelectorMatrizAtencionComponent } from '../selector-matriz-atencion/sel
     CommonModule,
     FormsModule,
     SelectorMatrizCriticidadComponent,
-    SelectorMatrizAtencionComponent
+    SelectorMatrizResolucionComponent
   ],
   templateUrl: './formulario-nodo-categoria.component.html',
   styleUrl: './formulario-nodo-categoria.component.scss'
@@ -28,7 +28,15 @@ export class FormularioNodoCategoriaComponent implements OnInit {
   @Input() nombreArea?: string = '';
   @Input() idArea?: string = '';
   @Input() matrizUrgencia?: MatrizUrgencia | null = null;
-  @Input() matrizAtencion?: MatrizAtencion | null = null;
+  @Input() matrizResolucion?: MatrizResolucion | null = null;
+  // Compatibilidad legacy input
+  @Input() set matrizAtencion(val: MatrizResolucion | null | undefined) {
+    if (val !== undefined) this.matrizResolucion = val;
+  }
+  get matrizAtencion(): MatrizResolucion | null | undefined {
+    return this.matrizResolucion;
+  }
+
   @Input() nodoEditar?: Categoria | Subcategoria;
   @Input() bloquearCambioTipo: boolean = false;
   @Input() esAnidado: boolean = false;
@@ -43,10 +51,20 @@ export class FormularioNodoCategoriaComponent implements OnInit {
   score: number = 4;
   prioridad: string = 'Medio';
 
-  criticidadAtencion: number = 2;
-  urgenciaAtencion: number = 2;
-  scoreAtencion: number = 4;
-  prioridadAtencion: 'Crítico' | 'Alto' | 'Medio' | 'Bajo' = 'Medio';
+  criticidadResolucion: number = 2;
+  urgenciaResolucion: number = 2;
+  scoreResolucion: number = 4;
+  prioridadResolucion: 'Crítico' | 'Alto' | 'Medio' | 'Bajo' = 'Medio';
+
+  // Compatibilidad legacy properties
+  get criticidadAtencion(): number { return this.criticidadResolucion; }
+  set criticidadAtencion(v: number) { this.criticidadResolucion = v; }
+  get urgenciaAtencion(): number { return this.urgenciaResolucion; }
+  set urgenciaAtencion(v: number) { this.urgenciaResolucion = v; }
+  get scoreAtencion(): number { return this.scoreResolucion; }
+  set scoreAtencion(v: number) { this.scoreResolucion = v; }
+  get prioridadAtencion(): 'Crítico' | 'Alto' | 'Medio' | 'Bajo' { return this.prioridadResolucion; }
+  set prioridadAtencion(v: 'Crítico' | 'Alto' | 'Medio' | 'Bajo') { this.prioridadResolucion = v; }
 
   ngOnInit(): void {
     if (this.modo === 'editar' && this.nodoEditar) {
@@ -70,11 +88,11 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       }
       this.impacto = Math.min(3, Math.max(1, imp || 2));
 
-      // Resolver coordenadas de atención (3×3)
-      this.criticidadAtencion = this.nodoEditar.criticidadAtencion || this.impacto;
-      this.urgenciaAtencion = this.nodoEditar.urgenciaAtencion || this.urgencia;
-      this.scoreAtencion = this.nodoEditar.scoreAtencion || (this.criticidadAtencion * this.urgenciaAtencion);
-      this.prioridadAtencion = (this.nodoEditar as any).prioridadAtencion || (this.prioridad as any) || 'Medio';
+      // Resolver coordenadas de resolución (3×3)
+      this.criticidadResolucion = this.nodoEditar.criticidadResolucion || this.nodoEditar.criticidadAtencion || this.impacto;
+      this.urgenciaResolucion = this.nodoEditar.urgenciaResolucion || this.nodoEditar.urgenciaAtencion || this.urgencia;
+      this.scoreResolucion = this.nodoEditar.scoreResolucion || this.nodoEditar.scoreAtencion || (this.criticidadResolucion * this.urgenciaResolucion);
+      this.prioridadResolucion = (this.nodoEditar as any).prioridadResolucion || (this.nodoEditar as any).prioridadAtencion || (this.prioridad as any) || 'Medio';
     } else if (this.modo === 'crear-hijo') {
       this.tipo = 'hoja';
     }
@@ -87,7 +105,7 @@ export class FormularioNodoCategoriaComponent implements OnInit {
     this.prioridad = evento.prioridad;
   }
 
-  alCambiarMatrizAtencion(evento: {
+  alCambiarMatrizResolucion(evento: {
     impacto: number;
     urgencia: number;
     score: number;
@@ -95,17 +113,22 @@ export class FormularioNodoCategoriaComponent implements OnInit {
     tiempo: string;
     horas: number;
   }): void {
-    this.criticidadAtencion = evento.impacto;
-    this.urgenciaAtencion = evento.urgencia;
-    this.scoreAtencion = evento.score;
-    this.prioridadAtencion = evento.prioridad;
+    this.criticidadResolucion = evento.impacto;
+    this.urgenciaResolucion = evento.urgencia;
+    this.scoreResolucion = evento.score;
+    this.prioridadResolucion = evento.prioridad;
+  }
+
+  // Compatibilidad legacy
+  alCambiarMatrizAtencion(evento: any): void {
+    this.alCambiarMatrizResolucion(evento);
   }
 
   alGuardar(): void {
     const nombreLimpio = this.nombre.trim();
     if (!nombreLimpio) return;
 
-    const scoreGlobal = (this.score || 4) + (this.scoreAtencion || 4);
+    const scoreGlobal = (this.score || 4) + (this.scoreResolucion || 4);
 
     this.guardar.emit({
       nombre: nombreLimpio,
@@ -122,11 +145,17 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       scoreUrgencia: this.tipo === 'hoja' ? this.score : undefined,
       prioridadUrgencia: this.tipo === 'hoja' ? (this.prioridad as any) : undefined,
 
-      // Atención (3×3)
-      criticidadAtencion: this.tipo === 'hoja' ? this.criticidadAtencion : undefined,
-      urgenciaAtencion: this.tipo === 'hoja' ? this.urgenciaAtencion : undefined,
-      scoreAtencion: this.tipo === 'hoja' ? this.scoreAtencion : undefined,
-      prioridadAtencion: this.tipo === 'hoja' ? this.prioridadAtencion : undefined,
+      // Resolución (3×3)
+      criticidadResolucion: this.tipo === 'hoja' ? this.criticidadResolucion : undefined,
+      urgenciaResolucion: this.tipo === 'hoja' ? this.urgenciaResolucion : undefined,
+      scoreResolucion: this.tipo === 'hoja' ? this.scoreResolucion : undefined,
+      prioridadResolucion: this.tipo === 'hoja' ? this.prioridadResolucion : undefined,
+
+      // Atención (3×3) [Compatibilidad]
+      criticidadAtencion: this.tipo === 'hoja' ? this.criticidadResolucion : undefined,
+      urgenciaAtencion: this.tipo === 'hoja' ? this.urgenciaResolucion : undefined,
+      scoreAtencion: this.tipo === 'hoja' ? this.scoreResolucion : undefined,
+      prioridadAtencion: this.tipo === 'hoja' ? this.prioridadResolucion : undefined,
 
       // Global
       scoreGlobal: this.tipo === 'hoja' ? scoreGlobal : undefined
