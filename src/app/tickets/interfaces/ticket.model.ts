@@ -18,20 +18,8 @@ export class Ticket {
   scoreUrgencia?: number;
   prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
 
-  // --- MATRIZ DE RESOLUCIÓN (3×3) ---
-  criticidadResolucion?: number;
-  urgenciaResolucion?: number;
-  scoreResolucion?: number;
-  prioridadResolucion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-
-  // --- MATRIZ DE ATENCIÓN (3×3) [Compatibilidad] ---
-  criticidadAtencion?: number;
-  urgenciaAtencion?: number;
-  scoreAtencion?: number;
-  prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-
   // --- SCORE GLOBAL MAESTRO ---
-  scoreGlobal?: number; // scoreUrgencia + scoreAtencion (2 a 18)
+  scoreGlobal?: number; // scoreUrgencia
 
   idPrioridadTicket?: string; // se quitara
   fecha: Timestamp | any = new Date();

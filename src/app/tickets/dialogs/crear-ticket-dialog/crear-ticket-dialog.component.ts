@@ -170,34 +170,18 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.nombreSubcategoria = seleccion.nombreSubcategoria || '';
 
     // Urgencia (3×3)
-    const critUrg = seleccion.criticidadUrgencia || seleccion.subcategoria?.criticidadUrgencia || seleccion.categoria?.criticidadUrgencia || seleccion.criticidad || 2;
-    const urgUrg = seleccion.urgenciaUrgencia || seleccion.subcategoria?.urgenciaUrgencia || seleccion.categoria?.urgenciaUrgencia || seleccion.urgencia || 2;
-    const scoreUrg = seleccion.scoreUrgencia || seleccion.score || (critUrg * urgUrg);
-    const prioUrg = seleccion.prioridadUrgencia || seleccion.prioridad || 'Medio';
+    const critUrg = seleccion.criticidad || seleccion.subcategoria?.criticidad || seleccion.categoria?.criticidad || 2;
+    const urgUrg = seleccion.urgencia || seleccion.subcategoria?.urgencia || seleccion.categoria?.urgencia || 2;
+    const scoreUrg = seleccion.score || (critUrg * urgUrg);
+    const prioUrg = seleccion.prioridad || seleccion.subcategoria?.prioridad || seleccion.categoria?.prioridad || 'Medio';
 
     this.ticket.criticidadUrgencia = Math.min(3, Math.max(1, critUrg));
     this.ticket.urgenciaUrgencia = Math.min(3, Math.max(1, urgUrg));
     this.ticket.scoreUrgencia = scoreUrg;
     this.ticket.prioridadUrgencia = prioUrg as any;
 
-    // Resolución (3×3) y Atención (3×3)
-    const critRes = seleccion.criticidadResolucion || seleccion.criticidadAtencion || seleccion.subcategoria?.criticidadResolucion || seleccion.subcategoria?.criticidadAtencion || seleccion.categoria?.criticidadResolucion || seleccion.categoria?.criticidadAtencion || this.ticket.criticidadUrgencia || 2;
-    const urgRes = seleccion.urgenciaResolucion || seleccion.urgenciaAtencion || seleccion.subcategoria?.urgenciaResolucion || seleccion.subcategoria?.urgenciaAtencion || seleccion.categoria?.urgenciaResolucion || seleccion.categoria?.urgenciaAtencion || this.ticket.urgenciaUrgencia || 2;
-    const scoreRes = seleccion.scoreResolucion || seleccion.scoreAtencion || (critRes * urgRes);
-    const prioRes = seleccion.prioridadResolucion || seleccion.prioridadAtencion || seleccion.subcategoria?.prioridadResolucion || seleccion.subcategoria?.prioridadAtencion || seleccion.categoria?.prioridadResolucion || seleccion.categoria?.prioridadAtencion || 'Medio';
-
-    this.ticket.criticidadResolucion = Math.min(3, Math.max(1, critRes));
-    this.ticket.urgenciaResolucion = Math.min(3, Math.max(1, urgRes));
-    this.ticket.scoreResolucion = scoreRes;
-    this.ticket.prioridadResolucion = prioRes as any;
-
-    this.ticket.criticidadAtencion = this.ticket.criticidadResolucion;
-    this.ticket.urgenciaAtencion = this.ticket.urgenciaResolucion;
-    this.ticket.scoreAtencion = scoreRes;
-    this.ticket.prioridadAtencion = prioRes as any;
-
     // Global
-    this.ticket.scoreGlobal = seleccion.scoreGlobal || (scoreUrg + scoreRes);
+    this.ticket.scoreGlobal = seleccion.scoreGlobal || scoreUrg;
   }
 
   onLimpiarCategoria(): void {
@@ -210,14 +194,6 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.urgenciaUrgencia = undefined;
     this.ticket.scoreUrgencia = undefined;
     this.ticket.prioridadUrgencia = undefined;
-    this.ticket.criticidadResolucion = undefined;
-    this.ticket.urgenciaResolucion = undefined;
-    this.ticket.scoreResolucion = undefined;
-    this.ticket.prioridadResolucion = undefined;
-    this.ticket.criticidadAtencion = undefined;
-    this.ticket.urgenciaAtencion = undefined;
-    this.ticket.scoreAtencion = undefined;
-    this.ticket.prioridadAtencion = undefined;
     this.ticket.scoreGlobal = undefined;
   }
 

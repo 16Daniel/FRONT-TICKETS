@@ -65,17 +65,6 @@
           (cambioSeleccion)="alCambiarMatriz($event)">
         </app-selector-matriz-criticidad>
       </div>
-
-      <div class="mb-2">
-        <app-selector-matriz-resolucion
-          [idArea]="idArea"
-          [matrizResolucion]="matrizResolucion || matrizAtencion"
-          [impacto]="criticidadResolucion"
-          [urgencia]="urgenciaResolucion"
-          [prioridadSeleccionada]="prioridadResolucion"
-          (cambioSeleccion)="alCambiarMatrizResolucion($event)">
-        </app-selector-matriz-resolucion>
-      </div>
     </div>
 
     <!-- Botones Guardar / Cancelar -->

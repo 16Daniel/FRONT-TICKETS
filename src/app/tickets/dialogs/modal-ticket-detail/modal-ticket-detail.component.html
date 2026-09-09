@@ -44,19 +44,6 @@
           <span>Urgencia: {{ ticket.prioridadUrgencia }}</span>
         </div>
 
-        <div
-          *ngIf="ticket.prioridadResolucion || ticket.prioridadAtencion"
-          class="priority-badge"
-          [pTooltip]="'Prioridad Resolución: ' + (ticket.prioridadResolucion || ticket.prioridadAtencion)"
-          tooltipPosition="bottom"
-          [ngStyle]="{
-            'background-color': obtenerPrioridadColor(ticket.prioridadResolucion || ticket.prioridadAtencion).bg,
-            'color': obtenerPrioridadColor(ticket.prioridadResolucion || ticket.prioridadAtencion).text,
-            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridadResolucion || ticket.prioridadAtencion).border
-          }">
-          <i class="bx bxs-circle"></i>
-          <span>Resolución: {{ ticket.prioridadResolucion || ticket.prioridadAtencion }}</span>
-        </div>
       </div>
     </div>
   </ng-template>
@@ -110,8 +97,7 @@
         <div class="sla-side-title">Cumplimiento SLA</div>
         <app-ticket-sla-gauge [ticket]="ticket" [size]="82"></app-ticket-sla-gauge>
         <div class="sla-legends">
-          <span class="legend-item"><span class="legend-dot exterior"></span> Urgencia</span>
-          <span class="legend-item"><span class="legend-dot interior"></span> Resolución</span>
+          <span class="legend-item"><span class="legend-dot exterior"></span> SLA Urgencia</span>
         </div>
       </div>
     </div>
