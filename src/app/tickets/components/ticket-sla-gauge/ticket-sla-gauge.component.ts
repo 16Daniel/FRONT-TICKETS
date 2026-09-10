@@ -323,7 +323,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     return null;
   }
 
-  private formatearHorasLegible(horas: number, tiempoOriginal?: number, unidadOriginal?: 'm' | 'h' | 'd'): string {
+  formatearHorasLegible(horas: number, tiempoOriginal?: number, unidadOriginal?: 'm' | 'h' | 'd'): string {
     if (unidadOriginal === 'm' && tiempoOriginal) {
       return `${tiempoOriginal}m (${horas}h)`;
     }

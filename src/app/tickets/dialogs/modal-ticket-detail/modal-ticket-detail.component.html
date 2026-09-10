@@ -95,10 +95,26 @@
       <!-- SLA Dual Gauge -->
       <div class="summary-sla-side">
         <div class="sla-side-title">Cumplimiento SLA</div>
-        <app-ticket-sla-gauge [ticket]="ticket" [size]="82"></app-ticket-sla-gauge>
-        <div class="sla-legends">
+        <app-ticket-sla-gauge #gauge [ticket]="ticket" [size]="82" [categorias]="categorias"></app-ticket-sla-gauge>
+        <!-- <div class="sla-legends">
           <span class="legend-item"><span class="legend-dot exterior"></span> SLA Urgencia</span>
           <span class="legend-item"><span class="legend-dot interior"></span> SLA Resolución</span>
+        </div> -->
+
+        <div class="sla-text-values mt-2 text-center" style="font-size: 0.75rem; color: #64748B;">
+          <div class="mb-1">
+            <strong>T. Atención:</strong>
+            {{ gauge.horasUrgenciaTranscurridas }}h / {{ gauge.horasUrgenciaSla }}h
+          </div>
+          <div>
+            <strong>T. Resolución:</strong>
+            {{ gauge.formatearHorasLegible(gauge.horasResolucionTranscurridas) }} / {{ gauge.formatearHorasLegible(gauge.horasResolucionSla, gauge.tiempoResolucionOriginal, gauge.unidadResolucionOriginal) }}
+          </div>
+        </div>
+
+        <!-- Mini Matriz 3x3 de Urgencia -->
+        <div class="mt-2 text-center">
+            <app-mini-matriz-urgencia [ticket]="ticket" [categorias]="categorias"></app-mini-matriz-urgencia>
         </div>
       </div>
     </div>

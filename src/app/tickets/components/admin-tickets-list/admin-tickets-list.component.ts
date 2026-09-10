@@ -37,6 +37,7 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectorArbolCategoriaComponent } from '../selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
+import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
 
 @Component({
   selector: 'app-admin-tickets-list',
@@ -56,7 +57,8 @@ import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.co
     CalendarModule,
     DialogModule,
     SelectorArbolCategoriaComponent,
-    TicketSlaGaugeComponent
+    TicketSlaGaugeComponent,
+    MiniMatrizUrgenciaComponent
   ],
   templateUrl: './admin-tickets-list.component.html',
   styleUrl: './admin-tickets-list.component.scss',
@@ -351,18 +353,7 @@ export class AdminTicketsListComponent {
 
   obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
 
-  readonly celdasMatriz = [
-    { impacto: 3, urgencia: 3 }, { impacto: 3, urgencia: 2 }, { impacto: 3, urgencia: 1 },
-    { impacto: 2, urgencia: 3 }, { impacto: 2, urgencia: 2 }, { impacto: 2, urgencia: 1 },
-    { impacto: 1, urgencia: 3 }, { impacto: 1, urgencia: 2 }, { impacto: 1, urgencia: 1 }
-  ];
 
-  readonly celdasMatrizResolucion = [
-    { impacto: 3, urgencia: 3 }, { impacto: 3, urgencia: 2 }, { impacto: 3, urgencia: 1 },
-    { impacto: 2, urgencia: 3 }, { impacto: 2, urgencia: 2 }, { impacto: 2, urgencia: 1 },
-    { impacto: 1, urgencia: 3 }, { impacto: 1, urgencia: 2 }, { impacto: 1, urgencia: 1 }
-  ];
-  readonly celdasMatrizAtencion = this.celdasMatrizResolucion;
 
   obtenerCoordenadasTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
     const critRaw = tk.criticidad;
@@ -460,27 +451,6 @@ export class AdminTicketsListComponent {
     return 'Bajo';
   }
 
-  esCeldaActiva(tk: Ticket, imp: number, urg: number): boolean {
-    const coord = this.obtenerCoordenadasTicket(tk);
-    return coord.impacto === imp && coord.urgencia === urg;
-  }
-
-  obtenerColorMatriz(tk: Ticket): string {
-    const coord = this.obtenerCoordenadasTicket(tk);
-    switch (coord.prioridad) {
-      case 'Crítico':
-        return '#EF4444';
-      case 'Alto':
-        return '#EA580C';
-      case 'Medio':
-        return '#EAB308';
-      case 'Bajo':
-        return '#10B981';
-      default:
-        return '#3B82F6';
-    }
-  }
-
   obtenerClaseCuadrante(tk: Ticket): string {
     const coord = this.obtenerCoordenadasTicket(tk);
     switch (coord.prioridad) {
@@ -499,12 +469,6 @@ export class AdminTicketsListComponent {
 
   obtenerNombrePrioridad(tk: Ticket): string {
     return this.obtenerCoordenadasTicket(tk).prioridad.toUpperCase();
-  }
-
-  obtenerTooltipMatriz(tk: Ticket): string {
-    const coord = this.obtenerCoordenadasTicket(tk);
-    const scoreGlobal = tk.score ? ` · Score Global: ${tk.score}` : '';
-    return `Urgencia (Inicio): Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}${scoreGlobal}`;
   }
 
 

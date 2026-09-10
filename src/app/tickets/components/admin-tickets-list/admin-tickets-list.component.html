@@ -26,15 +26,7 @@
                         <app-ticket-sla-gauge [ticket]="tk" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
 
                         <!-- Mini Matriz 3x3 de Urgencia -->
-                        <div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
-                            <div class="mini-matriz-grid">
-                                <span *ngFor="let celda of celdasMatriz"
-                                    class="celda-mm"
-                                    [class.activa]="esCeldaActiva(tk, celda.impacto, celda.urgencia)"
-                                    [style.backgroundColor]="esCeldaActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatriz(tk) : ''">
-                                </span>
-                            </div>
-                        </div>
+                        <app-mini-matriz-urgencia [ticket]="tk" [categorias]="categorias"></app-mini-matriz-urgencia>
                     </div>
 
                     <!-- Micro-Pill / Badge de Score Global (2 a 18 pts) -->

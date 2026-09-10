@@ -16,7 +16,9 @@ import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialo
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { CategoriesService } from '../../services/categories.service';
 import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticket-sla-gauge.component';
+import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgencia/mini-matriz-urgencia.component';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -30,7 +32,8 @@ import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticke
     CardModule,
     TooltipModule,
     ModalVisorImagenesComponent,
-    TicketSlaGaugeComponent
+    TicketSlaGaugeComponent,
+    MiniMatrizUrgenciaComponent
   ],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
@@ -45,13 +48,15 @@ export class ModalTicketDetailComponent implements OnInit {
   idSucursalEspecialista: string = '';
   urlVisorImagen: string = '';
   sucursales: any[] = [];
+  categorias: any[] = [];
 
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
     private areasService: AreasService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private categoriesService: CategoriesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -64,6 +69,16 @@ export class ModalTicketDetailComponent implements OnInit {
         error: () => {}
       });
     }
+
+    this.categoriesService.get().subscribe({
+      next: (data) => {
+        this.categorias = data.map((item: any) => ({
+          ...item,
+          id: item.id.toString()
+        }));
+      },
+      error: () => {}
+    });
   }
 
   onHide() {
