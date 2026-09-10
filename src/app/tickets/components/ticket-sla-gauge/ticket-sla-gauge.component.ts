@@ -46,6 +46,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   horasResolucionTranscurridas = 0;
   resolucionVencida = false;
   resolucionCompletada = false;
+  resolucionIniciada = false;
   tiempoResolucionOriginal?: number;
   unidadResolucionOriginal?: 'm' | 'h' | 'd';
 
@@ -255,8 +256,23 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private calcularResolucion(): void {
-    const fechaCreacion = this.extraerFecha(this.ticket.fecha) || new Date();
+    const fechaAtencion = this.extraerFecha(this.ticket.fechaAtencion);
     this.horasResolucionSla = this.resolverHorasResolucion();
+
+    if (!fechaAtencion) {
+      this.resolucionIniciada = false;
+      this.resolucionCompletada = false;
+      this.horasResolucionTranscurridas = 0;
+      this.porcentajeResolucion = 0;
+      this.resolucionVencida = false;
+      // Para que se vea completo en gris, sin progreso:
+      this.offsetInterior = this.perimetroInterior; 
+      this.colorInterior = '#9CA3AF'; // Gris / Pendiente
+      this.trackColorInterior = '#F3F4F6';
+      return;
+    }
+
+    this.resolucionIniciada = true;
 
     // Fin de Resolución: si el ticket ya finalizó (estatus 3 o fechaFin)
     const fechaFin = this.extraerFecha(this.ticket.fechaFin);
@@ -265,12 +281,12 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     if (esFinalizado) {
       this.resolucionCompletada = true;
       const refFin = fechaFin || new Date();
-      const ms = Math.max(0, refFin.getTime() - fechaCreacion.getTime());
+      const ms = Math.max(0, refFin.getTime() - fechaAtencion.getTime());
       this.horasResolucionTranscurridas = +(ms / (1000 * 60 * 60)).toFixed(2);
     } else {
       this.resolucionCompletada = false;
       const now = new Date();
-      const ms = Math.max(0, now.getTime() - fechaCreacion.getTime());
+      const ms = Math.max(0, now.getTime() - fechaAtencion.getTime());
       this.horasResolucionTranscurridas = +(ms / (1000 * 60 * 60)).toFixed(2);
     }
 
@@ -327,15 +343,17 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
       ? '⚠️ Vencido'
       : (this.urgenciaAtendida ? '✅ Atendido' : '⏱ En curso');
 
-    const estadoRes = this.resolucionVencida
-      ? '⚠️ Vencido'
-      : (this.resolucionCompletada ? '✅ Resuelto' : '⏱ En curso');
+    const estadoRes = !this.resolucionIniciada
+      ? '⏳ Pendiente (Sin atender)'
+      : (this.resolucionVencida
+        ? '⚠️ Vencido'
+        : (this.resolucionCompletada ? '✅ Resuelto' : '⏱ En curso'));
 
     const metaResStr = this.formatearHorasLegible(this.horasResolucionSla, this.tiempoResolucionOriginal, this.unidadResolucionOriginal);
     const transResStr = this.formatearHorasLegible(this.horasResolucionTranscurridas);
 
-    const detalleUrg = `⭕ Matriz Urgencia (Exterior): ${this.horasUrgenciaTranscurridas}h / ${this.horasUrgenciaSla}h (${this.porcentajeUrgencia}%) — ${estadoUrg}`;
-    const detalleRes = `🎯 Tiempo Resolución (Interior): ${transResStr} / ${metaResStr} (${this.porcentajeResolucion}%) — ${estadoRes}`;
+    const detalleUrg = `⭕ [TA] Tiempo de Atención (Exterior): ${this.horasUrgenciaTranscurridas}h / ${this.horasUrgenciaSla}h (${this.porcentajeUrgencia}%) — ${estadoUrg}`;
+    const detalleRes = `🎯 [TR] Tiempo de Resolución (Interior): ${transResStr} / ${metaResStr} (${this.porcentajeResolucion}%) — ${estadoRes}`;
 
     this.tooltipTexto = `${detalleUrg}\n${detalleRes}`;
   }
