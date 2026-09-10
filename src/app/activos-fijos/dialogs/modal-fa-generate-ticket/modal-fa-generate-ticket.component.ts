@@ -165,6 +165,9 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.urgencia = Math.min(3, Math.max(1, urgUrg));
     this.ticket.score = scoreUrg;
     this.ticket.prioridad = prioUrg as any;
+    this.ticket.tiempoResolucion = seleccion.tiempoResolucion;
+    this.ticket.unidadResolucion = seleccion.unidadResolucion;
+    this.ticket.horasResolucion = seleccion.horasResolucion;
   }
 
   onLimpiarCategoria(): void {
@@ -177,7 +180,9 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.urgencia = undefined;
     this.ticket.score = undefined;
     this.ticket.prioridad = undefined;
-    this.ticket.score = undefined;
+    this.ticket.tiempoResolucion = undefined;
+    this.ticket.unidadResolucion = undefined;
+    this.ticket.horasResolucion = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {

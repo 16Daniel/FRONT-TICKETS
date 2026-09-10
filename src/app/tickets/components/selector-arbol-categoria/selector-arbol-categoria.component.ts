@@ -274,6 +274,10 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
 
     const scGlobal = (nodo as any).scoreGlobal || scUrg;
 
+    const tiempoRes = nodo.tiempoResolucion || raiz.tiempoResolucion;
+    const unidadRes = nodo.unidadResolucion || raiz.unidadResolucion || 'h';
+    const horasRes = nodo.horasResolucion || raiz.horasResolucion || (tiempoRes ? (unidadRes === 'm' ? Math.round((tiempoRes / 60) * 100) / 100 : (unidadRes === 'd' ? tiempoRes * 24 : tiempoRes)) : undefined);
+
     this.nodoSeleccionadoId = String(nodo.id);
     this.nodoSeleccionado = {
       categoria: raiz,
@@ -286,7 +290,10 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       prioridad: pUrg as any,
       score: scUrg,
       criticidad: critUrg,
-      urgencia: urgUrg
+      urgencia: urgUrg,
+      tiempoResolucion: tiempoRes,
+      unidadResolucion: unidadRes,
+      horasResolucion: horasRes
     };
 
     this.alSeleccionar.emit(this.nodoSeleccionado);

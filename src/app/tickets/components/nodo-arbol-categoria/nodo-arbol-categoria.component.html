@@ -46,6 +46,15 @@
               {{ clasificarCuadrante(nodo.score || 4).label }}
             </span>
 
+            <!-- Insignia Tiempo de Resolución Configurado -->
+            <span *ngIf="!esRama(nodo) && (nodo.horasResolucion || nodo.tiempoResolucion)" 
+                  class="insignia-pildora pildora-tiempo-resolucion" 
+                  pTooltip="Tiempo de resolución configurado para esta categoría" 
+                  tooltipPosition="top">
+              <i class="bx bx-time-five"></i>
+              {{ obtenerLabelTiempoResolucion(nodo) }}
+            </span>
+
             <!-- Conteo de subcategorías para ramas -->
             <span *ngIf="esRama(nodo)" class="insignia-conteo-hijos">
               <i class="bx bx-git-branch"></i>

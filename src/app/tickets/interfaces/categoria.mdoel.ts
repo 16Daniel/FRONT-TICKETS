@@ -14,4 +14,8 @@ export class Categoria {
   criticidad?: number;
   score?: number;
   prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+  // Tiempo de resolución configurado (SLA)
+  tiempoResolucion?: number;
+  unidadResolucion?: 'm' | 'h' | 'd';
+  horasResolucion?: number;
 }

@@ -6,7 +6,9 @@ export interface ResultadoFormularioNodo {
   urgencia?: number;
   score?: number;
   prioridad?: string;
+  tiempoResolucion?: number;
+  unidadResolucion?: 'm' | 'h' | 'd';
+  horasResolucion?: number;
 
 
 }
-

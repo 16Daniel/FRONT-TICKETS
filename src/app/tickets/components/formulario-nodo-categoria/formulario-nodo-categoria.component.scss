@@ -143,6 +143,175 @@ $rw-primary: #d3152a;
     }
   }
 
+  .seccion-tiempo-resolucion {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.15rem;
+
+    .encabezado-subseccion {
+      margin-bottom: 0.65rem;
+
+      .etiqueta-campo {
+        margin-bottom: 0.15rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+
+        i {
+          color: $rw-primary;
+          font-size: 0.95rem;
+        }
+      }
+
+      .texto-ayuda-subseccion {
+        font-size: 0.725rem;
+        color: #64748b;
+        font-weight: 500;
+      }
+    }
+
+    .fila-control-tiempo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      .grupo-input-tiempo {
+        display: inline-flex;
+        align-items: center;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 10px;
+        background: #ffffff;
+        overflow: hidden;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:focus-within {
+          border-color: $rw-primary;
+          box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+        }
+
+        .input-numero-tiempo {
+          width: 75px;
+          padding: 0.55rem 0.65rem;
+          border: none;
+          background: transparent;
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #0f172a;
+          text-align: center;
+
+          &:focus {
+            outline: none;
+          }
+
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+          -moz-appearance: textfield;
+        }
+
+        .selector-unidad-pills {
+          display: flex;
+          background: #f1f5f9;
+          padding: 3px;
+          border-left: 1px solid #e2e8f0;
+
+          .btn-unidad-pill {
+            padding: 0.35rem 0.65rem;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            font-size: 0.725rem;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.15s ease;
+
+            &.is-active {
+              background: #ffffff;
+              color: #0f172a;
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            }
+
+            &:hover:not(.is-active) {
+              color: #0f172a;
+            }
+          }
+        }
+      }
+
+      .chip-resumen-tiempo {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: 8px;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        color: #065f46;
+        font-size: 0.775rem;
+        font-weight: 600;
+
+        i {
+          font-size: 0.95rem;
+          color: #059669;
+        }
+
+        b {
+          font-weight: 800;
+          color: #047857;
+        }
+      }
+    }
+
+    .fila-presets-tiempo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      .label-presets {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      .botones-presets {
+        display: flex;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+
+        .btn-preset-tiempo {
+          padding: 0.25rem 0.55rem;
+          border-radius: 6px;
+          border: 1px solid #e2e8f0;
+          background: #ffffff;
+          color: #475569;
+          font-size: 0.725rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.15s ease;
+
+          &:hover {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+          }
+
+          &.is-active {
+            background: #0f172a;
+            border-color: #0f172a;
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+
   .pie-acciones-formulario {
     display: flex;
     justify-content: flex-end;

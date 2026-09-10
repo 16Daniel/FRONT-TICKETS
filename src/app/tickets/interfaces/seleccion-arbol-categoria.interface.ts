@@ -13,4 +13,7 @@ export interface SeleccionArbolCategoria {
   score?: number;
   criticidad?: number;
   urgencia?: number;
+  tiempoResolucion?: number;
+  unidadResolucion?: 'm' | 'h' | 'd';
+  horasResolucion?: number;
 }

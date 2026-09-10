@@ -314,7 +314,12 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           urgencia: urgenciaUrg,
           score: scoreUrg,
           criticidad: criticidadUrg,
-          prioridad: datos.prioridad as any
+          prioridad: datos.prioridad as any,
+          ...(datos.tipo === 'hoja' ? {
+            tiempoResolucion: datos.tiempoResolucion,
+            unidadResolucion: datos.unidadResolucion,
+            horasResolucion: datos.horasResolucion
+          } : {})
         };
         await this.categoriesService.create(nuevaCat);
         this.mostrarMensaje('success', 'Éxito', `Categoría "${datos.nombre}" creada.`);
@@ -339,7 +344,10 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
             urgencia: urgenciaUrg,
             score: scoreUrg,
             criticidad: criticidadUrg,
-            prioridad: datos.prioridad as any
+            prioridad: datos.prioridad as any,
+            tiempoResolucion: datos.tiempoResolucion,
+            unidadResolucion: datos.unidadResolucion,
+            horasResolucion: datos.horasResolucion
           } : {})
         };
         info.nodo.subcategorias.push(nuevaSub);
@@ -373,9 +381,15 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
         objetivo.score = scoreUrg;
         objetivo.criticidad = criticidadUrg;
         objetivo.prioridad = datos.prioridad as any;
+        objetivo.tiempoResolucion = datos.tiempoResolucion;
+        objetivo.unidadResolucion = datos.unidadResolucion;
+        objetivo.horasResolucion = datos.horasResolucion;
       } else {
         objetivo.activarSubcategorias = true;
         objetivo.urgencia = undefined;
+        objetivo.tiempoResolucion = undefined;
+        objetivo.unidadResolucion = undefined;
+        objetivo.horasResolucion = undefined;
       }
       delete (objetivo as any).estimacion;
       delete (objetivo as any).slaRes;

@@ -159,6 +159,19 @@ $rw-primary: #d3152a;
         font-weight: 700;
         text-transform: none;
       }
+
+      &.pildora-tiempo-resolucion {
+        background: #ecfdf5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+        font-weight: 700;
+        text-transform: none;
+
+        i {
+          color: #059669;
+          font-size: 0.8rem;
+        }
+      }
     }
 
     .insignia-conteo-hijos {
