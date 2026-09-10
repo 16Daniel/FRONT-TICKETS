@@ -166,9 +166,9 @@
    ========================================================================== */
 .celda-criticidad-matriz {
   padding: 0.35rem 0.45rem !important;
-  width: 82px;
-  min-width: 82px;
-  max-width: 95px;
+  width: 98px;
+  min-width: 98px;
+  max-width: 110px;
 }
 
 .contenedor-criticidad-celda {
@@ -178,6 +178,13 @@
   justify-content: center;
   gap: 0.25rem;
   position: relative;
+}
+
+.fila-sla-matriz {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
 }
 
 .mini-matriz-wrapper {

@@ -4,7 +4,7 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Tiempos SLA (Matriz de Urgencia) y Score Global ponderado (1-9 pts)" tooltipPosition="top">SLA / SCORE</th>
+            <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA / MATRIZ</th>
             <th>FOLIO</th>
             <th>FECHA</th>
             <th>AREA</th>
@@ -21,8 +21,22 @@
             [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
             <td class="text-center celda-criticidad-matriz">
                 <div class="contenedor-criticidad-celda">
-                    <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
-                    <app-ticket-sla-gauge [ticket]="tk" [size]="50"></app-ticket-sla-gauge>
+                    <!-- Fila Dual SLA Gauge + Mini Matriz de Urgencia 3x3 -->
+                    <div class="fila-sla-matriz">
+                        <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
+                        <app-ticket-sla-gauge [ticket]="tk" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
+
+                        <!-- Mini Matriz 3x3 de Urgencia -->
+                        <div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
+                            <div class="mini-matriz-grid">
+                                <span *ngFor="let celda of celdasMatriz"
+                                    class="celda-mm"
+                                    [class.activa]="esCeldaActiva(tk, celda.impacto, celda.urgencia)"
+                                    [style.backgroundColor]="esCeldaActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatriz(tk) : ''">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Micro-Pill / Badge de Score Global (2 a 18 pts) -->
                     <div class="badge-score-global"
@@ -33,28 +47,6 @@
                         <span class="score-valor">{{ obtenerScoreGlobal(tk) }}</span>
                         <span class="score-label">pts</span>
                     </div>
-
-                    <!-- Matrices 3x3 ocultas temporalmente
-                    <div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
-                        <div class="mini-matriz-grid">
-                            <span *ngFor="let celda of celdasMatriz"
-                                class="celda-mm"
-                                [class.activa]="esCeldaActiva(tk, celda.impacto, celda.urgencia)"
-                                [style.backgroundColor]="esCeldaActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatriz(tk) : ''">
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="mini-matriz-wrapper mini-matriz-resolucion" [pTooltip]="obtenerTooltipMatrizResolucion(tk)" tooltipPosition="top">
-                        <div class="mini-matriz-grid">
-                            <span *ngFor="let celda of celdasMatrizResolucion"
-                                class="celda-mm"
-                                [class.activa]="esCeldaResolucionActiva(tk, celda.impacto, celda.urgencia)"
-                                [style.backgroundColor]="esCeldaResolucionActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatrizResolucion(tk) : ''">
-                            </span>
-                        </div>
-                    </div>
-                    -->
 
                     <!-- Badge de Prioridad del Cuadrante -->
                     <!-- <span class="badge-prioridad-cuadrante" [ngClass]="obtenerClaseCuadrante(tk)">
