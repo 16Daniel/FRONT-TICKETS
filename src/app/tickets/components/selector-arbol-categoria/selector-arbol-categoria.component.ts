@@ -286,8 +286,7 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       prioridad: pUrg as any,
       score: scUrg,
       criticidad: critUrg,
-      urgencia: urgUrg,
-      scoreGlobal: scGlobal
+      urgencia: urgUrg
     };
 
     this.alSeleccionar.emit(this.nodoSeleccionado);

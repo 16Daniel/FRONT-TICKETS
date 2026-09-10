@@ -365,9 +365,9 @@ export class AdminTicketsListComponent {
   readonly celdasMatrizAtencion = this.celdasMatrizResolucion;
 
   obtenerCoordenadasTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
-    const critRaw = tk.criticidadUrgencia ?? (tk as any).criticidad;
-    const urgRaw = tk.urgenciaUrgencia ?? (tk as any).urgencia;
-    const scoreRaw = tk.scoreUrgencia ?? (tk as any).score;
+    const critRaw = tk.criticidad;
+    const urgRaw = tk.urgencia;
+    const scoreRaw = tk.score;
 
     // 1. Si el ticket tiene criticidad y urgencia guardados directamente
     if (critRaw && urgRaw) {
@@ -381,7 +381,7 @@ export class AdminTicketsListComponent {
         impacto = Math.round(score / urgencia);
       }
       impacto = Math.min(3, Math.max(1, impacto || 2));
-      const prioridad = tk.prioridadUrgencia || this.clasificarPrioridad(score);
+      const prioridad = tk.prioridad || this.clasificarPrioridad(score);
       return { impacto, urgencia, score, prioridad };
     }
 
@@ -390,7 +390,7 @@ export class AdminTicketsListComponent {
       const score = Math.min(9, Math.max(1, scoreRaw));
       const urgencia = Math.min(3, Math.max(1, urgRaw || 2));
       const impacto = Math.min(3, Math.max(1, Math.round(score / urgencia)));
-      const prioridad = tk.prioridadUrgencia || this.clasificarPrioridad(score);
+      const prioridad = tk.prioridad || this.clasificarPrioridad(score);
       return { impacto, urgencia, score, prioridad };
     }
 
@@ -503,14 +503,14 @@ export class AdminTicketsListComponent {
 
   obtenerTooltipMatriz(tk: Ticket): string {
     const coord = this.obtenerCoordenadasTicket(tk);
-    const scoreGlobal = tk.scoreGlobal ? ` · Score Global: ${tk.scoreGlobal}` : '';
+    const scoreGlobal = tk.score ? ` · Score Global: ${tk.score}` : '';
     return `Urgencia (Inicio): Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}${scoreGlobal}`;
   }
 
 
   obtenerScoreGlobal(tk: Ticket): number {
-    if (tk.scoreGlobal && tk.scoreGlobal >= 2) {
-      return tk.scoreGlobal;
+    if (tk.score && tk.score >= 2) {
+      return tk.score;
     }
     const coordUrg = this.obtenerCoordenadasTicket(tk);
     return Math.min(9, Math.max(1, coordUrg.score || 4));
@@ -556,12 +556,10 @@ export class AdminTicketsListComponent {
         let temp = this.tickets.filter((x) => x.id == idTicket);
         if (temp.length > 0) {
           let ticket = temp[0];
-          ticket.criticidadUrgencia = 3;
-          ticket.urgenciaUrgencia = 3;
-          ticket.scoreUrgencia = 9;
-          ticket.prioridadUrgencia = 'Crítico';
-
-          ticket.scoreGlobal = 9;
+          ticket.criticidad = 3;
+          ticket.urgencia = 3;
+          ticket.score = 9;
+          ticket.prioridad = 'Crítico';
 
           this.ticketsService
             .update(ticket)
@@ -622,13 +620,10 @@ export class AdminTicketsListComponent {
     const scoreUrg = sel.score || (critUrg * urgUrg);
     const prioUrg = sel.prioridad || 'Medio';
 
-    tk.criticidadUrgencia = Math.min(3, Math.max(1, critUrg));
-    tk.urgenciaUrgencia = Math.min(3, Math.max(1, urgUrg));
-    tk.scoreUrgencia = scoreUrg;
-    tk.prioridadUrgencia = prioUrg as any;
-
-    // Global
-    tk.scoreGlobal = scoreUrg;
+    tk.criticidad = Math.min(3, Math.max(1, critUrg));
+    tk.urgencia = Math.min(3, Math.max(1, urgUrg));
+    tk.score = scoreUrg;
+    tk.prioridad = prioUrg as any;
 
     (tk as any).prioridad = prioUrg;
 

@@ -110,8 +110,8 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     const fechaCreacion = this.extraerFecha(this.ticket.fecha) || new Date();
 
     // Meta SLA Urgencia (3×3)
-    const impactoUrg = Math.min(3, Math.max(1, this.ticket.criticidadUrgencia || 2));
-    const urgenciaUrg = Math.min(3, Math.max(1, this.ticket.urgenciaUrgencia || 2));
+    const impactoUrg = Math.min(3, Math.max(1, this.ticket.criticidad || 2));
+    const urgenciaUrg = Math.min(3, Math.max(1, this.ticket.urgencia || 2));
 
     const matriz = this.matrizUrgencia || this.matrizUrgenciaLocal;
     if (matriz && matriz.celdas && matriz.celdas.length > 0) {

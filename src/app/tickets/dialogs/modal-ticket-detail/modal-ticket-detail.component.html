@@ -31,17 +31,17 @@
 
       <div class="header-right">
         <div
-          *ngIf="ticket.prioridadUrgencia"
+          *ngIf="ticket.prioridad"
           class="priority-badge"
-          [pTooltip]="'Prioridad Urgencia: ' + ticket.prioridadUrgencia"
+          [pTooltip]="'Prioridad Urgencia: ' + ticket.prioridad"
           tooltipPosition="bottom"
           [ngStyle]="{
-            'background-color': obtenerPrioridadColor(ticket.prioridadUrgencia).bg,
-            'color': obtenerPrioridadColor(ticket.prioridadUrgencia).text,
-            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridadUrgencia).border
+            'background-color': obtenerPrioridadColor(ticket.prioridad).bg,
+            'color': obtenerPrioridadColor(ticket.prioridad).text,
+            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridad).border
           }">
           <i class="bx bxs-circle"></i>
-          <span>Urgencia: {{ ticket.prioridadUrgencia }}</span>
+          <span>Urgencia: {{ ticket.prioridad }}</span>
         </div>
 
       </div>

@@ -13,5 +13,4 @@ export interface SeleccionArbolCategoria {
   score?: number;
   criticidad?: number;
   urgencia?: number;
-  scoreGlobal?: number;
 }

@@ -12,14 +12,10 @@ export class Ticket {
   idSubcategoria: string | null = null;
   idTipoSoporte: string | null = '';
   idEstatusTicket: string = '1';
-  // --- MATRIZ DE URGENCIA (3×3) ---
-  criticidadUrgencia?: number;
-  urgenciaUrgencia?: number;
-  scoreUrgencia?: number;
-  prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-
-  // --- SCORE GLOBAL MAESTRO ---
-  scoreGlobal?: number; // scoreUrgencia
+  criticidad?: number;
+  urgencia?: number;
+  score?: number;
+  prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
 
   idPrioridadTicket?: string; // se quitara
   fecha: Timestamp | any = new Date();

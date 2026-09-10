@@ -175,13 +175,10 @@ export class CrearTicketDialogComponent implements OnInit {
     const scoreUrg = seleccion.score || (critUrg * urgUrg);
     const prioUrg = seleccion.prioridad || seleccion.subcategoria?.prioridad || seleccion.categoria?.prioridad || 'Medio';
 
-    this.ticket.criticidadUrgencia = Math.min(3, Math.max(1, critUrg));
-    this.ticket.urgenciaUrgencia = Math.min(3, Math.max(1, urgUrg));
-    this.ticket.scoreUrgencia = scoreUrg;
-    this.ticket.prioridadUrgencia = prioUrg as any;
-
-    // Global
-    this.ticket.scoreGlobal = seleccion.scoreGlobal || scoreUrg;
+    this.ticket.criticidad = Math.min(3, Math.max(1, critUrg));
+    this.ticket.urgencia = Math.min(3, Math.max(1, urgUrg));
+    this.ticket.score = scoreUrg;
+    this.ticket.prioridad = prioUrg as any;
   }
 
   onLimpiarCategoria(): void {
@@ -190,11 +187,11 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.nombreCategoria = '';
     this.ticket.idSubcategoria = null;
     this.ticket.nombreSubcategoria = '';
-    this.ticket.criticidadUrgencia = undefined;
-    this.ticket.urgenciaUrgencia = undefined;
-    this.ticket.scoreUrgencia = undefined;
-    this.ticket.prioridadUrgencia = undefined;
-    this.ticket.scoreGlobal = undefined;
+    this.ticket.criticidad = undefined;
+    this.ticket.urgencia = undefined;
+    this.ticket.score = undefined;
+    this.ticket.prioridad = undefined;
+    this.ticket.score = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {
