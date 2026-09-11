@@ -32,4 +32,6 @@ export class Ticket {
   referenciaActivoFijo: string | undefined;
   esAsignadoEspecialista: boolean = false;
   idUsuarioEspecialista: string = '';
+  codProveedor?:number|null|undefined; 
+  fechaFinSoporte: Timestamp | any;
 }

@@ -3,6 +3,12 @@
 
     <div *ngIf="ticket" class="modal-ticket-content">
 
+        <div *ngIf="ticket.codProveedor != null">
+           <p class="m-0"> <strong>COD PROVEEDOR:</strong> {{ticket.codProveedor}}</p>
+            <p class="m-0"> <strong>NOMBRE PROVEEDOR:</strong> {{obtenerNombreProveedor(ticket.codProveedor)}}</p>
+            <p class="m-0"> <strong>RFC PROVEEDOR:</strong> {{obtenerRfcProveedor(ticket.codProveedor)}}</p>
+        </div>
+
         <!-- Descripción -->
         <section class="ticket-section">
             <h4>DESCRIPCIÓN</h4>

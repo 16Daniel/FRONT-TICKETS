@@ -7,6 +7,7 @@
       <h3 class="m-0">FORMATO DE NO CONFORMIDAD</h3>
     </ng-template>
     <ng-template pTemplate="right">
+      <button pButton  pRipple label="Catálogo de proveedores" icon="pi pi-cog" (click)="abrirModalCatProvs()"></button>&nbsp;
       <button pButton pRipple label="Nuevo Reporte" icon="pi pi-plus" class="p-button-success" (click)="openNew()"></button>
     </ng-template>
   </p-toolbar>
@@ -148,7 +149,9 @@
         </div>
       </td>
       <td>
-        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editDevolucion(dev)"></button>
+        <button pButton icon="pi pi-file-pdf" class="p-button-rounded p-button-primary mr-2" (click)="exportarPDF(dev)"></button>
+        <button *ngIf="usuario.idRol != '2'" pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editDevolucion(dev)"></button>
+        <button *ngIf="usuario.idRol == '2'" pButton icon="pi pi-eye" class="p-button-rounded p-button-info mr-2" (click)="editDevolucion(dev)"></button>
         <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteDevolucion(dev)"></button>
       </td>
     </tr>
@@ -168,3 +171,9 @@
     (cancel)="displayModal = false">
   </app-devolucion-form>
 </p-dialog>
+
+<app-catalogo-proveedores-tickets
+  [(visible)]="modalCatalogoProvs" 
+  [modulo]="'NC'"
+  (visibleChange)="modalCatalogoProvs = false">
+</app-catalogo-proveedores-tickets>

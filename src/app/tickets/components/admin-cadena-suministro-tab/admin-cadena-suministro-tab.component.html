@@ -30,6 +30,7 @@
         <p-button label="SOLICITAR COMPRA" icon="pi pi-plus" styleClass="p-button-secondary"
             (click)="mostrarModalSolicitarCompra = true">
         </p-button>
+        <button pButton  pRipple label="Catálogo de proveedores" icon="pi pi-cog" (click)="abrirModalCatProvs()"></button>
     </div>
 
     <div class="d-flex gap-3">
@@ -121,3 +122,9 @@
         </div>
     </ng-template>
 </p-confirmDialog>
+
+<app-catalogo-proveedores-tickets
+  [(visible)]="modalCatalogoProvs" 
+  [modulo]="'TK'"
+  (visibleChange)="modalCatalogoProvs = false">
+</app-catalogo-proveedores-tickets>
