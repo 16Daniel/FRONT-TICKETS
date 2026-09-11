@@ -7,6 +7,7 @@
           <p-table [value]="entregas" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
         <tr>
+          <th>FOLIO</th>
           <th>SUCURSAL</th>
           <th>FECHA</th>
           <th>ENTREGA CEDIS</th>
@@ -26,6 +27,7 @@
         'bg-success': record.intercambio == 2,
         'bg-warning': record.intercambio == 3
         }">
+            <td>{{record.folio}}</td>
             <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
             <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
           <td>{{ record.entregaCedis || '' }}</td>
@@ -47,6 +49,7 @@
           <p-table [value]="entregasTA" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
         <tr>
+         <th>FOLIO</th>
           <th>SUCURSAL</th>
           <th>FECHA</th>
           <th>ENTREGA CEDIS</th>
@@ -66,6 +69,7 @@
         'bg-success': record.intercambio == 2,
         'bg-warning': record.intercambio == 3
         }">
+            <td>{{record.folio}}</td>
             <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
             <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
           <td>{{ record.entregaCedis || '' }}</td>

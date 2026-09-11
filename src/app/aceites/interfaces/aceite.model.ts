@@ -12,6 +12,7 @@ export interface EntregaAceite {
   status: number;
   manual: boolean;
   fechaRecoleccion: Date | null;
+  folio:string;
 }
 
 export interface ReporteRA {
