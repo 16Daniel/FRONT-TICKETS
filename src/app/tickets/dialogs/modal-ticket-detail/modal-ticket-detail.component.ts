@@ -17,6 +17,8 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CategoriesService } from '../../services/categories.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgencia/mini-matriz-urgencia.component';
 
@@ -49,6 +51,7 @@ export class ModalTicketDetailComponent implements OnInit {
   urlVisorImagen: string = '';
   sucursales: any[] = [];
   categorias: any[] = [];
+  estatusTickets: EstatusTicket[] = [];
 
   constructor(
     private ticketsService: TicketsService,
@@ -56,7 +59,8 @@ export class ModalTicketDetailComponent implements OnInit {
     public datesHelper: DatesHelperService,
     private areasService: AreasService,
     private branchesService: BranchesService,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private statusTicketService: StatusTicketService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -76,6 +80,13 @@ export class ModalTicketDetailComponent implements OnInit {
           ...item,
           id: item.id.toString()
         }));
+      },
+      error: () => {}
+    });
+
+    this.statusTicketService.get().subscribe({
+      next: (data) => {
+        this.estatusTickets = data;
       },
       error: () => {}
     });
@@ -130,16 +141,9 @@ export class ModalTicketDetailComponent implements OnInit {
   }
 
   obtenerStatusLabel(idStatus?: string): string {
-    switch (idStatus) {
-      case '1': return 'Nuevo';
-      case '2': return 'En Proceso';
-      case '3': return 'Finalizado';
-      case '4': return 'Pausado';
-      case '5': return 'Compras';
-      case '6': return 'Validación Compras';
-      case '7': return 'Validación Admin';
-      default: return 'Desconocido';
-    }
+    if (!idStatus) return 'Desconocido';
+    const found = this.estatusTickets.find(s => String(s.id) === String(idStatus));
+    return found?.nombre || 'Desconocido';
   }
 
   obtenerStatusColor(idStatus?: string): { bg: string; text: string; border: string; dot: string } {
