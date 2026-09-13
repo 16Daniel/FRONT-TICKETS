@@ -17,16 +17,19 @@
           <i class="bx bx-hash"></i>
           <span>{{ ticket.folio }}</span>
         </div>
-        <div
-          class="status-pill"
-          [ngStyle]="{
-            'background-color': obtenerStatusColor(ticket.idEstatusTicket).bg,
-            'color': obtenerStatusColor(ticket.idEstatusTicket).text,
-            'border': '1px solid ' + obtenerStatusColor(ticket.idEstatusTicket).border
-          }">
-          <span class="status-dot" [ngStyle]="{'background-color': obtenerStatusColor(ticket.idEstatusTicket).dot}"></span>
-          {{ obtenerStatusLabel(ticket.idEstatusTicket) }}
-        </div>
+        <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
+          <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
+            <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
+            <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
+            {{ estatus.nombre }}
+          </div>
+        </ng-container>
+        <ng-template #estatusDesconocido>
+          <div class="status-pill" [ngStyle]="getEstatusStyle()">
+            <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
+            Desconocido
+          </div>
+        </ng-template>
       </div>
 
       <div class="header-right">

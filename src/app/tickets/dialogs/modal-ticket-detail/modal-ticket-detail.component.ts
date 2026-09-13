@@ -140,22 +140,18 @@ export class ModalTicketDetailComponent implements OnInit {
     return found?.nombre || `Sucursal ${idSucursal}`;
   }
 
-  obtenerStatusLabel(idStatus?: string): string {
-    if (!idStatus) return 'Desconocido';
-    const found = this.estatusTickets.find(s => String(s.id) === String(idStatus));
-    return found?.nombre || 'Desconocido';
+  obtenerEstatus(idStatus?: string): EstatusTicket | undefined {
+    if (!idStatus) return undefined;
+    return this.estatusTickets.find(s => String(s.id) === String(idStatus));
   }
 
-  obtenerStatusColor(idStatus?: string): { bg: string; text: string; border: string; dot: string } {
-    switch (idStatus) {
-      case '1': return { bg: '#EFF6FF', text: '#0F62FE', border: '#BFDBFE', dot: '#0F62FE' };
-      case '2': return { bg: '#FFFBEB', text: '#D97706', border: '#FDE68A', dot: '#F59E0B' };
-      case '3': return { bg: '#F0FDF4', text: '#16A34A', border: '#BBF7D0', dot: '#10B981' };
-      case '4': return { bg: '#F3E8FF', text: '#8A00DA', border: '#E9D5FF', dot: '#8A00DA' };
-      case '5': return { bg: '#EFF6FF', text: '#0F62FE', border: '#BFDBFE', dot: '#0F62FE' };
-      case '7': return { bg: '#F3E8FF', text: '#8A00DA', border: '#E9D5FF', dot: '#8A00DA' };
-      default: return { bg: '#F1F5F9', text: '#64748B', border: '#CBD5E1', dot: '#94A3B8' };
-    }
+  getEstatusStyle(estatus?: EstatusTicket): any {
+    const c = estatus?.color && estatus.color.startsWith('#') ? estatus.color : '#64748B';
+    return {
+      'background-color': c + '1A',
+      'color': c,
+      'border': '1px solid ' + c + '40'
+    };
   }
 
   obtenerPrioridadColor(prio?: string): { bg: string; text: string; border: string } {
