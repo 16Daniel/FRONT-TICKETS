@@ -4,7 +4,7 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA / MATRIZ</th>
+            <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA</th>
             <th>FECHA</th>
             <th>AREA</th>
             <th>CATEGORÍA / RUTA</th>
@@ -22,11 +22,11 @@
                 <div class="contenedor-criticidad-celda">
                     <!-- Fila Dual SLA Gauge + Mini Matriz de Urgencia 3x3 -->
                     <div class="fila-sla-matriz">
-                        <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
-                        <app-ticket-sla-gauge [ticket]="tk" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
-
                         <!-- Mini Matriz 3x3 de Urgencia -->
                         <app-mini-matriz-urgencia [ticket]="tk" [categorias]="categorias"></app-mini-matriz-urgencia>
+                        
+                        <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
+                        <app-ticket-sla-gauge [ticket]="tk" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
                     </div>
 
                     <!-- Micro-Pill / Badge de Score Global (2 a 18 pts) -->

@@ -325,7 +325,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
 
   formatearHorasLegible(horas: number, tiempoOriginal?: number, unidadOriginal?: 'm' | 'h' | 'd'): string {
     if (unidadOriginal === 'm' && tiempoOriginal) {
-      return `${tiempoOriginal}m (${horas}h)`;
+      return `${tiempoOriginal}m`;
     }
     if (horas < 1) {
       const min = Math.round(horas * 60);
@@ -340,20 +340,20 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
 
   private generarTooltip(): void {
     const estadoUrg = this.urgenciaVencida
-      ? '⚠️ Vencido'
+      ? '⚠️'
       : (this.urgenciaAtendida ? '✅ Atendido' : '⏱ En curso');
 
     const estadoRes = !this.resolucionIniciada
       ? '⏳ Pendiente (Sin atender)'
       : (this.resolucionVencida
-        ? '⚠️ Vencido'
+        ? '⚠️'
         : (this.resolucionCompletada ? '✅ Resuelto' : '⏱ En curso'));
 
     const metaResStr = this.formatearHorasLegible(this.horasResolucionSla, this.tiempoResolucionOriginal, this.unidadResolucionOriginal);
     const transResStr = this.formatearHorasLegible(this.horasResolucionTranscurridas);
 
-    const detalleUrg = `⭕ [TA] Tiempo de Atención (Exterior): ${this.horasUrgenciaTranscurridas}h / ${this.horasUrgenciaSla}h (${this.porcentajeUrgencia}%) — ${estadoUrg}`;
-    const detalleRes = `🎯 [TR] Tiempo de Resolución (Interior): ${transResStr} / ${metaResStr} (${this.porcentajeResolucion}%) — ${estadoRes}`;
+    const detalleUrg = `${estadoUrg}⭕ [TA] ${this.horasUrgenciaTranscurridas}h / ${this.horasUrgenciaSla}h`;
+    const detalleRes = `${estadoRes}🎯 [TR] ${transResStr} / ${metaResStr}`;
 
     this.tooltipTexto = `${detalleUrg}\n${detalleRes}`;
   }
