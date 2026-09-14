@@ -72,6 +72,7 @@
   <!-- 4. Validación Admin -->
   <div 
     class="kpi-dashboard-card card-admin" 
+    *ngIf="usuario?.idRol == '1' || usuario?.idRol == '5'"
     [class.has-alerts]="ticketsNotificacionTerminadoAdmin > 0"
     pTooltip="Tickets terminados por validar por administrador" 
     tooltipPosition="top">
@@ -95,6 +96,7 @@
   <!-- 5. Compras -->
   <div 
     class="kpi-dashboard-card card-compras" 
+    *ngIf="usuario?.idRol == '1' || usuario?.idRol == '5'"
     [class.has-alerts]="ticketsNotificacionComprando > 0"
     pTooltip="Solicitudes o tickets en proceso de compra" 
     tooltipPosition="top">

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -13,16 +13,22 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
   templateUrl: './iconos-notificaciones-tickets.component.html',
   styleUrl: './iconos-notificaciones-tickets.component.scss'
 })
-export class IconosNotificacionesTicketsComponent {
+export class IconosNotificacionesTicketsComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() compras: Compra[] = [];
-  @Input() usuario?: Usuario;
+  @Input() usuario?: Usuario | any;
+
+  ngOnInit(): void {
+    if (!this.usuario) {
+      this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    }
+  }
 
   /**
    * Devuelve los ids de sucursales del usuario
    */
   private get sucursalesUsuario(): string[] {
-    return this.usuario?.sucursales?.map(s => s.id) ?? [];
+    return this.usuario?.sucursales?.map((s: any) => s.id) ?? [];
   }
 
   /**
