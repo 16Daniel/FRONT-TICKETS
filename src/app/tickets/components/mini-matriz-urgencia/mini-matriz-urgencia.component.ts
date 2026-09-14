@@ -134,8 +134,7 @@ export class MiniMatrizUrgenciaComponent {
   obtenerTooltipMatriz(tk: Ticket | any): string {
     if (!tk) return '';
     const coord = this.obtenerCoordenadasTicket(tk);
-    const scoreGlobal = tk.score ? ` · Score Global: ${tk.score}` : '';
-    return `Urgencia (Inicio): Criticidad ${coord.impacto} × Urgencia ${coord.urgencia} (Score: ${coord.score}) — Prioridad: ${coord.prioridad}${scoreGlobal}`;
+    return `Criticidad: ${coord.prioridad} · Score: ${coord.score}`;
   }
 
   buscarSubcategoriaRecursiva(subcategorias: any[], idBuscado: string): any | null {

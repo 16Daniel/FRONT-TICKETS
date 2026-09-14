@@ -39,8 +39,8 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   radioInterior = 11.5;
   perimetroInterior = 2 * Math.PI * 11.5; // ~72.2566
   offsetInterior = 72.2566;
-  colorInterior = '#3B82F6';
-  trackColorInterior = '#EFF6FF';
+  colorInterior = '#10B981';
+  trackColorInterior = '#E2E8F0';
   porcentajeResolucion = 0;
   horasResolucionSla = 24;
   horasResolucionTranscurridas = 0;
@@ -306,8 +306,8 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
       this.colorInterior = '#F59E0B'; // Ámbar / Alerta
       this.trackColorInterior = '#FEF3C7';
     } else {
-      this.colorInterior = '#3B82F6'; // Azul vibrante / En tiempo
-      this.trackColorInterior = '#EFF6FF';
+      this.colorInterior = '#10B981'; // Verde / En tiempo
+      this.trackColorInterior = '#E2E8F0';
     }
   }
 
@@ -341,19 +341,19 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   private generarTooltip(): void {
     const estadoUrg = this.urgenciaVencida
       ? '⚠️'
-      : (this.urgenciaAtendida ? '✅ Atendido' : '⏱ En curso');
+      : (this.urgenciaAtendida ? '✅' : '');
 
     const estadoRes = !this.resolucionIniciada
-      ? '⏳ Pendiente (Sin atender)'
+      ? '⏳'
       : (this.resolucionVencida
         ? '⚠️'
-        : (this.resolucionCompletada ? '✅ Resuelto' : '⏱ En curso'));
+        : (this.resolucionCompletada ? '✅' : ''));
 
     const metaResStr = this.formatearHorasLegible(this.horasResolucionSla, this.tiempoResolucionOriginal, this.unidadResolucionOriginal);
     const transResStr = this.formatearHorasLegible(this.horasResolucionTranscurridas);
 
-    const detalleUrg = `${estadoUrg}⭕ [TA] ${this.horasUrgenciaTranscurridas}h / ${this.horasUrgenciaSla}h`;
-    const detalleRes = `${estadoRes}🎯 [TR] ${transResStr} / ${metaResStr}`;
+    const detalleUrg = `${estadoUrg}⭕ [TA] ${this.horasUrgenciaSla}h / ${this.horasUrgenciaTranscurridas}h`;
+    const detalleRes = `${estadoRes}🎯 [TR] ${metaResStr} / ${transResStr}`;
 
     this.tooltipTexto = `${detalleUrg}\n${detalleRes}`;
   }
