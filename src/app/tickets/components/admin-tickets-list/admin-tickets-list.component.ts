@@ -162,6 +162,11 @@ export class AdminTicketsListComponent {
     });
   }
 
+  obtenerEstatusInfo(idStatus?: string): any {
+    if (!idStatus) return undefined;
+    return this.estatusTicket.find(s => String(s.id) === String(idStatus));
+  }
+
   obtenerPrioridadesTicket() {
     this.ticketsPriorityService.get().subscribe({
       next: (data) => {

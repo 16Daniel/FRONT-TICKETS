@@ -35,10 +35,10 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   urgenciaVencida = false;
   urgenciaAtendida = false;
 
-  // Anillo interior: Tiempo de Resolución
-  radioInterior = 21;
-  perimetroInterior = 2 * Math.PI * 21; // ~131.95
-  offsetInterior = 131.95;
+  // Anillo interior: Tiempo de Resolución (Grafica de pie)
+  radioInterior = 11.5;
+  perimetroInterior = 2 * Math.PI * 11.5; // ~72.2566
+  offsetInterior = 72.2566;
   colorInterior = '#3B82F6';
   trackColorInterior = '#EFF6FF';
   porcentajeResolucion = 0;

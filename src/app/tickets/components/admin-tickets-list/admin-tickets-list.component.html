@@ -18,7 +18,8 @@
     <ng-template pTemplate="body" let-tk>
         <tr [pSelectableRow]="tk" class="bg-opacity-25"
             [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
-            <td class="text-center celda-criticidad-matriz">
+            <td class="text-center celda-criticidad-matriz"
+                [ngStyle]="{'box-shadow': 'inset 6px 0 0 0 ' + (obtenerEstatusInfo(tk.idEstatusTicket)?.color || 'transparent')}">
                 <div class="contenedor-criticidad-celda">
                     <!-- Fila Dual SLA Gauge + Mini Matriz de Urgencia 3x3 -->
                     <div class="fila-sla-matriz">
@@ -28,21 +29,6 @@
                         <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
                         <app-ticket-sla-gauge [ticket]="tk" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
                     </div>
-
-                    <!-- Micro-Pill / Badge de Score Global (2 a 18 pts) -->
-                    <!-- <div class="badge-score-global"
-                         [ngClass]="obtenerClaseScoreGlobal(tk)"
-                         [pTooltip]="obtenerTooltipScoreGlobal(tk)"
-                         tooltipPosition="top">
-                        <i class="bx bxs-zap"></i>
-                        <span class="score-valor">{{ obtenerScoreGlobal(tk) }}</span>
-                        <span class="score-label">pts</span>
-                    </div> -->
-
-                    <!-- Badge de Prioridad del Cuadrante -->
-                    <!-- <span class="badge-prioridad-cuadrante" [ngClass]="obtenerClaseCuadrante(tk)">
-                        {{ obtenerNombrePrioridad(tk) }}
-                    </span> -->
 
                     <div *ngIf="tk.esAsignadoEspecialista"
                         [pTooltip]="obtenerNombreResponsable(tk.idUsuarioEspecialista)" tooltipPosition="top"
