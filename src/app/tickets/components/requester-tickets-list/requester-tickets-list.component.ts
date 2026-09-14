@@ -34,6 +34,11 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
+import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
+import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { Categoria } from '../../interfaces/categoria.mdoel';
+import { CategoriesService } from '../../services/categories.service';
+
 @Component({
   selector: 'app-requester-tickets-list',
   standalone: true,
@@ -50,6 +55,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     ConfirmDialogModule,
     DropdownModule,
     FormsModule,
+    TicketSlaGaugeComponent,
+    MiniMatrizUrgenciaComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './requester-tickets-list.component.html',
@@ -84,6 +91,8 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   estatusTickets: EstatusTicket[] = [];
   sucursales: Sucursal[] = [];
 
+  categorias: Categoria[] = [];
+
   constructor(
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
@@ -93,9 +102,26 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private areasService: AreasService,
     private statusTicketsService: StatusTicketService,
     private branchesService: BranchesService,
+    private categoriesService: CategoriesService
   ) {
     this.obtenerCatalogoEstatusTickets();
     this.obtenerSucursales();
+    this.obtenerCategorias();
+  }
+
+  obtenerCategorias() {
+    this.categoriesService.get().subscribe({
+      next: (data) => {
+        this.categorias = data.map((item: any) => ({
+          ...item,
+          id: item.id.toString()
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   ngOnInit(): void {
@@ -160,6 +186,11 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       str = 'black';
     }
     return str;
+  }
+
+  obtenerEstatusInfo(idStatus?: string): any {
+    if (!idStatus) return undefined;
+    return this.estatusTickets.find(s => String(s.id) === String(idStatus));
   }
 
   obtenerAreas() {

@@ -35,6 +35,7 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
+import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -57,7 +58,8 @@ import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets
     AcordeonMantenimientosSistemasComponent,
     AcordeonMantenimientosMantenimientoComponent,
     SolicitarCompraDialogComponent,
-    AcordeonMantenimientosAudioVideoComponent
+    AcordeonMantenimientosAudioVideoComponent,
+    IconosNotificacionesTicketsComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',

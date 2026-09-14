@@ -1,70 +1,119 @@
-<div class="">
-  <div *ngIf="usuario.esGuardia" class="alert alert-warning text-center fw-bold" style="margin-top: 15px;">
-    🚨 GUARDIA ACTIVA 🚨
+<div class="tickets-tab-container">
+  
+  <!-- Top Bar: Context Badges & Maintenance Switches -->
+  <div class="tickets-top-bar">
+    <div class="header-title-group">
+      <span class="active-view-badge bg-warning text-dark border-warning" *ngIf="usuario.esGuardia">
+        <i class="bx bx-shield-quarter"></i>
+        <span>GUARDIA ACTIVA</span>
+      </span>
+
+      <span class="active-view-badge" *ngIf="mostrarMantenimientosSistemas">
+        <i class="bx bx-laptop"></i>
+        <span>Mantenimiento IT (8X8)</span>
+      </span>
+
+      <span class="active-view-badge" *ngIf="mostrarMantenimientosAV">
+        <i class="bx bx-tv"></i>
+        <span>Mantenimiento AV (6X6)</span>
+      </span>
+
+      <!-- <span class="user-group-badge" *ngIf="usuario">
+        <i class="bx bxs-user"></i>
+        <span>{{ usuario.nombre }} {{ usuario.apellidoP }}</span>
+      </span> -->
+    </div>
+
+    <!-- Toggles for IT: 8X8, AV: 6X6, and Guardia -->
+    <div class="switches-toggle-group">
+      <span class="switches-title">
+        <i class="bx bx-wrench"></i> Vistas:
+      </span>
+
+      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosSistemas" *ngIf="usuario.idArea == '2' || usuario.idArea == '1'">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="mostrarMantenimientosSistemas" 
+          (ngModelChange)="mostrarMantenimientosAV = false">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-laptop"></i>
+          <span>IT: 8X8</span>
+        </span>
+      </label>
+
+      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosAV" *ngIf="usuario.idArea == '1' || usuario.idArea == '2'">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="mostrarMantenimientosAV" 
+          (ngModelChange)="mostrarMantenimientosSistemas = false">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-tv"></i>
+          <span>AV: 6X6</span>
+        </span>
+      </label>
+
+      <label class="toggle-pill-item" [class.is-active]="usuario.esGuardia">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="usuario.esGuardia" 
+          (change)="onToggleGuardia(usuario)">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-shield"></i>
+          <span>Guardia</span>
+        </span>
+      </label>
+    </div>
   </div>
-  <div class="mt-5"></div>
 
+  <!-- Dashboard KPI Cards Row -->
+  <div class="dashboard-kpi-section mb-3">
+    <app-iconos-notificaciones-tickets 
+      [tickets]="tickets" 
+      [usuario]="usuario"
+      [compras]="compras">
+    </app-iconos-notificaciones-tickets>
+  </div>
 
-  @if(
-  mostrarMantenimientosAV === false && mostrarMantenimientosSistemas === false)
-  {
-  <h3 class="m-3 text-center">MIS TICKETS</h3>
-  }@else
-  {
-  <h3 class="m-3 text-center">MANTENIMIENTOS</h3>
-  }
+  <!-- Action Buttons Toolbar Row -->
+  <div class="actions-toolbar-row mb-4">
+    <div class="actions-buttons-container">
+      <p-button 
+        label="CREAR TICKET" 
+        icon="pi pi-plus" 
+        styleClass="p-button-primary action-btn-custom"
+        (click)="mostrarModalGenerateTicket = true">
+      </p-button>
 
-  <div class="d-flex justify-content-start gap-3 p-3 pb-0 flex-wrap">
-    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary"
-      (click)="mostrarModalGenerateTicket = true">
-    </p-button>
+      <p-button 
+        label="HISTORIAL TICKETS" 
+        icon="pi pi-history" 
+        styleClass="p-button-warning action-btn-custom"
+        (click)="mostrarModalHistorial = true">
+      </p-button>
 
-    <p-button label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
-      (click)="mostrarModalHistorial = true">
-    </p-button>
+      <p-button 
+        label="FILTRAR TICKETS" 
+        icon="pi pi-filter" 
+        styleClass="p-button-success action-btn-custom"
+        (click)="mostrarModalFilterTickets = true">
+      </p-button>
 
-    <p-button label="SOLICITAR COMPRA" icon="pi pi-plus" styleClass="p-button-secondary"
-      (click)="mostrarModalCompras = true">
-    </p-button>
-
-
-
-
-    <!-- <div class="form-check form-switch d-flex align-items-center gap-3" *ngIf="usuario.idArea != '20'">
-      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-        style="width: 3rem; height: 2rem;" [(ngModel)]="ordenarxmantenimiento" (ngModelChange)="mostrarMantenimientosAV = false; mostrarMantenimientosSistemas = false">
-      <label class="form-check-label fs-4" for="flexSwitchCheckDefault">{{tituloMantenimiento}}</label>
-    </div> -->
-
-    <div class="form-check form-switch d-flex align-items-center gap-3"
-      *ngIf="usuario.idArea == '1' || usuario.idArea == '2'">
-      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-        style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientosAV"
-        (ngModelChange)="mostrarMantenimientosSistemas = false">
-      <label class="form-check-label fs-4" for="flexSwitchCheckDefault">AV: 6X6</label>
-    </div>
-
-    <div class="form-check form-switch d-flex align-items-center gap-3"
-      *ngIf="usuario.idArea == '2' || usuario.idArea == '1'">
-      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-        style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarMantenimientosSistemas"
-        (ngModelChange)="mostrarMantenimientosAV = false">
-      <label class="form-check-label fs-4" for="flexSwitchCheckDefault">IT: 8X8</label>
-    </div>
-
-    <div class="ms-auto d-flex align-items-center gap-3">
-      <label class="form-check-label fs-4" for="activarGuardia">ACTIVAR GUARDIA</label>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
-          style="width: 3rem; height: 2rem;" [(ngModel)]="usuario.esGuardia" (change)="onToggleGuardia(usuario)">
-      </div>
+      <p-button 
+        label="SOLICITAR COMPRA" 
+        icon="pi pi-plus" 
+        styleClass="p-button-secondary action-btn-custom"
+        (click)="mostrarModalCompras = true">
+      </p-button>
     </div>
   </div>
 
   <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
     *ngIf="tickets.length == 0">
     @if (loading) {
-    <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>x
+    <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
     }@else {
     <i class="bx bx-file-blank bx-md" style="color: rgb(43, 92, 226)"></i>
     <p>SIN TICKETS PENDIENTES</p>
