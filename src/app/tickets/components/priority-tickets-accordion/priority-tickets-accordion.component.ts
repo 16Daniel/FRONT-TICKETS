@@ -46,50 +46,69 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     this.clickEvent.emit(ticket);
   }
 
-  obtenerContadorTickets(prioridad: any): number {
-    if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '1').length;
-    else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '2').length;
-    else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '3').length;
-    else return this.tickets.filter((x) => x.idPrioridadTicket === '4').length;
+  obtenerContadorTickets(prioridad: string): number {
+    return this.obtenerTicketsFiltrados(prioridad).length;
+  }
+
+  obtenerScore(tk: Ticket | any): number {
+    if (tk.score) return tk.score;
+    const urg = Math.min(3, Math.max(1, tk.urgencia || 2));
+    const crit = Math.min(3, Math.max(1, tk.criticidad || 2));
+    return crit * urg; // For legacy 3x3 this is max 9.
+  }
+
+  obtenerPrioridadTicket(tk: Ticket | any): string {
+    const score = this.obtenerScore(tk);
+
+    // If there is an explicit string, map it
+    const pStr = String(tk.prioridad || '').toUpperCase();
+    if (pStr.includes('CRÍT') || pStr.includes('CRIT') || pStr.includes('PÁN')) return 'Crítico';
+    if (pStr.includes('ALT')) return 'Alto';
+    if (pStr.includes('MED')) return 'Medio';
+    if (pStr.includes('BAJ')) return 'Bajo';
+
+    // Map by 18-point score scale
+    if (score >= 14) return 'Crítico';
+    if (score >= 10) return 'Alto';
+    if (score >= 6) return 'Medio';
+    if (score >= 2) return 'Bajo';
+
+    // Fallback logic for legacy 9-point scale if it wasn't caught by the explicit strings
+    // In legacy 3x3: 7-9 is Crítico, 5-6 Alto, 3-4 Medio, 1-2 Bajo
+    if (score >= 7) return 'Crítico';
+    if (score >= 5) return 'Alto';
+    if (score >= 3) return 'Medio';
+    return 'Bajo';
   }
 
   obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
+    // Return background colors based on the new spec
+    if (value === 'Crítico') return '#FEE2E2';
+    if (value === 'Alto') return '#FFEDD5';
+    if (value === 'Medio') return '#FEF9C3';
+    if (value === 'Bajo') return '#DCFCE7';
+    return '#f8f9fa';
+  }
+  
+  obtenerColorBordePrioridad(value: string): string {
+    if (value === 'Crítico') return '#FCA5A5';
+    if (value === 'Alto') return '#FDBA74';
+    if (value === 'Medio') return '#FDE047';
+    if (value === 'Bajo') return '#86EFAC';
+    return '#dee2e6';
+  }
 
-    if (value == 'ALTA') {
-      str = '#ff0000';
-    }
-
-    if (value == 'MEDIA') {
-      str = '#ffe800';
-    }
-
-    if (value == 'BAJA') {
-      str = '#61ff00';
-    }
-
-    if (value == 'PÁNICO') {
-      str = 'black';
-    }
-    return str;
+  obtenerColorTextoPrioridad(value: string): string {
+    if (value === 'Crítico') return '#991B1B';
+    if (value === 'Alto') return '#9A3412';
+    if (value === 'Medio') return '#854D0E';
+    if (value === 'Bajo') return '#166534';
+    return '#212529';
   }
 
   obtenerTicketsFiltrados(prioridad: string): Ticket[] {
-    if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '1');
-    else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '2');
-    else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '3');
-    else return this.tickets.filter((x) => x.idPrioridadTicket === '4');
+    return this.tickets.filter((tk) => this.obtenerPrioridadTicket(tk) === prioridad);
   }
-
-  // toggleAccordion(index: number) {
-  //   this.activeIndex = this.activeIndex === index ? null : index;
-  // }
 
   verificarChatNoLeido(tickets: Ticket[]): boolean {
     return tickets.some(ticket => {
@@ -100,7 +119,7 @@ export class PriorityTicketsAccordionComponent implements OnInit {
         const ultimoComentarioLeido = participante.ultimoComentarioLeido;
         const comentarios = ticket.comentarios;
 
-        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
+        return comentarios.length > ultimoComentarioLeido; 
       }
 
       return false;
@@ -111,5 +130,4 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     let result = tickets.filter(x => x.idEstatusTicket == '7');
     return result.length > 0;
   }
-
 }
