@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <!-- Selectores de Matrices (si es hoja) -->
+    <!-- Selectores de Matrices y Tiempos SLA (si es hoja) -->
     <div class="seccion-selectores-matrices mt-3" *ngIf="tipo === 'hoja'">
       <div class="mb-3">
         <app-selector-matriz-criticidad
@@ -66,15 +66,71 @@
         </app-selector-matriz-criticidad>
       </div>
 
-      <div class="mb-2">
-        <app-selector-matriz-atencion
-          [idArea]="idArea"
-          [matrizAtencion]="matrizAtencion"
-          [impacto]="criticidadAtencion"
-          [urgencia]="urgenciaAtencion"
-          [prioridadSeleccionada]="prioridadAtencion"
-          (cambioSeleccion)="alCambiarMatrizAtencion($event)">
-        </app-selector-matriz-atencion>
+      <!-- Configuración del Tiempo de Resolución (SLA) -->
+      <div class="seccion-tiempo-resolucion mb-3">
+        <div class="encabezado-subseccion">
+          <label class="etiqueta-campo">
+            <i class="bx bx-time-five"></i> TIEMPO DE RESOLUCIÓN ESTIMADO <span class="requerido">*</span>
+          </label>
+          <span class="texto-ayuda-subseccion">
+            Define cuánto tiempo objetivo tiene el equipo técnico para resolver los tickets de esta categoría.
+          </span>
+        </div>
+
+        <div class="fila-control-tiempo">
+          <div class="grupo-input-tiempo">
+            <input 
+              type="number" 
+              min="1" 
+              max="999" 
+              [(ngModel)]="tiempoResolucion" 
+              class="input-numero-tiempo" 
+              placeholder="Ej. 24" />
+            <div class="selector-unidad-pills">
+              <button 
+                type="button" 
+                class="btn-unidad-pill" 
+                [class.is-active]="unidadResolucion === 'm'" 
+                (click)="unidadResolucion = 'm'">
+                Minutos (m)
+              </button>
+              <button 
+                type="button" 
+                class="btn-unidad-pill" 
+                [class.is-active]="unidadResolucion === 'h'" 
+                (click)="unidadResolucion = 'h'">
+                Horas (h)
+              </button>
+              <button 
+                type="button" 
+                class="btn-unidad-pill" 
+                [class.is-active]="unidadResolucion === 'd'" 
+                (click)="unidadResolucion = 'd'">
+                Días (d)
+              </button>
+            </div>
+          </div>
+
+          <div class="chip-resumen-tiempo">
+            <i class="bx bx-check-circle"></i>
+            <span>SLA Objetivo: <b>{{ resumenTiempoResolucion }}</b></span>
+          </div>
+        </div>
+
+        <!-- Presets de Tiempo Rápido -->
+        <div class="fila-presets-tiempo mt-2">
+          <span class="label-presets">Presets comunes:</span>
+          <div class="botones-presets">
+            <button 
+              *ngFor="let p of presetsTiempo" 
+              type="button" 
+              class="btn-preset-tiempo" 
+              [class.is-active]="esPresetActivo(p.valor, p.unidad)" 
+              (click)="seleccionarPreset(p.valor, p.unidad)">
+              {{ p.label }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 

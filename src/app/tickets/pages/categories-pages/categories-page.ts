@@ -21,11 +21,8 @@ import { TarjetaGuiaMatrizComponent } from '../../components/tarjeta-guia-matriz
 import { FormularioNodoCategoriaComponent } from '../../components/formulario-nodo-categoria/formulario-nodo-categoria.component';
 import { NodoArbolCategoriaComponent } from '../../components/nodo-arbol-categoria/nodo-arbol-categoria.component';
 import { ConfiguracionMatrizUrgenciaComponent } from '../../components/configuracion-matriz-urgencia/configuracion-matriz-urgencia.component';
-import { ConfiguracionMatrizAtencionComponent } from '../../components/configuracion-matriz-atencion/configuracion-matriz-atencion.component';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
-import { MatrizAtencionService } from '../../services/matriz-atencion.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
@@ -43,7 +40,6 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
     FormularioNodoCategoriaComponent,
     NodoArbolCategoriaComponent,
     ConfiguracionMatrizUrgenciaComponent,
-    ConfiguracionMatrizAtencionComponent,
     PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],
@@ -59,10 +55,8 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
   filtroTexto: string = '';
 
   matrizUrgenciaActual: MatrizUrgencia | null = null;
-  matrizAtencionActual: MatrizAtencion | null = null;
   mostrarGuiaMatriz: boolean = false;
   mostrarConfiguracionMatriz: boolean = false;
-  tipoMatrizConfiguracion: 'urgencia' | 'atencion' = 'urgencia';
   nodosExpandidosIds = new Set<string>();
 
   idNodoParaAgregar: string | null = null;
@@ -71,14 +65,12 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
   private subscripcionAreas?: Subscription;
   private subscripcionCategorias?: Subscription;
   private subscripcionMatriz?: Subscription;
-  private subscripcionMatrizAtencion?: Subscription;
 
   constructor(
     private messageService: MessageService,
     private categoriesService: CategoriesService,
     private areasService: AreasService,
     private matrizUrgenciaService: MatrizUrgenciaService,
-    private matrizAtencionService: MatrizAtencionService,
     private confirmationService: ConfirmationService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -97,7 +89,6 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     this.subscripcionAreas?.unsubscribe();
     this.subscripcionCategorias?.unsubscribe();
     this.subscripcionMatriz?.unsubscribe();
-    this.subscripcionMatrizAtencion?.unsubscribe();
   }
 
   /* Carga de Datos */
@@ -124,17 +115,6 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
         },
         error: (err) => console.error('Error al cargar la matriz de urgencia en CategoriesPage:', err)
       });
-
-    this.subscripcionMatrizAtencion?.unsubscribe();
-    this.subscripcionMatrizAtencion = this.matrizAtencionService
-      .obtenerMatrizPorArea(this.areaSeleccionadaId, this.areaActual?.nombre || '')
-      .subscribe({
-        next: (matriz) => {
-          this.matrizAtencionActual = matriz;
-          this.cdr.detectChanges();
-        },
-        error: (err) => console.error('Error al cargar la matriz de atención en CategoriesPage:', err)
-      });
   }
 
   alGuardarMatriz(matriz: MatrizUrgencia): void {
@@ -142,10 +122,6 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  alGuardarMatrizAtencion(matriz: MatrizAtencion): void {
-    this.matrizAtencionActual = matriz;
-    this.cdr.detectChanges();
-  }
 
   private cargarCategorias(): void {
     this.subscripcionCategorias?.unsubscribe();
@@ -169,10 +145,7 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
       if (!nodo.score) {
         nodo.urgencia = 2;
         nodo.score = 4;
-        nodo.prioridadUrgencia = 'Medio';
-      }
-      if (!nodo.prioridadUrgencia && (nodo as any).prioridad) {
-        nodo.prioridadUrgencia = (nodo as any).prioridad;
+        nodo.prioridad = 'Medio';
       }
     }
     delete (nodo as any).estimacion;
@@ -326,13 +299,9 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
     try {
       if (idPadre === null || idPadre === 'RAIZ') {
         const nuevoSecuencial = await this.categoriesService.obtenerSecuencial();
-        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
-        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
-        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
-        const criticidadAten = datos.criticidadAtencion || 2;
-        const urgenciaAten = datos.urgenciaAtencion || 2;
-        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
-        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+        const criticidadUrg = datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgencia || 2;
+        const scoreUrg = datos.score || (criticidadUrg * urgenciaUrg);
 
         const nuevaCat: Categoria = {
           id: nuevoSecuencial,
@@ -345,17 +314,13 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           urgencia: urgenciaUrg,
           score: scoreUrg,
           criticidad: criticidadUrg,
-          criticidadUrgencia: criticidadUrg,
-          urgenciaUrgencia: urgenciaUrg,
-          scoreUrgencia: scoreUrg,
-          prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
-          criticidadAtencion: criticidadAten,
-          urgenciaAtencion: urgenciaAten,
-          scoreAtencion: scoreAten,
-          prioridadAtencion: datos.prioridadAtencion,
-          scoreGlobal: scoreGlob
+          prioridad: datos.prioridad as any,
+          ...(datos.tipo === 'hoja' ? {
+            tiempoResolucion: datos.tiempoResolucion,
+            unidadResolucion: datos.unidadResolucion,
+            horasResolucion: datos.horasResolucion
+          } : {})
         };
-        (nuevaCat as any).prioridad = nuevaCat.prioridadUrgencia;
         await this.categoriesService.create(nuevaCat);
         this.mostrarMensaje('success', 'Éxito', `Categoría "${datos.nombre}" creada.`);
       } else {
@@ -364,13 +329,9 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
 
         if (!info.nodo.subcategorias) info.nodo.subcategorias = [];
 
-        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
-        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
-        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
-        const criticidadAten = datos.criticidadAtencion || 2;
-        const urgenciaAten = datos.urgenciaAtencion || 2;
-        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
-        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+        const criticidadUrg = datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgencia || 2;
+        const scoreUrg = datos.score || (criticidadUrg * urgenciaUrg);
 
         const nuevaSub: Subcategoria = {
           id: generateGUID(),
@@ -383,20 +344,12 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
             urgencia: urgenciaUrg,
             score: scoreUrg,
             criticidad: criticidadUrg,
-            criticidadUrgencia: criticidadUrg,
-            urgenciaUrgencia: urgenciaUrg,
-            scoreUrgencia: scoreUrg,
-            prioridadUrgencia: (datos.prioridadUrgencia || datos.prioridad) as any,
-            criticidadAtencion: criticidadAten,
-            urgenciaAtencion: urgenciaAten,
-            scoreAtencion: scoreAten,
-            prioridadAtencion: datos.prioridadAtencion,
-            scoreGlobal: scoreGlob
+            prioridad: datos.prioridad as any,
+            tiempoResolucion: datos.tiempoResolucion,
+            unidadResolucion: datos.unidadResolucion,
+            horasResolucion: datos.horasResolucion
           } : {})
         };
-        if (datos.tipo === 'hoja') {
-          (nuevaSub as any).prioridad = nuevaSub.prioridadUrgencia;
-        }
         info.nodo.subcategorias.push(nuevaSub);
         info.nodo.tipo = 'rama';
         info.nodo.activarSubcategorias = true;
@@ -420,30 +373,23 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
       objetivo.nombre = datos.nombre;
       objetivo.tipo = datos.tipo;
       if (datos.tipo === 'hoja') {
-        const criticidadUrg = datos.criticidadUrgencia || datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
-        const urgenciaUrg = datos.urgenciaUrgencia || datos.urgencia || 2;
-        const scoreUrg = datos.scoreUrgencia || datos.score || (criticidadUrg * urgenciaUrg);
-        const criticidadAten = datos.criticidadAtencion || 2;
-        const urgenciaAten = datos.urgenciaAtencion || 2;
-        const scoreAten = datos.scoreAtencion || (criticidadAten * urgenciaAten);
-        const scoreGlob = datos.scoreGlobal || (scoreUrg + scoreAten);
+        const criticidadUrg = datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
+        const urgenciaUrg = datos.urgencia || 2;
+        const scoreUrg = datos.score || (criticidadUrg * urgenciaUrg);
 
         objetivo.urgencia = urgenciaUrg;
         objetivo.score = scoreUrg;
         objetivo.criticidad = criticidadUrg;
-        objetivo.criticidadUrgencia = criticidadUrg;
-        objetivo.urgenciaUrgencia = urgenciaUrg;
-        objetivo.scoreUrgencia = scoreUrg;
-        objetivo.prioridadUrgencia = (datos.prioridadUrgencia || datos.prioridad) as any;
-        (objetivo as any).prioridad = objetivo.prioridadUrgencia;
-
-        objetivo.criticidadAtencion = criticidadAten;
-        objetivo.urgenciaAtencion = urgenciaAten;
-        objetivo.scoreAtencion = scoreAten;
-        objetivo.prioridadAtencion = datos.prioridadAtencion;
-        objetivo.scoreGlobal = scoreGlob;
+        objetivo.prioridad = datos.prioridad as any;
+        objetivo.tiempoResolucion = datos.tiempoResolucion;
+        objetivo.unidadResolucion = datos.unidadResolucion;
+        objetivo.horasResolucion = datos.horasResolucion;
       } else {
         objetivo.activarSubcategorias = true;
+        objetivo.urgencia = undefined;
+        objetivo.tiempoResolucion = undefined;
+        objetivo.unidadResolucion = undefined;
+        objetivo.horasResolucion = undefined;
       }
       delete (objetivo as any).estimacion;
       delete (objetivo as any).slaRes;

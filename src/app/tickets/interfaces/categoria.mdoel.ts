@@ -13,17 +13,9 @@ export class Categoria {
   urgencia?: number;
   criticidad?: number;
   score?: number;
-  criticidadUrgencia?: number;
-  urgenciaUrgencia?: number;
-  scoreUrgencia?: number;
-  prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-
-  // Atención (3×3)
-  criticidadAtencion?: number;
-  urgenciaAtencion?: number;
-  scoreAtencion?: number;
-  prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-
-  // Score Global
-  scoreGlobal?: number;
+  prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+  // Tiempo de resolución configurado (SLA)
+  tiempoResolucion?: number;
+  unidadResolucion?: 'm' | 'h' | 'd';
+  horasResolucion?: number;
 }

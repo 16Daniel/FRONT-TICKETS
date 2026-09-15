@@ -166,9 +166,9 @@
    ========================================================================== */
 .celda-criticidad-matriz {
   padding: 0.35rem 0.45rem !important;
-  width: 82px;
-  min-width: 82px;
-  max-width: 95px;
+  width: 98px;
+  min-width: 98px;
+  max-width: 110px;
 }
 
 .contenedor-criticidad-celda {
@@ -180,58 +180,13 @@
   position: relative;
 }
 
-.mini-matriz-wrapper {
-  cursor: help;
+.fila-sla-matriz {
   display: inline-flex;
-  padding: 3.5px;
-  border-radius: 7px;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-
-  &:hover {
-    transform: scale(1.08);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
 }
 
-.mini-matriz-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 9px);
-  grid-template-rows: repeat(3, 9px);
-  gap: 2.5px;
-}
-
-.celda-mm {
-  width: 9px;
-  height: 9px;
-  border-radius: 2.5px;
-  background-color: #e2e8f0;
-  transition: all 0.15s ease;
-
-  &.activa {
-    box-shadow: 0 0 0 1.5px #ffffff, 0 0 0 2.5px #0f172a;
-  }
-}
-
-.mini-matriz-2x2-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 14px);
-  grid-template-rows: repeat(2, 14px);
-  gap: 2.5px;
-}
-
-.celda-mm-2x2 {
-  width: 14px;
-  height: 14px;
-  border-radius: 2.5px;
-  background-color: #e2e8f0;
-  transition: all 0.15s ease;
-
-  &.activa {
-    box-shadow: 0 0 0 1.5px #ffffff, 0 0 0 2.5px #0f172a;
-  }
-}
 
 .badge-prioridad-cuadrante {
   font-size: 0.7rem;
@@ -470,5 +425,86 @@
     border-top: 1px solid #e2e8f0;
     padding: 0.75rem 1.25rem;
     background: #f8fafc;
+  }
+}
+
+/* ==========================================================================
+   Botones de Acción en Tabla
+   ========================================================================== */
+.btn-action-table {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #64748b;
+  font-size: 1.15rem;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+
+  i {
+    transition: transform 0.15s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    i {
+      transform: scale(1.1);
+    }
+  }
+
+  &.btn-action-warning {
+    background-color: #fffbeb;
+    color: #d97706;
+    border-color: #fde68a;
+  }
+
+  &.btn-action-success {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border-color: #bbf7d0;
+  }
+
+  &.btn-action-admin {
+    background-color: #f3e8ff;
+    color: #8a00da;
+    border-color: #e9d5ff;
+  }
+
+  &.btn-action-primary {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-color: #bfdbfe;
+  }
+
+  &.btn-action-info {
+    background-color: #ecfeff;
+    color: #0891b2;
+    border-color: #a5f3fc;
+  }
+
+  /* Para las notificaciones de chat */
+  &.has-notification {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-color: #bfdbfe;
+    
+    &::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 12px;
+      height: 12px;
+      background-color: #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px #ffffff;
+    }
   }
 }

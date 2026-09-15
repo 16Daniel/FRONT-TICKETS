@@ -121,10 +121,8 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       nodo.tipo = tieneHijos || (nodo as any).activarSubcategorias ? 'rama' : 'hoja';
     }
     if (nodo.tipo === 'hoja') {
-      if (!nodo.prioridadUrgencia && !(nodo as any).prioridad) {
-        nodo.prioridadUrgencia = 'Medio';
-      } else if (!nodo.prioridadUrgencia && (nodo as any).prioridad) {
-        nodo.prioridadUrgencia = (nodo as any).prioridad;
+      if (!nodo.prioridad) {
+        nodo.prioridad = 'Medio';
       }
     }
     nodo.subcategorias.forEach((h) => this.normalizarNodo(h));
@@ -269,16 +267,16 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
     const esSub = String(raiz.id) !== String(nodo.id);
     const rutaCompleta = rutaNombres.join(' › ');
 
-    const critUrg = nodo.criticidadUrgencia || (nodo as any).criticidad || (nodo as any).impacto || 2;
-    const urgUrg = nodo.urgenciaUrgencia || nodo.urgencia || 2;
-    const scUrg = nodo.scoreUrgencia || nodo.score || (critUrg * urgUrg);
-    const pUrg = nodo.prioridadUrgencia || (nodo as any).prioridad || 'Medio';
+    const critUrg = nodo.criticidad || (nodo as any).impacto || 2;
+    const urgUrg = nodo.urgencia || 2;
+    const scUrg = nodo.score || (critUrg * urgUrg);
+    const pUrg = nodo.prioridad || 'Medio';
 
-    const critAten = nodo.criticidadAtencion || critUrg;
-    const urgAten = nodo.urgenciaAtencion || urgUrg;
-    const scAten = nodo.scoreAtencion || (critAten * urgAten);
-    const pAten = (nodo.prioridadAtencion || raiz.prioridadAtencion || 'Medio') as any;
-    const scGlobal = nodo.scoreGlobal || (scUrg + scAten);
+    const scGlobal = (nodo as any).scoreGlobal || scUrg;
+
+    const tiempoRes = nodo.tiempoResolucion || raiz.tiempoResolucion;
+    const unidadRes = nodo.unidadResolucion || raiz.unidadResolucion || 'h';
+    const horasRes = nodo.horasResolucion || raiz.horasResolucion || (tiempoRes ? (unidadRes === 'm' ? Math.round((tiempoRes / 60) * 100) / 100 : (unidadRes === 'd' ? tiempoRes * 24 : tiempoRes)) : undefined);
 
     this.nodoSeleccionadoId = String(nodo.id);
     this.nodoSeleccionado = {
@@ -289,19 +287,13 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       nombreCategoria: raiz.nombre,
       nombreSubcategoria: esSub ? nodo.nombre : null,
       rutaCompleta,
-      prioridad: pUrg,
-      prioridadUrgencia: pUrg,
-      prioridadAtencion: pAten,
-      criticidadUrgencia: critUrg,
-      urgenciaUrgencia: urgUrg,
-      scoreUrgencia: scUrg,
-      criticidadAtencion: critAten,
-      urgenciaAtencion: urgAten,
-      scoreAtencion: scAten,
-      scoreGlobal: scGlobal,
+      prioridad: pUrg as any,
       score: scUrg,
       criticidad: critUrg,
-      urgencia: urgUrg
+      urgencia: urgUrg,
+      tiempoResolucion: tiempoRes,
+      unidadResolucion: unidadRes,
+      horasResolucion: horasRes
     };
 
     this.alSeleccionar.emit(this.nodoSeleccionado);

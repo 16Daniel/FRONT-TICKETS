@@ -71,8 +71,8 @@
           <span class="nodo-ruta-padre">{{ item.rutaCompleta }}</span>
         </div>
         <div class="nodo-metadatos">
-          <span class="insignia-prioridad" [ngClass]="obtenerClasePrioridad(item.nodo.prioridadUrgencia)">
-            {{ item.nodo.prioridadUrgencia || 'Medio' }}
+          <span class="insignia-prioridad" [ngClass]="obtenerClasePrioridad(item.nodo.prioridad)">
+            {{ item.nodo.prioridad || 'Medio' }}
           </span>
         </div>
       </div>
@@ -106,8 +106,8 @@
           </span>
           <i *ngIf="esRama(n)" class="bx bx-chevron-right icono-flecha-rama"></i>
 
-          <span *ngIf="!esRama(n)" class="insignia-prioridad" [ngClass]="obtenerClasePrioridad(n.prioridadUrgencia)">
-            {{ n.prioridadUrgencia || 'Medio' }}
+          <span *ngIf="!esRama(n)" class="insignia-prioridad" [ngClass]="obtenerClasePrioridad(n.prioridad)">
+            {{ n.prioridad || 'Medio' }}
           </span>
         </div>
       </div>

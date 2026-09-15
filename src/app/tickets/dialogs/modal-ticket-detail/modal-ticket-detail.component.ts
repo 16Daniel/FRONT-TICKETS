@@ -16,7 +16,11 @@ import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialo
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { CategoriesService } from '../../services/categories.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticket-sla-gauge.component';
+import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgencia/mini-matriz-urgencia.component';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -30,7 +34,8 @@ import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticke
     CardModule,
     TooltipModule,
     ModalVisorImagenesComponent,
-    TicketSlaGaugeComponent
+    TicketSlaGaugeComponent,
+    MiniMatrizUrgenciaComponent
   ],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
@@ -45,13 +50,17 @@ export class ModalTicketDetailComponent implements OnInit {
   idSucursalEspecialista: string = '';
   urlVisorImagen: string = '';
   sucursales: any[] = [];
+  categorias: any[] = [];
+  estatusTickets: EstatusTicket[] = [];
 
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
     public datesHelper: DatesHelperService,
     private areasService: AreasService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private categoriesService: CategoriesService,
+    private statusTicketService: StatusTicketService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -64,6 +73,23 @@ export class ModalTicketDetailComponent implements OnInit {
         error: () => {}
       });
     }
+
+    this.categoriesService.get().subscribe({
+      next: (data) => {
+        this.categorias = data.map((item: any) => ({
+          ...item,
+          id: item.id.toString()
+        }));
+      },
+      error: () => {}
+    });
+
+    this.statusTicketService.get().subscribe({
+      next: (data) => {
+        this.estatusTickets = data;
+      },
+      error: () => {}
+    });
   }
 
   onHide() {
@@ -114,29 +140,18 @@ export class ModalTicketDetailComponent implements OnInit {
     return found?.nombre || `Sucursal ${idSucursal}`;
   }
 
-  obtenerStatusLabel(idStatus?: string): string {
-    switch (idStatus) {
-      case '1': return 'Nuevo';
-      case '2': return 'En Proceso';
-      case '3': return 'Finalizado';
-      case '4': return 'Pausado';
-      case '5': return 'Compras';
-      case '6': return 'Validación Compras';
-      case '7': return 'Validación Admin';
-      default: return 'Desconocido';
-    }
+  obtenerEstatus(idStatus?: string): EstatusTicket | undefined {
+    if (!idStatus) return undefined;
+    return this.estatusTickets.find(s => String(s.id) === String(idStatus));
   }
 
-  obtenerStatusColor(idStatus?: string): { bg: string; text: string; border: string; dot: string } {
-    switch (idStatus) {
-      case '1': return { bg: '#EFF6FF', text: '#0F62FE', border: '#BFDBFE', dot: '#0F62FE' };
-      case '2': return { bg: '#FFFBEB', text: '#D97706', border: '#FDE68A', dot: '#F59E0B' };
-      case '3': return { bg: '#F0FDF4', text: '#16A34A', border: '#BBF7D0', dot: '#10B981' };
-      case '4': return { bg: '#F3E8FF', text: '#8A00DA', border: '#E9D5FF', dot: '#8A00DA' };
-      case '5': return { bg: '#EFF6FF', text: '#0F62FE', border: '#BFDBFE', dot: '#0F62FE' };
-      case '7': return { bg: '#F3E8FF', text: '#8A00DA', border: '#E9D5FF', dot: '#8A00DA' };
-      default: return { bg: '#F1F5F9', text: '#64748B', border: '#CBD5E1', dot: '#94A3B8' };
-    }
+  getEstatusStyle(estatus?: EstatusTicket): any {
+    const c = estatus?.color && estatus.color.startsWith('#') ? estatus.color : '#64748B';
+    return {
+      'background-color': c + '1A',
+      'color': c,
+      'border': '1px solid ' + c + '40'
+    };
   }
 
   obtenerPrioridadColor(prio?: string): { bg: string; text: string; border: string } {

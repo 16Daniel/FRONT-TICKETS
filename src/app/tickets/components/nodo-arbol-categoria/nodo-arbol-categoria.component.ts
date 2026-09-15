@@ -6,7 +6,6 @@ import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { clasificarCuadrante } from '../../helpers/matriz-criticidad.helper';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
-import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
 import { FormularioNodoCategoriaComponent } from '../formulario-nodo-categoria/formulario-nodo-categoria.component';
 
 @Component({
@@ -27,7 +26,6 @@ export class NodoArbolCategoriaComponent {
   @Input() categoriaRaiz!: Categoria;
   @Input() idArea?: string = '';
   @Input() matrizUrgencia?: MatrizUrgencia | null = null;
-  @Input() matrizAtencion?: MatrizAtencion | null = null;
   @Input() estaExpandido: boolean = false;
   @Input() filtroTexto: string = '';
   @Input() idNodoEnEdicion: string | null = null;
@@ -81,5 +79,21 @@ export class NodoArbolCategoriaComponent {
 
   alGuardarEdicion(datos: ResultadoFormularioNodo): void {
     this.guardarEdicion.emit({ nodoId: String(this.nodo.id), datos });
+  }
+
+  obtenerLabelTiempoResolucion(nodo: Categoria | Subcategoria): string {
+    if (nodo.tiempoResolucion) {
+      return `${nodo.tiempoResolucion} ${nodo.unidadResolucion || 'h'}`;
+    }
+    if (nodo.horasResolucion) {
+      if (nodo.horasResolucion < 1) {
+        return `${Math.round(nodo.horasResolucion * 60)} m`;
+      }
+      if (nodo.horasResolucion >= 24 && nodo.horasResolucion % 24 === 0) {
+        return `${nodo.horasResolucion / 24} d`;
+      }
+      return `${nodo.horasResolucion} h`;
+    }
+    return '';
   }
 }

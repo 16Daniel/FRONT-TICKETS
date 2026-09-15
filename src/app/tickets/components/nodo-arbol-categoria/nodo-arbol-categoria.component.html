@@ -46,9 +46,13 @@
               {{ clasificarCuadrante(nodo.score || 4).label }}
             </span>
 
-            <span *ngIf="!esRama(nodo) && nodo.prioridadAtencion" class="insignia-pildora insignia-atencion" pTooltip="SLA de resolución (Matriz de Atención)" tooltipPosition="top">
-              <i class="bx bx-timer"></i>
-              <span>Atención: {{ nodo.prioridadAtencion }}</span>
+            <!-- Insignia Tiempo de Resolución Configurado -->
+            <span *ngIf="!esRama(nodo) && (nodo.horasResolucion || nodo.tiempoResolucion)" 
+                  class="insignia-pildora pildora-tiempo-resolucion" 
+                  pTooltip="Tiempo de resolución configurado para esta categoría" 
+                  tooltipPosition="top">
+              <i class="bx bx-time-five"></i>
+              {{ obtenerLabelTiempoResolucion(nodo) }}
             </span>
 
             <!-- Conteo de subcategorías para ramas -->
@@ -112,7 +116,6 @@
       modo="editar"
       [idArea]="idArea"
       [matrizUrgencia]="matrizUrgencia"
-      [matrizAtencion]="matrizAtencion"
       [nodoEditar]="nodo"
       [bloquearCambioTipo]="obtenerHijosActivos(nodo).length > 0"
       [esAnidado]="profundidad > 0"
@@ -127,7 +130,6 @@
       modo="crear-hijo"
       [idArea]="idArea"
       [matrizUrgencia]="matrizUrgencia"
-      [matrizAtencion]="matrizAtencion"
       [nombrePadre]="nodo.nombre"
       [esAnidado]="true"
       (guardar)="alGuardarHijo($event)"
@@ -144,7 +146,6 @@
         [categoriaRaiz]="categoriaRaiz"
         [idArea]="idArea"
         [matrizUrgencia]="matrizUrgencia"
-        [matrizAtencion]="matrizAtencion"
         [estaExpandido]="hijoEstaExpandido(hijo.id)"
         [filtroTexto]="filtroTexto"
         [idNodoEnEdicion]="idNodoEnEdicion"

@@ -156,29 +156,18 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.nombreSubcategoria = seleccion.nombreSubcategoria || '';
 
     // Urgencia (3×3)
-    const critUrg = seleccion.criticidadUrgencia || seleccion.subcategoria?.criticidadUrgencia || seleccion.categoria?.criticidadUrgencia || seleccion.criticidad || 2;
-    const urgUrg = seleccion.urgenciaUrgencia || seleccion.subcategoria?.urgenciaUrgencia || seleccion.categoria?.urgenciaUrgencia || seleccion.urgencia || 2;
-    const scoreUrg = seleccion.scoreUrgencia || seleccion.score || (critUrg * urgUrg);
-    const prioUrg = seleccion.prioridadUrgencia || seleccion.prioridad || 'Medio';
+    const critUrg = seleccion.criticidad || seleccion.subcategoria?.criticidad || seleccion.categoria?.criticidad || 2;
+    const urgUrg = seleccion.urgencia || seleccion.subcategoria?.urgencia || seleccion.categoria?.urgencia || 2;
+    const scoreUrg = seleccion.score || (critUrg * urgUrg);
+    const prioUrg = seleccion.prioridad || seleccion.subcategoria?.prioridad || seleccion.categoria?.prioridad || 'Medio';
 
-    this.ticket.criticidadUrgencia = Math.min(3, Math.max(1, critUrg));
-    this.ticket.urgenciaUrgencia = Math.min(3, Math.max(1, urgUrg));
-    this.ticket.scoreUrgencia = scoreUrg;
-    this.ticket.prioridadUrgencia = prioUrg as any;
-
-    // Atención (3×3)
-    const critAten = seleccion.criticidadAtencion || seleccion.subcategoria?.criticidadAtencion || seleccion.categoria?.criticidadAtencion || this.ticket.criticidadUrgencia;
-    const urgAten = seleccion.urgenciaAtencion || seleccion.subcategoria?.urgenciaAtencion || seleccion.categoria?.urgenciaAtencion || this.ticket.urgenciaUrgencia;
-    const scoreAten = seleccion.scoreAtencion || (critAten * urgAten);
-    const prioAten = seleccion.prioridadAtencion || seleccion.subcategoria?.prioridadAtencion || seleccion.categoria?.prioridadAtencion || 'Medio';
-
-    this.ticket.criticidadAtencion = Math.min(3, Math.max(1, critAten));
-    this.ticket.urgenciaAtencion = Math.min(3, Math.max(1, urgAten));
-    this.ticket.scoreAtencion = scoreAten;
-    this.ticket.prioridadAtencion = prioAten as any;
-
-    // Global
-    this.ticket.scoreGlobal = seleccion.scoreGlobal || (scoreUrg + scoreAten);
+    this.ticket.criticidad = Math.min(3, Math.max(1, critUrg));
+    this.ticket.urgencia = Math.min(3, Math.max(1, urgUrg));
+    this.ticket.score = scoreUrg;
+    this.ticket.prioridad = prioUrg as any;
+    this.ticket.tiempoResolucion = seleccion.tiempoResolucion;
+    this.ticket.unidadResolucion = seleccion.unidadResolucion;
+    this.ticket.horasResolucion = seleccion.horasResolucion;
   }
 
   onLimpiarCategoria(): void {
@@ -187,15 +176,13 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.nombreCategoria = '';
     this.ticket.idSubcategoria = null;
     this.ticket.nombreSubcategoria = '';
-    this.ticket.criticidadUrgencia = undefined;
-    this.ticket.urgenciaUrgencia = undefined;
-    this.ticket.scoreUrgencia = undefined;
-    this.ticket.prioridadUrgencia = undefined;
-    this.ticket.criticidadAtencion = undefined;
-    this.ticket.urgenciaAtencion = undefined;
-    this.ticket.scoreAtencion = undefined;
-    this.ticket.prioridadAtencion = undefined;
-    this.ticket.scoreGlobal = undefined;
+    this.ticket.criticidad = undefined;
+    this.ticket.urgencia = undefined;
+    this.ticket.score = undefined;
+    this.ticket.prioridad = undefined;
+    this.ticket.tiempoResolucion = undefined;
+    this.ticket.unidadResolucion = undefined;
+    this.ticket.horasResolucion = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {

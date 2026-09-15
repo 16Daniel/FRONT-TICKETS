@@ -121,46 +121,15 @@
       </div>
     </div>
 
-    <!-- Pestañas Selectoras de Tipo de Matriz (cuando el panel está abierto) -->
-    <div class="contenedor-pestanas-matrices mb-3" *ngIf="mostrarConfiguracionMatriz">
-      <div class="matriz-selector-tabs">
-        <button 
-          type="button" 
-          class="tab-matriz-btn"
-          [class.is-active]="tipoMatrizConfiguracion === 'urgencia'"
-          (click)="tipoMatrizConfiguracion = 'urgencia'">
-          <i class="bx bx-grid-alt"></i>
-          <span>Matriz de Urgencia (3×3) · Inicio</span>
-        </button>
-
-        <button 
-          type="button" 
-          class="tab-matriz-btn"
-          [class.is-active]="tipoMatrizConfiguracion === 'atencion'"
-          (click)="tipoMatrizConfiguracion = 'atencion'">
-          <i class="bx bx-timer"></i>
-          <span>Matriz de Atención (2×2) · Resolución</span>
-        </button>
-      </div>
-    </div>
 
     <!-- Componente de Configuración de Matriz de Urgencia por Área (3x3) -->
     <app-configuracion-matriz-urgencia
-      *ngIf="mostrarConfiguracionMatriz && tipoMatrizConfiguracion === 'urgencia'"
+      *ngIf="mostrarConfiguracionMatriz"
       [idArea]="areaSeleccionadaId"
       [nombreArea]="areaActual?.nombre || ''"
       (guardado)="alGuardarMatriz($event)"
       (cerrar)="mostrarConfiguracionMatriz = false">
     </app-configuracion-matriz-urgencia>
-
-    <!-- Componente de Configuración de Matriz de Atención por Área (2x2) -->
-    <app-configuracion-matriz-atencion
-      *ngIf="mostrarConfiguracionMatriz && tipoMatrizConfiguracion === 'atencion'"
-      [idArea]="areaSeleccionadaId"
-      [nombreArea]="areaActual?.nombre || ''"
-      (guardado)="alGuardarMatrizAtencion($event)"
-      (cerrar)="mostrarConfiguracionMatriz = false">
-    </app-configuracion-matriz-atencion>
 
     <!-- Componente Ficha Guía Desplegable -->
     <app-tarjeta-guia-matriz 
@@ -175,7 +144,6 @@
         [nombreArea]="areaActual?.nombre"
         [idArea]="areaSeleccionadaId"
         [matrizUrgencia]="matrizUrgenciaActual"
-        [matrizAtencion]="matrizAtencionActual"
         (guardar)="guardarNuevoNodo('RAIZ', $event)"
         (cancelar)="cancelarFormulario()">
       </app-formulario-nodo-categoria>
@@ -205,7 +173,6 @@
           [categoriaRaiz]="cat"
           [idArea]="areaSeleccionadaId"
           [matrizUrgencia]="matrizUrgenciaActual"
-          [matrizAtencion]="matrizAtencionActual"
           [estaExpandido]="estaExpandido(cat.id)"
           [filtroTexto]="filtroTexto"
           [idNodoEnEdicion]="idNodoEnEdicion"

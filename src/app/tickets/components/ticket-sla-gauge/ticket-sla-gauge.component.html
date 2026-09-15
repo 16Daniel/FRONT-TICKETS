@@ -1,56 +1,61 @@
 <div class="ticket-sla-gauge-wrapper" [pTooltip]="tooltipTexto" tooltipPosition="top" [tooltipStyleClass]="'sla-gauge-custom-tooltip'">
   <svg [attr.width]="size" [attr.height]="size" viewBox="0 0 76 76" class="sla-gauge-svg">
-    <!-- Pista de fondo Urgencia (Exterior) -->
-    <circle
-      cx="38"
-      cy="38"
-      [attr.r]="radioExterior"
-      class="gauge-track"
-      [attr.stroke]="trackColorExterior"
-      stroke-width="5"
-      fill="none"
-    />
+    <!-- Grupo Urgencia (Exterior) -->
+    <g [class.pulsar-alerta]="urgenciaVencida && !urgenciaAtendida">
+      <!-- Pista de fondo Urgencia (Exterior) -->
+      <circle
+        cx="38"
+        cy="38"
+        [attr.r]="radioExterior"
+        class="gauge-track gauge-track-exterior"
+        [attr.stroke]="trackColorExterior"
+        stroke-width="5"
+        fill="none"
+      />
 
-    <!-- Arco de progreso Urgencia (Exterior) -->
-    <circle
-      cx="38"
-      cy="38"
-      [attr.r]="radioExterior"
-      class="gauge-progress gauge-exterior"
-      [attr.stroke]="colorExterior"
-      stroke-width="5"
-      fill="none"
-      stroke-linecap="round"
-      [attr.stroke-dasharray]="perimetroExterior"
-      [attr.stroke-dashoffset]="offsetExterior"
-      transform="rotate(-90 38 38)"
-    />
+      <!-- Arco de progreso Urgencia (Exterior) -->
+      <circle
+        cx="38"
+        cy="38"
+        [attr.r]="radioExterior"
+        class="gauge-progress gauge-exterior"
+        [attr.stroke]="colorExterior"
+        stroke-width="5"
+        fill="none"
+        stroke-linecap="round"
+        [attr.stroke-dasharray]="perimetroExterior"
+        [attr.stroke-dashoffset]="offsetExterior"
+        transform="rotate(-90 38 38)"
+      />
+    </g>
 
-    <!-- Pista de fondo Atención (Interior) -->
-    <circle
-      cx="38"
-      cy="38"
-      [attr.r]="radioInterior"
-      class="gauge-track"
-      [attr.stroke]="trackColorInterior"
-      stroke-width="5"
-      fill="none"
-    />
+    <!-- Grupo Tiempo de Resolución (Interior, tipo Pie Chart) -->
+    <g [class.pulsar-alerta]="resolucionVencida && !resolucionCompletada">
+      <!-- Pista de fondo Tiempo de Resolución (Interior) -->
+      <circle
+        cx="38"
+        cy="38"
+        [attr.r]="radioInterior"
+        class="gauge-track gauge-track-interior"
+        [attr.stroke]="trackColorInterior"
+        stroke-width="23"
+        fill="none"
+      />
 
-    <!-- Arco de progreso Atención (Interior) -->
-    <circle
-      cx="38"
-      cy="38"
-      [attr.r]="radioInterior"
-      class="gauge-progress gauge-interior"
-      [attr.stroke]="colorInterior"
-      stroke-width="5"
-      fill="none"
-      stroke-linecap="round"
-      [attr.stroke-dasharray]="perimetroInterior"
-      [attr.stroke-dashoffset]="offsetInterior"
-      transform="rotate(-90 38 38)"
-    />
-
+      <!-- Arco de progreso Tiempo de Resolución (Interior) -->
+      <circle
+        cx="38"
+        cy="38"
+        [attr.r]="radioInterior"
+        class="gauge-progress gauge-interior"
+        [attr.stroke]="colorInterior"
+        stroke-width="23"
+        fill="none"
+        stroke-linecap="butt"
+        [attr.stroke-dasharray]="perimetroInterior"
+        [attr.stroke-dashoffset]="offsetInterior"
+        transform="rotate(-90 38 38)"
+      />
+    </g>
   </svg>
 </div>

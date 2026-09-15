@@ -6,20 +6,9 @@ export interface ResultadoFormularioNodo {
   urgencia?: number;
   score?: number;
   prioridad?: string;
+  tiempoResolucion?: number;
+  unidadResolucion?: 'm' | 'h' | 'd';
+  horasResolucion?: number;
 
-  // Urgencia (3×3)
-  criticidadUrgencia?: number;
-  urgenciaUrgencia?: number;
-  scoreUrgencia?: number;
-  prioridadUrgencia?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
 
-  // Atención (3×3)
-  criticidadAtencion?: number;
-  urgenciaAtencion?: number;
-  scoreAtencion?: number;
-  prioridadAtencion?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
-
-  // Global
-  scoreGlobal?: number;
 }
-

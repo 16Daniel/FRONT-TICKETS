@@ -4,8 +4,7 @@
     [(selection)]="ticketSeleccionado">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Tiempos SLA (Urgencia exterior · Atención interior) y Score Global ponderado (2-18 pts)" tooltipPosition="top">SLA / SCORE</th>
-            <th>FOLIO</th>
+            <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA</th>
             <th>FECHA</th>
             <th>AREA</th>
             <th>CATEGORÍA / RUTA</th>
@@ -19,47 +18,17 @@
     <ng-template pTemplate="body" let-tk>
         <tr [pSelectableRow]="tk" class="bg-opacity-25"
             [ngClass]="{'bg-warning':tk.idEstatusTicket == '7', 'texto-negro':tk.idEstatusTicket == '7'}">
-            <td class="text-center celda-criticidad-matriz">
+            <td class="text-center celda-criticidad-matriz"
+                [ngStyle]="{'box-shadow': 'inset 6px 0 0 0 ' + (obtenerEstatusInfo(tk.idEstatusTicket)?.color || 'transparent')}">
                 <div class="contenedor-criticidad-celda">
-                    <!-- Gráfica Circular Dual SLA (Urgencia exterior + Atención interior) -->
-                    <app-ticket-sla-gauge [ticket]="tk" [size]="50"></app-ticket-sla-gauge>
-
-                    <!-- Micro-Pill / Badge de Score Global (2 a 18 pts) -->
-                    <div class="badge-score-global"
-                         [ngClass]="obtenerClaseScoreGlobal(tk)"
-                         [pTooltip]="obtenerTooltipScoreGlobal(tk)"
-                         tooltipPosition="top">
-                        <i class="bx bxs-zap"></i>
-                        <span class="score-valor">{{ obtenerScoreGlobal(tk) }}</span>
-                        <span class="score-label">pts</span>
+                    <!-- Fila Dual SLA Gauge + Mini Matriz de Urgencia 3x3 -->
+                    <div class="fila-sla-matriz">
+                        <!-- Mini Matriz 3x3 de Urgencia -->
+                        <app-mini-matriz-urgencia [ticket]="tk" [categorias]="categorias"></app-mini-matriz-urgencia>
+                        
+                        <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
+                        <app-ticket-sla-gauge [ticket]="tk" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
                     </div>
-
-                    <!-- Matrices 3x3 ocultas temporalmente
-                    <div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(tk)" tooltipPosition="top">
-                        <div class="mini-matriz-grid">
-                            <span *ngFor="let celda of celdasMatriz"
-                                class="celda-mm"
-                                [class.activa]="esCeldaActiva(tk, celda.impacto, celda.urgencia)"
-                                [style.backgroundColor]="esCeldaActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatriz(tk) : ''">
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="mini-matriz-wrapper mini-matriz-atencion" [pTooltip]="obtenerTooltipMatrizAtencion(tk)" tooltipPosition="top">
-                        <div class="mini-matriz-grid">
-                            <span *ngFor="let celda of celdasMatrizAtencion"
-                                class="celda-mm"
-                                [class.activa]="esCeldaAtencionActiva(tk, celda.impacto, celda.urgencia)"
-                                [style.backgroundColor]="esCeldaAtencionActiva(tk, celda.impacto, celda.urgencia) ? obtenerColorMatrizAtencion(tk) : ''">
-                            </span>
-                        </div>
-                    </div>
-                    -->
-
-                    <!-- Badge de Prioridad del Cuadrante -->
-                    <!-- <span class="badge-prioridad-cuadrante" [ngClass]="obtenerClaseCuadrante(tk)">
-                        {{ obtenerNombrePrioridad(tk) }}
-                    </span> -->
 
                     <div *ngIf="tk.esAsignadoEspecialista"
                         [pTooltip]="obtenerNombreResponsable(tk.idUsuarioEspecialista)" tooltipPosition="top"
@@ -67,7 +36,6 @@
                     </div>
                 </div>
             </td>
-            <td class="text-center fw-bold">{{tk.folio}}</td>
             <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
             </td>
             <td class="text-center">
@@ -135,7 +103,7 @@
             </td>
             <td class="text-center">{{ tk.solicitante | uppercase }}</td>
             <td class="text-center">
-                {{ obtenerNombreResponsable(tk.idResponsableFinaliza) }}
+                {{ obtenerNombreResponsable(tk.idResponsableFinaliza) | uppercase }}
             </td>
             <td class="text-center">
                 <p-dropdown 
@@ -157,33 +125,30 @@
             </td>
             <td *ngIf="mostrarAcciones">
                 <div class="d-flex justify-content-center align-items-center gap-2">
-                    <button class="btn btn-warning btn-sm rounded-2" (click)="onClickRechazar(tk)"
-                        *ngIf="mostrarAccionFinalizar && tk.idEstatusTicket == '7'">
-                        <i class="bx bx-undo" pTooltip="RECHAZAR SOPORTE" tooltipPosition="top"></i>
+                    <button class="btn-action-table btn-action-warning" (click)="onClickRechazar(tk)"
+                        *ngIf="mostrarAccionFinalizar && tk.idEstatusTicket == '7'" pTooltip="RECHAZAR SOPORTE" tooltipPosition="top">
+                        <i class="bx bx-undo"></i>
                     </button>
 
-                    <button class="btn btn-sm rounded-2" style="background-color: #8a00da; color: white;"
-                        (click)="onClickValidacionAdmin(tk)"
-                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket == '3'">
-                        <i class="bx bxs-badge-check" pTooltip="VALIDACIÓN ADMINISTRADOR" tooltipPosition="top"></i>
+                    <button class="btn-action-table btn-action-admin" (click)="onClickValidacionAdmin(tk)"
+                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket == '3'" pTooltip="VALIDACIÓN ADMINISTRADOR" tooltipPosition="top">
+                        <i class="bx bxs-badge-check"></i>
                     </button>
 
-                    <button class="btn btn-warning btn-sm rounded-2" (click)="onClickValidar(tk)"
-                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket != '3'">
-                        <i class="bx bx-check-circle" pTooltip="VALIDAR TICKET" tooltipPosition="top"></i>
+                    <button class="btn-action-table btn-action-warning" (click)="onClickValidar(tk)"
+                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket != '3'" pTooltip="VALIDAR TICKET" tooltipPosition="top">
+                        <i class="bx bx-check-circle"></i>
                     </button>
-                    <button class="btn btn-primary btn-sm rounded-2 btn-notification" (click)="onClickChat(tk)"
-                        *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(tk)}">
-                        <i class="bx bx-message-square-dots text-white" pTooltip="CHAT" tooltipPosition="top"></i>
+                    
+                    <button class="btn-action-table btn-action-primary" (click)="onClickChat(tk)"
+                        *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(tk)}" pTooltip="CHAT" tooltipPosition="top">
+                        <i class="bx bx-message-square-dots"></i>
                     </button>
-                    <button class="btn btn-info btn-sm rounded-2 text-white" pTooltip="DETALLES" tooltipPosition="top"
-                        (click)="abrirModalDetalleTicket(tk)">
+                    
+                    <button class="btn-action-table btn-action-info" (click)="abrirModalDetalleTicket(tk)"
+                        pTooltip="DETALLES" tooltipPosition="top">
                         <i class="bx bx-show"></i>
                     </button>
-                    <!-- <button *ngIf="(tk != undefined && obtenerNombrePrioridad(tk) != 'CRÍTICO')" class="btn btn-dark btn-sm rounded-2"
-                        (click)="onPanicoClick(tk!.id)">
-                        <i class="bx bxs-hot text-white" pTooltip="PÁNICO" tooltipPosition="top"></i>
-                    </button> -->
                 </div>
             </td>
         </tr>

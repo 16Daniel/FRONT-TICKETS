@@ -1,0 +1,9 @@
+<div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(ticket)" tooltipPosition="top">
+    <div class="mini-matriz-grid">
+        <span *ngFor="let celda of celdasMatriz"
+            class="celda-mm"
+            [class.activa]="esCeldaActiva(ticket, celda.impacto, celda.urgencia)"
+            [style.backgroundColor]="esCeldaActiva(ticket, celda.impacto, celda.urgencia) ? obtenerColorMatriz(ticket) : ''">
+        </span>
+    </div>
+</div>

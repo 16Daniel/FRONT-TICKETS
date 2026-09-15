@@ -4,11 +4,11 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 import { Ticket } from '../../interfaces/ticket.model';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
-import { MatrizAtencion } from '../../interfaces/matriz-atencion.interface';
+import { Categoria } from '../../interfaces/categoria.mdoel';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { obtenerTiempoSla } from '../../helpers/matriz-criticidad.helper';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { MatrizAtencionService } from '../../services/matriz-atencion.service';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-ticket-sla-gauge',
@@ -20,10 +20,10 @@ import { MatrizAtencionService } from '../../services/matriz-atencion.service';
 export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() ticket!: Ticket;
   @Input() matrizUrgencia?: MatrizUrgencia | null;
-  @Input() matrizAtencion?: MatrizAtencion | null;
+  @Input() categorias?: Categoria[];
   @Input() size: number = 74;
 
-  // Anillo exterior: Urgencia
+  // Anillo exterior: Matriz de Urgencia
   radioExterior = 30;
   perimetroExterior = 2 * Math.PI * 30; // ~188.5
   offsetExterior = 188.5;
@@ -35,34 +35,36 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   urgenciaVencida = false;
   urgenciaAtendida = false;
 
-  // Anillo interior: Atención
-  radioInterior = 21;
-  perimetroInterior = 2 * Math.PI * 21; // ~131.95
-  offsetInterior = 131.95;
-  colorInterior = '#4ADE80';
-  trackColorInterior = '#EDF2F7';
-  porcentajeAtencion = 0;
-  horasAtencionSla = 24;
-  horasAtencionTranscurridas = 0;
-  atencionIniciada = false;
-  atencionVencida = false;
-  atencionCompletada = false;
+  // Anillo interior: Tiempo de Resolución (Grafica de pie)
+  radioInterior = 11.5;
+  perimetroInterior = 2 * Math.PI * 11.5; // ~72.2566
+  offsetInterior = 72.2566;
+  colorInterior = '#10B981';
+  trackColorInterior = '#E2E8F0';
+  porcentajeResolucion = 0;
+  horasResolucionSla = 24;
+  horasResolucionTranscurridas = 0;
+  resolucionVencida = false;
+  resolucionCompletada = false;
+  resolucionIniciada = false;
+  tiempoResolucionOriginal?: number;
+  unidadResolucionOriginal?: 'm' | 'h' | 'd';
 
   folioCorto = '';
   tooltipTexto = '';
   private timerId: any = null;
 
   private matrizUrgenciaLocal?: MatrizUrgencia | null;
-  private matrizAtencionLocal?: MatrizAtencion | null;
   private subUrgencia?: Subscription;
-  private subAtencion?: Subscription;
   private currentAreaUrgencia: string = '';
-  private currentAreaAtencion: string = '';
+
+  private subCategorias?: Subscription;
+  private categoriasLocales: Categoria[] = [];
 
   constructor(
     private datesHelper: DatesHelperService,
     private matrizUrgenciaService: MatrizUrgenciaService,
-    private matrizAtencionService: MatrizAtencionService,
+    private categoriesService: CategoriesService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -76,7 +78,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ticket'] || changes['matrizUrgencia'] || changes['matrizAtencion']) {
+    if (changes['ticket'] || changes['matrizUrgencia'] || changes['categorias']) {
       this.cargarMatricesSiEsNecesario();
       this.calcularMetricas();
     }
@@ -87,7 +89,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
       clearInterval(this.timerId);
     }
     this.subUrgencia?.unsubscribe();
-    this.subAtencion?.unsubscribe();
+    this.subCategorias?.unsubscribe();
   }
 
   private cargarMatricesSiEsNecesario(): void {
@@ -114,24 +116,15 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
       this.subUrgencia?.unsubscribe();
     }
 
-    if (!this.matrizAtencion) {
-      if (this.currentAreaAtencion !== idArea) {
-        this.currentAreaAtencion = idArea;
-        this.subAtencion?.unsubscribe();
-        this.subAtencion = this.matrizAtencionService
-          .obtenerMatrizPorArea(idArea)
-          .subscribe({
-            next: (matriz) => {
-              this.matrizAtencionLocal = matriz;
-              this.calcularMetricas();
-              this.cdr.markForCheck();
-            },
-            error: (err) => console.error('Error al cargar matriz de atención en gauge:', err)
-          });
-      }
-    } else {
-      this.matrizAtencionLocal = null;
-      this.subAtencion?.unsubscribe();
+    if (!this.categorias && this.categoriasLocales.length === 0) {
+      this.subCategorias = this.categoriesService.get().subscribe({
+        next: (cats) => {
+          this.categoriasLocales = cats || [];
+          this.calcularMetricas();
+          this.cdr.markForCheck();
+        },
+        error: (err) => console.error('Error al cargar categorías en gauge:', err)
+      });
     }
   }
 
@@ -140,11 +133,11 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
 
     this.folioCorto = this.obtenerFolioCorto(this.ticket.folio);
 
-    // 1. CÁLCULO DE URGENCIA (Círculo Exterior)
+    // 1. CÁLCULO DE URGENCIA (Círculo Exterior - Matriz de Urgencia)
     this.calcularUrgencia();
 
-    // 2. CÁLCULO DE ATENCIÓN (Círculo Interior)
-    this.calcularAtencion();
+    // 2. CÁLCULO DE RESOLUCIÓN (Círculo Interior - Tiempo de Resolución)
+    this.calcularResolucion();
 
     // 3. GENERAR TOOLTIP
     this.generarTooltip();
@@ -154,8 +147,8 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     const fechaCreacion = this.extraerFecha(this.ticket.fecha) || new Date();
 
     // Meta SLA Urgencia (3×3)
-    const impactoUrg = Math.min(3, Math.max(1, this.ticket.criticidadUrgencia || 2));
-    const urgenciaUrg = Math.min(3, Math.max(1, this.ticket.urgenciaUrgencia || 2));
+    const impactoUrg = Math.min(3, Math.max(1, this.ticket.criticidad || 2));
+    const urgenciaUrg = Math.min(3, Math.max(1, this.ticket.urgencia || 2));
 
     const matriz = this.matrizUrgencia || this.matrizUrgenciaLocal;
     if (matriz && matriz.celdas && matriz.celdas.length > 0) {
@@ -186,7 +179,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     const progressExterior = Math.min(1, Math.max(0.04, this.porcentajeUrgencia / 100));
     this.offsetExterior = this.perimetroExterior * (1 - progressExterior);
 
-    // Color semáforo Urgencia (según referencia: verde, ámbar o rojo)
+    // Color semáforo Urgencia
     if (this.urgenciaVencida) {
       this.colorExterior = '#EF4444'; // Rojo / Vencido
       this.trackColorExterior = '#FEE2E2';
@@ -199,93 +192,170 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private calcularAtencion(): void {
-    const fechaAtencion = this.extraerFecha(this.ticket.fechaAtencion);
+  private resolverHorasResolucion(): number {
+    this.tiempoResolucionOriginal = undefined;
+    this.unidadResolucionOriginal = undefined;
 
-    // Meta SLA Atención (3×3)
-    const impactoAten = Math.min(3, Math.max(1, this.ticket.criticidadAtencion || this.ticket.criticidadUrgencia || 2));
-    const urgenciaAten = Math.min(3, Math.max(1, this.ticket.urgenciaAtencion || this.ticket.urgenciaUrgencia || 2));
-
-    const matriz = this.matrizAtencion || this.matrizAtencionLocal;
-    if (matriz && matriz.celdas && matriz.celdas.length > 0) {
-      const celda = matriz.celdas.find(c => c.impacto === impactoAten && c.urgencia === urgenciaAten);
-      this.horasAtencionSla = celda?.horas ?? 24;
-    } else {
-      this.horasAtencionSla = obtenerTiempoSla(impactoAten, urgenciaAten).horas;
+    // 1. Directamente en el ticket
+    if (this.ticket.horasResolucion && this.ticket.horasResolucion > 0) {
+      this.tiempoResolucionOriginal = this.ticket.tiempoResolucion;
+      this.unidadResolucionOriginal = this.ticket.unidadResolucion;
+      return this.ticket.horasResolucion;
     }
 
+    if (this.ticket.tiempoResolucion && this.ticket.tiempoResolucion > 0) {
+      const u = this.ticket.unidadResolucion || 'h';
+      this.tiempoResolucionOriginal = this.ticket.tiempoResolucion;
+      this.unidadResolucionOriginal = u;
+      if (u === 'm') return Math.round((this.ticket.tiempoResolucion / 60) * 100) / 100;
+      if (u === 'd') return this.ticket.tiempoResolucion * 24;
+      return this.ticket.tiempoResolucion;
+    }
+
+    // 2. Si tenemos categorías disponibles, buscar en la categoría/subcategoría del ticket
+    const listaCategorias = (this.categorias && this.categorias.length > 0) ? this.categorias : this.categoriasLocales;
+    if (listaCategorias && listaCategorias.length > 0 && (this.ticket.idCategoria || this.ticket.idSubcategoria)) {
+      const cat = listaCategorias.find(c => String(c.id) === String(this.ticket.idCategoria));
+      if (cat) {
+        if (this.ticket.idSubcategoria && cat.subcategorias) {
+          const sub = this.buscarSubcategoriaRecursiva(cat.subcategorias, String(this.ticket.idSubcategoria));
+          if (sub) {
+            if (sub.horasResolucion) {
+              this.tiempoResolucionOriginal = sub.tiempoResolucion;
+              this.unidadResolucionOriginal = sub.unidadResolucion;
+              return sub.horasResolucion;
+            }
+            if (sub.tiempoResolucion) {
+              const u = sub.unidadResolucion || 'h';
+              this.tiempoResolucionOriginal = sub.tiempoResolucion;
+              this.unidadResolucionOriginal = u;
+              if (u === 'm') return Math.round((sub.tiempoResolucion / 60) * 100) / 100;
+              if (u === 'd') return sub.tiempoResolucion * 24;
+              return sub.tiempoResolucion;
+            }
+          }
+        }
+        if (cat.horasResolucion) {
+          this.tiempoResolucionOriginal = cat.tiempoResolucion;
+          this.unidadResolucionOriginal = cat.unidadResolucion;
+          return cat.horasResolucion;
+        }
+        if (cat.tiempoResolucion) {
+          const u = cat.unidadResolucion || 'h';
+          this.tiempoResolucionOriginal = cat.tiempoResolucion;
+          this.unidadResolucionOriginal = u;
+          if (u === 'm') return Math.round((cat.tiempoResolucion / 60) * 100) / 100;
+          if (u === 'd') return cat.tiempoResolucion * 24;
+          return cat.tiempoResolucion;
+        }
+      }
+    }
+
+    // 3. Fallback: tiempo de urgencia o 24h
+    return this.horasUrgenciaSla || 24;
+  }
+
+  private calcularResolucion(): void {
+    const fechaAtencion = this.extraerFecha(this.ticket.fechaAtencion);
+    this.horasResolucionSla = this.resolverHorasResolucion();
+
     if (!fechaAtencion) {
-      // No ha iniciado la fase de atención
-      this.atencionIniciada = false;
-      this.atencionVencida = false;
-      this.atencionCompletada = false;
-      this.porcentajeAtencion = 0;
-      this.horasAtencionTranscurridas = 0;
-      this.offsetInterior = this.perimetroInterior; // Vacío
-      this.colorInterior = '#CBD5E1';
-      this.trackColorInterior = '#F1F5F9';
+      this.resolucionIniciada = false;
+      this.resolucionCompletada = false;
+      this.horasResolucionTranscurridas = 0;
+      this.porcentajeResolucion = 0;
+      this.resolucionVencida = false;
+      // Para que se vea completo en gris, sin progreso:
+      this.offsetInterior = this.perimetroInterior; 
+      this.colorInterior = '#9CA3AF'; // Gris / Pendiente
+      this.trackColorInterior = '#F3F4F6';
       return;
     }
 
-    this.atencionIniciada = true;
+    this.resolucionIniciada = true;
 
-    // Fin de Atención: si ticket ya finalizó (estatus 3 o fechaFin)
+    // Fin de Resolución: si el ticket ya finalizó (estatus 3 o fechaFin)
     const fechaFin = this.extraerFecha(this.ticket.fechaFin);
-    if (this.ticket.idEstatusTicket === '3' || fechaFin) {
-      this.atencionCompletada = true;
+    const esFinalizado = this.ticket.idEstatusTicket === '3' || !!fechaFin;
+
+    if (esFinalizado) {
+      this.resolucionCompletada = true;
       const refFin = fechaFin || new Date();
       const ms = Math.max(0, refFin.getTime() - fechaAtencion.getTime());
-      this.horasAtencionTranscurridas = +(ms / (1000 * 60 * 60)).toFixed(1);
+      this.horasResolucionTranscurridas = +(ms / (1000 * 60 * 60)).toFixed(2);
     } else {
-      this.atencionCompletada = false;
+      this.resolucionCompletada = false;
       const now = new Date();
       const ms = Math.max(0, now.getTime() - fechaAtencion.getTime());
-      this.horasAtencionTranscurridas = +(ms / (1000 * 60 * 60)).toFixed(1);
+      this.horasResolucionTranscurridas = +(ms / (1000 * 60 * 60)).toFixed(2);
     }
 
-    const ratio = this.horasAtencionSla > 0 ? (this.horasAtencionTranscurridas / this.horasAtencionSla) : 0;
-    this.porcentajeAtencion = Math.max(0, Math.min(100, Math.round(ratio * 100)));
-    this.atencionVencida = this.horasAtencionTranscurridas > this.horasAtencionSla;
+    const ratio = this.horasResolucionSla > 0 ? (this.horasResolucionTranscurridas / this.horasResolucionSla) : 0;
+    this.porcentajeResolucion = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+    this.resolucionVencida = this.horasResolucionTranscurridas > this.horasResolucionSla;
 
     // Offset circular
-    const progressInterior = Math.min(1, Math.max(0.04, this.porcentajeAtencion / 100));
+    const progressInterior = Math.min(1, Math.max(0.04, this.porcentajeResolucion / 100));
     this.offsetInterior = this.perimetroInterior * (1 - progressInterior);
 
-    // Color semáforo Atención (tonos complementarios como en la imagen)
-    if (this.atencionVencida) {
-      this.colorInterior = '#F87171'; // Rojo pastel / Coral
+    // Color semáforo Resolución
+    if (this.resolucionVencida) {
+      this.colorInterior = '#EF4444'; // Rojo / Vencido
       this.trackColorInterior = '#FEE2E2';
-    } else if (this.porcentajeAtencion >= 70) {
-      this.colorInterior = '#FBBF24'; // Amarillo dorado / Ámbar
+    } else if (this.porcentajeResolucion >= 70) {
+      this.colorInterior = '#F59E0B'; // Ámbar / Alerta
       this.trackColorInterior = '#FEF3C7';
     } else {
-      this.colorInterior = '#4ADE80'; // Verde claro armonioso
-      this.trackColorInterior = '#EDF2F7';
+      this.colorInterior = '#10B981'; // Verde / En tiempo
+      this.trackColorInterior = '#E2E8F0';
     }
+  }
+
+  private buscarSubcategoriaRecursiva(subcategorias: any[], idBuscado: string): any | null {
+    if (!subcategorias || !subcategorias.length) return null;
+    for (const sub of subcategorias) {
+      if (String(sub.id) === idBuscado) return sub;
+      if (sub.subcategorias && sub.subcategorias.length > 0) {
+        const found = this.buscarSubcategoriaRecursiva(sub.subcategorias, idBuscado);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  formatearHorasLegible(horas: number, tiempoOriginal?: number, unidadOriginal?: 'm' | 'h' | 'd'): string {
+    if (unidadOriginal === 'm' && tiempoOriginal) {
+      return `${tiempoOriginal}m`;
+    }
+    if (horas < 1) {
+      const min = Math.round(horas * 60);
+      return `${min}m (${horas}h)`;
+    }
+    if (horas >= 24 && horas % 24 === 0) {
+      const dias = horas / 24;
+      return `${horas}h (${dias}d)`;
+    }
+    return `${horas}h`;
   }
 
   private generarTooltip(): void {
     const estadoUrg = this.urgenciaVencida
-      ? '⚠️ Vencido'
-      : (this.urgenciaAtendida ? '✅ Atendido' : '⏱ En curso');
+      ? '⚠️'
+      : (this.urgenciaAtendida ? '✅' : '');
 
-    let estadoAten = '';
-    if (!this.atencionIniciada) {
-      estadoAten = '⏳ Pendiente de inicio';
-    } else if (this.atencionVencida) {
-      estadoAten = '⚠️ Vencido';
-    } else if (this.atencionCompletada) {
-      estadoAten = '✅ Finalizado';
-    } else {
-      estadoAten = '⏱ En proceso';
-    }
+    const estadoRes = !this.resolucionIniciada
+      ? '⏳'
+      : (this.resolucionVencida
+        ? '⚠️'
+        : (this.resolucionCompletada ? '✅' : ''));
 
-    const detalleUrg = `⭕ Urgencia (Exterior): ${this.horasUrgenciaTranscurridas}h / ${this.horasUrgenciaSla}h (${this.porcentajeUrgencia}%) — ${estadoUrg}`;
-    const detalleAten = this.atencionIniciada
-      ? `⭕ Atención (Interior): ${this.horasAtencionTranscurridas}h / ${this.horasAtencionSla}h (${this.porcentajeAtencion}%) — ${estadoAten}`
-      : `⭕ Atención (Interior): ${estadoAten} (SLA Meta: ${this.horasAtencionSla}h)`;
+    const metaResStr = this.formatearHorasLegible(this.horasResolucionSla, this.tiempoResolucionOriginal, this.unidadResolucionOriginal);
+    const transResStr = this.formatearHorasLegible(this.horasResolucionTranscurridas);
 
-    this.tooltipTexto = `${detalleUrg}\n${detalleAten}`;
+    const detalleUrg = `${estadoUrg}⭕ [TA] ${this.horasUrgenciaSla}h / ${this.horasUrgenciaTranscurridas}h`;
+    const detalleRes = `${estadoRes}🎯 [TR] ${metaResStr} / ${transResStr}`;
+
+    this.tooltipTexto = `${detalleUrg}\n${detalleRes}`;
   }
 
   private obtenerFolioCorto(folio: string | undefined): string {
