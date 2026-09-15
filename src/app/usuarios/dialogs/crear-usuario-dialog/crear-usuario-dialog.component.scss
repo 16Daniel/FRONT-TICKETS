@@ -1,3 +1,94 @@
 .p-invalid {
     box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
+
+::ng-deep .dialog-modern {
+    .p-dialog-header {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1.25rem 1.5rem;
+        background: #ffffff;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .p-dialog-content {
+        padding: 1.5rem;
+        background: #f8fafc;
+    }
+
+    .p-dialog-footer {
+        border-top: 1px solid #e2e8f0;
+        padding: 1rem 1.5rem;
+        background: #ffffff;
+    }
+}
+
+.rw-input {
+    height: 44px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.875rem;
+    color: #334155;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+
+    &:focus {
+        border-color: #d3152a;
+        box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.1);
+        outline: none;
+    }
+}
+
+::ng-deep .rw-dropdown {
+    height: 44px !important;
+    border-radius: 8px !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+    display: flex;
+    align-items: center;
+
+    .p-dropdown-label, .p-multiselect-label {
+        font-size: 0.875rem;
+        color: #334155;
+    }
+}
+
+.rw-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: #d3152a;
+}
+
+.btn-rw-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  
+    i {
+      font-size: 1.15rem;
+    }
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38);
+      background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+    }
+  
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(211, 21, 42, 0.2);
+    }
+}

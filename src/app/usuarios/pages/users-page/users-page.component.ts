@@ -15,6 +15,10 @@ import { UsersService } from '../../services/users.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { Rol } from '../../../roles/interfaces/rol.model';
 import { CrearUsuarioDialogComponent } from '../../dialogs/crear-usuario-dialog/crear-usuario-dialog.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+
+import { Area } from '../../../areas/interfaces/area.model';
+import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({
   selector: 'app-users-page',
@@ -26,22 +30,30 @@ import { CrearUsuarioDialogComponent } from '../../dialogs/crear-usuario-dialog/
     ConfirmDialogModule,
     TableModule,
     TooltipModule,
-    CrearUsuarioDialogComponent
+    CrearUsuarioDialogComponent,
+    PageHeaderComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './users-page.component.html',
+  styleUrl: './users-page.component.scss'
 })
 
 export default class UsersPageComponent implements OnDestroy, OnInit {
+  readonly String = String;
   mostrarModalUsuario: boolean = false;
   actualizar: boolean = false;
   usuarios: Usuario[] = [];
+  usuariosFiltrados: Usuario[] = [];
   usuariosel: Usuario | undefined;
   roles: Rol[] = [];
   usuarioSeleccionado: Usuario | any = new Usuario;
   esNuevoUsuario: boolean = false;
   subscripcionUsuarios: Subscription | undefined;
+  private subscripcionAreas?: Subscription;
   private unsubscribe!: () => void;
+
+  areas: Area[] = [];
+  areaSeleccionadaId: string = 'sucursales';
 
   usuario: Usuario;
 
@@ -51,7 +63,8 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private usersService: UsersService,
-    private rolesService: RolesService
+    private rolesService: RolesService,
+    private areasService: AreasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -62,15 +75,44 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
       if (this.usuario.idRol == '5') {
         this.usuarios = this.usuarios.filter(x => x.idArea == this.usuario.idArea);
       }
+      this.aplicarFiltroArea();
     });
+    this.cargarAreas();
     this.obtenerRoles();
+  }
+
+  private cargarAreas(): void {
+    this.subscripcionAreas = this.areasService.areas$.subscribe((areas: Area[]) => {
+      this.areas = areas.filter((a: Area) => !a.eliminado);
+      if (this.areaSeleccionadaId !== 'sucursales' && this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
+        this.areaSeleccionadaId = 'sucursales';
+      }
+      this.aplicarFiltroArea();
+      this.cdr.detectChanges();
+    });
+  }
+
+  cambiarArea(areaId: string | number): void {
+    this.areaSeleccionadaId = String(areaId);
+    this.aplicarFiltroArea();
+  }
+
+  aplicarFiltroArea(): void {
+    if (this.areaSeleccionadaId === 'sucursales') {
+      this.usuariosFiltrados = this.usuarios.filter(u => !u.idArea || String(u.idArea) === '0' || String(u.idArea) === '');
+    } else {
+      this.usuariosFiltrados = this.usuarios.filter(u => String(u.idArea) === this.areaSeleccionadaId);
+    }
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy() {
     if (this.subscripcionUsuarios != undefined) {
       this.subscripcionUsuarios.unsubscribe();
     }
-
+    if (this.subscripcionAreas) {
+      this.subscripcionAreas.unsubscribe();
+    }
     if (this.unsubscribe) {
       this.unsubscribe();
     }
