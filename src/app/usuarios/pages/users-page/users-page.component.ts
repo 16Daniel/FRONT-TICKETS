@@ -7,6 +7,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../interfaces/usuario.model';
@@ -30,6 +31,7 @@ import { AreasService } from '../../../areas/services/areas.service';
     ConfirmDialogModule,
     TableModule,
     TooltipModule,
+    InputTextModule,
     CrearUsuarioDialogComponent,
     PageHeaderComponent
   ],

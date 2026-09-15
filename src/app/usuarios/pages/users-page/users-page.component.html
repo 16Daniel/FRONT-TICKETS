@@ -32,6 +32,15 @@
     <!-- Barra de Herramientas y Filtros -->
     <div class="users-toolbar-bar mb-4">
       <div class="toolbar-left">
+        <div class="search-input-wrapper">
+          <i class="bx bx-search search-icon"></i>
+          <input 
+            type="text" 
+            #filterInput
+            (input)="dt.filterGlobal(filterInput.value, 'contains')"
+            placeholder="Buscar usuario..." 
+            class="users-search-input" />
+        </div>
       </div>
       <div class="toolbar-right">
         <!-- Botón Agregar Usuario -->
@@ -46,15 +55,15 @@
     </div>
 
     <!-- Contenedor de la Tabla -->
-    <div class="table-container">
-      <p-table [value]="usuariosFiltrados" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-          styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
+    <div class="users-nodes-container">
+      <p-table #dt [value]="usuariosFiltrados" [globalFilterFields]="['nombre', 'apellidoP', 'apellidoM', 'email']" [tableStyle]="{ 'min-width': '10rem' }"
+          styleClass="p-datatable-gridlines table-tk">
           <ng-template pTemplate="header">
               <tr>
                   <th>NOMBRE</th>
                   <th>CORREO</th>
                   <th>ROL</th>
-                  <th>ACCIONES</th>
+                  <th style="width: 120px; text-align: center;">ACCIONES</th>
               </tr>
           </ng-template>
           <ng-template pTemplate="body" let-usuario>

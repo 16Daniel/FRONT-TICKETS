@@ -1,50 +1,90 @@
-<div class="pt-5">
-    <div class="pt-3 container">
-        <div class="m-2 mt-3 bg-white p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2>LISTA DE SUCURSALES</h2>
-                <p-button label="AGREGAR" icon="pi pi-plus" styleClass="p-button-info"
-                    (click)="abrirModalCrearSucursal()">
-                </p-button>
-            </div>
-            <br>
+<div class="branches-page-wrapper">
+  <div class="branches-content-container">
 
-            <p-table [value]="sucursales" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>ID</th>
-                        <th>NOMBRE</th>
-                        <th>ID FRONT</th>
-                        <th>CLA UBICACIÓN</th>
-                        <th>ACCIONES</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-sucursal>
-                    <tr [pSelectableRow]="sucursal">
-                        <td>{{ sucursal.id }}</td>
-                        <td>{{ sucursal.nombre }}</td>
-                        <td>{{ sucursal.idFront }}</td>
-                        <td>{{ sucursal.claUbicacion }}</td>
-                        <td>
-                            <button class="btn btn-primary me-3" (click)="abrirModalEditarSucursal(sucursal)"><i
-                                    class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Gestión de Sucursales" 
+      title="Catálogo de Sucursales">
+    </app-page-header>
 
-                            <button class="btn btn-danger" (click)="confirmaEliminacion(sucursal.id)"><i
-                                    class='bx bx-trash bx-sm' pTooltip="ELIMINAR" tooltipPosition="top"></i></button>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
+    <!-- Barra Selector de Áreas por Chips -->
+    <div class="areas-chips-track mb-4">
+      <button 
+        *ngFor="let area of areas" 
+        type="button" 
+        class="chip-area-pill"
+        [class.is-active]="String(area.id) === areaSeleccionadaId"
+        (click)="cambiarArea(area.id)">
+        <span class="area-dot"></span>
+        <span class="area-name">{{ area.nombre }}</span>
+      </button>
     </div>
+
+    <!-- Barra de Herramientas y Filtros -->
+    <div class="branches-toolbar-bar mb-4">
+      <div class="toolbar-left">
+        <div class="search-input-wrapper">
+          <i class="bx bx-search search-icon"></i>
+          <input 
+            type="text" 
+            #filterInput
+            (input)="dt.filterGlobal(filterInput.value, 'contains')"
+            placeholder="Buscar sucursal..." 
+            class="branches-search-input" />
+        </div>
+      </div>
+
+      <div class="toolbar-right">
+        <!-- Botón Nueva Sucursal -->
+        <button 
+          type="button" 
+          class="btn-rw-cta" 
+          (click)="abrirModalCrearSucursal()">
+          <i class="bx bx-plus"></i>
+          <span>NUEVA SUCURSAL</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor Principal (Tabla) -->
+    <div class="branches-nodes-container">
+      <p-table #dt [value]="sucursales" [globalFilterFields]="['nombre', 'idFront', 'claUbicacion']" [tableStyle]="{ 'min-width': '10rem' }"
+          styleClass="p-datatable-gridlines table-tk">
+          <ng-template pTemplate="header">
+              <tr>
+                  <th>ID</th>
+                  <th>NOMBRE</th>
+                  <th>ID FRONT</th>
+                  <th>CLA UBICACIÓN</th>
+                  <th>SOPORTE</th>
+                  <th style="width: 120px; text-align: center;">ACCIONES</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-sucursal>
+              <tr [pSelectableRow]="sucursal">
+                  <td>{{ sucursal.id }}</td>
+                  <td>{{ sucursal.nombre }}</td>
+                  <td>{{ sucursal.idFront }}</td>
+                  <td>{{ sucursal.claUbicacion }}</td>
+                  <td>{{ obtenerSoporte(sucursal) }}</td>
+                  <td>
+                      <div class="d-flex justify-content-start align-items-center gap-2" style="justify-content: center !important;">
+                          <button class="btn-action-table btn-action-info" (click)="abrirModalEditarSucursal(sucursal)"
+                              pTooltip="EDITAR" tooltipPosition="top">
+                              <i class="bx bx-edit"></i>
+                          </button>
+                          <button class="btn-action-table btn-action-danger" (click)="confirmaEliminacion(sucursal.id)"
+                              pTooltip="ELIMINAR" tooltipPosition="top">
+                              <i class="bx bx-trash"></i>
+                          </button>
+                      </div>
+                  </td>
+              </tr>
+          </ng-template>
+      </p-table>
+    </div>
+  </div>
 </div>
-
-
-
-
-
-
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
     [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
