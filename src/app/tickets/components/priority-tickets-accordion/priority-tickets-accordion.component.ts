@@ -46,45 +46,19 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     this.clickEvent.emit(ticket);
   }
 
-  obtenerContadorTickets(prioridad: any): number {
-    if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '1').length;
-    else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '2').length;
-    else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '3').length;
-    else return this.tickets.filter((x) => x.idPrioridadTicket === '4').length;
+  obtenerContadorTickets(prioridad: string): number {
+    return this.obtenerTicketsFiltrados(prioridad).length;
   }
 
-  obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
-
-    if (value == 'ALTA') {
-      str = '#ff0000';
-    }
-
-    if (value == 'MEDIA') {
-      str = '#ffe800';
-    }
-
-    if (value == 'BAJA') {
-      str = '#61ff00';
-    }
-
-    if (value == 'PÁNICO') {
-      str = 'black';
-    }
-    return str;
+  obtenerClaseEstadoPrioridad(prioridad: string): string {
+    if (prioridad === 'Crítico') return 'score-critico';
+    if (prioridad === 'Alto') return 'score-alto';
+    if (prioridad === 'Medio') return 'score-medio';
+    return 'score-bajo';
   }
 
   obtenerTicketsFiltrados(prioridad: string): Ticket[] {
-    if (prioridad === 'PÁNICO')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '1');
-    else if (prioridad === 'ALTA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '2');
-    else if (prioridad === 'MEDIA')
-      return this.tickets.filter((x) => x.idPrioridadTicket === '3');
-    else return this.tickets.filter((x) => x.idPrioridadTicket === '4');
+    return this.tickets.filter((x) => x.prioridad === prioridad);
   }
 
   // toggleAccordion(index: number) {

@@ -1,29 +1,33 @@
 <app-tpvs-devices-table *ngIf="mostrarTpvs" [sucursal]="sucursal"></app-tpvs-devices-table>
 
-<p-accordion class="w-full" *ngIf="!mostrarTpvs">
-    <p-accordionTab *ngFor="let item of ['PÁNICO', 'ALTA', 'MEDIA', 'BAJA']">
+<p-accordion class="custom-branches-accordion w-full" *ngIf="!mostrarTpvs">
+    <p-accordionTab *ngFor="let item of ['Crítico', 'Alto', 'Medio', 'Bajo']">
         <ng-template pTemplate="header">
-            <span class="ms-3 d-flex gap-3 p-3 rounded-3 w-100"
-                [style]="{'background-color': obtenerBackgroundColorPrioridad(item)}">
-                <p-badge [value]="obtenerContadorTickets(item)" class="ml-auto mr-2" size="large"
-                    [style]="{'background-color':'white','color':'black'}" />
+            <div class="branch-accordion-header" [ngClass]="obtenerClaseEstadoPrioridad(item)">
+                
+                <div class="branch-info-group">
+                    <!-- Clean Number Badge ONLY -->
+                    <div class="branch-count-badge">
+                        {{ obtenerContadorTickets(item) }}
+                    </div>
 
-                <span class="fw-bold flex-grow-1"
-                    [style]="{ 'color': (item === 'MEDIA' || item === 'BAJA') ? 'black' : 'white' }"
-                    style="padding-top: 7px;">
-                    {{ item }}
-                </span>
+                    <!-- Priority Name ONLY -->
+                    <span class="branch-title">PRIORIDAD {{ item | uppercase }}</span>
+                </div>
 
-                <span class="icon-circle bx-tada" *ngIf="verificarChatNoLeido(obtenerTicketsFiltrados(item))">
-                    <i class="pi pi-comments" style="font-size: 1.5rem; color: #0F99E4;" pTooltip="NUEVO CHAT"
-                        tooltipPosition="top"></i>
-                </span>
+                <!-- Action / Alert Badges -->
+                <div class="branch-actions-indicators">
+                    <span class="indicator-badge badge-chat" *ngIf="verificarChatNoLeido(obtenerTicketsFiltrados(item))"
+                        pTooltip="NUEVO CHAT" tooltipPosition="top">
+                        <i class="bx bx-message-square-dots"></i>
+                    </span>
 
-                <span class="icon-circle bx-tada" *ngIf="verificarTicketsPorValidar(obtenerTicketsFiltrados(item))">
-                    <i class="pi pi-bell" style="font-size: 1.5rem; color: #FF0000;" pTooltip="TICKET LISTO"
-                        tooltipPosition="top"></i>
-                </span>
-            </span>
+                    <span class="indicator-badge badge-pending" *ngIf="verificarTicketsPorValidar(obtenerTicketsFiltrados(item))"
+                        pTooltip="TICKET LISTO" tooltipPosition="top">
+                        <i class="bx bx-check-double"></i>
+                    </span>
+                </div>
+            </div>
         </ng-template>
 
         <app-requester-tickets-list [tickets]="obtenerTicketsFiltrados(item)"

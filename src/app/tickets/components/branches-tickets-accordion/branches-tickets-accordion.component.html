@@ -1,7 +1,7 @@
 <p-accordion class="custom-branches-accordion w-full">
     <p-accordionTab *ngFor="let item of sucursales">
         <ng-template pTemplate="header">
-            <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(contarTickets(item.id))">
+            <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(obtenerScoreMaximoSucursal(item.id))">
                 
                 <div class="branch-info-group">
                     <!-- Clean Number Badge ONLY -->

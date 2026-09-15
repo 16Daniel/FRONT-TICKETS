@@ -1,19 +1,20 @@
-<div class="d-flex justify-content-start gap-3 p-3 pb-0">
-  <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary" (click)="onClickGenerarTicket()">
-  </p-button>
+<div class="actions-toolbar-row mt-3 mb-4">
+  <div class="actions-buttons-container">
+    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary action-btn-custom" (click)="onClickGenerarTicket()">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
-    (click)="mostrarModalHistorial = true">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning action-btn-custom"
+      (click)="mostrarModalHistorial = true">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8" icon="pi pi-history" styleClass="p-button-secondary"
-    (click)="mostrarModalHistorialMantenimientos = true">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8" icon="pi pi-history" styleClass="p-button-secondary action-btn-custom"
+      (click)="mostrarModalHistorialMantenimientos = true">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2' && mantenimientosActivos.length > 0" label="CHECK 8 X 8" icon="pi pi-wrench"
-    styleClass="p-button-danger" (click)="mostrarAlerta()">
-  </p-button>
-
+    <p-button *ngIf="usuario.idRol == '2' && mantenimientosActivos.length > 0" label="CHECK 8 X 8" icon="pi pi-wrench"
+      styleClass="p-button-danger action-btn-custom" (click)="mostrarAlerta()">
+    </p-button>
+  </div>
 </div>
 
 <div *ngIf="tickets.length > 0" class="p-1 mt-3">

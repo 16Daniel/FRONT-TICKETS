@@ -1,30 +1,32 @@
-<div class="d-flex justify-content-start gap-3 p-3 pb-0">
-  <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary" (click)="onClickGenerarTicket()">
-  </p-button>
+<div class="actions-toolbar-row mt-3 mb-4">
+  <div class="actions-buttons-container">
+    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary action-btn-custom" (click)="onClickGenerarTicket()">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning"
-    (click)="mostrarModalHistorial = true">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning action-btn-custom"
+      (click)="mostrarModalHistorial = true">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8" icon="pi pi-history" styleClass="p-button-secondary"
-    (click)="mostrarModalHistorialMantenimientos = true">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 8 X 8" icon="pi pi-history" styleClass="p-button-secondary action-btn-custom"
+      (click)="mostrarModalHistorialMantenimientos = true">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 6 X 6 AV" icon="pi pi-history" styleClass="p-button-secondary"
-    (click)="mostrarModalHistorialMantenimientosAV = true">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL 6 X 6 AV" icon="pi pi-history" styleClass="p-button-secondary action-btn-custom"
+      (click)="mostrarModalHistorialMantenimientosAV = true">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="SISTEMAS 8 X 8" icon="pi pi-verified"
-    styleClass="p-button-danger" (click)="mostrarAlertaIT()">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2' && mantenimientoActivo?.id" label="SISTEMAS 8 X 8" icon="pi pi-verified"
+      styleClass="p-button-danger action-btn-custom" (click)="mostrarAlertaIT()">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2' && mantenimientoAVActivo?.id" label="AUDIO VIDEO 6 X 6" icon="pi pi-verified"
-    styleClass="p-button-danger" (click)="mostrarAlertaAV()">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2' && mantenimientoAVActivo?.id" label="AUDIO VIDEO 6 X 6" icon="pi pi-verified"
+      styleClass="p-button-danger action-btn-custom" (click)="mostrarAlertaAV()">
+    </p-button>
 
-  <p-button *ngIf="usuario.idRol == '2'" label="EVALUACION GENERAL" icon="pi pi-star" styleClass="p-button-yellow"
-    (click)="mostrarModalRating = true">
-  </p-button>
+    <p-button *ngIf="usuario.idRol == '2'" label="EVALUACION GENERAL" icon="pi pi-star" styleClass="p-button-yellow action-btn-custom"
+      (click)="mostrarModalRating = true">
+    </p-button>
+  </div>
 </div>
 
 <div class="d-flex flex-wrap gap-2 align-items-center mt-3">
