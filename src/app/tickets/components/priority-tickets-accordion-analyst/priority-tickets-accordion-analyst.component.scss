@@ -66,65 +66,41 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
   }
 
-  /* Score Colors & Rich Background Tints */
+  /* Status Colors & Rich Background Tints */
 
-  /* Crítico (14 - 18 pts) */
-  &.score-critico {
+  /* Critical (>= 5 tickets) - Soft Rose Background */
+  &.status-critical {
     background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
     border-color: rgba(244, 63, 94, 0.3);
     &::before { background-color: #ef4444; }
     .branch-count-badge {
-      background-color: #FEE2E2;
-      color: #991B1B;
-      border: 1px solid #FCA5A5;
+      background-color: #ffe4e6;
+      color: #e11d48;
+      border: 1px solid #fecdd3;
     }
   }
 
-  /* Alto (10 - 13 pts) */
-  &.score-alto {
-    background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
-    border-color: rgba(249, 115, 22, 0.3);
-    &::before { background-color: #f97316; }
+  /* Warning (1 - 4 tickets) - Soft Amber Background */
+  &.status-warning {
+    background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+    border-color: rgba(245, 158, 11, 0.3);
+    &::before { background-color: #f59e0b; }
     .branch-count-badge {
-      background-color: #FFEDD5;
-      color: #9A3412;
-      border: 1px solid #FDBA74;
+      background-color: #fef3c7;
+      color: #d97706;
+      border: 1px solid #fde68a;
     }
   }
 
-  /* Medio (6 - 9 pts) */
-  &.score-medio {
-    background: linear-gradient(135deg, #ffffff 0%, #fefce8 100%);
-    border-color: rgba(234, 179, 8, 0.3);
-    &::before { background-color: #eab308; }
-    .branch-count-badge {
-      background-color: #FEF9C3;
-      color: #854D0E;
-      border: 1px solid #FDE047;
-    }
-  }
-
-  /* Bajo (1 - 5 pts) */
-  &.score-bajo {
+  /* Success (0 tickets) - Soft Emerald Background */
+  &.status-success {
     background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
-    border-color: rgba(34, 197, 94, 0.3);
-    &::before { background-color: #22c55e; }
+    border-color: rgba(16, 185, 129, 0.25);
+    &::before { background-color: #10b981; }
     .branch-count-badge {
-      background-color: #DCFCE7;
-      color: #166534;
-      border: 1px solid #86EFAC;
-    }
-  }
-
-  /* Neutral (0 tickets) */
-  &.score-neutral {
-    background: #ffffff;
-    border-color: #e2e8f0;
-    &::before { background-color: #cbd5e1; }
-    .branch-count-badge {
-      background-color: #f1f5f9;
-      color: #64748b;
-      border: 1px solid #e2e8f0;
+      background-color: #d1fae5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
     }
   }
 }

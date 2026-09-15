@@ -1,49 +1,34 @@
-$rw-primary: #d3152a;
-
-/* Actions Toolbar Row */
-.actions-toolbar-row {
-  width: 100%;
+/* 🔹 Tabs inactivos (gris claro) */
+::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  color: #999 !important; /* Texto gris para tabs inactivos */
+  font-weight: normal;
+  text-decoration: none !important;
+  transition: color 0.3s ease;
 }
 
-.actions-buttons-container {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  width: 100%;
+/* 🔹 Tab activo (negro) */
+::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: black !important; /* 🔥 Ahora sí, negro para la pestaña activa */
+  font-weight: bold;
+  border-bottom: 3px solid #007bff !important; /* Línea azul para resaltar */
+}
 
-  ::ng-deep .action-btn-custom {
-    font-size: 0.825rem !important;
-    font-weight: 600 !important;
-    padding: 0.55rem 0.95rem !important;
-    border-radius: 10px !important;
+/* 🔹 Hover en tabs inactivos */
+::ng-deep
+  .p-tabview
+  .p-tabview-nav
+  li:not(.p-highlight)
+  .p-tabview-nav-link:hover {
+  color: #666 !important; /* Gris más oscuro en hover */
+}
 
-    .p-button-icon {
-      font-size: 0.875rem !important;
-    }
-  }
-
-  /* Rebel Wings Brand Primary Button (CREAR TICKET) */
-  ::ng-deep .p-button-primary {
-    background-color: $rw-primary !important;
-    border-color: $rw-primary !important;
-    box-shadow: 0 2px 8px rgba(211, 21, 42, 0.25) !important;
-
-    &:hover {
-      background-color: darken($rw-primary, 6%) !important;
-      border-color: darken($rw-primary, 6%) !important;
-    }
-  }
-
-  ::ng-deep .btn-compras {
-    background-color: #0f62fe !important;
-    border: none !important;
-    color: white !important;
-  }
+/* 🔹 Línea separadora entre los tabs y el contenido */
+::ng-deep .p-tabview .p-tabview-nav {
+  border-bottom: 2px solid #ddd !important;
 }
 
 ::ng-deep .p-dialog.p-confirm-dialog {
-  max-width: 500px !important;
-  width: 90% !important;
-  text-align: justify;
+  max-width: 500px !important; /* Ajusta el ancho máximo */
+  width: 90% !important; /* Para pantallas pequeñas */
+  text-align: justify; /* Justifica el texto si es necesario */
 }

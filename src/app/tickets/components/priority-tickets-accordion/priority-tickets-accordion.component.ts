@@ -46,19 +46,45 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     this.clickEvent.emit(ticket);
   }
 
-  obtenerContadorTickets(prioridad: string): number {
-    return this.obtenerTicketsFiltrados(prioridad).length;
+  obtenerContadorTickets(prioridad: any): number {
+    if (prioridad === 'PÁNICO')
+      return this.tickets.filter((x) => x.idPrioridadTicket === '1').length;
+    else if (prioridad === 'ALTA')
+      return this.tickets.filter((x) => x.idPrioridadTicket === '2').length;
+    else if (prioridad === 'MEDIA')
+      return this.tickets.filter((x) => x.idPrioridadTicket === '3').length;
+    else return this.tickets.filter((x) => x.idPrioridadTicket === '4').length;
   }
 
-  obtenerClaseEstadoPrioridad(prioridad: string): string {
-    if (prioridad === 'Crítico') return 'score-critico';
-    if (prioridad === 'Alto') return 'score-alto';
-    if (prioridad === 'Medio') return 'score-medio';
-    return 'score-bajo';
+  obtenerBackgroundColorPrioridad(value: string): string {
+    let str = '';
+
+    if (value == 'ALTA') {
+      str = '#ff0000';
+    }
+
+    if (value == 'MEDIA') {
+      str = '#ffe800';
+    }
+
+    if (value == 'BAJA') {
+      str = '#61ff00';
+    }
+
+    if (value == 'PÁNICO') {
+      str = 'black';
+    }
+    return str;
   }
 
   obtenerTicketsFiltrados(prioridad: string): Ticket[] {
-    return this.tickets.filter((x) => x.prioridad === prioridad);
+    if (prioridad === 'PÁNICO')
+      return this.tickets.filter((x) => x.idPrioridadTicket === '1');
+    else if (prioridad === 'ALTA')
+      return this.tickets.filter((x) => x.idPrioridadTicket === '2');
+    else if (prioridad === 'MEDIA')
+      return this.tickets.filter((x) => x.idPrioridadTicket === '3');
+    else return this.tickets.filter((x) => x.idPrioridadTicket === '4');
   }
 
   // toggleAccordion(index: number) {

@@ -52,37 +52,57 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
   }
 
   obtenerColorDeFondoSucursal(value: number): string {
-    return ''; // Deprecated
+    let str = '';
+
+    if (value >= 5) {
+      str = '#ff0000';
+    }
+
+    if (value > 0 && value <= 4) {
+      str = '#ffe800';
+    }
+
+    if (value == 0) {
+      str = '#00a312';
+    }
+
+    return str;
   }
 
-  obtenerClaseEstado(score: number): string {
-    if (score >= 14) return 'score-critico';
-    if (score >= 10) return 'score-alto';
-    if (score >= 6) return 'score-medio';
-    if (score >= 1) return 'score-bajo';
-    return 'score-neutral';
+  obtenerClaseEstado(value: number): string {
+    if (value >= 5) return 'status-critical';
+    if (value > 0 && value <= 4) return 'status-warning';
+    return 'status-success';
   }
 
   obtenerTicketsPorSucursal(idSucursal: number | any) {
     return this.tickets.filter((x) => x.idSucursal == idSucursal);
   }
 
-  obtenerScoreMaximoSucursal(idSucursal: number | any): number {
-    const ticketsAbiertos = this.tickets.filter(x => x.idSucursal == idSucursal && x.idEstatusTicket != '3');
-    if (ticketsAbiertos.length === 0) return 0;
-    return Math.max(...ticketsAbiertos.map(t => t.score || 0));
-  }
-
   ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
     return catsucursales.sort((a, b) => {
-      const ticketsA = this.obtenerScoreMaximoSucursal(a.id);
-      const ticketsB = this.obtenerScoreMaximoSucursal(b.id);
+      const ticketsA = this.obtenerTicketsPorSucursal(a.id).length;
+      const ticketsB = this.obtenerTicketsPorSucursal(b.id).length;
       return ticketsB - ticketsA; // Ordena de mayor a menor
     });
   }
 
   obtenerColorDeTexto(value: number): string {
-    return ''; // Deprecated
+    let str = '';
+
+    if (value >= 5) {
+      str = '#fff';
+    }
+
+    if (value > 0 && value <= 4) {
+      str = '#000';
+    }
+
+    if (value == 0) {
+      str = '#fff';
+    }
+
+    return str;
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
