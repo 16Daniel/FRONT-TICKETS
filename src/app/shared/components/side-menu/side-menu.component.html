@@ -172,6 +172,12 @@
         <span class="nav-label">Categorías</span>
       </a>
 
+    </div>
+
+    <!-- Grupo: Operaciones y Visitas -->
+    <div class="nav-group">
+      <span class="nav-group-title">Operaciones</span>
+
       <a 
         [routerLink]="'/main/fixed-assets'" 
         routerLinkActive="active"
@@ -185,16 +191,21 @@
       <a 
         [routerLink]="'/administracion/compras'" 
         routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
         (click)="closemenu()" 
         class="nav-item">
         <i class="bx bx-shopping-bag nav-icon"></i>
         <span class="nav-label">Requisición de compra</span>
       </a>
-    </div>
 
-    <!-- Grupo: Operaciones y Visitas -->
-    <div class="nav-group">
-      <span class="nav-group-title">Operaciones</span>
+      <a 
+        [routerLink]="'/main/comensales'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-group nav-icon"></i>
+        <span class="nav-label">Comensales</span>
+      </a>
 
       <a 
         [routerLink]="'/main/calendar-builder'" 

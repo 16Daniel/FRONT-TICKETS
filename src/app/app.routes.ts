@@ -59,6 +59,10 @@ export const routes: Routes = [
       },
       {
         path: '',
+        loadChildren: () => import('./comensales/comensales.routes')
+      },
+      {
+        path: '',
         redirectTo: '/main/home-a',
         pathMatch: 'full',
       },
