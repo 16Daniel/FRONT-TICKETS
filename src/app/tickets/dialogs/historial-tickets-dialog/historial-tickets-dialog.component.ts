@@ -31,6 +31,8 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import * as XLSX from 'xlsx';
+import { PlaneacionCatService } from '../../../compras/services/planeacion.service';
+import { ProveedorPlaneacion } from '../../../compras/interfaces/ProveedorPlaneacion';
 
 @Component({
   selector: 'app-historial-tickets-dialog',
@@ -77,6 +79,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
   todosLosTickets: Ticket[] = [];
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
+  allProveedores: ProveedorPlaneacion[] = [];
 
   opcionesCalificacion = [
     { label: '1 estrella', value: 1 },
@@ -95,7 +98,8 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
     private areasService: AreasService,
     private branchesService: BranchesService,
     private usersService: UsersService,
-    private statusTicketsService: StatusTicketService
+    private statusTicketsService: StatusTicketService,
+    private servicePlaneacion: PlaneacionCatService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -125,6 +129,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
   }
 
   buscar() {
+    this.cargarTodosProveedores(); 
     console.log(this.idsucursales)
     this.ticketsService.getHistorialTickets(
       this.fechaInicio,
@@ -252,7 +257,9 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
       SUBCATEGORÍA: t.idSubcategoria == null ? 'N/A' : t.nombreSubcategoria,
       ESTATUS: this.obtenerNombreEstatusTicket(t.idEstatusTicket),
       CALIFICACIÓN: t.calificacion || 0,
-      DESCRIPCIÓN: this.truncateExcelText(t.descripcion)
+      DESCRIPCIÓN: this.truncateExcelText(t.descripcion),
+      'PROVEEDOR': this.getNombreProveedor(t.codProveedor),
+      'FIN DEL SOPORTE': t.fechaFinSoporte ? this.formatDate(t.fechaFinSoporte): 'N/A'
     }));
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);
@@ -260,6 +267,26 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Historial');
 
     XLSX.writeFile(wb, filename);
+  } 
+
+    cargarTodosProveedores(): void {
+    this.servicePlaneacion.getAllProveedores().subscribe({
+      next: (data) => {
+        this.allProveedores = data;
+      },
+      error: (err) => {
+        console.error('Error cargando todos los proveedores', err);
+      }
+    });
+  }
+
+   getNombreProveedor(cod:number|null|undefined):string
+  {  
+    if(cod == null || cod == undefined){return '';}
+    let nombre:string = '';
+    let temp = this.allProveedores.filter(x=>x.codproveedor == cod); 
+    if(temp.length>0){ nombre = temp[0].nombre;}
+    return nombre; 
   }
 
 }

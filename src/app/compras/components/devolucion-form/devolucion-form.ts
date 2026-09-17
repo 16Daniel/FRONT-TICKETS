@@ -49,7 +49,10 @@ export class DevolucionFormComponent implements OnInit {
   existingPhotos: string[] = [];
   isSaving = false;
  
-  constructor( private messageService: MessageService){ this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
+  constructor( private messageService: MessageService){
+     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    console.log(this.usuario)
+    }
   ngOnInit(): void {
     this.initForm();
     if (this.devolucion) {
@@ -74,6 +77,7 @@ export class DevolucionFormComponent implements OnInit {
       estatus: [''],
       sucursal: [this.sucursal]
     });
+    this.actualizarEstadoControles();
   }
 
   private loadFormData(data: DevolucionAla): void {
@@ -132,8 +136,8 @@ showMessage(sev: string, summ: string, det: string) {
     }
 
     this.isSaving = true;
-    const formVal = this.devForm.value;
-
+    // const datos = this.form.getRawValue();
+    const formVal = this.devForm.getRawValue();
     const payload: Partial<DevolucionAla> = {
       fechaReporte: formVal.fechaReporte,
       proveedor: formVal.proveedor,
@@ -151,7 +155,6 @@ showMessage(sev: string, summ: string, det: string) {
       estatus: formVal.estatus,
       sucursal: formVal.sucursal
     };
-
     try {
       if (this.devolucion && this.devolucion.id) {
         await this.devolucionesService.updateDevolucion(
@@ -168,4 +171,26 @@ showMessage(sev: string, summ: string, det: string) {
       this.isSaving = false;
     }
   }
+
+  private actualizarEstadoControles(): void {
+  // Condiciones
+  const esRolComprador = this.usuario.idRol === '2';
+  const esEdicion = this.devolucion !== null;
+  // Control de estatus (solo depende del rol)
+  const estatusControl = this.devForm.get('estatus');
+  if (estatusControl) {
+    esRolComprador ? estatusControl.disable() : estatusControl.enable();
+  }
+   const sucursalControl = this.devForm.get('sucursal');
+  if (sucursalControl) {
+    esRolComprador ? sucursalControl.disable() : sucursalControl.enable();
+  }
+ 
+   const fechareporte = this.devForm.get('fechaReporte');
+    if (fechareporte) {
+    fechareporte.disable();
+  }
+
+}  
+
 }

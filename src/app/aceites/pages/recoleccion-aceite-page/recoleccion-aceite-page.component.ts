@@ -15,11 +15,12 @@ import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { EntregaAceite } from '../../interfaces/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-recoleccion-aceite-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule],
+  imports: [CommonModule, FormsModule, TableModule, TabViewModule, ToastModule, DialogModule, CalendarModule, DropdownModule, MultiSelectModule],
   providers: [MessageService],
   templateUrl: './recoleccion-aceite-page.component.html',
 })
@@ -27,10 +28,12 @@ export default class RecoleccionAceitePageComponent implements OnInit {
   public TodasLasEntregas: EntregaAceite[] = [];
   public TodasLasEntregasTA: EntregaAceite[] = [];
   public entregas: EntregaAceite[] = [];
+  public entregasH: EntregaAceite[] = [];
   public entregasTA: EntregaAceite[] = [];
   public mostrarModalValidacion: boolean = false;
   public sucursales: Sucursal[] = [];
   public sucursalSel: Sucursal[] = [];
+   public sucursalesSel: Sucursal[] = [];
   public formcomentarios: string = "";
   public itemEntrega: EntregaAceite | undefined;
   public tipoActualizacion: number = 0;
@@ -39,6 +42,7 @@ export default class RecoleccionAceitePageComponent implements OnInit {
   fechafin: Date = new Date();
   usuario: Usuario;
   esTrampadeAceite: boolean = false;
+   public mostrarModalHistorial: boolean = false;
 
   constructor(
     public aceiteService: AceiteService,
@@ -221,5 +225,41 @@ export default class RecoleccionAceitePageComponent implements OnInit {
     }
 
   }
+   
+  abrirModalHistorial()
+  {
+    this.mostrarModalHistorial = true; 
+  }
 
+  obtenerSucursaleUsuario():Sucursal[]
+  {
+    let arr:Sucursal[] = [];
+    for(let item of this.usuario.sucursales)
+      {
+          var temp = this.sucursales.filter(x=>x.id == item.id)
+          if(temp.length>0){ arr.push(temp[0])}
+      }
+    return arr; 
+  }
+  buscarRegistros()
+  {
+     this.entregasH = []; 
+     this.loading = true
+    let temp: number[] = [];
+    for (let item of this.sucursalesSel) {
+      temp.push(item.idFront!);
+    }
+    let idf = JSON.stringify(temp);
+    this.aceiteService.getEntregasCedisH(idf, this.fechaini, this.fechafin).subscribe({
+      next: (data) => {
+        this.entregasH = data;
+        this.loading = false,
+          this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      },
+    });
+  }
 }

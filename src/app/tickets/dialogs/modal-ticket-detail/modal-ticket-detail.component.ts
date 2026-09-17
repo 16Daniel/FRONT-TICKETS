@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -11,6 +11,9 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialogs/seleccionar-usuario-especialista-dialog/seleccionar-usuario-especialista-dialog.component';
+import Swal from 'sweetalert2';
+import { PlaneacionCatService } from '../../../compras/services/planeacion.service';
+import { ProveedorPlaneacion } from '../../../compras/interfaces/ProveedorPlaneacion';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -36,10 +39,13 @@ export class ModalTicketDetailComponent {
   mostrarModalImagen: boolean = false;
   idSucursalEspecialista: string = '';
   urlVisorImagen: string = '';
+  public catproveedores:ProveedorPlaneacion[] = []; 
 
   constructor(
     private ticketsService: TicketsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private planeacionService:PlaneacionCatService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -51,6 +57,33 @@ export class ModalTicketDetailComponent {
   onClick() {
     this.actualizaTicket(this.ticket);
   }
+
+  ngOnInit() {
+   if(this.ticket?.codProveedor != null)
+    {
+      this.obtenerProveedores(); 
+    }
+}
+
+    obtenerProveedores()
+     {
+       Swal.fire({
+                target: document.body,
+                allowOutsideClick: false,
+                icon: 'info',
+                text: 'Espere por favor...',
+                didOpen: () => Swal.showLoading(),
+                customClass: {
+                  container: 'swal-topmost'
+                }
+              });
+
+        this.planeacionService.getCatProveedores().subscribe(data => {
+         this.catproveedores = data;
+         this.cdr.detectChanges();
+         Swal.close(); 
+       });
+     }
 
   actualizaTicket(ticket: Ticket | any) {
     ticket.idEstatusTicket = '2';
@@ -75,4 +108,14 @@ export class ModalTicketDetailComponent {
     this.mostrarModalImagen = true;
     this.urlVisorImagen = url;
   }
+  obtenerNombreProveedor(codp:number):string
+  {
+    return this.catproveedores.filter(x=>x.codproveedor == codp)[0].nombre; 
+  }
+
+  obtenerRfcProveedor(codp:number):string
+  {
+    return this.catproveedores.filter(x=>x.codproveedor == codp)[0].rfc; 
+  }
+
 }

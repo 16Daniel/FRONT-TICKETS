@@ -32,6 +32,8 @@ import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { ActivoFijo } from '../../../activos-fijos/interfaces/activo-fijo.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { PlaneacionCatService } from '../../../compras/services/planeacion.service';
+import { ProveedorPlaneacion } from '../../../compras/interfaces/ProveedorPlaneacion';
 
 @Component({
   selector: 'app-crear-ticket-dialog',
@@ -51,7 +53,6 @@ export class CrearTicketDialogComponent implements OnInit {
   @Input() mostrarModalGenerateTicket: boolean = false;
   @Input() idArea: string = '0';
   @Output() closeEvent = new EventEmitter<boolean>();
-
   ticket: Ticket = new Ticket
   sucursales: Sucursal[] = [];
   usuarioActivo: Usuario = new Usuario();
@@ -68,6 +69,8 @@ export class CrearTicketDialogComponent implements OnInit {
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
   archivos: File[] = [];
+  public catproveedores:ProveedorPlaneacion[] = []; 
+  public formProveedor: any = null; 
 
   constructor(
     private ticketsService: TicketsService,
@@ -80,7 +83,8 @@ export class CrearTicketDialogComponent implements OnInit {
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
     private fixedAssetsService: FixedAssetsService,
-    private firebaseStorage: FirebaseStorageService
+    private firebaseStorage: FirebaseStorageService,
+    private planeacionService:PlaneacionCatService
   ) { }
 
   ngOnInit(): void {
@@ -94,6 +98,7 @@ export class CrearTicketDialogComponent implements OnInit {
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
+    this.obtenerProveedores(); 
   }
 
   obtenerSucursales() {
@@ -109,6 +114,14 @@ export class CrearTicketDialogComponent implements OnInit {
     });
   }
 
+ obtenerProveedores()
+  {
+     this.planeacionService.getProveedoresPorModulo('TK').subscribe(data => {
+      this.catproveedores = data;
+      this.cdr.detectChanges();
+      Swal.close(); 
+    });
+  }
   obtenerPrioridadesTicket() {
     this.ticketsPriorityService.get().subscribe({
       next: (data) => {
@@ -230,7 +243,7 @@ export class CrearTicketDialogComponent implements OnInit {
         ultimoComentarioLeido: 0,
       });
     });
-
+    
     this.ticket.idResponsables = idsResponsablesTicket;
     this.ticket.idSucursal = this.ticket.idSucursal.toString();
     this.ticket.idArea = this.ticket.idArea.toString();
@@ -240,6 +253,7 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
     this.ticket.idUsuario = this.usuarioActivo.id;
     this.ticket.nombreCategoria = this.formCategoria.nombre;
+    this.ticket.codProveedor = this.formProveedor == null ? null: this.formProveedor.codproveedor; 
 
     if (this.formCategoria.activarSubcategorias)
       this.ticket.nombreSubcategoria = this.formCategoria.subcategorias.find((x: Subcategoria) => x.id == this.ticket.idSubcategoria).nombre
@@ -383,4 +397,15 @@ export class CrearTicketDialogComponent implements OnInit {
       categoria.trim().toUpperCase()
     );
   }
+
+  requiereProveedor():boolean
+{ 
+  if(this.formCategoria == undefined || this.formCategoria == null)
+    {
+      return false;  
+    }
+  let idCategoria = this.formCategoria.id; 
+  let categorias:number[] = [46,47,48,49,50,51,52,53,56,59,62]
+  return categorias.includes(idCategoria)
+}
 }

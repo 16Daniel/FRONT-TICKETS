@@ -1,0 +1,92 @@
+<p-dialog 
+  header="Proveedores del módulo" 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [closable]="true"
+  [dismissableMask]="true"
+  [style]="{ width: '70vw' }"
+  (onHide)="cerrarDialog()">
+
+ <!-- Sección para agregar proveedores -->
+  <div class="add-section">
+    <div class="add-row">
+      <p-dropdown 
+        [options]="proveedoresDisponibles" 
+        [(ngModel)]="selectedProveedorParaAgregar"
+        optionLabel="nombre" 
+        placeholder="Selecciona un proveedor"
+        [filter]="true"
+        filterBy="nombre"
+        [showClear]="true"
+        styleClass="w-full">
+        <ng-template let-proveedor pTemplate="item">
+          <div>{{ proveedor.nombre }} ({{ proveedor.codproveedor }})</div>
+        </ng-template>
+      </p-dropdown>
+      <button pButton 
+              icon="pi pi-plus" 
+              label="Agregar" 
+              class="p-button-success"
+              (click)="agregarProveedor()"
+              [disabled]="!selectedProveedorParaAgregar || loading">
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container mt-3">
+    <!-- Tabla de proveedores asociados -->
+    <p-table
+      [value]="proveedores" 
+      [loading]="loading"
+      [selectionMode]="'multiple'"
+      [(selection)]="selectedProveedores"
+      dataKey="codproveedor"
+      [metaKeySelection]="false"
+      styleClass="p-datatable-striped">
+
+      <ng-template pTemplate="caption">
+        <div class="table-header">
+          <span>Lista de proveedores asociados</span>
+          <button pButton 
+                  icon="pi pi-trash" 
+                  label="Eliminar seleccionados" 
+                  class="p-button-danger p-button-sm"
+                  (click)="eliminarSeleccionados()"
+                  [disabled]="selectedProveedores.length === 0 || loading">
+          </button>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>RFC</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-proveedor>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="proveedor"></p-tableCheckbox>
+          </td>
+          <td>{{ proveedor.codproveedor }}</td>
+          <td>{{ proveedor.nombre }}</td>
+          <td>{{ proveedor.rfc }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">No hay proveedores asociados a este módulo</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+</p-dialog>
+
+<p-toast />

@@ -33,6 +33,7 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimient
 import { AcordeonMantenimientosSistemasComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component";
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
+import { CatalogoProveedoresTickets } from "../../../compras/dialogs/catalogo-proveedores-tickets/catalogo-proveedores-tickets";
 
 @Component({
   selector: 'app-admin-cadena-suministro-tab',
@@ -53,7 +54,8 @@ import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
     AcordeonMantenimientosAudioVideoComponent,
-    AcordeonMantenimientosSistemasComponent
+    AcordeonMantenimientosSistemasComponent,
+    CatalogoProveedoresTickets
 ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-cadena-suministro-tab.component.html',
@@ -87,6 +89,7 @@ export class AdminCadenaSuministroTabComponent {
   mostrarMantenimientosAV: boolean = false;
   auxMostrarMantenimientosAV = true;
   mantenimientosAV: MantenimientoAudioVideo[] = [];
+  public modalCatalogoProvs:boolean = false; 
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -306,5 +309,10 @@ export class AdminCadenaSuministroTabComponent {
       );
     }
 
+  }
+
+    abrirModalCatProvs()
+  {
+    this.modalCatalogoProvs = true; 
   }
 }

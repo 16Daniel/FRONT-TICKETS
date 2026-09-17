@@ -82,6 +82,28 @@
                 requerido.</small>
             <p></p>
         </div>
+  
+        <div class="w-100" *ngIf="idArea == '20' && formCategoria !=undefined && requiereProveedor()">
+        <p-dropdown 
+        [options]="catproveedores" 
+        [(ngModel)]="formProveedor"
+        name="codProveedor"
+        optionLabel="nombre" 
+        [filter]="true" 
+        filterBy="nombre" 
+        placeholder="SELECCIONAR PROVEEDOR"
+        emptyFilterMessage="No se encontraron resultados"
+        [style]="{'width': '100%'}"
+        #formCodProveedorCtrl="ngModel" 
+        [ngClass]="{'p-invalid': formCodProveedorCtrl.invalid && formCodProveedorCtrl.touched}" required
+        >
+        </p-dropdown>
+        <small *ngIf="formCodProveedorCtrl.invalid && formCodProveedorCtrl.touched" class="p-error">
+            Campo requerido.
+        </small>
+        <p></p>
+        </div>
+        
 
         <input class="form-control" style="height: 48px;" type="text" placeholder="NOMBRE DEL SOLICITANTE"
             [(ngModel)]="ticket.solicitante" name="nombreSolicitante"
