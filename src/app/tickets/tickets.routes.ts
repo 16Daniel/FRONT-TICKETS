@@ -41,6 +41,12 @@ export const TICKETS_ROUTES: Routes = [
     title: 'No conformidad',
     loadComponent: () =>
       import('../compras/components/tabla-devoluciones/tabla-devoluciones'),
+  },
+  {
+    path: 'kpis',
+    title: 'KPIs',
+    loadComponent: () =>
+      import('./pages/kpis-tickets-page/kpis-tickets-page.component'),
   }
 ];
 

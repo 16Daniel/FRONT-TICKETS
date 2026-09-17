@@ -8,25 +8,25 @@ import { ToastModule } from 'primeng/toast';
 import { MultiSelectModule } from "primeng/multiselect";
 import { Subscription } from 'rxjs';
 
-import { GraficaGeneralTicketsComponent } from '../../../tickets/components/grafica-general-tickets/grafica-general-tickets.component';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { GraficaGeneralTicketsComponent } from '../../components/grafica-general-tickets/grafica-general-tickets.component';
+import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../../tickets/interfaces/categoria.mdoel';
-import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
-import { AceiteService } from '../../services/aceite.service';
+import { Categoria } from '../../interfaces/categoria.mdoel';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
+import { AceiteService } from '../../../aceites/services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { TicketsService } from '../../../tickets/services/tickets.service';
+import { TicketsService } from '../../services/tickets.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { CategoriesService } from '../../../tickets/services/categories.service';
-import { StatusTicketService } from '../../../tickets/services/status-ticket.service';
+import { CategoriesService } from '../../services/categories.service';
+import { StatusTicketService } from '../../services/status-ticket.service';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
 
 @Component({
-  selector: 'app-admin-reports-tab',
+  selector: 'app-kpis-tickets-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -38,11 +38,11 @@ import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimien
     MultiSelectModule
   ],
   providers: [MessageService],
-  templateUrl: './admin-reports-tab.component.html',
-  styleUrl: './admin-reports-tab.component.scss',
+  templateUrl: './kpis-tickets-page.component.html',
+  styleUrl: './kpis-tickets-page.component.scss',
 })
 
-export default class AdminReportsTabComponent implements OnInit {
+export default class KpisTicketsPageComponent implements OnInit {
   sucursales: Sucursal[] = [];
   sucursalesSel: Sucursal[] = [];
   loading: boolean = false;

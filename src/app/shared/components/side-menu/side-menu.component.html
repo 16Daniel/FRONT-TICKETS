@@ -78,9 +78,9 @@
   <!-- Scrollable Menu Content -->
   <div class="drawer-content">
     
-    <!-- Grupo: Principal -->
+    <!-- Grupo: Tickets -->
     <div class="nav-group">
-      <span class="nav-group-title">Principal</span>
+      <span class="nav-group-title">Tickets</span>
 
       <a 
         [routerLink]="'/main/home'" 
@@ -93,6 +93,21 @@
       </a>
 
       <a 
+        [routerLink]="'/main/kpis'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-line-chart nav-icon"></i>
+        <span class="nav-label">KPIs</span>
+      </a>
+    </div>
+
+    <!-- Grupo: Control de versiones -->
+    <div class="nav-group">
+      <span class="nav-group-title">Control de versiones</span>
+
+      <a 
         [routerLink]="'/main/version-control'" 
         routerLinkActive="active"
         *ngIf="usuario.idRol == '1'" 
@@ -100,16 +115,6 @@
         class="nav-item">
         <i class="bx bx-git-repo-forked nav-icon"></i>
         <span class="nav-label">Control de versiones</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/kpis'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '4'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-line-chart nav-icon"></i>
-        <span class="nav-label">KPIs</span>
       </a>
     </div>
 

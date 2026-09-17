@@ -32,14 +32,6 @@
     </ng-container>
   </p-tabPanel>
   }
-  @if (usuario.idRol == '1' || usuario.idRol == '5')
-  {
-  <p-tabPanel header="KPIs">
-    <ng-container *ngIf="tabsActivos['KPIs']">
-      <app-admin-reports-tab></app-admin-reports-tab>
-    </ng-container>
-  </p-tabPanel>
-  }
   <p-tabPanel header="TAREAS">
 
     <div class="d-flex align-items-center">

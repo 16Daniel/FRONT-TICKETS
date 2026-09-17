@@ -10,7 +10,6 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
-import AdminReportsTabComponent from '../../../aceites/layout/admin-reports-tab/admin-reports-tab.component';
 import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
 import { AdminSysTabComponent } from '../admin-sys-tab/admin-sys-tab.component';
 import { AdminAudioVideoTabComponent } from '../admin-audio-video-tab/admin-audio-video-tab.component';
@@ -27,7 +26,6 @@ import { AdminCadenaSuministroTabComponent } from '../admin-cadena-suministro-ta
     AdminSysTabComponent,
     AdminAudioVideoTabComponent,
     AdminMaintenanceTabComponent,
-    AdminReportsTabComponent,
     EisenhowerMatrixPageComponent,
     DashboardTasksPageComponent,
     DropdownModule,
