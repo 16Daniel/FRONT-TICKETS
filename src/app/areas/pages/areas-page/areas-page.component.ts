@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
@@ -11,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { Area } from '../../interfaces/area.model';
 import { AreasService } from '../../services/areas.service';
 import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-area-create.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-areas-page',
@@ -21,8 +24,11 @@ import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-
     ButtonModule,
     TableModule,
     ToastModule,
+    TooltipModule,
+    InputTextModule,
     ConfirmDialogModule,
-    ModalAreaCreateComponent
+    ModalAreaCreateComponent,
+    PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './areas-page.component.html',

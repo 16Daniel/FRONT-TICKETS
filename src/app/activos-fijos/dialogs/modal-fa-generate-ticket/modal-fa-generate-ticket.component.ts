@@ -286,14 +286,14 @@ export class ModalFaGenerateTicketComponent implements OnInit {
 
   obtenerIdResponsableTicket(): string {
     let id = '';
-    const rol2 = this.catUsuariosHelp.find(x => x.idRol === '2');
-    if (rol2) {
-      id = rol2.id;
-    } else {
-      const resp = this.catUsuariosHelp.find(x => x.idArea === this.ticket.idArea);
-      if (resp) {
-        id = resp.id;
-      }
+    const usuarioResponsable = this.catUsuariosHelp.find(x => 
+      x.idRol === '4' && 
+      String(x.idArea) === String(this.ticket.idArea) &&
+      x.sucursales && x.sucursales.some(s => String(s.id) === String(this.ticket.idSucursal))
+    );
+    
+    if (usuarioResponsable) {
+      id = usuarioResponsable.id;
     }
     return id;
   }
@@ -311,15 +311,12 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   obtenerResponsablesTicket(idSucursal: string, idArea: string): string[] {
     const idsResponsables: string[] = [];
     for (const usuario of this.catUsuariosHelp) {
-      const existeSucursal = usuario.sucursales.some(
-        (sucursal) => String(sucursal.id) === String(idSucursal)
-      );
+      const esRol4 = String(usuario.idRol) === '4';
+      const esMismaArea = String(usuario.idArea) === String(idArea);
+      const tieneSucursal = usuario.sucursales && usuario.sucursales.some(s => String(s.id) === String(idSucursal));
+      const esGuardia = usuario.esGuardia === true;
 
-      if (
-        ((existeSucursal && String(usuario.idArea) === String(idArea)) ||
-          (usuario.esGuardia && String(usuario.idArea) === String(this.ticket.idArea))) &&
-        usuario.idRol !== '2'
-      ) {
+      if (esRol4 && esMismaArea && (tieneSucursal || esGuardia)) {
         idsResponsables.push(usuario.id);
       }
     }

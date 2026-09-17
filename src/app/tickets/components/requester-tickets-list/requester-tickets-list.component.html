@@ -1,119 +1,124 @@
-<p-table [value]="tickets" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
+<p-table [value]="tickets" [tableStyle]="{ 'min-width': '10rem' }"
   styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
   [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
   <ng-template pTemplate="header">
     <tr class="text-center">
-      <th><span class="fs-1">🚥</span></th>
-      <th>FOLIO</th>
+      <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA</th>
       <th>{{ mostrarFechaSolicitud ? 'FECHA DE SOLICITUD' : 'FECHA' }}</th>
-      <th *ngIf="mostrarFedchaEstimacion">FECHA FIN</th>
       <th *ngIf="mostrarFechaTermino">FECHA DE TERMINO</th>
       <th>AREA</th>
       <th *ngIf="esEspectadorActivo || mostrarSucursal">SUCURSAL</th>
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
-      <th>CATEGORÍA</th>
-      <th>SUBCATEGORÍA</th>
+      <th>CATEGORÍA / RUTA</th>
       <th *ngIf="mostrarDescripcion">DESCRIPCIÓN</th>
       <th>ESTATUS</th>
       <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
       <th *ngIf="mostrarAcciones">ACCIONES</th>
     </tr>
   </ng-template>
-  <!-- FF495F -->
+
   <ng-template pTemplate="body" let-ticket>
     <tr [pSelectableRow]="ticket"
       [ngClass]="{'row-highlight': ticket.idEstatusTicket == '7' && ticketSeleccionado !== ticket}">
 
+      <!-- SLA Column (First Column, gets the lateral color indicator) -->
+      <td class="text-center celda-criticidad-matriz"
+          [ngStyle]="{'box-shadow': 'inset 6px 0 0 0 ' + (obtenerEstatusInfo(ticket.idEstatusTicket)?.color || 'transparent')}">
+          <div class="contenedor-criticidad-celda">
+              <!-- Fila Dual SLA Gauge + Mini Matriz de Urgencia 3x3 -->
+              <div class="fila-sla-matriz">
+                  <!-- Mini Matriz 3x3 de Urgencia -->
+                  <app-mini-matriz-urgencia [ticket]="ticket" [categorias]="categorias"></app-mini-matriz-urgencia>
+                  
+                  <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
+                  <app-ticket-sla-gauge [ticket]="ticket" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
+              </div>
+
+              <div *ngIf="ticket.esAsignadoEspecialista"
+                  [pTooltip]="obtenerNombreResponsable(ticket.idUsuarioEspecialista)" tooltipPosition="top"
+                  style="color: red; font-size: 1.1em;"> ✚
+              </div>
+          </div>
+      </td>
+
+      <!-- FECHA (Second Column) -->
       <td class="text-center">
-        <i *ngIf="!ticket.esAsignadoEspecialista && ticket.idPrioridadTicket != '1'" class="bx bxs-circle bx-sm"
-          [style]="{
-                color: obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket)
-              }">
-        </i>
-
-        <i class="bx bxs-hot bx-sm" style="color: red" *ngIf="ticket.idPrioridadTicket == '1' && !ticket.esAsignadoEspecialista"></i>
-
-        <div *ngIf="ticket.esAsignadoEspecialista" ticket.esAsignadoEspecialista
-          style="margin: 2px; background-color: white; color: red; font-size: 1.5em;"> ✚ </div>
+        <div class="d-flex flex-column align-items-center gap-1">
+          <span>{{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy' }}</span>
+          <span class="text-muted small">{{ getDate(ticket!.fecha) | date: 'hh:mm a' }}</span>
+          <i class="bx bxs-hot text-danger mt-1" *ngIf="ticket.idPrioridadTicket == '1' && !ticket.esAsignadoEspecialista" pTooltip="PRIORIDAD MÁXIMA" tooltipPosition="top"></i>
+        </div>
       </td>
 
-
-
-      <td class="text-center">{{ ticket.folio }}</td>
-      <td class="text-center">
-        {{ getDate(ticket!.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
-      </td>
-      <td class="text-center" *ngIf="mostrarFedchaEstimacion">
-        {{ getDate(ticket!.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}
-      </td>
       <td class="text-center" *ngIf="mostrarFechaTermino">
         {{ ticket.fechaFin ? (getDate(ticket.fechaFin) | date: 'dd/MM/yyyy hh:mm a') : 'N/A' }}
       </td>
+      
       <td class="text-center">
         {{ obtenerNombreArea(ticket.idArea) }}
       </td>
+      
       <td class="text-center" *ngIf="esEspectadorActivo || mostrarSucursal">
-        {{obtenerNombreSucursal(ticket.idSucursal)}}
+        {{ obtenerNombreSucursal(ticket.idSucursal) }}
       </td>
-      <td class="text-center">{{ ticket.solicitante | uppercase }}</td>
-      <td class="text-center">
+      
+      <td class="text-center fw-bold">{{ ticket.solicitante | uppercase }}</td>
+      
+      <td class="text-center text-muted">
         {{ obtenerNombreResponsable(ticket!.idResponsableFinaliza) }}
       </td>
+      
       <td class="text-center">
-        {{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}
+        <div class="d-flex flex-column align-items-center">
+          <span class="fw-bold">{{ ticket.nombreCategoria == null ? "" : ticket.nombreCategoria }}</span>
+          <span class="text-muted small">{{ ticket.idSubcategoria == null ? "" : ticket.nombreSubcategoria }}</span>
+        </div>
       </td>
-      <td class="text-center">
-        {{ ticket.idSubcategoria == null ? "N/A" : ticket.nombreSubcategoria }}
-      </td>
+      
       <td class="text-center" *ngIf="mostrarDescripcion" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" [pTooltip]="ticket.descripcion" tooltipPosition="top">
         {{ ticket.descripcion }}
       </td>
+      
       <td class="text-center">
-        <i *ngIf="ticket.idEstatusTicket == '1'" class="bx bx-dots-horizontal-rounded bx-tada bx-sm"
-          style="color: #ff0028" [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)"
-          tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '2'" class="bx bx-loader bx-rotate-180 bx-spin bx-sm" style="color: #ff7b00"
-          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '4'" class="bx bx-pause bx-tada bx-md" style="color: #a300ff"
-          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '3'" class="bx bx-check bx-tada bx-sm" style="color: #008500"
-          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '5'" class="bx bxs-cart bx-tada bx-sm" style="color: #ff7b00"
-          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '6'" class="bx bxs-cart bx-tada bx-sm" style="color: #008500"
-          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
-        <i *ngIf="ticket.idEstatusTicket == '7'" class="bx bx-check bx-tada bx-sm" style="color: #a300ff"
-          [pTooltip]="obtenerNombreEstatusTicket(ticket.idEstatusTicket)" tooltipPosition="top"></i>
+        <div class="d-flex align-items-center justify-content-center gap-1" *ngIf="obtenerEstatusInfo(ticket.idEstatusTicket) as st; else soloTexto">
+          <i class="bx fs-5" [ngClass]="st.icon" [class]="st.animation" [style.color]="st.color"></i>
+          <span class="fw-bold">{{ st.nombre }}</span>
+        </div>
+        <ng-template #soloTexto>
+          <span class="badge bg-secondary">{{ obtenerNombreEstatusTicket(ticket.idEstatusTicket) | uppercase }}</span>
+        </ng-template>
       </td>
 
-      <td *ngIf="mostrarEstrellas">
+      <td *ngIf="mostrarEstrellas" class="text-center">
         <app-rating-stars [rating]="ticket.calificacion" [editable]="false"></app-rating-stars>
       </td>
 
-      <td style="display: flex; gap: 10px" *ngIf="mostrarAcciones">
+      <!-- Action Buttons homologated to btn-action-table -->
+      <td class="text-center" *ngIf="mostrarAcciones">
+        <div class="d-flex align-items-center justify-content-center gap-2">
+          
+          <button class="btn-action-table btn-action-success" (click)="onClickFinalizar(ticket)"
+            [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar" pTooltip="FINALIZAR TICKET" tooltipPosition="top">
+            <i class="bx bx-check-circle"></i>
+          </button>
+          
+          <button class="btn-action-table btn-action-warning" (click)="onClickRechazar(ticket)"
+            [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar && ticket.idEstatusTicket == '7'" pTooltip="RECHAZAR SOPORTE" tooltipPosition="top">
+            <i class="bx bx-undo"></i>
+          </button>
+          
+          <button class="btn-action-table btn-action-success" (click)="onClickValidar(ticket)"
+            [disabled]="esEspectadorActivo" *ngIf="mostrarAccionValidar && ticket.idEstatusTicket != '7'" pTooltip="VALIDAR TICKET" tooltipPosition="top">
+            <i class="bx bx-check-double"></i>
+          </button>
+          
+          <button class="btn-action-table btn-action-primary" (click)="onClickChat(ticket)"
+            *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}" pTooltip="CHAT" tooltipPosition="top">
+            <i class="bx bx-message-square-dots"></i>
+          </button>
 
-        <button class="btn btn-success" (click)="onClickFinalizar(ticket)" style="margin: 2px"
-          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar">
-          <i class="bx bx-check-circle bx-sm" pTooltip="FINALIZAR TICKET" tooltipPosition="top"></i>
-        </button>
-        <button class="btn btn-warning" (click)="onClickRechazar(ticket)" style="margin: 2px"
-          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar && ticket.idEstatusTicket == '7'">
-          <i class="bx bx-undo bx-sm" pTooltip="RECHAZAR SPORTE" tooltipPosition="top"></i>
-        </button>
-        <button class="btn btn-warning" (click)="onClickValidar(ticket)" style="margin: 2px"
-          [disabled]="esEspectadorActivo" *ngIf="mostrarAccionValidar && ticket.idEstatusTicket != '7'">
-          <i class="bx bx-check-circle bx-sm" pTooltip="VALIDAR TICKET" tooltipPosition="top"></i>
-        </button>
-        <button class="btn btn-primary btn-notification" (click)="onClickChat(ticket)" style="margin: 2px"
-          *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}">
-          <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
-            tooltipPosition="top"></i>
-        </button>
-        <button *ngIf="(ticket != undefined && ticket!.idPrioridadTicket != '1') && mostrarAccionPanico"
-          class="btn btn-dark" (click)="onPanicoClick(ticket!.id)" style="margin: 2px" [disabled]="esEspectadorActivo">
-          <i class="bx bxs-hot bx-sm" style="color: rgb(255, 255, 255)" pTooltip="PÁNICO" tooltipPosition="top"></i>
-        </button>
+        </div>
       </td>
     </tr>
   </ng-template>
