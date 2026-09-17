@@ -6,7 +6,7 @@
         <tr class="text-center">
             <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA</th>
             <th>FECHA</th>
-            <th>AREA</th>
+            <!-- <th>AREA</th> -->
             <th>CATEGORÍA / RUTA</th>
             <th>ESTATUS</th>
             <th>SOLICITANTE</th>
@@ -38,7 +38,7 @@
             </td>
             <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
             </td>
-            <td class="text-center">
+            <!-- <td class="text-center">
                 <p-dropdown 
                     [options]="areas" 
                     [(ngModel)]="tk.idArea" 
@@ -56,7 +56,7 @@
                         <span>{{ dep.nombre }}</span>
                     </ng-template>
                 </p-dropdown>
-            </td>
+            </td> -->
             <td class="celda-categoria-ruta text-start">
                 <button 
                     type="button" 
