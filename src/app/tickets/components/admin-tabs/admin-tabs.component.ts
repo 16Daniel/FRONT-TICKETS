@@ -8,8 +8,6 @@ import { Subscription } from 'rxjs';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
-import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import { AdminSysTabComponent } from '../admin-sys-tab/admin-sys-tab.component';
 import { AdminAudioVideoTabComponent } from '../admin-audio-video-tab/admin-audio-video-tab.component';
 import { AdminMaintenanceTabComponent } from '../admin-maintenance-tab/admin-maintenance-tab.component';
@@ -25,8 +23,6 @@ import { AdminCadenaSuministroTabComponent } from '../admin-cadena-suministro-ta
     AdminSysTabComponent,
     AdminAudioVideoTabComponent,
     AdminMaintenanceTabComponent,
-    EisenhowerMatrixPageComponent,
-    DashboardTasksPageComponent,
     DropdownModule,
     AdminCadenaSuministroTabComponent,
   ],
@@ -46,7 +42,6 @@ export class AdminTabsComponent {
   activeIndex: number = 0;
   tabsActivos: Record<string, boolean> = {};
   private unsubscribe!: () => void;
-  verEisenhower: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -82,11 +77,5 @@ export class AdminTabsComponent {
     const header = event.originalEvent.target.innerText.trim();
     this.activeIndex = event.index;
     this.tabsActivos[header] = true;
-  }
-
-  onToggleEisenhower() {
-    setTimeout(() => {
-      this.cdr.detectChanges();
-    }, 500);
   }
 }

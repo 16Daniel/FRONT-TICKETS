@@ -63,6 +63,10 @@ export const routes: Routes = [
       },
       {
         path: '',
+        loadChildren: () => import('./tareas/tareas.routes').then(m => m.TAREAS_MAIN_ROUTES)
+      },
+      {
+        path: '',
         redirectTo: '/main/home-a',
         pathMatch: 'full',
       },
@@ -96,7 +100,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./tareas/tareas.routes')
+    loadChildren: () => import('./tareas/tareas.routes').then(m => m.TAREAS_ROOT_ROUTES)
   },
   {
     path: '',

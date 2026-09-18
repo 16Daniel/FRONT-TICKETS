@@ -208,6 +208,15 @@
       </a>
 
       <a 
+        [routerLink]="'/main/tareas'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-check-square nav-icon"></i>
+        <span class="nav-label">Tareas</span>
+      </a>
+
+      <a 
         [routerLink]="'/main/calendar-builder'" 
         routerLinkActive="active"
         *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
