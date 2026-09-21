@@ -11,10 +11,11 @@
     </button>
 
     <div class="brand-container">
-      <div class="branch-badge" *ngIf="tituloBanner">
-        <i class="bx bx-user badge-icon"></i>
-        <span>{{ tituloBanner }}</span>
+      <!-- <div class="brand-logo">
+        <i class="bx bx-layer"></i>
       </div>
+      <span class="brand-title">REBEL TICKETS</span> -->
+      <span class="branch-badge" *ngIf="tituloBanner">{{ tituloBanner }}</span>
     </div>
   </div>
 
@@ -55,6 +56,15 @@
       <span class="drawer-title">ERP REBEL TICKETS</span>
     </div>
     <div class="drawer-actions">
+      <button 
+        type="button" 
+        class="pin-drawer-btn" 
+        (click)="togglePin()" 
+        [title]="isPinned ? 'Desanclar menú' : 'Anclar menú'" 
+        [attr.aria-label]="isPinned ? 'Desanclar menú' : 'Anclar menú'">
+        <i class="bx" [ngClass]="isPinned ? 'bxs-pin active-pin' : 'bx-pin'"></i>
+      </button>
+
       <button 
         type="button" 
         class="close-drawer-btn" 

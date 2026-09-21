@@ -69,10 +69,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
     });
 
-    // Menú siempre anclado en escritorio
-    this.isPinned = true;
+    // Read pinned status from localStorage (default to true)
+    const savedPin = localStorage.getItem('rw_sidebar_pinned');
+    this.isPinned = savedPin !== null ? savedPin === 'true' : true;
 
-    if (window.innerWidth > 1024) {
+    if (this.isPinned && window.innerWidth > 1024) {
       this.showmenu = true;
     }
 
@@ -111,6 +112,16 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.updateBodyPinClass();
   }
 
+  togglePin(): void {
+    this.isPinned = !this.isPinned;
+    localStorage.setItem('rw_sidebar_pinned', String(this.isPinned));
+    if (this.isPinned) {
+      this.showmenu = true;
+    }
+    this.updateBodyPinClass();
+    this.cdr.markForCheck();
+  }
+
   toggleMenu(): void {
     this.showmenu = !this.showmenu;
     this.updateBodyPinClass();
@@ -118,7 +129,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   }
 
   closemenu(): void {
-    if (window.innerWidth <= 1024) {
+    if (!this.isPinned || window.innerWidth <= 1024) {
       this.showmenu = false;
       this.updateBodyPinClass();
     }
