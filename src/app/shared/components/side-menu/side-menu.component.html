@@ -20,7 +20,7 @@
   </div>
 
   <div class="navbar-right">
-    <app-version-button></app-version-button>
+
     <app-chat-notifications-button></app-chat-notifications-button>
 
     <div class="user-avatar-wrapper" *ngIf="usuario && usuario.idRol !== '6'">
@@ -398,7 +398,7 @@
       </div>
       <div class="user-info">
         <span class="user-name">{{ usuario.nombre }} {{ usuario.apellidoP }}</span>
-        <span class="user-role">ERP User</span>
+        <span class="user-role">ERP User <ng-container *ngIf="versionActual">| v{{ versionActual.version }}</ng-container></span>
       </div>
     </div>
     <button type="button" class="logout-btn" (click)="logout()">
