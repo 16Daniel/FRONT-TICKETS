@@ -11,18 +11,17 @@
     </button>
 
     <div class="brand-container">
-      <div class="brand-logo">
-        <i class="bx bx-layer"></i>
+      <div class="branch-badge" *ngIf="tituloBanner">
+        <i class="bx bx-user badge-icon"></i>
+        <span>{{ tituloBanner }}</span>
       </div>
-      <span class="brand-title">REBEL TICKETS</span>
-      <span class="branch-badge" *ngIf="tituloBanner">{{ tituloBanner }}</span>
     </div>
   </div>
 
   <div class="navbar-right">
 
     <app-chat-notifications-button></app-chat-notifications-button>
-
+<!-- 
     <div class="user-avatar-wrapper" *ngIf="usuario && usuario.idRol !== '6'">
       <ngx-avatars 
         [name]="responsableTarea?.nombre || usuario.nombre" 
@@ -30,7 +29,7 @@
         pTooltip="{{ responsableTarea?.nombre || usuario.nombre }}" 
         [bgColor]="responsableTarea?.color || '#D3152A'">
       </ngx-avatars>
-    </div>
+    </div> -->
   </div>
 </header>
 
@@ -56,15 +55,6 @@
       <span class="drawer-title">ERP REBEL TICKETS</span>
     </div>
     <div class="drawer-actions">
-      <button 
-        type="button" 
-        class="pin-drawer-btn" 
-        (click)="togglePin()" 
-        [title]="isPinned ? 'Desanclar menú' : 'Anclar menú'" 
-        [attr.aria-label]="isPinned ? 'Desanclar menú' : 'Anclar menú'">
-        <i class="bx" [ngClass]="isPinned ? 'bxs-pin active-pin' : 'bx-pin'"></i>
-      </button>
-
       <button 
         type="button" 
         class="close-drawer-btn" 
