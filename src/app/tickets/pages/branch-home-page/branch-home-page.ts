@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { BranchesTabsComponent } from '../../components/branches-tabs/branches-tabs.component';
 import { NotificacionNuevoMensajeChatComponent } from '../../components/notificacion-nuevo-mensaje-chat/notificacion-nuevo-mensaje-chat.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-branch-home-page',
@@ -17,9 +18,11 @@ import { NotificacionNuevoMensajeChatComponent } from '../../components/notifica
     ConfirmDialogModule,
     CommonModule,
     BranchesTabsComponent,
+    PageHeaderComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './branch-home-page.html',
+  styleUrl: './branch-home-page.scss'
 })
 export default class BranchHomePageComponent {
   esEspectadorActivo: boolean = false;

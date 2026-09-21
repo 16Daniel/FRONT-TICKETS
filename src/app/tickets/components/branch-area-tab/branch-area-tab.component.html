@@ -1,0 +1,118 @@
+<!-- Tarjetas informativas (KPIs) -->
+<div class="dashboard-kpi-section mb-4 mt-3">
+  <app-iconos-notificaciones-tickets 
+    [tickets]="todosLosTickets" 
+    [usuario]="usuario">
+  </app-iconos-notificaciones-tickets>
+</div>
+
+<div class="actions-toolbar-row mt-3 mb-4">
+  <div class="actions-buttons-container justify-content-start flex-wrap gap-2">
+    <!-- General Actions -->
+    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary action-btn-custom" (click)="onClickGenerarTicket()"></p-button>
+
+    <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning action-btn-custom"
+      (click)="mostrarModalHistorial = true">
+    </p-button>
+
+    <!-- Specific Actions: IT (id=1) -->
+    <p-button *ngIf="usuario.idRol == '2' && (idArea == '1' || idArea == '4' || idArea == '2')" label="HISTORIAL 8 X 8" icon="pi pi-history" styleClass="p-button-secondary action-btn-custom"
+      (click)="mostrarModalHistorialMantenimientos = true">
+    </p-button>
+
+    <p-button *ngIf="usuario.idRol == '2' && idArea == '1'" label="HISTORIAL 6 X 6 AV" icon="pi pi-history" styleClass="p-button-secondary action-btn-custom"
+      (click)="mostrarModalHistorialMantenimientosAV = true">
+    </p-button>
+
+    <p-button *ngIf="usuario.idRol == '2' && idArea == '1' && mantenimientoActivo?.id" label="SISTEMAS 8 X 8" icon="pi pi-verified"
+      styleClass="p-button-danger action-btn-custom" (click)="mostrarAlertaIT()">
+    </p-button>
+
+    <p-button *ngIf="usuario.idRol == '2' && idArea == '1' && mantenimientoAVActivo?.id" label="AUDIO VIDEO 6 X 6" icon="pi pi-verified"
+      styleClass="p-button-danger action-btn-custom" (click)="mostrarAlertaAV()">
+    </p-button>
+    
+    <p-button *ngIf="usuario.idRol == '2' && idArea == '1'" label="EVALUACION GENERAL" icon="pi pi-star" styleClass="p-button-yellow action-btn-custom"
+      (click)="mostrarModalRating = true">
+    </p-button>
+
+    <!-- Specific Actions: AV (id=2) -->
+    <p-button *ngIf="usuario.idRol == '2' && idArea == '2' && mantenimientoAVActivo?.id" label="CHECK 8 X 8" icon="pi pi-wrench"
+      styleClass="p-button-danger action-btn-custom" (click)="mostrarAlertaAV()">
+    </p-button>
+
+    <!-- Specific Actions: Mtto (id=4) -->
+    <p-button *ngIf="usuario.idRol == '2' && idArea == '4' && mantenimientosActivos.length > 0" label="CHECK 8 X 8" icon="pi pi-wrench"
+      styleClass="p-button-danger action-btn-custom" (click)="mostrarAlertaMtto()">
+    </p-button>
+  </div>
+</div>
+
+<div class="d-flex flex-wrap gap-2 align-items-center mt-3" *ngIf="idArea == '1'">
+  <div class="form-check form-switch d-flex align-items-center gap-2">
+    <input class="form-check-input" type="checkbox" role="switch" style="width: 3rem; height: 2rem;" [(ngModel)]="mostrarTPVs">
+    <label class="form-check-label fs-6">MOSTRAR TPVs</label>
+  </div>
+</div>
+
+<div *ngIf="tickets.length > 0" class="p-1 mt-3">
+  <div class="m-0 pb-4" style="background-color: transparent">
+    <app-priority-tickets-accordion [tickets]="tickets" [esEspectadorActivo]="esEspectadorActivo"
+      (clickEvent)="abrirModalDetalleTicket($event)" [mostrarTpvs]="mostrarTPVs"></app-priority-tickets-accordion>
+  </div>
+</div>
+
+<app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>
+
+<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
+  [showModalTicketDetail]="mostrarModalTicketDetail"
+  (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+
+<app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
+  (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-historial-tickets-dialog>
+
+<!-- Modals for IT/AV -->
+<ng-container *ngIf="idArea == '1' || idArea == '2'">
+  <app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
+    [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
+    (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
+
+  <app-historial-mantenimiento-sys-av-dialog *ngIf="mostrarModalHistorialMantenimientosAV"
+    [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientosAV"
+    (closeEvent)="mostrarModalHistorialMantenimientosAV = false"></app-historial-mantenimiento-sys-av-dialog>
+
+  <!-- Checks for IT -->
+  <app-modal-ten-xten-maintenance-check *ngIf="mostrarModalMtooTI" [mostrarModalMtooTI]="mostrarModalMtooTI"
+    (closeEvent)="mostrarModalMtooTI = false" [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
+
+  <!-- Checks for AV -->
+  <app-check-mantenimiento-sis-av-dialog *ngIf="mostrarModalAV" [mostrarModalAV]="mostrarModalAV"
+    (closeEvent)="mostrarModalAV = false" [mantenimientoActivo]="mantenimientoAVActivo"></app-check-mantenimiento-sis-av-dialog>
+</ng-container>
+
+<!-- Modals for Mtto -->
+<ng-container *ngIf="idArea == '4'">
+  <app-modal-maintenance-mtto-history *ngIf="mostrarModalHistorialMantenimientos"
+    [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
+    (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-maintenance-mtto-history>
+
+  <app-modal-mateinance-mtto-check *ngIf="mostrarModalManteinance" [showModal]="mostrarModalManteinance"
+    (closeEvent)="mostrarModalManteinance = false" [mantenimientosActivos]="mantenimientosActivos"></app-modal-mateinance-mtto-check>
+</ng-container>
+
+<app-modal-branch-rating *ngIf="idArea == '1'" [mostrarModalRating]="mostrarModalRating"
+  (closeEvent)="mostrarModalRating = false"></app-modal-branch-rating>
+
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p [innerHTML]="message.message"></p>
+    </div>
+  </ng-template>
+</p-confirmDialog>

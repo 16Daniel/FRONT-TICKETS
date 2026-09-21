@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabViewModule } from 'primeng/tabview';
@@ -10,14 +10,10 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
-import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
-import { BranchesOilTabComponent } from '../../../aceites/components/branches-oil-tab/branches-oil-tab.component';
-import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
-import { BranchesSysTabComponent } from '../branches-sys-tab/branches-sys-tab.component';
-import { BranchesAudioVideoTabComponent } from '../branches-audio-video-tab/branches-audio-video-tab.component';
-import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
-import { SucursalCadenaSuministrosTabComponent } from "../sucursal-cadena-suministros-tab/sucursal-cadena-suministros-tab.component";
+import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { BranchAreaTabComponent } from '../branch-area-tab/branch-area-tab.component';
+import { Area } from '../../../areas/interfaces/area.model';
+import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({
   selector: 'app-branches-tabs',
@@ -25,22 +21,16 @@ import { SucursalCadenaSuministrosTabComponent } from "../sucursal-cadena-sumini
   imports: [
     CommonModule,
     TabViewModule,
-    BranchesSysTabComponent,
-    BranchesAudioVideoTabComponent,
     FormsModule,
     MultiSelectModule,
-    BranchesMaintenanceTabComponent,
-    BranchesOilTabComponent,
-    EisenhowerMatrixPageComponent,
-    DashboardTasksPageComponent,
-    ComensalesPage,
-    SucursalCadenaSuministrosTabComponent
+    IconosNotificacionesTicketsComponent,
+    BranchAreaTabComponent
   ],
   templateUrl: './branches-tabs.component.html',
   styleUrl: './branches-tabs.component.scss',
 })
 
-export class BranchesTabsComponent implements OnDestroy {
+export class BranchesTabsComponent implements OnDestroy, OnInit {
   @Output() espectadorEmitter = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];
@@ -52,30 +42,56 @@ export class BranchesTabsComponent implements OnDestroy {
   todosLosTickets: Ticket[] = [];
   ticket: Ticket | undefined;
 
-  verEisenhower: boolean = false;
+  areasTicket: Area[] = [];
+  areasSub: Subscription | undefined;
+  activeIndex: number = 0;
+  tabsActivos: Record<string, boolean> = {};
+
   esEspectadorActivo: boolean = false;
   sucursalesSeleccionadas: Sucursal[] = [];
-  public tabindex: number = 0;
   private unsubscribe!: () => void;
 
   constructor(
     private ticketsService: TicketsService,
     public cdr: ChangeDetectorRef,
-    private sucursalesService: BranchesService,) {
+    private sucursalesService: BranchesService,
+    private areasService: AreasService
+  ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
     this.obtenerTicketsPorSucursal(this.sucursal?.id);
     this.obtenerSucursales();
   }
 
+  ngOnInit() {
+    this.areasSub = this.areasService.areas$.subscribe((areas) => {
+      let filteredAreas = areas.filter(a => a.activarTickets === true);
+
+      this.areasTicket = filteredAreas;
+      
+      if (this.areasTicket.length > 0) {
+        this.tabsActivos[this.areasTicket[0].nombre.toUpperCase()] = true;
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
   ngOnDestroy() {
-    if (this.subscripcionTicket != undefined) {
+    if (this.subscripcionTicket) {
       this.subscripcionTicket.unsubscribe();
     }
-
+    if (this.areasSub) {
+      this.areasSub.unsubscribe();
+    }
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+  }
+
+  onTabChange(event: any) {
+    const header = event.originalEvent.target.innerText.trim();
+    this.activeIndex = event.index;
+    this.tabsActivos[header] = true;
   }
 
   obtenerSucursales() {
@@ -174,9 +190,5 @@ export class BranchesTabsComponent implements OnDestroy {
 
   }
 
-  onToggleEisenhower() {
-    setTimeout(() => {
-      this.cdr.detectChanges();
-    }, 500);
-  }
+
 }
