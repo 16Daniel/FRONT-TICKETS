@@ -5,10 +5,10 @@ import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
-import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion',

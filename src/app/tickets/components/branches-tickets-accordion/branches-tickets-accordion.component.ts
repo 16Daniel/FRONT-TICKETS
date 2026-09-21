@@ -12,13 +12,13 @@ import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-l
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { NivelesAudioComponent } from '../../../mantenimientos/components/niveles-audio/niveles-audio.component';
-import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
 import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TablaTvsBocinasComponent } from "../../../mantenimientos/components/tabla-tvs-bocinas/tabla-tvs-bocinas.component";
+import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-branches-tickets-accordion',
