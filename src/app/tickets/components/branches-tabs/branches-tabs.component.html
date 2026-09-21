@@ -48,34 +48,6 @@
     <app-branches-oil-tab></app-branches-oil-tab>
   </p-tabPanel>
 
-  <p-tabPanel header="TAREAS">
-
-    <div class="d-flex justify-content-end align-items-center gap-3">
-      <label class="form-check-label fs-4 mb-0" for="activarGuardia">EISENHOWER</label>
-
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
-          style="width: 3rem; height: 2rem;" [(ngModel)]="verEisenhower" (change)="onToggleEisenhower()">
-      </div>
-    </div>
-
-    <br>
-
-    <!-- <app-dashboard-tasks-page *ngIf="!verEisenhower"></app-dashboard-tasks-page>
-    <app-eisenhower-matrix-page *ngIf="verEisenhower"></app-eisenhower-matrix-page> -->
-
-    <app-dashboard-tasks-page [hidden]="verEisenhower || sucursal.id == undefined"></app-dashboard-tasks-page>
-    <app-eisenhower-matrix-page [hidden]="!verEisenhower || sucursal.id == undefined"></app-eisenhower-matrix-page>
-
-  </p-tabPanel>
-
-  <p-tabPanel header="COMENSALES">
-    <ng-container>
-      <app-comensales-page></app-comensales-page>
-    </ng-container>
-  </p-tabPanel>
-
-
 </p-tabView>
 
 <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"

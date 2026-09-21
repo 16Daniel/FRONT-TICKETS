@@ -44,7 +44,7 @@
                     [(ngModel)]="mostrarSistemasMap[item.id]" />
                 <label class="form-check-label m-0">💻 TABLETAS | TPVs</label>
             </div>
-            <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0" *ngIf="idArea == '1'">
                 <input class="form-check-input custom-switch" type="checkbox" role="switch"
                     [(ngModel)]="mostrarAudioVideoMap[item.id]" />
                 <label class="form-check-label m-0">🔊 TVs | BOCINAS</label>

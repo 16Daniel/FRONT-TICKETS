@@ -10,10 +10,7 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { DashboardTasksPageComponent } from '../../../tareas/pages/dashboard-tasks-page/dashboard-tasks-page';
-import { EisenhowerMatrixPageComponent } from '../../../tareas/pages/eisenhower-matrix-page/eisenhower-matrix-page';
 import { BranchesOilTabComponent } from '../../../aceites/components/branches-oil-tab/branches-oil-tab.component';
-import { ComensalesPage } from "../../../comensales/pages/comensales-page/comensales-page";
 import { BranchesSysTabComponent } from '../branches-sys-tab/branches-sys-tab.component';
 import { BranchesAudioVideoTabComponent } from '../branches-audio-video-tab/branches-audio-video-tab.component';
 import { BranchesMaintenanceTabComponent } from '../branches-maintenance-tab/branches-maintenance-tab.component';
@@ -31,9 +28,6 @@ import { SucursalCadenaSuministrosTabComponent } from "../sucursal-cadena-sumini
     MultiSelectModule,
     BranchesMaintenanceTabComponent,
     BranchesOilTabComponent,
-    EisenhowerMatrixPageComponent,
-    DashboardTasksPageComponent,
-    ComensalesPage,
     SucursalCadenaSuministrosTabComponent
   ],
   templateUrl: './branches-tabs.component.html',

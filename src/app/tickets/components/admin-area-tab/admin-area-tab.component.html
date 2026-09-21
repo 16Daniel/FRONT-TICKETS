@@ -1,13 +1,70 @@
 <div class="tickets-tab-container">
 
-  <!-- Top Bar: User Badge -->
-  <div class="tickets-top-bar" *ngIf="usergroup">
+  <!-- Top Bar: Context Badges & Maintenance Switches -->
+  <div class="tickets-top-bar">
     <div class="header-title-group">
+      <span class="active-view-badge" *ngIf="mostrarMantenimientosTI">
+        <i class="bx bx-laptop"></i>
+        <span>Mantenimiento IT (8X8)</span>
+      </span>
+
+      <span class="active-view-badge" *ngIf="mostrarMantenimientosAV">
+        <i class="bx bx-tv"></i>
+        <span>Mantenimiento AV (6X6)</span>
+      </span>
+      
+      <span class="active-view-badge" *ngIf="mostrarMantenimientosMtto">
+        <i class="bx bx-wrench"></i>
+        <span>Mantenimiento (8X8)</span>
+      </span>
 
       <span class="user-group-badge" *ngIf="usergroup">
         <i class="bx bxs-user"></i>
         <span>{{ usergroup.nombre }} {{ usergroup.apellidoP }}</span>
       </span>
+    </div>
+
+    <!-- Toggles for Mantenimientos -->
+    <div class="switches-toggle-group" *ngIf="idArea === '1' || idArea === '2' || idArea === '4'">
+      <span class="switches-title">
+        <i class="bx bx-wrench"></i> Mantenimientos:
+      </span>
+
+      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosTI" *ngIf="idArea === '1' || idArea === '2'">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="mostrarMantenimientosTI" 
+          (ngModelChange)="mostrarMantenimientosAV = false; mostrarMantenimientosMtto = false">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-laptop"></i>
+          <span>IT: 8X8</span>
+        </span>
+      </label>
+
+      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosAV" *ngIf="idArea === '1' || idArea === '2'">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="mostrarMantenimientosAV" 
+          (ngModelChange)="mostrarMantenimientosTI = false; mostrarMantenimientosMtto = false">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-tv"></i>
+          <span>AV: 6X6</span>
+        </span>
+      </label>
+      
+      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosMtto" *ngIf="idArea === '4'">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="mostrarMantenimientosMtto" 
+          (ngModelChange)="mostrarMantenimientosTI = false; mostrarMantenimientosAV = false">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-laptop"></i>
+          <span>8X8</span>
+        </span>
+      </label>
     </div>
   </div>
 
@@ -81,18 +138,25 @@
   </p-overlayPanel>
 
   <!-- Accordions Content -->
-  @if(mostrarMantenimientos) {
+  @if(mostrarMantenimientosTI) {
   <div class="mt-2">
-    <app-acordeon-mantenimientos-sistemas *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientos"
-      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+    <app-acordeon-mantenimientos-sistemas *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientosTI"
+      [sucursales]="sucursalesMantenimeintosActivos('1')" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
       [mostrarChat]="true"></app-acordeon-mantenimientos-sistemas>
   </div>
   }
   @else if(mostrarMantenimientosAV) {
   <div class="mt-2">
-    <app-acordeon-mantenimientos-audio-video *ngIf="auxMostrarMantenimientosAV" [mantenimientos]="mantenimientosAV"
-      [sucursales]="sucursalesMantenimeintosActivos()" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+    <app-acordeon-mantenimientos-audio-video *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientosAV"
+      [sucursales]="sucursalesMantenimeintosActivos('2')" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
       [mostrarChat]="true"></app-acordeon-mantenimientos-audio-video>
+  </div>
+  }
+  @else if(mostrarMantenimientosMtto) {
+  <div class="mt-2">
+    <app-acordeon-mantenimientos-mantenimiento *ngIf="auxMostrarMantenimientos" [mantenimientos]="mantenimientosMtto"
+      [sucursales]="sucursalesMantenimeintosActivos('4')" [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+      [mostrarChat]="true"></app-acordeon-mantenimientos-mantenimiento>
   </div>
   }
   @else {
