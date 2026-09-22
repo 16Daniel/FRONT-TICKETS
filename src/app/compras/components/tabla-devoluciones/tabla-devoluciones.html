@@ -7,7 +7,7 @@
       <h3 class="m-0">FORMATO DE NO CONFORMIDAD</h3>
     </ng-template>
     <ng-template pTemplate="right">
-      <button pButton  pRipple label="Catálogo de proveedores" icon="pi pi-cog" (click)="abrirModalCatProvs()"></button>&nbsp;
+      <button pButton  pRipple label="Catálogo de proveedores" icon="pi pi-cog" (click)="abrirModalCatProvs()" *ngIf="usuario.idArea == '20'"></button>&nbsp;
       <button pButton pRipple label="Nuevo Reporte" icon="pi pi-plus" class="p-button-success" (click)="openNew()"></button>
     </ng-template>
   </p-toolbar>
