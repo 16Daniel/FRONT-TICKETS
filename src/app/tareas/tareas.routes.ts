@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ResponsableGuard } from '../shared/guards/responsable.guard';
 
 /**
  * Rutas globales (fuera de /main)
@@ -16,6 +17,7 @@ export const TAREAS_MAIN_ROUTES: Routes = [
   {
     path: 'tareas',
     title: 'Tareas',
+    canActivate: [ResponsableGuard],
     loadComponent: () =>
       import('./pages/tareas-page/tareas-page.component').then(m => m.TareasPageComponent),
   }
