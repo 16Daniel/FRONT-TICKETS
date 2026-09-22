@@ -18,14 +18,14 @@ export class IconosNotificacionesTicketsComponent implements OnInit {
   @Input() compras: Compra[] = [];
   @Input() usuario?: Usuario | any;
 
+  loggedUser: Usuario | any;
+
   ngOnInit(): void {
-    if (!this.usuario) {
-      this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    }
+    this.loggedUser = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   /**
-   * Devuelve los ids de sucursales del usuario
+   * Devuelve los ids de sucursales del usuario (solo si se pasó un usuario para filtrar)
    */
   private get sucursalesUsuario(): string[] {
     return this.usuario?.sucursales?.map((s: any) => s.id) ?? [];
