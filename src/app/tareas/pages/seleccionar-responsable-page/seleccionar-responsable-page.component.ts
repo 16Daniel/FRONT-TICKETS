@@ -85,7 +85,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
       JSON.stringify(responsable)
     );
 
-    this.router.navigate(['/main/tareas']);
+    this.router.navigate(['/home']);
   }
 
   cancelar() {

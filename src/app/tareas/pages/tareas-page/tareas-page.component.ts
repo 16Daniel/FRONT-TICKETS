@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, type OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, type OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DashboardTasksPageComponent } from '../dashboard-tasks-page/dashboard-tasks-page';
@@ -6,36 +6,41 @@ import { EisenhowerMatrixPageComponent } from '../eisenhower-matrix-page/eisenho
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
-import { AvatarModule } from 'ngx-avatars';
-import { TooltipModule } from 'primeng/tooltip';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
-
 @Component({
   selector: 'app-tareas-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, DashboardTasksPageComponent, EisenhowerMatrixPageComponent, AvatarModule, TooltipModule],
-  templateUrl: './tareas-page.component.html',
-  styleUrl: './tareas-page.component.scss'
+  imports: [CommonModule, FormsModule, DashboardTasksPageComponent, EisenhowerMatrixPageComponent],
+  template: `
+    <div class="p-4">
+      <div class="d-flex align-items-center mb-4">
+        <h2 class="m-0">TAREAS</h2>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <label class="form-check-label fs-4 mb-0" for="activarGuardia">
+            EISENHOWER
+          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
+              style="width: 3rem; height: 2rem;" [(ngModel)]="verEisenhower" (change)="onToggleEisenhower()">
+          </div>
+        </div>
+      </div>
+      
+      <app-dashboard-tasks-page [hidden]="verEisenhower || sucursal?.id == undefined"></app-dashboard-tasks-page>
+      <app-eisenhower-matrix-page [hidden]="!verEisenhower || sucursal?.id == undefined"></app-eisenhower-matrix-page>
+    </div>
+  `
 })
-export class TareasPageComponent implements OnInit, OnDestroy {
+export class TareasPageComponent implements OnInit {
   verEisenhower: boolean = false;
   usuario: Usuario;
   sucursal: Sucursal;
-  responsableTarea: ResponsableTarea | null = null;
 
   constructor(private cdr: ChangeDetectorRef) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario?.sucursales?.[0];
-    const respStr = localStorage.getItem('responsable-tareas');
-    this.responsableTarea = respStr ? JSON.parse(respStr) : null;
   }
 
   ngOnInit() {}
-
-  ngOnDestroy() {
-    debugger
-    localStorage.removeItem('responsable-tareas');
-  }
 
   onToggleEisenhower() {
     setTimeout(() => {
