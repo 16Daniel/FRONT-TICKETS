@@ -25,8 +25,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
         </div>
       </div>
       
-      <app-dashboard-tasks-page [hidden]="verEisenhower || sucursal?.id == undefined"></app-dashboard-tasks-page>
-      <app-eisenhower-matrix-page [hidden]="!verEisenhower || sucursal?.id == undefined"></app-eisenhower-matrix-page>
+      <app-dashboard-tasks-page [hidden]="verEisenhower || !sucursal || sucursal.id == undefined"></app-dashboard-tasks-page>
+      <app-eisenhower-matrix-page [hidden]="!verEisenhower || !sucursal || sucursal.id == undefined"></app-eisenhower-matrix-page>
     </div>
   `
 })

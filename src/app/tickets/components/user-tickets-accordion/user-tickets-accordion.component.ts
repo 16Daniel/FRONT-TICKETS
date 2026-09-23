@@ -112,27 +112,12 @@ export class UserTicketsAccordionComponent {
     return nuevosTickets.length > 0;
   }
 
-  verificarChatNoLeido(tickets: Ticket[]): boolean {
-    return tickets.some(ticket => {
-      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
-      const participante = participantes.find((p) => p.idUsuario === this.usuario.id);
-
-      if (participante) {
-        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
-        const comentarios = ticket.comentarios;
-
-        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
-      }
-
-      return false;
-    });
-  }
-
   verificarTicketsPendientesValidar = (tickets: Ticket[]) =>
     tickets.filter(x => x.validacionAdmin == false && x.idEstatusTicket == '3').length > 0;
 
   obtenerSucursal(id: string) {
     return this.sucursales.find(x => x.id == id);
   }
+
 
 }

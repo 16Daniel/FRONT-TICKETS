@@ -230,67 +230,9 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
-  actualizaTicketEstatusSucursal(idTicket: string) {
-    let temp = this.tickets.filter((x) => x.id == idTicket);
-    if (temp.length > 0) {
-      let ticket = temp[0];
-      ticket.idPrioridadTicket = '1';
-
-      this.ticketsService
-        .update(ticket)
-        .then(() => {
-          this.showMessage('success', 'Success', 'Enviado correctamente');
-        })
-        .catch((error) =>
-          console.error('Error al actualizar los comentarios:', error)
-        );
-    }
-  }
-
-  onPanicoClick(idTicket: string) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.actualizaTicketEstatusSucursal(idTicket);
-      },
-      reject: () => { },
-    });
-  }
-
   onClickFinalizar(ticket: Ticket) {
     this.ticketAccion = ticket;
     this.showModalFinalizeTicket = true;
-  }
-
-  onClickChat(ticket: Ticket) {
-    this.ticketAccion = ticket;
-    this.showModalChatTicket = true;
-  }
-
-  verificarChatNoLeido(ticket: Ticket) {
-    const participantes = ticket.participantesChat.sort(
-      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
-    );
-    const participante = participantes.find(
-      (p) => p.idUsuario === this.usuario.id
-    );
-
-    if (participante) {
-      const ultimoComentarioLeido = this.showModalChatTicket
-        ? ticket.comentarios.length
-        : participante.ultimoComentarioLeido;
-      const comentarios = ticket.comentarios;
-
-      // Si el último comentario leído es menor que la longitud actual de los comentarios
-      return comentarios.length > ultimoComentarioLeido;
-    }
-
-    return false;
   }
 
   obtenerNombreEstatusTicket(idEstatusTicket: string) {
@@ -364,4 +306,5 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       },
     });
   }
+
 }

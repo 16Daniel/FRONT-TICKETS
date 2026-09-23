@@ -180,7 +180,7 @@ export class TicketsService {
     idsSucursales: string[],
     idArea?: string,
     idCategoria?: string,
-    calificacion?: number
+    calificacionSucursal?: number
   ): Promise<Ticket[]> {
     if (!idsSucursales || idsSucursales.length === 0) {
       return [];
@@ -208,7 +208,7 @@ export class TicketsService {
 
       if (idArea) filtros.push(where('idArea', '==', idArea));
       if (idCategoria) filtros.push(where('idCategoria', '==', idCategoria));
-      if (calificacion) filtros.push(where('calificacion', '==', calificacion));
+      if (calificacionSucursal) filtros.push(where('calificacionSucursal', '==', calificacionSucursal));
 
       const q = query(collectionRef, ...filtros);
       const querySnapshot = await getDocs(q);

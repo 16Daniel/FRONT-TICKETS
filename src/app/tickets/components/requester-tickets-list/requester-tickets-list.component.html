@@ -91,7 +91,7 @@
       </td>
 
       <td *ngIf="mostrarEstrellas" class="text-center">
-        <app-rating-stars [rating]="ticket.calificacion" [editable]="false"></app-rating-stars>
+        <app-rating-stars [rating]="ticket.calificacionSucursal" [editable]="false"></app-rating-stars>
       </td>
 
       <!-- Action Buttons homologated to btn-action-table -->
@@ -113,10 +113,7 @@
             <i class="bx bx-check-double"></i>
           </button>
           
-          <button class="btn-action-table btn-action-primary" (click)="onClickChat(ticket)"
-            *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(ticket)}" pTooltip="CHAT" tooltipPosition="top">
-            <i class="bx bx-message-square-dots"></i>
-          </button>
+          
 
         </div>
       </td>
