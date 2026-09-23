@@ -8,10 +8,11 @@ import { TabDiccionario } from "../../components/tab-diccionario/tab-diccionario
 import { TabClientesDelivery } from "../../components/tab-clientes-delivery/tab-clientes-delivery";
 import { TabCombosDelivery } from "../../components/tab-combos-delivery/tab-combos-delivery";
 import { TabCatMarcasDelivery } from "../../components/tab-cat-marcas-delivery/tab-cat-marcas-delivery";
+import { TabLogDiccionarioDelivery } from '../../components/tab-log-diccionario-delivery/tab-log-diccionario-delivery';
 @Component({
   selector: 'app-diccionario-delivery-page',
   standalone: true,
-   imports: [CommonModule, FormsModule, TabViewModule, TabDiccionario, TabClientesDelivery, TabCombosDelivery, TabCatMarcasDelivery],
+   imports: [CommonModule, FormsModule, TabViewModule, TabDiccionario, TabClientesDelivery, TabCombosDelivery, TabCatMarcasDelivery, TabLogDiccionarioDelivery],
   templateUrl: './diccionario-delivery-page.component.html',
   styleUrl: './diccionario-delivery-page.component.scss'
 })

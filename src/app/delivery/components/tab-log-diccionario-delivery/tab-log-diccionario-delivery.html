@@ -1,0 +1,113 @@
+<div class="card p-3">
+  <h3>Logs de Diccionario Delivery</h3>
+  
+<div class="m-3">
+  <p-button label="consultar" severity="help" (click)="cargarLogs()"/>
+</div>
+
+  <p-table 
+    [value]="logs" 
+    [loading]="loading"
+    [paginator]="true" 
+    [rows]="10"
+    [responsiveLayout]="'scroll'"
+    styleClass="p-datatable-striped p-datatable-gridlines">
+    
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Sucursal</th>
+        <th>Plataforma</th>
+        <th>Marca</th>
+        <th>Artículo</th>
+        <th>Modificador</th>
+        <th>ID Pedido</th>
+        <th>Procesado</th>
+        <th style="width: 8rem">Info</th>
+        <th>Validar</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-log>
+      <tr>
+        <td>{{ log.id }}</td>
+        <td>{{ log.sucursal || '-' }}</td>
+        <td>{{ log.plataforma }}</td>
+        <td>{{ log.marca }}</td>
+        <td>{{ log.articulo }}</td>
+        <td>{{ log.modificador || '-' }}</td>
+        <td>{{ log.idpedido || '-' }}</td>
+        <td>
+          <p-tag 
+            [severity]="log.procesado ? 'success' : 'warning'" 
+            [value]="log.procesado ? 'Procesado' : 'Pendiente'">
+          </p-tag>
+        </td>
+        <td class="text-center">
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-code" 
+            class="p-button-rounded p-button-info p-button-text"
+            pTooltip="Ver JSON Pedido"
+            [disabled]="!log.jsonpedido"
+            (click)="verJson(log)">
+          </button>
+        </td>
+        <td class="text-center">
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-check" 
+            class="p-button-rounded p-button-info p-button-text"
+            pTooltip="Validar"
+            (click)="updateLog(log.id)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="9" class="text-center">No se encontraron registros.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Modal para desplegar el JSON -->
+<p-dialog 
+  [(visible)]="displayJsonDialog" 
+  [header]="'Detalle JSON - Pedido: ' + selectedPedidoId" 
+  [modal]="true" 
+  [style]="{ width: '50vw' }" 
+  [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+  [draggable]="false" 
+  [resizable]="false">
+  
+  <div class="json-container">
+    <pre><code>{{ selectedJsonFormatted }}</code></pre>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button 
+      icon="pi pi-check" 
+      (click)="displayJsonDialog = false" 
+      label="Cerrar" 
+      styleClass="p-button-text">
+    </p-button>
+  </ng-template>
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+
+  <p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p [innerHTML]="message.message"></p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
