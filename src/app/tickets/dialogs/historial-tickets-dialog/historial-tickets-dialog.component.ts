@@ -68,7 +68,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
 
   idCategoria: string = ''
   idsucursales: string[] = [];
-  calificacion?: number;
+  calificacionSucursal?: number;
 
   textoBusqueda: string = '';
   ticketsFiltrados: Ticket[] = [];
@@ -132,7 +132,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
       this.idsucursales,
       this.idArea,
       (this.idCategoria ? this.idCategoria.toString() : undefined),
-      this.calificacion
+      this.calificacionSucursal
     ).then(tickets => {
       this.tickets = tickets;
       this.ticketsFiltrados = [...this.tickets];
@@ -247,11 +247,11 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
       SUCURSAL: this.obtenerNombreSucursal(t.idSucursal),
       AREA: this.obtenerNombreArea(t.idArea),
       SOLICITANTE: t.solicitante ? t.solicitante.toUpperCase() : '',
-      RESPONSABLE: this.obtenerNombreResponsable(t.idResponsableFinaliza),
+      RESPONSABLE: this.obtenerNombreResponsable(t.idResponsable),
       CATEGORÍA: t.nombreCategoria || '',
       SUBCATEGORÍA: t.idSubcategoria == null ? 'N/A' : t.nombreSubcategoria,
       ESTATUS: this.obtenerNombreEstatusTicket(t.idEstatusTicket),
-      CALIFICACIÓN: t.calificacion || 0,
+      CALIFICACIÓN: t.calificacionSucursal || 0,
       DESCRIPCIÓN: this.truncateExcelText(t.descripcion)
     }));
 

@@ -21,6 +21,9 @@ import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { UsersService } from '../../../usuarios/services/users.service';
+import { AvatarModule } from 'ngx-avatars';
+import { TabViewModule } from 'primeng/tabview';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -35,7 +38,9 @@ import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgenc
     TooltipModule,
     ModalVisorImagenesComponent,
     TicketSlaGaugeComponent,
-    MiniMatrizUrgenciaComponent
+    MiniMatrizUrgenciaComponent,
+    AvatarModule,
+    TabViewModule
   ],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
@@ -60,9 +65,20 @@ export class ModalTicketDetailComponent implements OnInit {
     private areasService: AreasService,
     private branchesService: BranchesService,
     private categoriesService: CategoriesService,
-    private statusTicketService: StatusTicketService
+    private statusTicketService: StatusTicketService,
+    private usersService: UsersService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
+
+  getResponsable(): Usuario | undefined {
+    if (!this.ticket?.idResponsable) return undefined;
+    return this.usersService.usuarios.find(u => u.id === this.ticket!.idResponsable);
+  }
+
+  getInvolucrados(): Usuario[] {
+    if (!this.ticket?.idInvolucrados || !this.ticket.idInvolucrados.length) return [];
+    return this.usersService.usuarios.filter(u => this.ticket!.idInvolucrados.includes(u.id!));
   }
 
   ngOnInit(): void {
@@ -162,5 +178,18 @@ export class ModalTicketDetailComponent implements OnInit {
       case 'Bajo': return { bg: '#F0FDF4', text: '#16A34A', border: '#BBF7D0' };
       default: return { bg: '#F8FAFC', text: '#64748B', border: '#E2E8F0' };
     }
+  }
+
+  get showBtnAsignar(): boolean {
+    return this.usuario?.idArea === '4' && 
+           this.usuario?.idRol === '5' && 
+           this.ticket?.idEstatusTicket === '2' && 
+           !this.ticket?.esAsignadoEspecialista;
+  }
+
+  get showBtnTrabajar(): boolean {
+    return this.usuario?.idRol === '4' && 
+           !!this.ticket?.idEstatusTicket && 
+           !['2', '3', '5', '7'].includes(this.ticket.idEstatusTicket);
   }
 }

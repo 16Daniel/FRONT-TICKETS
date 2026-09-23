@@ -281,7 +281,7 @@ export class TicketsService {
       ];
 
       if (!esGuardia) {
-        filtros.push(where('idResponsables', 'array-contains', idUsuario));
+        filtros.push(where('idInvolucrados', 'array-contains', idUsuario));
       }
 
       const q = query(collectionRef, ...filtros);

@@ -62,7 +62,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   formCategoria: any = null;
   catUsuariosHelp: Usuario[] = [];
 
-  imagenesEvidencia: string[] = [];
+  urlsArchivos: string[] = [];
   imagenesBase64: string[] = [];
   archivos: File[] = [];
 
@@ -239,21 +239,21 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       });
     });
 
-    this.ticket.idResponsables = idsResponsablesTicket;
+    this.ticket.idInvolucrados = idsResponsablesTicket;
     this.ticket.idSucursal = this.ticket.idSucursal.toString();
     this.ticket.idArea = this.ticket.idArea.toString();
     this.ticket.idCategoria = this.ticket.idCategoria.toString();
     this.ticket.idSubcategoria = this.ticket.idSubcategoria ? this.ticket.idSubcategoria.toString() : null;
-    this.ticket.idResponsableFinaliza = this.obtenerIdResponsableTicket();
+    this.ticket.idResponsable = this.obtenerIdResponsableTicket();
     this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
     this.ticket.idUsuario = this.usuarioActivo?.id;
     this.ticket.folio = folio;
-    this.ticket.participantesChat = participantesChat;
+    
 
     if (this.archivos.length > 0) {
       this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
         .then(async urls => {
-          this.ticket.imagenesEvidencia = urls;
+          this.ticket.archivos = urls;
           await this.ticketsService.create({ ...this.ticket });
           await this.ticketsService.incrementarContadorTickets();
           Swal.close();
@@ -270,7 +270,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
           this.closeEvent.emit();
         });
     } else {
-      this.ticket.imagenesEvidencia = [];
+      this.ticket.archivos = [];
       await this.ticketsService.create({ ...this.ticket });
       await this.ticketsService.incrementarContadorTickets();
       Swal.close();
