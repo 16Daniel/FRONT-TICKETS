@@ -1,13 +1,14 @@
-<div *ngIf="esEspectadorActivo" class="alert alert-warning text-center fw-bold" style="margin-top: 15px;">
-  🚨 ESPECTADOR ACTIVO 🚨
-</div>
-
-<div class="pt-5">
-  <div class="pt-3">
-    <div class="m-2 mt-3 bg-white p-3">
-      <app-branches-tabs (espectadorEmitter)="activarEspectador($event)"></app-branches-tabs>
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header 
+      subtitle="MESA DE AYUDA & TICKETS" 
+      title="Panel de Sucursal">
+    </app-page-header>
+    
+    <div *ngIf="esEspectadorActivo" class="alert alert-warning text-center fw-bold" style="margin-top: 15px;">
+      🚨 ESPECTADOR ACTIVO 🚨
     </div>
+
+    <app-branches-tabs (espectadorEmitter)="activarEspectador($event)"></app-branches-tabs>
   </div>
 </div>
-
-<!-- <app-notificacion-nuevo-mensaje-chat></app-notificacion-nuevo-mensaje-chat> -->

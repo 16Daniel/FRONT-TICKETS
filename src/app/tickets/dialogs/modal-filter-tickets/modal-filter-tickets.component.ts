@@ -108,7 +108,7 @@ export class ModalFilterTicketsComponent implements OnInit {
     this.ticketsFiltrados = [...this.tickets];
     if (this.filterPrioridad != undefined) {
       this.ticketsFiltrados = this.ticketsFiltrados.filter(
-        (x) => x.idPrioridadTicket == this.filterPrioridad.id
+        (x) => (x as any).idPrioridadTicket == this.filterPrioridad.id || x.prioridad?.toUpperCase() == this.filterPrioridad.nombre?.toUpperCase()
       );
     }
 

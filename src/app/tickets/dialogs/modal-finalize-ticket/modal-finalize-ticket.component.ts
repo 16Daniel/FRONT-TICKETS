@@ -39,7 +39,7 @@ export class ModalFinalizeTicketComponent {
 
   finalizarTicket() {
     this.ticket!.idEstatusTicket = '3';
-    this.ticket!.calificacion = this.rating;
+    this.ticket!.calificacionSucursal = this.rating;
     this.ticket.fechaFin = new Date();
 
     this.ticketsService

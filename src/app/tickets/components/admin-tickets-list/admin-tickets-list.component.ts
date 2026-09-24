@@ -254,32 +254,6 @@ export class AdminTicketsListComponent {
       .catch((error) => console.error(error));
   }
 
-  onClickChat(ticket: Ticket) {
-    this.ticketAccion = ticket;
-    this.showModalChatTicket = true;
-  }
-
-  verificarChatNoLeido(ticket: Ticket) {
-    const participantes = ticket.participantesChat.sort(
-      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
-    );
-    const participante = participantes.find(
-      (p) => p.idUsuario === this.usuario.id
-    );
-
-    if (participante) {
-      const ultimoComentarioLeido = this.showModalChatTicket
-        ? ticket.comentarios.length
-        : participante.ultimoComentarioLeido;
-      const comentarios = ticket.comentarios;
-
-      // Si el último comentario leído es menor que la longitud actual de los comentarios
-      return comentarios.length > ultimoComentarioLeido;
-    }
-
-    return false;
-  }
-
   onClickRechazar(ticket: Ticket) {
     this.confirmationService.confirm({
       header: 'Confirmación',
@@ -321,19 +295,8 @@ export class AdminTicketsListComponent {
 
   onClickValidacionAdmin(ticket: Ticket) {
 
-    const usuariosUnicosMap = new Map<string, { idUsuario: string }>();
-    ticket.participantesChat.forEach(p => {
-      usuariosUnicosMap.set(p.idUsuario, p);
-    });
-    const usuariosUnicos = Array.from(usuariosUnicosMap.values());
-
-    usuariosUnicos.forEach(async participante => {
-      await this.mensajesPendientesService.marcarComoLeidos(
-        ticket.id,
-        'Tickets',
-        participante.idUsuario
-      );
-    });
+    
+    
 
     this.confirmationService.confirm({
       header: 'Confirmación',
@@ -440,7 +403,7 @@ export class AdminTicketsListComponent {
       }
     }
 
-    const fallback = (tk as any).idPrioridadTicket;
+    const fallback = null;
     if (fallback === '1') return { impacto: 3, urgencia: 3, score: 9, prioridad: 'Crítico' };
     if (fallback === '2') return { impacto: 3, urgencia: 2, score: 6, prioridad: 'Alto' };
     if (fallback === '3') return { impacto: 2, urgencia: 2, score: 4, prioridad: 'Medio' };
@@ -703,4 +666,5 @@ export class AdminTicketsListComponent {
     this.rutaCache.set(tk, { key: cacheKey, info: resultado });
     return resultado;
   }
+
 }

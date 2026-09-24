@@ -103,7 +103,7 @@
             </td>
             <td class="text-center">{{ tk.solicitante | uppercase }}</td>
             <td class="text-center">
-                {{ obtenerNombreResponsable(tk.idResponsableFinaliza) | uppercase }}
+                {{ obtenerNombreResponsable(tk.idResponsable) | uppercase }}
             </td>
             <td class="text-center">
                 <p-dropdown 
@@ -140,10 +140,7 @@
                         <i class="bx bx-check-circle"></i>
                     </button>
                     
-                    <button class="btn-action-table btn-action-primary" (click)="onClickChat(tk)"
-                        *ngIf="mostrarAccionChat" [ngClass]="{'has-notification': verificarChatNoLeido(tk)}" pTooltip="CHAT" tooltipPosition="top">
-                        <i class="bx bx-message-square-dots"></i>
-                    </button>
+                    
                     
                     <button class="btn-action-table btn-action-info" (click)="abrirModalDetalleTicket(tk)"
                         pTooltip="DETALLES" tooltipPosition="top">

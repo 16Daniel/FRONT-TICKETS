@@ -396,3 +396,40 @@
   outline: 2px solid var(--erp-color-danger);
 }
 
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+@media (max-width: 768px) {
+  .erp-navbar {
+    padding: 0 10px;
+  }
+  
+  .navbar-left {
+    gap: 8px;
+  }
+  
+  .brand-container {
+    gap: 6px;
+  }
+  
+  .brand-title {
+    display: none; /* Hide 'REBEL TICKETS' text on mobile to save space */
+  }
+  
+  .brand-logo {
+    display: none; /* Hide 'REBEL TICKETS' text on mobile to save space */
+  }
+  
+  .branch-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .navbar-right {
+    gap: 8px;
+  }
+}

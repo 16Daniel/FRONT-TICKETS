@@ -185,24 +185,6 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
         ticket.idUsuarioEspecialista = '';
         ticket.esAsignadoEspecialista = false;
 
-        let nuevoMensaje: Comentario = {
-          nombre: this.usuario?.nombre + ' ' + this.usuario?.apellidoP,
-          idUsuario: this.usuario?.id,
-          comentario: `
-            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-              <p><strong>Este ticket se asigna al siguiente analista:</strong></p>
-              <ul>
-                <li><strong>Fecha:</strong> ${new Date().toLocaleString()}</li>
-                <li><strong>Nombre:</strong> ${this.getUsuarioResponsable(ticket.idResponsableFinaliza)?.nombre} ${this.getUsuarioResponsable(ticket.idResponsableFinaliza)?.apellidoP}</li>
-              </ul>
-              <p>Él dará el seguimiento y finalizará este ticket.</p>
-            </div>
-          `,
-          fecha: new Date(),
-        };
-
-        ticket!.comentarios.push(nuevoMensaje);
-
 
         this.ticketsService
           .update(ticket)
@@ -218,27 +200,6 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
   onClickChat(ticket: Ticket) {
     this.ticketSeleccionado = ticket;
     this.mostrarModalChatTicket = true;
-  }
-
-  verificarChatNoLeido(ticket: Ticket) {
-    const participantes = ticket.participantesChat.sort(
-      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
-    );
-    const participante = participantes.find(
-      (p) => p.idUsuario === this.usuario.id
-    );
-
-    if (participante) {
-      const ultimoComentarioLeido = this.mostrarModalChatTicket
-        ? ticket.comentarios.length
-        : participante.ultimoComentarioLeido;
-      const comentarios = ticket.comentarios;
-
-      // Si el último comentario leído es menor que la longitud actual de los comentarios
-      return comentarios.length > ultimoComentarioLeido;
-    }
-
-    return false;
   }
 
   observaActualizacionesChatTicket(changes: SimpleChanges) {
@@ -267,7 +228,8 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
     });
   }
 
-  getUsuarioResponsable(idResponsableFinaliza: string) {
-    return this.usuariosHelp.find(x => x.id == idResponsableFinaliza)
+  getUsuarioResponsable(idResponsable: string) {
+    return this.usuariosHelp.find(x => x.id == idResponsable)
   }
+
 }

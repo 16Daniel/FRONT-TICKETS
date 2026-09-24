@@ -1,8 +1,8 @@
 <p-dialog
   [modal]="true"
   [(visible)]="showModalTicketDetail"
-  [style]="{ width: '56rem', maxWidth: '95vw' }"
-  [breakpoints]="{ '1199px': '80vw', '575px': '95vw' }"
+  [style]="{ width: '85rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '95vw', '575px': '100vw' }"
   [maximizable]="true"
   [draggable]="false"
   [resizable]="false"
@@ -11,192 +11,281 @@
 
   <!-- Cabecera Personalizada -->
   <ng-template pTemplate="header">
-    <div class="modal-custom-header" *ngIf="ticket">
-      <div class="header-left">
-        <div class="folio-badge">
-          <i class="bx bx-hash"></i>
-          <span>{{ ticket.folio }}</span>
-        </div>
-        <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
-          <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
-            <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
-            <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
-            {{ estatus.nombre }}
-          </div>
-        </ng-container>
-        <ng-template #estatusDesconocido>
-          <div class="status-pill" [ngStyle]="getEstatusStyle()">
-            <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
-            Desconocido
-          </div>
-        </ng-template>
-      </div>
-
-      <div class="header-right">
-        <div
-          *ngIf="ticket.prioridad"
-          class="priority-badge"
-          [pTooltip]="'Prioridad Urgencia: ' + ticket.prioridad"
-          tooltipPosition="bottom"
-          [ngStyle]="{
-            'background-color': obtenerPrioridadColor(ticket.prioridad).bg,
-            'color': obtenerPrioridadColor(ticket.prioridad).text,
-            'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridad).border
-          }">
-          <i class="bx bxs-circle"></i>
-          <span>Urgencia: {{ ticket.prioridad }}</span>
-        </div>
-
-      </div>
+    <div class="modal-custom-header w-100 d-flex justify-content-between align-items-center">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-receipt text-danger"></i> Detalle de Ticket
+      </h4>
     </div>
   </ng-template>
 
   <!-- Cuerpo del Modal -->
   <div *ngIf="ticket" class="modal-ticket-body">
-
-    <!-- Tarjeta Principal de Información + SLA Gauge -->
-    <div class="ticket-card summary-card">
-      <div class="summary-info-grid">
-        <div class="info-item">
-          <span class="info-label"><i class="bx bx-user"></i> Solicitante</span>
-          <span class="info-value text-uppercase">{{ ticket.solicitante || 'No registrado' }}</span>
-        </div>
-
-        <div class="info-item">
-          <span class="info-label"><i class="bx bx-store-alt"></i> Sucursal</span>
-          <span class="info-value">{{ obtenerNombreSucursal(ticket.idSucursal) }}</span>
-        </div>
-
-        <div class="info-item">
-          <span class="info-label"><i class="bx bx-briefcase"></i> Área</span>
-          <span class="info-value">{{ obtenerNombreArea(ticket.idArea) }}</span>
-        </div>
-
-        <div class="info-item">
-          <span class="info-label"><i class="bx bx-folder"></i> Categoría</span>
-          <span class="info-value">
-            {{ ticket.nombreCategoria || 'Sin categoría' }}
-            <span *ngIf="ticket.nombreSubcategoria" class="subcategoria-tag">
-              <i class="bx bx-chevron-right"></i> {{ ticket.nombreSubcategoria }}
-            </span>
-          </span>
-        </div>
-
-        <div class="info-item">
-          <span class="info-label"><i class="bx bx-calendar"></i> Creación</span>
-          <span class="info-value">{{ datesHelper.getDate(ticket.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</span>
-        </div>
-
-        <div class="info-item">
-          <span class="info-label"><i class="bx bx-time-five"></i> Inicio Atención</span>
-          <span class="info-value" [class.text-muted]="!ticket.fechaAtencion">
-            {{ ticket.fechaAtencion ? (datesHelper.getDate(ticket.fechaAtencion) | date: 'dd/MM/yyyy hh:mm a') : 'Pendiente de inicio' }}
-          </span>
-        </div>
-      </div>
-
-      <!-- SLA Dual Gauge -->
-      <div class="summary-sla-side">
-        <div class="sla-side-title">Cumplimiento SLA</div>
-        <app-ticket-sla-gauge #gauge [ticket]="ticket" [size]="82" [categorias]="categorias"></app-ticket-sla-gauge>
-        <!-- <div class="sla-legends">
-          <span class="legend-item"><span class="legend-dot exterior"></span> SLA Urgencia</span>
-          <span class="legend-item"><span class="legend-dot interior"></span> SLA Resolución</span>
-        </div> -->
-
-        <div class="sla-text-values mt-2 text-center" style="font-size: 0.75rem; color: #64748B;">
-          <div class="mb-1">
-            <strong>T. Atención:</strong>
-            {{ gauge.horasUrgenciaTranscurridas }}h / {{ gauge.horasUrgenciaSla }}h
+    <div class="row">
+      <!-- Columna Izquierda: Detalle del Ticket -->
+      <div class="col-lg-7 d-flex flex-column gap-4">
+        
+        <!-- TOP: SLA, Matriz y Responsables -->
+        <div class="row align-items-stretch">
+          <!-- SLA -->
+          <div class="col-md-4 d-flex flex-column mb-3 mb-md-0">
+            <div class="ticket-card p-3 m-0 flex-grow-1 d-flex flex-column">
+              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">Cumplimiento SLA</h5>
+              
+              <div class="d-flex flex-column flex-grow-1 justify-content-between align-items-center">
+                <div class="d-flex align-items-center justify-content-center" style="min-height: 90px;">
+                  <app-ticket-sla-gauge #gauge [ticket]="ticket" [size]="65" [categorias]="categorias"></app-ticket-sla-gauge>
+                </div>
+                
+                <div class="text-center mt-2" style="font-size: 0.7rem;">
+                  <span class="d-block text-muted">Resolución</span>
+                  <span class="fw-bold">{{ gauge.formatearHorasLegible(gauge.horasResolucionTranscurridas) }} / {{ gauge.formatearHorasLegible(gauge.horasResolucionSla, gauge.tiempoResolucionOriginal, gauge.unidadResolucionOriginal) }}</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <strong>T. Resolución:</strong>
-            {{ gauge.formatearHorasLegible(gauge.horasResolucionTranscurridas) }} / {{ gauge.formatearHorasLegible(gauge.horasResolucionSla, gauge.tiempoResolucionOriginal, gauge.unidadResolucionOriginal) }}
+
+          <!-- Matriz -->
+          <div class="col-md-4 d-flex flex-column mb-3 mb-md-0">
+            <div class="ticket-card p-3 m-0 flex-grow-1 d-flex flex-column">
+              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">Urgencia e Impacto</h5>
+              
+              <div class="d-flex flex-column flex-grow-1 justify-content-between align-items-center">
+                <div class="d-flex align-items-center justify-content-center" style="min-height: 90px;">
+                  <app-mini-matriz-urgencia [ticket]="ticket" [categorias]="categorias"></app-mini-matriz-urgencia>
+                </div>
+                
+                <div class="text-center mt-2" style="font-size: 0.7rem;">
+                  <span class="d-block text-muted">Atención</span>
+                  <span class="fw-bold">{{ gauge.horasUrgenciaTranscurridas }}h / {{ gauge.horasUrgenciaSla }}h</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Mini Matriz 3x3 de Urgencia -->
-        <div class="mt-2 text-center">
-            <app-mini-matriz-urgencia [ticket]="ticket" [categorias]="categorias"></app-mini-matriz-urgencia>
-        </div>
-      </div>
-    </div>
+          <!-- Responsables -->
+          <div class="col-md-4 d-flex flex-column">
+            <div class="ticket-card p-3 m-0 flex-grow-1">
+              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Equipo Asignado</h5>
+              
+              <div class="d-flex flex-column gap-3">
+                <div *ngIf="getResponsable() as resp">
+                  <span class="d-block text-muted mb-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">RESPONSABLE</span>
+                  <div class="d-flex align-items-center gap-2">
+                    <ngx-avatars [name]="resp.nombre + ' ' + resp.apellidoP" [size]="35" [round]="true" pTooltip="Responsable Principal"></ngx-avatars>
+                    <div class="lh-1 text-truncate">
+                      <span class="d-block fw-bold mb-1 text-truncate" style="font-size: 0.85rem; color: #1e293b;">{{ resp.nombre }} {{ resp.apellidoP }}</span>
+                      <span class="text-muted text-truncate d-block" style="font-size: 0.7rem;">{{ resp.email }}</span>
+                    </div>
+                  </div>
+                </div>
 
-    <!-- Tarjeta de Descripción -->
-    <div class="ticket-card description-card">
-      <div class="card-header-strip">
-        <i class="bx bx-detail section-icon"></i>
-        <h4 class="section-title">DESCRIPCIÓN</h4>
-      </div>
-      <div class="card-body-content">
-        <ng-container *ngIf="ticket.descripcion; else noDescripcion">
-          <div class="description-text" [innerHTML]="ticket.descripcion"></div>
-        </ng-container>
-        <ng-template #noDescripcion>
-          <div class="empty-description">
-            <i class="bx bx-info-circle"></i>
-            <span>Sin descripción registrada en este ticket.</span>
-          </div>
-        </ng-template>
-      </div>
-    </div>
-
-    <!-- Tarjeta de Evidencias -->
-    <div class="ticket-card evidencias-card" *ngIf="ticket.imagenesEvidencia?.length">
-      <div class="card-header-strip">
-        <i class="bx bx-images section-icon"></i>
-        <h4 class="section-title">EVIDENCIA FOTOGRÁFICA</h4>
-        <span class="badge-count">{{ ticket.imagenesEvidencia.length }}</span>
-      </div>
-      <div class="card-body-content">
-        <div class="evidencias-grid">
-          <div
-            *ngFor="let url of ticket.imagenesEvidencia"
-            class="evidencia-thumbnail-wrapper"
-            (click)="abrirModalImagen(url)"
-            pTooltip="Clic para ampliar"
-            tooltipPosition="top">
-            <img [src]="url" alt="Evidencia ticket" class="evidencia-img" />
-            <div class="img-overlay">
-              <i class="bx bx-zoom-in"></i>
+                <div *ngIf="getInvolucrados().length > 0">
+                  <span class="d-block text-muted mb-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">INVOLUCRADOS</span>
+                  <div class="d-flex flex-wrap gap-1">
+                    <ngx-avatars *ngFor="let inv of getInvolucrados()" [name]="inv.nombre + ' ' + inv.apellidoP" [size]="28" [round]="true" [pTooltip]="inv.nombre + ' ' + inv.apellidoP"></ngx-avatars>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- MIDDLE & BOTTOM: Tabs -->
+        <p-tabView styleClass="ticket-detail-tabs mt-1">
+          
+          <!-- Tab 1: Detalles Generales -->
+          <p-tabPanel header="Detalles Generales" leftIcon="bx bx-list-ul">
+            <div class="ticket-card p-4 m-0">
+              <div class="d-flex justify-content-between align-items-start mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+                <div>
+                  <h3 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 mb-1" style="font-size: 1.5rem;">
+                    <i class="bx bx-hash text-muted"></i>{{ ticket.folio }}
+                  </h3>
+                  <span class="text-muted" style="font-size: 0.85rem;">Detalles generales de la solicitud</span>
+                </div>
+              </div>
+
+              <div class="summary-info-grid">
+                <!-- Row 1 -->
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-user"></i> Solicitante</span>
+                  <span class="info-value text-uppercase">{{ ticket.solicitante || 'No registrado' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-folder"></i> Categoría</span>
+                  <span class="info-value">
+                    {{ ticket.nombreCategoria || 'Sin categoría' }}
+                    <span *ngIf="ticket.nombreSubcategoria" class="subcategoria-tag">
+                      <i class="bx bx-chevron-right"></i> {{ ticket.nombreSubcategoria }}
+                    </span>
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-info-circle"></i> Estatus</span>
+                  <div class="mt-1 d-flex">
+                    <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
+                      <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
+                        <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
+                        <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
+                        {{ estatus.nombre }}
+                      </div>
+                    </ng-container>
+                    <ng-template #estatusDesconocido>
+                      <div class="status-pill" [ngStyle]="getEstatusStyle()">
+                        <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
+                        Desconocido
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-store-alt"></i> Sucursal</span>
+                  <span class="info-value">{{ obtenerNombreSucursal(ticket.idSucursal) }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-calendar"></i> Creación</span>
+                  <span class="info-value">{{ datesHelper.getDate(ticket.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-error"></i> Prioridad</span>
+                  <div class="mt-1 d-flex">
+                    <div *ngIf="ticket.prioridad" class="priority-badge"
+                         [ngStyle]="{
+                           'background-color': obtenerPrioridadColor(ticket.prioridad).bg,
+                           'color': obtenerPrioridadColor(ticket.prioridad).text,
+                           'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridad).border
+                         }">
+                      <i class="bx bxs-circle"></i> Urgencia: {{ ticket.prioridad }}
+                    </div>
+                    <span *ngIf="!ticket.prioridad" class="info-value text-muted">No definida</span>
+                  </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-briefcase"></i> Área</span>
+                  <span class="info-value">{{ obtenerNombreArea(ticket.idArea) }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-time-five"></i> Inicio Atención</span>
+                  <span class="info-value" [class.text-muted]="!ticket.fechaAtencion">
+                    {{ ticket.fechaAtencion ? (datesHelper.getDate(ticket.fechaAtencion) | date: 'dd/MM/yyyy hh:mm a') : 'Pendiente de inicio' }}
+                  </span>
+                </div>
+                <!-- Columna vacía para cerrar la cuadrícula 3x3 -->
+                <div></div>
+              </div>
+            </div>
+          </p-tabPanel>
+
+          <!-- Tab 2: Descripción -->
+          <p-tabPanel header="Descripción" leftIcon="bx bx-detail">
+            <div class="ticket-card p-4 m-0" style="min-height: 250px;">
+              <ng-container *ngIf="ticket.descripcion; else noDescripcion">
+                <div class="description-text" [innerHTML]="ticket.descripcion"></div>
+              </ng-container>
+              <ng-template #noDescripcion>
+                <div class="empty-description">
+                  <i class="bx bx-info-circle"></i>
+                  <span>Sin descripción registrada en este ticket.</span>
+                </div>
+              </ng-template>
+            </div>
+          </p-tabPanel>
+
+          <!-- Tab 3: Archivos y Evidencia -->
+          <p-tabPanel header="Archivos" leftIcon="bx bx-folder-open">
+            <div class="d-flex flex-column gap-4">
+              <div class="ticket-card p-4 m-0">
+                <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                  <i class="bx bx-file fs-5" style="color: #D3152A;"></i> ARCHIVOS ADJUNTOS
+                </h5>
+                <div class="text-center py-4" style="border: 2px dashed #cbd5e1; border-radius: 12px; background-color: #f8fafc;">
+                  <i class="bx bx-cloud-upload mb-2" style="font-size: 2.5rem; color: #94a3b8;"></i>
+                  <p class="m-0 text-muted" style="font-size: 0.9rem; font-weight: 600;">No hay archivos adjuntos</p>
+                  <p class="m-0 mt-1 text-muted" style="font-size: 0.8rem;">(Lista de archivos por implementar)</p>
+                </div>
+              </div>
+
+              <!-- Tarjeta de Evidencias -->
+              <div class="ticket-card p-4 m-0" *ngIf="ticket.archivos?.length">
+                <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                  <i class="bx bx-images fs-5" style="color: #D3152A;"></i> EVIDENCIA FOTOGRÁFICA 
+                  <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos.length }}</span>
+                </h5>
+                <div class="evidencias-grid">
+                  <div
+                    *ngFor="let url of ticket.archivos"
+                    class="evidencia-thumbnail-wrapper"
+                    (click)="abrirModalImagen(url)"
+                    pTooltip="Clic para ampliar"
+                    tooltipPosition="top">
+                    <img [src]="url" alt="Evidencia ticket" class="evidencia-img" />
+                    <div class="img-overlay">
+                      <i class="bx bx-zoom-in"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+          <!-- Tab 4: Historial -->
+          <p-tabPanel header="Historial" leftIcon="bx bx-history">
+            <div class="ticket-card p-4 m-0 d-flex flex-column justify-content-center align-items-center" style="min-height: 250px;">
+              <div class="text-center py-4 text-muted">
+                <i class="bx bx-history mb-3" style="font-size: 2.5rem; color: #94a3b8;"></i>
+                <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Historial de Cambios</p>
+                <p class="m-0 mt-1" style="font-size: 0.8rem;">(Bitácora por implementar)</p>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+
+        <!-- Tarjeta de Comentarios Finales (si está cerrado) -->
+        <div class="ticket-card p-4 m-0" *ngIf="ticket.idEstatusTicket == '3' && ticket.comentariosFinalesSucursal">
+          <h5 class="sub-title mb-3 fw-bold text-uppercase d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px; color: #166534;">
+            <i class="pi pi-check-circle fs-5"></i> Comentarios de Cierre (Solución)
+          </h5>
+          <div class="comentarios-finales-content">
+            <div class="comentarios-finales-text" [innerHTML]="ticket.comentariosFinalesSucursal"></div>
+          </div>
+        </div>
+
+        <!-- Botonera de Acciones (Footer) -->
+        <div class="modal-footer-actions mt-3" *ngIf="showBtnAsignar || showBtnTrabajar">
+          <!-- Botón ASIGNAR A ESPECIALISTA -->
+          <button
+            *ngIf="showBtnAsignar"
+            class="btn-action btn-secondary-rebel"
+            (click)="onClickAsignarEspecialista()">
+            <i class="bx bx-user-pin"></i>
+            <span>ASIGNAR A ESPECIALISTA</span>
+          </button>
+
+          <!-- Botón TRABAJAR (Inicia atención y registra fechaAtencion) -->
+          <button
+            *ngIf="showBtnTrabajar"
+            class="btn-action btn-primary-rebel"
+            (click)="onClick()">
+            <i class="bx bx-play-circle"></i>
+            <span>TRABAJAR TICKET</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Columna Derecha: Minuta / Activity Log (Placeholder) -->
+      <div class="col-lg-5 d-flex flex-column">
+        <div class="ticket-card flex-grow-1 d-flex flex-column align-items-center justify-content-center m-0" style="background-color: #f8fafc; border: 2px dashed #cbd5e1; box-shadow: none;">
+          <div class="text-center text-muted">
+            <i class="bx bx-time-five mb-3" style="font-size: 3.5rem; color: #94a3b8;"></i>
+            <h5 class="m-0 fw-bold" style="color: #64748b;">Actividad del Ticket</h5>
+            <p class="m-0 mt-2" style="font-size: 0.95rem;">(Aquí irá el componente de Minutas)</p>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- Tarjeta de Comentarios Finales (si está cerrado) -->
-    <div class="ticket-card comentarios-finales-card" *ngIf="ticket.idEstatusTicket == '3' && ticket.comentariosFinales">
-      <div class="card-header-strip">
-        <i class="bx bx-check-circle section-icon"></i>
-        <h4 class="section-title">COMENTARIOS FINALES / RESOLUCIÓN</h4>
-      </div>
-      <div class="card-body-content">
-        <div class="comentarios-finales-text" [innerHTML]="ticket.comentariosFinales"></div>
-      </div>
-    </div>
-
-    <!-- Botonera de Acciones (Footer) -->
-    <div class="modal-footer-actions">
-      <!-- Botón ASIGNAR A ESPECIALISTA -->
-      <button
-        *ngIf="usuario?.idArea == '4' && usuario?.idRol == '5' && ticket?.idEstatusTicket == '2' && !ticket?.esAsignadoEspecialista"
-        class="btn-action btn-secondary-rebel"
-        (click)="onClickAsignarEspecialista()">
-        <i class="bx bx-user-pin"></i>
-        <span>ASIGNAR A ESPECIALISTA</span>
-      </button>
-
-      <!-- Botón TRABAJAR (Inicia atención y registra fechaAtencion) -->
-      <button
-        *ngIf="usuario?.idRol == '4' && !['2', '3', '5', '7'].includes(ticket?.idEstatusTicket!)"
-        class="btn-action btn-primary-rebel"
-        (click)="onClick()">
-        <i class="bx bx-play-circle"></i>
-        <span>TRABAJAR TICKET</span>
-      </button>
-    </div>
-
   </div>
 </p-dialog>
 

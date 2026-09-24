@@ -66,30 +66,8 @@ export class SeleccionarUsuarioEspecialistaComponent implements OnInit {
       accept: () => {
         this.ticket.idUsuarioEspecialista = this.usuarioSeleccionado?.id!
         this.ticket.esAsignadoEspecialista = true;
-        this.ticket.idResponsables.push(this.ticket.idUsuarioEspecialista);
-        this.ticket.participantesChat.push({
-          idUsuario: this.ticket.idUsuarioEspecialista,
-          ultimoComentarioLeido: 0,
-        });
+        this.ticket.idInvolucrados.push(this.ticket.idUsuarioEspecialista);
 
-        let nuevoMensaje: Comentario = {
-          nombre: this.usuario?.nombre + ' ' + this.usuario?.apellidoP,
-          idUsuario: this.usuario?.id,
-          comentario: `
-    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-      <p><strong>Este ticket se asigna al siguiente especialista:</strong></p>
-      <ul>
-        <li><strong>Fecha:</strong> ${new Date().toLocaleString()}</li>
-        <li><strong>Nombre:</strong> ${this.usuarioSeleccionado?.nombre} ${this.usuarioSeleccionado?.apellidoP}</li>
-        <li><strong>Especialidad:</strong> ${this.usuarioSeleccionado?.especialidad}</li>
-      </ul>
-      <p>Él dará el seguimiento y finalizará este ticket.</p>
-    </div>
-  `,
-          fecha: new Date(),
-        };
-
-        this.ticket!.comentarios.push(nuevoMensaje);
 
         this.ticketsService
           .update(this.ticket)

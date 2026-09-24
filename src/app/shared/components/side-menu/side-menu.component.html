@@ -11,18 +11,18 @@
     </button>
 
     <div class="brand-container">
-      <div class="brand-logo">
+      <!-- <div class="brand-logo">
         <i class="bx bx-layer"></i>
       </div>
-      <span class="brand-title">REBEL TICKETS</span>
+      <span class="brand-title">REBEL TICKETS</span> -->
       <span class="branch-badge" *ngIf="tituloBanner">{{ tituloBanner }}</span>
     </div>
   </div>
 
   <div class="navbar-right">
-    <app-version-button></app-version-button>
-    <app-chat-notifications-button></app-chat-notifications-button>
 
+    <app-chat-notifications-button></app-chat-notifications-button>
+<!-- 
     <div class="user-avatar-wrapper" *ngIf="usuario && usuario.idRol !== '6'">
       <ngx-avatars 
         [name]="responsableTarea?.nombre || usuario.nombre" 
@@ -30,7 +30,7 @@
         pTooltip="{{ responsableTarea?.nombre || usuario.nombre }}" 
         [bgColor]="responsableTarea?.color || '#D3152A'">
       </ngx-avatars>
-    </div>
+    </div> -->
   </div>
 </header>
 
@@ -78,9 +78,9 @@
   <!-- Scrollable Menu Content -->
   <div class="drawer-content">
     
-    <!-- Grupo: Principal -->
+    <!-- Grupo: Tickets -->
     <div class="nav-group">
-      <span class="nav-group-title">Principal</span>
+      <span class="nav-group-title">Tickets</span>
 
       <a 
         [routerLink]="'/main/home'" 
@@ -93,6 +93,21 @@
       </a>
 
       <a 
+        [routerLink]="'/main/kpis'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-line-chart nav-icon"></i>
+        <span class="nav-label">KPIs</span>
+      </a>
+    </div>
+
+    <!-- Grupo: Control de versiones -->
+    <div class="nav-group">
+      <span class="nav-group-title">Control de versiones</span>
+
+      <a 
         [routerLink]="'/main/version-control'" 
         routerLinkActive="active"
         *ngIf="usuario.idRol == '1'" 
@@ -100,16 +115,6 @@
         class="nav-item">
         <i class="bx bx-git-repo-forked nav-icon"></i>
         <span class="nav-label">Control de versiones</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/kpis'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '4'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-line-chart nav-icon"></i>
-        <span class="nav-label">KPIs</span>
       </a>
     </div>
 
@@ -167,6 +172,12 @@
         <span class="nav-label">Categorías</span>
       </a>
 
+    </div>
+
+    <!-- Grupo: Operaciones y Visitas -->
+    <div class="nav-group">
+      <span class="nav-group-title">Operaciones</span>
+
       <a 
         [routerLink]="'/main/fixed-assets'" 
         routerLinkActive="active"
@@ -180,16 +191,30 @@
       <a 
         [routerLink]="'/administracion/compras'" 
         routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
         (click)="closemenu()" 
         class="nav-item">
         <i class="bx bx-shopping-bag nav-icon"></i>
         <span class="nav-label">Requisición de compra</span>
       </a>
-    </div>
 
-    <!-- Grupo: Operaciones y Visitas -->
-    <div class="nav-group">
-      <span class="nav-group-title">Operaciones</span>
+      <a 
+        [routerLink]="'/main/comensales'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-group nav-icon"></i>
+        <span class="nav-label">Comensales</span>
+      </a>
+
+      <a 
+        [routerLink]="'/main/tareas'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-check-square nav-icon"></i>
+        <span class="nav-label">Tareas</span>
+      </a>
 
       <a 
         [routerLink]="'/main/calendar-builder'" 
@@ -373,7 +398,7 @@
       </div>
       <div class="user-info">
         <span class="user-name">{{ usuario.nombre }} {{ usuario.apellidoP }}</span>
-        <span class="user-role">ERP User</span>
+        <span class="user-role">ERP User <ng-container *ngIf="versionActual">| v{{ versionActual.version }}</ng-container></span>
       </div>
     </div>
     <button type="button" class="logout-btn" (click)="logout()">

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { AnalistaTabsComponent } from '../../components/analista-tabs/analista-tabs.component';
+import { TicketsTabComponent } from '../../components/tickets-tab/tickets-tab.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-analyst-home-page',
   standalone: true,
   imports: [
-    AnalistaTabsComponent,
+    TicketsTabComponent,
     PageHeaderComponent
   ],
   templateUrl: './analyst-home-page.html',

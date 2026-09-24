@@ -10,9 +10,9 @@ import { GraficaTickets30DiasComponent } from '../../../mantenimientos/component
 import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { TpvsDevicesTableComponent } from "../tpvs-devices-table/tpvs-devices-table.component";
 import { TablaTvsBocinasComponent } from "../../../mantenimientos/components/tabla-tvs-bocinas/tabla-tvs-bocinas.component";
 import { NivelesAudioComponent } from '../../../mantenimientos/components/niveles-audio/niveles-audio.component';
+import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',
@@ -114,20 +114,5 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
     return nuevosTickets.length > 0;
   }
 
-  verificarChatNoLeido(tickets: Ticket[]): boolean {
-    return tickets.some(ticket => {
-      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
-      const participante = participantes.find((p) => p.idUsuario === this.usuario.id);
-
-      if (participante) {
-        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
-        const comentarios = ticket.comentarios;
-
-        return comentarios.length > ultimoComentarioLeido; // Si hay al menos 1 chat sin leer, devuelve true
-      }
-
-      return false;
-    });
-  }
 
 }

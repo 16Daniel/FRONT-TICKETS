@@ -27,11 +27,7 @@
                         <i class="bx bx-bell"></i>
                     </span>
 
-                    <span class="indicator-badge badge-chat" 
-                        *ngIf="verificarChatNoLeido(filtrarTicketsPorSucursal(item.id))" 
-                        pTooltip="NUEVO CHAT" tooltipPosition="top">
-                        <i class="bx bx-message-square-dots"></i>
-                    </span>
+                    
                 </div>
 
             </div>
@@ -44,7 +40,7 @@
                     [(ngModel)]="mostrarSistemasMap[item.id]" />
                 <label class="form-check-label m-0">💻 TABLETAS | TPVs</label>
             </div>
-            <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0" *ngIf="idArea == '1'">
                 <input class="form-check-input custom-switch" type="checkbox" role="switch"
                     [(ngModel)]="mostrarAudioVideoMap[item.id]" />
                 <label class="form-check-label m-0">🔊 TVs | BOCINAS</label>

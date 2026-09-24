@@ -1,17 +1,15 @@
 import { Timestamp } from '@angular/fire/firestore';
-import { Comentario } from '../../shared/interfaces/comentario-chat.model';
-import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
-
 export class Ticket {
   id?: string | any;
   idUsuario: string = '';
-  idResponsables: string[] = [];
+  idInvolucrados: string[] = [];
   idSucursal: any = '';
   idArea: string = '';
   idCategoria: string = '';
   idSubcategoria: string | null = null;
   idTipoSoporte: string | null = '';
   idEstatusTicket: string = '1';
+  
   criticidad?: number;
   urgencia?: number;
   score?: number;
@@ -20,24 +18,29 @@ export class Ticket {
   unidadResolucion?: 'm' | 'h' | 'd';
   horasResolucion?: number;
 
-  idPrioridadTicket?: string; // se quitara
   fecha: Timestamp | any = new Date();
   fechaAtencion?: Timestamp | any;
   fechaFin: Timestamp | null = null;
   solicitante: string = '';
-  idResponsableFinaliza: string = '';
+  idResponsable: string = '';
+
   nombreCategoria: string | null = '';
   nombreSubcategoria: string | null = '';
+
   descripcion: string = '';
-  comentarios: Comentario[] = [];
-  imagenesEvidencia: string[] = [];
-  comentariosFinales?: string | null;
+
+
+  archivos: string[] = [];
   folio: string = '';
-  calificacion: number = 0;
+
+  comentariosFinalesSucursal?: string | null;
+  calificacionSucursal: number = 0;
   calificacionAnalista: number = 0;
-  participantesChat: ParticipanteChat[] = [];
+
+
   validacionAdmin: boolean = false;
   referenciaActivoFijo: string | undefined;
+
   esAsignadoEspecialista: boolean = false;
   idUsuarioEspecialista: string = '';
 }

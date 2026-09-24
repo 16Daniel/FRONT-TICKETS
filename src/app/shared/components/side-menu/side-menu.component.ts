@@ -8,12 +8,13 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 
 import { DocumentsService } from '../../services/documents.service';
-import { VersionButtonComponent } from '../version-button/version-button.component';
+
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
 import { ResponsableTarea } from '../../../tareas/interfaces/responsable-tarea.interface';
 import { AvatarModule } from 'ngx-avatars';
+import { VersionControlService } from '../../../versiones/services/version-control.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -22,7 +23,6 @@ import { AvatarModule } from 'ngx-avatars';
     CommonModule, 
     FormsModule, 
     MenubarModule, 
-    VersionButtonComponent, 
     ButtonModule, 
     ChatNotificationsButtonComponent, 
     AvatarModule,
@@ -44,11 +44,13 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   isCheckingValidadorCupones: boolean = false;
 
   responsableTarea: ResponsableTarea | null = null;
+  versionActual: any;
 
   constructor(
     public cdr: ChangeDetectorRef,
     private router: Router,
-    public documentsService: DocumentsService
+    public documentsService: DocumentsService,
+    private versionControlService: VersionControlService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
@@ -62,6 +64,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.versionControlService.getLastVersion().subscribe((result) => {
+      if (result.length > 0) this.versionActual = result[0];
+      this.cdr.markForCheck();
+    });
+
     // Read pinned status from localStorage (default to true)
     const savedPin = localStorage.getItem('rw_sidebar_pinned');
     this.isPinned = savedPin !== null ? savedPin === 'true' : true;

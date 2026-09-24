@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
@@ -14,28 +14,34 @@ import { UserTicketsAccordionComponent } from '../../../tickets/components/user-
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
+import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
+import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
+
+import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
+import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
+import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
+
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
+import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
+import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
+
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
-import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
-import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ComprasService } from '../../../compras/services/compras.service';
-import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
-import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
-import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
-import { AcordeonMantenimientosSistemasComponent } from "../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component";
-import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
+import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
+import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
 
 @Component({
-  selector: 'app-admin-cadena-suministro-tab',
+  selector: 'app-admin-area-tab',
   standalone: true,
   imports: [
     ToastModule,
@@ -52,41 +58,50 @@ import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
+    AcordeonMantenimientosSistemasComponent,
     AcordeonMantenimientosAudioVideoComponent,
-    AcordeonMantenimientosSistemasComponent
-],
+    AcordeonMantenimientosMantenimientoComponent
+  ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './admin-cadena-suministro-tab.component.html',
-  styleUrl: './admin-cadena-suministro-tab.component.scss'
+  templateUrl: './admin-area-tab.component.html',
+  styleUrl: './admin-area-tab.component.scss'
 })
-export class AdminCadenaSuministroTabComponent {
+export class AdminAreaTabComponent implements OnInit, OnDestroy {
+  @Input() idArea!: string;
+  @Input() areaName!: string;
+
   tickets: Ticket[] = [];
+  todosLostickets: Ticket[] = [];
+  ticket: Ticket | undefined;
+  
+  sucursales: Sucursal[] = [];
+  usuariosHelp: Usuario[] = [];
+  compras: Compra[] = [];
+  
+  mantenimientosTI: MantenimientoSys[] = [];
+  mantenimientosAV: MantenimientoAudioVideo[] = [];
+  mantenimientosMtto: MantenimientoMtto[] = [];
+
   mostrarModalGenerateTicket: boolean = false;
-  mostrarMantenimientos: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalHistorial: boolean = false;
   mostrarAgrupacion: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalCompras: boolean = false;
   mostrarModalSolicitarCompra: boolean = false;
-  sucursales: Sucursal[] = [];
-  mantenimientos: MantenimientoSys[] = [];
-  catStatusT: EstatusTicket[] = [];
-  subscripcionTicket: Subscription | undefined;
-  ticket: Ticket | undefined;
+
+  mostrarMantenimientosTI = false;
+  mostrarMantenimientosAV = false;
+  mostrarMantenimientosMtto = false;
+  
+  auxMostrarMantenimientos = true;
+  ordenarMantenimientosFecha: boolean = false;
+
   usuario: Usuario;
   sucursal: Sucursal | undefined;
-  usuariosHelp: Usuario[] = [];
-  todosLostickets: Ticket[] = [];
-  filterarea: any | undefined;
   usergroup: Usuario | undefined;
-  idArea: string = '20';
-  ordenarMantenimientosFecha: boolean = false;
-  compras: Compra[] = [];
-  auxMostrarMantenimientos = true;
-  mostrarMantenimientosAV: boolean = false;
-  auxMostrarMantenimientosAV = true;
-  mantenimientosAV: MantenimientoAudioVideo[] = [];
+
+  subscripcionTicket: Subscription | undefined;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -94,31 +109,37 @@ export class AdminCadenaSuministroTabComponent {
     private ticketsService: TicketsService,
     private usersService: UsersService,
     private branchesService: BranchesService,
-    private maintenanceService: MaintenanceAvService,
-    private mantenimientosSistemasService: MantenimientosSistemasService,
-    private maintenanceAvService: MaintenanceAvService,
     private purchaseService: ComprasService,
-    private datesHelper: DatesHelperService
+    private datesHelper: DatesHelperService,
+    private maintenanceSysService: MantenimientosSistemasService,
+    private maintenanceAvService: MaintenanceAvService,
+    private maintenanceMttoService: MaintenanceMtooService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
+  }
 
+  ngOnInit() {
     this.obtenerTickets();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerCompras();
-    this.todosLostickets = this.tickets;
   }
 
   ngAfterViewInit() {
-
     setTimeout(() => {
-      this.mostrarMantenimientos = true;
+      // Trigger animations / re-renders if needed
+      this.auxMostrarMantenimientos = false;
       this.cdr.detectChanges();
-      this.mostrarMantenimientos = false;
+      this.auxMostrarMantenimientos = true;
+      this.cdr.detectChanges();
     }, 1500);
+  }
 
-
+  ngOnDestroy() {
+    if (this.subscripcionTicket) {
+      this.subscripcionTicket.unsubscribe();
+    }
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -132,15 +153,12 @@ export class AdminCadenaSuministroTabComponent {
       icon: 'info',
       text: 'Espere por favor...',
       didOpen: () => Swal.showLoading(),
-      customClass: {
-        container: 'swal-topmost'
-      }
+      customClass: { container: 'swal-topmost' }
     });
 
     this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
       next: (data) => {
         this.tickets = data;
-        // Ordenar por score global/urgencia (mayor a menor) y luego por fecha más reciente
         this.tickets.sort((a, b) => {
           const scoreA = (a as any).score || (((a as any).criticidad && (a as any).urgencia) ? (a as any).criticidad * (a as any).urgencia : 4);
           const scoreB = (b as any).score || (((b as any).criticidad && (b as any).urgencia) ? (b as any).criticidad * (b as any).urgencia : 4);
@@ -151,6 +169,7 @@ export class AdminCadenaSuministroTabComponent {
           const timeB = b.fecha?.toDate ? b.fecha.toDate().getTime() : (b.fecha ? new Date(b.fecha).getTime() : 0);
           return timeB - timeA;
         });
+        
         this.todosLostickets = [...this.tickets];
 
         if (this.ticket != undefined) {
@@ -161,6 +180,13 @@ export class AdminCadenaSuministroTabComponent {
         }
 
         this.tickets = this.tickets.filter(x => x.validacionAdmin != true);
+        
+        // Convert to string for category consistency
+        this.tickets = this.tickets.map((item: any) => ({
+          ...item,
+          idCategoria: item.idCategoria ? item.idCategoria.toString() : item.idCategoria
+        }));
+
         this.cdr.detectChanges();
         setTimeout(() => { Swal.close(); }, 1000);
       },
@@ -176,47 +202,42 @@ export class AdminCadenaSuministroTabComponent {
       next: (data) => {
         this.sucursales = data;
 
-        // TI
-        this.maintenanceService
-          .getUltimosMantenimientos(
-            this.sucursales.map((sucursal) => sucursal.id)
-          )
-          .subscribe((result) => {
-            let data = result.filter((element) => element.length > 0);
-            this.mantenimientos = [];
-            for (let itemdata of data) {
-              for (let item of itemdata) {
-                this.mantenimientos.push(item);
-              }
+        if (this.idArea === '1' || this.idArea === '2') {
+          // TI
+          this.maintenanceSysService.getUltimosMantenimientos(this.sucursales.map(s => s.id)).subscribe((result) => {
+            let filtered = result.filter(e => e.length > 0);
+            this.mantenimientosTI = [];
+            for (let itemdata of filtered) {
+              for (let item of itemdata) this.mantenimientosTI.push(item);
             }
-
-            this.mantenimientos = this.mantenimientos.map(x => {
-              x.fecha = this.datesHelper.getDate(x.fecha);
-              return x;
-            });
+            this.mantenimientosTI = this.mantenimientosTI.map(x => { x.fecha = this.datesHelper.getDate(x.fecha); return x; });
             this.cdr.detectChanges();
           });
 
-        // AV TI
-        this.maintenanceAvService
-          .getUltimosMantenimientos(
-            this.sucursales.map((sucursal) => sucursal.id)
-          )
-          .subscribe((result) => {
-            let data = result.filter((element) => element.length > 0);
+          // AV
+          this.maintenanceAvService.getUltimosMantenimientos(this.sucursales.map(s => s.id)).subscribe((result) => {
+            let filtered = result.filter(e => e.length > 0);
             this.mantenimientosAV = [];
-            for (let itemdata of data) {
-              for (let item of itemdata) {
-                this.mantenimientosAV.push(item);
-              }
+            for (let itemdata of filtered) {
+              for (let item of itemdata) this.mantenimientosAV.push(item);
             }
-
-            this.mantenimientosAV = this.mantenimientosAV.map(x => {
-              x.fecha = this.datesHelper.getDate(x.fecha);
-              return x;
-            });
+            this.mantenimientosAV = this.mantenimientosAV.map(x => { x.fecha = this.datesHelper.getDate(x.fecha); return x; });
             this.cdr.detectChanges();
           });
+        }
+
+        if (this.idArea === '4') {
+          // Mtto
+          this.maintenanceMttoService.getUltimosMantenimientos(this.sucursales.map(s => s.id)).subscribe((result) => {
+            let filtered = result.filter(e => e.length > 0);
+            this.mantenimientosMtto = [];
+            for (let itemdata of filtered) {
+              for (let item of itemdata) this.mantenimientosMtto.push(item);
+            }
+            this.mantenimientosMtto = this.mantenimientosMtto.map(x => { x.fecha = this.datesHelper.getDate(x.fecha); return x; });
+            this.cdr.detectChanges();
+          });
+        }
 
         this.cdr.detectChanges();
       },
@@ -228,7 +249,7 @@ export class AdminCadenaSuministroTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsuariosPorRol(['4', '7'], this.usuario.idArea)
+    this.usersService.getUsuariosPorRol(['4', '7'], this.idArea)
       .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
@@ -243,9 +264,8 @@ export class AdminCadenaSuministroTabComponent {
     this.mostrarAgrupacion = true;
 
     if (this.usergroup.idRol === '7') {
-      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id)
-    }
-    else {
+      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id);
+    } else {
       this.tickets = this.todosLostickets;
     }
   }
@@ -262,29 +282,19 @@ export class AdminCadenaSuministroTabComponent {
     this.ticket = itemticket;
   }
 
-  filtrarMantenimientos() {
-    this.auxMostrarMantenimientos = false;
-    setTimeout(() => {
-      this.auxMostrarMantenimientos = true;
-      this.cdr.detectChanges();
-    }, 400);
-  }
-
-  sucursalesMantenimeintosActivos = () => {
+  sucursalesMantenimeintosActivos(areaIdToCheck: string) {
     if (this.usergroup !== undefined) {
       const idsSucursalesUsuario = this.usergroup?.sucursales.map(s => String(s.id));
       return this.sucursales.filter(sucursal =>
         idsSucursalesUsuario?.includes(String(sucursal.id)) &&
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes('2')
+        sucursal.activoMantenimientos.includes(areaIdToCheck)
       );
-    }
-    else {
+    } else {
       return this.sucursales.filter(sucursal =>
         Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes('2')
+        sucursal.activoMantenimientos.includes(areaIdToCheck)
       );
     }
-
   }
 }

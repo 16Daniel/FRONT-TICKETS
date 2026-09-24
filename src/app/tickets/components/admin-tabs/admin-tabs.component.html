@@ -1,75 +1,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <p-tabView (onChange)="onTabChange($event)" [activeIndex]="activeIndex">
-  @if ((usuario.idArea == '1' || usuario.idArea == '2') || usuario.idRol == '1')
-  {
-  <p-tabPanel header="SISTEMAS">
-    <ng-container *ngIf="tabsActivos['SISTEMAS']">
-      <app-admin-sys-tab></app-admin-sys-tab>
-    </ng-container>
-  </p-tabPanel>
+  @for (area of areasTicket; track area.id) {
+    <p-tabPanel [header]="area.nombre | uppercase">
+      <ng-container *ngIf="tabsActivos[area.nombre | uppercase]">
+        <app-admin-area-tab [idArea]="area.id" [areaName]="area.nombre"></app-admin-area-tab>
+      </ng-container>
+    </p-tabPanel>
   }
-  @if (usuario.idArea == '2' || usuario.idRol == '1')
-  {
-  <p-tabPanel header="AUDIO Y VIDEO">
-    <ng-container *ngIf="tabsActivos['AUDIO Y VIDEO']">
-      <app-admin-audio-video-tab></app-admin-audio-video-tab>
-    </ng-container>
-  </p-tabPanel>
-  }
-  @if (usuario.idArea == '4' || usuario.idRol == '1')
-  {
-  <p-tabPanel header="MANTENIMIENTO">
-    <ng-container *ngIf="tabsActivos['MANTENIMIENTO']">
-      <app-admin-maintenance-tab></app-admin-maintenance-tab>
-    </ng-container>
-  </p-tabPanel>
-  }
-  @if (usuario.idArea == '20' || usuario.idRol == '1')
-  {
-  <p-tabPanel header="CADENA DE SUMINISTRO">
-    <ng-container *ngIf="tabsActivos['CADENA DE SUMINISTRO']">
-      <app-admin-cadena-suministro-tab></app-admin-cadena-suministro-tab>
-    </ng-container>
-  </p-tabPanel>
-  }
-  @if (usuario.idRol == '1' || usuario.idRol == '5')
-  {
-  <p-tabPanel header="KPIs">
-    <ng-container *ngIf="tabsActivos['KPIs']">
-      <app-admin-reports-tab></app-admin-reports-tab>
-    </ng-container>
-  </p-tabPanel>
-  }
-  <p-tabPanel header="TAREAS">
-
-    <div class="d-flex align-items-center">
-
-      <div class="d-flex align-items-center gap-3 ms-auto">
-        <label class="form-check-label fs-4 mb-0" for="activarGuardia">
-          EISENHOWER
-        </label>
-
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" role="switch" id="activarGuardia"
-            style="width: 3rem; height: 2rem;" [(ngModel)]="verEisenhower" (change)="onToggleEisenhower()">
-        </div>
-      </div>
-
-    </div>
-
-    <br>
-
-    <app-dashboard-tasks-page [hidden]="verEisenhower || sucursal.id == undefined"></app-dashboard-tasks-page>
-    <app-eisenhower-matrix-page [hidden]="!verEisenhower || sucursal.id == undefined"></app-eisenhower-matrix-page>
-
-
-  </p-tabPanel>
-
-  <p-tabPanel header="COMENSALES">
-    <ng-container *ngIf="tabsActivos['COMENSALES']">
-      <app-comensales-page></app-comensales-page>
-    </ng-container>
-  </p-tabPanel>
-
-
 </p-tabView>

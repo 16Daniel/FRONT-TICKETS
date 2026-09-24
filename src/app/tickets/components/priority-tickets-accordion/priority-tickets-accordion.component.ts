@@ -5,10 +5,10 @@ import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
-import { TpvsDevicesTableComponent } from '../tpvs-devices-table/tpvs-devices-table.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion',
@@ -110,24 +110,9 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     return this.tickets.filter((tk) => this.obtenerPrioridadTicket(tk) === prioridad);
   }
 
-  verificarChatNoLeido(tickets: Ticket[]): boolean {
-    return tickets.some(ticket => {
-      const participantes = ticket.participantesChat.sort((a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido);
-      const participante = participantes.find((p) => p.idUsuario === this.userdata.id);
-
-      if (participante) {
-        const ultimoComentarioLeido = participante.ultimoComentarioLeido;
-        const comentarios = ticket.comentarios;
-
-        return comentarios.length > ultimoComentarioLeido; 
-      }
-
-      return false;
-    });
-  }
-
   verificarTicketsPorValidar(tickets: Ticket[]) {
     let result = tickets.filter(x => x.idEstatusTicket == '7');
     return result.length > 0;
   }
+
 }

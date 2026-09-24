@@ -4,12 +4,6 @@ import { Routes } from '@angular/router';
  * Rutas que viven dentro de /main
  */
 export const ACEITES_MAIN_ROUTES: Routes = [
-  {
-    path: 'kpis',
-    title: 'KPIS',
-    loadComponent: () =>
-      import('./layout/admin-reports-tab/admin-reports-tab.component'),
-  },
 ];
 
 /**

@@ -17,11 +17,7 @@
 
         <!-- Action / Alert Badges -->
         <div class="branch-actions-indicators">
-          <span class="indicator-badge badge-chat" 
-            *ngIf="verificarChatNoLeido(obtenerTicketsFiltrados(item))" 
-            pTooltip="NUEVO CHAT" tooltipPosition="top">
-            <i class="bx bx-message-square-dots bx-tada"></i>
-          </span>
+          
 
           <span class="indicator-badge badge-new" 
             *ngIf="verificarTicketsPorValidar(obtenerTicketsFiltrados(item))" 
