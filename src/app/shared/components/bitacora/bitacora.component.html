@@ -1,0 +1,90 @@
+<div class="bitacora-container ticket-card h-100 d-flex flex-column m-0">
+  
+  <!-- Header de Bitácora -->
+  <div class="bitacora-header p-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+    <h5 class="m-0 fw-bold d-flex align-items-center gap-2" style="color: #475569;">
+      <i class="bx bx-list-ul fs-4 text-muted"></i> Actividad
+    </h5>
+    <span class="text-muted" style="font-size: 0.8rem;">Registro de eventos y comentarios</span>
+  </div>
+
+  <!-- Lista de Bitácoras (Timeline) -->
+  <div class="bitacora-body flex-grow-1 p-4" style="overflow-y: auto; background-color: #f8fafc;">
+    
+    <div *ngIf="cargando" class="text-center text-muted py-5">
+      <i class="bx bx-loader-alt bx-spin fs-2"></i>
+      <p class="mt-2" style="font-size: 0.85rem;">Cargando actividad...</p>
+    </div>
+
+    <div *ngIf="!cargando && bitacoras.length === 0" class="text-center text-muted py-5">
+      <i class="bx bx-time-five mb-3" style="font-size: 3rem; color: #cbd5e1;"></i>
+      <p class="m-0 fw-bold">Sin actividad aún</p>
+      <p class="m-0 mt-1" style="font-size: 0.85rem;">Sé el primero en dejar un comentario.</p>
+    </div>
+
+    <!-- Timeline Items -->
+    <div class="timeline d-flex flex-column gap-3" *ngIf="!cargando && bitacoras.length > 0">
+      <div *ngFor="let b of bitacoras" class="timeline-item d-flex gap-3">
+        <!-- Avatar -->
+        <div class="timeline-avatar flex-shrink-0">
+          <ngx-avatars [name]="b.autor.nombre" [size]="36" [round]="true" [bgColor]="b.autor.color || '#94a3b8'"></ngx-avatars>
+        </div>
+        
+        <!-- Contenido del Comentario -->
+        <div class="timeline-content flex-grow-1">
+          <div class="d-flex align-items-baseline gap-2 mb-1">
+            <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ b.autor.nombre }}</span>
+            <span class="text-muted" style="font-size: 0.75rem;">
+              {{ b.fechaCreacion ? (datesHelper.getDate(b.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}
+            </span>
+          </div>
+          
+          <div class="comentario-bubble p-3" [innerHTML]="b.contenido"></div>
+          
+          <!-- Archivos adjuntos (cuando se implementen) -->
+          <div *ngIf="b.archivos && b.archivos.length > 0" class="mt-2 d-flex flex-wrap gap-2">
+            <div *ngFor="let arch of b.archivos" class="adjunto-pill">
+              <i class="bx bx-file"></i> {{ arch.nombre }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zona de Input (Quill / P-Editor) -->
+  <div class="bitacora-footer p-3" style="border-top: 1px solid #e2e8f0; background: #fff; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+    <!-- Usamos p-editor nativo de primeng con módulos quill-mention -->
+    <p-editor [(ngModel)]="nuevoMensaje" [modules]="editorModules" [style]="{'height':'100px'}" placeholder="Escribe un comentario y usa @ para etiquetar...">
+      <ng-template pTemplate="header">
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-clean"></button>
+        </span>
+      </ng-template>
+    </p-editor>
+    
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div>
+        <button class="btn-action btn-ghost btn-sm text-muted">
+          <i class="bx bx-paperclip"></i> Adjuntar
+        </button>
+      </div>
+      <button 
+        class="btn-action btn-primary-rebel btn-sm px-4" 
+        [disabled]="!nuevoMensaje || nuevoMensaje.trim() === ''"
+        (click)="enviarComentario()">
+        <i class="bx bx-send"></i> Enviar
+      </button>
+    </div>
+  </div>
+
+</div>
