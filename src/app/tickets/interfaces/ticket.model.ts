@@ -3,6 +3,7 @@ export class Ticket {
   id?: string | any;
   idUsuario: string = '';
   idInvolucrados: string[] = [];
+  usuariosEtiquetados?: string[] = [];
   idSucursal: any = '';
   idArea: string = '';
   idCategoria: string = '';
@@ -30,7 +31,7 @@ export class Ticket {
   descripcion: string = '';
 
 
-  archivos: string[] = [];
+  archivos?: { url: string; nombre: string; tipo: string; }[] = [];
   folio: string = '';
 
   comentariosFinalesSucursal?: string | null;

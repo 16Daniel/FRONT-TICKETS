@@ -26,6 +26,7 @@ import { AvatarModule } from 'ngx-avatars';
 import { TabViewModule } from 'primeng/tabview';
 import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
 import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { FileUtils } from '../../../shared/utils/file.utils';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -52,6 +53,9 @@ export class ModalTicketDetailComponent implements OnInit {
   @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
+  
+  public fileUtils = FileUtils;
+  
   usuario: Usuario;
   mostrarModalEspecialistas: boolean = false;
   mostrarModalImagen: boolean = false;

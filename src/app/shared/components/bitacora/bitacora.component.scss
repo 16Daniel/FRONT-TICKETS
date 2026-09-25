@@ -1,8 +1,13 @@
+:host {
+  min-height: 0;
+}
+
 .bitacora-container {
   box-shadow: none !important; // Para igualar la línea de diseño si está envuelto
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   background-color: #ffffff;
+  min-height: 0;
 }
 
 .timeline {
@@ -131,4 +136,33 @@
     background: #e2e8f0;
     color: #0f172a;
   }
+}
+
+// Estilos globales para la lista desplegable de menciones de Quill
+::ng-deep .ql-mention-list-container {
+  max-height: 250px !important;
+  overflow-y: auto !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  background-color: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+::ng-deep .ql-mention-list {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+::ng-deep .ql-mention-list-item {
+  padding: 6px 16px !important;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+}
+
+::ng-deep .ql-mention-list-item:last-child {
+  border-bottom: none;
+}
+
+::ng-deep .ql-mention-list-item.selected {
+  background-color: #f1f5f9 !important;
 }

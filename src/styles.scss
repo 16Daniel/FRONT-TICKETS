@@ -455,3 +455,83 @@ html, body {
     }
   }
 }
+
+/* Global Quill Mention Dropdown Styles */
+.ql-mention-list-container {
+  max-height: 250px !important;
+  overflow-y: auto !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  background-color: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.ql-mention-list {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.ql-mention-list-item {
+  padding: 6px 16px !important;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+}
+
+.ql-mention-list-item:last-child {
+  border-bottom: none;
+}
+
+.ql-mention-list-item.selected {
+  background-color: #f1f5f9 !important;
+}
+
+/* Global PrimeNG TabView Styles */
+.p-tabview {
+  .p-tabview-nav {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 0.5rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+    display: flex !important;
+    gap: 0.5rem !important;
+    flex-wrap: wrap !important;
+
+    li {
+      margin-right: 0 !important;
+
+      .p-tabview-nav-link {
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 0.65rem 1.15rem !important;
+        font-weight: 700 !important;
+        font-size: 0.85rem !important;
+        letter-spacing: 0.02em !important;
+        color: #64748b !important;
+        background: transparent !important;
+        transition: all 0.2s ease !important;
+
+        &:hover {
+          color: #0f172a !important;
+          background: #f8fafc !important;
+        }
+      }
+
+      &.p-highlight {
+        .p-tabview-nav-link {
+          color: #d3152a !important;
+          background: #fff1f2 !important;
+          border: 1px solid rgba(211, 21, 42, 0.2) !important;
+          box-shadow: 0 2px 8px rgba(211, 21, 42, 0.15) !important;
+        }
+      }
+    }
+  }
+
+  .p-tabview-panels {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+}

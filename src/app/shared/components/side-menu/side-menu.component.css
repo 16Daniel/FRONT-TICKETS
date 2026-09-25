@@ -44,6 +44,18 @@
   gap: 16px;
 }
 
+.navbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  max-width: 50%;
+  pointer-events: none; /* Allows clicking through if it overlaps slightly */
+}
+
 .nav-toggle-btn {
   display: inline-flex;
   align-items: center;
@@ -95,13 +107,18 @@
 }
 
 .branch-badge {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   color: var(--erp-color-primary);
   background-color: var(--erp-color-primary-light);
-  padding: 2px 10px;
+  padding: 6px 18px;
   border-radius: 9999px;
-  border: 1px solid rgba(15, 98, 254, 0.15);
+  border: 1px solid rgba(211, 21, 42, 0.2);
+  pointer-events: auto; /* Re-enable clicks if needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .navbar-right {
@@ -421,12 +438,13 @@
   }
   
   .branch-badge {
-    font-size: 10px;
-    padding: 2px 6px;
-    max-width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 13px;
+    padding: 4px 12px;
+    max-width: 100%;
+  }
+  
+  .navbar-center {
+    max-width: 55%;
   }
   
   .navbar-right {
