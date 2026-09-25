@@ -19,10 +19,10 @@
   </ng-template>
 
   <!-- Cuerpo del Modal -->
-  <div *ngIf="ticket" class="modal-ticket-body">
-    <div class="row">
+  <div *ngIf="ticket" class="modal-ticket-body d-flex flex-column h-100 flex-grow-1">
+    <div class="row flex-grow-1 m-0">
       <!-- Columna Izquierda: Detalle del Ticket -->
-      <div class="col-lg-7 d-flex flex-column gap-4">
+      <div class="col-lg-7 d-flex flex-column gap-4 pb-3 pb-lg-0 h-100">
         
         <!-- TOP: SLA, Matriz y Responsables -->
         <div class="row align-items-stretch">
@@ -91,17 +91,38 @@
         </div>
 
         <!-- MIDDLE & BOTTOM: Tabs -->
-        <p-tabView styleClass="ticket-detail-tabs mt-1">
+        <p-tabView class="flex-grow-1 d-flex flex-column" styleClass="ticket-detail-tabs mt-1 flex-grow-1 d-flex flex-column">
           
           <!-- Tab 1: Detalles Generales -->
           <p-tabPanel header="Detalles Generales" leftIcon="bx bx-list-ul">
-            <div class="ticket-card p-4 m-0">
+            <div class="ticket-card p-4 m-0 h-100" style="overflow-y: auto;">
               <div class="d-flex justify-content-between align-items-start mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
                 <div>
                   <h3 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 mb-1" style="font-size: 1.5rem;">
                     <i class="bx bx-hash text-muted"></i>{{ ticket.folio }}
                   </h3>
                   <span class="text-muted" style="font-size: 0.85rem;">Detalles generales de la solicitud</span>
+                </div>
+                
+                <!-- Botonera de Acciones -->
+                <div class="modal-footer-actions m-0 p-0" *ngIf="showBtnAsignar || showBtnTrabajar">
+                  <!-- Botón ASIGNAR A ESPECIALISTA -->
+                  <button
+                    *ngIf="showBtnAsignar"
+                    class="btn-action btn-secondary-rebel"
+                    (click)="onClickAsignarEspecialista()">
+                    <i class="bx bx-user-pin"></i>
+                    <span>ASIGNAR A ESPECIALISTA</span>
+                  </button>
+
+                  <!-- Botón TRABAJAR (Inicia atención y registra fechaAtencion) -->
+                  <button
+                    *ngIf="showBtnTrabajar"
+                    class="btn-action btn-primary-rebel"
+                    (click)="onClick()">
+                    <i class="bx bx-play-circle"></i>
+                    <span>TRABAJAR TICKET</span>
+                  </button>
                 </div>
               </div>
 
@@ -182,7 +203,11 @@
 
           <!-- Tab 2: Descripción -->
           <p-tabPanel header="Descripción" leftIcon="bx bx-detail">
-            <div class="ticket-card p-4 m-0" style="min-height: 250px;">
+            <div class="ticket-card p-4 m-0 h-100" style="min-height: 250px; overflow-y: auto;">
+              <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="bx bx-detail fs-5" style="color: #D3152A;"></i> DESCRIPCIÓN DEL TICKET
+              </h5>
+              
               <ng-container *ngIf="ticket.descripcion; else noDescripcion">
                 <div class="description-text" [innerHTML]="ticket.descripcion"></div>
               </ng-container>
@@ -197,35 +222,60 @@
 
           <!-- Tab 3: Archivos y Evidencia -->
           <p-tabPanel header="Archivos" leftIcon="bx bx-folder-open">
-            <div class="d-flex flex-column gap-4">
-              <div class="ticket-card p-4 m-0">
+            <div class="d-flex flex-column gap-4 h-100" style="overflow-y: auto;">
+              <!-- Estado Vacío -->
+              <div class="ticket-card p-4 m-0 h-100" *ngIf="!ticket.archivos || ticket.archivos.length === 0">
                 <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
                   <i class="bx bx-file fs-5" style="color: #D3152A;"></i> ARCHIVOS ADJUNTOS
                 </h5>
                 <div class="text-center py-4" style="border: 2px dashed #cbd5e1; border-radius: 12px; background-color: #f8fafc;">
-                  <i class="bx bx-cloud-upload mb-2" style="font-size: 2.5rem; color: #94a3b8;"></i>
+                  <i class="bx bx-folder-minus mb-2" style="font-size: 2.5rem; color: #94a3b8;"></i>
                   <p class="m-0 text-muted" style="font-size: 0.9rem; font-weight: 600;">No hay archivos adjuntos</p>
-                  <p class="m-0 mt-1 text-muted" style="font-size: 0.8rem;">(Lista de archivos por implementar)</p>
                 </div>
               </div>
 
-              <!-- Tarjeta de Evidencias -->
-              <div class="ticket-card p-4 m-0" *ngIf="ticket.archivos?.length">
-                <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
-                  <i class="bx bx-images fs-5" style="color: #D3152A;"></i> EVIDENCIA FOTOGRÁFICA 
-                  <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos.length }}</span>
+              <!-- Tarjeta de Archivos -->
+              <div class="ticket-card p-4 m-0 d-flex flex-column h-100" *ngIf="ticket.archivos?.length">
+                <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2 flex-shrink-0" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                  <i class="bx bx-folder-open fs-5" style="color: #D3152A;"></i> ARCHIVOS DEL TICKET 
+                  <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos?.length }}</span>
                 </h5>
-                <div class="evidencias-grid">
-                  <div
-                    *ngFor="let url of ticket.archivos"
-                    class="evidencia-thumbnail-wrapper"
-                    (click)="abrirModalImagen(url)"
-                    pTooltip="Clic para ampliar"
-                    tooltipPosition="top">
-                    <img [src]="url" alt="Evidencia ticket" class="evidencia-img" />
-                    <div class="img-overlay">
-                      <i class="bx bx-zoom-in"></i>
+                <div class="archivos-list d-flex flex-column gap-2 flex-grow-1" style="overflow-y: auto; min-height: 0; padding-right: 0.5rem;">
+                  <div *ngFor="let archivo of ticket.archivos" class="archivo-list-item d-flex align-items-center p-2" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; transition: all 0.2s; cursor: default;">
+                    
+                    <!-- Icono o Miniatura pequeña -->
+                    <div class="archivo-icon me-3" style="width: 44px; height: 44px; flex-shrink: 0; overflow: hidden; border-radius: 6px;">
+                      <!-- Si es imagen -->
+                      <ng-container *ngIf="archivo.tipo?.startsWith('image/') || archivo.url?.match('.jpg|.jpeg|.png|.gif'); else docPreview">
+                        <div (click)="abrirModalImagen(archivo.url)" class="w-100 h-100" style="cursor: pointer;" pTooltip="Clic para ampliar" tooltipPosition="top">
+                          <img [src]="archivo.url" [alt]="archivo.nombre" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                        </div>
+                      </ng-container>
+                      <!-- Si es documento -->
+                      <ng-template #docPreview>
+                        <div class="d-flex align-items-center justify-content-center w-100 h-100" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+                          <i [class]="fileUtils.obtenerIconoArchivo(archivo.nombre, archivo.tipo)" style="font-size: 1.5rem;" [style.color]="fileUtils.obtenerColorArchivo(archivo.nombre, archivo.tipo)"></i>
+                        </div>
+                      </ng-template>
                     </div>
+
+                    <!-- Detalles del archivo -->
+                    <div class="archivo-details flex-grow-1 text-truncate">
+                      <div class="fw-bold text-dark text-truncate" style="font-size: 0.85rem;" [title]="archivo.nombre || 'Archivo'">
+                        {{ archivo.nombre || 'Archivo adjunto' }}
+                      </div>
+                      <div class="text-muted text-truncate text-uppercase" style="font-size: 0.7rem;">
+                        {{ archivo.tipo || 'Documento' }}
+                      </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="archivo-actions ms-3">
+                      <a [href]="archivo.url" target="_blank" class="btn btn-sm" pTooltip="Abrir en pestaña nueva" tooltipPosition="left" style="background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; border-radius: 6px;">
+                        <i class="bx bx-link-external fs-6"></i>
+                      </a>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -233,11 +283,15 @@
           </p-tabPanel>
           <!-- Tab 4: Historial -->
           <p-tabPanel header="Historial" leftIcon="bx bx-history">
-            <div class="ticket-card p-4 m-0 d-flex flex-column justify-content-center align-items-center" style="min-height: 250px;">
-              <div class="text-center py-4 text-muted">
+            <div class="ticket-card p-4 m-0 d-flex flex-column h-100" style="min-height: 250px; overflow-y: auto;">
+              <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="bx bx-history fs-5" style="color: #D3152A;"></i> HISTORIAL DE CAMBIOS
+              </h5>
+              
+              <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
                 <i class="bx bx-history mb-3" style="font-size: 2.5rem; color: #94a3b8;"></i>
-                <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Historial de Cambios</p>
-                <p class="m-0 mt-1" style="font-size: 0.8rem;">(Bitácora por implementar)</p>
+                <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Sin historial registrado</p>
+                <p class="m-0 mt-1" style="font-size: 0.8rem;">(Por implementar)</p>
               </div>
             </div>
           </p-tabPanel>
@@ -253,37 +307,18 @@
           </div>
         </div>
 
-        <!-- Botonera de Acciones (Footer) -->
-        <div class="modal-footer-actions mt-3" *ngIf="showBtnAsignar || showBtnTrabajar">
-          <!-- Botón ASIGNAR A ESPECIALISTA -->
-          <button
-            *ngIf="showBtnAsignar"
-            class="btn-action btn-secondary-rebel"
-            (click)="onClickAsignarEspecialista()">
-            <i class="bx bx-user-pin"></i>
-            <span>ASIGNAR A ESPECIALISTA</span>
-          </button>
 
-          <!-- Botón TRABAJAR (Inicia atención y registra fechaAtencion) -->
-          <button
-            *ngIf="showBtnTrabajar"
-            class="btn-action btn-primary-rebel"
-            (click)="onClick()">
-            <i class="bx bx-play-circle"></i>
-            <span>TRABAJAR TICKET</span>
-          </button>
-        </div>
       </div>
       
-      <!-- Columna Derecha: Minuta / Activity Log (Placeholder) -->
-      <div class="col-lg-5 d-flex flex-column">
-        <div class="ticket-card flex-grow-1 d-flex flex-column align-items-center justify-content-center m-0" style="background-color: #f8fafc; border: 2px dashed #cbd5e1; box-shadow: none;">
-          <div class="text-center text-muted">
-            <i class="bx bx-time-five mb-3" style="font-size: 3.5rem; color: #94a3b8;"></i>
-            <h5 class="m-0 fw-bold" style="color: #64748b;">Actividad del Ticket</h5>
-            <p class="m-0 mt-2" style="font-size: 0.95rem;">(Aquí irá el componente de Minutas)</p>
-          </div>
-        </div>
+      <!-- Columna Derecha: Bitácora -->
+      <div class="col-lg-5 d-flex flex-column h-100">
+        <!-- El componente BitacoraComponent se encargará de rellenar el alto total con flex-grow-1 internamente (ticket-card h-100) -->
+        <app-bitacora 
+          class="flex-grow-1 d-flex flex-column h-100"
+          [modulo]="'TICKETS'" 
+          [referenciaId]="ticket.id" 
+          [usuariosEtiquetables]="taskResponsibleService.responsables">
+        </app-bitacora>
       </div>
     </div>
   </div>

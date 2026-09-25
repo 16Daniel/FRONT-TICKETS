@@ -24,6 +24,9 @@ import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgenc
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AvatarModule } from 'ngx-avatars';
 import { TabViewModule } from 'primeng/tabview';
+import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
+import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { FileUtils } from '../../../shared/utils/file.utils';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -40,7 +43,8 @@ import { TabViewModule } from 'primeng/tabview';
     TicketSlaGaugeComponent,
     MiniMatrizUrgenciaComponent,
     AvatarModule,
-    TabViewModule
+    TabViewModule,
+    BitacoraComponent
   ],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
@@ -49,6 +53,9 @@ export class ModalTicketDetailComponent implements OnInit {
   @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
+  
+  public fileUtils = FileUtils;
+  
   usuario: Usuario;
   mostrarModalEspecialistas: boolean = false;
   mostrarModalImagen: boolean = false;
@@ -66,7 +73,8 @@ export class ModalTicketDetailComponent implements OnInit {
     private branchesService: BranchesService,
     private categoriesService: CategoriesService,
     private statusTicketService: StatusTicketService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    public taskResponsibleService: TaskResponsibleService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }

@@ -88,18 +88,31 @@
     <div class="seccion-evidencias">
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
         <label class="etiqueta-formulario m-0">
-          <i class="bx bx-image-add"></i> Evidencia Fotográfica del Activo
+          <i class="bx bx-paperclip"></i> Archivos Adjuntos (Opcional)
         </label>
-        <input type="file" id="fileInputFA" (change)="onFileChange($event)" multiple accept="image/*" hidden />
+        <input type="file" id="fileInputFA" (change)="onFileChange($event)" multiple hidden />
         <button type="button" (click)="onSeleccionarImagenes()" class="btn-adjuntar-evidencia">
-          <i class="bx bx-upload"></i> Subir imágenes
+          <i class="bx bx-upload"></i> Subir archivos
         </button>
       </div>
 
-      <div *ngIf="imagenesBase64.length > 0" class="galeria-miniaturas">
-        <div *ngFor="let img of imagenesBase64; let i = index" class="miniatura-item">
-          <img [src]="img" [alt]="'Evidencia ' + (i + 1)" />
-          <span class="miniatura-pie">Foto {{ i + 1 }}</span>
+      <div *ngIf="archivosPreview.length > 0" class="galeria-miniaturas">
+        <div *ngFor="let archivo of archivosPreview; let i = index" class="miniatura-item position-relative" [ngClass]="{'is-doc': !archivo.imgBase64}">
+          <!-- Botón Eliminar -->
+          <button type="button" class="btn-remover position-absolute rounded-circle d-flex align-items-center justify-content-center" (click)="removerArchivo(i)" pTooltip="Quitar archivo" tooltipPosition="top">
+            <i class="bx bx-x"></i>
+          </button>
+
+          <ng-container *ngIf="archivo.imgBase64; else docTpl">
+            <img [src]="archivo.imgBase64" [alt]="archivo.nombre" />
+          </ng-container>
+          <ng-template #docTpl>
+            <div class="doc-placeholder d-flex flex-column align-items-center justify-content-center h-100" style="background: #f1f5f9; border: 1px dashed #cbd5e1; border-bottom: none; border-radius: 9px 9px 0 0;" [style.color]="archivo.color">
+              <i [class]="archivo.icono + ' mb-1'" style="font-size: 1.5rem;"></i>
+              <small class="text-truncate px-2 w-100 text-center" style="font-size: 0.65rem; color: #64748b;" [title]="archivo.nombre">{{ archivo.nombre }}</small>
+            </div>
+          </ng-template>
+          <span class="miniatura-pie text-truncate" [title]="archivo.nombre">{{ archivo.nombre }}</span>
         </div>
       </div>
     </div>
@@ -109,16 +122,27 @@
       <label class="etiqueta-formulario">
         <i class="bx bx-detail"></i> Detalle de la Falla o Problema
       </label>
-      <textarea 
+      <p-editor 
         [(ngModel)]="ticket.descripcion" 
         name="descripcion" 
-        rows="4" 
-        class="textarea-rw"
+        [style]="{'height':'120px'}"
+        [modules]="editorModules"
         placeholder="Describe qué le ocurre al activo fijo, síntomas, ruidos, mensajes de error..."
         [ngClass]="{'input-invalido': formDescripcionCtrl.invalid && formDescripcionCtrl.touched}"
         #formDescripcionCtrl="ngModel" 
         required>
-      </textarea>
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <button class="ql-bold" aria-label="Bold"></button>
+            <button class="ql-italic" aria-label="Italic"></button>
+            <button class="ql-underline" aria-label="Underline"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+        </ng-template>
+      </p-editor>
       <small *ngIf="formDescripcionCtrl.invalid && formDescripcionCtrl.touched" class="p-error">
         La descripción es requerida.
       </small>

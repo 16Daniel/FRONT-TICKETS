@@ -32,6 +32,14 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { SelectorArbolCategoriaComponent } from '../../../tickets/components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
+import { FileUtils } from '../../../shared/utils/file.utils';
+import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+
+import Quill from 'quill';
+import { Mention, MentionBlot } from 'quill-mention';
+import { MentionUtils } from '../../../shared/utils/mention.utils';
+
+Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -57,13 +65,63 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   sucursales: Sucursal[] = [];
   usuarioActivo?: Usuario | null;
   areas: Area[] = [];
+
+  editorModules = {
+    mention: {
+      allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+      mentionDenotationChars: ['@'],
+      source: (searchTerm: string, renderList: (matches: any[], searchTerm: string) => void, mentionChar: string) => {
+        const getInitials = (name: string) => {
+          if (!name) return '?';
+          const parts = name.split(' ').filter(p => p.length > 0);
+          if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+          return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+        };
+
+        const responsables = this.taskResponsibleService.responsables;
+        const values = responsables.map(u => ({ 
+          id: u.id, 
+          value: u.nombre,
+          color: u.color,
+          posicion: u.posicion,
+          initials: getInitials(u.nombre)
+        }));
+        
+        if (searchTerm.length === 0) {
+          renderList(values, searchTerm);
+        } else {
+          const matches = values.filter(v => v.value.toLowerCase().includes(searchTerm.toLowerCase()));
+          renderList(matches, searchTerm);
+        }
+      },
+      renderItem: (item: any, searchTerm: string) => {
+        const div = document.createElement('div');
+        div.style.display = 'flex';
+        div.style.alignItems = 'center';
+        div.style.gap = '10px';
+        div.style.padding = '4px 0';
+        
+        const avatarStr = `
+          <div style="width: 28px; height: 28px; border-radius: 50%; background-color: ${item.color || '#94a3b8'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0;">
+            ${item.initials}
+          </div>
+          <div style="display: flex; flex-direction: column; line-height: 1.2;">
+            <span style="font-size: 14px; font-weight: 600; color: #334155;">${item.value}</span>
+            <span style="font-size: 11px; color: #64748b;">${item.posicion || 'Sin área'}</span>
+          </div>
+        `;
+        div.innerHTML = avatarStr;
+        return div;
+      }
+    }
+  };
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
   formCategoria: any = null;
   catUsuariosHelp: Usuario[] = [];
 
   urlsArchivos: string[] = [];
-  imagenesBase64: string[] = [];
+  archivosPreview: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string }[] = [];
   archivos: File[] = [];
 
   constructor(
@@ -76,7 +134,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
-    private firebaseStorage: FirebaseStorageService
+    private firebaseStorage: FirebaseStorageService,
+    public taskResponsibleService: TaskResponsibleService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -248,10 +307,10 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
     this.ticket.idUsuario = this.usuarioActivo?.id;
     this.ticket.folio = folio;
-    
+    this.ticket.usuariosEtiquetados = MentionUtils.extraerUsuariosEtiquetados(this.ticket.descripcion);
 
     if (this.archivos.length > 0) {
-      this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
+      this.firebaseStorage.cargarArchivosTicket(this.archivos)
         .then(async urls => {
           this.ticket.archivos = urls;
           await this.ticketsService.create({ ...this.ticket });
@@ -334,18 +393,38 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    this.archivos = Array.from(input.files);
-    this.imagenesBase64 = [];
+    const nuevosArchivos = Array.from(input.files);
 
-    this.archivos.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          this.imagenesBase64.push(reader.result);
-          this.cdr.detectChanges();
-        }
+    nuevosArchivos.forEach(file => {
+      this.archivos.push(file);
+      const previewItem: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string } = {
+        nombre: file.name,
+        tipo: file.type,
+        icono: FileUtils.obtenerIconoArchivo(file.name, file.type),
+        color: FileUtils.obtenerColorArchivo(file.name, file.type)
       };
-      reader.readAsDataURL(file);
+      
+      this.archivosPreview.push(previewItem);
+
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            previewItem.imgBase64 = reader.result;
+            this.cdr.detectChanges();
+          }
+        };
+        reader.readAsDataURL(file);
+      }
     });
+
+    input.value = ''; // Permite volver a seleccionar el mismo archivo si es necesario
+    this.cdr.detectChanges();
+  }
+
+  removerArchivo(index: number): void {
+    this.archivos.splice(index, 1);
+    this.archivosPreview.splice(index, 1);
+    this.cdr.detectChanges();
   }
 }

@@ -1,0 +1,168 @@
+:host {
+  min-height: 0;
+}
+
+.bitacora-container {
+  box-shadow: none !important; // Para igualar la línea de diseño si está envuelto
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  min-height: 0;
+}
+
+.timeline {
+  .timeline-item {
+    .comentario-bubble {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0 12px 12px 12px; // Pico estilo globo de chat moderno
+      font-size: 0.9rem;
+      color: #334155;
+      line-height: 1.5;
+      
+      ::ng-deep p {
+        margin: 0;
+      }
+      ::ng-deep img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+      }
+      ::ng-deep .mention {
+        background-color: #eff6ff;
+        color: #2563eb;
+        padding: 0.1rem 0.3rem;
+        border-radius: 4px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+    }
+
+    .adjunto-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      color: #475569;
+      cursor: pointer;
+      
+      &:hover {
+        background: #e2e8f0;
+      }
+    }
+  }
+}
+
+// Personalizar p-editor
+::ng-deep .bitacora-footer {
+  .p-editor-container {
+    .p-editor-toolbar {
+      border: 1px solid #e2e8f0;
+      border-bottom: none;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      background: #f8fafc;
+      padding: 0.5rem;
+    }
+    .p-editor-content {
+      border: 1px solid #e2e8f0;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      
+      .ql-editor {
+        font-size: 0.9rem;
+        color: #334155;
+        min-height: 80px;
+      }
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Botones (copiados del modal para mantener consistencia global)
+// --------------------------------------------------------------------------
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.btn-primary-rebel {
+  background: #D3152A; // Rojo Rebel
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(211, 21, 42, 0.28);
+
+  &:hover:not(:disabled) {
+    background: #B91122;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    background: #fca5a5; // Rojo suave para indicar que está inactivo pero es el botón principal
+    color: #ffffff;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #475569;
+  font-weight: 700;
+  
+  &:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+}
+
+// Estilos globales para la lista desplegable de menciones de Quill
+::ng-deep .ql-mention-list-container {
+  max-height: 250px !important;
+  overflow-y: auto !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  background-color: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+::ng-deep .ql-mention-list {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+::ng-deep .ql-mention-list-item {
+  padding: 6px 16px !important;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+}
+
+::ng-deep .ql-mention-list-item:last-child {
+  border-bottom: none;
+}
+
+::ng-deep .ql-mention-list-item.selected {
+  background-color: #f1f5f9 !important;
+}
