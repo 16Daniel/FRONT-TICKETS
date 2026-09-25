@@ -1,51 +1,111 @@
-<p-dialog [header]="!esNuevaArea ? 'ACTUALIZAR ÁREA' : 'CREAR ÁREA'" [(visible)]="mostrarModalCrearArea"
-    [modal]="true" [style]="{ 'width': '600px', 'max-width': '95vw' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog
+  [header]="!esNuevaArea ? 'ACTUALIZAR ÁREA' : 'CREAR ÁREA'"
+  [(visible)]="mostrarModalCrearArea"
+  [modal]="true"
+  [breakpoints]="{ '768px': '95vw', '560px': '100vw' }"
+  [style]="{ width: '70rem', maxWidth: '95vw' }"
+  [maximizable]="true"
+  (onHide)="onHide()">
+  
+  <form #form="ngForm" (ngSubmit)="enviar(form)" class="mt-3">
+    <div class="row gy-4">
+      
+      <div class="col-12 col-md-6">
+        <label class="rw-form-label">ID</label>
+        <input [disabled]="true" class="form-control rw-input" type="text" placeholder="ID (Automático)"
+          [(ngModel)]="area.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
+          #formidCtrl="ngModel" required>
+        <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error d-block mt-1">
+          Campo requerido.
+        </small>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="rw-form-label">NOMBRE</label>
+        <input class="form-control rw-input" type="text" placeholder="Nombre del Área"
+          [(ngModel)]="area.nombre" name="nombre"
+          [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
+          required>
+        <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error d-block mt-1">
+          Campo requerido.
+        </small>
+      </div>
+
+      <div class="col-12">
+        <div class="d-flex align-items-center p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+          <div class="form-check form-switch m-0 d-flex align-items-center gap-3 flex-wrap">
+            <input class="form-check-input m-0" type="checkbox" role="switch" id="switchActivarTickets"
+              style="width: 3.5rem; height: 2rem; cursor: pointer;" name="activarTickets" 
+              [(ngModel)]="area.activarTickets">
+            <label class="form-check-label rw-form-label m-0" for="switchActivarTickets" style="cursor: pointer; margin-bottom: 0 !important;">
+              ¿ACTIVAR MÓDULO DE TICKETS?
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+   <div class="mt-4">
+        <p-tabView>
+    <p-tabPanel header="HORARIO DE TRABAJO DEL ÁREA" leftIcon="bx bx-support">
+      <div class="row gy-3">
+        <div class="col-12 col-md-6" *ngFor="let dia of diasSemana">
+          <label class="rw-form-label d-block mb-2">{{ dia.label }}</label>
+          <div class="d-flex align-items-center gap-2 flex-column flex-md-row">
+            <input
+              type="time"
+              class="form-control rw-input w-100"
+              [(ngModel)]="area.horarioTrabajo[dia.key].inicio"
+              [name]="'area_horario_trabajo_' + dia.key + '_inicio'"
+              aria-label="Hora de entrada del área">
+            <span class="text-muted d-none d-md-inline">-</span>
+            <input
+              type="time"
+              class="form-control rw-input w-100"
+              [(ngModel)]="area.horarioTrabajo[dia.key].fin"
+              [name]="'area_horario_trabajo_' + dia.key + '_fin'"
+              aria-label="Hora de salida del área">
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="HORARIO DE GUARDIA" leftIcon="bx bx-shield">
+      <div class="row gy-3">
+        <div class="col-12 col-md-6" *ngFor="let dia of diasSemana">
+          <label class="rw-form-label d-block mb-2">{{ dia.label }}</label>
+          <div class="d-flex align-items-center gap-2 flex-column flex-md-row">
+            <input
+              type="time"
+              class="form-control rw-input w-100"
+              [(ngModel)]="area.horarioGuardia[dia.key].inicio"
+              [name]="'area_horario_guardia_' + dia.key + '_inicio'"
+              aria-label="Hora de entrada de guardia">
+            <span class="text-muted d-none d-md-inline">-</span>
+            <input
+              type="time"
+              class="form-control rw-input w-100"
+              [(ngModel)]="area.horarioGuardia[dia.key].fin"
+              [name]="'area_horario_guardia_' + dia.key + '_fin'"
+              aria-label="Hora de salida de guardia">
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="NOTIFICACIONES" leftIcon="bx bx-bell">
+        <app-escalation-manager [(levels)]="parentLevels"></app-escalation-manager>
+    </p-tabPanel>
+</p-tabView>
+   </div>
     
-    <form #form="ngForm" (ngSubmit)="enviar(form)" class="mt-3">
-        <div class="row gy-4">
-            
-            <div class="col-12 col-md-6">
-                <label class="rw-form-label">ID</label>
-                <input [disabled]="true" class="form-control rw-input" type="text" placeholder="ID (Automático)"
-                    [(ngModel)]="area.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
-                    #formidCtrl="ngModel" required>
-                <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error d-block mt-1">
-                    Campo requerido.
-                </small>
-            </div>
+    <div class="d-flex justify-content-end mt-5 pt-3 border-top">
+      <button type="submit" class="btn-rw-cta" [disabled]="form.invalid">
+        <i class='bx bx-check-circle'></i>
+        <span *ngIf="esNuevaArea">CREAR ÁREA</span>
+        <span *ngIf="!esNuevaArea">GUARDAR CAMBIOS</span>
+      </button>
+    </div>
 
-            <div class="col-12 col-md-6">
-                <label class="rw-form-label">NOMBRE</label>
-                <input class="form-control rw-input" type="text" placeholder="Nombre del Área"
-                    [(ngModel)]="area.nombre" name="nombre"
-                    [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
-                    required>
-                <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error d-block mt-1">
-                    Campo requerido.
-                </small>
-            </div>
-
-            <div class="col-12">
-                <div class="d-flex align-items-center p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                    <div class="form-check form-switch m-0 d-flex align-items-center gap-3">
-                        <input class="form-check-input m-0" type="checkbox" role="switch" id="switchActivarTickets"
-                            style="width: 3.5rem; height: 2rem; cursor: pointer;" name="activarTickets" 
-                            [(ngModel)]="area.activarTickets">
-                        <label class="form-check-label rw-form-label m-0" for="switchActivarTickets" style="cursor: pointer; margin-bottom: 0 !important;">¿ACTIVAR MÓDULO DE TICKETS?</label>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="d-flex justify-content-end mt-5 pt-3 border-top">
-            <button type="submit" class="btn-rw-cta" [disabled]="form.invalid">
-                <i class='bx bx-check-circle'></i>
-                <span *ngIf="esNuevaArea">CREAR ÁREA</span>
-                <span *ngIf="!esNuevaArea">GUARDAR CAMBIOS</span>
-            </button>
-        </div>
-
-    </form>
+  </form>
 
 </p-dialog>
