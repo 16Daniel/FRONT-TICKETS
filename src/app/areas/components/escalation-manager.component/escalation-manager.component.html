@@ -1,0 +1,80 @@
+<div class="escalation-container">
+  <h2>Configuración de Escalonamiento de Notificaciones</h2>
+  <p class="description">
+    Define el orden de notificación. Si el Nivel 1 no responde, la alerta se escalará al siguiente nivel.
+  </p>
+
+  <div class="timeline-wrapper">
+    <div *ngFor="let item of levels(); let i = index; let last = last" class="level-card-wrapper">
+      
+      <!-- Card por cada nivel -->
+      <p-card class="level-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <p-tag 
+              [value]="'Nivel ' + item.level" 
+              [severity]="i === 0 ? 'info' : (i === 1 ? 'warning' : 'danger')">
+            </p-tag>
+            <span class="level-title">{{ i === 0 ? 'Responsable Directo' : 'Escalado ' + i }}</span>
+            <!-- <p-button 
+              *ngIf="levels().length > 1"
+              icon="pi pi-trash" 
+              severity="danger" 
+              [text]="true" 
+              [rounded]="true" 
+              (click)="removeLevel(item.id)"
+              aria-label="Eliminar nivel">
+            </p-button> -->
+
+            <button class="btn-action-table btn-action-danger" (click)="removeLevel(item.id)"
+                              pTooltip="ELIMINAR" tooltipPosition="top">
+                              <i class="bx bx-trash"></i>
+                          </button>
+
+          </div>
+        </ng-template>
+
+        <div class="form-grid">
+          <div class="field">
+            <label [for]="'name-' + item.id">Nombre completo</label>
+            <input 
+            class="form-control rw-input"
+              pInputText 
+              [id]="'name-' + item.id" 
+              [(ngModel)]="item.name" 
+              placeholder="Ej. Juan Pérez" />
+          </div>
+
+          <div class="field">
+            <label [for]="'phone-' + item.id">Num. WhatsApp</label>
+            <input 
+            class="form-control rw-input"
+              pInputText 
+              [id]="'phone-' + item.id" 
+              [(ngModel)]="item.phone" 
+              placeholder="Ej. +52 55 1234 5678" />
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Indicador visual de escalamiento hacia arriba/siguiente nivel -->
+      <div *ngIf="!last" class="escalation-arrow">
+        <i class="pi pi-arrow-down"></i>
+        <span>Escala por falta de respuesta</span>
+      </div>
+
+    </div>
+  </div>
+
+  <p-divider></p-divider>
+
+  <!-- Acciones globales -->
+  <div class="actions">
+    <button type="button"
+      class="btn-rw-cta"
+      (click)="addLevel()">
+      <span><i class="bx bx-plus"></i> Agregar Nivel</span>
+    </button>
+
+  </div>
+</div>
