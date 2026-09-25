@@ -15,8 +15,10 @@ import { MentionUtils } from '../../utils/mention.utils';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
+import MagicUrl from 'quill-magic-url';
 
 Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
+Quill.register('modules/magicUrl', MagicUrl);
 @Component({
   selector: 'app-bitacora',
   standalone: true,
@@ -84,7 +86,8 @@ export class BitacoraComponent implements OnInit, OnDestroy {
         div.innerHTML = avatarStr;
         return div;
       }
-    }
+    },
+    magicUrl: true
   };
 
   private sub: Subscription | null = null;

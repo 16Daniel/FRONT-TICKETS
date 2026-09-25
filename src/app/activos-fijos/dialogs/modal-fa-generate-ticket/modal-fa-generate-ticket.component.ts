@@ -38,8 +38,10 @@ import { TaskResponsibleService } from '../../../tareas/services/task-responsibl
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
 import { MentionUtils } from '../../../shared/utils/mention.utils';
+import MagicUrl from 'quill-magic-url';
 
 Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
+Quill.register('modules/magicUrl', MagicUrl);
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -113,7 +115,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
         div.innerHTML = avatarStr;
         return div;
       }
-    }
+    },
+    magicUrl: true
   };
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
