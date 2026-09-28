@@ -105,7 +105,44 @@
                 </div>
                 
                 <!-- Botonera de Acciones -->
-                <div class="modal-footer-actions m-0 p-0" *ngIf="showBtnAsignar || showBtnTrabajar">
+                <div class="modal-footer-actions m-0 p-0" *ngIf="showBtnAsignar || showBtnTrabajar || showBtnValidar || showBtnFinalizar || showBtnRechazar || showBtnValidacionAdmin">
+                  
+                  <!-- Botón RECHAZAR SOPORTE -->
+                  <button
+                    *ngIf="showBtnRechazar"
+                    class="btn-action" style="background-color: #EF4444; color: white;"
+                    (click)="onClickRechazar(ticket)">
+                    <i class="bx bx-undo"></i>
+                    <span>RECHAZAR SOPORTE</span>
+                  </button>
+
+                  <!-- Botón FINALIZAR TICKET -->
+                  <button
+                    *ngIf="showBtnFinalizar"
+                    class="btn-action" style="background-color: #10B981; color: white;"
+                    (click)="onClickFinalizar(ticket)">
+                    <i class="bx bx-check-circle"></i>
+                    <span>FINALIZAR TICKET</span>
+                  </button>
+
+                  <!-- Botón VALIDAR TICKET -->
+                  <button
+                    *ngIf="showBtnValidar"
+                    class="btn-action" style="background-color: #10B981; color: white;"
+                    (click)="onClickPendienteValidarSucursal()">
+                    <i class="bx bx-check-double"></i>
+                    <span>VALIDAR TICKET</span>
+                  </button>
+
+                  <!-- Botón VALIDACIÓN ADMINISTRADOR -->
+                  <button
+                    *ngIf="showBtnValidacionAdmin"
+                    class="btn-action btn-action-admin" style="background-color: #3B82F6; color: white;"
+                    (click)="onClickValidacionAdmin(ticket)">
+                    <i class="bx bxs-badge-check"></i>
+                    <span>VALIDACIÓN ADMINISTRADOR</span>
+                  </button>
+
                   <!-- Botón ASIGNAR A ESPECIALISTA -->
                   <button
                     *ngIf="showBtnAsignar"
@@ -119,7 +156,7 @@
                   <button
                     *ngIf="showBtnTrabajar"
                     class="btn-action btn-primary-rebel"
-                    (click)="onClick()">
+                    (click)="onClickTrabajarTicket()">
                     <i class="bx bx-play-circle"></i>
                     <span>TRABAJAR TICKET</span>
                   </button>
@@ -341,3 +378,9 @@
   [imagenUrl]="urlVisorImagen"
   (closeEvent)="mostrarModalImagen = false">
 </app-modal-visor-imagenes>
+
+<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
+  [ticket]="ticket!" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
+
+<app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
+  [ticket]="ticket!" (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>

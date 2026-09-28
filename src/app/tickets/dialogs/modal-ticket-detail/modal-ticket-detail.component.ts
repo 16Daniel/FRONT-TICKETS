@@ -3,6 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
+import Swal from 'sweetalert2';
+import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticket/modal-finalize-ticket.component';
+import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
 import { AccordionModule } from 'primeng/accordion';
 import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
@@ -44,8 +47,11 @@ import { FileUtils } from '../../../shared/utils/file.utils';
     MiniMatrizUrgenciaComponent,
     AvatarModule,
     TabViewModule,
-    BitacoraComponent
+    BitacoraComponent,
+    ModalValidateTicketComponent,
+    ModalFinalizeTicketComponent
   ],
+  providers: [],
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
 })
@@ -53,12 +59,14 @@ export class ModalTicketDetailComponent implements OnInit {
   @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
-  
+
   public fileUtils = FileUtils;
-  
+
   usuario: Usuario;
   mostrarModalEspecialistas: boolean = false;
   mostrarModalImagen: boolean = false;
+  mostrarModalValidarTicket: boolean = false;
+  showModalFinalizeTicket: boolean = false;
   idSucursalEspecialista: string = '';
   urlVisorImagen: string = '';
   sucursales: any[] = [];
@@ -94,7 +102,7 @@ export class ModalTicketDetailComponent implements OnInit {
     if (!this.sucursales || this.sucursales.length === 0) {
       this.branchesService.get().subscribe({
         next: (data) => (this.sucursales = data),
-        error: () => {}
+        error: () => { }
       });
     }
 
@@ -105,14 +113,14 @@ export class ModalTicketDetailComponent implements OnInit {
           id: item.id.toString()
         }));
       },
-      error: () => {}
+      error: () => { }
     });
 
     this.statusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTickets = data;
       },
-      error: () => {}
+      error: () => { }
     });
   }
 
@@ -120,31 +128,106 @@ export class ModalTicketDetailComponent implements OnInit {
     this.closeEvent.emit(); // Cerrar modal
   }
 
-  onClick() {
-    this.actualizaTicket(this.ticket);
+  showMessage(sev: string, summ: string, det: string) {
+    this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  actualizaTicket(ticket: Ticket | any) {
-    if (!ticket) return;
-    ticket.idEstatusTicket = '2';
-    if (!ticket.fechaAtencion) {
-      ticket.fechaAtencion = Timestamp.now();
+  onClickTrabajarTicket() {
+    if (!this.ticket) return;
+
+    this.ticket.idEstatusTicket = '2';
+
+    if (!this.ticket.fechaAtencion) {
+      this.ticket.fechaAtencion = Timestamp.now();
     }
+
     this.ticketsService
-      .update(ticket)
+      .update(this.ticket)
       .then(() => {
         this.showMessage('success', 'Success', 'Enviado correctamente');
       })
       .catch((error) => console.error(error));
   }
 
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
+  onClickPendienteValidarSucursal() {
+    Swal.fire({
+      title: 'Confirmación',
+      text: 'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#D3152A',
+      cancelButtonColor: '#1E1E24',
+      confirmButtonText: 'Sí, continuar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.mostrarModalValidarTicket = true;
+      }
+    });
+  }
+
+  onClickValidacionAdmin(ticket: Ticket | any) {
+    Swal.fire({
+      title: 'Confirmación',
+      text: 'Validar ticket cerrado ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#D3152A',
+      cancelButtonColor: '#1E1E24',
+      confirmButtonText: 'Sí, continuar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ticket.validacionAdmin = true;
+        this.ticketsService
+          .update(ticket)
+          .then(() => {
+            this.showMessage('success', 'Éxito', 'Validación correcta');
+          })
+          .catch((error) => console.error(error));
+      }
+    });
   }
 
   onClickAsignarEspecialista() {
     this.idSucursalEspecialista = this.ticket?.idSucursal;
     this.mostrarModalEspecialistas = true;
+  }
+
+  onClickFinalizar(ticket: Ticket | any) {
+    this.showModalFinalizeTicket = true;
+  }
+
+  onClickRechazar(ticket: Ticket | any) {
+    Swal.fire({
+      title: 'Confirmación',
+      text: 'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#D3152A',
+      cancelButtonColor: '#1E1E24',
+      confirmButtonText: 'Sí, continuar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ticket.idEstatusTicket = '1';
+        this.ticketsService
+          .update(ticket)
+          .then(() => {
+            this.showMessage('success', 'Éxito', 'Enviado correctamente');
+          })
+          .catch((error) => console.error(error));
+      }
+    });
   }
 
   abrirModalImagen(url: string) {
@@ -189,15 +272,32 @@ export class ModalTicketDetailComponent implements OnInit {
   }
 
   get showBtnAsignar(): boolean {
-    return this.usuario?.idArea === '4' && 
-           this.usuario?.idRol === '5' && 
-           this.ticket?.idEstatusTicket === '2' && 
-           !this.ticket?.esAsignadoEspecialista;
+    return this.usuario?.idArea === '4' &&
+      this.usuario?.idRol === '5' &&
+      this.ticket?.idEstatusTicket === '2' &&
+      !this.ticket?.esAsignadoEspecialista;
   }
 
   get showBtnTrabajar(): boolean {
-    return this.usuario?.idRol === '4' && 
-           !!this.ticket?.idEstatusTicket && 
-           ['1', '4', '6'].includes(this.ticket.idEstatusTicket);
+    return this.usuario?.idRol === '4' &&
+      !!this.ticket?.idEstatusTicket &&
+      ['1', '4', '6'].includes(this.ticket.idEstatusTicket);
+  }
+
+  get showBtnValidar(): boolean {
+    return this.usuario?.idRol === '4' &&
+      this.ticket?.idEstatusTicket === '2';
+  }
+
+  get showBtnFinalizar(): boolean {
+    return this.usuario?.idRol === '2' && this.ticket?.idEstatusTicket === '7';
+  }
+
+  get showBtnRechazar(): boolean {
+    return this.usuario?.idRol === '2' && this.ticket?.idEstatusTicket === '7';
+  }
+
+  get showBtnValidacionAdmin(): boolean {
+    return this.ticket?.idEstatusTicket === '3' && !this.ticket?.validacionAdmin;
   }
 }

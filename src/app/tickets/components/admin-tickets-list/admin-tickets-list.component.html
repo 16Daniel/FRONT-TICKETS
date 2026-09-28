@@ -1,12 +1,11 @@
 <p-table *ngIf="usuariosHelp.length>0" [value]="tickets" [tableStyle]="{
     'min-width': '10rem'
   }" styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="65vh" selectionMode="single"
-    [(selection)]="ticketSeleccionado">
+    [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
     <ng-template pTemplate="header">
         <tr class="text-center">
             <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA</th>
             <th>FECHA</th>
-            <!-- <th>AREA</th> -->
             <th>CATEGORÍA / RUTA</th>
             <th>ESTATUS</th>
             <th>SOLICITANTE</th>
@@ -38,30 +37,11 @@
             </td>
             <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
             </td>
-            <!-- <td class="text-center">
-                <p-dropdown 
-                    [options]="areas" 
-                    [(ngModel)]="tk.idArea" 
-                    optionLabel="nombre" 
-                    [showClear]="false"
-                    optionValue="id" 
-                    [disabled]="true" 
-                    (onChange)="actualizaTicket(tk)" 
-                    styleClass="table-select-custom"
-                    appendTo="body">
-                    <ng-template pTemplate="selectedItem" let-selectedOption>
-                        <span>{{ selectedOption?.nombre }}</span>
-                    </ng-template>
-                    <ng-template let-dep pTemplate="item">
-                        <span>{{ dep.nombre }}</span>
-                    </ng-template>
-                </p-dropdown>
-            </td> -->
             <td class="celda-categoria-ruta text-start">
                 <button 
                     type="button" 
                     class="btn-categoria-ruta-chip"
-                    (click)="abrirModalCambiarCategoria(tk)"
+                    (click)="abrirModalCambiarCategoria(tk); $event.stopPropagation()"
                     [pTooltip]="obtenerInfoRutaTicket(tk).ruta" 
                     tooltipPosition="top">
                     <div class="categoria-chip-body">
@@ -125,27 +105,13 @@
             </td>
             <td *ngIf="mostrarAcciones">
                 <div class="d-flex justify-content-center align-items-center gap-2">
-                    <button class="btn-action-table btn-action-warning" (click)="onClickRechazar(tk)"
-                        *ngIf="mostrarAccionFinalizar && tk.idEstatusTicket == '7'" pTooltip="RECHAZAR SOPORTE" tooltipPosition="top">
-                        <i class="bx bx-undo"></i>
-                    </button>
-
-                    <button class="btn-action-table btn-action-admin" (click)="onClickValidacionAdmin(tk)"
-                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket == '3'" pTooltip="VALIDACIÓN ADMINISTRADOR" tooltipPosition="top">
+                    <button class="btn-action-table btn-action-admin"
+                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket == '3'" pTooltip="PENDIENTE VALIDACIÓN" tooltipPosition="top">
                         <i class="bx bxs-badge-check"></i>
                     </button>
-
-                    <button class="btn-action-table btn-action-warning" (click)="onClickValidar(tk)"
-                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket != '3'" pTooltip="VALIDAR TICKET" tooltipPosition="top">
-                        <i class="bx bx-check-circle"></i>
-                    </button>
                     
                     
                     
-                    <button class="btn-action-table btn-action-info" (click)="abrirModalDetalleTicket(tk)"
-                        pTooltip="DETALLES" tooltipPosition="top">
-                        <i class="bx bx-show"></i>
-                    </button>
                 </div>
             </td>
         </tr>

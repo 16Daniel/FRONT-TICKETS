@@ -254,69 +254,16 @@ export class AdminTicketsListComponent {
       .catch((error) => console.error(error));
   }
 
-  onClickRechazar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        ticket.idEstatusTicket = '1';
-        this.ticketsService
-          .update(ticket)
-          .then(() => {
-            this.showMessage('success', 'Success', 'Enviado correctamente');
-          })
-          .catch((error) => console.error(error));
-      },
-      reject: () => { },
-    });
-  }
-
-  onClickValidar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.ticketAccion = ticket;
-        this.mostrarModalValidarTicket = true;
-      },
-      reject: () => { },
-    });
-  }
-
-  onClickValidacionAdmin(ticket: Ticket) {
-
-    
-    
-
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'Validar ticket cerrado ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        ticket.validacionAdmin = true;
-        this.actualizaTicket(ticket);
-      },
-      reject: () => { },
-    });
-  }
 
   abrirModalDetalleTicket(itemticket: Ticket | any) {
     this.mostrarModalTicketDetail = true;
     this.ticket = itemticket;
+  }
+
+  onClick() {
+    if (this.ticketSeleccionado) {
+      this.abrirModalDetalleTicket(this.ticketSeleccionado);
+    }
   }
 
   obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
