@@ -58,28 +58,13 @@
                 </button>
             </td>
             <td class="text-center">
-                <p-dropdown 
-                    [options]="estatusTicket" 
-                    [(ngModel)]="tk.idEstatusTicket" 
-                    optionLabel="nombre"
-                    [showClear]="false" 
-                    optionValue="id" 
-                    (onChange)="actualizarEstatus(tk, $event.value)" 
-                    styleClass="table-select-custom"
-                    appendTo="body">
-                    <ng-template pTemplate="selectedItem" let-selectedOption>
-                        <div class="d-flex align-items-center gap-1 justify-content-center">
-                            <i class="bx {{ selectedOption?.icon }} {{ selectedOption?.animation }}" [style.color]="selectedOption?.color"></i>
-                            <span>{{ selectedOption?.nombre }}</span>
-                        </div>
-                    </ng-template>
-                    <ng-template let-st pTemplate="item">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bx {{ st.icon }} {{ st.animation }}" [style.color]="st.color"></i>
-                            <span>{{ st.nombre }}</span>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
+                <div class="d-flex align-items-center justify-content-center gap-1" *ngIf="obtenerEstatusInfo(tk.idEstatusTicket) as st; else soloTexto">
+                    <i class="bx fs-5" [ngClass]="st.icon" [class]="st.animation" [style.color]="st.color"></i>
+                    <span class="fw-bold">{{ st.nombre }}</span>
+                </div>
+                <ng-template #soloTexto>
+                    <span class="badge bg-secondary">DESCONOCIDO</span>
+                </ng-template>
             </td>
             <td class="text-center">{{ tk.solicitante | uppercase }}</td>
             <td class="text-center">

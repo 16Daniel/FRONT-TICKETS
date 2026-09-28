@@ -8,6 +8,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
 import { Timestamp } from '@angular/fire/firestore';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
 import { Ticket } from '../../interfaces/ticket.model';
@@ -47,7 +48,8 @@ import { RatingStarsComponent } from '../../components/rating-stars/rating-stars
     AvatarModule,
     TabViewModule,
     BitacoraComponent,
-    RatingStarsComponent
+    RatingStarsComponent,
+    DropdownModule
   ],
   providers: [],
   templateUrl: './modal-ticket-detail.component.html',
@@ -126,23 +128,28 @@ export class ModalTicketDetailComponent implements OnInit {
     this.closeEvent.emit(); // Cerrar modal
   }
 
+  get estatusTicketsFiltrados(): EstatusTicket[] {
+    return this.estatusTickets.filter(s => {
+      const id = String(s.id);
+      return id !== '2' && id !== '3' && id !== '7';
+    });
+  }
+
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  onClickTrabajarTicket() {
+  actualizarEstatus(idEstatusTicket: string) {
     if (!this.ticket) return;
 
-    this.ticket.idEstatusTicket = '2';
-
-    if (!this.ticket.fechaAtencion) {
-      this.ticket.fechaAtencion = Timestamp.now();
+    if (idEstatusTicket === '3') {
+      this.ticket.fechaFin = Timestamp.now();
     }
 
     this.ticketsService
       .update(this.ticket)
       .then(() => {
-        this.showMessage('success', 'Success', 'Enviado correctamente');
+        this.showMessage('success', 'Éxito', 'Estatus actualizado correctamente');
       })
       .catch((error) => console.error(error));
   }
@@ -231,6 +238,23 @@ export class ModalTicketDetailComponent implements OnInit {
         onConfirm(result.value);
       }
     });
+  }
+
+  onClickTrabajarTicket() {
+    if (!this.ticket) return;
+
+    this.ticket.idEstatusTicket = '2';
+
+    if (!this.ticket.fechaAtencion) {
+      this.ticket.fechaAtencion = Timestamp.now();
+    }
+
+    this.ticketsService
+      .update(this.ticket)
+      .then(() => {
+        this.showMessage('success', 'Success', 'Enviado correctamente');
+      })
+      .catch((error) => console.error(error));
   }
 
   onClickPendienteValidarSucursal() {
@@ -398,8 +422,8 @@ export class ModalTicketDetailComponent implements OnInit {
   }
 
   get showBtnValidacionAdmin(): boolean {
-    return (this.usuario?.idRol === '1' || this.usuario?.idRol === '5') && 
-           this.ticket?.idEstatusTicket === '3' && 
-           !this.ticket?.validacionAdmin;
+    return (this.usuario?.idRol === '1' || this.usuario?.idRol === '5') &&
+      this.ticket?.idEstatusTicket === '3' &&
+      !this.ticket?.validacionAdmin;
   }
 }

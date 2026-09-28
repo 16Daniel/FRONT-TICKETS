@@ -202,19 +202,46 @@
                 <div class="info-item">
                   <span class="info-label"><i class="bx bx-info-circle"></i> Estatus</span>
                   <div class="mt-1 d-flex">
-                    <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
-                      <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
-                        <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
-                        <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
-                        {{ estatus.nombre }}
-                      </div>
+                    <!-- Dropdown para Admin (Roles 1 y 5) -->
+                    <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
+                        [options]="estatusTicketsFiltrados" 
+                        [(ngModel)]="ticket.idEstatusTicket" 
+                        optionLabel="nombre"
+                        [showClear]="false" 
+                        optionValue="id" 
+                        (onChange)="actualizarEstatus($event.value)" 
+                        styleClass="table-select-custom"
+                        appendTo="body">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="d-flex align-items-center gap-1 justify-content-center">
+                                <i class="bx {{ selectedOption?.icon }} {{ selectedOption?.animation }}" [style.color]="selectedOption?.color"></i>
+                                <span>{{ selectedOption?.nombre }}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template let-st pTemplate="item">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bx {{ st.icon }} {{ st.animation }}" [style.color]="st.color"></i>
+                                <span>{{ st.nombre }}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+
+                    <!-- Etiqueta estática para otros usuarios -->
+                    <ng-container *ngIf="usuario?.idRol !== '1' && usuario?.idRol !== '5'">
+                      <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
+                        <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
+                          <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
+                          <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
+                          {{ estatus.nombre }}
+                        </div>
+                      </ng-container>
+                      <ng-template #estatusDesconocido>
+                        <div class="status-pill" [ngStyle]="getEstatusStyle()">
+                          <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
+                          Desconocido
+                        </div>
+                      </ng-template>
                     </ng-container>
-                    <ng-template #estatusDesconocido>
-                      <div class="status-pill" [ngStyle]="getEstatusStyle()">
-                        <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
-                        Desconocido
-                      </div>
-                    </ng-template>
                   </div>
                 </div>
 
