@@ -137,7 +137,7 @@
                   <!-- Botón VALIDACIÓN ADMINISTRADOR -->
                   <button
                     *ngIf="showBtnValidacionAdmin"
-                    class="btn-action btn-action-admin" style="background-color: #3B82F6; color: white;"
+                    class="btn-action btn-action-admin" style="background-color: #a300ff; color: white;"
                     (click)="onClickValidacionAdmin(ticket)">
                     <i class="bx bxs-badge-check"></i>
                     <span>VALIDACIÓN ADMINISTRADOR</span>
@@ -162,6 +162,27 @@
                   </button>
                 </div>
               </div>
+
+              <!-- Sección de Calificaciones (Solo visible si está finalizado) -->
+              <ng-container *ngIf="ticket.idEstatusTicket === '3'">
+                <div class="d-flex flex-wrap gap-4 mb-4" style="background: #f8fafc; padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid #e2e8f0; align-items: center;">
+                  <h5 class="m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px; border-right: 2px solid #e2e8f0; padding-right: 1.5rem; height: 100%;">
+                    <i class="bx bx-star text-warning fs-4"></i> EVALUACIÓN
+                  </h5>
+                  
+                  <div class="d-flex flex-column gap-1">
+                    <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Por Sucursal</span>
+                    <app-rating-stars [rating]="ticket.calificacionSucursal" [editable]="false"></app-rating-stars>
+                  </div>
+
+                  <div style="width: 1px; height: 35px; background: #cbd5e1; margin: 0 0.5rem;" *ngIf="ticket.calificacionAnalista"></div>
+
+                  <div class="d-flex flex-column gap-1" *ngIf="ticket.calificacionAnalista">
+                    <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Por Analista</span>
+                    <app-rating-stars [rating]="ticket.calificacionAnalista" [editable]="false"></app-rating-stars>
+                  </div>
+                </div>
+              </ng-container>
 
               <div class="summary-info-grid">
                 <!-- Row 1 -->
@@ -334,15 +355,7 @@
           </p-tabPanel>
         </p-tabView>
 
-        <!-- Tarjeta de Comentarios Finales (si está cerrado) -->
-        <div class="ticket-card p-4 m-0" *ngIf="ticket.idEstatusTicket == '3' && ticket.comentariosFinalesSucursal">
-          <h5 class="sub-title mb-3 fw-bold text-uppercase d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px; color: #166534;">
-            <i class="pi pi-check-circle fs-5"></i> Comentarios de Cierre (Solución)
-          </h5>
-          <div class="comentarios-finales-content">
-            <div class="comentarios-finales-text" [innerHTML]="ticket.comentariosFinalesSucursal"></div>
-          </div>
-        </div>
+
 
 
       </div>
@@ -379,8 +392,6 @@
   (closeEvent)="mostrarModalImagen = false">
 </app-modal-visor-imagenes>
 
-<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
-  [ticket]="ticket!" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
 
-<app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
-  [ticket]="ticket!" (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
+
+

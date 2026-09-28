@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
-import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticket/modal-finalize-ticket.component';
-import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
 import { AccordionModule } from 'primeng/accordion';
 import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
@@ -30,6 +28,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
 import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
 import { FileUtils } from '../../../shared/utils/file.utils';
+import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -48,8 +47,7 @@ import { FileUtils } from '../../../shared/utils/file.utils';
     AvatarModule,
     TabViewModule,
     BitacoraComponent,
-    ModalValidateTicketComponent,
-    ModalFinalizeTicketComponent
+    RatingStarsComponent
   ],
   providers: [],
   templateUrl: './modal-ticket-detail.component.html',
@@ -65,8 +63,8 @@ export class ModalTicketDetailComponent implements OnInit {
   usuario: Usuario;
   mostrarModalEspecialistas: boolean = false;
   mostrarModalImagen: boolean = false;
-  mostrarModalValidarTicket: boolean = false;
-  showModalFinalizeTicket: boolean = false;
+
+
   idSucursalEspecialista: string = '';
   urlVisorImagen: string = '';
   sucursales: any[] = [];
@@ -149,24 +147,110 @@ export class ModalTicketDetailComponent implements OnInit {
       .catch((error) => console.error(error));
   }
 
-  onClickPendienteValidarSucursal() {
+  private showRatingSwal(
+    title: string,
+    message: string,
+    confirmButtonText: string,
+    onConfirm: (rating: number) => void
+  ) {
     Swal.fire({
-      title: 'Confirmación',
-      text: 'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
-      icon: 'warning',
+      title: title,
+      html: `
+        <style>
+          .rating-container { display: flex; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+          .rating-option { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; padding: 12px 8px; border: 2px solid #e2e8f0; border-radius: 12px; 
+            transition: all 0.2s ease; flex: 1; min-width: 70px; background: #ffffff;
+          }
+          .rating-option:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
+          .rating-option.selected { border-color: #10B981; background: #ECFDF5; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1); }
+          .rating-stars { font-size: 1.2rem; line-height: 1; margin-bottom: 8px; color: #cbd5e1; letter-spacing: 1px; display: flex; }
+          .rating-option:hover .rating-stars { color: #34d399; }
+          .rating-option.selected .rating-stars { color: #10B981; }
+          .rating-text { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; text-align: center; }
+          .rating-option.selected .rating-text { color: #047857; font-weight: 800; }
+        </style>
+        <p class="text-muted" style="font-size: 0.95rem; margin-bottom: 5px;">${message}</p>
+        <p class="text-dark fw-bold m-0 mt-3" style="font-size: 1.05rem;">Por favor, califica la atención recibida:</p>
+        <div class="rating-container" id="custom-rating">
+          <div class="rating-option" data-value="1">
+            <div class="rating-stars">★</div>
+            <div class="rating-text">Malo</div>
+          </div>
+          <div class="rating-option" data-value="2">
+            <div class="rating-stars">★★</div>
+            <div class="rating-text">Regular</div>
+          </div>
+          <div class="rating-option" data-value="3">
+            <div class="rating-stars">★★★</div>
+            <div class="rating-text">Bueno</div>
+          </div>
+          <div class="rating-option" data-value="4">
+            <div class="rating-stars">★★★★</div>
+            <div class="rating-text">Muy<br>Bueno</div>
+          </div>
+          <div class="rating-option" data-value="5">
+            <div class="rating-stars">★★★★★</div>
+            <div class="rating-text">Excelente</div>
+          </div>
+        </div>
+        <input type="hidden" id="rating-value" value="">
+      `,
+      width: '600px',
       showCancelButton: true,
-      confirmButtonColor: '#D3152A',
+      confirmButtonColor: '#10B981',
       cancelButtonColor: '#1E1E24',
-      confirmButtonText: 'Sí, continuar',
+      confirmButtonText: confirmButtonText,
       cancelButtonText: 'Cancelar',
       customClass: {
         container: 'swal-topmost'
+      },
+      didOpen: () => {
+        const options = document.querySelectorAll('.rating-option');
+        const input = document.getElementById('rating-value') as HTMLInputElement;
+        options.forEach(opt => {
+          opt.addEventListener('click', () => {
+            options.forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            input.value = opt.getAttribute('data-value') || '';
+            Swal.resetValidationMessage();
+          });
+        });
+      },
+      preConfirm: () => {
+        const val = (document.getElementById('rating-value') as HTMLInputElement).value;
+        if (!val) {
+          Swal.showValidationMessage('Debes seleccionar una calificación para continuar');
+          return false;
+        }
+        return Number(val);
       }
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.mostrarModalValidarTicket = true;
+      if (result.isConfirmed && result.value) {
+        onConfirm(result.value);
       }
     });
+  }
+
+  onClickPendienteValidarSucursal() {
+    this.showRatingSwal(
+      'Validar Ticket',
+      'El estado del ticket se cambiará a <b>POR VALIDAR</b>.',
+      'Sí, enviar a validar',
+      (rating) => {
+        this.ticket!.idEstatusTicket = '7';
+        this.ticket!.idResponsable = this.usuario.id;
+        this.ticket!.calificacionAnalista = rating;
+
+        this.ticketsService
+          .update(this.ticket)
+          .then(() => {
+            this.showMessage('success', 'Éxito', 'Ticket enviado a validación correctamente');
+          })
+          .catch((error) => console.error(error));
+      }
+    );
   }
 
   onClickValidacionAdmin(ticket: Ticket | any) {
@@ -201,7 +285,23 @@ export class ModalTicketDetailComponent implements OnInit {
   }
 
   onClickFinalizar(ticket: Ticket | any) {
-    this.showModalFinalizeTicket = true;
+    this.showRatingSwal(
+      'Finalizar Ticket',
+      'El ticket se cerrará y cambiará a <b>FINALIZADO</b>.',
+      'Sí, finalizar ticket',
+      (rating) => {
+        ticket.idEstatusTicket = '3';
+        ticket.calificacionSucursal = rating;
+        ticket.fechaFin = Timestamp.now();
+
+        this.ticketsService
+          .update(ticket)
+          .then(() => {
+            this.showMessage('success', 'Éxito', 'Ticket finalizado correctamente');
+          })
+          .catch((error) => console.error(error));
+      }
+    );
   }
 
   onClickRechazar(ticket: Ticket | any) {
@@ -298,6 +398,8 @@ export class ModalTicketDetailComponent implements OnInit {
   }
 
   get showBtnValidacionAdmin(): boolean {
-    return this.ticket?.idEstatusTicket === '3' && !this.ticket?.validacionAdmin;
+    return (this.usuario?.idRol === '1' || this.usuario?.idRol === '5') && 
+           this.ticket?.idEstatusTicket === '3' && 
+           !this.ticket?.validacionAdmin;
   }
 }

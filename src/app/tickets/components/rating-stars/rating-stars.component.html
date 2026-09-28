@@ -1,19 +1,12 @@
-<div class="rating-container" *ngIf="!editable">
+<div class="rating-container" [ngClass]="{'editable': editable}">
+    <p class="rating-title" *ngIf="editable">
+        {{ calificaAnalista ? 'Califica tu experiencia con la sucursal:' : 'Califica tu experiencia con nuestro soporte:' }}
+    </p>
     <div class="star-rating">
-        <span *ngFor="let star of stars; let i = index" class="star">
-            <ng-container *ngIf="star">★</ng-container>
-            <ng-container *ngIf="!star">☆</ng-container>
-        </span>
-    </div>
-</div>
-
-<div class="rating-container" *ngIf="editable">
-    <p style="color: black;" *ngIf="!calificaAnalista">Califica tu experiencia con nuestro soporte:</p>
-    <p style="color: black;" *ngIf="calificaAnalista">Califica tu experiencia con la sucursal:</p>
-    <div class="star-rating">
-        <span *ngFor="let star of stars; let i = index" (click)="setRating(i)" class="star">
-            <ng-container *ngIf="star">★</ng-container>
-            <ng-container *ngIf="!star">☆</ng-container>
-        </span>
+        <i *ngFor="let star of stars; let i = index" 
+           [class]="star ? 'bx bxs-star star-filled' : 'bx bx-star star-empty'" 
+           (click)="editable ? setRating(i) : null"
+           class="star-icon">
+        </i>
     </div>
 </div>

@@ -119,8 +119,7 @@
 </p-table>
 
 <!-- Modals -->
-<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
-    [ticket]="ticketAccion" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
+
 
 <app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
     (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>
