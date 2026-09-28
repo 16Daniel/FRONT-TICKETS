@@ -198,6 +198,6 @@ export class ModalTicketDetailComponent implements OnInit {
   get showBtnTrabajar(): boolean {
     return this.usuario?.idRol === '4' && 
            !!this.ticket?.idEstatusTicket && 
-           !['2', '3', '5', '7'].includes(this.ticket.idEstatusTicket);
+           ['1', '4', '6'].includes(this.ticket.idEstatusTicket);
   }
 }

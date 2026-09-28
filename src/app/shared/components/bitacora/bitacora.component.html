@@ -41,11 +41,12 @@
           
           <div class="comentario-bubble p-3" [innerHTML]="b.contenido"></div>
           
-          <!-- Archivos adjuntos (cuando se implementen) -->
+          <!-- Archivos adjuntos -->
           <div *ngIf="b.archivos && b.archivos.length > 0" class="mt-2 d-flex flex-wrap gap-2">
-            <div *ngFor="let arch of b.archivos" class="adjunto-pill">
-              <i class="bx bx-file"></i> {{ arch.nombre }}
-            </div>
+            <a *ngFor="let arch of b.archivos" [href]="arch.url" target="_blank" class="adjunto-pill text-decoration-none">
+              <i [class]="fileUtils.obtenerIconoArchivo(arch.nombre, arch.tipo)" [style.color]="fileUtils.obtenerColorArchivo(arch.nombre, arch.tipo)"></i>
+              <span class="text-truncate" style="max-width: 150px;" [title]="arch.nombre">{{ arch.nombre }}</span>
+            </a>
           </div>
         </div>
       </div>
@@ -73,17 +74,32 @@
       </ng-template>
     </p-editor>
     
+    <input type="file" id="bitacoraFileInput" multiple hidden (change)="onFileSelected($event)">
+    
+    <!-- Previsualización de archivos antes de enviar -->
+    <div *ngIf="archivosSeleccionados.length > 0" class="d-flex flex-wrap gap-2 mb-2 mt-2">
+      <div *ngFor="let file of archivosSeleccionados; let i = index" class="archivo-preview-pill">
+        <i [class]="fileUtils.obtenerIconoArchivo(file.name, file.type)" [style.color]="fileUtils.obtenerColorArchivo(file.name, file.type)"></i>
+        <span class="text-truncate" style="max-width: 150px; font-size: 0.75rem;">{{ file.name }}</span>
+        <button type="button" class="btn-remove-file" (click)="removerArchivo(i)" [disabled]="subiendoArchivos">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+    </div>
+    
     <div class="d-flex justify-content-between align-items-center mt-3">
       <div>
-        <button class="btn-action btn-ghost btn-sm text-muted">
+        <button class="btn-action btn-ghost btn-sm text-muted" (click)="!subiendoArchivos && fileInput.click()" [disabled]="subiendoArchivos">
           <i class="bx bx-paperclip"></i> Adjuntar
         </button>
+        <input type="file" #fileInput multiple hidden (change)="onFileSelected($event)" />
       </div>
       <button 
         class="btn-action btn-primary-rebel btn-sm px-4" 
-        [disabled]="!nuevoMensaje || nuevoMensaje.trim() === ''"
+        [disabled]="(!nuevoMensaje.trim() && archivosSeleccionados.length === 0) || subiendoArchivos"
         (click)="enviarComentario()">
-        <i class="bx bx-send"></i> Enviar
+        <i class="bx" [ngClass]="subiendoArchivos ? 'bx-loader-alt bx-spin' : 'bx-send'"></i>
+        {{ subiendoArchivos ? 'Enviando...' : 'Enviar' }}
       </button>
     </div>
   </div>
