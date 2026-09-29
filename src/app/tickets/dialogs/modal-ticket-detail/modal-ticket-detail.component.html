@@ -373,10 +373,28 @@
                 <i class="bx bx-history fs-5" style="color: #D3152A;"></i> HISTORIAL DE CAMBIOS
               </h5>
               
-              <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
+              <!-- Vacío -->
+              <div *ngIf="historial.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
                 <i class="bx bx-history mb-3" style="font-size: 2.5rem; color: #94a3b8;"></i>
                 <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Sin historial registrado</p>
-                <p class="m-0 mt-1" style="font-size: 0.8rem;">(Por implementar)</p>
+              </div>
+
+              <!-- Lista -->
+              <div *ngIf="historial.length > 0" class="timeline d-flex flex-column gap-3">
+                <div *ngFor="let h of historial" class="timeline-item d-flex gap-3">
+                  <div class="timeline-avatar flex-shrink-0">
+                    <ngx-avatars [name]="h.autor.nombre" [size]="36" [round]="true" [bgColor]="h.autor.color || '#94a3b8'"></ngx-avatars>
+                  </div>
+                  <div class="timeline-content flex-grow-1">
+                    <div class="d-flex align-items-baseline gap-2 mb-1">
+                      <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ h.autor.nombre }}</span>
+                      <span class="text-muted" style="font-size: 0.75rem;">
+                        {{ h.fechaCreacion ? (datesHelper.getDate(h.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}
+                      </span>
+                    </div>
+                    <div class="p-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;" [innerHTML]="h.contenido"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </p-tabPanel>

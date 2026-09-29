@@ -41,6 +41,8 @@ import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
 import { MentionUtils } from '../../../shared/utils/mention.utils';
 import MagicUrl from 'quill-magic-url';
+import { BitacoraService } from '../../../shared/services/bitacora.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
 Quill.register('modules/magicUrl', MagicUrl);
@@ -143,7 +145,8 @@ export class CrearTicketDialogComponent implements OnInit {
     private ticketsPriorityService: TicketsPriorityService,
     private fixedAssetsService: FixedAssetsService,
     private firebaseStorage: FirebaseStorageService,
-    public taskResponsibleService: TaskResponsibleService
+    public taskResponsibleService: TaskResponsibleService,
+    private bitacoraService: BitacoraService
   ) {}
 
   ngOnInit(): void {
@@ -329,7 +332,8 @@ export class CrearTicketDialogComponent implements OnInit {
       this.firebaseStorage.cargarArchivosTicket(this.archivos)
         .then(async urls => {
           this.ticket.archivos = urls;
-          await this.ticketsService.create({ ...this.ticket });
+          const ticketId = await this.ticketsService.create({ ...this.ticket });
+          await this.registrarBitacoraSistema(ticketId, folio);
           await this.ticketsService.incrementarContadorTickets();
           Swal.close();
           Swal.fire('OK', 'TICKET CREADO!', 'success');
@@ -339,19 +343,43 @@ export class CrearTicketDialogComponent implements OnInit {
           console.error('Error al subir una o más imágenes:', err);
           this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
           await this.ticketsService.incrementarContadorTickets();
-          await this.ticketsService.create({ ...this.ticket });
+          const ticketId = await this.ticketsService.create({ ...this.ticket });
+          await this.registrarBitacoraSistema(ticketId, folio);
           Swal.close();
           Swal.fire('OK', 'TICKET CREADO!', 'success');
           this.closeEvent.emit();
         });
     } else {
       this.ticket.archivos = [];
-      await this.ticketsService.create({ ...this.ticket });
+      const ticketId = await this.ticketsService.create({ ...this.ticket });
+      await this.registrarBitacoraSistema(ticketId, folio);
       await this.ticketsService.incrementarContadorTickets();
       Swal.close();
       Swal.fire('OK', 'TICKET CREADO!', 'success');
       this.closeEvent.emit();
     }
+  }
+
+  async registrarBitacoraSistema(ticketId: string, folio: string): Promise<void> {
+    let responsable: any = null;
+    const rawResp = localStorage.getItem('responsable-tareas');
+    if (rawResp) {
+      responsable = JSON.parse(rawResp);
+    }
+
+    const bitacoraEntry: any = {
+      modulo: 'TICKETS',
+      referenciaId: ticketId,
+      tipo: 'SISTEMA',
+      contenido: `Ticket creado con folio ${folio}`,
+      autor: {
+        id: responsable?.id || 'SISTEMA',
+        nombre: responsable?.nombre || 'Sistema',
+        color: responsable?.color || '#94a3b8'
+      },
+      fechaCreacion: Timestamp.now()
+    };
+    await this.bitacoraService.addEntrada(bitacoraEntry);
   }
 
   obtenerTipoSoporte(idArea: string): string {

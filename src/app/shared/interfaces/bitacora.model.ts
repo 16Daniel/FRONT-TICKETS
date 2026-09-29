@@ -2,7 +2,7 @@ export interface Bitacora {
   id?: string;
   modulo: string; // Ej. 'TICKETS', 'PROYECTOS'
   referenciaId: string; // Ej. ID del ticket
-  tipo: 'COMENTARIO' | 'SISTEMA' | 'ADJUNTO';
+  tipo: 'COMENTARIO' | 'SISTEMA';
   contenido: string;
   
   // Basado en ResponsableTarea

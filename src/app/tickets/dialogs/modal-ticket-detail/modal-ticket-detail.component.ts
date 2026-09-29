@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -30,6 +30,9 @@ import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.
 import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
+import { Bitacora } from '../../../shared/interfaces/bitacora.model';
+import { BitacoraService } from '../../../shared/services/bitacora.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-modal-ticket-detail',
@@ -55,7 +58,7 @@ import { RatingStarsComponent } from '../../components/rating-stars/rating-stars
   templateUrl: './modal-ticket-detail.component.html',
   styleUrl: './modal-ticket-detail.component.scss',
 })
-export class ModalTicketDetailComponent implements OnInit {
+export class ModalTicketDetailComponent implements OnInit, OnDestroy {
   @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -73,6 +76,9 @@ export class ModalTicketDetailComponent implements OnInit {
   categorias: any[] = [];
   estatusTickets: EstatusTicket[] = [];
 
+  historial: Bitacora[] = [];
+  historialSub?: Subscription;
+
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
@@ -82,7 +88,8 @@ export class ModalTicketDetailComponent implements OnInit {
     private categoriesService: CategoriesService,
     private statusTicketService: StatusTicketService,
     private usersService: UsersService,
-    public taskResponsibleService: TaskResponsibleService
+    public taskResponsibleService: TaskResponsibleService,
+    private bitacoraService: BitacoraService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -122,6 +129,17 @@ export class ModalTicketDetailComponent implements OnInit {
       },
       error: () => { }
     });
+
+    if (this.ticket?.id) {
+      this.historialSub = this.bitacoraService.getBitacoras('TICKETS', this.ticket.id, 'SISTEMA')
+        .subscribe(data => {
+          this.historial = data ? data.slice().reverse() : [];
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.historialSub?.unsubscribe();
   }
 
   onHide() {
@@ -142,13 +160,15 @@ export class ModalTicketDetailComponent implements OnInit {
   actualizarEstatus(idEstatusTicket: string) {
     if (!this.ticket) return;
 
-    if (idEstatusTicket === '3') {
-      this.ticket.fechaFin = Timestamp.now();
-    }
+    // if (idEstatusTicket === '3') {
+    //   this.ticket.fechaFin = Timestamp.now();
+    // }
 
     this.ticketsService
       .update(this.ticket)
-      .then(() => {
+      .then(async () => {
+        const estatus = this.estatusTickets.find(x => String(x.id) === String(idEstatusTicket));
+        await this.registrarBitacoraSistema(`Estatus actualizado a: <b>${estatus?.nombre || 'Desconocido'}</b>`);
         this.showMessage('success', 'Éxito', 'Estatus actualizado correctamente');
       })
       .catch((error) => console.error(error));
@@ -171,12 +191,12 @@ export class ModalTicketDetailComponent implements OnInit {
             transition: all 0.2s ease; flex: 1; min-width: 70px; background: #ffffff;
           }
           .rating-option:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
-          .rating-option.selected { border-color: #10B981; background: #ECFDF5; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1); }
+          .rating-option.selected { border-color: #D3152A; background: #FFF1F2; box-shadow: 0 4px 6px -1px rgba(211, 21, 42, 0.1); }
           .rating-stars { font-size: 1.2rem; line-height: 1; margin-bottom: 8px; color: #cbd5e1; letter-spacing: 1px; display: flex; }
-          .rating-option:hover .rating-stars { color: #34d399; }
-          .rating-option.selected .rating-stars { color: #10B981; }
+          .rating-option:hover .rating-stars { color: #FDB813; }
+          .rating-option.selected .rating-stars { color: #FDB813; }
           .rating-text { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; text-align: center; }
-          .rating-option.selected .rating-text { color: #047857; font-weight: 800; }
+          .rating-option.selected .rating-text { color: #D3152A; font-weight: 800; }
         </style>
         <p class="text-muted" style="font-size: 0.95rem; margin-bottom: 5px;">${message}</p>
         <p class="text-dark fw-bold m-0 mt-3" style="font-size: 1.05rem;">Por favor, califica la atención recibida:</p>
@@ -206,7 +226,7 @@ export class ModalTicketDetailComponent implements OnInit {
       `,
       width: '600px',
       showCancelButton: true,
-      confirmButtonColor: '#10B981',
+      confirmButtonColor: '#D3152A',
       cancelButtonColor: '#1E1E24',
       confirmButtonText: confirmButtonText,
       cancelButtonText: 'Cancelar',
@@ -251,7 +271,8 @@ export class ModalTicketDetailComponent implements OnInit {
 
     this.ticketsService
       .update(this.ticket)
-      .then(() => {
+      .then(async () => {
+        await this.registrarBitacoraSistema(`Ticket en atención (Trabajando)`);
         this.showMessage('success', 'Success', 'Enviado correctamente');
       })
       .catch((error) => console.error(error));
@@ -269,7 +290,8 @@ export class ModalTicketDetailComponent implements OnInit {
 
         this.ticketsService
           .update(this.ticket)
-          .then(() => {
+          .then(async () => {
+            await this.registrarBitacoraSistema(`Ticket enviado a <b>VALIDAR</b> por el analista</b>`);
             this.showMessage('success', 'Éxito', 'Ticket enviado a validación correctamente');
           })
           .catch((error) => console.error(error));
@@ -295,7 +317,8 @@ export class ModalTicketDetailComponent implements OnInit {
         ticket.validacionAdmin = true;
         this.ticketsService
           .update(ticket)
-          .then(() => {
+          .then(async () => {
+            await this.registrarBitacoraSistema(`Validación de administrador <b>confirmada</b>`);
             this.showMessage('success', 'Éxito', 'Validación correcta');
           })
           .catch((error) => console.error(error));
@@ -320,7 +343,8 @@ export class ModalTicketDetailComponent implements OnInit {
 
         this.ticketsService
           .update(ticket)
-          .then(() => {
+          .then(async () => {
+            await this.registrarBitacoraSistema(`Ticket <b>FINALIZADO</b> por la sucursal, calificación: <b>${rating}★</b>`);
             this.showMessage('success', 'Éxito', 'Ticket finalizado correctamente');
           })
           .catch((error) => console.error(error));
@@ -346,7 +370,8 @@ export class ModalTicketDetailComponent implements OnInit {
         ticket.idEstatusTicket = '1';
         this.ticketsService
           .update(ticket)
-          .then(() => {
+          .then(async () => {
+            await this.registrarBitacoraSistema(`Soporte <b>RECHAZADO</b> por la sucursal. El ticket regresa a <b>POR RESOLVER</b>`);
             this.showMessage('success', 'Éxito', 'Enviado correctamente');
           })
           .catch((error) => console.error(error));
@@ -425,5 +450,27 @@ export class ModalTicketDetailComponent implements OnInit {
     return (this.usuario?.idRol === '1' || this.usuario?.idRol === '5') &&
       this.ticket?.idEstatusTicket === '3' &&
       !this.ticket?.validacionAdmin;
+  }
+
+  async registrarBitacoraSistema(contenido: string): Promise<void> {
+    if (!this.ticket?.id) return;
+    let responsable: any = null;
+    const rawResp = localStorage.getItem('responsable-tareas');
+    if (rawResp) {
+      responsable = JSON.parse(rawResp);
+    }
+    const bitacoraEntry: any = {
+      modulo: 'TICKETS',
+      referenciaId: this.ticket.id,
+      tipo: 'SISTEMA',
+      contenido: contenido,
+      autor: {
+        id: responsable?.id || 'SISTEMA',
+        nombre: responsable?.nombre || 'Sistema',
+        color: responsable?.color || '#94a3b8'
+      },
+      fechaCreacion: Timestamp.now()
+    };
+    await this.bitacoraService.addEntrada(bitacoraEntry);
   }
 }
