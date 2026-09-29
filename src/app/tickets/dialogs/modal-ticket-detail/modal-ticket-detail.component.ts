@@ -344,7 +344,7 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
         this.ticketsService
           .update(ticket)
           .then(async () => {
-            await this.registrarBitacoraSistema(`Ticket <b>FINALIZADO</b> por la sucursal, calificación: <b>${rating}★</b>`);
+            await this.registrarBitacoraSistema(`Ticket <b>FINALIZADO</b> por la sucursal</b>`);
             this.showMessage('success', 'Éxito', 'Ticket finalizado correctamente');
           })
           .catch((error) => console.error(error));

@@ -11,7 +11,6 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasArchivadasDialogComponent } from '../../dialogs/tareas-archivadas-dialog/tareas-archivadas-dialog.component';
 import { EtiquetasTareaDialogComponent } from '../../dialogs/etiquetas-tarea-dialog/etiquetas-tarea-dialog.component';
 import { CrearTareaDialogComponent } from '../../dialogs/crear-tarea-dialog/crear-tarea-dialog.component';
-import { ResponsablesTareasDialogComponent } from '../../dialogs/responsables-tareas-dialog/responsables-tareas-dialog.component';
 import { BusquedaTareasDialogComponent } from '../../dialogs/busqueda-tareas-dialog/busqueda-tareas-dialog.component';
 import { Tarea } from '../../interfaces/tarea.interface';
 
@@ -23,7 +22,6 @@ import { Tarea } from '../../interfaces/tarea.interface';
     FormsModule,
     DropdownModule,
     ButtonModule,
-    ResponsablesTareasDialogComponent,
     TareasArchivadasDialogComponent,
     EtiquetasTareaDialogComponent,
     CrearTareaDialogComponent,
@@ -60,7 +58,6 @@ export class CabeceraTareasComponent {
   responsablesGlobalesOrdenados: ResponsableTarea[] = [];
   mostrarResponsables: boolean = false;
   mostrarModalEtiquetas = false;
-  mostrarModalResponsables = false;
   mostrarModalArchivados = false;
   mostrarModalNuevaTarea = false;
   mostrarModalBusqueda = false;

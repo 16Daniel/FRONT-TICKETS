@@ -7,6 +7,12 @@ export const USUARIOS_MAIN_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/users-page/users-page.component'),
   },
+  {
+    path: 'responsables',
+    title: 'Responsables',
+    loadComponent: () =>
+      import('./pages/responsables-page/responsables-page.component'),
+  },
 ];
 
 export default USUARIOS_MAIN_ROUTES;
