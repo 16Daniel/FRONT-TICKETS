@@ -5,9 +5,9 @@ export interface Bitacora {
   tipo: 'COMENTARIO' | 'SISTEMA';
   contenido: string;
   
-  // Basado en ResponsableTarea
+  // Basado en Responsable
   autor: {
-    id: string; // id del ResponsableTarea
+    id: string; // id del Responsable
     nombre: string;
     correo?: string;
     color?: string;

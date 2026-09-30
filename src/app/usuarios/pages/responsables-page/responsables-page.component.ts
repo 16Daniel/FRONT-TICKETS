@@ -14,9 +14,9 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { ResponsablesService } from '../../services/responsables.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { ResponsableTarea } from '../../../tareas/interfaces/responsable-tarea.interface';
+import { Responsable } from '../../interfaces/responsable.interface';
 import { Usuario } from '../../interfaces/usuario.model';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
@@ -44,14 +44,14 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   branchesService = inject(BranchesService);
-  responsablesService = inject(TaskResponsibleService);
+  responsablesService = inject(ResponsablesService);
   messageService = inject(MessageService);
   cdr = inject(ChangeDetectorRef);
   mailService = inject(MailService);
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
-  responsables: ResponsableTarea[] = [];
+  responsables: Responsable[] = [];
   idSucursalSeleccionada: string | null = null;
 
   cargando = false;
@@ -59,7 +59,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
   usuario!: Usuario;
   mostrarModalCrearResponsable = false;
   
-  responsableSeleccionado: ResponsableTarea = new ResponsableTarea;
+  responsableSeleccionado: Responsable = new Responsable;
   esNuevoResponsable: boolean = true;
 
   ngOnInit() {
@@ -98,13 +98,13 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   abrirModalCrearResponsable() {
     this.esNuevoResponsable = true;
-    this.responsableSeleccionado = new ResponsableTarea;
+    this.responsableSeleccionado = new Responsable;
     this.responsableSeleccionado.idSucursal = this.idSucursalSeleccionada!;
     this.responsableSeleccionado.color = '#1e1e24';
     this.mostrarModalCrearResponsable = true;
   }
 
-  abrirModalEditarResponsable(res: ResponsableTarea) {
+  abrirModalEditarResponsable(res: Responsable) {
     this.esNuevoResponsable = false;
     this.responsableSeleccionado = { ...res };
     this.mostrarModalCrearResponsable = true;
@@ -128,7 +128,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  async eliminar(res: ResponsableTarea) {
+  async eliminar(res: Responsable) {
     if (!res.id) return;
 
     const result = await Swal.fire({
@@ -182,7 +182,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
     this.enviarCorreo(res, nuevoPin);
   }
 
-  enviarCorreo(responsable: ResponsableTarea, pin: string) {
+  enviarCorreo(responsable: Responsable, pin: string) {
     const request: EnviarCorreoRequest = {
       titulo: `Tu PIN ha sido generado`,
       body: this.generatePinEmailHtml(responsable.nombre, this.sucursalesMap.get(responsable.idSucursal)!, pin),

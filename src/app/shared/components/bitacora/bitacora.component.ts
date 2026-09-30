@@ -9,7 +9,7 @@ import { EditorModule } from 'primeng/editor';
 
 import { Bitacora } from '../../interfaces/bitacora.model';
 import { BitacoraService } from '../../services/bitacora.service';
-import { ResponsableTarea } from '../../../tareas/interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { DatesHelperService } from '../../helpers/dates-helper.service';
 import { MentionUtils } from '../../utils/mention.utils';
 import { FirebaseStorageService } from '../../services/firebase-storage.service';
@@ -31,10 +31,10 @@ Quill.register('modules/magicUrl', MagicUrl);
 export class BitacoraComponent implements OnInit, OnDestroy {
   @Input() modulo!: string;
   @Input() referenciaId!: string;
-  @Input() usuariosEtiquetables: ResponsableTarea[] = [];
+  @Input() usuariosEtiquetables: Responsable[] = [];
   
   // Usuario actual (simulado o inyectado después)
-  @Input() usuarioActual!: ResponsableTarea;
+  @Input() usuarioActual!: Responsable;
 
   bitacoras: Bitacora[] = [];
   nuevoMensaje: string = '';

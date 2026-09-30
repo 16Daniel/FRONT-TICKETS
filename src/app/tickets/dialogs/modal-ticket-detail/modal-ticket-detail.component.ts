@@ -27,7 +27,7 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { AvatarModule } from 'ngx-avatars';
 import { TabViewModule } from 'primeng/tabview';
 import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
-import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
@@ -88,7 +88,7 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
     private categoriesService: CategoriesService,
     private statusTicketService: StatusTicketService,
     private usersService: UsersService,
-    public taskResponsibleService: TaskResponsibleService,
+    public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

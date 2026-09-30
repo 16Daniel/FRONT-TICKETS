@@ -35,7 +35,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SelectorArbolCategoriaComponent } from '../../components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
-import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
@@ -94,7 +94,7 @@ export class CrearTicketDialogComponent implements OnInit {
           return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
         };
 
-        const responsables = this.taskResponsibleService.responsables;
+        const responsables = this.responsablesService.responsables;
         const values = responsables.map(u => ({ 
           id: u.id, 
           value: u.nombre,
@@ -145,7 +145,7 @@ export class CrearTicketDialogComponent implements OnInit {
     private ticketsPriorityService: TicketsPriorityService,
     private fixedAssetsService: FixedAssetsService,
     private firebaseStorage: FirebaseStorageService,
-    public taskResponsibleService: TaskResponsibleService,
+    public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService
   ) {}
 

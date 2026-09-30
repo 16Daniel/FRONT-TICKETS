@@ -8,8 +8,8 @@ import { AvatarModule } from 'ngx-avatars';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import Swal from 'sweetalert2';
 
-import { ResponsableTarea } from '../../../tareas/interfaces/responsable-tarea.interface';
-import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { Responsable } from '../../interfaces/responsable.interface';
+import { ResponsablesService } from '../../services/responsables.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { MailService, EnviarCorreoRequest } from '../../../shared/services/mail.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -32,10 +32,10 @@ import { Usuario } from '../../interfaces/usuario.model';
 export class CrearResponsableDialogComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
-  @Input() responsable: ResponsableTarea = new ResponsableTarea;
+  @Input() responsable: Responsable = new Responsable;
   @Input() esNuevo: boolean = true;
   
-  responsablesService = inject(TaskResponsibleService);
+  responsablesService = inject(ResponsablesService);
   branchesService = inject(BranchesService);
   messageService = inject(MessageService);
   mailService = inject(MailService);
@@ -138,7 +138,7 @@ export class CrearResponsableDialogComponent implements OnInit {
     }
   }
 
-  enviarCorreo(responsable: ResponsableTarea, pin: string) {
+  enviarCorreo(responsable: Responsable, pin: string) {
     const request: EnviarCorreoRequest = {
       titulo: `Tu PIN ha sido generado`,
       body: this.generatePinEmailHtml(responsable.nombre, this.sucursalesMap.get(responsable.idSucursal)!, pin),

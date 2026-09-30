@@ -33,7 +33,7 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
 import { SelectorArbolCategoriaComponent } from '../../../tickets/components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
-import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
@@ -82,7 +82,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
           return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
         };
 
-        const responsables = this.taskResponsibleService.responsables;
+        const responsables = this.responsablesService.responsables;
         const values = responsables.map(u => ({ 
           id: u.id, 
           value: u.nombre,
@@ -140,7 +140,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
     private firebaseStorage: FirebaseStorageService,
-    public taskResponsibleService: TaskResponsibleService,
+    public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService
   ) {}
 
