@@ -146,10 +146,13 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
     this.closeEvent.emit(); // Cerrar modal
   }
 
-  get estatusTicketsFiltrados(): EstatusTicket[] {
-    return this.estatusTickets.filter(s => {
+  get estatusTicketsOpciones(): any[] {
+    return this.estatusTickets.map(s => {
       const id = String(s.id);
-      return id !== '2' && id !== '3' && id !== '7';
+      return {
+        ...s,
+        disabled: id === '2' || id === '3' || id === '7'
+      };
     });
   }
 
@@ -159,10 +162,6 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
 
   actualizarEstatus(idEstatusTicket: string) {
     if (!this.ticket) return;
-
-    // if (idEstatusTicket === '3') {
-    //   this.ticket.fechaFin = Timestamp.now();
-    // }
 
     this.ticketsService
       .update(this.ticket)

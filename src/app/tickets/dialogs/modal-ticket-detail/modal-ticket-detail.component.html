@@ -204,7 +204,8 @@
                   <div class="mt-1 d-flex">
                     <!-- Dropdown para Admin (Roles 1 y 5) -->
                     <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
-                        [options]="estatusTicketsFiltrados" 
+                        [options]="estatusTicketsOpciones" 
+                        optionDisabled="disabled"
                         [(ngModel)]="ticket.idEstatusTicket" 
                         optionLabel="nombre"
                         [showClear]="false" 

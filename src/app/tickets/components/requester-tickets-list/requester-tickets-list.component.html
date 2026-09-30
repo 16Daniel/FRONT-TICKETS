@@ -14,6 +14,7 @@
       <th>CATEGORÍA / RUTA</th>
       <th *ngIf="mostrarDescripcion">DESCRIPCIÓN</th>
       <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
+      <th *ngIf="usuario?.idRol == '2'"></th>
     </tr>
   </ng-template>
 
@@ -93,7 +94,14 @@
         <app-rating-stars [rating]="ticket.calificacionSucursal" [editable]="false"></app-rating-stars>
       </td>
 
-
+      <td *ngIf="usuario?.idRol == '2'">
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <button class="btn-action-table btn-action-warning"
+                *ngIf="ticket.idEstatusTicket == '7'" pTooltip="PENDIENTE VALIDACIÓN" tooltipPosition="top">
+                <i class="bx bxs-badge-check"></i>
+            </button>
+        </div>
+      </td>
     </tr>
   </ng-template>
 </p-table>
