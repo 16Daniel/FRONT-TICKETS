@@ -20,6 +20,20 @@
 
   <!-- Cuerpo del Modal -->
   <div *ngIf="ticket" class="modal-ticket-body d-flex flex-column h-100 flex-grow-1">
+    
+    <!-- Banner de Mitigación -->
+    <div *ngIf="ticket.idEstatusTicket === '8' && ultimaMitigacion" class="alert alert-warning m-3 d-flex align-items-center gap-3" style="background-color: #FFFBEB; border: 1px solid #FDE68A; color: #D97706; border-radius: 8px;">
+      <i class="bx bx-shield-quarter fs-2"></i>
+      <div class="flex-grow-1">
+        <h6 class="fw-bold mb-1 m-0">Ticket en Mitigación</h6>
+        <div class="text-dark" style="font-size: 0.85rem;" [innerHTML]="ultimaMitigacion.contenido"></div>
+      </div>
+      <div class="text-end" style="font-size: 0.8rem;">
+        <span class="d-block fw-bold">{{ ultimaMitigacion.autor.nombre }}</span>
+        <span class="text-muted">{{ ultimaMitigacion.fechaCreacion ? (datesHelper.getDate(ultimaMitigacion.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}</span>
+      </div>
+    </div>
+
     <div class="row flex-grow-1 m-0">
       <!-- Columna Izquierda: Detalle del Ticket -->
       <div class="col-lg-7 d-flex flex-column gap-4 pb-3 pb-lg-0 h-100">

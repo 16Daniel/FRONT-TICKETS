@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnDestroy, Output, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -79,6 +79,10 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
   historial: Bitacora[] = [];
   historialSub?: Subscription;
 
+  ultimaMitigacion: Bitacora | null = null;
+  mitigacionSub?: Subscription;
+  estatusAnterior?: string;
+
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
@@ -89,7 +93,8 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
     private statusTicketService: StatusTicketService,
     private usersService: UsersService,
     public responsablesService: ResponsablesService,
-    private bitacoraService: BitacoraService
+    private bitacoraService: BitacoraService,
+    private cdr: ChangeDetectorRef
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -131,15 +136,29 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
     });
 
     if (this.ticket?.id) {
+      this.estatusAnterior = this.ticket.idEstatusTicket;
+
       this.historialSub = this.bitacoraService.getBitacoras('TICKETS', this.ticket.id, 'SISTEMA')
         .subscribe(data => {
           this.historial = data ? data.slice().reverse() : [];
+          this.cdr.detectChanges();
+        });
+
+      this.mitigacionSub = this.bitacoraService.getBitacoras('TICKETS', this.ticket.id, 'MITIGACION')
+        .subscribe(data => {
+          if (data && data.length > 0) {
+            this.ultimaMitigacion = data[data.length - 1];
+          } else {
+            this.ultimaMitigacion = null;
+          }
+          this.cdr.detectChanges();
         });
     }
   }
 
   ngOnDestroy(): void {
     this.historialSub?.unsubscribe();
+    this.mitigacionSub?.unsubscribe();
   }
 
   onHide() {
@@ -151,7 +170,7 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
       const id = String(s.id);
       return {
         ...s,
-        disabled: id === '2' || id === '3' || id === '7'
+        disabled: id === '3' || id === '7'
       };
     });
   }
@@ -163,14 +182,111 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
   actualizarEstatus(idEstatusTicket: string) {
     if (!this.ticket) return;
 
+    if (String(idEstatusTicket) === '8') {
+      this.mostrarSwalMitigacion(idEstatusTicket);
+      return;
+    }
+
     this.ticketsService
       .update(this.ticket)
       .then(async () => {
+        this.estatusAnterior = idEstatusTicket;
         const estatus = this.estatusTickets.find(x => String(x.id) === String(idEstatusTicket));
         await this.registrarBitacoraSistema(`Estatus actualizado a: <b>${estatus?.nombre || 'Desconocido'}</b>`);
         this.showMessage('success', 'Éxito', 'Estatus actualizado correctamente');
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        if (this.estatusAnterior) this.ticket!.idEstatusTicket = this.estatusAnterior;
+      });
+  }
+
+  mostrarSwalMitigacion(idEstatusTicket: string) {
+    Swal.fire({
+      title: 'Mitigación de Ticket',
+      html: `
+        <div class="text-start" style="font-family: inherit;">
+          <label class="form-label fw-bold mb-1" style="font-size: 0.9rem;">Comentario Breve:</label>
+          <textarea id="mitigacion-comentario" class="form-control mb-3" rows="3" placeholder="Ingrese el motivo o comentario de mitigación..." style="border-radius: 8px;"></textarea>
+          
+          <label class="form-label fw-bold mb-1" style="font-size: 0.9rem;">Fecha Estimada:</label>
+          <input type="date" id="mitigacion-fecha" class="form-control" style="border-radius: 8px;">
+        </div>
+      `,
+      width: '500px',
+      showCancelButton: true,
+      confirmButtonColor: '#D3152A',
+      cancelButtonColor: '#1E1E24',
+      confirmButtonText: 'Guardar Mitigación',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      },
+      preConfirm: () => {
+        const comentario = (document.getElementById('mitigacion-comentario') as HTMLTextAreaElement).value.trim();
+        const fecha = (document.getElementById('mitigacion-fecha') as HTMLInputElement).value;
+        if (!comentario) {
+          Swal.showValidationMessage('El comentario es requerido');
+          return false;
+        }
+        if (!fecha) {
+          Swal.showValidationMessage('La fecha estimada es requerida');
+          return false;
+        }
+        return { comentario, fecha };
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        this.guardarMitigacion(idEstatusTicket, result.value.comentario, result.value.fecha);
+      } else {
+        if (this.estatusAnterior && this.ticket) {
+          // Revert back
+          setTimeout(() => {
+            this.ticket!.idEstatusTicket = this.estatusAnterior!;
+          });
+        }
+      }
+    });
+  }
+
+  async guardarMitigacion(idEstatusTicket: string, comentario: string, fecha: string) {
+    if (!this.ticket) return;
+
+    const estatus = this.estatusTickets.find(x => String(x.id) === String(idEstatusTicket));
+    this.ticket.idEstatusTicket = idEstatusTicket;
+    
+    this.ticketsService
+      .update(this.ticket)
+      .then(async () => {
+        this.estatusAnterior = idEstatusTicket;
+        await this.registrarBitacoraSistema(`Estatus actualizado a: <b>${estatus?.nombre || 'Mitigación'}</b>`);
+        
+        let responsable: any = null;
+        const rawResp = localStorage.getItem('responsable-tareas');
+        if (rawResp) {
+          responsable = JSON.parse(rawResp);
+        }
+        
+        const bitacoraEntry: Bitacora = {
+          modulo: 'TICKETS',
+          referenciaId: this.ticket!.id!,
+          tipo: 'MITIGACION',
+          contenido: `<b>Comentario:</b> ${comentario}<br><b>Fecha Estimada:</b> ${fecha}`,
+          autor: {
+            id: responsable?.id || this.usuario?.id || 'SISTEMA',
+            nombre: responsable?.nombre || (this.usuario ? `${this.usuario.nombre} ${this.usuario.apellidoP}` : 'Sistema'),
+            color: responsable?.color || '#94a3b8'
+          },
+          fechaCreacion: Timestamp.now()
+        };
+        await this.bitacoraService.addEntrada(bitacoraEntry);
+        
+        this.showMessage('success', 'Éxito', 'Estatus actualizado y mitigación registrada');
+      })
+      .catch((error) => {
+        console.error(error);
+        if (this.estatusAnterior) this.ticket!.idEstatusTicket = this.estatusAnterior;
+      });
   }
 
   private showRatingSwal(
