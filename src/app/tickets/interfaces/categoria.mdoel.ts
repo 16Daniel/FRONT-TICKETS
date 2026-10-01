@@ -9,6 +9,7 @@ export class Categoria {
   subcategorias: Subcategoria[] = [];
   activarSubcategorias: boolean = false;
   tipo?: 'rama' | 'hoja' = 'rama';
+  evidenciaObligatoria?: boolean = false;
   // Urgencia (3×3)
   urgencia?: number;
   criticidad?: number;

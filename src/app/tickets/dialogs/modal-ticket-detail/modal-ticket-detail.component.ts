@@ -23,6 +23,8 @@ import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { SupportTypesService } from '../../services/support-types.service';
+import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AvatarModule } from 'ngx-avatars';
 import { TabViewModule } from 'primeng/tabview';
@@ -75,6 +77,7 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
   sucursales: any[] = [];
   categorias: any[] = [];
   estatusTickets: EstatusTicket[] = [];
+  tiposSoporte: TipoSoporte[] = [];
 
   historial: Bitacora[] = [];
   historialSub?: Subscription;
@@ -94,7 +97,8 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private supportTypesService: SupportTypesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -131,6 +135,13 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
     this.statusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTickets = data;
+      },
+      error: () => { }
+    });
+
+    this.supportTypesService.get().subscribe({
+      next: (data) => {
+        this.tiposSoporte = data;
       },
       error: () => { }
     });
@@ -199,6 +210,24 @@ export class ModalTicketDetailComponent implements OnInit, OnDestroy {
         console.error(error);
         if (this.estatusAnterior) this.ticket!.idEstatusTicket = this.estatusAnterior;
       });
+  }
+
+  actualizarTipoSoporte(idTipoSoporte: string) {
+    if (!this.ticket) return;
+    this.ticketsService
+      .update(this.ticket)
+      .then(async () => {
+        const ts = this.tiposSoporte.find(x => String(x.id) === String(idTipoSoporte));
+        await this.registrarBitacoraSistema(`Tipo de asistencia actualizado a: <b>${ts?.name || 'Desconocido'}</b>`);
+        this.showMessage('success', 'Éxito', 'Asistencia actualizada correctamente');
+      })
+      .catch((error) => console.error(error));
+  }
+
+  obtenerNombreTipoSoporte(id?: string | null): string {
+    if (!id) return 'NO DEFINIDO';
+    const ts = this.tiposSoporte.find(x => String(x.id) === String(id));
+    return ts ? (ts.name || 'NO DEFINIDO') : 'NO DEFINIDO';
   }
 
   mostrarSwalMitigacion(idEstatusTicket: string) {

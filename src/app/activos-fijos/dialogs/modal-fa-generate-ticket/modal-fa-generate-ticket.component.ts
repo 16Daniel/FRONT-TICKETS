@@ -129,6 +129,10 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   archivosPreview: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string }[] = [];
   archivos: File[] = [];
 
+  get requiereEvidencia(): boolean {
+    return this.formCategoria?.evidenciaObligatoria === true;
+  }
+
   constructor(
     private ticketsService: TicketsService,
     private folioGeneratorService: FolioGeneratorService,
@@ -264,6 +268,20 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       return;
     }
 
+    if (this.requiereEvidencia && this.archivos.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Acción requerida',
+        text: 'Para la categoría seleccionada es necesario subir evidencia obligatoriamente.',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#D3152A',
+        customClass: {
+          container: 'swal-topmost'
+        }
+      });
+      return;
+    }
+
     Swal.fire({
       target: document.body,
       allowOutsideClick: false,
@@ -323,7 +341,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
           await this.registrarBitacoraSistema(ticketId, folio);
           await this.ticketsService.incrementarContadorTickets();
           Swal.close();
-          Swal.fire('OK', 'TICKET CREADO!', 'success');
+          Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
           this.closeEvent.emit();
         })
         .catch(async err => {
@@ -333,7 +351,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
           const ticketId = await this.ticketsService.create({ ...this.ticket });
           await this.registrarBitacoraSistema(ticketId, folio);
           Swal.close();
-          Swal.fire('OK', 'TICKET CREADO!', 'success');
+          Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
           this.closeEvent.emit();
         });
     } else {
@@ -342,7 +360,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       await this.registrarBitacoraSistema(ticketId, folio);
       await this.ticketsService.incrementarContadorTickets();
       Swal.close();
-      Swal.fire('OK', 'TICKET CREADO!', 'success');
+      Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
       this.closeEvent.emit();
     }
   }

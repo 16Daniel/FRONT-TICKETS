@@ -131,6 +131,25 @@
             </button>
           </div>
         </div>
+
+        <!-- Evidencia Obligatoria -->
+        <div class="mt-4 mb-2 p-3 rounded border" style="background-color: #f8fafc;">
+          <div class="form-check form-switch d-flex align-items-center m-0 gap-2">
+            <input 
+              class="form-check-input mt-0" 
+              type="checkbox" 
+              role="switch" 
+              id="switchEvidenciaObli"
+              style="width: 2.5rem; height: 1.25rem; cursor: pointer;"
+              [(ngModel)]="evidenciaObligatoria">
+            <label class="form-check-label fw-bold mb-0 text-dark" for="switchEvidenciaObli" style="cursor: pointer;">
+              ¿Exigir adjuntar evidencia fotográfica o documental?
+            </label>
+          </div>
+          <small class="text-muted d-block mt-1 ms-5">
+            Si se activa, el usuario no podrá enviar el ticket si no adjunta al menos un archivo.
+          </small>
+        </div>
       </div>
     </div>
 

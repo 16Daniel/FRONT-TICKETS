@@ -42,6 +42,7 @@ export class FormularioNodoCategoriaComponent implements OnInit {
   urgencia: number = 2;
   score: number = 4;
   prioridad: string = 'Medio';
+  evidenciaObligatoria: boolean = false;
 
   // Configuración del Tiempo de Resolución
   tiempoResolucion: number = 24;
@@ -66,6 +67,7 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       this.urgencia = this.nodoEditar.urgencia || 2;
       this.score = this.nodoEditar.score || 4;
       this.prioridad = this.nodoEditar.prioridad || 'Medio';
+      this.evidenciaObligatoria = this.nodoEditar.evidenciaObligatoria || false;
 
       // Cargar tiempo de resolución configurado
       if (this.nodoEditar.tiempoResolucion) {
@@ -169,7 +171,8 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       prioridad: this.tipo === 'hoja' ? this.prioridad : undefined,
       tiempoResolucion: tiempoRes,
       unidadResolucion: unidadRes,
-      horasResolucion: horasRes
+      horasResolucion: horasRes,
+      evidenciaObligatoria: this.tipo === 'hoja' ? this.evidenciaObligatoria : false
     });
   }
 }

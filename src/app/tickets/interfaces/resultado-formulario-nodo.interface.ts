@@ -9,6 +9,6 @@ export interface ResultadoFormularioNodo {
   tiempoResolucion?: number;
   unidadResolucion?: 'm' | 'h' | 'd';
   horasResolucion?: number;
-
+  evidenciaObligatoria?: boolean;
 
 }

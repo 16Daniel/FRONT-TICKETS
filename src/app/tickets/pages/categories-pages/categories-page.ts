@@ -318,7 +318,8 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
           ...(datos.tipo === 'hoja' ? {
             tiempoResolucion: datos.tiempoResolucion,
             unidadResolucion: datos.unidadResolucion,
-            horasResolucion: datos.horasResolucion
+            horasResolucion: datos.horasResolucion,
+            evidenciaObligatoria: datos.evidenciaObligatoria
           } : {})
         };
         await this.categoriesService.create(nuevaCat);
@@ -347,7 +348,8 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
             prioridad: datos.prioridad as any,
             tiempoResolucion: datos.tiempoResolucion,
             unidadResolucion: datos.unidadResolucion,
-            horasResolucion: datos.horasResolucion
+            horasResolucion: datos.horasResolucion,
+            evidenciaObligatoria: datos.evidenciaObligatoria
           } : {})
         };
         info.nodo.subcategorias.push(nuevaSub);
@@ -384,12 +386,14 @@ export default class CategoriesPageComponent implements OnInit, OnDestroy {
         objetivo.tiempoResolucion = datos.tiempoResolucion;
         objetivo.unidadResolucion = datos.unidadResolucion;
         objetivo.horasResolucion = datos.horasResolucion;
+        objetivo.evidenciaObligatoria = datos.evidenciaObligatoria;
       } else {
         objetivo.activarSubcategorias = true;
         objetivo.urgencia = undefined;
         objetivo.tiempoResolucion = undefined;
         objetivo.unidadResolucion = undefined;
         objetivo.horasResolucion = undefined;
+        objetivo.evidenciaObligatoria = false;
       }
       delete (objetivo as any).estimacion;
       delete (objetivo as any).slaRes;

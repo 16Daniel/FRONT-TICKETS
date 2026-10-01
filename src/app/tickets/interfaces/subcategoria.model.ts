@@ -5,6 +5,7 @@ export class Subcategoria {
     tipo?: 'rama' | 'hoja' = 'hoja';
     subcategorias?: Subcategoria[] = [];
     activarSubcategorias?: boolean = false;
+    evidenciaObligatoria?: boolean = false;
     // Urgencia (3×3)
     urgencia?: number;
     criticidad?: number;
