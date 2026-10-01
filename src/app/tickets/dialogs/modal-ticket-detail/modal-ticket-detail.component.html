@@ -20,6 +20,20 @@
 
   <!-- Cuerpo del Modal -->
   <div *ngIf="ticket" class="modal-ticket-body d-flex flex-column h-100 flex-grow-1">
+    
+    <!-- Banner de Mitigación -->
+    <div *ngIf="ticket.idEstatusTicket === '8' && ultimaMitigacion" class="alert alert-warning m-3 d-flex align-items-center gap-3" style="background-color: #FFFBEB; border: 1px solid #FDE68A; color: #D97706; border-radius: 8px;">
+      <i class="bx bx-shield-quarter fs-2"></i>
+      <div class="flex-grow-1">
+        <h6 class="fw-bold mb-1 m-0">Ticket en Mitigación</h6>
+        <div class="text-dark" style="font-size: 0.85rem;" [innerHTML]="ultimaMitigacion.contenido"></div>
+      </div>
+      <div class="text-end" style="font-size: 0.8rem;">
+        <span class="d-block fw-bold">{{ ultimaMitigacion.autor.nombre }}</span>
+        <span class="text-muted">{{ ultimaMitigacion.fechaCreacion ? (datesHelper.getDate(ultimaMitigacion.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}</span>
+      </div>
+    </div>
+
     <div class="row flex-grow-1 m-0">
       <!-- Columna Izquierda: Detalle del Ticket -->
       <div class="col-lg-7 d-flex flex-column gap-4 pb-3 pb-lg-0 h-100">
@@ -105,7 +119,44 @@
                 </div>
                 
                 <!-- Botonera de Acciones -->
-                <div class="modal-footer-actions m-0 p-0" *ngIf="showBtnAsignar || showBtnTrabajar">
+                <div class="modal-footer-actions m-0 p-0" *ngIf="showBtnAsignar || showBtnTrabajar || showBtnValidar || showBtnFinalizar || showBtnRechazar || showBtnValidacionAdmin">
+                  
+                  <!-- Botón RECHAZAR SOPORTE -->
+                  <button
+                    *ngIf="showBtnRechazar"
+                    class="btn-action" style="background-color: #EF4444; color: white;"
+                    (click)="onClickRechazar(ticket)">
+                    <i class="bx bx-undo"></i>
+                    <span>RECHAZAR SOPORTE</span>
+                  </button>
+
+                  <!-- Botón FINALIZAR TICKET -->
+                  <button
+                    *ngIf="showBtnFinalizar"
+                    class="btn-action" style="background-color: #10B981; color: white;"
+                    (click)="onClickFinalizar(ticket)">
+                    <i class="bx bx-check-circle"></i>
+                    <span>FINALIZAR TICKET</span>
+                  </button>
+
+                  <!-- Botón VALIDAR TICKET -->
+                  <button
+                    *ngIf="showBtnValidar"
+                    class="btn-action" style="background-color: #10B981; color: white;"
+                    (click)="onClickPendienteValidarSucursal()">
+                    <i class="bx bx-check-double"></i>
+                    <span>VALIDAR TICKET</span>
+                  </button>
+
+                  <!-- Botón VALIDACIÓN ADMINISTRADOR -->
+                  <button
+                    *ngIf="showBtnValidacionAdmin"
+                    class="btn-action btn-action-admin" style="background-color: #a300ff; color: white;"
+                    (click)="onClickValidacionAdmin(ticket)">
+                    <i class="bx bxs-badge-check"></i>
+                    <span>VALIDACIÓN ADMINISTRADOR</span>
+                  </button>
+
                   <!-- Botón ASIGNAR A ESPECIALISTA -->
                   <button
                     *ngIf="showBtnAsignar"
@@ -119,12 +170,33 @@
                   <button
                     *ngIf="showBtnTrabajar"
                     class="btn-action btn-primary-rebel"
-                    (click)="onClick()">
+                    (click)="onClickTrabajarTicket()">
                     <i class="bx bx-play-circle"></i>
                     <span>TRABAJAR TICKET</span>
                   </button>
                 </div>
               </div>
+
+              <!-- Sección de Calificaciones (Solo visible si está finalizado) -->
+              <ng-container *ngIf="ticket.idEstatusTicket === '3'">
+                <div class="d-flex flex-wrap gap-4 mb-4" style="background: #f8fafc; padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid #e2e8f0; align-items: center;">
+                  <h5 class="m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px; border-right: 2px solid #e2e8f0; padding-right: 1.5rem; height: 100%;">
+                    <i class="bx bx-star text-warning fs-4"></i> EVALUACIÓN
+                  </h5>
+                  
+                  <div class="d-flex flex-column gap-1">
+                    <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Por Sucursal</span>
+                    <app-rating-stars [rating]="ticket.calificacionSucursal" [editable]="false"></app-rating-stars>
+                  </div>
+
+                  <div style="width: 1px; height: 35px; background: #cbd5e1; margin: 0 0.5rem;" *ngIf="ticket.calificacionAnalista"></div>
+
+                  <div class="d-flex flex-column gap-1" *ngIf="ticket.calificacionAnalista">
+                    <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Por Analista</span>
+                    <app-rating-stars [rating]="ticket.calificacionAnalista" [editable]="false"></app-rating-stars>
+                  </div>
+                </div>
+              </ng-container>
 
               <div class="summary-info-grid">
                 <!-- Row 1 -->
@@ -144,19 +216,47 @@
                 <div class="info-item">
                   <span class="info-label"><i class="bx bx-info-circle"></i> Estatus</span>
                   <div class="mt-1 d-flex">
-                    <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
-                      <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
-                        <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
-                        <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
-                        {{ estatus.nombre }}
-                      </div>
+                    <!-- Dropdown para Admin (Roles 1 y 5) -->
+                    <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
+                        [options]="estatusTicketsOpciones" 
+                        optionDisabled="disabled"
+                        [(ngModel)]="ticket.idEstatusTicket" 
+                        optionLabel="nombre"
+                        [showClear]="false" 
+                        optionValue="id" 
+                        (onChange)="actualizarEstatus($event.value)" 
+                        styleClass="table-select-custom"
+                        appendTo="body">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="d-flex align-items-center gap-1 justify-content-center">
+                                <i class="bx {{ selectedOption?.icon }} {{ selectedOption?.animation }}" [style.color]="selectedOption?.color"></i>
+                                <span>{{ selectedOption?.nombre }}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template let-st pTemplate="item">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bx {{ st.icon }} {{ st.animation }}" [style.color]="st.color"></i>
+                                <span>{{ st.nombre }}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+
+                    <!-- Etiqueta estática para otros usuarios -->
+                    <ng-container *ngIf="usuario?.idRol !== '1' && usuario?.idRol !== '5'">
+                      <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
+                        <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
+                          <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
+                          <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
+                          {{ estatus.nombre }}
+                        </div>
+                      </ng-container>
+                      <ng-template #estatusDesconocido>
+                        <div class="status-pill" [ngStyle]="getEstatusStyle()">
+                          <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
+                          Desconocido
+                        </div>
+                      </ng-template>
                     </ng-container>
-                    <ng-template #estatusDesconocido>
-                      <div class="status-pill" [ngStyle]="getEstatusStyle()">
-                        <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
-                        Desconocido
-                      </div>
-                    </ng-template>
                   </div>
                 </div>
 
@@ -288,24 +388,34 @@
                 <i class="bx bx-history fs-5" style="color: #D3152A;"></i> HISTORIAL DE CAMBIOS
               </h5>
               
-              <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
+              <!-- Vacío -->
+              <div *ngIf="historial.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
                 <i class="bx bx-history mb-3" style="font-size: 2.5rem; color: #94a3b8;"></i>
                 <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Sin historial registrado</p>
-                <p class="m-0 mt-1" style="font-size: 0.8rem;">(Por implementar)</p>
+              </div>
+
+              <!-- Lista -->
+              <div *ngIf="historial.length > 0" class="timeline d-flex flex-column gap-3">
+                <div *ngFor="let h of historial" class="timeline-item d-flex gap-3">
+                  <div class="timeline-avatar flex-shrink-0">
+                    <ngx-avatars [name]="h.autor.nombre" [size]="36" [round]="true" [bgColor]="h.autor.color || '#94a3b8'"></ngx-avatars>
+                  </div>
+                  <div class="timeline-content flex-grow-1">
+                    <div class="d-flex align-items-baseline gap-2 mb-1">
+                      <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ h.autor.nombre }}</span>
+                      <span class="text-muted" style="font-size: 0.75rem;">
+                        {{ h.fechaCreacion ? (datesHelper.getDate(h.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}
+                      </span>
+                    </div>
+                    <div class="p-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;" [innerHTML]="h.contenido"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </p-tabPanel>
         </p-tabView>
 
-        <!-- Tarjeta de Comentarios Finales (si está cerrado) -->
-        <div class="ticket-card p-4 m-0" *ngIf="ticket.idEstatusTicket == '3' && ticket.comentariosFinalesSucursal">
-          <h5 class="sub-title mb-3 fw-bold text-uppercase d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px; color: #166534;">
-            <i class="pi pi-check-circle fs-5"></i> Comentarios de Cierre (Solución)
-          </h5>
-          <div class="comentarios-finales-content">
-            <div class="comentarios-finales-text" [innerHTML]="ticket.comentariosFinalesSucursal"></div>
-          </div>
-        </div>
+
 
 
       </div>
@@ -317,7 +427,7 @@
           class="flex-grow-1 d-flex flex-column h-100"
           [modulo]="'TICKETS'" 
           [referenciaId]="ticket.id" 
-          [usuariosEtiquetables]="taskResponsibleService.responsables">
+          [usuariosEtiquetables]="responsablesService.responsables">
         </app-bitacora>
       </div>
     </div>
@@ -341,3 +451,7 @@
   [imagenUrl]="urlVisorImagen"
   (closeEvent)="mostrarModalImagen = false">
 </app-modal-visor-imagenes>
+
+
+
+

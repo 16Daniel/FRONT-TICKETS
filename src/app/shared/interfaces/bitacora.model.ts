@@ -2,12 +2,12 @@ export interface Bitacora {
   id?: string;
   modulo: string; // Ej. 'TICKETS', 'PROYECTOS'
   referenciaId: string; // Ej. ID del ticket
-  tipo: 'COMENTARIO' | 'SISTEMA' | 'ADJUNTO';
+  tipo: 'COMENTARIO' | 'SISTEMA' | 'MITIGACION';
   contenido: string;
   
-  // Basado en ResponsableTarea
+  // Basado en Responsable
   autor: {
-    id: string; // id del ResponsableTarea
+    id: string; // id del Responsable
     nombre: string;
     correo?: string;
     color?: string;

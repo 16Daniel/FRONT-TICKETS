@@ -1,4 +1,4 @@
-export class ResponsableTarea {
+export class Responsable {
   id?: string;
   idSucursal: string = '';
   nombre: string = '';

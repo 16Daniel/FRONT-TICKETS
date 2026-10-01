@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
@@ -10,64 +9,70 @@ import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { AvatarModule } from 'ngx-avatars';
+import { CrearResponsableDialogComponent } from '../../dialogs/crear-responsable-dialog/crear-responsable-dialog.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../services/responsables.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Responsable } from '../../interfaces/responsable.interface';
+import { Usuario } from '../../interfaces/usuario.model';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
-  selector: 'app-modal-task-responsible',
+  selector: 'app-responsables-page',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    DialogModule,
     ButtonModule,
     TableModule,
     DropdownModule,
     ToastModule,
     AvatarModule,
-    InputSwitchModule
+    InputSwitchModule,
+    TooltipModule,
+    PageHeaderComponent,
+    CrearResponsableDialogComponent
   ],
   providers: [MessageService],
-  templateUrl: './responsables-tareas-dialog.component.html',
-  styleUrl: './responsables-tareas-dialog.component.scss'
+  templateUrl: './responsables-page.component.html',
+  styleUrl: './responsables-page.component.scss'
 })
-export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
-
-  @Input() mostrarModal = false;
-  @Output() closeEvent = new EventEmitter<boolean>();
+export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   branchesService = inject(BranchesService);
-  responsablesService = inject(TaskResponsibleService);
+  responsablesService = inject(ResponsablesService);
   messageService = inject(MessageService);
   cdr = inject(ChangeDetectorRef);
   mailService = inject(MailService);
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
-  responsables: ResponsableTarea[] = [];
+  responsables: Responsable[] = [];
   idSucursalSeleccionada: string | null = null;
 
   cargando = false;
   private subs = new Subscription();
-  nuevoResponsable: ResponsableTarea = new ResponsableTarea;
   usuario!: Usuario;
+  mostrarModalCrearResponsable = false;
+  
+  responsableSeleccionado: Responsable = new Responsable;
+  esNuevoResponsable: boolean = true;
 
   ngOnInit() {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
-    this.nuevoResponsable.idSucursal = this.usuario.sucursales[0].id;
-    // this.aplicarFiltro();
 
     this.subs.add(
       this.branchesService.get().subscribe({
         next: (data) => {
-          this.sucursales = data;
+          this.sucursales = [
+            { id: 'todos', nombre: 'TODAS LAS SUCURSALES' } as any,
+            ...data
+          ];
 
           this.sucursalesMap.clear();
           data.forEach(s =>
@@ -91,52 +96,22 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
   }
 
-  onHide = () => this.closeEvent.emit(false);
+  abrirModalCrearResponsable() {
+    this.esNuevoResponsable = true;
+    this.responsableSeleccionado = new Responsable;
+    this.responsableSeleccionado.idSucursal = this.idSucursalSeleccionada!;
+    this.responsableSeleccionado.color = '#1e1e24';
+    this.mostrarModalCrearResponsable = true;
+  }
 
-  async enviar(form: NgForm) {
-    if (form.invalid || this.cargando) return;
+  abrirModalEditarResponsable(res: Responsable) {
+    this.esNuevoResponsable = false;
+    this.responsableSeleccionado = { ...res };
+    this.mostrarModalCrearResponsable = true;
+  }
 
-    this.cargando = true;
-    try {
-      const existe = await this.responsablesService.correoExiste(
-        this.nuevoResponsable.correo
-      );
-
-      if (existe) {
-        await Swal.fire({
-          icon: 'warning',
-          title: 'Correo duplicado',
-          text: 'Este correo ya está registrado.',
-          confirmButtonColor: '#3085d6',
-          customClass: {
-            container: 'swal-topmost'
-          }
-        });
-
-        return;
-      }
-
-      const nuevoPin = await this.responsablesService.generarPinUnico();
-      this.nuevoResponsable.pin = nuevoPin;
-
-      this.enviarCorreo(this.nuevoResponsable, nuevoPin);
-
-      await this.responsablesService.create({ ...this.nuevoResponsable });
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Correcto',
-        detail: 'Responsable creado',
-      });
-
-      // await this.regenerarPin(this.nuevoResponsable);
-
-      form.resetForm({color: '#000'});
-      this.nuevoResponsable.color = '#000';
-      this.nuevoResponsable.idSucursal = this.idSucursalSeleccionada!;
-
-    } finally {
-      this.cargando = false;
-    }
+  alCerrarModalCrear(recargar: boolean) {
+    this.mostrarModalCrearResponsable = false;
   }
 
   onSucursalChange(id: string) {
@@ -145,27 +120,15 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
   }
 
   private aplicarFiltro() {
-    this.responsables =
-      this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada, false);
+    if (this.idSucursalSeleccionada === 'todos') {
+      this.verTodosResponsables();
+    } else {
+      this.responsables =
+        this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada, false);
+    }
   }
 
-  activarEdicion(res: any) {
-    res.editando = true;
-  }
-
-  async guardarCambios(res: any) {
-    res.editando = false;
-    if (!res.id) return;
-
-    await this.responsablesService.update(res, res.id);
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Actualizado',
-      detail: 'Cambios guardados'
-    });
-  }
-
-  async eliminar(res: ResponsableTarea) {
+  async eliminar(res: Responsable) {
     if (!res.id) return;
 
     const result = await Swal.fire({
@@ -175,7 +138,7 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#d33',
+      confirmButtonColor: '#d3152a',
       cancelButtonColor: '#6c757d',
       reverseButtons: true,
       customClass: {
@@ -214,12 +177,12 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
     const nuevoPin = await this.responsablesService.generarPinUnico();
     res.pin = nuevoPin;
 
-    this.guardarCambios(res);
+    await this.responsablesService.update(res, res.id);
+    this.showMessage('success', 'Actualizado', 'PIN regenerado');
     this.enviarCorreo(res, nuevoPin);
   }
 
-  enviarCorreo(responsable: ResponsableTarea, pin: string) {
-
+  enviarCorreo(responsable: Responsable, pin: string) {
     const request: EnviarCorreoRequest = {
       titulo: `Tu PIN ha sido generado`,
       body: this.generatePinEmailHtml(responsable.nombre, this.sucursalesMap.get(responsable.idSucursal)!, pin),
@@ -237,10 +200,6 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Genera el HTML para el envío de PIN por correo.
-   * Diseño optimizado para máxima compatibilidad en clientes de correo.
-   */
   generatePinEmailHtml(nombre: string, sucursal: string, pin: string): string {
     return `
     <!DOCTYPE html>
@@ -248,15 +207,14 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
     <head>
       <meta charset="utf-8">
       <style>
-        /* Estilos básicos para clientes que soportan bloques de estilo */
         .pin-text { font-family: 'Courier New', Courier, monospace !important; }
       </style>
     </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333333;">
-      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; margin: 40px auto; background-color: #ffffff; border: 1px solid #eeeeee; border-radius: 8px;">
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f6fa; color: #1e1e24;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; margin: 40px auto; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
 
         <tr>
-          <td align="center" style="padding: 30px 20px; background-color: #ff5500; border-radius: 8px 8px 0 0;">
+          <td align="center" style="padding: 30px 20px; background-color: #D3152A;">
             <h2 style="margin: 0; color: #ffffff; font-size: 22px; text-transform: uppercase; letter-spacing: 2px;">
               Seguridad de Acceso
             </h2>
@@ -268,22 +226,22 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
             <p style="font-size: 16px; line-height: 1.5; margin-top: 0;">
               Hola <strong>${nombre}</strong>,
             </p>
-            <p style="font-size: 15px; color: #666666; line-height: 1.5;">
+            <p style="font-size: 15px; color: #64748b; line-height: 1.5;">
               Este es tu código de acceso para el sistema de tickets en la sucursal: <br>
-              <span style="color: #333333; font-weight: bold;">${sucursal}</span>
+              <span style="color: #1e1e24; font-weight: bold;">${sucursal}</span>
             </p>
 
             <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 35px auto;">
               <tr>
-                <td align="center" style="background-color: #f1f5f9; border-radius: 6px; padding: 20px 35px;">
-                  <span class="pin-text" style="font-size: 36px; font-weight: bold; color: #ff5500; letter-spacing: 12px;">
+                <td align="center" style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 20px 35px;">
+                  <span class="pin-text" style="font-size: 36px; font-weight: bold; color: #D3152A; letter-spacing: 12px;">
                     ${pin}
                   </span>
                 </td>
               </tr>
             </table>
 
-            <p style="font-size: 13px; color: #999999; text-align: center; line-height: 1.4; margin-bottom: 0;">
+            <p style="font-size: 13px; color: #94a3b8; text-align: center; line-height: 1.4; margin-bottom: 0;">
               Por razones de seguridad, no compartas este código con nadie. <br>
               Si tú no realizaste este cambio, informa a tu supervisor de inmediato.
             </p>
@@ -306,41 +264,7 @@ export class ResponsablesTareasDialogComponent implements OnInit, OnDestroy {
   }
 
   verTodosResponsables() {
+    this.idSucursalSeleccionada = 'todos';
     this.responsables = this.responsablesService.responsables;
   }
-
-  async cambiarCorreo(res: ResponsableTarea, event: any) {
-    try {
-
-      res.correo = res.correo?.toLowerCase().trim();
-      const correoNuevo = event.target.value?.toLowerCase().trim();
-      if (!correoNuevo) return;
-
-      const existe = await this.responsablesService.correoExiste(correoNuevo);
-
-      const noEsMismoRegistro =
-        this.responsablesService.responsables
-          .find(r => r.correo === res.correo && r.id !== res.id);
-
-      if (existe && noEsMismoRegistro) {
-
-        await Swal.fire({
-          icon: 'warning',
-          title: 'Correo duplicado',
-          text: 'Este correo ya está registrado.',
-          customClass: {
-            container: 'swal-topmost'
-          }
-        });
-
-        return;
-      }
-
-      this.guardarCambios(res);
-    } catch (error) {
-      console.error(error);
-      this.showMessage('error', 'Error', 'No se pudo actualizar el correo');
-    }
-  }
-
 }

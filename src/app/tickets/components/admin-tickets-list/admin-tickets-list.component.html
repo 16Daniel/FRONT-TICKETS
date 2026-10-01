@@ -1,12 +1,12 @@
 <p-table *ngIf="usuariosHelp.length>0" [value]="tickets" [tableStyle]="{
     'min-width': '10rem'
   }" styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="65vh" selectionMode="single"
-    [(selection)]="ticketSeleccionado">
+    [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
     <ng-template pTemplate="header">
         <tr class="text-center">
-            <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA</th>
+            <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global"
+                tooltipPosition="top">SLA</th>
             <th>FECHA</th>
-            <!-- <th>AREA</th> -->
             <th>CATEGORÍA / RUTA</th>
             <th>ESTATUS</th>
             <th>SOLICITANTE</th>
@@ -25,9 +25,10 @@
                     <div class="fila-sla-matriz">
                         <!-- Mini Matriz 3x3 de Urgencia -->
                         <app-mini-matriz-urgencia [ticket]="tk" [categorias]="categorias"></app-mini-matriz-urgencia>
-                        
+
                         <!-- Gráfica Circular Dual SLA (Urgencia exterior + Resolución interior) -->
-                        <app-ticket-sla-gauge [ticket]="tk" [size]="44" [categorias]="categorias"></app-ticket-sla-gauge>
+                        <app-ticket-sla-gauge [ticket]="tk" [size]="44"
+                            [categorias]="categorias"></app-ticket-sla-gauge>
                     </div>
 
                     <div *ngIf="tk.esAsignadoEspecialista"
@@ -38,32 +39,10 @@
             </td>
             <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
             </td>
-            <!-- <td class="text-center">
-                <p-dropdown 
-                    [options]="areas" 
-                    [(ngModel)]="tk.idArea" 
-                    optionLabel="nombre" 
-                    [showClear]="false"
-                    optionValue="id" 
-                    [disabled]="true" 
-                    (onChange)="actualizaTicket(tk)" 
-                    styleClass="table-select-custom"
-                    appendTo="body">
-                    <ng-template pTemplate="selectedItem" let-selectedOption>
-                        <span>{{ selectedOption?.nombre }}</span>
-                    </ng-template>
-                    <ng-template let-dep pTemplate="item">
-                        <span>{{ dep.nombre }}</span>
-                    </ng-template>
-                </p-dropdown>
-            </td> -->
             <td class="celda-categoria-ruta text-start">
-                <button 
-                    type="button" 
-                    class="btn-categoria-ruta-chip"
-                    (click)="abrirModalCambiarCategoria(tk)"
-                    [pTooltip]="obtenerInfoRutaTicket(tk).ruta" 
-                    tooltipPosition="top">
+                <button type="button" class="btn-categoria-ruta-chip"
+                    (click)="abrirModalCambiarCategoria(tk); $event.stopPropagation()"
+                    [pTooltip]="obtenerInfoRutaTicket(tk).ruta" tooltipPosition="top">
                     <div class="categoria-chip-body">
                         <div class="categoria-chip-trail" *ngIf="obtenerInfoRutaTicket(tk).rutaPadres">
                             <i class="bx bx-folder"></i>
@@ -78,42 +57,22 @@
                 </button>
             </td>
             <td class="text-center">
-                <p-dropdown 
-                    [options]="estatusTicket" 
-                    [(ngModel)]="tk.idEstatusTicket" 
-                    optionLabel="nombre"
-                    [showClear]="false" 
-                    optionValue="id" 
-                    (onChange)="actualizarEstatus(tk, $event.value)" 
-                    styleClass="table-select-custom"
-                    appendTo="body">
-                    <ng-template pTemplate="selectedItem" let-selectedOption>
-                        <div class="d-flex align-items-center gap-1 justify-content-center">
-                            <i class="bx {{ selectedOption?.icon }} {{ selectedOption?.animation }}" [style.color]="selectedOption?.color"></i>
-                            <span>{{ selectedOption?.nombre }}</span>
-                        </div>
-                    </ng-template>
-                    <ng-template let-st pTemplate="item">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bx {{ st.icon }} {{ st.animation }}" [style.color]="st.color"></i>
-                            <span>{{ st.nombre }}</span>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
+                <div class="d-flex align-items-center justify-content-center gap-1"
+                    *ngIf="obtenerEstatusInfo(tk.idEstatusTicket) as st; else soloTexto">
+                    <i class="bx fs-5" [ngClass]="st.icon" [class]="st.animation" [style.color]="st.color"></i>
+                    <span class="fw-bold">{{ st.nombre }}</span>
+                </div>
+                <ng-template #soloTexto>
+                    <span class="badge bg-secondary">DESCONOCIDO</span>
+                </ng-template>
             </td>
             <td class="text-center">{{ tk.solicitante | uppercase }}</td>
             <td class="text-center">
                 {{ obtenerNombreResponsable(tk.idResponsable) | uppercase }}
             </td>
             <td class="text-center">
-                <p-dropdown 
-                    [options]="tiposSoporte" 
-                    [(ngModel)]="tk.idTipoSoporte" 
-                    optionLabel="name" 
-                    optionValue="id"
-                    [showClear]="false" 
-                    (onChange)="actualizaTicket(tk)" 
-                    styleClass="table-select-custom"
+                <p-dropdown [options]="tiposSoporte" [(ngModel)]="tk.idTipoSoporte" optionLabel="name" optionValue="id"
+                    [showClear]="false" (onChange)="actualizaTicket(tk)" styleClass="table-select-custom"
                     appendTo="body">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         <span>{{ selectedOption?.name || selectedOption?.nombre }}</span>
@@ -123,29 +82,16 @@
                     </ng-template>
                 </p-dropdown>
             </td>
-            <td *ngIf="mostrarAcciones">
+            <td>
                 <div class="d-flex justify-content-center align-items-center gap-2">
-                    <button class="btn-action-table btn-action-warning" (click)="onClickRechazar(tk)"
-                        *ngIf="mostrarAccionFinalizar && tk.idEstatusTicket == '7'" pTooltip="RECHAZAR SOPORTE" tooltipPosition="top">
-                        <i class="bx bx-undo"></i>
-                    </button>
-
-                    <button class="btn-action-table btn-action-admin" (click)="onClickValidacionAdmin(tk)"
-                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket == '3'" pTooltip="VALIDACIÓN ADMINISTRADOR" tooltipPosition="top">
+                    <button class="btn-action-table btn-action-admin"
+                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket == '3'" pTooltip="PENDIENTE VALIDACIÓN"
+                        tooltipPosition="top">
                         <i class="bx bxs-badge-check"></i>
                     </button>
 
-                    <button class="btn-action-table btn-action-warning" (click)="onClickValidar(tk)"
-                        *ngIf="mostrarAccionValidar && tk.idEstatusTicket != '7' && tk.idEstatusTicket != '3'" pTooltip="VALIDAR TICKET" tooltipPosition="top">
-                        <i class="bx bx-check-circle"></i>
-                    </button>
-                    
-                    
-                    
-                    <button class="btn-action-table btn-action-info" (click)="abrirModalDetalleTicket(tk)"
-                        pTooltip="DETALLES" tooltipPosition="top">
-                        <i class="bx bx-show"></i>
-                    </button>
+
+
                 </div>
             </td>
         </tr>
@@ -153,8 +99,7 @@
 </p-table>
 
 <!-- Modals -->
-<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
-    [ticket]="ticketAccion" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
+
 
 <app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
     (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>
@@ -163,16 +108,12 @@
     [showModalTicketDetail]="mostrarModalTicketDetail"
     (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
 
-<p-dialog 
-    header="CAMBIAR CATEGORÍA / RUTA" 
-    [modal]="true" 
-    [(visible)]="mostrarModalCambiarCategoria" 
-    [style]="{ width: '56rem', maxWidth: '95vw' }"
-    [maximizable]="true" 
-    (onHide)="cerrarModalCambiarCategoria()"
+<p-dialog header="CAMBIAR CATEGORÍA / RUTA" [modal]="true" [(visible)]="mostrarModalCambiarCategoria"
+    [style]="{ width: '56rem', maxWidth: '95vw' }" [maximizable]="true" (onHide)="cerrarModalCambiarCategoria()"
     styleClass="dialog-cambiar-categoria">
-    
-    <div class="mb-3 p-3 bg-light rounded border d-flex align-items-center justify-content-between flex-wrap gap-2" *ngIf="ticketEnCambioCategoria">
+
+    <div class="mb-3 p-3 bg-light rounded border d-flex align-items-center justify-content-between flex-wrap gap-2"
+        *ngIf="ticketEnCambioCategoria">
         <div>
             <span class="text-muted small d-block fw-bold text-uppercase">Ticket</span>
             <strong class="fs-6 text-dark">{{ ticketEnCambioCategoria.folio }}</strong>
@@ -186,13 +127,10 @@
         </div>
     </div>
 
-    <app-selector-arbol-categoria
-        *ngIf="mostrarModalCambiarCategoria && ticketEnCambioCategoria"
-        [idArea]="ticketEnCambioCategoria.idArea || idArea"
-        [categoriasExternas]="categorias"
+    <app-selector-arbol-categoria *ngIf="mostrarModalCambiarCategoria && ticketEnCambioCategoria"
+        [idArea]="ticketEnCambioCategoria.idArea || idArea" [categoriasExternas]="categorias"
         [idCategoriaInicial]="ticketEnCambioCategoria.idCategoria"
-        [idSubcategoriaInicial]="ticketEnCambioCategoria.idSubcategoria"
-        (alSeleccionar)="onSeleccionarEnModal($event)">
+        [idSubcategoriaInicial]="ticketEnCambioCategoria.idSubcategoria" (alSeleccionar)="onSeleccionarEnModal($event)">
     </app-selector-arbol-categoria>
 
     <ng-template pTemplate="footer">
@@ -206,10 +144,7 @@
                 <button type="button" class="btn btn-light px-3 py-2" (click)="cerrarModalCambiarCategoria()">
                     <i class="bx bx-x me-1"></i> Cancelar
                 </button>
-                <button 
-                    type="button" 
-                    class="btn btn-primary px-3 py-2" 
-                    [disabled]="!nuevaSeleccionCategoria"
+                <button type="button" class="btn btn-primary px-3 py-2" [disabled]="!nuevaSeleccionCategoria"
                     (click)="guardarNuevaCategoria()">
                     <i class="bx bx-check me-1"></i> Guardar Cambios
                 </button>

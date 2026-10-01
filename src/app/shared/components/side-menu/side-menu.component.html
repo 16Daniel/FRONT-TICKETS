@@ -131,6 +131,15 @@
       </a>
 
       <a 
+        [routerLink]="'/main/responsables'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-key nav-icon"></i>
+        <span class="nav-label">Responsables PIN</span>
+      </a>
+
+      <a 
         [routerLink]="'/main/roles'" 
         routerLinkActive="active"
         *ngIf="usuario.idRol == '1'" 
@@ -177,6 +186,15 @@
       <span class="nav-group-title">Operaciones</span>
 
       <a 
+        [routerLink]="'/main/tareas'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-check-square nav-icon"></i>
+        <span class="nav-label">Tareas</span>
+      </a>
+      
+      <a 
         [routerLink]="'/main/fixed-assets'" 
         routerLinkActive="active"
         *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.id == 'pclOBh7sMdziimACOc1w' || usuario.id =='WO0CbRub7FecMua3n7BV'" 
@@ -203,15 +221,6 @@
         class="nav-item">
         <i class="bx bx-group nav-icon"></i>
         <span class="nav-label">Comensales</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/tareas'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-check-square nav-icon"></i>
-        <span class="nav-label">Tareas</span>
       </a>
 
       <a 
@@ -268,6 +277,7 @@
     <!-- Grupo: Personal y Nómina -->
     <div class="nav-group">
       <span class="nav-group-title">Personal y Nómina</span>
+
 
       <a 
         [routerLink]="'/nomina/control-de-personal'" 

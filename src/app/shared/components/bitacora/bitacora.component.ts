@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -9,14 +9,18 @@ import { EditorModule } from 'primeng/editor';
 
 import { Bitacora } from '../../interfaces/bitacora.model';
 import { BitacoraService } from '../../services/bitacora.service';
-import { ResponsableTarea } from '../../../tareas/interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { DatesHelperService } from '../../helpers/dates-helper.service';
 import { MentionUtils } from '../../utils/mention.utils';
+import { FirebaseStorageService } from '../../services/firebase-storage.service';
+import { FileUtils } from '../../utils/file.utils';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
+import MagicUrl from 'quill-magic-url';
 
 Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
+Quill.register('modules/magicUrl', MagicUrl);
 @Component({
   selector: 'app-bitacora',
   standalone: true,
@@ -27,14 +31,19 @@ Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
 export class BitacoraComponent implements OnInit, OnDestroy {
   @Input() modulo!: string;
   @Input() referenciaId!: string;
-  @Input() usuariosEtiquetables: ResponsableTarea[] = [];
+  @Input() usuariosEtiquetables: Responsable[] = [];
   
   // Usuario actual (simulado o inyectado después)
-  @Input() usuarioActual!: ResponsableTarea;
+  @Input() usuarioActual!: Responsable;
 
   bitacoras: Bitacora[] = [];
   nuevoMensaje: string = '';
   cargando: boolean = true;
+  
+  archivosSeleccionados: File[] = [];
+  subiendoArchivos: boolean = false;
+  
+  fileUtils = FileUtils;
   
   // Configuración de módulos de Quill
   editorModules = {
@@ -84,14 +93,17 @@ export class BitacoraComponent implements OnInit, OnDestroy {
         div.innerHTML = avatarStr;
         return div;
       }
-    }
+    },
+    magicUrl: true
   };
 
   private sub: Subscription | null = null;
 
   constructor(
     private bitacoraService: BitacoraService,
-    public datesHelper: DatesHelperService
+    public datesHelper: DatesHelperService,
+    private firebaseStorage: FirebaseStorageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -119,16 +131,41 @@ export class BitacoraComponent implements OnInit, OnDestroy {
           // Invertimos el arreglo para mostrar los más recientes primero (descendente)
           this.bitacoras = data ? data.slice().reverse() : [];
           this.cargando = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error al cargar bitácora:', err);
           this.cargando = false;
+          this.cdr.detectChanges();
         }
       });
   }
 
-  enviarComentario() {
-    if (!this.nuevoMensaje || this.nuevoMensaje.trim() === '') return;
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const nuevosArchivos = Array.from(input.files);
+      nuevosArchivos.forEach(file => {
+        this.archivosSeleccionados.push(file);
+      });
+      // Limpiar input para permitir seleccionar el mismo archivo de nuevo si se removió
+      input.value = '';
+    }
+  }
+
+  removerArchivo(index: number) {
+    this.archivosSeleccionados.splice(index, 1);
+  }
+
+  async enviarComentario() {
+    // Si no hay mensaje pero hay archivos, podemos permitir enviarlo (o requerir mensaje, depende). 
+    // Lo común es requerir mensaje O archivos.
+    const tieneMensaje = this.nuevoMensaje && this.nuevoMensaje.trim() !== '';
+    const tieneArchivos = this.archivosSeleccionados.length > 0;
+    
+    if (!tieneMensaje && !tieneArchivos) return;
+    
+    this.subiendoArchivos = true;
     
     // Obtener el responsable actual
     const currentId = this.usuarioActual?.id || 'default';
@@ -141,7 +178,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
       modulo: this.modulo,
       referenciaId: this.referenciaId,
       tipo: 'COMENTARIO',
-      contenido: this.nuevoMensaje,
+      contenido: this.nuevoMensaje || '', // Puede ir vacío si solo manda archivo
       autor: {
         id: currentId,
         nombre: currentName,
@@ -151,8 +188,26 @@ export class BitacoraComponent implements OnInit, OnDestroy {
       usuariosEtiquetados: usuariosEtiquetados
     };
 
-    this.bitacoraService.addEntrada(nuevaBitacora).then(() => {
+    try {
+      if (tieneArchivos) {
+        // Usamos el servicio de Firebase Storage para subir y obtener las URLs
+        // (Reutilizamos cargarArchivosTicket, que los guarda en tickets/evidencias)
+        const archivosSubidos = await this.firebaseStorage.cargarArchivosTicket(this.archivosSeleccionados);
+        nuevaBitacora.archivos = archivosSubidos;
+      }
+
+      await this.bitacoraService.addEntrada(nuevaBitacora);
+      
+      // Limpiar después de enviar
       this.nuevoMensaje = '';
-    });
+      this.archivosSeleccionados = [];
+      this.subiendoArchivos = false;
+      this.cdr.detectChanges();
+      
+    } catch (error) {
+      console.error('Error al enviar comentario con archivos:', error);
+      this.subiendoArchivos = false;
+      this.cdr.detectChanges();
+    }
   }
 }

@@ -5,16 +5,16 @@
     <tr class="text-center">
       <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global" tooltipPosition="top">SLA</th>
       <th>{{ mostrarFechaSolicitud ? 'FECHA DE SOLICITUD' : 'FECHA' }}</th>
+      <th>ESTATUS</th>
       <th *ngIf="mostrarFechaTermino">FECHA DE TERMINO</th>
-      <th>AREA</th>
+      <th>FOLIO</th>
       <th *ngIf="esEspectadorActivo || mostrarSucursal">SUCURSAL</th>
       <th>SOLICITANTE</th>
       <th>RESPONSABLE</th>
       <th>CATEGORÍA / RUTA</th>
       <th *ngIf="mostrarDescripcion">DESCRIPCIÓN</th>
-      <th>ESTATUS</th>
       <th *ngIf="mostrarEstrellas">CALIFICACIÓN</th>
-      <th *ngIf="mostrarAcciones">ACCIONES</th>
+      <th *ngIf="usuario?.idRol == '2'"></th>
     </tr>
   </ng-template>
 
@@ -51,12 +51,22 @@
         </div>
       </td>
 
+      <td class="text-center">
+        <div class="d-flex align-items-center justify-content-center gap-1" *ngIf="obtenerEstatusInfo(ticket.idEstatusTicket) as st; else soloTexto">
+          <i class="bx fs-5" [ngClass]="st.icon" [class]="st.animation" [style.color]="st.color"></i>
+          <span class="fw-bold">{{ st.nombre }}</span>
+        </div>
+        <ng-template #soloTexto>
+          <span class="badge bg-secondary">{{ obtenerNombreEstatusTicket(ticket.idEstatusTicket) | uppercase }}</span>
+        </ng-template>
+      </td>
+
       <td class="text-center" *ngIf="mostrarFechaTermino">
         {{ ticket.fechaFin ? (getDate(ticket.fechaFin) | date: 'dd/MM/yyyy hh:mm a') : 'N/A' }}
       </td>
       
-      <td class="text-center">
-        {{ obtenerNombreArea(ticket.idArea) }}
+      <td class="text-center fw-bold">
+        #{{ ticket.folio }}
       </td>
       
       <td class="text-center" *ngIf="esEspectadorActivo || mostrarSucursal">
@@ -66,7 +76,7 @@
       <td class="text-center fw-bold">{{ ticket.solicitante | uppercase }}</td>
       
       <td class="text-center text-muted">
-        {{ obtenerNombreResponsable(ticket!.idResponsableFinaliza) }}
+        {{ obtenerNombreResponsable(ticket!.idResponsable) | uppercase }}
       </td>
       
       <td class="text-center">
@@ -80,52 +90,23 @@
         {{ ticket.descripcion }}
       </td>
       
-      <td class="text-center">
-        <div class="d-flex align-items-center justify-content-center gap-1" *ngIf="obtenerEstatusInfo(ticket.idEstatusTicket) as st; else soloTexto">
-          <i class="bx fs-5" [ngClass]="st.icon" [class]="st.animation" [style.color]="st.color"></i>
-          <span class="fw-bold">{{ st.nombre }}</span>
-        </div>
-        <ng-template #soloTexto>
-          <span class="badge bg-secondary">{{ obtenerNombreEstatusTicket(ticket.idEstatusTicket) | uppercase }}</span>
-        </ng-template>
-      </td>
-
       <td *ngIf="mostrarEstrellas" class="text-center">
         <app-rating-stars [rating]="ticket.calificacionSucursal" [editable]="false"></app-rating-stars>
       </td>
 
-      <!-- Action Buttons homologated to btn-action-table -->
-      <td class="text-center" *ngIf="mostrarAcciones">
-        <div class="d-flex align-items-center justify-content-center gap-2">
-          
-          <button class="btn-action-table btn-action-success" (click)="onClickFinalizar(ticket)"
-            [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar" pTooltip="FINALIZAR TICKET" tooltipPosition="top">
-            <i class="bx bx-check-circle"></i>
-          </button>
-          
-          <button class="btn-action-table btn-action-warning" (click)="onClickRechazar(ticket)"
-            [disabled]="esEspectadorActivo" *ngIf="mostrarAccionFinalizar && ticket.idEstatusTicket == '7'" pTooltip="RECHAZAR SOPORTE" tooltipPosition="top">
-            <i class="bx bx-undo"></i>
-          </button>
-          
-          <button class="btn-action-table btn-action-success" (click)="onClickValidar(ticket)"
-            [disabled]="esEspectadorActivo" *ngIf="mostrarAccionValidar && ticket.idEstatusTicket != '7'" pTooltip="VALIDAR TICKET" tooltipPosition="top">
-            <i class="bx bx-check-double"></i>
-          </button>
-          
-          
-
+      <td *ngIf="usuario?.idRol == '2'">
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <button class="btn-action-table btn-action-warning"
+                *ngIf="ticket.idEstatusTicket == '7'" pTooltip="PENDIENTE VALIDACIÓN" tooltipPosition="top">
+                <i class="bx bxs-badge-check"></i>
+            </button>
         </div>
       </td>
     </tr>
   </ng-template>
 </p-table>
 
-<app-modal-finalize-ticket *ngIf="showModalFinalizeTicket" [showModalFinalizeTicket]="showModalFinalizeTicket"
-  [ticket]="ticketAccion" (closeEvent)="showModalFinalizeTicket = false"></app-modal-finalize-ticket>
 
-<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
-  [ticket]="ticketAccion" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
 
 <app-modal-ticket-chat *ngIf="showModalChatTicket" [showModalChatTicket]="showModalChatTicket" [ticket]="ticketAccion"
   (closeEvent)="showModalChatTicket = false"></app-modal-ticket-chat>

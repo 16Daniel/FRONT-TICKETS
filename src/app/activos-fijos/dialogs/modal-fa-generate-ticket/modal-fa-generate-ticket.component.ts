@@ -33,13 +33,17 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
 import { SelectorArbolCategoriaComponent } from '../../../tickets/components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
-import { TaskResponsibleService } from '../../../tareas/services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
 import { MentionUtils } from '../../../shared/utils/mention.utils';
+import MagicUrl from 'quill-magic-url';
+import { BitacoraService } from '../../../shared/services/bitacora.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
+Quill.register('modules/magicUrl', MagicUrl);
 
 @Component({
   selector: 'app-modal-fa-generate-ticket',
@@ -78,7 +82,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
           return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
         };
 
-        const responsables = this.taskResponsibleService.responsables;
+        const responsables = this.responsablesService.responsables;
         const values = responsables.map(u => ({ 
           id: u.id, 
           value: u.nombre,
@@ -113,7 +117,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
         div.innerHTML = avatarStr;
         return div;
       }
-    }
+    },
+    magicUrl: true
   };
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
@@ -135,7 +140,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
     private firebaseStorage: FirebaseStorageService,
-    public taskResponsibleService: TaskResponsibleService
+    public responsablesService: ResponsablesService,
+    private bitacoraService: BitacoraService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -313,7 +319,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
       this.firebaseStorage.cargarArchivosTicket(this.archivos)
         .then(async urls => {
           this.ticket.archivos = urls;
-          await this.ticketsService.create({ ...this.ticket });
+          const ticketId = await this.ticketsService.create({ ...this.ticket });
+          await this.registrarBitacoraSistema(ticketId, folio);
           await this.ticketsService.incrementarContadorTickets();
           Swal.close();
           Swal.fire('OK', 'TICKET CREADO!', 'success');
@@ -323,19 +330,43 @@ export class ModalFaGenerateTicketComponent implements OnInit {
           console.error('Error al subir una o más imágenes:', err);
           this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
           await this.ticketsService.incrementarContadorTickets();
-          await this.ticketsService.create({ ...this.ticket });
+          const ticketId = await this.ticketsService.create({ ...this.ticket });
+          await this.registrarBitacoraSistema(ticketId, folio);
           Swal.close();
           Swal.fire('OK', 'TICKET CREADO!', 'success');
           this.closeEvent.emit();
         });
     } else {
       this.ticket.archivos = [];
-      await this.ticketsService.create({ ...this.ticket });
+      const ticketId = await this.ticketsService.create({ ...this.ticket });
+      await this.registrarBitacoraSistema(ticketId, folio);
       await this.ticketsService.incrementarContadorTickets();
       Swal.close();
       Swal.fire('OK', 'TICKET CREADO!', 'success');
       this.closeEvent.emit();
     }
+  }
+
+  async registrarBitacoraSistema(ticketId: string, folio: string): Promise<void> {
+    let responsable: any = null;
+    const rawResp = localStorage.getItem('responsable-tareas');
+    if (rawResp) {
+      responsable = JSON.parse(rawResp);
+    }
+
+    const bitacoraEntry: any = {
+      modulo: 'TICKETS',
+      referenciaId: ticketId,
+      tipo: 'SISTEMA',
+      contenido: `Ticket creado con folio ${folio}`,
+      autor: {
+        id: responsable?.id || 'SISTEMA',
+        nombre: responsable?.nombre || 'Sistema',
+        color: responsable?.color || '#94a3b8'
+      },
+      fechaCreacion: Timestamp.now()
+    };
+    await this.bitacoraService.addEntrada(bitacoraEntry);
   }
 
   obtenerTipoSoporte(idArea: string): string {

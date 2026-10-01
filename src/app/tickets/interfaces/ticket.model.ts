@@ -34,7 +34,7 @@ export class Ticket {
   archivos?: { url: string; nombre: string; tipo: string; }[] = [];
   folio: string = '';
 
-  comentariosFinalesSucursal?: string | null;
+
   calificacionSucursal: number = 0;
   calificacionAnalista: number = 0;
 

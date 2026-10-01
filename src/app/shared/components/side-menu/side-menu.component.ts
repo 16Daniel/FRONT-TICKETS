@@ -12,7 +12,7 @@ import { DocumentsService } from '../../services/documents.service';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
-import { ResponsableTarea } from '../../../tareas/interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { AvatarModule } from 'ngx-avatars';
 import { VersionControlService } from '../../../versiones/services/version-control.service';
 
@@ -43,7 +43,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   isCheckingValidadorConsumos: boolean = false;
   isCheckingValidadorCupones: boolean = false;
 
-  responsableTarea: ResponsableTarea | null = null;
+  responsableTarea: Responsable | null = null;
   versionActual: any;
 
   constructor(

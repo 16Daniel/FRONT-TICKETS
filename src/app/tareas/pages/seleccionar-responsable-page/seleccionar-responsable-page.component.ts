@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { CommonModule } from '@angular/common';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Router } from '@angular/router';
 import { AvatarModule } from 'ngx-avatars';
@@ -17,10 +17,10 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './seleccionar-responsable-page.component.scss'
 })
 export default class SeleccionarResponsablePageComponent implements OnInit {
-  taskResponsibleService = inject(TaskResponsibleService);
+  responsablesService = inject(ResponsablesService);
 
-  responsableActivoSeleccionado?: ResponsableTarea | any;
-  resposablesDeSucursal: ResponsableTarea[] = [];
+  responsableActivoSeleccionado?: Responsable | any;
+  resposablesDeSucursal: Responsable[] = [];
   usuario!: Usuario;
   idSucursalSeleccionada: string = '';
 
@@ -39,8 +39,8 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
 
-    this.taskResponsibleService.responsables$.subscribe(() => {
-      this.resposablesDeSucursal = this.taskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada, false);
+    this.responsablesService.responsables$.subscribe(() => {
+      this.resposablesDeSucursal = this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada, false);
     });
   }
 
@@ -50,7 +50,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
     }, 0);
   }
 
-  onPinValidado(responsable: ResponsableTarea) {
+  onPinValidado(responsable: Responsable) {
     localStorage.setItem('responsable-tareas', JSON.stringify(responsable));
     this.router.navigate(['/main/home-a']);
   }
@@ -69,7 +69,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
   validarPin() {
     if (this.pinIngresado.length !== 4) return;
 
-    const responsable = this.taskResponsibleService.buscarPorPin(this.pinIngresado);
+    const responsable = this.responsablesService.buscarPorPin(this.pinIngresado);
 
     if (!responsable) {
       this.errorPin = 'PIN incorrecto';

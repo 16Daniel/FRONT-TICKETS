@@ -1,0 +1,88 @@
+<p-dialog [header]="esNuevo ? 'CREAR RESPONSABLE' : 'EDITAR RESPONSABLE'" [(visible)]="mostrarModal"
+    [modal]="true" [style]="{ 'width': '800px', 'max-width': '95vw' }" [maximizable]="true" (onHide)="onHide()"
+    styleClass="dialog-modern">
+    <form #form="ngForm" (ngSubmit)="enviar(form)" class="mt-3">
+        
+        <div class="row gy-4">
+            <div class="col-12 col-md-6">
+                <label class="rw-form-label">Nombre</label>
+                <input class="form-control rw-input" type="text" placeholder="Escribe el nombre"
+                    [(ngModel)]="responsable.nombre" name="nombre"
+                    [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
+                    required minlength="3" maxlength="50">
+                <small *ngIf="formNombreCtrl.errors?.['required'] && formNombreCtrl.touched" class="p-error d-block mt-1">
+                    Campo requerido.
+                </small>
+                <small *ngIf="formNombreCtrl.errors?.['minlength'] && formNombreCtrl.touched" class="p-error d-block mt-1">
+                    Mínimo 3 caracteres.
+                </small>
+            </div>
+            
+            <div class="col-12 col-md-6">
+                <label class="rw-form-label">Posición / Puesto</label>
+                <input class="form-control rw-input" type="text" placeholder="Ej. Gerente"
+                    [(ngModel)]="responsable.posicion" name="posicion"
+                    [ngClass]="{'p-invalid': formPosicionCtrl.invalid && formPosicionCtrl.touched}"
+                    #formPosicionCtrl="ngModel" required minlength="2" maxlength="50">
+                <small *ngIf="formPosicionCtrl.errors?.['required'] && formPosicionCtrl.touched" class="p-error d-block mt-1">
+                    Campo requerido.
+                </small>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="rw-form-label">Correo Electrónico</label>
+                <input class="form-control rw-input" type="email" placeholder="correo@operamx.com"
+                    [(ngModel)]="responsable.correo" name="correo"
+                    [ngClass]="{'p-invalid': formCorreoCtrl.invalid && formCorreoCtrl.touched}" #formCorreoCtrl="ngModel"
+                    required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                <small *ngIf="formCorreoCtrl.errors?.['required'] && formCorreoCtrl.touched" class="p-error d-block mt-1">
+                    Campo requerido.
+                </small>
+                <small *ngIf="formCorreoCtrl.errors?.['pattern'] && formCorreoCtrl.touched" class="p-error d-block mt-1">
+                    Correo electrónico inválido.
+                </small>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="rw-form-label">Sucursal</label>
+                <p-dropdown [options]="sucursales" [(ngModel)]="responsable.idSucursal" name="sucursal" optionValue="id" optionLabel="nombre"
+                    [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Selecciona sucursal"
+                    [style]="{width:'100%'}" #formSucursalCtrl="ngModel" styleClass="rw-dropdown" appendTo="body"
+                    [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required>
+                </p-dropdown>
+                <small *ngIf="formSucursalCtrl.invalid && formSucursalCtrl.touched" class="p-error d-block mt-1">
+                    Campo requerido.
+                </small>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0; height: 100%;">
+                    <div class="form-check form-switch m-0 d-flex align-items-center gap-3">
+                        <input class="form-check-input m-0" type="checkbox" role="switch" id="esGlobalSwitch"
+                            style="width: 3.5rem; height: 2rem; cursor: pointer;" name="esGlobal"
+                            [(ngModel)]="responsable.esGlobal">
+                        <label class="form-check-label rw-form-label m-0" for="esGlobalSwitch" style="cursor: pointer; margin-bottom: 0 !important; margin-top: 0;">¿ES GLOBAL?</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0; height: 100%;">
+                    <label class="rw-form-label m-0" style="margin-bottom: 0 !important;">COLOR DE IDENTIFICACIÓN</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <ngx-avatars [name]="responsable.nombre || ' '" [size]="42" [bgColor]="responsable.color"></ngx-avatars>
+                        <input type="color" class="form-control form-control-color p-0 border-0" style="height: 42px; width: 42px; cursor: pointer; border-radius: 8px;" [(ngModel)]="responsable.color" name="color" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">
+            <button type="submit" class="btn-rw-cta" [disabled]="form.invalid || cargando">
+                <i class='bx' [ngClass]="esNuevo ? 'bx-check-circle' : 'bx-save'"></i>
+                <span>{{ esNuevo ? 'AGREGAR RESPONSABLE' : 'GUARDAR CAMBIOS' }}</span>
+            </button>
+        </div>
+
+    </form>
+</p-dialog>

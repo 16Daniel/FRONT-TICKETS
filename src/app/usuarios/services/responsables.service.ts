@@ -12,24 +12,24 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { ResponsableTarea } from '../interfaces/responsable-tarea.interface';
+import { Responsable } from '../interfaces/responsable.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TaskResponsibleService {
+export class ResponsablesService {
 
-  private pathName = 'cat_responsables_tarea';
+  private pathName = 'responsables';
 
-  private _responsables: ResponsableTarea[] = [];
-  private _responsablesSubject = new BehaviorSubject<ResponsableTarea[]>([]);
-  public responsables$: Observable<ResponsableTarea[]> =
+  private _responsables: Responsable[] = [];
+  private _responsablesSubject = new BehaviorSubject<Responsable[]>([]);
+  public responsables$: Observable<Responsable[]> =
     this._responsablesSubject.asObservable();
 
   private _unsubscribe: (() => void) | null = null;
   private _loaded = false;
 
-  public get responsables(): ResponsableTarea[] {
+  public get responsables(): Responsable[] {
     return this._responsables;
   }
 
@@ -46,7 +46,7 @@ export class TaskResponsibleService {
     this._unsubscribe = onSnapshot(q, (querySnapshot) => {
       this._responsables = querySnapshot.docs.map(docSnap => ({
         id: docSnap.id,
-        ...(docSnap.data() as Omit<ResponsableTarea, 'id'>),
+        ...(docSnap.data() as Omit<Responsable, 'id'>),
       }));
 
       this._responsablesSubject.next(this._responsables);
@@ -54,14 +54,14 @@ export class TaskResponsibleService {
     });
   }
 
-  async create(responsable: ResponsableTarea): Promise<string> {
+  async create(responsable: Responsable): Promise<string> {
     const ref = collection(this.firestore, this.pathName);
     const docRef = await addDoc(ref, responsable);
     return docRef.id;
   }
 
   async update(
-    responsable: Partial<ResponsableTarea>,
+    responsable: Partial<Responsable>,
     idResponsable: string
   ): Promise<void> {
     const documentRef = doc(
@@ -94,7 +94,7 @@ export class TaskResponsibleService {
   public filtrarPorSucursal(
     idSucursal: string | null,
     globales: boolean = true
-  ): ResponsableTarea[] {
+  ): Responsable[] {
     if (!idSucursal) return [];
 
     return this._responsables.filter(
@@ -104,13 +104,13 @@ export class TaskResponsibleService {
     );
   }
 
-  public filtrarGlobales(): ResponsableTarea[] {
+  public filtrarGlobales(): Responsable[] {
     return this._responsables.filter(
       r => r.esGlobal === true
     );
   }
 
-  public buscarPorPin(pin: string): ResponsableTarea | null {
+  public buscarPorPin(pin: string): Responsable | null {
     if (!pin) return null;
 
     return (

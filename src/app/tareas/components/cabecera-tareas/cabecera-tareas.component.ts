@@ -5,13 +5,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 
-import { TaskResponsibleService } from '../../services/task-responsible.service';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasArchivadasDialogComponent } from '../../dialogs/tareas-archivadas-dialog/tareas-archivadas-dialog.component';
 import { EtiquetasTareaDialogComponent } from '../../dialogs/etiquetas-tarea-dialog/etiquetas-tarea-dialog.component';
 import { CrearTareaDialogComponent } from '../../dialogs/crear-tarea-dialog/crear-tarea-dialog.component';
-import { ResponsablesTareasDialogComponent } from '../../dialogs/responsables-tareas-dialog/responsables-tareas-dialog.component';
 import { BusquedaTareasDialogComponent } from '../../dialogs/busqueda-tareas-dialog/busqueda-tareas-dialog.component';
 import { Tarea } from '../../interfaces/tarea.interface';
 
@@ -23,7 +22,6 @@ import { Tarea } from '../../interfaces/tarea.interface';
     FormsModule,
     DropdownModule,
     ButtonModule,
-    ResponsablesTareasDialogComponent,
     TareasArchivadasDialogComponent,
     EtiquetasTareaDialogComponent,
     CrearTareaDialogComponent,
@@ -39,7 +37,7 @@ export class CabeceraTareasComponent {
   @Input() etiquetas: any[] = [];
   @Input() sucursalSeleccionadaNombre?: string;
   @Input() idSucursalSeleccionada!: string;
-  @Input() responsables: ResponsableTarea[] = [];
+  @Input() responsables: Responsable[] = [];
 
   idEtiquetaSeleccionada!: string;
   idResponsableSeleccionado!: string;
@@ -57,23 +55,22 @@ export class CabeceraTareasComponent {
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
 
   tipoTablero: 'TABLERO SUCURSALES' | 'TABLERO RESPONSABLES' | 'MI TABLERO' = 'MI TABLERO';
-  responsablesGlobalesOrdenados: ResponsableTarea[] = [];
+  responsablesGlobalesOrdenados: Responsable[] = [];
   mostrarResponsables: boolean = false;
   mostrarModalEtiquetas = false;
-  mostrarModalResponsables = false;
   mostrarModalArchivados = false;
   mostrarModalNuevaTarea = false;
   mostrarModalBusqueda = false;
   mostrarProyectos = false;
   mostrarGant = false;
   usuario!: Usuario;
-  taskResponsibleService = inject(TaskResponsibleService);
+  responsablesService = inject(ResponsablesService);
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.mostrarResponsables = this.usuario.sucursales.filter(x => x.nombre === 'SISTEMAS').length > 0;
 
-    this.taskResponsibleService.responsables$.subscribe(() => {
+    this.responsablesService.responsables$.subscribe(() => {
       // this.actualizarResponsables();
     });
   }
@@ -109,11 +106,11 @@ export class CabeceraTareasComponent {
   // private actualizarResponsables(): void {
   //   debugger
   //   if (this.tipoTablero === 'TABLERO RESPONSABLES') {
-  //     this.taskResponsibleService.filtrarGlobales()
+  //     this.responsablesService.filtrarGlobales()
   //   }
 
   //   if (this.tipoTablero === 'TABLERO SUCURSALES') {
-  //     this.taskResponsibleService.filtrarPorSucursal(this.idSucursalSeleccionada);
+  //     this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada);
   //   }
   // }
 
