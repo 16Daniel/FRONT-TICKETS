@@ -10,6 +10,6 @@
 
 </p-dialog>
 
-<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
+<app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
     [showModalTicketDetail]="mostrarModalTicketDetail"
-    (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+    (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>

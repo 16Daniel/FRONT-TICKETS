@@ -12,7 +12,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 
 import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
-import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
@@ -46,7 +46,7 @@ import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz
 
     ModalTicketChatComponent,
     ConfirmDialogModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     TooltipModule,
     CalendarModule,
     DialogModule,

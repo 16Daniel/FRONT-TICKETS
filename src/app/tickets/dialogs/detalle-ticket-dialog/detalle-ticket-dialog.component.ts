@@ -37,7 +37,7 @@ import { BitacoraService } from '../../../shared/services/bitacora.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-modal-ticket-detail',
+  selector: 'app-detalle-ticket-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -57,10 +57,10 @@ import { Subscription } from 'rxjs';
     DropdownModule
   ],
   providers: [],
-  templateUrl: './modal-ticket-detail.component.html',
-  styleUrl: './modal-ticket-detail.component.scss',
+  templateUrl: './detalle-ticket-dialog.component.html',
+  styleUrl: './detalle-ticket-dialog.component.scss',
 })
-export class ModalTicketDetailComponent implements OnInit, OnDestroy {
+export class DetalleTicketDialogComponent implements OnInit, OnDestroy {
   @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();

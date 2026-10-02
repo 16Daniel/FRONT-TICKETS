@@ -6,7 +6,7 @@ import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 
 import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
-import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalMaintenanceDetailComponent } from '../systems/modal-maintenance-detail/modal-maintenance-detail.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -30,7 +30,7 @@ import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-m
     RequesterTicketsListComponent,
     TablaMantenimientosSistemasComponent,
     EditorModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     ModalMaintenanceDetailComponent,
     TablaMantenimientosAudioVideoComponent,
     TablaMantenimientosMantenimientoComponent,

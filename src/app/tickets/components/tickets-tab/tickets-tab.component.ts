@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalFilterTicketsComponent } from '../../dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
@@ -47,7 +47,7 @@ import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-t
     ConfirmDialogModule,
     CommonModule,
     CrearTicketDialogComponent,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     ModalFilterTicketsComponent,
     HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,

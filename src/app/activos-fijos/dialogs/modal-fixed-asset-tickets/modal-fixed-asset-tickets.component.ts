@@ -5,13 +5,13 @@ import { DialogModule } from 'primeng/dialog';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { RequesterTicketsListComponent } from '../../../tickets/components/requester-tickets-list/requester-tickets-list.component';
-import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 
 @Component({
   selector: 'app-modal-fixed-asset-tickets',
   standalone: true,
-  imports: [CommonModule, DialogModule, RequesterTicketsListComponent, ModalTicketDetailComponent],
+  imports: [CommonModule, DialogModule, RequesterTicketsListComponent, DetalleTicketDialogComponent],
   templateUrl: './modal-fixed-asset-tickets.component.html',
   styleUrl: './modal-fixed-asset-tickets.component.scss'
 })

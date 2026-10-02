@@ -6,7 +6,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
@@ -39,7 +39,7 @@ import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-t
     ConfirmDialogModule,
     CommonModule,
     CrearTicketDialogComponent,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     ModalFilterTicketsComponent,
     HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,
