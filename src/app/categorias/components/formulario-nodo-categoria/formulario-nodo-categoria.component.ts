@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 import { EventoSeleccionMatriz } from '../../interfaces/evento-seleccion-matriz.interface';

@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { FolioGeneratorService } from '../../services/folio-generator.service';

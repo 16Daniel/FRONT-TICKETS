@@ -12,7 +12,7 @@ import { GraficaGeneralTicketsComponent } from '../../components/grafica-general
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { AceiteService } from '../../../aceites/services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

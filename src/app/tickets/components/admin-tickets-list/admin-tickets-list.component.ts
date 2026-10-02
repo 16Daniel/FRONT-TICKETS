@@ -16,7 +16,7 @@ import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialo
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
-import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';

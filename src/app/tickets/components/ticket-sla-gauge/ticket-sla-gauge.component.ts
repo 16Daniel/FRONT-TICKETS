@@ -4,7 +4,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 import { Ticket } from '../../interfaces/ticket.model';
 import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
-import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { obtenerTiempoSla } from '../../helpers/matriz-criticidad.helper';
 import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';

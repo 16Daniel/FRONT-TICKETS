@@ -35,7 +35,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
-import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { CategoriesService } from '../../../categorias/services/categories.service';
 
 @Component({

@@ -15,7 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Ticket } from '../../interfaces/ticket.model';
 import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
-import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { CategoriesService } from '../../../categorias/services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';

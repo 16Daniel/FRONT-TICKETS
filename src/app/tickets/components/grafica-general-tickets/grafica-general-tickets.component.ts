@@ -7,7 +7,7 @@ import { TagModule } from 'primeng/tag';
 
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
