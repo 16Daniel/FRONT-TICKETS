@@ -18,11 +18,11 @@ import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialo
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticket-sla-gauge.component';
-import { MiniMatrizUrgenciaComponent } from '../../components/mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
 import { SupportTypesService } from '../../services/support-types.service';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { UsersService } from '../../../usuarios/services/users.service';

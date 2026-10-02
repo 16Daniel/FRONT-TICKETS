@@ -12,14 +12,14 @@ import { GraficaGeneralTicketsComponent } from '../../components/grafica-general
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/interfaces/categoria.mdoel';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { AceiteService } from '../../../aceites/services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TicketsService } from '../../services/tickets.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';

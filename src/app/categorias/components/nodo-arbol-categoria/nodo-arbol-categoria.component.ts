@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/cor
 import { TooltipModule } from 'primeng/tooltip';
 import { Categoria } from '../../interfaces/categoria.mdoel';
 import { Subcategoria } from '../../interfaces/subcategoria.model';
-import { clasificarCuadrante } from '../../helpers/matriz-criticidad.helper';
+import { clasificarCuadrante } from '../../../tickets/helpers/matriz-criticidad.helper';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { FormularioNodoCategoriaComponent } from '../formulario-nodo-categoria/formulario-nodo-categoria.component';

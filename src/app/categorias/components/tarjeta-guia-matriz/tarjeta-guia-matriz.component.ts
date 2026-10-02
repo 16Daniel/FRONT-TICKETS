@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CUADRANTES } from '../../helpers/matriz-criticidad.helper';
+import { CUADRANTES } from '../../../tickets/helpers/matriz-criticidad.helper';
 
 @Component({
   selector: 'app-tarjeta-guia-matriz',

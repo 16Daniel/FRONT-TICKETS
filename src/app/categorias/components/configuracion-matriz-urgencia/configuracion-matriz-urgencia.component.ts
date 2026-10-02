@@ -21,7 +21,7 @@ import {
   MATRIZ_FILAS,
   MATRIZ_COLUMNAS,
   clasificarCuadrante
-} from '../../helpers/matriz-criticidad.helper';
+} from '../../../tickets/helpers/matriz-criticidad.helper';
 
 @Component({
   selector: 'app-configuracion-matriz-urgencia',

@@ -9,7 +9,7 @@ import {
 import { Observable, of, shareReplay } from 'rxjs';
 import { MatrizUrgencia } from '../interfaces/matriz-urgencia.interface';
 import { CeldaMatrizUrgencia } from '../interfaces/celda-matriz-urgencia.interface';
-import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
+import { clasificarCuadrante } from '../../tickets/helpers/matriz-criticidad.helper';
 
 @Injectable({
   providedIn: 'root'
