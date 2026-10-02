@@ -34,7 +34,7 @@ export const TICKETS_ROUTES: Routes = [
     path: 'categories',
     title: 'Categorias',
     loadComponent: () =>
-      import('./pages/categories-pages/categories-page'),
+      import('./pages/categorias-page/categorias-page.component'),
   },
    {
     path: 'no-conformidad',

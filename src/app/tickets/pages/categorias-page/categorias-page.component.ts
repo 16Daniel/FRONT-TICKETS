@@ -26,7 +26,7 @@ import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
-  selector: 'app-categories-page',
+  selector: 'app-categorias-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -43,10 +43,10 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
     PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './categories-page.html',
-  styleUrl: './categories-page.scss'
+  templateUrl: './categorias-page.component.html',
+  styleUrl: './categorias-page.component.scss'
 })
-export default class CategoriesPageComponent implements OnInit, OnDestroy {
+export default class CategoriasPageComponent implements OnInit, OnDestroy {
   readonly String = String;
   usuario!: Usuario;
   areas: Area[] = [];
