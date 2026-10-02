@@ -1,5 +1,5 @@
 import { Categoria } from '../models/categoria.model';
-import { Subcategoria } from './subcategoria.model';
+import { Subcategoria } from './subcategoria.interface';
 
 export interface SeleccionArbolCategoria {
   categoria: Categoria;
