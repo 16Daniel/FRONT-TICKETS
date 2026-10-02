@@ -170,13 +170,24 @@
       </a>
 
       <a 
-        [routerLink]="'/main/categories'" 
+        [routerLink]="'/main/categorias'" 
         routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}"
         *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
         (click)="closemenu()" 
         class="nav-item">
         <i class="bx bx-grid-alt nav-icon"></i>
         <span class="nav-label">Categorías</span>
+      </a>
+
+      <a 
+        [routerLink]="'/main/categorias/umbral-recurrencias'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-slider nav-icon"></i>
+        <span class="nav-label">Umbral de Recurrencias</span>
       </a>
 
     </div>

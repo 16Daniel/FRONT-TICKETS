@@ -1,5 +1,5 @@
-import { CuadranteInfo } from '../interfaces/cuadrante-info.interface';
-import { TiempoSlaCelda } from '../interfaces/tiempo-sla-celda.interface';
+import { CuadranteInfo } from '../../categorias/interfaces/cuadrante-info.interface';
+import { TiempoSlaCelda } from '../../categorias/interfaces/tiempo-sla-celda.interface';
 
 export const MATRIZ_FILAS = [
   { impacto: 3, label: '3 · Crítico' },

@@ -9,8 +9,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 
-import { Categoria } from '../../interfaces/categoria.mdoel';
-import { Subcategoria, generateGUID } from '../../interfaces/subcategoria.model';
+import { Categoria } from '../../models/categoria.model';
+import { Subcategoria, generateGUID } from '../../interfaces/subcategoria.interface';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';

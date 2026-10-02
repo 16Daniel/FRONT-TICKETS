@@ -17,7 +17,7 @@ import {
   calcularScore,
   clasificarCuadrante,
   obtenerTiempoSla
-} from '../../helpers/matriz-criticidad.helper';
+} from '../../../tickets/helpers/matriz-criticidad.helper';
 import { CuadranteInfo } from '../../interfaces/cuadrante-info.interface';
 import { EventoSeleccionMatriz } from '../../interfaces/evento-seleccion-matriz.interface';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';

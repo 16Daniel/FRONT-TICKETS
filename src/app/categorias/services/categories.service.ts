@@ -14,7 +14,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Categoria } from '../interfaces/categoria.mdoel';
+import { Categoria } from '../models/categoria.model';
 
 @Injectable({
   providedIn: 'root',

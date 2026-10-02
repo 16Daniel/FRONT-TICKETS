@@ -16,12 +16,12 @@ import Swal from 'sweetalert2';
 
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../../tickets/interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { PrioridadTicket } from '../../../tickets/interfaces/prioridad-ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { FolioGeneratorService } from '../../../tickets/services/folio-generator.service';
-import { CategoriesService } from '../../../tickets/services/categories.service';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
@@ -30,8 +30,8 @@ import { FirebaseStorageService } from '../../../shared/services/firebase-storag
 import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
-import { SelectorArbolCategoriaComponent } from '../../../tickets/components/selector-arbol-categoria/selector-arbol-categoria.component';
-import { SeleccionArbolCategoria } from '../../../tickets/interfaces/seleccion-arbol-categoria.interface';
+import { SelectorArbolCategoriaComponent } from '../../../categorias/components/selector-arbol-categoria/selector-arbol-categoria.component';
+import { SeleccionArbolCategoria } from '../../../categorias/interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 

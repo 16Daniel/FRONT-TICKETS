@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx';
 
 import { AceiteService } from '../../services/aceite.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { ReporteRA } from '../../interfaces/aceite.model';
+import { ReporteRA } from '../../models/aceite.model';
 
 @Component({
   selector: 'app-reporte-aceite-tab',

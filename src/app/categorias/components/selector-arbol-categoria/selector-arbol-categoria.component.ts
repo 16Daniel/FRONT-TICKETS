@@ -13,8 +13,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { Categoria } from '../../interfaces/categoria.mdoel';
-import { Subcategoria } from '../../interfaces/subcategoria.model';
+import { Categoria } from '../../models/categoria.model';
+import { Subcategoria } from '../../interfaces/subcategoria.interface';
 import { CategoriesService } from '../../services/categories.service';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 

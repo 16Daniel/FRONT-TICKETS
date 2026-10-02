@@ -1,5 +1,5 @@
-import { Categoria } from './categoria.mdoel';
-import { Subcategoria } from './subcategoria.model';
+import { Categoria } from '../models/categoria.model';
+import { Subcategoria } from './subcategoria.interface';
 
 export interface SeleccionArbolCategoria {
   categoria: Categoria;

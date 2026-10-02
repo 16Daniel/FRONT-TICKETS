@@ -66,6 +66,10 @@ export const routes: Routes = [
         loadChildren: () => import('./tareas/tareas.routes').then(m => m.TAREAS_MAIN_ROUTES)
       },
       {
+        path: 'categorias',
+        loadChildren: () => import('./categorias/categorias.routes')
+      },
+      {
         path: '',
         redirectTo: '/main/home-a',
         pathMatch: 'full',

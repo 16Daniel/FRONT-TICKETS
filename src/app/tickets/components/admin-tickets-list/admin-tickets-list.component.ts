@@ -16,7 +16,7 @@ import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialo
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
-import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -24,14 +24,14 @@ import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 import { SupportTypesService } from '../../services/support-types.service';
 import { TicketsPriorityService } from '../../services/tickets-priority.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
-import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
 
 @Component({
   selector: 'app-admin-tickets-list',

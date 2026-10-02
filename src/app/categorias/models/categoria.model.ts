@@ -1,4 +1,4 @@
-import { Subcategoria } from "./subcategoria.model";
+import { Subcategoria } from "../interfaces/subcategoria.interface";
 
 export class Categoria {
   id: string | any;
