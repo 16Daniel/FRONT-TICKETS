@@ -12,7 +12,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { EditorModule } from 'primeng/editor';
 import { Subscription } from 'rxjs';
 
-import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -52,7 +52,7 @@ import { DispositivosSucursalesService } from '../../../sucursales/services/disp
     ToastModule,
     CalendarModule,
     EditorModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     CalendarioComponent,
     ModalColorsComponent,
     TarjetaSucursalPorVisitarComponent,

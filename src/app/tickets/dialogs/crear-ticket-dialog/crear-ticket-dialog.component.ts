@@ -82,6 +82,13 @@ export class CrearTicketDialogComponent implements OnInit {
   archivosPreview: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string }[] = [];
   archivos: File[] = [];
 
+  get requiereEvidencia(): boolean {
+    const requierePorCategoria = this.formCategoria?.evidenciaObligatoria === true;
+    const nombreCatParaValidar = this.ticket.nombreSubcategoria || this.ticket.nombreCategoria || '';
+    const requierePorSuministro = this.incluirEvidenciaCadenaSuministro(nombreCatParaValidar) && String(this.ticket.idArea) === '20';
+    return requierePorCategoria || requierePorSuministro;
+  }
+
   editorModules = {
     mention: {
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
@@ -218,14 +225,6 @@ export class CrearTicketDialogComponent implements OnInit {
     });
   }
 
-  obtenerBackgroundColorPrioridad(value: string): string {
-    const val = value?.toUpperCase() || '';
-    if (val === 'ALTA' || val === 'PÁNICO') return '#d3152a';
-    if (val === 'MEDIA') return '#fdb813';
-    if (val === 'BAJA') return '#16a34a';
-    return '#64748b';
-  }
-
   /* Selección de Categoría desde el Árbol */
   onSeleccionarCategoria(seleccion: SeleccionArbolCategoria): void {
     this.formCategoria = seleccion.categoria;
@@ -274,15 +273,15 @@ export class CrearTicketDialogComponent implements OnInit {
 
     const nombreCatParaValidar = this.ticket.nombreSubcategoria || this.ticket.nombreCategoria || '';
     if (
-      this.incluirEvidenciaCadenaSuministro(nombreCatParaValidar) &&
-      this.archivos.length === 0 &&
-      String(this.ticket.idArea) === '20'
+      this.requiereEvidencia &&
+      this.archivos.length === 0
     ) {
       Swal.fire({
         icon: 'warning',
         title: 'Acción requerida',
-        text: 'Para la categoría ' + nombreCatParaValidar + ' es necesario subir evidencia.',
+        text: 'Para la categoría seleccionada es necesario subir evidencia obligatoriamente.',
         confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#D3152A',
         customClass: {
           container: 'swal-topmost'
         }
@@ -336,7 +335,7 @@ export class CrearTicketDialogComponent implements OnInit {
           await this.registrarBitacoraSistema(ticketId, folio);
           await this.ticketsService.incrementarContadorTickets();
           Swal.close();
-          Swal.fire('OK', 'TICKET CREADO!', 'success');
+          Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
           this.closeEvent.emit();
         })
         .catch(async err => {
@@ -346,7 +345,7 @@ export class CrearTicketDialogComponent implements OnInit {
           const ticketId = await this.ticketsService.create({ ...this.ticket });
           await this.registrarBitacoraSistema(ticketId, folio);
           Swal.close();
-          Swal.fire('OK', 'TICKET CREADO!', 'success');
+          Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
           this.closeEvent.emit();
         });
     } else {
@@ -355,7 +354,7 @@ export class CrearTicketDialogComponent implements OnInit {
       await this.registrarBitacoraSistema(ticketId, folio);
       await this.ticketsService.incrementarContadorTickets();
       Swal.close();
-      Swal.fire('OK', 'TICKET CREADO!', 'success');
+      Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
       this.closeEvent.emit();
     }
   }

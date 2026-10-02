@@ -65,9 +65,9 @@
 <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
   (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>
 
-<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
+<app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
   [showModalTicketDetail]="mostrarModalTicketDetail"
-  (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+  (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>
 
 <app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
   (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-historial-tickets-dialog>

@@ -81,31 +81,6 @@ export class PriorityTicketsAccordionComponent implements OnInit {
     return 'Bajo';
   }
 
-  obtenerBackgroundColorPrioridad(value: string): string {
-    // Return background colors based on the new spec
-    if (value === 'Crítico') return '#FEE2E2';
-    if (value === 'Alto') return '#FFEDD5';
-    if (value === 'Medio') return '#FEF9C3';
-    if (value === 'Bajo') return '#DCFCE7';
-    return '#f8f9fa';
-  }
-  
-  obtenerColorBordePrioridad(value: string): string {
-    if (value === 'Crítico') return '#FCA5A5';
-    if (value === 'Alto') return '#FDBA74';
-    if (value === 'Medio') return '#FDE047';
-    if (value === 'Bajo') return '#86EFAC';
-    return '#dee2e6';
-  }
-
-  obtenerColorTextoPrioridad(value: string): string {
-    if (value === 'Crítico') return '#991B1B';
-    if (value === 'Alto') return '#9A3412';
-    if (value === 'Medio') return '#854D0E';
-    if (value === 'Bajo') return '#166534';
-    return '#212529';
-  }
-
   obtenerTicketsFiltrados(prioridad: string): Ticket[] {
     return this.tickets.filter((tk) => this.obtenerPrioridadTicket(tk) === prioridad);
   }

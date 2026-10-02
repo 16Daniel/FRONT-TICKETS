@@ -181,9 +181,9 @@
   <app-solicitar-compra-dialog *ngIf="mostrarModalSolicitarCompra" [mostrarModal]="mostrarModalSolicitarCompra"
     (closeEvent)="mostrarModalSolicitarCompra = false" [idArea]="idArea"></app-solicitar-compra-dialog>
 
-  <app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
+  <app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
     [showModalTicketDetail]="mostrarModalTicketDetail"
-    (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+    (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>
 
   <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
     (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>

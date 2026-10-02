@@ -6,7 +6,7 @@
   [maximizable]="true"
   [draggable]="false"
   [resizable]="false"
-  styleClass="modal-ticket-detail-dialog"
+  styleClass="detalle-ticket-dialog-dialog"
   (onHide)="onHide()">
 
   <!-- Cabecera Personalizada -->
@@ -295,8 +295,34 @@
                     {{ ticket.fechaAtencion ? (datesHelper.getDate(ticket.fechaAtencion) | date: 'dd/MM/yyyy hh:mm a') : 'Pendiente de inicio' }}
                   </span>
                 </div>
-                <!-- Columna vacía para cerrar la cuadrícula 3x3 -->
-                <div></div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-headphone"></i> Asistencia</span>
+                  <div class="mt-1 d-flex">
+                    <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
+                        [options]="tiposSoporte" 
+                        [(ngModel)]="ticket.idTipoSoporte" 
+                        optionLabel="name"
+                        [showClear]="false" 
+                        optionValue="id" 
+                        (onChange)="actualizarTipoSoporte($event.value)" 
+                        styleClass="table-select-custom"
+                        appendTo="body">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="d-flex align-items-center gap-1">
+                                <span>{{ selectedOption?.name || selectedOption?.nombre }}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            <div class="d-flex align-items-center gap-1">
+                                <span>{{ item.name || item.nombre }}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <span *ngIf="usuario?.idRol !== '1' && usuario?.idRol !== '5'" class="info-value text-uppercase fw-bold text-dark">
+                      {{ obtenerNombreTipoSoporte(ticket.idTipoSoporte) }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </p-tabPanel>

@@ -151,7 +151,9 @@
     <div class="seccion-evidencias">
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
         <label class="etiqueta-formulario m-0">
-          <i class="bx bx-paperclip"></i> Archivos Adjuntos (Opcional)
+          <i class="bx bx-paperclip"></i> Archivos Adjuntos 
+          <span *ngIf="!requiereEvidencia" class="fw-normal text-muted" style="font-size: 0.85em;">(Opcional)</span>
+          <span *ngIf="requiereEvidencia" class="text-danger ms-1">* <small>(Obligatorio)</small></span>
         </label>
         <input type="file" id="fileInput" (change)="onFileChange($event)" multiple hidden />
         <button type="button" (click)="onSeleccionarImagenes()" class="btn-adjuntar-evidencia">

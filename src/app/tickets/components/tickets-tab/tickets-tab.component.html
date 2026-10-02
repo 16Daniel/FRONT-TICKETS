@@ -163,9 +163,9 @@
 <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
   (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="usuario.idArea"></app-crear-ticket-dialog>
 
-<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="itemtk"
+<app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="itemtk"
   [showModalTicketDetail]="mostrarModalTicketDetail"
-  (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+  (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>
 
 <app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLosTickets"
   (closeEvent)="mostrarModalFilterTickets = false"

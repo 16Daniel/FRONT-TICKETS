@@ -84,9 +84,9 @@
 
 <p-confirmDialog />
 
-<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticketSeleccionado"
+<app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="ticketSeleccionado"
     [showModalTicketDetail]="mostrarModalTicketDetail"
-    (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
+    (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>
 
 
 

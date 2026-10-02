@@ -142,41 +142,11 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     }
   }
 
-  obtenerNombreArea(idArea: string): string {
-    let nombre = '';
-    let area = this.areas.filter((x) => x.id == idArea);
-    if (area.length > 0) {
-      nombre = area[0].nombre;
-    }
-    return nombre;
-  }
-
   obtenerNombreSucursal(idSucursal: string): string {
     let str = '';
     let temp = this.sucursales.filter((x) => x.id == idSucursal);
     if (temp.length > 0) {
       str = temp[0].nombre;
-    }
-    return str;
-  }
-
-  obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
-
-    if (value == '2') {
-      str = '#ff0000';
-    }
-
-    if (value == '3') {
-      str = '#ffe800';
-    }
-
-    if (value == '4') {
-      str = '#61ff00';
-    }
-
-    if (value == '1') {
-      str = 'black';
     }
     return str;
   }
@@ -223,7 +193,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
-
   obtenerNombreEstatusTicket(idEstatusTicket: string) {
     if (this.estatusTickets.length == 0) return;
     let nombre: string = this.estatusTickets.filter(
@@ -232,18 +201,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
     return nombre;
   }
-
-  actualizaTicket(ticket: Ticket) {
-    this.ticketsService
-      .update(ticket)
-      .then(() => { })
-      .catch((error) => console.error(error));
-  }
-
-  filrarEstatusTickets() {
-    return this.estatusTickets.filter((x) => x.id == '1' || x.id == '2');
-  }
-
 
   obtenerSucursales() {
     this.branchesService.get().subscribe({

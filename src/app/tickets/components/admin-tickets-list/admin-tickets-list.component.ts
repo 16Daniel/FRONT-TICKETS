@@ -1,18 +1,18 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Timestamp } from '@firebase/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
+import { DialogModule } from 'primeng/dialog';
 
 import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
-import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
@@ -29,12 +29,7 @@ import { SupportTypesService } from '../../services/support-types.service';
 import { TicketsPriorityService } from '../../services/tickets-priority.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-
-import { DialogModule } from 'primeng/dialog';
-import { SelectorArbolCategoriaComponent } from '../selector-arbol-categoria/selector-arbol-categoria.component';
-import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
 
@@ -51,11 +46,10 @@ import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz
 
     ModalTicketChatComponent,
     ConfirmDialogModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     TooltipModule,
     CalendarModule,
     DialogModule,
-    SelectorArbolCategoriaComponent,
     TicketSlaGaugeComponent,
     MiniMatrizUrgenciaComponent
   ],
@@ -79,9 +73,6 @@ export class AdminTicketsListComponent {
   mostrarModalTicketDetail: boolean = false;
   mostrarModalValidarTicket: boolean = false;
   showModalChatTicket: boolean = false;
-  mostrarModalCambiarCategoria: boolean = false;
-  ticketEnCambioCategoria: Ticket | null = null;
-  nuevaSeleccionCategoria: SeleccionArbolCategoria | null = null;
   private rutaCache = new WeakMap<Ticket, { key: string; info: { ruta: string; categoriaRaiz: string; rutaPadres: string; hoja: string } }>();
 
   areas: Area[] = [];
@@ -104,9 +95,7 @@ export class AdminTicketsListComponent {
     private supportTypesService: SupportTypesService,
     private ticketsPriorityService: TicketsPriorityService,
     private statusTicketService: StatusTicketService,
-    private confirmationService: ConfirmationService,
     public datesHelper: DatesHelperService,
-    private mensajesPendientesService: MensajesPendientesService
   ) {
     this.areas = this.areasService.areas;
     this.obtenerUsuariosHelp();
@@ -204,13 +193,10 @@ export class AdminTicketsListComponent {
     return name;
   }
 
-  obtenerNombreSucursal(idSucursal: string): string {
-    let str = '';
-    let temp = this.sucursales.filter((x) => x.id == idSucursal);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
+  obtenerNombreTipoSoporte(idTipoSoporte?: string | null): string {
+    if (!idTipoSoporte) return 'NO DEFINIDO';
+    let temp = this.tiposSoporte.find((x) => String(x.id) === String(idTipoSoporte));
+    return temp ? temp.name : 'NO DEFINIDO';
   }
 
   obtenerUsuariosHelp() {
@@ -219,12 +205,6 @@ export class AdminTicketsListComponent {
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
-
-  actualizarEstatus(ticket: Ticket | any, idEstatusTicket: string) {
-    if (idEstatusTicket == '3') ticket.fechaFin = new Date();
-
-    this.actualizaTicket(ticket);
   }
 
   actualizaTicket(ticket: Ticket) {
@@ -252,7 +232,6 @@ export class AdminTicketsListComponent {
       .catch((error) => console.error(error));
   }
 
-
   abrirModalDetalleTicket(itemticket: Ticket | any) {
     this.mostrarModalTicketDetail = true;
     this.ticket = itemticket;
@@ -266,190 +245,11 @@ export class AdminTicketsListComponent {
 
   obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
 
-
-
-  obtenerCoordenadasTicket(tk: Ticket): { impacto: number; urgencia: number; score: number; prioridad: string } {
-    const critRaw = tk.criticidad;
-    const urgRaw = tk.urgencia;
-    const scoreRaw = tk.score;
-
-    // 1. Si el ticket tiene criticidad y urgencia guardados directamente
-    if (critRaw && urgRaw) {
-      const urgencia = Math.min(3, Math.max(1, urgRaw));
-      let score = scoreRaw || (critRaw * urgencia);
-      if (score > 9) score = 9;
-
-      // Normalizar impacto si criticidad vino con el score (ej. 9 o 6)
-      let impacto = critRaw;
-      if (impacto > 3) {
-        impacto = Math.round(score / urgencia);
-      }
-      impacto = Math.min(3, Math.max(1, impacto || 2));
-      const prioridad = tk.prioridad || this.clasificarPrioridad(score);
-      return { impacto, urgencia, score, prioridad };
-    }
-
-    // 2. Si tiene score pero no criticidad
-    if (scoreRaw) {
-      const score = Math.min(9, Math.max(1, scoreRaw));
-      const urgencia = Math.min(3, Math.max(1, urgRaw || 2));
-      const impacto = Math.min(3, Math.max(1, Math.round(score / urgencia)));
-      const prioridad = tk.prioridad || this.clasificarPrioridad(score);
-      return { impacto, urgencia, score, prioridad };
-    }
-
-    const legacyPrioridad = (tk as any).prioridad;
-    if (legacyPrioridad) {
-      const p = String(legacyPrioridad).toUpperCase();
-      if (p.includes('CRÍT') || p.includes('CRIT') || p.includes('PÁN') || p.includes('PAN')) {
-        return { impacto: 3, urgencia: 3, score: 9, prioridad: 'Crítico' };
-      }
-      if (p.includes('ALT')) {
-        return { impacto: 3, urgencia: 2, score: 6, prioridad: 'Alto' };
-      }
-      if (p.includes('MED')) {
-        return { impacto: 2, urgencia: 2, score: 4, prioridad: 'Medio' };
-      }
-      if (p.includes('BAJ')) {
-        return { impacto: 1, urgencia: 2, score: 2, prioridad: 'Bajo' };
-      }
-    }
-
-    if (tk.idCategoria) {
-      const cat = this.categorias.find(c => String(c.id) === String(tk.idCategoria));
-      if (cat) {
-        if (tk.idSubcategoria && cat.subcategorias) {
-          const sub = this.buscarSubcategoriaRecursiva(cat.subcategorias, String(tk.idSubcategoria));
-          if (sub && (sub.criticidad || sub.score)) {
-            const urg = Math.min(3, Math.max(1, sub.urgencia || 2));
-            const sc = sub.score || ((sub.criticidad || 2) * urg);
-            let imp = sub.criticidad && sub.criticidad <= 3 ? sub.criticidad : Math.round(sc / urg);
-            imp = Math.min(3, Math.max(1, imp));
-            return {
-              impacto: imp,
-              urgencia: urg,
-              score: sc,
-              prioridad: sub.prioridadUrgencia || (sub as any).prioridad || this.clasificarPrioridad(sc)
-            };
-          }
-        }
-        if (cat.criticidad || cat.score) {
-          const urg = Math.min(3, Math.max(1, cat.urgencia || 2));
-          const sc = cat.score || ((cat.criticidad || 2) * urg);
-          let imp = cat.criticidad && cat.criticidad <= 3 ? cat.criticidad : Math.round(sc / urg);
-          imp = Math.min(3, Math.max(1, imp));
-          return {
-            impacto: imp,
-            urgencia: urg,
-            score: sc,
-            prioridad: cat.prioridad || this.clasificarPrioridad(sc)
-          };
-        }
-      }
-    }
-
-    const fallback = null;
-    if (fallback === '1') return { impacto: 3, urgencia: 3, score: 9, prioridad: 'Crítico' };
-    if (fallback === '2') return { impacto: 3, urgencia: 2, score: 6, prioridad: 'Alto' };
-    if (fallback === '3') return { impacto: 2, urgencia: 2, score: 4, prioridad: 'Medio' };
-    if (fallback === '4') return { impacto: 1, urgencia: 2, score: 2, prioridad: 'Bajo' };
-
-    return { impacto: 2, urgencia: 2, score: 4, prioridad: 'Medio' };
-  }
-
   clasificarPrioridad(score: number): string {
     if (score >= 7) return 'Crítico';
     if (score >= 5) return 'Alto';
     if (score >= 3) return 'Medio';
     return 'Bajo';
-  }
-
-  obtenerClaseCuadrante(tk: Ticket): string {
-    const coord = this.obtenerCoordenadasTicket(tk);
-    switch (coord.prioridad) {
-      case 'Crítico':
-        return 'cuadrante-critico';
-      case 'Alto':
-        return 'cuadrante-alto';
-      case 'Medio':
-        return 'cuadrante-medio';
-      case 'Bajo':
-        return 'cuadrante-bajo';
-      default:
-        return 'cuadrante-medio';
-    }
-  }
-
-  obtenerNombrePrioridad(tk: Ticket): string {
-    return this.obtenerCoordenadasTicket(tk).prioridad.toUpperCase();
-  }
-
-
-  obtenerScoreGlobal(tk: Ticket): number {
-    if (tk.score && tk.score >= 2) {
-      return tk.score;
-    }
-    const coordUrg = this.obtenerCoordenadasTicket(tk);
-    return Math.min(9, Math.max(1, coordUrg.score || 4));
-  }
-
-  obtenerClaseScoreGlobal(tk: Ticket): string {
-    const score = this.obtenerScoreGlobal(tk);
-    if (score >= 7) return 'score-critico';
-    if (score >= 5) return 'score-alto';
-    if (score >= 3) return 'score-medio';
-    return 'score-bajo';
-  }
-
-  obtenerTooltipScoreGlobal(tk: Ticket): string {
-    const total = this.obtenerScoreGlobal(tk);
-    const coordUrg = this.obtenerCoordenadasTicket(tk);
-
-    let nivel = 'Bajo';
-    if (total >= 7) nivel = 'Crítico';
-    else if (total >= 5) nivel = 'Alto';
-    else if (total >= 3) nivel = 'Medio';
-
-    return `⚡ Score Global: ${total}/9 pts (Nivel ${nivel})\n• Urgencia: ${coordUrg.score} pts (${coordUrg.prioridad})`;
-  }
-
-  obtenerBackgroundColorPrioridad(value: string): string {
-    if (value == '2') return '#EF4444';
-    if (value == '3') return '#EAB308';
-    if (value == '4') return '#10B981';
-    if (value == '1') return '#EF4444';
-    return '#64748b';
-  }
-
-  onPanicoClick(idTicket: string) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: 'El estado del ticket se cambiará a Crítico / Pánico ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        let temp = this.tickets.filter((x) => x.id == idTicket);
-        if (temp.length > 0) {
-          let ticket = temp[0];
-          ticket.criticidad = 3;
-          ticket.urgencia = 3;
-          ticket.score = 9;
-          ticket.prioridad = 'Crítico';
-
-          this.ticketsService
-            .update(ticket)
-            .then(() => {
-              this.showMessage('success', 'Success', 'Enviado correctamente');
-            })
-            .catch((error) =>
-              console.error('Error al actualizar los comentarios:', error)
-            );
-        }
-      },
-      reject: () => { },
-    });
   }
 
   buscarSubcategoriaRecursiva(subcategorias: any[], idBuscado: string): any | null {
@@ -462,61 +262,6 @@ export class AdminTicketsListComponent {
       }
     }
     return null;
-  }
-
-  abrirModalCambiarCategoria(tk: Ticket) {
-    this.ticketEnCambioCategoria = tk;
-    this.nuevaSeleccionCategoria = null;
-    this.mostrarModalCambiarCategoria = true;
-  }
-
-  cerrarModalCambiarCategoria() {
-    this.mostrarModalCambiarCategoria = false;
-    this.ticketEnCambioCategoria = null;
-    this.nuevaSeleccionCategoria = null;
-  }
-
-  onSeleccionarEnModal(seleccion: SeleccionArbolCategoria) {
-    this.nuevaSeleccionCategoria = seleccion;
-  }
-
-  guardarNuevaCategoria() {
-    if (!this.ticketEnCambioCategoria || !this.nuevaSeleccionCategoria) return;
-
-    const tk = this.ticketEnCambioCategoria;
-    const sel = this.nuevaSeleccionCategoria;
-
-    tk.idCategoria = sel.idCategoria;
-    tk.idSubcategoria = sel.idSubcategoria ?? null;
-    tk.nombreCategoria = sel.nombreCategoria;
-    tk.nombreSubcategoria = sel.nombreSubcategoria ?? '';
-
-    // Urgencia (3×3)
-    const critUrg = sel.criticidad || sel.subcategoria?.criticidad || sel.categoria?.criticidad || 2;
-    const urgUrg = sel.urgencia || sel.subcategoria?.urgencia || sel.categoria?.urgencia || 2;
-    const scoreUrg = sel.score || (critUrg * urgUrg);
-    const prioUrg = sel.prioridad || 'Medio';
-
-    tk.criticidad = Math.min(3, Math.max(1, critUrg));
-    tk.urgencia = Math.min(3, Math.max(1, urgUrg));
-    tk.score = scoreUrg;
-    tk.prioridad = prioUrg as any;
-
-    (tk as any).prioridad = prioUrg;
-
-    this.rutaCache.delete(tk);
-
-    this.ticketsService
-      .update({ ...tk })
-      .then(() => {
-        this.showMessage('success', 'Categoría actualizada', `Se asignó: ${sel.rutaCompleta}`);
-        this.cdr.detectChanges();
-        this.cerrarModalCambiarCategoria();
-      })
-      .catch((error) => {
-        console.error('Error al actualizar categoría:', error);
-        this.showMessage('error', 'Error', 'Error al guardar la categoría');
-      });
   }
 
   obtenerInfoRutaTicket(tk: Ticket): { ruta: string; categoriaRaiz: string; rutaPadres: string; hoja: string } {
@@ -611,5 +356,4 @@ export class AdminTicketsListComponent {
     this.rutaCache.set(tk, { key: cacheKey, info: resultado });
     return resultado;
   }
-
 }

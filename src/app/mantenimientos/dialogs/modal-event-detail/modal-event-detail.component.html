@@ -46,9 +46,9 @@
 
   </div>
 
-  <app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk"
+  <app-detalle-ticket-dialog *ngIf="showModalTicketDetail" [ticket]="itemtk"
     [showModalTicketDetail]="showModalTicketDetail"
-    (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
+    (closeEvent)="showModalTicketDetail = false"></app-detalle-ticket-dialog>
 
   <app-modal-maintenance-detail *ngIf="mostrarModalDetalleMantenimeinto" [mantenimiento]="mantenimiento"
     [mostrarModalDetalleMantenimeinto]="mostrarModalDetalleMantenimeinto"
