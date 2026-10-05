@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TreeNode } from 'primeng/api';
@@ -26,6 +26,8 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
 
   dataArbol: TreeNode[] = [];
   zoomLevel: number = 1;
+
+  @ViewChild('panContainer') panContainer?: ElementRef<HTMLElement>;
 
   // Panning variables
   isDragging = false;
@@ -129,7 +131,20 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
     this.subscripcionCategorias = this.categoriesService.get(this.areaSeleccionadaId).subscribe((cats: Categoria[]) => {
       this.dataArbol = this.transformarAChart(cats);
       this.cdr.detectChanges();
+      this.centrarScroll();
     });
+  }
+
+  private centrarScroll(): void {
+    setTimeout(() => {
+      if (this.panContainer && this.panContainer.nativeElement) {
+        const el = this.panContainer.nativeElement;
+        // Si el contenido es más ancho que el contenedor, hacer scroll al centro
+        if (el.scrollWidth > el.clientWidth) {
+          el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+        }
+      }
+    }, 100);
   }
 
   private transformarAChart(categorias: Categoria[]): TreeNode[] {

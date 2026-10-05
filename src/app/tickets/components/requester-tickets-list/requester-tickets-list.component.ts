@@ -25,7 +25,6 @@ import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 
-import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
@@ -44,7 +43,6 @@ import { CategoriesService } from '../../../categorias/services/categories.servi
   imports: [
     TableModule,
     CommonModule,
-    ModalTicketChatComponent,
     AccordionModule,
     BadgeModule,
     RatingStarsComponent,

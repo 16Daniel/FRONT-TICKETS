@@ -85,6 +85,7 @@ $rw-canvas: #f4f6fa;
   height: calc(100vh - 280px);
   min-height: 500px;
   cursor: grab;
+  text-align: center;
 
   &.is-dragging {
     cursor: grabbing;
@@ -188,6 +189,31 @@ $rw-canvas: #f4f6fa;
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
+}
+
+/* Fix PrimeNG OrgChart Connecting Lines */
+::ng-deep .p-organizationchart {
+  .p-organizationchart-line-down {
+    background-color: #94a3b8 !important; /* Color más oscuro para que resalte */
+    width: 2px !important;
+    margin: 0 auto;
+  }
+  .p-organizationchart-line-left {
+    border-right: 2px solid #94a3b8 !important;
+  }
+  .p-organizationchart-line-top {
+    border-top: 2px solid #94a3b8 !important;
+  }
+  .p-organizationchart-node-content .p-node-toggler {
+    color: #475569 !important;
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    bottom: -1rem !important; /* Ajustar posición si interfiere */
+    
+    &:hover {
+      background: #e2e8f0 !important;
+    }
+  }
 }
 
 .tree-empty-state {

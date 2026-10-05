@@ -11,7 +11,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 
-import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
@@ -43,8 +42,6 @@ import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini
     TableModule,
     BadgeModule,
     AccordionModule,
-
-    ModalTicketChatComponent,
     ConfirmDialogModule,
     DetalleTicketDialogComponent,
     TooltipModule,

@@ -87,8 +87,3 @@
 <app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="ticketSeleccionado"
     [showModalTicketDetail]="mostrarModalTicketDetail"
     (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>
-
-
-
-<app-modal-ticket-chat *ngIf="mostrarModalChatTicket" [showModalChatTicket]="mostrarModalChatTicket"
-    [ticket]="ticketSeleccionado" (closeEvent)="mostrarModalChatTicket = false"></app-modal-ticket-chat>
