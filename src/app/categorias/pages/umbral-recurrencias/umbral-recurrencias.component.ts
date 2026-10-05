@@ -18,6 +18,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
+import { UmbralTicketsService, UmbralFiltros } from '../../services/umbral-tickets.service';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
 
 @Component({
   selector: 'app-umbral-recurrencias',
@@ -30,6 +32,10 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   readonly String = String;
   areas: Area[] = [];
   areaSeleccionadaId: string = '1';
+
+  categoriasActuales: Categoria[] = [];
+  ticketCounts: { [key: string]: number } = {};
+  isApplyingFilters = false;
 
   dataArbol: TreeNode[] = [];
   zoomLevel: number = 1;
@@ -44,8 +50,8 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   scrollTop = 0;
 
   // Filter variables
-  fechaInicio: Date | null = null;
-  fechaFin: Date | null = null;
+  fechaInicio: Date | null = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  fechaFin: Date | null = new Date();
   sucursales: Sucursal[] = [];
   sucursalesSeleccionadas: Sucursal[] = [];
   usuariosRol4: Usuario[] = [];
@@ -61,6 +67,7 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
     private categoriesService: CategoriesService,
     private branchesService: BranchesService,
     private usersService: UsersService,
+    private umbralTicketsService: UmbralTicketsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -153,12 +160,39 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   }
 
   aplicarFiltros(): void {
-    // Para el siguiente paso: Aquí implementaremos la lógica real
-    console.log('Filtros aplicados:', {
+    this.isApplyingFilters = true;
+    const filtros: UmbralFiltros = {
       fechaInicio: this.fechaInicio,
       fechaFin: this.fechaFin,
-      sucursales: this.sucursalesSeleccionadas,
-      usuarios: this.usuariosSeleccionados
+      idSucursales: this.sucursalesSeleccionadas.map(s => String(s.id)),
+      idUsuarios: this.usuariosSeleccionados.map(u => String(u.id))
+    };
+
+    this.umbralTicketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
+      next: (tickets: Ticket[]) => {
+        // Reiniciar conteos
+        this.ticketCounts = {};
+
+        // Contar tickets agrupando por idSubcategoria o idCategoria
+        tickets.forEach(t => {
+          const key = t.idSubcategoria || t.idCategoria;
+          if (key) {
+            this.ticketCounts[key] = (this.ticketCounts[key] || 0) + 1;
+          }
+        });
+
+        // Refrescar el árbol
+        if (this.categoriasActuales.length > 0) {
+          this.dataArbol = this.transformarAChart(this.categoriasActuales);
+        }
+        
+        this.isApplyingFilters = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error aplicando filtros', err);
+        this.isApplyingFilters = false;
+      }
     });
   }
 
@@ -170,19 +204,26 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
       }
       this.cargarCategorias();
       this.cargarUsuariosPorArea();
+      this.aplicarFiltros();
       this.cdr.detectChanges();
     });
   }
 
   cambiarArea(areaId: string | number): void {
     this.areaSeleccionadaId = String(areaId);
+    
+    // Al cambiar de área, limpiar conteos y filtros (opcional, pero limpiar conteos es bueno)
+    this.ticketCounts = {};
+    
     this.cargarCategorias();
     this.cargarUsuariosPorArea();
+    this.aplicarFiltros();
   }
 
   private cargarCategorias(): void {
     this.subscripcionCategorias?.unsubscribe();
     this.subscripcionCategorias = this.categoriesService.get(this.areaSeleccionadaId).subscribe((cats: Categoria[]) => {
+      this.categoriasActuales = cats;
       this.dataArbol = this.transformarAChart(cats);
       this.cdr.detectChanges();
       this.centrarScroll();
@@ -230,7 +271,8 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
       expanded: true,
       data: {
         nodo: nodo,
-        esRama: esRama
+        esRama: esRama,
+        ticketCount: !esRama ? (this.ticketCounts[String(nodo.id)] || 0) : 0
       },
       children: hijos.map(h => this.mapearNodo(h))
     };

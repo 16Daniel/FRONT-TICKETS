@@ -39,7 +39,10 @@
         <p-multiSelect [options]="usuariosRol4" [(ngModel)]="usuariosSeleccionados" optionLabel="nombreCompleto" placeholder="Selecciona usuarios" [filter]="true" [maxSelectedLabels]="2" styleClass="w-100" appendTo="body"></p-multiSelect>
       </div>
       <div class="filter-actions align-self-end">
-        <button class="btn btn-primary" (click)="aplicarFiltros()">Aplicar</button>
+        <button class="btn btn-primary" (click)="aplicarFiltros()" [disabled]="isApplyingFilters">
+          <i class="bx bx-loader-alt bx-spin me-1" *ngIf="isApplyingFilters"></i>
+          Aplicar
+        </button>
       </div>
     </div>
 
@@ -86,6 +89,12 @@
           <div class="node-content node-hoja">
             <div class="node-header"><i class="bx bx-tag"></i></div>
             <div class="node-label">{{ node.label }}</div>
+            <span class="badge rounded-pill text-bg-danger mt-2" *ngIf="node.data.ticketCount > 0" style="background-color: #d3152a !important; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+              {{ node.data.ticketCount }} tickets
+            </span>
+            <span class="badge rounded-pill text-bg-secondary mt-2" *ngIf="!node.data.ticketCount" style="font-size: 0.75rem; background-color: #94a3b8 !important;">
+              Sin tickets
+            </span>
           </div>
         </ng-template>
       </p-organizationChart>
