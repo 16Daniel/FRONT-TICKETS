@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TreeNode } from 'primeng/api';
 import { OrganizationChartModule } from 'primeng/organizationchart';
+import { CalendarModule } from 'primeng/calendar';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
@@ -11,11 +14,15 @@ import { CategoriesService } from '../../services/categories.service';
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
 import { TooltipModule } from 'primeng/tooltip';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { UsersService } from '../../../usuarios/services/users.service';
 
 @Component({
   selector: 'app-umbral-recurrencias',
   standalone: true,
-  imports: [CommonModule, PageHeaderComponent, OrganizationChartModule, TooltipModule],
+  imports: [CommonModule, FormsModule, PageHeaderComponent, OrganizationChartModule, TooltipModule, CalendarModule, MultiSelectModule],
   templateUrl: './umbral-recurrencias.component.html',
   styleUrl: './umbral-recurrencias.component.scss'
 })
@@ -36,12 +43,24 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   scrollLeft = 0;
   scrollTop = 0;
 
+  // Filter variables
+  fechaInicio: Date | null = null;
+  fechaFin: Date | null = null;
+  sucursales: Sucursal[] = [];
+  sucursalesSeleccionadas: Sucursal[] = [];
+  usuariosRol4: Usuario[] = [];
+  usuariosSeleccionados: Usuario[] = [];
+
   private subscripcionAreas?: Subscription;
   private subscripcionCategorias?: Subscription;
+  private subscripcionSucursales?: Subscription;
+  private subscripcionUsuarios?: Subscription;
 
   constructor(
     private areasService: AreasService,
     private categoriesService: CategoriesService,
+    private branchesService: BranchesService,
+    private usersService: UsersService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -103,11 +122,44 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cargarAreas();
+    this.cargarFiltros();
   }
 
   ngOnDestroy(): void {
     this.subscripcionAreas?.unsubscribe();
     this.subscripcionCategorias?.unsubscribe();
+    this.subscripcionSucursales?.unsubscribe();
+    this.subscripcionUsuarios?.unsubscribe();
+  }
+
+  private cargarFiltros(): void {
+    this.subscripcionSucursales = this.branchesService.get().subscribe(sucursales => {
+      this.sucursales = sucursales;
+      this.cdr.detectChanges();
+    });
+  }
+
+  private cargarUsuariosPorArea(): void {
+    this.subscripcionUsuarios?.unsubscribe();
+    this.subscripcionUsuarios = this.usersService.getUsuariosPorRol(['4'], this.areaSeleccionadaId).subscribe(usuarios => {
+      this.usuariosRol4 = usuarios.map(u => ({
+        ...u,
+        nombreCompleto: `${u.nombre} ${u.apellidoP} ${u.apellidoM}`.trim()
+      }));
+      // Limpiar selecciones al cambiar de área
+      this.usuariosSeleccionados = [];
+      this.cdr.detectChanges();
+    });
+  }
+
+  aplicarFiltros(): void {
+    // Para el siguiente paso: Aquí implementaremos la lógica real
+    console.log('Filtros aplicados:', {
+      fechaInicio: this.fechaInicio,
+      fechaFin: this.fechaFin,
+      sucursales: this.sucursalesSeleccionadas,
+      usuarios: this.usuariosSeleccionados
+    });
   }
 
   private cargarAreas(): void {
@@ -117,6 +169,7 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
         this.areaSeleccionadaId = String(this.areas[0].id);
       }
       this.cargarCategorias();
+      this.cargarUsuariosPorArea();
       this.cdr.detectChanges();
     });
   }
@@ -124,6 +177,7 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   cambiarArea(areaId: string | number): void {
     this.areaSeleccionadaId = String(areaId);
     this.cargarCategorias();
+    this.cargarUsuariosPorArea();
   }
 
   private cargarCategorias(): void {

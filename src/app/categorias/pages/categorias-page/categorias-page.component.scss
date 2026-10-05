@@ -17,60 +17,8 @@ $rw-canvas: #f4f6fa;
 }
 
 /* ==========================================================================
-   Area Selector Chips Header
+   Area Selector Chips Header (Styles moved to styles.scss)
    ========================================================================== */
-.areas-chips-track {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #ffffff;
-  padding: 0.5rem 1rem;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.chip-area-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1rem;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #64748b;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  .area-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #cbd5e1;
-    transition: all 0.18s ease;
-  }
-
-  &:hover {
-    background-color: #f8fafc;
-    color: #0f172a;
-  }
-
-  &.is-active {
-    background-color: #fff1f2;
-    color: $rw-primary;
-    font-weight: 800;
-    border-color: #fecdd3;
-
-    .area-dot {
-      background-color: $rw-primary;
-    }
-  }
-}
 
 /* ==========================================================================
    Summary KPI Grid (Tarjetas Blancas Fuera del Cuadro)
@@ -259,39 +207,7 @@ $rw-canvas: #f4f6fa;
   }
 }
 
-.btn-rw-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
-  color: #ffffff;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 0.6rem 1.25rem;
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-
-  i {
-    font-size: 1.15rem;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38);
-    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(211, 21, 42, 0.2);
-  }
-}
-
+/* Botón btn-rw-cta movido a styles.scss */
 /* ==========================================================================
    Tree Nodes Container & Empty State
    ========================================================================== */

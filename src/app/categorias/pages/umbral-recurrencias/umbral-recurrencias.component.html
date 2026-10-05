@@ -20,6 +20,29 @@
       </button>
     </div>
 
+    <!-- Filtros -->
+    <div class="filters-bar mb-3">
+      <div class="filter-group">
+        <label>Fecha Inicio</label>
+        <p-calendar [(ngModel)]="fechaInicio" dateFormat="dd/mm/yy" placeholder="Seleccionar..." [showIcon]="true" appendTo="body" styleClass="w-100"></p-calendar>
+      </div>
+      <div class="filter-group">
+        <label>Fecha Fin</label>
+        <p-calendar [(ngModel)]="fechaFin" dateFormat="dd/mm/yy" placeholder="Seleccionar..." [showIcon]="true" appendTo="body" styleClass="w-100"></p-calendar>
+      </div>
+      <div class="filter-group flex-grow-1">
+        <label>Sucursales</label>
+        <p-multiSelect [options]="sucursales" [(ngModel)]="sucursalesSeleccionadas" optionLabel="nombre" placeholder="Selecciona sucursales" [filter]="true" [maxSelectedLabels]="2" styleClass="w-100" appendTo="body"></p-multiSelect>
+      </div>
+      <div class="filter-group flex-grow-1">
+        <label>Responsables</label>
+        <p-multiSelect [options]="usuariosRol4" [(ngModel)]="usuariosSeleccionados" optionLabel="nombreCompleto" placeholder="Selecciona usuarios" [filter]="true" [maxSelectedLabels]="2" styleClass="w-100" appendTo="body"></p-multiSelect>
+      </div>
+      <div class="filter-actions align-self-end">
+        <button class="btn btn-primary" (click)="aplicarFiltros()">Aplicar</button>
+      </div>
+    </div>
+
     <!-- Controles de Zoom -->
     <div class="zoom-controls mb-3" *ngIf="dataArbol.length > 0">
       <button type="button" class="btn btn-light btn-sm" (click)="zoomOut()" pTooltip="Alejar" tooltipPosition="top">

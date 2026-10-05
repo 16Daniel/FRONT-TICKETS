@@ -17,57 +17,79 @@ $rw-canvas: #f4f6fa;
 }
 
 /* ==========================================================================
-   Area Selector Chips Header
+   Area Selector Chips Header (Styles moved to styles.scss)
    ========================================================================== */
-.areas-chips-track {
+
+/* ==========================================================================
+   Filters Bar
+   ========================================================================== */
+.filters-bar {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #ffffff;
-  padding: 0.5rem 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: #ffffff;
+  padding: 1.25rem;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-  flex-wrap: wrap;
-  width: 100%;
-}
+  align-items: flex-end;
 
-.chip-area-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1rem;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #64748b;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1 1 auto;
+    min-width: 150px;
 
-  .area-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #cbd5e1;
-    transition: all 0.18s ease;
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+    
+    p-calendar {
+      width: 100%;
+    }
   }
 
-  &:hover {
-    background-color: #f8fafc;
-    color: #0f172a;
+  .flex-grow-1 {
+    flex: 1 1 200px;
   }
 
-  &.is-active {
-    background-color: #fff1f2;
-    color: $rw-primary;
-    font-weight: 800;
-    border-color: #fecdd3;
+  /* Overrides para componentes PrimeNG y Botones según DESIGN-SYSTEM.md */
+  .btn-primary {
+    background-color: #d3152a !important; /* Rojo Rebel */
+    border-color: #d3152a !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    
+    &:hover {
+      background-color: #b01021 !important; /* Rojo Rebel Oscuro */
+      border-color: #b01021 !important;
+    }
+  }
 
-    .area-dot {
-      background-color: $rw-primary;
+  ::ng-deep {
+    .p-calendar .p-button {
+      background-color: #d3152a !important; /* Rojo Rebel */
+      border-color: #d3152a !important;
+      
+      &:enabled:hover {
+        background-color: #b01021 !important;
+        border-color: #b01021 !important;
+      }
+    }
+
+    .p-multiselect:not(.p-disabled).p-focus {
+      border-color: #d3152a !important;
+      box-shadow: 0 0 0 0.2rem rgba(211, 21, 42, 0.2) !important;
+    }
+    
+    .p-calendar:not(.p-disabled).p-focus > .p-inputtext {
+      border-color: #d3152a !important;
+      box-shadow: 0 0 0 0.2rem rgba(211, 21, 42, 0.2) !important;
     }
   }
 }
