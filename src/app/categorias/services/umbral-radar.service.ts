@@ -23,18 +23,21 @@ export class UmbralRadarService {
       sumCalifSucursal: 0,
       countCalifSucursal: 0,
       sumCalifAnalista: 0,
-      countCalifAnalista: 0
+      countCalifAnalista: 0,
+      detalles: []
     };
   }
 
   public procesarDatosRadar(
     tickets: Ticket[],
     matriz: MatrizUrgencia | undefined,
-    sucursales: any[]
+    sucursales: any[],
+    usuarios: any[]
   ) {
     const statsGeneral: RadarStats = this.emptyStats();
     const statsCategorias: { [name: string]: RadarStats } = {};
     const statsSucursales: { [name: string]: RadarStats } = {};
+    const statsUsuarios: { [name: string]: RadarStats } = {};
 
     tickets.forEach(t => {
       const catName = t.nombreSubcategoria || t.nombreCategoria || 'Sin Categoría';
@@ -44,6 +47,14 @@ export class UmbralRadarService {
         const sId = String(t.idSucursal);
         const foundS = sucursales.find(x => String(x.id) === sId);
         sName = foundS ? foundS.nombre : `Sucursal ${sId}`;
+      }
+
+      let uName = '';
+      if (t.idResponsable) {
+        const u = usuarios.find(x => x.id === t.idResponsable);
+        if (u) {
+          uName = `${u.nombre} ${u.apellidoP}`.trim();
+        }
       }
 
       // ===== CALCULO DE SLAs =====
@@ -84,8 +95,8 @@ export class UmbralRadarService {
       const calSuc = Number(t.calificacionSucursal) || 0;
       const calAna = Number(t.calificacionAnalista) || 0;
 
-      // Verifica si el ticket está terminado (estatus 7)
-      const isTerminado = String(t.idEstatusTicket) === '7';
+      // Verifica si el ticket está terminado (estatus 3 según corrección)
+      const isTerminado = String(t.idEstatusTicket) === '3';
 
       const addStats = (stats: RadarStats) => {
         stats.totalTickets++;
@@ -96,23 +107,37 @@ export class UmbralRadarService {
         }
         if (calSuc > 0) { stats.sumCalifSucursal += calSuc; stats.countCalifSucursal++; }
         if (calAna > 0) { stats.sumCalifAnalista += calAna; stats.countCalifAnalista++; }
+        
+        // Log para auditoría en consola
+        stats.detalles.push({
+          folio: t.folio,
+          estatusTerminado: isTerminado ? 'SI' : 'NO',
+          cumplioSlaAtencion: isTerminado ? (metSlaAtencion ? 'SI' : 'NO') : 'N/A',
+          cumplioSlaResolucion: isTerminado ? (metSlaResolucion ? 'SI' : 'NO') : 'N/A',
+          calificacionSucursal: calSuc > 0 ? calSuc : 'N/A',
+          calificacionAnalista: calAna > 0 ? calAna : 'N/A'
+        });
       };
 
       if (!statsCategorias[catName]) statsCategorias[catName] = this.emptyStats();
       if (!statsSucursales[sName]) statsSucursales[sName] = this.emptyStats();
+      if (uName !== '' && !statsUsuarios[uName]) statsUsuarios[uName] = this.emptyStats();
 
       addStats(statsGeneral);
       addStats(statsCategorias[catName]);
       addStats(statsSucursales[sName]);
+      if (uName !== '') addStats(statsUsuarios[uName]);
     });
 
     // NORMALIZACIÓN
     const maxTicketsCategoria = Math.max(...Object.values(statsCategorias).map(s => s.totalTickets), 1);
     const maxTicketsSucursal = Math.max(...Object.values(statsSucursales).map(s => s.totalTickets), 1);
+    const maxTicketsUsuario = Math.max(...Object.values(statsUsuarios).map(s => s.totalTickets), 1);
 
     const radarDataGeneral = this.formatRadarSeries('General', statsGeneral, statsGeneral.totalTickets);
     const radarDataCategorias: { [name: string]: any[] } = {};
     const radarDataSucursales: { [name: string]: any[] } = {};
+    const radarDataUsuarios: { [name: string]: any[] } = {};
 
     Object.keys(statsCategorias).forEach(cName => {
       radarDataCategorias[cName] = this.formatRadarSeries(cName, statsCategorias[cName], maxTicketsCategoria);
@@ -122,10 +147,15 @@ export class UmbralRadarService {
       radarDataSucursales[sName] = this.formatRadarSeries(sName, statsSucursales[sName], maxTicketsSucursal);
     });
 
+    Object.keys(statsUsuarios).forEach(uName => {
+      radarDataUsuarios[uName] = this.formatRadarSeries(uName, statsUsuarios[uName], maxTicketsUsuario);
+    });
+
     return {
       radarDataGeneral,
       radarDataCategorias,
-      radarDataSucursales
+      radarDataSucursales,
+      radarDataUsuarios
     };
   }
 
@@ -141,6 +171,7 @@ export class UmbralRadarService {
     return [
       {
         name: name,
+        detalles: stats.detalles,
         series: [
           { name: 'Volumen Relativo', value: Math.round(ptTickets) },
           { name: 'T. Terminados', value: Math.round(ptTerminados) },

@@ -66,6 +66,11 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   radarDataGeneral: any[] = [];
   radarDataCategorias: { [name: string]: any[] } = {};
   radarDataSucursales: { [name: string]: any[] } = {};
+  radarDataUsuarios: { [name: string]: any[] } = {};
+  
+  datosCategorias: any[] = [];
+  datosSucursales: any[] = [];
+  datosUsuarios: any[] = [];
 
   constructor(
     private areasService: AreasService,
@@ -123,8 +128,6 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   usuarioTopTickets: { nombre: string, conteo: number } | null = null;
   sucursalTopTickets: { nombre: string, conteo: number } | null = null;
 
-  datosCategorias: any[] = [];
-  datosSucursales: any[] = [];
 
   aplicarFiltros(): void {
     this.isApplyingFilters = true;
@@ -167,12 +170,15 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
             topCatName = catName;
           }
 
-          if (t.idUsuario) {
-            userCounts[t.idUsuario] = (userCounts[t.idUsuario] || 0) + 1;
-            if (userCounts[t.idUsuario] > maxUsuarios) {
-              maxUsuarios = userCounts[t.idUsuario];
-              const u = this.usersService.usuarios.find(x => x.id === t.idUsuario);
-              topUsuarioName = u ? `${u.nombre} ${u.apellidoP}`.trim() : 'Desconocido';
+          if (t.idResponsable) {
+            const isRol4 = this.usuariosRol4.some(u => u.id === t.idResponsable);
+            if (isRol4) {
+              userCounts[t.idResponsable] = (userCounts[t.idResponsable] || 0) + 1;
+              if (userCounts[t.idResponsable] > maxUsuarios) {
+                maxUsuarios = userCounts[t.idResponsable];
+                const u = this.usuariosRol4.find(x => x.id === t.idResponsable);
+                topUsuarioName = u ? `${u.nombre} ${u.apellidoP}`.trim() : 'Desconocido';
+              }
             }
           }
 
@@ -205,11 +211,25 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
           };
         }).sort((a, b) => b.value - a.value);
 
+        this.datosUsuarios = Object.keys(userCounts).map(id => {
+          const u = this.usuariosRol4.find(x => x.id === id);
+          return {
+            name: u ? `${u.nombre} ${u.apellidoP}`.trim() : `Usuario ${id}`,
+            value: userCounts[id]
+          };
+        }).sort((a, b) => b.value - a.value);
+
         // ==== CÁLCULO DE DATOS RADAR USANDO EL SERVICIO ====
-        const radarResult = this.umbralRadarService.procesarDatosRadar(tickets, this.matrizUrgenciaArea, this.sucursales);
+        const radarResult = this.umbralRadarService.procesarDatosRadar(
+          tickets, 
+          this.matrizUrgenciaArea, 
+          this.sucursales,
+          this.usuariosRol4
+        );
         this.radarDataGeneral = radarResult.radarDataGeneral;
         this.radarDataCategorias = radarResult.radarDataCategorias;
         this.radarDataSucursales = radarResult.radarDataSucursales;
+        this.radarDataUsuarios = radarResult.radarDataUsuarios;
 
         // Refrescar el árbol
         if (this.categoriasActuales.length > 0) {

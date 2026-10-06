@@ -2,7 +2,7 @@
   <h3 class="chart-title">{{ currentTitle }}</h3>
   <p class="chart-subtitle text-muted mb-3" style="font-size: 0.85rem;">Métricas de cumplimiento y calificación (%)</p>
   
-  <div class="chart-polar-container w-full flex justify-content-center" style="height: 350px;">
-    <p-chart type="radar" [data]="chartData" [options]="chartOptions" width="100%" height="350px"></p-chart>
+  <div class="chart-polar-container w-full" style="height: 350px; position: relative;">
+    <p-chart #chart type="radar" [data]="chartData" [options]="chartOptions" [responsive]="true"></p-chart>
   </div>
 </div>

@@ -7,4 +7,5 @@ export interface RadarStats {
   countCalifSucursal: number;
   sumCalifAnalista: number;
   countCalifAnalista: number;
+  detalles: any[];
 }

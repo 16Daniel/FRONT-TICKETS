@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChartModule } from 'primeng/chart';
+import { ChartModule, UIChart } from 'primeng/chart';
 
 @Component({
   selector: 'app-umbral-radar-chart',
@@ -15,8 +15,14 @@ export class UmbralRadarChartComponent implements OnChanges {
   @Input() dataDictionary: { [key: string]: any[] } = {};
   @Input() selectedItem: string = '';
 
+  @ViewChild('chart') chart!: UIChart;
+
   chartData: any;
   chartOptions: any;
+
+  constructor() {
+    this.initOptions();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedItem'] || changes['dataGeneral'] || changes['dataDictionary']) {
@@ -35,12 +41,35 @@ export class UmbralRadarChartComponent implements OnChanges {
     return 'Análisis SLA: ' + (this.selectedItem || 'General');
   }
 
+  private initOptions() {
+    this.chartOptions = {
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        r: {
+          angleLines: { display: true },
+          suggestedMin: 0,
+          suggestedMax: 100,
+          ticks: { stepSize: 20 }
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    };
+  }
+
   private updateChart() {
     const rawData = this.activeData;
     
     // Si la data viene vacía o no tiene el formato esperado, ponemos default
     if (!rawData || rawData.length === 0 || !rawData[0].series) {
-      this.chartData = { labels: [], datasets: [] };
+      if (!this.chartData) {
+        this.chartData = { labels: [], datasets: [] };
+      } else {
+        this.chartData.datasets = [];
+        if (this.chart) this.chart.refresh();
+      }
       return;
     }
 
@@ -52,42 +81,44 @@ export class UmbralRadarChartComponent implements OnChanges {
     const rgbaBg = 'rgba(211, 21, 42, 0.4)';
     const rgbaBorder = 'rgba(211, 21, 42, 1)';
 
-    this.chartData = {
-      labels: labels,
-      datasets: [
-        {
-          label: this.currentTitle,
-          backgroundColor: rgbaBg,
-          borderColor: rgbaBorder,
-          pointBackgroundColor: rgbaBorder,
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: rgbaBorder,
-          data: dataValues
-        }
-      ]
-    };
-
-    this.chartOptions = {
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        r: {
-          angleLines: {
-            display: true
-          },
-          suggestedMin: 0,
-          suggestedMax: 100,
-          ticks: {
-            stepSize: 20
+    if (!this.chartData) {
+      this.chartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: this.currentTitle,
+            backgroundColor: rgbaBg,
+            borderColor: rgbaBorder,
+            pointBackgroundColor: rgbaBorder,
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: rgbaBorder,
+            data: dataValues
           }
-        }
-      },
-      responsive: true,
-      maintainAspectRatio: false
-    };
+        ]
+      };
+    } else {
+      // Mutate existing object to prevent canvas destruction
+      this.chartData.labels = labels;
+      if (!this.chartData.datasets || this.chartData.datasets.length === 0) {
+        this.chartData.datasets = [{
+            label: this.currentTitle,
+            backgroundColor: rgbaBg,
+            borderColor: rgbaBorder,
+            pointBackgroundColor: rgbaBorder,
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: rgbaBorder,
+            data: dataValues
+        }];
+      } else {
+        this.chartData.datasets[0].data = dataValues;
+        this.chartData.datasets[0].label = this.currentTitle;
+      }
+      
+      if (this.chart) {
+        this.chart.refresh();
+      }
+    }
   }
 }
