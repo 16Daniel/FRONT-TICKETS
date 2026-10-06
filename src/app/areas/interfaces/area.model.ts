@@ -6,12 +6,26 @@ export class Area {
   horarioTrabajo:any = {};
   horarioGuardia:any = {};
   nivelesNotificacion: EscalationLevel[] = []; 
+  gruponotificacion: string = '';
 }
 
 export interface EscalationLevel {
   id: string;
   level: number;
-  name: string;
-  phone: string;
+  responsables: ResponsableNivel[];
   role?: string;
+  
+}
+
+export interface ResponsableNivel 
+{
+   id: string;
+   name: string;
+   phone: string;
+   esgrupo: boolean;
+}
+
+export interface GrupoWhatsapp {
+  id: string;
+  name: string;
 }

@@ -326,7 +326,7 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.idUsuario = this.usuarioActivo.id;
     this.ticket.usuariosEtiquetados = MentionUtils.extraerUsuariosEtiquetados(this.ticket.descripcion);
     this.ticket.folio = folio;
-
+    // await this.whatsappService.enviarMensajeTexto('120363418021345457@g.us', 'Se ha creado un nuevo ticket con folio: ' + folio + ' y categoría: ' + this.ticket.nombreCategoria + (this.ticket.nombreSubcategoria ? ' - ' + this.ticket.nombreSubcategoria : ''));
     if (this.archivos.length > 0) {
       this.firebaseStorage.cargarArchivosTicket(this.archivos)
         .then(async urls => {
