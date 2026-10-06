@@ -1,5 +1,9 @@
 export const environment = {
     production: true,
+    whatsappApiConfig: {
+    instancia: '',
+    token: ''
+  },
     firebaseConfig: {
         apiKey: 'AIzaSyCavGJWR7uF85WbuaeA4iOB_Ecb0zL45P4',
         authDomain: 'tickets-23dc4.firebaseapp.com',
