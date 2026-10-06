@@ -1,0 +1,53 @@
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.chart-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 1rem 0;
+}
+
+.chart-scroll-container {
+  height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  
+  /* Scrollbar personalizado para que no se vea feo */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9; 
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1; 
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8; 
+  }
+}
+
+.chart-inner-wrapper {
+  width: 100%;
+  position: relative;
+}

@@ -1,0 +1,48 @@
+    <!-- Sección de Gráficas ngx-charts -->
+    <div class="charts-grid" *ngIf="!isApplyingFilters && (datosCategorias.length > 0 || datosSucursales.length > 0)">
+      
+      <div class="chart-card">
+        <h3 class="chart-title">Tickets por Categoría</h3>
+        <div class="chart-scroll-container">
+          <div class="chart-inner-wrapper" [style.height]="getChartHeight(datosCategorias)">
+            <ngx-charts-bar-horizontal
+              [results]="reversedDatosCategorias"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="false"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="false"
+              xAxisLabel="Cantidad de Tickets"
+              [barPadding]="8"
+              [roundEdges]="true"
+              [gradient]="false"
+              [tooltipDisabled]="false">
+            </ngx-charts-bar-horizontal>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3 class="chart-title">Tickets por Sucursal</h3>
+        <div class="chart-scroll-container">
+          <div class="chart-inner-wrapper" [style.height]="getChartHeight(datosSucursales)">
+            <ngx-charts-bar-horizontal
+              [results]="reversedDatosSucursales"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="false"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="false"
+              xAxisLabel="Cantidad de Tickets"
+              [barPadding]="8"
+              [roundEdges]="true"
+              [gradient]="false"
+              [tooltipDisabled]="false">
+            </ngx-charts-bar-horizontal>
+          </div>
+        </div>
+      </div>
+
+    </div>

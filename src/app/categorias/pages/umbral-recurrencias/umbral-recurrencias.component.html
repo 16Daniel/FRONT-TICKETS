@@ -20,141 +20,38 @@
       </button>
     </div>
 
-    <!-- Fila de Tarjetas KPI -->
-    <div class="tree-kpi-grid mb-4" *ngIf="!isApplyingFilters" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="tree-kpi-card card-root">
-        <div class="kpi-icon-wrap">
-          <i class="bx bx-receipt"></i>
-        </div>
-        <div class="kpi-info-wrap">
-          <span class="kpi-label">Tickets Totales</span>
-          <span class="kpi-value">{{ totalTickets }}</span>
-          <span class="kpi-sub">en el periodo seleccionado</span>
-        </div>
-      </div>
+    <!-- Tarjetas KPI -->
+    <app-umbral-kpis 
+      [totalTickets]="totalTickets"
+      [categoriaTopTickets]="categoriaTopTickets"
+      [usuarioTopTickets]="usuarioTopTickets"
+      [sucursalTopTickets]="sucursalTopTickets"
+      [isApplyingFilters]="isApplyingFilters">
+    </app-umbral-kpis>
 
-      <div class="tree-kpi-card card-leaves">
-        <div class="kpi-icon-wrap">
-          <i class="bx bx-trophy"></i>
-        </div>
-        <div class="kpi-info-wrap">
-          <span class="kpi-label">Mayor Recurrencia</span>
-          <span class="kpi-value" style="font-size: 1.2rem; line-height: 1.2;">{{ categoriaTopTickets ? categoriaTopTickets.nombre : 'N/A' }}</span>
-          <span class="kpi-sub">{{ categoriaTopTickets ? categoriaTopTickets.conteo + ' tickets' : 'Sin datos' }}</span>
-        </div>
-      </div>
+    <!-- Barra de Filtros -->
+    <app-umbral-filtros 
+      [sucursales]="sucursales"
+      [usuariosRol4]="usuariosRol4"
+      [isApplyingFilters]="isApplyingFilters"
+      [initialFechaInicio]="fechaInicio"
+      [initialFechaFin]="fechaFin"
+      (apply)="aplicarFiltrosEvent($event)">
+    </app-umbral-filtros>
 
-      <div class="tree-kpi-card card-user">
-        <div class="kpi-icon-wrap">
-          <i class="bx bx-user-voice"></i>
-        </div>
-        <div class="kpi-info-wrap">
-          <span class="kpi-label">Más Reportes</span>
-          <span class="kpi-value" style="font-size: 1.1rem; line-height: 1.2;">{{ usuarioTopTickets ? usuarioTopTickets.nombre : 'N/A' }}</span>
-          <span class="kpi-sub">{{ usuarioTopTickets ? usuarioTopTickets.conteo + ' tickets' : 'Sin datos' }}</span>
-        </div>
-      </div>
+    <!-- Árbol de Organización -->
+    <app-umbral-arbol 
+      [dataArbol]="dataArbol"
+      [hasCategories]="categoriasActuales.length > 0">
+    </app-umbral-arbol>
 
-      <div class="tree-kpi-card card-branch">
-        <div class="kpi-icon-wrap">
-          <i class="bx bx-store-alt"></i>
-        </div>
-        <div class="kpi-info-wrap">
-          <span class="kpi-label">Suc. Crítica</span>
-          <span class="kpi-value" style="font-size: 1.1rem; line-height: 1.2;">{{ sucursalTopTickets ? sucursalTopTickets.nombre : 'N/A' }}</span>
-          <span class="kpi-sub">{{ sucursalTopTickets ? sucursalTopTickets.conteo + ' tickets' : 'Sin datos' }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Filtros -->
-    <div class="filters-bar mb-3">
-      <div class="filter-group">
-        <label>Fecha Inicio</label>
-        <p-calendar [(ngModel)]="fechaInicio" dateFormat="dd/mm/yy" placeholder="Seleccionar..." [showIcon]="true" appendTo="body" styleClass="w-100"></p-calendar>
-      </div>
-      <div class="filter-group">
-        <label>Fecha Fin</label>
-        <p-calendar [(ngModel)]="fechaFin" dateFormat="dd/mm/yy" placeholder="Seleccionar..." [showIcon]="true" appendTo="body" styleClass="w-100"></p-calendar>
-      </div>
-      <div class="filter-group flex-grow-1">
-        <label>Sucursales</label>
-        <p-multiSelect [options]="sucursales" [(ngModel)]="sucursalesSeleccionadas" optionLabel="nombre" placeholder="Selecciona sucursales" [filter]="true" [maxSelectedLabels]="2" styleClass="w-100" appendTo="body"></p-multiSelect>
-      </div>
-      <div class="filter-group flex-grow-1">
-        <label>Responsables</label>
-        <p-multiSelect [options]="usuariosRol4" [(ngModel)]="usuariosSeleccionados" optionLabel="nombreCompleto" placeholder="Selecciona usuarios" [filter]="true" [maxSelectedLabels]="2" styleClass="w-100" appendTo="body"></p-multiSelect>
-      </div>
-      <div class="filter-actions align-self-end">
-        <button class="btn btn-primary" (click)="aplicarFiltros()" [disabled]="isApplyingFilters">
-          <i class="bx bx-loader-alt bx-spin me-1" *ngIf="isApplyingFilters"></i>
-          Aplicar
-        </button>
-      </div>
-    </div>
-
-    <!-- Controles de Zoom -->
-    <div class="zoom-controls mb-3" *ngIf="dataArbol.length > 0">
-      <button type="button" class="btn btn-light btn-sm" (click)="zoomOut()" pTooltip="Alejar" tooltipPosition="top">
-        <i class="bx bx-minus"></i>
-      </button>
-      <span class="zoom-indicator">{{ (zoomLevel * 100) | number:'1.0-0' }}%</span>
-      <button type="button" class="btn btn-light btn-sm" (click)="zoomIn()" pTooltip="Acercar" tooltipPosition="top">
-        <i class="bx bx-plus"></i>
-      </button>
-      <button type="button" class="btn btn-light btn-sm ms-2" (click)="resetZoom()" pTooltip="Restablecer" tooltipPosition="top">
-        <i class="bx bx-reset"></i>
-      </button>
-    </div>
-
-    <!-- Contenedor del Organization Chart -->
-    <div class="org-chart-container mt-2" *ngIf="dataArbol.length > 0"
-         #panContainer
-         [class.is-dragging]="isDragging"
-         (mousedown)="onMouseDown($event, panContainer)"
-         (mouseleave)="onMouseLeave()"
-         (mouseup)="onMouseUp()"
-         (mousemove)="onMouseMove($event, panContainer)"
-         (wheel)="onWheel($event)">
-      <div class="org-chart-zoom-wrapper" [style.transform]="'scale(' + zoomLevel + ')'" [style.transform-origin]="'top center'">
-        <p-organizationChart [value]="dataArbol">
-        <ng-template let-node pTemplate="area">
-          <div class="node-content node-area">
-            <div class="node-header"><i class="bx bx-buildings"></i></div>
-            <div class="node-label">{{ node.label }}</div>
-          </div>
-        </ng-template>
-
-        <ng-template let-node pTemplate="rama">
-          <div class="node-content node-rama">
-            <div class="node-header"><i class="bx bx-folder"></i></div>
-            <div class="node-label">{{ node.label }}</div>
-          </div>
-        </ng-template>
-
-        <ng-template let-node pTemplate="hoja">
-          <div class="node-content node-hoja">
-            <div class="node-header"><i class="bx bx-tag"></i></div>
-            <div class="node-label">{{ node.label }}</div>
-            <span class="badge rounded-pill text-bg-danger mt-2" *ngIf="node.data.ticketCount > 0" style="background-color: #d3152a !important; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
-              {{ node.data.ticketCount }} tickets
-            </span>
-            <span class="badge rounded-pill text-bg-secondary mt-2" *ngIf="!node.data.ticketCount" style="font-size: 0.75rem; background-color: #94a3b8 !important;">
-              Sin tickets
-            </span>
-          </div>
-        </ng-template>
-      </p-organizationChart>
-      </div>
-    </div>
-
-    <div class="tree-empty-state" *ngIf="dataArbol.length === 0 || (dataArbol[0] && (!dataArbol[0].children || dataArbol[0].children.length === 0))">
-      <div class="empty-icon">
-        <i class="bx bx-git-repo-forked"></i>
-      </div>
-      <h4>Esta área aún no tiene categorías</h4>
-      <p>Debes crear categorías en la pantalla de Categorías primero.</p>
-    </div>
+    <!-- Gráficas ngx-charts -->
+    <app-umbral-graficas 
+      [datosCategorias]="datosCategorias"
+      [datosSucursales]="datosSucursales"
+      [colorScheme]="colorScheme"
+      [isApplyingFilters]="isApplyingFilters">
+    </app-umbral-graficas>
 
   </div>
 </div>

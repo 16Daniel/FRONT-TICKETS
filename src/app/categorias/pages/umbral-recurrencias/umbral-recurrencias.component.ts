@@ -1,11 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TreeNode } from 'primeng/api';
-import { OrganizationChartModule } from 'primeng/organizationchart';
-import { CalendarModule } from 'primeng/calendar';
-import { MultiSelectModule } from 'primeng/multiselect';
 
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
@@ -13,18 +10,21 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { CategoriesService } from '../../services/categories.service';
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
-import { TooltipModule } from 'primeng/tooltip';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { UmbralTicketsService, UmbralFiltros } from '../../services/umbral-tickets.service';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { UmbralKpisComponent } from '../../components/umbral-kpis/umbral-kpis.component';
+import { UmbralFiltrosComponent } from '../../components/umbral-filtros/umbral-filtros.component';
+import { UmbralGraficasComponent } from '../../components/umbral-graficas/umbral-graficas.component';
+import { UmbralArbolComponent } from '../../components/umbral-arbol/umbral-arbol.component';
 
 @Component({
   selector: 'app-umbral-recurrencias',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeaderComponent, OrganizationChartModule, TooltipModule, CalendarModule, MultiSelectModule],
+  imports: [CommonModule, FormsModule, PageHeaderComponent, UmbralKpisComponent, UmbralFiltrosComponent, UmbralGraficasComponent, UmbralArbolComponent],
   templateUrl: './umbral-recurrencias.component.html',
   styleUrl: './umbral-recurrencias.component.scss'
 })
@@ -38,16 +38,10 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   isApplyingFilters = false;
 
   dataArbol: TreeNode[] = [];
-  zoomLevel: number = 1;
 
-  @ViewChild('panContainer') panContainer?: ElementRef<HTMLElement>;
-
-  // Panning variables
-  isDragging = false;
-  startX = 0;
-  startY = 0;
-  scrollLeft = 0;
-  scrollTop = 0;
+  colorScheme: any = {
+    domain: ['#d3152a', '#fdb813', '#2563eb', '#16a34a', '#7c3aed', '#0f766e', '#b91c1c', '#ca8a04', '#64748b']
+  };
 
   // Filter variables
   fechaInicio: Date | null = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -71,60 +65,12 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
-  zoomIn(): void {
-    if (this.zoomLevel < 2) {
-      this.zoomLevel += 0.1;
-    }
-  }
-
-  zoomOut(): void {
-    if (this.zoomLevel > 0.3) {
-      this.zoomLevel -= 0.1;
-    }
-  }
-
-  resetZoom(): void {
-    this.zoomLevel = 1;
-  }
-
-  onMouseDown(e: MouseEvent, container: HTMLElement): void {
-    // Solo permitir drag con el botón principal
-    if (e.button !== 0) return;
-    
-    this.isDragging = true;
-    this.startX = e.pageX - container.offsetLeft;
-    this.startY = e.pageY - container.offsetTop;
-    this.scrollLeft = container.scrollLeft;
-    this.scrollTop = container.scrollTop;
-  }
-
-  onMouseLeave(): void {
-    this.isDragging = false;
-  }
-
-  onMouseUp(): void {
-    this.isDragging = false;
-  }
-
-  onMouseMove(e: MouseEvent, container: HTMLElement): void {
-    if (!this.isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - container.offsetLeft;
-    const y = e.pageY - container.offsetTop;
-    const walkX = (x - this.startX) * 1.5; // Multiplicador de velocidad
-    const walkY = (y - this.startY) * 1.5;
-    container.scrollLeft = this.scrollLeft - walkX;
-    container.scrollTop = this.scrollTop - walkY;
-  }
-
-  onWheel(e: WheelEvent): void {
-    // Prevenir el scroll por defecto de la página
-    e.preventDefault();
-    if (e.deltaY < 0) {
-      this.zoomIn(); // Hacia arriba, acercar
-    } else if (e.deltaY > 0) {
-      this.zoomOut(); // Hacia abajo, alejar
-    }
+  aplicarFiltrosEvent(event: any): void {
+    this.fechaInicio = event.fechaInicio;
+    this.fechaFin = event.fechaFin;
+    this.sucursalesSeleccionadas = event.sucursalesSeleccionadas;
+    this.usuariosSeleccionados = event.usuariosSeleccionados;
+    this.aplicarFiltros();
   }
 
   ngOnInit(): void {
@@ -163,6 +109,9 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   categoriaTopTickets: { nombre: string, conteo: number } | null = null;
   usuarioTopTickets: { nombre: string, conteo: number } | null = null;
   sucursalTopTickets: { nombre: string, conteo: number } | null = null;
+
+  datosCategorias: any[] = [];
+  datosSucursales: any[] = [];
 
   aplicarFiltros(): void {
     this.isApplyingFilters = true;
@@ -231,6 +180,19 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
         this.usuarioTopTickets = maxUsuarios > 0 ? { nombre: topUsuarioName, conteo: maxUsuarios } : null;
         this.sucursalTopTickets = maxSucursales > 0 ? { nombre: topSucursalName, conteo: maxSucursales } : null;
 
+        this.datosCategorias = Object.keys(nameCounts).map(name => ({
+          name: name,
+          value: nameCounts[name]
+        })).sort((a, b) => b.value - a.value);
+
+        this.datosSucursales = Object.keys(sucursalCounts).map(id => {
+          const s = this.sucursales.find(x => String(x.id) === id);
+          return {
+            name: s ? s.nombre : `Sucursal ${id}`,
+            value: sucursalCounts[id]
+          };
+        }).sort((a, b) => b.value - a.value);
+
         // Refrescar el árbol
         if (this.categoriasActuales.length > 0) {
           this.dataArbol = this.transformarAChart(this.categoriasActuales);
@@ -276,20 +238,7 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
       this.categoriasActuales = cats;
       this.dataArbol = this.transformarAChart(cats);
       this.cdr.detectChanges();
-      this.centrarScroll();
     });
-  }
-
-  private centrarScroll(): void {
-    setTimeout(() => {
-      if (this.panContainer && this.panContainer.nativeElement) {
-        const el = this.panContainer.nativeElement;
-        // Si el contenido es más ancho que el contenedor, hacer scroll al centro
-        if (el.scrollWidth > el.clientWidth) {
-          el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
-        }
-      }
-    }, 100);
   }
 
   private transformarAChart(categorias: Categoria[]): TreeNode[] {

@@ -1,0 +1,70 @@
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: #ffffff;
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  align-items: flex-end;
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1 1 auto;
+    min-width: 150px;
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+    
+    ::ng-deep p-calendar {
+      width: 100%;
+    }
+  }
+
+  .flex-grow-1 {
+    flex: 1 1 200px;
+  }
+
+  /* Overrides para componentes PrimeNG y Botones según DESIGN-SYSTEM.md */
+  .btn-primary {
+    background-color: #d3152a !important; /* Rojo Rebel */
+    border-color: #d3152a !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    
+    &:hover {
+      background-color: #b01021 !important; /* Rojo Rebel Oscuro */
+      border-color: #b01021 !important;
+    }
+  }
+
+  ::ng-deep {
+    .p-calendar .p-button {
+      background-color: #d3152a !important; /* Rojo Rebel */
+      border-color: #d3152a !important;
+      
+      &:enabled:hover {
+        background-color: #b01021 !important;
+        border-color: #b01021 !important;
+      }
+    }
+
+    .p-multiselect:not(.p-disabled).p-focus {
+      border-color: #d3152a !important;
+      box-shadow: 0 0 0 0.2rem rgba(211, 21, 42, 0.2) !important;
+    }
+    
+    .p-calendar:not(.p-disabled).p-focus > .p-inputtext {
+      border-color: #d3152a !important;
+      box-shadow: 0 0 0 0.2rem rgba(211, 21, 42, 0.2) !important;
+    }
+  }
+}

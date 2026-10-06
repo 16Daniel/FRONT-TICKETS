@@ -1,0 +1,60 @@
+    <!-- Contenedor del Árbol de Nodos -->
+    <div class="org-chart-container mt-3"
+         #panContainer
+         [class.is-dragging]="isDragging"
+         (mousedown)="onMouseDown($event, panContainer)"
+         (mouseleave)="onMouseLeave()"
+         (mouseup)="onMouseUp()"
+         (mousemove)="onMouseMove($event, panContainer)"
+         (wheel)="onWheel($event)">
+      
+      <div class="tree-empty-state" *ngIf="!hasCategories || dataArbol.length === 0 || (dataArbol[0] && (!dataArbol[0].children || dataArbol[0].children.length === 0))">
+        <div class="empty-icon">
+          <i class="bx bx-git-repo-forked"></i>
+        </div>
+        <h4>Esta área aún no tiene categorías</h4>
+        <p>Debes crear categorías en la pantalla de Categorías primero.</p>
+      </div>
+
+      <div class="org-chart-zoom-wrapper" [style.transform]="'scale(' + zoomLevel + ')'" *ngIf="hasCategories && dataArbol.length > 0">
+        <p-organizationChart [value]="dataArbol">
+          <ng-template let-node pTemplate="area">
+            <div class="node-content node-area">
+              <div class="node-header"><i class="bx bx-buildings"></i></div>
+              <div class="node-label">{{ node.label }}</div>
+            </div>
+          </ng-template>
+          
+          <ng-template let-node pTemplate="rama">
+            <div class="node-content node-rama">
+              <div class="node-header"><i class="bx bx-folder"></i></div>
+              <div class="node-label">{{ node.label }}</div>
+            </div>
+          </ng-template>
+          
+          <ng-template let-node pTemplate="hoja">
+            <div class="node-content node-hoja">
+              <div class="node-header">
+                <i class="bx bx-tag"></i>
+              </div>
+              <div class="node-label mb-2">{{ node.label }}</div>
+              
+              <!-- Badge de Recurrencia -->
+              <span class="badge rounded-pill mt-2 d-inline-flex align-items-center gap-1"
+                    *ngIf="node.data.ticketCount > 0"
+                    style="background-color: #d3152a !important; color: white !important; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+                <i class="bx bx-error-circle"></i>
+                {{ node.data.ticketCount }} tickets
+              </span>
+              
+              <span class="badge rounded-pill mt-2 d-inline-flex align-items-center gap-1"
+                    *ngIf="!node.data.ticketCount"
+                    style="background-color: #94a3b8 !important; color: white !important; font-size: 0.75rem; padding: 0.4rem 0.6rem;">
+                <i class="bx bx-check-circle"></i>
+                Sin tickets
+              </span>
+            </div>
+          </ng-template>
+        </p-organizationChart>
+      </div>
+    </div>
