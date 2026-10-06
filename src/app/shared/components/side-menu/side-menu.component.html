@@ -9,12 +9,10 @@
       aria-label="Abrir menú de navegación">
       <i class="bx" [ngClass]="showmenu ? 'bx-x' : 'bx-menu'"></i>
     </button>
+  </div>
 
+  <div class="navbar-center">
     <div class="brand-container">
-      <!-- <div class="brand-logo">
-        <i class="bx bx-layer"></i>
-      </div>
-      <span class="brand-title">REBEL TICKETS</span> -->
       <span class="branch-badge" *ngIf="tituloBanner">{{ tituloBanner }}</span>
     </div>
   </div>
@@ -133,6 +131,15 @@
       </a>
 
       <a 
+        [routerLink]="'/main/responsables'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-key nav-icon"></i>
+        <span class="nav-label">Responsables PIN</span>
+      </a>
+
+      <a 
         [routerLink]="'/main/roles'" 
         routerLinkActive="active"
         *ngIf="usuario.idRol == '1'" 
@@ -163,13 +170,24 @@
       </a>
 
       <a 
-        [routerLink]="'/main/categories'" 
+        [routerLink]="'/main/categorias'" 
         routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}"
         *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
         (click)="closemenu()" 
         class="nav-item">
         <i class="bx bx-grid-alt nav-icon"></i>
         <span class="nav-label">Categorías</span>
+      </a>
+
+      <a 
+        [routerLink]="'/main/categorias/umbral-recurrencias'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-slider nav-icon"></i>
+        <span class="nav-label">Umbral de Recurrencias</span>
       </a>
 
     </div>
@@ -178,6 +196,15 @@
     <div class="nav-group">
       <span class="nav-group-title">Operaciones</span>
 
+      <a 
+        [routerLink]="'/main/tareas'" 
+        routerLinkActive="active"
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-check-square nav-icon"></i>
+        <span class="nav-label">Tareas</span>
+      </a>
+      
       <a 
         [routerLink]="'/main/fixed-assets'" 
         routerLinkActive="active"
@@ -205,15 +232,6 @@
         class="nav-item">
         <i class="bx bx-group nav-icon"></i>
         <span class="nav-label">Comensales</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/tareas'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-check-square nav-icon"></i>
-        <span class="nav-label">Tareas</span>
       </a>
 
       <a 
@@ -270,6 +288,7 @@
     <!-- Grupo: Personal y Nómina -->
     <div class="nav-group">
       <span class="nav-group-title">Personal y Nómina</span>
+
 
       <a 
         [routerLink]="'/nomina/control-de-personal'" 

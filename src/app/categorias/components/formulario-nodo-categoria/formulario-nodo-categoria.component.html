@@ -1,0 +1,169 @@
+<div class="tarjeta-formulario-nodo" [class.es-anidado]="esAnidado">
+  <div class="encabezado-formulario">
+    <div class="titulo-formulario">
+      <i class="bx" [ngClass]="modo === 'editar' ? 'bx-edit-alt' : (modo === 'crear-raiz' ? 'bx-folder-plus' : 'bx-plus')"></i>
+      <span *ngIf="modo === 'crear-raiz'">Nueva Categoría Raíz en <b>{{ nombreArea }}</b></span>
+      <span *ngIf="modo === 'crear-hijo'">Agregar subcategoría dentro de <b>{{ nombrePadre }}</b></span>
+      <span *ngIf="modo === 'editar'">Editar: <b>{{ nodoEditar?.nombre }}</b></span>
+    </div>
+    <button type="button" class="btn-cerrar-formulario" (click)="cancelar.emit()">
+      <i class="bx bx-x"></i>
+    </button>
+  </div>
+
+  <div class="cuerpo-formulario">
+    <!-- Input Nombre -->
+    <div class="grupo-campo mb-3">
+      <label class="etiqueta-campo">NOMBRE <span class="requerido">*</span></label>
+      <input 
+        type="text" 
+        [(ngModel)]="nombre" 
+        placeholder="Nombre de la categoría..." 
+        class="input-texto-nodo" 
+        (keyup.enter)="alGuardar()"
+        autofocus />
+    </div>
+
+    <!-- Selector de Tipo (Rama vs Hoja) -->
+    <div class="grupo-campo mb-3" *ngIf="!bloquearCambioTipo">
+      <label class="etiqueta-campo">¿QUÉ TIPO DE CATEGORÍA ES?</label>
+      <div class="botones-seleccion-tipo">
+        <button 
+          type="button" 
+          class="boton-tipo" 
+          [class.esta-elegido]="tipo === 'rama'" 
+          (click)="tipo = 'rama'">
+          <i class="bx bx-folder"></i>
+          <div class="textos-boton-tipo">
+            <b>Rama (Solo agrupar)</b>
+            <span>Tendrá más subcategorías dentro</span>
+          </div>
+        </button>
+
+        <button 
+          type="button" 
+          class="boton-tipo" 
+          [class.esta-elegido]="tipo === 'hoja'" 
+          (click)="tipo = 'hoja'">
+          <i class="bx bx-tag"></i>
+          <div class="textos-boton-tipo">
+            <b>Categoría final (Recibe tickets)</b>
+            <span>Tendrá prioridad y criticidad fija</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Selectores de Matrices y Tiempos SLA (si es hoja) -->
+    <div class="seccion-selectores-matrices mt-3" *ngIf="tipo === 'hoja'">
+      <div class="mb-3">
+        <app-selector-matriz-criticidad
+          [idArea]="idArea"
+          [matrizUrgencia]="matrizUrgencia"
+          [impacto]="impacto"
+          [urgencia]="urgencia"
+          (cambioSeleccion)="alCambiarMatriz($event)">
+        </app-selector-matriz-criticidad>
+      </div>
+
+      <!-- Configuración del Tiempo de Resolución (SLA) -->
+      <div class="seccion-tiempo-resolucion mb-3">
+        <div class="encabezado-subseccion">
+          <label class="etiqueta-campo">
+            <i class="bx bx-time-five"></i> TIEMPO DE RESOLUCIÓN ESTIMADO <span class="requerido">*</span>
+          </label>
+          <span class="texto-ayuda-subseccion">
+            Define cuánto tiempo objetivo tiene el equipo técnico para resolver los tickets de esta categoría.
+          </span>
+        </div>
+
+        <div class="fila-control-tiempo">
+          <div class="grupo-input-tiempo">
+            <input 
+              type="number" 
+              min="1" 
+              max="999" 
+              [(ngModel)]="tiempoResolucion" 
+              class="input-numero-tiempo" 
+              placeholder="Ej. 24" />
+            <div class="selector-unidad-pills">
+              <button 
+                type="button" 
+                class="btn-unidad-pill" 
+                [class.is-active]="unidadResolucion === 'm'" 
+                (click)="unidadResolucion = 'm'">
+                Minutos (m)
+              </button>
+              <button 
+                type="button" 
+                class="btn-unidad-pill" 
+                [class.is-active]="unidadResolucion === 'h'" 
+                (click)="unidadResolucion = 'h'">
+                Horas (h)
+              </button>
+              <button 
+                type="button" 
+                class="btn-unidad-pill" 
+                [class.is-active]="unidadResolucion === 'd'" 
+                (click)="unidadResolucion = 'd'">
+                Días (d)
+              </button>
+            </div>
+          </div>
+
+          <div class="chip-resumen-tiempo">
+            <i class="bx bx-check-circle"></i>
+            <span>SLA Objetivo: <b>{{ resumenTiempoResolucion }}</b></span>
+          </div>
+        </div>
+
+        <!-- Presets de Tiempo Rápido -->
+        <div class="fila-presets-tiempo mt-2">
+          <span class="label-presets">Presets comunes:</span>
+          <div class="botones-presets">
+            <button 
+              *ngFor="let p of presetsTiempo" 
+              type="button" 
+              class="btn-preset-tiempo" 
+              [class.is-active]="esPresetActivo(p.valor, p.unidad)" 
+              (click)="seleccionarPreset(p.valor, p.unidad)">
+              {{ p.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Evidencia Obligatoria -->
+        <div class="mt-4 mb-2 p-3 rounded border" style="background-color: #f8fafc;">
+          <div class="form-check form-switch d-flex align-items-center m-0 gap-2">
+            <input 
+              class="form-check-input mt-0" 
+              type="checkbox" 
+              role="switch" 
+              id="switchEvidenciaObli"
+              style="width: 2.5rem; height: 1.25rem; cursor: pointer;"
+              [(ngModel)]="evidenciaObligatoria">
+            <label class="form-check-label fw-bold mb-0 text-dark" for="switchEvidenciaObli" style="cursor: pointer;">
+              ¿Exigir adjuntar evidencia fotográfica o documental?
+            </label>
+          </div>
+          <small class="text-muted d-block mt-1 ms-5">
+            Si se activa, el usuario no podrá enviar el ticket si no adjunta al menos un archivo.
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones Guardar / Cancelar -->
+    <div class="pie-acciones-formulario mt-4">
+      <button type="button" class="btn-cancelar-formulario" (click)="cancelar.emit()">Cancelar</button>
+      <button 
+        type="button" 
+        class="btn-guardar-formulario" 
+        [disabled]="!nombre.trim()"
+        (click)="alGuardar()">
+        <i class="bx bx-check"></i>
+        <span>{{ modo === 'editar' ? 'Guardar Cambios' : (modo === 'crear-raiz' ? 'Guardar Categoría Raíz' : 'Agregar Subcategoría') }}</span>
+      </button>
+    </div>
+  </div>
+</div>

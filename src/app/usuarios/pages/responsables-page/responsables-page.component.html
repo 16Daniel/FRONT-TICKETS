@@ -1,0 +1,134 @@
+<div class="users-page-wrapper">
+  <div class="users-content-container">
+
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Gestión y Control" 
+      title="Lista de Responsables">
+    </app-page-header>
+
+    <!-- Toolbar -->
+    <div class="users-toolbar-bar mb-4">
+      <div class="toolbar-left">
+        <div class="d-flex align-items-center gap-3">
+          <p-dropdown 
+            [options]="sucursales" 
+            [(ngModel)]="idSucursalSeleccionada" 
+            optionValue="id" 
+            optionLabel="nombre" 
+            [filter]="true" 
+            filterBy="nombre" 
+            placeholder="Seleccionar Sucursal" 
+            styleClass="p-dropdown-custom"
+            [style]="{'min-width': '250px'}"
+            (onChange)="onSucursalChange($event.value)">
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="toolbar-right d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-outline-secondary d-flex align-items-center" style="border-radius: 12px; font-weight: 600;" (click)="verTodosResponsables()">
+            <i class="bx bx-list-ul me-2 fs-5"></i> VER TODOS
+        </button>
+        <button type="button" class="btn-rw-cta" (click)="abrirModalCrearResponsable()">
+          <i class='bx bx-plus'></i>
+          <span>AGREGAR RESPONSABLE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor de la Tabla -->
+    <div class="users-nodes-container">
+      <p-table [value]="responsables" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines table-tk">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th>NOMBRE</th>
+            <th>POSICIÓN</th>
+            <th>CORREO</th>
+            <th>SUCURSAL</th>
+            <th>COLOR</th>
+            <th class="text-center">GLOBAL</th>
+            <th class="text-center">PIN</th>
+            <th class="text-center" style="width: 140px;">ACCIONES</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-res>
+          <tr [pSelectableRow]="res">
+            <!-- NOMBRE -->
+            <td>{{ res.nombre }}</td>
+
+            <!-- POSICIÓN -->
+            <td>{{ res.posicion }}</td>
+
+            <!-- CORREO -->
+            <td>{{ res.correo }}</td>
+
+            <!-- SUCURSAL -->
+            <td>
+              <span class="text-secondary fw-medium">
+                {{ sucursalesMap.get(res.idSucursal) }}
+              </span>
+            </td>
+
+            <!-- COLOR -->
+            <td>
+              <ngx-avatars [name]="res.nombre || ' '" [size]="30" [bgColor]="res.color"></ngx-avatars>
+            </td>
+
+            <!-- ES GLOBAL -->
+            <td class="text-center">
+              <span class="badge" [ngClass]="res.esGlobal ? 'bg-success' : 'bg-secondary'">
+                {{ res.esGlobal ? 'SI' : 'NO' }}
+              </span>
+            </td>
+
+            <!-- PIN -->
+            <td class="text-center">
+              <span class="badge bg-light text-dark border px-2 py-1 fs-6" style="letter-spacing: 2px;">{{ res.pin }}</span>
+            </td>
+
+            <!-- ACCIONES -->
+            <td>
+              <div class="d-flex justify-content-center align-items-center gap-2">
+                <button class="btn-action-table btn-action-info" pTooltip="EDITAR" tooltipPosition="top" (click)="abrirModalEditarResponsable(res)">
+                  <i class="bx bx-edit"></i>
+                </button>
+                <button class="btn-action-table btn-action-info" pTooltip="REGENERAR PIN" tooltipPosition="top" (click)="regenerarPin(res)">
+                  <i class="bx bx-refresh"></i>
+                </button>
+                <button class="btn-action-table btn-action-danger" pTooltip="ELIMINAR" tooltipPosition="top" (click)="eliminar(res)">
+                  <i class="bx bx-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8">
+              <div class="d-flex flex-column align-items-center justify-content-center text-center p-5 w-100" style="min-height: 400px;">
+                <i class="bx bx-user-x mb-3" style="font-size: 5rem; color: #cbd5e1;"></i>
+                <h5 class="fw-bold" style="color: #64748b; letter-spacing: 0.02em;">No hay responsables registrados</h5>
+                <p style="color: #94a3b8;">No se encontraron responsables de tareas asociados a esta sucursal.</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+
+  </div>
+</div>
+
+<p-toast></p-toast>
+
+<app-crear-responsable-dialog
+  *ngIf="mostrarModalCrearResponsable"
+  [mostrarModal]="mostrarModalCrearResponsable"
+  [responsable]="responsableSeleccionado"
+  [esNuevo]="esNuevoResponsable"
+  (closeEvent)="alCerrarModalCrear($event)">
+</app-crear-responsable-dialog>

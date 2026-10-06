@@ -10,10 +10,10 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
@@ -62,7 +62,7 @@ export class CrearTareaDialogComponent implements OnInit {
   mostrarPanelProyectos: boolean = false;
   mostrarPanelTareasAsociadas: boolean = false;
   proyectos: Tarea[] = [];
-  responsableTarea!: ResponsableTarea;
+  responsableTarea!: Responsable;
 
   imagenesEvidencia: string[] = [];
   imagenesBase64: string[] = [];
@@ -72,14 +72,14 @@ export class CrearTareaDialogComponent implements OnInit {
   tarea: Tarea = new Tarea();
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
-  responsables: ResponsableTarea[] = [];
+  responsables: Responsable[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private tareasService: TareasService,
     private firebaseStorage: FirebaseStorageService,
-    private taskResponsibleService: TaskResponsibleService
+    private responsablesService: ResponsablesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.tarea.idSucursal = this.usuario.sucursales[0].id;
@@ -323,7 +323,7 @@ export class CrearTareaDialogComponent implements OnInit {
   }
 
   private actualizarResponsables(): void {
-    this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
+    this.responsables = this.responsablesService.filtrarPorSucursal(this.tarea.idSucursal);
   }
 
   onSucursalesChange() {
@@ -336,7 +336,7 @@ export class CrearTareaDialogComponent implements OnInit {
     );
   }
 
-  private generarBodyCorreo(responsable: ResponsableTarea): string {
+  private generarBodyCorreo(responsable: Responsable): string {
     return `
     <div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #333; line-height: 1.4;">
 
@@ -397,7 +397,7 @@ export class CrearTareaDialogComponent implements OnInit {
   `;
   }
 
-  enviarCorreo(responsable: ResponsableTarea) {
+  enviarCorreo(responsable: Responsable) {
 
     const request: EnviarCorreoRequest = {
       titulo: `Nueva tarea asignada: ${this.tarea.titulo}`,
@@ -431,7 +431,7 @@ export class CrearTareaDialogComponent implements OnInit {
     this.tarea.esProyecto = false;
   }
 
-  onSeleccionarLider(responsable: ResponsableTarea) {
+  onSeleccionarLider(responsable: Responsable) {
     if (this.tarea.idResponsablePrincipal == responsable.id) {
       this.tarea.idResponsablePrincipal = null;
     }

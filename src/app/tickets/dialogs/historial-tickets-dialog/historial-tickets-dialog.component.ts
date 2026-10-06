@@ -16,14 +16,14 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -42,7 +42,7 @@ import * as XLSX from 'xlsx';
     FormsModule,
     ModalFilterTicketsComponent,
     CommonModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     DropdownModule,
     MultiSelectModule
   ],

@@ -16,7 +16,7 @@ import { BranchesOilTrapTab } from "../branches-oil-trap-tab/branches-oil-trap-t
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { EntregaAceite } from '../../interfaces/aceite.model';
+import { EntregaAceite } from '../../models/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({

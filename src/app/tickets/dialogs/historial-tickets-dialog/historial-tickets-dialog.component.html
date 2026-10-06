@@ -130,7 +130,7 @@
 
   <br>
   <app-requester-tickets-list [tickets]="ticketsFiltrados" (clickEvent)="abrirModalDetalleTicket($event)"
-    [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false" [mostrarSucursal]="true"
+    [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false" [mostrarSucursal]="true"
     [mostrarFechaSolicitud]="true" [mostrarFechaTermino]="true" [mostrarDescripcion]="true"></app-requester-tickets-list>
 </p-dialog>
 
@@ -138,8 +138,8 @@
 
 
 
-<app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
-  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
+<app-detalle-ticket-dialog *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false"></app-detalle-ticket-dialog>
 
 <app-modal-filter-tickets [showModalFilterTickets]="showModalFilterTickets" [tickets]="todosLosTickets"
   (closeEvent)="showModalFilterTickets = false" (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>

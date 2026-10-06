@@ -1,0 +1,81 @@
+<div class="categories-tree-page-wrapper">
+  <div class="categories-content-container">
+
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Configuración de Umbrales" 
+      title="Umbral de Recurrencias">
+    </app-page-header>
+
+    <!-- Barra Selector de Áreas por Chips (debajo del título) -->
+    <div class="areas-chips-track mb-4">
+      <button 
+        *ngFor="let area of areas" 
+        type="button" 
+        class="chip-area-pill"
+        [class.is-active]="String(area.id) === areaSeleccionadaId"
+        (click)="cambiarArea(area.id)">
+        <span class="area-dot"></span>
+        <span class="area-name">{{ area.nombre }}</span>
+      </button>
+    </div>
+
+    <!-- Controles de Zoom -->
+    <div class="zoom-controls mb-3" *ngIf="dataArbol.length > 0">
+      <button type="button" class="btn btn-light btn-sm" (click)="zoomOut()" pTooltip="Alejar" tooltipPosition="top">
+        <i class="bx bx-minus"></i>
+      </button>
+      <span class="zoom-indicator">{{ (zoomLevel * 100) | number:'1.0-0' }}%</span>
+      <button type="button" class="btn btn-light btn-sm" (click)="zoomIn()" pTooltip="Acercar" tooltipPosition="top">
+        <i class="bx bx-plus"></i>
+      </button>
+      <button type="button" class="btn btn-light btn-sm ms-2" (click)="resetZoom()" pTooltip="Restablecer" tooltipPosition="top">
+        <i class="bx bx-reset"></i>
+      </button>
+    </div>
+
+    <!-- Contenedor del Organization Chart -->
+    <div class="org-chart-container mt-2" *ngIf="dataArbol.length > 0"
+         #panContainer
+         [class.is-dragging]="isDragging"
+         (mousedown)="onMouseDown($event, panContainer)"
+         (mouseleave)="onMouseLeave()"
+         (mouseup)="onMouseUp()"
+         (mousemove)="onMouseMove($event, panContainer)"
+         (wheel)="onWheel($event)">
+      <div class="org-chart-zoom-wrapper" [style.transform]="'scale(' + zoomLevel + ')'" [style.transform-origin]="'top center'">
+        <p-organizationChart [value]="dataArbol">
+        <ng-template let-node pTemplate="area">
+          <div class="node-content node-area">
+            <div class="node-header"><i class="bx bx-buildings"></i></div>
+            <div class="node-label">{{ node.label }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-node pTemplate="rama">
+          <div class="node-content node-rama">
+            <div class="node-header"><i class="bx bx-folder"></i></div>
+            <div class="node-label">{{ node.label }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-node pTemplate="hoja">
+          <div class="node-content node-hoja">
+            <div class="node-header"><i class="bx bx-tag"></i></div>
+            <div class="node-label">{{ node.label }}</div>
+          </div>
+        </ng-template>
+      </p-organizationChart>
+      </div>
+    </div>
+
+    <div class="tree-empty-state" *ngIf="dataArbol.length === 0 || (dataArbol[0] && (!dataArbol[0].children || dataArbol[0].children.length === 0))">
+      <div class="empty-icon">
+        <i class="bx bx-git-repo-forked"></i>
+      </div>
+      <h4>Esta área aún no tiene categorías</h4>
+      <p>Debes crear categorías en la pantalla de Categorías primero.</p>
+    </div>
+
+  </div>
+</div>

@@ -30,12 +30,7 @@ export const TICKETS_ROUTES: Routes = [
       import('./pages/specialist-home-page/specialist-home-page'),
     canActivate: [HomeGuard],
   },
-  {
-    path: 'categories',
-    title: 'Categorias',
-    loadComponent: () =>
-      import('./pages/categories-pages/categories-page'),
-  },
+
    {
     path: 'no-conformidad',
     title: 'No conformidad',

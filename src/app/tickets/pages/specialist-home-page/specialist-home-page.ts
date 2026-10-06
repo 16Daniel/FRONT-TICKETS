@@ -5,10 +5,9 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import Swal from 'sweetalert2';
 
-import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
-import { ModalValidateTicketComponent } from '../../../tickets/dialogs/modal-validate-ticket/modal-validate-ticket.component';
-import { ModalTicketChatComponent } from '../../../tickets/dialogs/modal-ticket-chat/modal-ticket-chat.component';
+import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
@@ -29,11 +28,8 @@ import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
     CommonModule,
     TableModule,
     TooltipModule,
-    ModalTicketDetailComponent,
-    ConfirmDialogModule,
-    ModalValidateTicketComponent,
-    ModalTicketChatComponent
-  ],
+    DetalleTicketDialogComponent,
+    ConfirmDialogModule,  ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './specialist-home-page.html',
   styleUrl: './specialist-home-page.scss'
@@ -49,7 +45,7 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
   usuariosHelp: Usuario[] = [];
   ticket: Ticket | undefined;
   mostrarModalTicketDetail: boolean = false;
-  mostrarModalValidarTicket: boolean = false;
+
   mostrarModalChatTicket: boolean = false;
 
   constructor(
@@ -211,20 +207,93 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
     }
   }
 
-  onClickValidar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.ticketSeleccionado = ticket;
-        this.mostrarModalValidarTicket = true;
+  onClickValidar(ticket: Ticket | any) {
+    Swal.fire({
+      title: 'Validar Ticket',
+      html: `
+        <style>
+          .rating-container { display: flex; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+          .rating-option { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; padding: 12px 8px; border: 2px solid #e2e8f0; border-radius: 12px; 
+            transition: all 0.2s ease; flex: 1; min-width: 70px; background: #ffffff;
+          }
+          .rating-option:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
+          .rating-option.selected { border-color: #F59E0B; background: #FFFBEB; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.1); }
+          .rating-stars { font-size: 1.2rem; line-height: 1; margin-bottom: 8px; color: #cbd5e1; letter-spacing: 1px; display: flex; }
+          .rating-option:hover .rating-stars { color: #fbbf24; }
+          .rating-option.selected .rating-stars { color: #F59E0B; }
+          .rating-text { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; text-align: center; }
+          .rating-option.selected .rating-text { color: #d97706; font-weight: 800; }
+        </style>
+        <p class="text-muted" style="font-size: 0.95rem; margin-bottom: 5px;">El estado del ticket se cambiará a <b>POR VALIDAR</b>.</p>
+        <p class="text-dark fw-bold m-0" style="font-size: 1.05rem;">Por favor, califica la atención del analista:</p>
+        <div class="rating-container" id="custom-rating">
+          <div class="rating-option" data-value="1">
+            <div class="rating-stars">★</div>
+            <div class="rating-text">Malo</div>
+          </div>
+          <div class="rating-option" data-value="2">
+            <div class="rating-stars">★★</div>
+            <div class="rating-text">Regular</div>
+          </div>
+          <div class="rating-option" data-value="3">
+            <div class="rating-stars">★★★</div>
+            <div class="rating-text">Bueno</div>
+          </div>
+          <div class="rating-option" data-value="4">
+            <div class="rating-stars">★★★★</div>
+            <div class="rating-text">Muy<br>Bueno</div>
+          </div>
+          <div class="rating-option" data-value="5">
+            <div class="rating-stars">★★★★★</div>
+            <div class="rating-text">Excelente</div>
+          </div>
+        </div>
+        <input type="hidden" id="rating-value" value="">
+      `,
+      width: '600px',
+      showCancelButton: true,
+      confirmButtonColor: '#D3152A',
+      cancelButtonColor: '#1E1E24',
+      confirmButtonText: 'Sí, enviar a validar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
       },
-      reject: () => { },
+      didOpen: () => {
+        const options = document.querySelectorAll('.rating-option');
+        const input = document.getElementById('rating-value') as HTMLInputElement;
+        options.forEach(opt => {
+          opt.addEventListener('click', () => {
+            options.forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            input.value = opt.getAttribute('data-value') || '';
+            Swal.resetValidationMessage();
+          });
+        });
+      },
+      preConfirm: () => {
+        const val = (document.getElementById('rating-value') as HTMLInputElement).value;
+        if (!val) {
+          Swal.showValidationMessage('Debes seleccionar una calificación para continuar');
+          return false;
+        }
+        return val;
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        ticket.idEstatusTicket = '7';
+        ticket.idResponsableFinaliza = this.usuario.id;
+        ticket.calificacionAnalista = Number(result.value);
+
+        this.ticketsService
+          .update(ticket)
+          .then(() => {
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Ticket enviado a validación correctamente' });
+          })
+          .catch((error) => console.error(error));
+      }
     });
   }
 

@@ -1,0 +1,483 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="showModalTicketDetail"
+  [style]="{ width: '85rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '95vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="detalle-ticket-dialog-dialog"
+  (onHide)="onHide()">
+
+  <!-- Cabecera Personalizada -->
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header w-100 d-flex justify-content-between align-items-center">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-receipt text-danger"></i> Detalle de Ticket
+      </h4>
+    </div>
+  </ng-template>
+
+  <!-- Cuerpo del Modal -->
+  <div *ngIf="ticket" class="modal-ticket-body d-flex flex-column h-100 flex-grow-1">
+    
+    <!-- Banner de Mitigación -->
+    <div *ngIf="ticket.idEstatusTicket === '8' && ultimaMitigacion" class="alert alert-warning m-3 d-flex align-items-center gap-3" style="background-color: #FFFBEB; border: 1px solid #FDE68A; color: #D97706; border-radius: 8px;">
+      <i class="bx bx-shield-quarter fs-2"></i>
+      <div class="flex-grow-1">
+        <h6 class="fw-bold mb-1 m-0">Ticket en Mitigación</h6>
+        <div class="text-dark" style="font-size: 0.85rem;" [innerHTML]="ultimaMitigacion.contenido"></div>
+      </div>
+      <div class="text-end" style="font-size: 0.8rem;">
+        <span class="d-block fw-bold">{{ ultimaMitigacion.autor.nombre }}</span>
+        <span class="text-muted">{{ ultimaMitigacion.fechaCreacion ? (datesHelper.getDate(ultimaMitigacion.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}</span>
+      </div>
+    </div>
+
+    <div class="row flex-grow-1 m-0">
+      <!-- Columna Izquierda: Detalle del Ticket -->
+      <div class="col-lg-7 d-flex flex-column gap-4 pb-3 pb-lg-0 h-100">
+        
+        <!-- TOP: SLA, Matriz y Responsables -->
+        <div class="row align-items-stretch">
+          <!-- SLA -->
+          <div class="col-md-4 d-flex flex-column mb-3 mb-md-0">
+            <div class="ticket-card p-3 m-0 flex-grow-1 d-flex flex-column">
+              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">Cumplimiento SLA</h5>
+              
+              <div class="d-flex flex-column flex-grow-1 justify-content-between align-items-center">
+                <div class="d-flex align-items-center justify-content-center" style="min-height: 90px;">
+                  <app-ticket-sla-gauge #gauge [ticket]="ticket" [size]="65" [categorias]="categorias"></app-ticket-sla-gauge>
+                </div>
+                
+                <div class="text-center mt-2" style="font-size: 0.7rem;">
+                  <span class="d-block text-muted">Resolución</span>
+                  <span class="fw-bold">{{ gauge.formatearHorasLegible(gauge.horasResolucionTranscurridas) }} / {{ gauge.formatearHorasLegible(gauge.horasResolucionSla, gauge.tiempoResolucionOriginal, gauge.unidadResolucionOriginal) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Matriz -->
+          <div class="col-md-4 d-flex flex-column mb-3 mb-md-0">
+            <div class="ticket-card p-3 m-0 flex-grow-1 d-flex flex-column">
+              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">Urgencia e Impacto</h5>
+              
+              <div class="d-flex flex-column flex-grow-1 justify-content-between align-items-center">
+                <div class="d-flex align-items-center justify-content-center" style="min-height: 90px;">
+                  <app-mini-matriz-urgencia [ticket]="ticket" [categorias]="categorias"></app-mini-matriz-urgencia>
+                </div>
+                
+                <div class="text-center mt-2" style="font-size: 0.7rem;">
+                  <span class="d-block text-muted">Atención</span>
+                  <span class="fw-bold">{{ gauge.horasUrgenciaTranscurridas }}h / {{ gauge.horasUrgenciaSla }}h</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Responsables -->
+          <div class="col-md-4 d-flex flex-column">
+            <div class="ticket-card p-3 m-0 flex-grow-1">
+              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Equipo Asignado</h5>
+              
+              <div class="d-flex flex-column gap-3">
+                <div *ngIf="getResponsable() as resp">
+                  <span class="d-block text-muted mb-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">RESPONSABLE</span>
+                  <div class="d-flex align-items-center gap-2">
+                    <ngx-avatars [name]="resp.nombre + ' ' + resp.apellidoP" [size]="35" [round]="true" pTooltip="Responsable Principal"></ngx-avatars>
+                    <div class="lh-1 text-truncate">
+                      <span class="d-block fw-bold mb-1 text-truncate" style="font-size: 0.85rem; color: #1e293b;">{{ resp.nombre }} {{ resp.apellidoP }}</span>
+                      <span class="text-muted text-truncate d-block" style="font-size: 0.7rem;">{{ resp.email }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="getInvolucrados().length > 0">
+                  <span class="d-block text-muted mb-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">INVOLUCRADOS</span>
+                  <div class="d-flex flex-wrap gap-1">
+                    <ngx-avatars *ngFor="let inv of getInvolucrados()" [name]="inv.nombre + ' ' + inv.apellidoP" [size]="28" [round]="true" [pTooltip]="inv.nombre + ' ' + inv.apellidoP"></ngx-avatars>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MIDDLE & BOTTOM: Tabs -->
+        <p-tabView class="flex-grow-1 d-flex flex-column" styleClass="ticket-detail-tabs mt-1 flex-grow-1 d-flex flex-column">
+          
+          <!-- Tab 1: Detalles Generales -->
+          <p-tabPanel header="Detalles Generales" leftIcon="bx bx-list-ul">
+            <div class="ticket-card p-4 m-0 h-100" style="overflow-y: auto;">
+              <div class="d-flex justify-content-between align-items-start mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+                <div>
+                  <h3 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 mb-1" style="font-size: 1.5rem;">
+                    <i class="bx bx-hash text-muted"></i>{{ ticket.folio }}
+                  </h3>
+                  <span class="text-muted" style="font-size: 0.85rem;">Detalles generales de la solicitud</span>
+                </div>
+                
+                <!-- Botonera de Acciones -->
+                <div class="modal-footer-actions m-0 p-0" *ngIf="showBtnAsignar || showBtnTrabajar || showBtnValidar || showBtnFinalizar || showBtnRechazar || showBtnValidacionAdmin">
+                  
+                  <!-- Botón RECHAZAR SOPORTE -->
+                  <button
+                    *ngIf="showBtnRechazar"
+                    class="btn-action" style="background-color: #EF4444; color: white;"
+                    (click)="onClickRechazar(ticket)">
+                    <i class="bx bx-undo"></i>
+                    <span>RECHAZAR SOPORTE</span>
+                  </button>
+
+                  <!-- Botón FINALIZAR TICKET -->
+                  <button
+                    *ngIf="showBtnFinalizar"
+                    class="btn-action" style="background-color: #10B981; color: white;"
+                    (click)="onClickFinalizar(ticket)">
+                    <i class="bx bx-check-circle"></i>
+                    <span>FINALIZAR TICKET</span>
+                  </button>
+
+                  <!-- Botón VALIDAR TICKET -->
+                  <button
+                    *ngIf="showBtnValidar"
+                    class="btn-action" style="background-color: #10B981; color: white;"
+                    (click)="onClickPendienteValidarSucursal()">
+                    <i class="bx bx-check-double"></i>
+                    <span>VALIDAR TICKET</span>
+                  </button>
+
+                  <!-- Botón VALIDACIÓN ADMINISTRADOR -->
+                  <button
+                    *ngIf="showBtnValidacionAdmin"
+                    class="btn-action btn-action-admin" style="background-color: #a300ff; color: white;"
+                    (click)="onClickValidacionAdmin(ticket)">
+                    <i class="bx bxs-badge-check"></i>
+                    <span>VALIDACIÓN ADMINISTRADOR</span>
+                  </button>
+
+                  <!-- Botón ASIGNAR A ESPECIALISTA -->
+                  <button
+                    *ngIf="showBtnAsignar"
+                    class="btn-action btn-secondary-rebel"
+                    (click)="onClickAsignarEspecialista()">
+                    <i class="bx bx-user-pin"></i>
+                    <span>ASIGNAR A ESPECIALISTA</span>
+                  </button>
+
+                  <!-- Botón TRABAJAR (Inicia atención y registra fechaAtencion) -->
+                  <button
+                    *ngIf="showBtnTrabajar"
+                    class="btn-action btn-primary-rebel"
+                    (click)="onClickTrabajarTicket()">
+                    <i class="bx bx-play-circle"></i>
+                    <span>TRABAJAR TICKET</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sección de Calificaciones (Solo visible si está finalizado) -->
+              <ng-container *ngIf="ticket.idEstatusTicket === '3'">
+                <div class="d-flex flex-wrap gap-4 mb-4" style="background: #f8fafc; padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid #e2e8f0; align-items: center;">
+                  <h5 class="m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px; border-right: 2px solid #e2e8f0; padding-right: 1.5rem; height: 100%;">
+                    <i class="bx bx-star text-warning fs-4"></i> EVALUACIÓN
+                  </h5>
+                  
+                  <div class="d-flex flex-column gap-1">
+                    <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Por Sucursal</span>
+                    <app-rating-stars [rating]="ticket.calificacionSucursal" [editable]="false"></app-rating-stars>
+                  </div>
+
+                  <div style="width: 1px; height: 35px; background: #cbd5e1; margin: 0 0.5rem;" *ngIf="ticket.calificacionAnalista"></div>
+
+                  <div class="d-flex flex-column gap-1" *ngIf="ticket.calificacionAnalista">
+                    <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Por Analista</span>
+                    <app-rating-stars [rating]="ticket.calificacionAnalista" [editable]="false"></app-rating-stars>
+                  </div>
+                </div>
+              </ng-container>
+
+              <div class="summary-info-grid">
+                <!-- Row 1 -->
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-user"></i> Solicitante</span>
+                  <span class="info-value text-uppercase">{{ ticket.solicitante || 'No registrado' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-folder"></i> Categoría</span>
+                  <span class="info-value">
+                    {{ ticket.nombreCategoria || 'Sin categoría' }}
+                    <span *ngIf="ticket.nombreSubcategoria" class="subcategoria-tag">
+                      <i class="bx bx-chevron-right"></i> {{ ticket.nombreSubcategoria }}
+                    </span>
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-info-circle"></i> Estatus</span>
+                  <div class="mt-1 d-flex">
+                    <!-- Dropdown para Admin (Roles 1 y 5) -->
+                    <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
+                        [options]="estatusTicketsOpciones" 
+                        optionDisabled="disabled"
+                        [(ngModel)]="ticket.idEstatusTicket" 
+                        optionLabel="nombre"
+                        [showClear]="false" 
+                        optionValue="id" 
+                        (onChange)="actualizarEstatus($event.value)" 
+                        styleClass="table-select-custom"
+                        appendTo="body">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="d-flex align-items-center gap-1 justify-content-center">
+                                <i class="bx {{ selectedOption?.icon }} {{ selectedOption?.animation }}" [style.color]="selectedOption?.color"></i>
+                                <span>{{ selectedOption?.nombre }}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template let-st pTemplate="item">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bx {{ st.icon }} {{ st.animation }}" [style.color]="st.color"></i>
+                                <span>{{ st.nombre }}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+
+                    <!-- Etiqueta estática para otros usuarios -->
+                    <ng-container *ngIf="usuario?.idRol !== '1' && usuario?.idRol !== '5'">
+                      <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
+                        <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
+                          <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
+                          <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
+                          {{ estatus.nombre }}
+                        </div>
+                      </ng-container>
+                      <ng-template #estatusDesconocido>
+                        <div class="status-pill" [ngStyle]="getEstatusStyle()">
+                          <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
+                          Desconocido
+                        </div>
+                      </ng-template>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-store-alt"></i> Sucursal</span>
+                  <span class="info-value">{{ obtenerNombreSucursal(ticket.idSucursal) }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-calendar"></i> Creación</span>
+                  <span class="info-value">{{ datesHelper.getDate(ticket.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-error"></i> Prioridad</span>
+                  <div class="mt-1 d-flex">
+                    <div *ngIf="ticket.prioridad" class="priority-badge"
+                         [ngStyle]="{
+                           'background-color': obtenerPrioridadColor(ticket.prioridad).bg,
+                           'color': obtenerPrioridadColor(ticket.prioridad).text,
+                           'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridad).border
+                         }">
+                      <i class="bx bxs-circle"></i> Urgencia: {{ ticket.prioridad }}
+                    </div>
+                    <span *ngIf="!ticket.prioridad" class="info-value text-muted">No definida</span>
+                  </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-briefcase"></i> Área</span>
+                  <span class="info-value">{{ obtenerNombreArea(ticket.idArea) }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-time-five"></i> Inicio Atención</span>
+                  <span class="info-value" [class.text-muted]="!ticket.fechaAtencion">
+                    {{ ticket.fechaAtencion ? (datesHelper.getDate(ticket.fechaAtencion) | date: 'dd/MM/yyyy hh:mm a') : 'Pendiente de inicio' }}
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label"><i class="bx bx-headphone"></i> Asistencia</span>
+                  <div class="mt-1 d-flex">
+                    <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
+                        [options]="tiposSoporte" 
+                        [(ngModel)]="ticket.idTipoSoporte" 
+                        optionLabel="name"
+                        [showClear]="false" 
+                        optionValue="id" 
+                        (onChange)="actualizarTipoSoporte($event.value)" 
+                        styleClass="table-select-custom"
+                        appendTo="body">
+                        <ng-template pTemplate="selectedItem" let-selectedOption>
+                            <div class="d-flex align-items-center gap-1">
+                                <span>{{ selectedOption?.name || selectedOption?.nombre }}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            <div class="d-flex align-items-center gap-1">
+                                <span>{{ item.name || item.nombre }}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <span *ngIf="usuario?.idRol !== '1' && usuario?.idRol !== '5'" class="info-value text-uppercase fw-bold text-dark">
+                      {{ obtenerNombreTipoSoporte(ticket.idTipoSoporte) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+
+          <!-- Tab 2: Descripción -->
+          <p-tabPanel header="Descripción" leftIcon="bx bx-detail">
+            <div class="ticket-card p-4 m-0 h-100" style="min-height: 250px; overflow-y: auto;">
+              <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="bx bx-detail fs-5" style="color: #D3152A;"></i> DESCRIPCIÓN DEL TICKET
+              </h5>
+              
+              <ng-container *ngIf="ticket.descripcion; else noDescripcion">
+                <div class="description-text" [innerHTML]="ticket.descripcion"></div>
+              </ng-container>
+              <ng-template #noDescripcion>
+                <div class="empty-description">
+                  <i class="bx bx-info-circle"></i>
+                  <span>Sin descripción registrada en este ticket.</span>
+                </div>
+              </ng-template>
+            </div>
+          </p-tabPanel>
+
+          <!-- Tab 3: Archivos y Evidencia -->
+          <p-tabPanel header="Archivos" leftIcon="bx bx-folder-open">
+            <div class="d-flex flex-column gap-4 h-100" style="overflow-y: auto;">
+              <!-- Estado Vacío -->
+              <div class="ticket-card p-4 m-0 h-100" *ngIf="!ticket.archivos || ticket.archivos.length === 0">
+                <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                  <i class="bx bx-file fs-5" style="color: #D3152A;"></i> ARCHIVOS ADJUNTOS
+                </h5>
+                <div class="text-center py-4" style="border: 2px dashed #cbd5e1; border-radius: 12px; background-color: #f8fafc;">
+                  <i class="bx bx-folder-minus mb-2" style="font-size: 2.5rem; color: #94a3b8;"></i>
+                  <p class="m-0 text-muted" style="font-size: 0.9rem; font-weight: 600;">No hay archivos adjuntos</p>
+                </div>
+              </div>
+
+              <!-- Tarjeta de Archivos -->
+              <div class="ticket-card p-4 m-0 d-flex flex-column h-100" *ngIf="ticket.archivos?.length">
+                <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2 flex-shrink-0" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                  <i class="bx bx-folder-open fs-5" style="color: #D3152A;"></i> ARCHIVOS DEL TICKET 
+                  <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos?.length }}</span>
+                </h5>
+                <div class="archivos-list d-flex flex-column gap-2 flex-grow-1" style="overflow-y: auto; min-height: 0; padding-right: 0.5rem;">
+                  <div *ngFor="let archivo of ticket.archivos" class="archivo-list-item d-flex align-items-center p-2" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; transition: all 0.2s; cursor: default;">
+                    
+                    <!-- Icono o Miniatura pequeña -->
+                    <div class="archivo-icon me-3" style="width: 44px; height: 44px; flex-shrink: 0; overflow: hidden; border-radius: 6px;">
+                      <!-- Si es imagen -->
+                      <ng-container *ngIf="archivo.tipo?.startsWith('image/') || archivo.url?.match('.jpg|.jpeg|.png|.gif'); else docPreview">
+                        <div (click)="abrirModalImagen(archivo.url)" class="w-100 h-100" style="cursor: pointer;" pTooltip="Clic para ampliar" tooltipPosition="top">
+                          <img [src]="archivo.url" [alt]="archivo.nombre" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                        </div>
+                      </ng-container>
+                      <!-- Si es documento -->
+                      <ng-template #docPreview>
+                        <div class="d-flex align-items-center justify-content-center w-100 h-100" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+                          <i [class]="fileUtils.obtenerIconoArchivo(archivo.nombre, archivo.tipo)" style="font-size: 1.5rem;" [style.color]="fileUtils.obtenerColorArchivo(archivo.nombre, archivo.tipo)"></i>
+                        </div>
+                      </ng-template>
+                    </div>
+
+                    <!-- Detalles del archivo -->
+                    <div class="archivo-details flex-grow-1 text-truncate">
+                      <div class="fw-bold text-dark text-truncate" style="font-size: 0.85rem;" [title]="archivo.nombre || 'Archivo'">
+                        {{ archivo.nombre || 'Archivo adjunto' }}
+                      </div>
+                      <div class="text-muted text-truncate text-uppercase" style="font-size: 0.7rem;">
+                        {{ archivo.tipo || 'Documento' }}
+                      </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="archivo-actions ms-3">
+                      <a [href]="archivo.url" target="_blank" class="btn btn-sm" pTooltip="Abrir en pestaña nueva" tooltipPosition="left" style="background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; border-radius: 6px;">
+                        <i class="bx bx-link-external fs-6"></i>
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+          <!-- Tab 4: Historial -->
+          <p-tabPanel header="Historial" leftIcon="bx bx-history">
+            <div class="ticket-card p-4 m-0 d-flex flex-column h-100" style="min-height: 250px; overflow-y: auto;">
+              <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="bx bx-history fs-5" style="color: #D3152A;"></i> HISTORIAL DE CAMBIOS
+              </h5>
+              
+              <!-- Vacío -->
+              <div *ngIf="historial.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
+                <i class="bx bx-history mb-3" style="font-size: 2.5rem; color: #94a3b8;"></i>
+                <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Sin historial registrado</p>
+              </div>
+
+              <!-- Lista -->
+              <div *ngIf="historial.length > 0" class="timeline d-flex flex-column gap-3">
+                <div *ngFor="let h of historial" class="timeline-item d-flex gap-3">
+                  <div class="timeline-avatar flex-shrink-0">
+                    <ngx-avatars [name]="h.autor.nombre" [size]="36" [round]="true" [bgColor]="h.autor.color || '#94a3b8'"></ngx-avatars>
+                  </div>
+                  <div class="timeline-content flex-grow-1">
+                    <div class="d-flex align-items-baseline gap-2 mb-1">
+                      <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ h.autor.nombre }}</span>
+                      <span class="text-muted" style="font-size: 0.75rem;">
+                        {{ h.fechaCreacion ? (datesHelper.getDate(h.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}
+                      </span>
+                    </div>
+                    <div class="p-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;" [innerHTML]="h.contenido"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+
+
+
+
+      </div>
+      
+      <!-- Columna Derecha: Bitácora -->
+      <div class="col-lg-5 d-flex flex-column h-100">
+        <!-- El componente BitacoraComponent se encargará de rellenar el alto total con flex-grow-1 internamente (ticket-card h-100) -->
+        <app-bitacora 
+          class="flex-grow-1 d-flex flex-column h-100"
+          [modulo]="'TICKETS'" 
+          [referenciaId]="ticket.id" 
+          [usuariosEtiquetables]="responsablesService.responsables">
+        </app-bitacora>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Modal Asignar Especialista -->
+<app-seleccionar-usuario-especialista-dialog
+  *ngIf="mostrarModalEspecialistas"
+  [mostrarModal]="mostrarModalEspecialistas"
+  [idSucursal]="idSucursalEspecialista"
+  [ticket]="ticket!"
+  [idArea]="usuario.idArea"
+  (closeEvent)="mostrarModalEspecialistas = false">
+</app-seleccionar-usuario-especialista-dialog>
+
+<!-- Modal Visor de Imágenes -->
+<app-modal-visor-imagenes
+  *ngIf="mostrarModalImagen"
+  [mostrarModal]="mostrarModalImagen"
+  [imagenUrl]="urlVisorImagen"
+  (closeEvent)="mostrarModalImagen = false">
+</app-modal-visor-imagenes>
+
+
+
+

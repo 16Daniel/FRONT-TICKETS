@@ -22,11 +22,11 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 import { ContenedorTareasComponent } from '../../components/contenedor-tareas/contenedor-tareas.component';
 import { CabeceraTareasComponent } from '../../components/cabecera-tareas/cabecera-tareas.component';
@@ -73,7 +73,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
 
   tipoTablero: 'TABLERO SUCURSALES' | 'TABLERO RESPONSABLES' | 'MI TABLERO' = 'MI TABLERO';
 
-  responsablesTodos: ResponsableTarea[] = [];
+  responsablesTodos: Responsable[] = [];
   idResponsableSeleccionado = '';
   idsResponsablesFiltro: string[] = [];
 
@@ -83,7 +83,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
   dropListIds = ['todoList', 'workingList', 'checkList', 'doneList'];
 
   tareaSeleccionada!: Tarea;
-  responsableTarea!: ResponsableTarea;
+  responsableTarea!: Responsable;
 
   toDo: Tarea[] = [];
   working: Tarea[] = [];
@@ -96,7 +96,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private labelsTasksService: LabelsTasksService,
-    private raskResponsibleService: TaskResponsibleService
+    private raskResponsibleService: ResponsablesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);

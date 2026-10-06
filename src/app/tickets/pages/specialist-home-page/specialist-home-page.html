@@ -84,12 +84,6 @@
 
 <p-confirmDialog />
 
-<app-modal-ticket-detail *ngIf="mostrarModalTicketDetail" [ticket]="ticketSeleccionado"
+<app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="ticketSeleccionado"
     [showModalTicketDetail]="mostrarModalTicketDetail"
-    (closeEvent)="mostrarModalTicketDetail = false"></app-modal-ticket-detail>
-
-<app-modal-validate-ticket *ngIf="mostrarModalValidarTicket" [mostrarModalValidarTicket]="mostrarModalValidarTicket"
-    [ticket]="ticketSeleccionado" (closeEvent)="mostrarModalValidarTicket = false"></app-modal-validate-ticket>
-
-<app-modal-ticket-chat *ngIf="mostrarModalChatTicket" [showModalChatTicket]="mostrarModalChatTicket"
-    [ticket]="ticketSeleccionado" (closeEvent)="mostrarModalChatTicket = false"></app-modal-ticket-chat>
+    (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>

@@ -24,9 +24,7 @@ import { TicketsService } from '../../services/tickets.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
-import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticket/modal-finalize-ticket.component';
-import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
-import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
+
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
@@ -35,9 +33,9 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
-import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
-import { Categoria } from '../../interfaces/categoria.mdoel';
-import { CategoriesService } from '../../services/categories.service';
+import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { Categoria } from '../../../categorias/models/categoria.model';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -45,9 +43,6 @@ import { CategoriesService } from '../../services/categories.service';
   imports: [
     TableModule,
     CommonModule,
-    ModalFinalizeTicketComponent,
-    ModalTicketChatComponent,
-    ModalValidateTicketComponent,
     AccordionModule,
     BadgeModule,
     RatingStarsComponent,
@@ -64,13 +59,11 @@ import { CategoriesService } from '../../services/categories.service';
 })
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
-  @Input() mostrarAcciones: boolean = true;
   @Input() mostrarAccionChat: boolean = true;
   @Input() mostrarAccionPanico: boolean = true;
   @Input() mostrarAccionFinalizar: boolean = true;
   @Input() mostrarEstrellas: boolean = true;
   @Input() mostrarFedchaEstimacion: boolean = true;
-  @Input() mostrarAccionValidar: boolean = true;
   @Input() mostrarSucursal: boolean = false;
   @Input() esEspectadorActivo: boolean = false;
   @Input() mostrarFechaSolicitud: boolean = false;
@@ -79,8 +72,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
   @Output() clickEvent = new EventEmitter<Ticket>();
 
-  showModalFinalizeTicket: boolean = false;
-  mostrarModalValidarTicket: boolean = false;
   showModalChatTicket: boolean = false;
   areas: Area[] = [];
   ticketSeleccionado: Ticket | undefined;
@@ -149,41 +140,11 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     }
   }
 
-  obtenerNombreArea(idArea: string): string {
-    let nombre = '';
-    let area = this.areas.filter((x) => x.id == idArea);
-    if (area.length > 0) {
-      nombre = area[0].nombre;
-    }
-    return nombre;
-  }
-
   obtenerNombreSucursal(idSucursal: string): string {
     let str = '';
     let temp = this.sucursales.filter((x) => x.id == idSucursal);
     if (temp.length > 0) {
       str = temp[0].nombre;
-    }
-    return str;
-  }
-
-  obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
-
-    if (value == '2') {
-      str = '#ff0000';
-    }
-
-    if (value == '3') {
-      str = '#ffe800';
-    }
-
-    if (value == '4') {
-      str = '#61ff00';
-    }
-
-    if (value == '1') {
-      str = 'black';
     }
     return str;
   }
@@ -230,11 +191,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
-  onClickFinalizar(ticket: Ticket) {
-    this.ticketAccion = ticket;
-    this.showModalFinalizeTicket = true;
-  }
-
   obtenerNombreEstatusTicket(idEstatusTicket: string) {
     if (this.estatusTickets.length == 0) return;
     let nombre: string = this.estatusTickets.filter(
@@ -242,56 +198,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     )[0].nombre;
 
     return nombre;
-  }
-
-  actualizaTicket(ticket: Ticket) {
-    this.ticketsService
-      .update(ticket)
-      .then(() => { })
-      .catch((error) => console.error(error));
-  }
-
-  filrarEstatusTickets() {
-    return this.estatusTickets.filter((x) => x.id == '1' || x.id == '2');
-  }
-
-  onClickValidar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.ticketAccion = ticket;
-        this.mostrarModalValidarTicket = true;
-      },
-      reject: () => { },
-    });
-  }
-
-  onClickRechazar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        ticket.idEstatusTicket = '1';
-        this.ticketsService
-          .update(ticket)
-          .then(() => {
-            this.showMessage('success', 'Success', 'Enviado correctamente');
-          })
-          .catch((error) => console.error(error));
-      },
-      reject: () => { },
-    });
   }
 
   obtenerSucursales() {

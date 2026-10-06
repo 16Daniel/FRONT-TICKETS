@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
-import { EntregaAceite } from '../../interfaces/aceite.model';
+import { EntregaAceite } from '../../models/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({

@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalFilterTicketsComponent } from '../../dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { ModalTenXtenMaintenanceCheckComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-check/modal-ten-xten-maintenance-check.component';
 import { ModalTenXtenMaintenanceHistoryComponent } from '../../../mantenimientos/dialogs/systems/modal-ten-xten-maintenance-history/modal-ten-xten-maintenance-history.component';
@@ -47,7 +47,7 @@ import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-t
     ConfirmDialogModule,
     CommonModule,
     CrearTicketDialogComponent,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     ModalFilterTicketsComponent,
     HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,
@@ -228,42 +228,6 @@ export class TicketsTabComponent implements OnInit {
       });
   }
 
-  obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
-
-    if (value == 'ALTA') {
-      str = '#ff0000';
-    }
-
-    if (value == 'MEDIA') {
-      str = '#ffe800';
-    }
-
-    if (value == 'BAJA') {
-      str = '#61ff00';
-    }
-    return str;
-  }
-
-  obtenerNombreArea(idp: string): string {
-    let nombre = '';
-    let area = this.areas.filter((x) => x.id == idp);
-    if (area.length > 0) {
-      nombre = area[0].nombre;
-    }
-    return nombre;
-  }
-
-  async obtenerMantenimientoActivo() {
-    this.unsubscribe = this.mantenimientosSistemasService.getMantenimientoActivo(
-      this.sucursal?.id,
-      (mantenimiento) => {
-        this.mantenimientoActivo = mantenimiento;
-        this.cdr.detectChanges();
-      }
-    );
-  }
-
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.itemtk = ticket;
     this.mostrarModalTicketDetail = true;
@@ -306,14 +270,6 @@ export class TicketsTabComponent implements OnInit {
         );
       }
     });
-  }
-
-  filtrarMantenimientos() {
-    this.auxMostrarMantenimientos = false;
-    setTimeout(() => {
-      this.auxMostrarMantenimientos = true;
-      this.cdr.detectChanges();
-    }, 400);
   }
 
   sucursalesMantenimeintosActivos = () => {

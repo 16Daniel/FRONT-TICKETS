@@ -12,11 +12,11 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { SearchFilterPipe } from '../../../shared/pipes/search-filter.pipe';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 
 @Component({
   selector: 'app-tareas-archivadas-dialog',
@@ -41,14 +41,14 @@ export class TareasArchivadasDialogComponent implements OnInit {
   idSucursalSeleccionada: string = '';
   usuario: Usuario;
   tareas: Tarea[] = [];
-  responsables: ResponsableTarea[] = [];
+  responsables: Responsable[] = [];
   textoBusqueda?: string;
 
   branchesService = inject(BranchesService);
   tasksService = inject(TareasService);
   public datesHelper = inject(DatesHelperService);
   cdr = inject(ChangeDetectorRef);
-  taskResponsibleService = inject(TaskResponsibleService);
+  responsablesService = inject(ResponsablesService);
 
   constructor() {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -59,7 +59,7 @@ export class TareasArchivadasDialogComponent implements OnInit {
     this.obtenerSucursales();
     this.buscarTickets();
 
-    this.taskResponsibleService.responsables$.subscribe(responsable => this.responsables = responsable);
+    this.responsablesService.responsables$.subscribe(responsable => this.responsables = responsable);
   }
 
   onHide = () => this.closeEvent.emit(false);
