@@ -1,0 +1,8 @@
+<div class="radar-wrapper w-full flex flex-column align-items-center">
+  <h3 class="chart-title">{{ currentTitle }}</h3>
+  <p class="chart-subtitle text-muted mb-3" style="font-size: 0.85rem;">Métricas de cumplimiento y calificación (%)</p>
+  
+  <div class="chart-polar-container w-full flex justify-content-center" style="height: 350px;">
+    <p-chart type="radar" [data]="chartData" [options]="chartOptions" width="100%" height="350px"></p-chart>
+  </div>
+</div>

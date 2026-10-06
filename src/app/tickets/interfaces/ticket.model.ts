@@ -35,8 +35,8 @@ export class Ticket {
   folio: string = '';
 
 
-  calificacionSucursal: number = 0;
-  calificacionAnalista: number = 0;
+  calificacionSucursal: number = 0; // Calificación que da la sucursal
+  calificacionAnalista: number = 0; // Calificación que da el analista
 
 
   validacionAdmin: boolean = false;

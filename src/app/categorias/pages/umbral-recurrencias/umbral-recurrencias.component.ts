@@ -20,6 +20,9 @@ import { UmbralKpisComponent } from '../../components/umbral-kpis/umbral-kpis.co
 import { UmbralFiltrosComponent } from '../../components/umbral-filtros/umbral-filtros.component';
 import { UmbralGraficasComponent } from '../../components/umbral-graficas/umbral-graficas.component';
 import { UmbralArbolComponent } from '../../components/umbral-arbol/umbral-arbol.component';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { UmbralRadarService } from '../../services/umbral-radar.service';
 
 @Component({
   selector: 'app-umbral-recurrencias',
@@ -55,6 +58,14 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
   private subscripcionCategorias?: Subscription;
   private subscripcionSucursales?: Subscription;
   private subscripcionUsuarios?: Subscription;
+  private subscripcionMatriz?: Subscription;
+
+  matrizUrgenciaArea?: MatrizUrgencia;
+  
+  // Arreglos ya procesados para el Input de la gráfica
+  radarDataGeneral: any[] = [];
+  radarDataCategorias: { [name: string]: any[] } = {};
+  radarDataSucursales: { [name: string]: any[] } = {};
 
   constructor(
     private areasService: AreasService,
@@ -62,6 +73,8 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
     private branchesService: BranchesService,
     private usersService: UsersService,
     private umbralTicketsService: UmbralTicketsService,
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private umbralRadarService: UmbralRadarService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -141,18 +154,17 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
 
         // Contar tickets agrupando por idSubcategoria o idCategoria
         tickets.forEach(t => {
+          // Conteo básico para el arbol
           const key = t.idSubcategoria || t.idCategoria;
           if (key) {
             this.ticketCounts[key] = (this.ticketCounts[key] || 0) + 1;
           }
 
-          const name = t.nombreSubcategoria || t.nombreCategoria;
-          if (name) {
-            nameCounts[name] = (nameCounts[name] || 0) + 1;
-            if (nameCounts[name] > maxTickets) {
-              maxTickets = nameCounts[name];
-              topCatName = name;
-            }
+          const catName = t.nombreSubcategoria || t.nombreCategoria || 'Sin Categoría';
+          nameCounts[catName] = (nameCounts[catName] || 0) + 1;
+          if (nameCounts[catName] > maxTickets) {
+            maxTickets = nameCounts[catName];
+            topCatName = catName;
           }
 
           if (t.idUsuario) {
@@ -193,6 +205,12 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
           };
         }).sort((a, b) => b.value - a.value);
 
+        // ==== CÁLCULO DE DATOS RADAR USANDO EL SERVICIO ====
+        const radarResult = this.umbralRadarService.procesarDatosRadar(tickets, this.matrizUrgenciaArea, this.sucursales);
+        this.radarDataGeneral = radarResult.radarDataGeneral;
+        this.radarDataCategorias = radarResult.radarDataCategorias;
+        this.radarDataSucursales = radarResult.radarDataSucursales;
+
         // Refrescar el árbol
         if (this.categoriasActuales.length > 0) {
           this.dataArbol = this.transformarAChart(this.categoriasActuales);
@@ -214,22 +232,28 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
       if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
         this.areaSeleccionadaId = String(this.areas[0].id);
       }
+      this.cargarMatrizYFiltros();
+      this.cdr.detectChanges();
+    });
+  }
+
+  private cargarMatrizYFiltros(): void {
+    this.subscripcionMatriz?.unsubscribe();
+    this.subscripcionMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(this.areaSeleccionadaId).subscribe(mat => {
+      this.matrizUrgenciaArea = mat;
       this.cargarCategorias();
       this.cargarUsuariosPorArea();
       this.aplicarFiltros();
-      this.cdr.detectChanges();
     });
   }
 
   cambiarArea(areaId: string | number): void {
     this.areaSeleccionadaId = String(areaId);
     
-    // Al cambiar de área, limpiar conteos y filtros (opcional, pero limpiar conteos es bueno)
+    // Al cambiar de área, limpiar conteos y filtros
     this.ticketCounts = {};
     
-    this.cargarCategorias();
-    this.cargarUsuariosPorArea();
-    this.aplicarFiltros();
+    this.cargarMatrizYFiltros();
   }
 
   private cargarCategorias(): void {
