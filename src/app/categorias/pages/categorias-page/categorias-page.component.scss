@@ -21,82 +21,8 @@ $rw-canvas: #f4f6fa;
    ========================================================================== */
 
 /* ==========================================================================
-   Summary KPI Grid (Tarjetas Blancas Fuera del Cuadro)
+   Summary KPI Grid (Tarjetas Blancas Fuera del Cuadro) -> Moved to styles.scss
    ========================================================================== */
-.tree-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-
-  @media (max-width: 850px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.tree-kpi-card {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  padding: 1.15rem 1.35rem;
-  display: flex;
-  align-items: center;
-  gap: 1.15rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  }
-
-  .kpi-icon-wrap {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    flex-shrink: 0;
-  }
-
-  .kpi-info-wrap {
-    display: flex;
-    flex-direction: column;
-
-    .kpi-label {
-      font-size: 0.725rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      color: #64748b;
-      margin-bottom: 0.15rem;
-      text-transform: uppercase;
-    }
-
-    .kpi-value {
-      font-size: 1.65rem;
-      font-weight: 800;
-      color: #0f172a;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-    }
-  }
-
-  &.card-root .kpi-icon-wrap {
-    background-color: #fff1f2;
-    color: $rw-primary;
-  }
-
-  &.card-leaves .kpi-icon-wrap {
-    background-color: #fefce8;
-    color: #ca8a04;
-  }
-
-  &.card-total .kpi-icon-wrap {
-    background-color: #eff6ff;
-    color: #2563eb;
-  }
-}
 
 /* ==========================================================================
    Tree Toolbar

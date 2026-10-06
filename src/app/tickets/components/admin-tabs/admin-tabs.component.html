@@ -1,10 +1,23 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<p-tabView (onChange)="onTabChange($event)" [activeIndex]="activeIndex">
-  @for (area of areasTicket; track area.id) {
-    <p-tabPanel [header]="area.nombre | uppercase">
-      <ng-container *ngIf="tabsActivos[area.nombre | uppercase]">
+<!-- Barra Selector de Áreas por Chips -->
+<div class="areas-chips-track mb-4">
+  <button 
+    *ngFor="let area of areasTicket"
+    type="button" 
+    class="chip-area-pill"
+    [class.is-active]="areaSeleccionadaId === area.id"
+    (click)="cambiarArea(area)">
+    <span class="area-dot"></span>
+    <span class="area-name">{{ area.nombre | uppercase }}</span>
+  </button>
+</div>
+
+<!-- Contenedor del contenido de las Áreas -->
+<div class="tab-content-container">
+  <ng-container *ngFor="let area of areasTicket">
+    <div [hidden]="areaSeleccionadaId !== area.id">
+      <ng-container *ngIf="tabsActivos[area.nombre]">
         <app-admin-area-tab [idArea]="area.id" [areaName]="area.nombre"></app-admin-area-tab>
       </ng-container>
-    </p-tabPanel>
-  }
-</p-tabView>
+    </div>
+  </ng-container>
+</div>

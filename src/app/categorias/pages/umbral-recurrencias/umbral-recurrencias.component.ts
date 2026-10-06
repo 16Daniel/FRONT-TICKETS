@@ -159,6 +159,11 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
     });
   }
 
+  totalTickets: number = 0;
+  categoriaTopTickets: { nombre: string, conteo: number } | null = null;
+  usuarioTopTickets: { nombre: string, conteo: number } | null = null;
+  sucursalTopTickets: { nombre: string, conteo: number } | null = null;
+
   aplicarFiltros(): void {
     this.isApplyingFilters = true;
     const filtros: UmbralFiltros = {
@@ -172,6 +177,18 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
       next: (tickets: Ticket[]) => {
         // Reiniciar conteos
         this.ticketCounts = {};
+        
+        let maxTickets = 0;
+        let topCatName = '';
+        const nameCounts: { [name: string]: number } = {};
+
+        let maxUsuarios = 0;
+        let topUsuarioName = '';
+        const userCounts: { [id: string]: number } = {};
+
+        let maxSucursales = 0;
+        let topSucursalName = '';
+        const sucursalCounts: { [id: string]: number } = {};
 
         // Contar tickets agrupando por idSubcategoria o idCategoria
         tickets.forEach(t => {
@@ -179,7 +196,40 @@ export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
           if (key) {
             this.ticketCounts[key] = (this.ticketCounts[key] || 0) + 1;
           }
+
+          const name = t.nombreSubcategoria || t.nombreCategoria;
+          if (name) {
+            nameCounts[name] = (nameCounts[name] || 0) + 1;
+            if (nameCounts[name] > maxTickets) {
+              maxTickets = nameCounts[name];
+              topCatName = name;
+            }
+          }
+
+          if (t.idUsuario) {
+            userCounts[t.idUsuario] = (userCounts[t.idUsuario] || 0) + 1;
+            if (userCounts[t.idUsuario] > maxUsuarios) {
+              maxUsuarios = userCounts[t.idUsuario];
+              const u = this.usersService.usuarios.find(x => x.id === t.idUsuario);
+              topUsuarioName = u ? `${u.nombre} ${u.apellidoP}`.trim() : 'Desconocido';
+            }
+          }
+
+          if (t.idSucursal) {
+            const sId = String(t.idSucursal);
+            sucursalCounts[sId] = (sucursalCounts[sId] || 0) + 1;
+            if (sucursalCounts[sId] > maxSucursales) {
+              maxSucursales = sucursalCounts[sId];
+              const s = this.sucursales.find(x => String(x.id) === sId);
+              topSucursalName = s ? s.nombre : `Sucursal ${sId}`;
+            }
+          }
         });
+
+        this.totalTickets = tickets.length;
+        this.categoriaTopTickets = maxTickets > 0 ? { nombre: topCatName, conteo: maxTickets } : null;
+        this.usuarioTopTickets = maxUsuarios > 0 ? { nombre: topUsuarioName, conteo: maxUsuarios } : null;
+        this.sucursalTopTickets = maxSucursales > 0 ? { nombre: topSucursalName, conteo: maxSucursales } : null;
 
         // Refrescar el árbol
         if (this.categoriasActuales.length > 0) {
