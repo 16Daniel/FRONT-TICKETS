@@ -24,6 +24,7 @@ export class ModalAreaCreateComponent {
   @Input() esNuevaArea: boolean = true;
   idAreaEditar: string = '';
   parentLevels = signal<EscalationLevel[]>([]);
+  grupoNuevosTickets = signal<string>('');
 
   constructor(
     private messageService: MessageService,
@@ -54,6 +55,10 @@ export class ModalAreaCreateComponent {
     }
     if(this.area.nivelesNotificacion){
       this.parentLevels.set(this.area.nivelesNotificacion);
+    }
+
+    if(this.area.gruponotificacion){
+      this.grupoNuevosTickets.set(this.area.gruponotificacion);
     }
 
   }
@@ -104,6 +109,7 @@ export class ModalAreaCreateComponent {
   async crear() {
     this.area = { ...this.area, id: String(this.area.id) }
     this.area.nivelesNotificacion = this.parentLevels();
+    this.area.gruponotificacion = this.grupoNuevosTickets();
     try {
       await this.areasService.create({ ...this.area });
       this.cdr.detectChanges();
@@ -118,6 +124,7 @@ export class ModalAreaCreateComponent {
   actualizar() {
     this.area = { ...this.area, id: String(this.area.id) }
     this.area.nivelesNotificacion = this.parentLevels();
+    this.area.gruponotificacion = this.grupoNuevosTickets();
     this.areasService
       .update(this.area, this.idAreaEditar)
       .then(() => {

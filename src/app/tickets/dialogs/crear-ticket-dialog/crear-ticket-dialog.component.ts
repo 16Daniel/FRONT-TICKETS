@@ -34,6 +34,7 @@ import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.m
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SelectorArbolCategoriaComponent } from '../../components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
+import { WhatsappService } from '../../../areas/services/whatsapp.service';
 
 @Component({
   selector: 'app-crear-ticket-dialog',
@@ -81,7 +82,8 @@ export class CrearTicketDialogComponent implements OnInit {
     private areasService: AreasService,
     private ticketsPriorityService: TicketsPriorityService,
     private fixedAssetsService: FixedAssetsService,
-    private firebaseStorage: FirebaseStorageService
+    private firebaseStorage: FirebaseStorageService,
+    private whatsappService: WhatsappService
   ) {}
 
   ngOnInit(): void {
@@ -261,7 +263,7 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.idTipoSoporte = this.obtenerTipoSoporte(this.ticket.idArea);
     this.ticket.idUsuario = this.usuarioActivo.id;
     this.ticket.folio = folio;
-
+    // await this.whatsappService.enviarMensajeTexto('120363418021345457@g.us', 'Se ha creado un nuevo ticket con folio: ' + folio + ' y categoría: ' + this.ticket.nombreCategoria + (this.ticket.nombreSubcategoria ? ' - ' + this.ticket.nombreSubcategoria : ''));
     if (this.archivos.length > 0) {
       this.firebaseStorage.cargarImagenesEvidenciasTicket(this.archivos)
         .then(async urls => {
