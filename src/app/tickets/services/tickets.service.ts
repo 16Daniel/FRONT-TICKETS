@@ -148,22 +148,6 @@ export class TicketsService {
     });
   }
 
-  updateLastCommentRead(
-    ticketId: string,
-    idUsuario: string,
-    ultimoComentarioLeido: number
-  ) {
-    const ticketRef = doc(this.firestore, `tickets/${ticketId}`);
-
-    // Actualizar el índice del último comentario leído para un participante
-    return updateDoc(ticketRef, {
-      participantesChat: arrayUnion({
-        idUsuario,
-        ultimoComentarioLeido,
-      }),
-    });
-  }
-
   private parseTimestampToDate(tsmp: any): Date {
     if (tsmp instanceof Timestamp) {
       return tsmp.toDate();
@@ -455,7 +439,7 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 
-   async getTicketsUltimos30Dias(idSucursal: string, idArea: string) {
+  async getTicketsUltimos30Dias(idSucursal: string, idArea: string) {
     const hoy = new Date();
     const hace30Dias = new Date();
     hace30Dias.setDate(hoy.getDate() - 30);

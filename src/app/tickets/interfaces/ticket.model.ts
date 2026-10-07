@@ -15,6 +15,7 @@ export class Ticket {
   urgencia?: number;
   score?: number;
   prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+  
   tiempoResolucion?: number;
   unidadResolucion?: 'm' | 'h' | 'd';
   horasResolucion?: number;
@@ -35,8 +36,8 @@ export class Ticket {
   folio: string = '';
 
 
-  calificacionSucursal: number = 0;
-  calificacionAnalista: number = 0;
+  calificacionSucursal: number = 0; // Calificación que da la sucursal
+  calificacionAnalista: number = 0; // Calificación que da el analista
 
 
   validacionAdmin: boolean = false;

@@ -292,6 +292,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .dashboard-kpi-container {
+    display: none !important;
+  }
+}
+
 @media (max-width: 520px) {
   .dashboard-kpi-container {
     grid-template-columns: 1fr;

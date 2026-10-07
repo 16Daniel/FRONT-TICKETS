@@ -8,7 +8,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import Swal from 'sweetalert2';
 
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
-import { ModalTicketChatComponent } from '../../../tickets/dialogs/modal-ticket-chat/modal-ticket-chat.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
@@ -30,10 +29,7 @@ import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
     TableModule,
     TooltipModule,
     DetalleTicketDialogComponent,
-    ConfirmDialogModule,
-
-    ModalTicketChatComponent
-  ],
+    ConfirmDialogModule,  ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './specialist-home-page.html',
   styleUrl: './specialist-home-page.scss'

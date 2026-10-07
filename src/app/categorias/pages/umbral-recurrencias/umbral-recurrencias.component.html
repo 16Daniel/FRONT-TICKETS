@@ -20,5 +20,60 @@
       </button>
     </div>
 
+    <!-- Tarjetas KPI -->
+    <app-umbral-kpis 
+      [tickets]="tickets"
+      [sucursales]="sucursales"
+      [usuariosRol4]="usuariosRol4"
+      [isApplyingFilters]="isApplyingFilters">
+    </app-umbral-kpis>
+
+    <!-- Barra de Filtros -->
+    <app-umbral-filtros 
+      [sucursales]="sucursales"
+      [usuariosRol4]="usuariosRol4"
+      [isApplyingFilters]="isApplyingFilters"
+      [initialFechaInicio]="fechaInicio"
+      [initialFechaFin]="fechaFin"
+      (apply)="aplicarFiltrosEvent($event)">
+    </app-umbral-filtros>
+
+    <!-- Árbol de Organización -->
+    <app-umbral-arbol 
+      [tickets]="tickets"
+      [categoriasActuales]="categoriasActuales"
+      [areas]="areas"
+      [areaSeleccionadaId]="areaSeleccionadaId"
+      [hasCategories]="categoriasActuales.length > 0">
+    </app-umbral-arbol>
+
+    <!-- Sección de Gráficas Especializadas -->
+    <div class="charts-layout" *ngIf="!isApplyingFilters && tickets.length > 0">
+      
+      <!-- Fila 1: Categorías -->
+      <app-grafica-desempeno-categorias
+        [tickets]="tickets"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-categorias>
+
+      <!-- Fila 2: Sucursales -->
+      <app-grafica-desempeno-sucursales
+        [tickets]="tickets"
+        [sucursales]="sucursales"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-sucursales>
+
+      <!-- Fila 3: Usuarios Responsables -->
+      <app-grafica-desempeno-responsables
+        [tickets]="tickets"
+        [usuarios]="usuariosRol4"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-responsables>
+
+    </div>
+
   </div>
 </div>

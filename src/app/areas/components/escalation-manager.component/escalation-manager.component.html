@@ -3,6 +3,21 @@
   <p class="description">
     Define el orden de notificación. Si el Nivel 1 no responde, la alerta se escalará al siguiente nivel.
   </p>
+ 
+  <div class="field mb-3">
+            <label>GRUPO DE NOTIFICACIÓN DE NEVOS TICKETS</label>
+            <p-dropdown
+              [options]="gruposWhatsapp()"
+              [(ngModel)]="grupoNuevosTickets"
+              [optionValue]="'id'"
+              optionLabel="name"
+              placeholder="Seleccione un grupo de WhatsApp"
+              filter="true"
+              [filterBy]="'name'"
+              (onChange)="cambiarGrupoNuevosTickets($event)"
+              [showClear]="false">
+            </p-dropdown>
+            </div>
 
   <div class="timeline-wrapper">
     <div *ngFor="let item of levels(); let i = index; let last = last" class="level-card-wrapper">
@@ -16,16 +31,6 @@
               [severity]="i === 0 ? 'info' : (i === 1 ? 'warning' : 'danger')">
             </p-tag>
             <span class="level-title">{{ i === 0 ? 'Responsable Directo' : 'Escalado ' + i }}</span>
-            <!-- <p-button 
-              *ngIf="levels().length > 1"
-              icon="pi pi-trash" 
-              severity="danger" 
-              [text]="true" 
-              [rounded]="true" 
-              (click)="removeLevel(item.id)"
-              aria-label="Eliminar nivel">
-            </p-button> -->
-
             <button class="btn-action-table btn-action-danger" (click)="removeLevel(item.id)"
                               pTooltip="ELIMINAR" tooltipPosition="top">
                               <i class="bx bx-trash"></i>
@@ -34,27 +39,77 @@
           </div>
         </ng-template>
 
-        <div class="form-grid">
+        @for (itemr of item.responsables; track $index) 
+        {
+
+           <div class="form-grid">
+          <div class="field">
+            <label class="form-check-label rw-form-label m-0" for="switchActivarTickets" style="cursor: pointer; margin-bottom: 0 !important;">
+              Utilizar grupo de whatsapp
+            </label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" [(ngModel)]="itemr.esgrupo"  style="width: 3.5rem; height: 2rem; cursor: pointer;">
+            </div>
+          </div>
+
           <div class="field">
             <label [for]="'name-' + item.id">Nombre completo</label>
             <input 
             class="form-control rw-input"
               pInputText 
               [id]="'name-' + item.id" 
-              [(ngModel)]="item.name" 
+              [(ngModel)]="itemr.name" 
               placeholder="Ej. Juan Pérez" />
           </div>
 
-          <div class="field">
+          @if(itemr.esgrupo == false)
+          {
+            <div class="field">
             <label [for]="'phone-' + item.id">Num. WhatsApp</label>
             <input 
             class="form-control rw-input"
               pInputText 
-              [id]="'phone-' + item.id" 
-              [(ngModel)]="item.phone" 
+              [id]="'phone-' + itemr.id" 
+              [(ngModel)]="itemr.phone" 
               placeholder="Ej. +52 55 1234 5678" />
+            </div>
+          } @else 
+          {
+            <div class="field">
+            <label [for]="'phone-' + itemr.id">Grupo de WhatsApp</label>
+            <p-dropdown
+              [options]="gruposWhatsapp()"
+              [(ngModel)]="itemr.phone"
+              [optionValue]="'id'"
+              optionLabel="name"
+              placeholder="Seleccione un grupo de WhatsApp"
+              filter="true"
+              [filterBy]="'name'"
+              (onchange)="onGrupoChange($event, itemr)"
+              [showClear]="false">
+            </p-dropdown>
+            </div>
+          }
+
+            <div class="field">
+            <label class="form-check-label rw-form-label m-0" for="switchActivarTickets" style="cursor: pointer; margin-bottom: 0 !important;">
+              &nbsp;
+            </label>
+            <button type="button" class="btn-rw-cta" (click)="removeResponsable(item.id, itemr.id)">
+                <span><i class="bx bx-x-circle"></i>&nbsp;Eliminar</span>
+              </button>
           </div>
+
         </div>
+
+        }
+
+         <div class="mt-3">
+           <button type="button" class="btn-rw-cta" (click)="addResponsable(item.id)">
+                <span><i class="bx bx-plus"></i>Agregar</span>
+              </button>
+         </div>
+
       </p-card>
 
       <!-- Indicador visual de escalamiento hacia arriba/siguiente nivel -->
