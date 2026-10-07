@@ -12,6 +12,23 @@ $rw-primary: #d3152a;
   cursor: grab;
   text-align: center;
 
+  /* Estilos para que el scrollbar no quite los bordes redondeados en Windows */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   &.is-dragging {
     cursor: grabbing;
     user-select: none;

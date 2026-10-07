@@ -22,10 +22,9 @@
 
     <!-- Tarjetas KPI -->
     <app-umbral-kpis 
-      [totalTickets]="totalTickets"
-      [categoriaTopTickets]="categoriaTopTickets"
-      [usuarioTopTickets]="usuarioTopTickets"
-      [sucursalTopTickets]="sucursalTopTickets"
+      [tickets]="tickets"
+      [sucursales]="sucursales"
+      [usuariosRol4]="usuariosRol4"
       [isApplyingFilters]="isApplyingFilters">
     </app-umbral-kpis>
 
@@ -41,22 +40,40 @@
 
     <!-- Árbol de Organización -->
     <app-umbral-arbol 
-      [dataArbol]="dataArbol"
+      [tickets]="tickets"
+      [categoriasActuales]="categoriasActuales"
+      [areas]="areas"
+      [areaSeleccionadaId]="areaSeleccionadaId"
       [hasCategories]="categoriasActuales.length > 0">
     </app-umbral-arbol>
 
-    <!-- Gráficas ngx-charts -->
-    <app-umbral-graficas 
-      [datosCategorias]="datosCategorias"
-      [datosSucursales]="datosSucursales"
-      [datosUsuarios]="datosUsuarios"
-      [radarDataGeneral]="radarDataGeneral"
-      [radarDataCategorias]="radarDataCategorias"
-      [radarDataSucursales]="radarDataSucursales"
-      [radarDataUsuarios]="radarDataUsuarios"
-      [colorScheme]="colorScheme"
-      [isApplyingFilters]="isApplyingFilters">
-    </app-umbral-graficas>
+    <!-- Sección de Gráficas Especializadas -->
+    <div class="charts-layout" *ngIf="!isApplyingFilters && tickets.length > 0">
+      
+      <!-- Fila 1: Categorías -->
+      <app-grafica-desempeno-categorias
+        [tickets]="tickets"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-categorias>
+
+      <!-- Fila 2: Sucursales -->
+      <app-grafica-desempeno-sucursales
+        [tickets]="tickets"
+        [sucursales]="sucursales"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-sucursales>
+
+      <!-- Fila 3: Usuarios Responsables -->
+      <app-grafica-desempeno-responsables
+        [tickets]="tickets"
+        [usuarios]="usuariosRol4"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-responsables>
+
+    </div>
 
   </div>
 </div>

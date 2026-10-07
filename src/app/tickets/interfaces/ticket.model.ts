@@ -15,6 +15,7 @@ export class Ticket {
   urgencia?: number;
   score?: number;
   prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+  
   tiempoResolucion?: number;
   unidadResolucion?: 'm' | 'h' | 'd';
   horasResolucion?: number;

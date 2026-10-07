@@ -2,6 +2,10 @@ import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } fro
 import { CommonModule } from '@angular/common';
 import { TreeNode } from 'primeng/api';
 import { OrganizationChartModule } from 'primeng/organizationchart';
+import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Categoria } from '../../models/categoria.model';
+import { Area } from '../../../areas/interfaces/area.model';
+import { Subcategoria } from '../../interfaces/subcategoria.interface';
 
 @Component({
   selector: 'app-umbral-arbol',
@@ -11,8 +15,14 @@ import { OrganizationChartModule } from 'primeng/organizationchart';
   styleUrl: './umbral-arbol.component.scss'
 })
 export class UmbralArbolComponent implements OnChanges {
-  @Input() dataArbol: TreeNode[] = [];
+  @Input() tickets: Ticket[] = [];
+  @Input() categoriasActuales: Categoria[] = [];
+  @Input() areas: Area[] = [];
+  @Input() areaSeleccionadaId: string = '';
   @Input() hasCategories: boolean = false;
+
+  dataArbol: TreeNode[] = [];
+  ticketCounts: { [key: string]: number } = {};
 
   zoomLevel: number = 1;
   @ViewChild('panContainer') panContainer?: ElementRef<HTMLElement>;
@@ -24,9 +34,60 @@ export class UmbralArbolComponent implements OnChanges {
   scrollTop = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataArbol']) {
+    if (changes['tickets'] || changes['categoriasActuales'] || changes['areaSeleccionadaId'] || changes['areas']) {
+      this.procesarArbol();
+    }
+    if (changes['dataArbol'] || changes['categoriasActuales']) {
       this.centrarScroll();
     }
+  }
+
+  private procesarArbol(): void {
+    if (!this.categoriasActuales || this.categoriasActuales.length === 0) {
+      this.dataArbol = [];
+      return;
+    }
+
+    // Contar tickets
+    this.ticketCounts = {};
+    if (this.tickets) {
+      this.tickets.forEach(t => {
+        const key = t.idSubcategoria || t.idCategoria;
+        if (key) {
+          this.ticketCounts[key] = (this.ticketCounts[key] || 0) + 1;
+        }
+      });
+    }
+
+    // Generar árbol
+    const areaActual = this.areas.find(a => String(a.id) === String(this.areaSeleccionadaId));
+    
+    const nodoRaizArea: TreeNode = {
+      label: areaActual ? areaActual.nombre : 'Área',
+      type: 'area',
+      expanded: true,
+      data: { tipo: 'area' },
+      children: this.categoriasActuales.filter((c: Categoria) => !c.eliminado).map((cat: Categoria) => this.mapearNodo(cat))
+    };
+
+    this.dataArbol = [nodoRaizArea];
+  }
+
+  private mapearNodo(nodo: Categoria | Subcategoria): TreeNode {
+    const hijos = nodo.subcategorias ? nodo.subcategorias.filter((s: Subcategoria) => !s.eliminado) : [];
+    const esRama = nodo.tipo === 'rama' || hijos.length > 0 || nodo.activarSubcategorias;
+
+    return {
+      label: nodo.nombre,
+      type: esRama ? 'rama' : 'hoja',
+      expanded: true,
+      data: {
+        nodo: nodo,
+        esRama: esRama,
+        ticketCount: !esRama ? (this.ticketCounts[String(nodo.id)] || 0) : 0
+      },
+      children: hijos.map((h: Subcategoria) => this.mapearNodo(h))
+    };
   }
 
   centrarScroll(): void {
