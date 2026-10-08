@@ -89,11 +89,11 @@
           <div class="coordenadas-celda">
             <div class="dato-coord">
               <span class="k">Impacto:</span>
-              <span class="v">{{ celdaSeleccionada.impacto }} ({{ celdaSeleccionada.impacto === 3 ? 'Crítico' : celdaSeleccionada.impacto === 2 ? 'Moderado' : 'Leve' }})</span>
+              <span class="v">{{ celdaSeleccionada.impacto }} ({{ celdaSeleccionada.impacto === 3 ? 'Detiene operación' : celdaSeleccionada.impacto === 2 ? 'Degrada / Riesgo' : 'Estético / Sin efecto' }})</span>
             </div>
             <div class="dato-coord">
               <span class="k">Urgencia:</span>
-              <span class="v">{{ celdaSeleccionada.urgencia }} ({{ celdaSeleccionada.urgencia === 3 ? 'Inmediata' : celdaSeleccionada.urgencia === 2 ? 'Media' : 'Baja' }})</span>
+              <span class="v">{{ celdaSeleccionada.urgencia }} ({{ celdaSeleccionada.urgencia === 3 ? 'Alta' : celdaSeleccionada.urgencia === 2 ? 'Media' : 'Baja' }})</span>
             </div>
             <div class="dato-coord">
               <span class="k">Score:</span>

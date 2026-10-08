@@ -2,15 +2,15 @@ import { CuadranteInfo } from '../../categorias/interfaces/cuadrante-info.interf
 import { TiempoSlaCelda } from '../../categorias/interfaces/tiempo-sla-celda.interface';
 
 export const MATRIZ_FILAS = [
-  { impacto: 3, label: '3 · Crítico' },
-  { impacto: 2, label: '2 · Moderado' },
-  { impacto: 1, label: '1 · Leve' }
+  { impacto: 3, label: '3 · Detiene operación' },
+  { impacto: 2, label: '2 · Degrada / Riesgo' },
+  { impacto: 1, label: '1 · Estético / Sin efecto' }
 ];
 
 export const MATRIZ_COLUMNAS = [
-  { urgencia: 3, label: '3 · Inmediata' },
-  { urgencia: 2, label: '2 · Media' },
-  { urgencia: 1, label: '1 · Baja' }
+  { urgencia: 3, label: '3 · Urgencia Alta' },
+  { urgencia: 2, label: '2 · Urgencia Media' },
+  { urgencia: 1, label: '1 · Urgencia Baja' }
 ];
 
 export const CUADRANTES: CuadranteInfo[] = [
