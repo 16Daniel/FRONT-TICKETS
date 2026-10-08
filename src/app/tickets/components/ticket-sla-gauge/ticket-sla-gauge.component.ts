@@ -146,16 +146,20 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   private calcularUrgencia(): void {
     const fechaCreacion = this.extraerFecha(this.ticket.fecha) || new Date();
 
-    // Meta SLA Urgencia (3×3)
-    const impactoUrg = Math.min(3, Math.max(1, this.ticket.criticidad || 2));
-    const urgenciaUrg = Math.min(3, Math.max(1, this.ticket.urgencia || 2));
-
-    const matriz = this.matrizUrgencia || this.matrizUrgenciaLocal;
-    if (matriz && matriz.celdas && matriz.celdas.length > 0) {
-      const celda = matriz.celdas.find(c => c.impacto === impactoUrg && c.urgencia === urgenciaUrg);
-      this.horasUrgenciaSla = celda?.horas ?? 24;
+    if (this.ticket.horasAtencion && this.ticket.horasAtencion > 0) {
+      this.horasUrgenciaSla = this.ticket.horasAtencion;
     } else {
-      this.horasUrgenciaSla = obtenerTiempoSla(impactoUrg, urgenciaUrg).horas;
+      // Meta SLA Urgencia (3×3)
+      const impactoUrg = Math.min(3, Math.max(1, this.ticket.criticidad || 2));
+      const urgenciaUrg = Math.min(3, Math.max(1, this.ticket.urgencia || 2));
+
+      const matriz = this.matrizUrgencia || this.matrizUrgenciaLocal;
+      if (matriz && matriz.celdas && matriz.celdas.length > 0) {
+        const celda = matriz.celdas.find(c => c.impacto === impactoUrg && c.urgencia === urgenciaUrg);
+        this.horasUrgenciaSla = celda?.horas ?? 24;
+      } else {
+        this.horasUrgenciaSla = obtenerTiempoSla(impactoUrg, urgenciaUrg).horas;
+      }
     }
 
     // Fin de Urgencia: si ya tiene fechaAtencion, el reloj se detuvo ahí
@@ -352,7 +356,10 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     const metaResStr = this.formatearHorasLegible(this.horasResolucionSla, this.tiempoResolucionOriginal, this.unidadResolucionOriginal);
     const transResStr = this.formatearHorasLegible(this.horasResolucionTranscurridas);
 
-    const detalleUrg = `${estadoUrg}⭕ [TA] ${this.horasUrgenciaSla}h / ${this.horasUrgenciaTranscurridas}h`;
+    const metaUrgStr = this.formatearHorasLegible(this.horasUrgenciaSla, this.ticket.tiempoAtencion, this.ticket.unidadAtencion);
+    const transUrgStr = this.formatearHorasLegible(this.horasUrgenciaTranscurridas);
+
+    const detalleUrg = `${estadoUrg}⭕ [TA] ${metaUrgStr} / ${transUrgStr}`;
     const detalleRes = `${estadoRes}🎯 [TR] ${metaResStr} / ${transResStr}`;
 
     this.tooltipTexto = `${detalleUrg}\n${detalleRes}`;

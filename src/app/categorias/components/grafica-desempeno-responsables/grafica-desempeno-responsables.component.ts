@@ -60,10 +60,46 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
     const radarResult = this.radarService.procesarRadarUsuarios(this.tickets, this.matrizUrgencia, this.usuarios);
     this.radarDataGeneral = radarResult.general;
     this.radarDataUsuarios = radarResult.diccionario;
+    
+    this.actualizarTotales();
   }
 
   get reversedDatosBarras() {
     return [...this.datosBarras].reverse();
+  }
+
+  totales: { label: string, value: string }[] = [];
+
+  private actualizarTotales(): void {
+    const data = this.selectedRadarItem && this.radarDataUsuarios[this.selectedRadarItem]
+      ? this.radarDataUsuarios[this.selectedRadarItem]
+      : this.radarDataGeneral;
+
+    if (!data || data.length === 0) return;
+    const series = data[0].series;
+    
+    // Extraer valores (0-100) y convertirlos a escala 0-10
+    const getVal = (name: string) => {
+      const item = series.find((s: any) => s.name === name);
+      return item ? item.value / 10 : 0;
+    };
+
+    const volRel = getVal('Volumen Relativo');
+    const tTerm = getVal('T. Terminados');
+    const slaAte = getVal('SLA Atención');
+    const slaRes = getVal('SLA Resolución');
+    const calSuc = getVal('Calif. Sucursal');
+
+    const prom = (volRel + tTerm + slaAte + slaRes + calSuc) / 5;
+
+    this.totales = [
+      { label: 'Volumen Relativo', value: volRel.toFixed(1) },
+      { label: 'T. Terminados', value: tTerm.toFixed(1) },
+      { label: 'SLA Atención', value: slaAte.toFixed(1) },
+      { label: 'SLA Resolución', value: slaRes.toFixed(1) },
+      { label: 'Calif. Sucursal', value: calSuc.toFixed(1) },
+      { label: 'Total', value: prom.toFixed(1) }
+    ];
   }
 
   getChartHeight(): string {
@@ -77,6 +113,8 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
     if (typeof event === 'object' && event.name) {
       this.selectedRadarItem = this.selectedRadarItem === event.name ? '' : event.name;
       
+      this.actualizarTotales();
+
       if (this.selectedRadarItem && this.radarDataUsuarios[this.selectedRadarItem]) {
         const rawData = this.radarDataUsuarios[this.selectedRadarItem][0];
         if (rawData && rawData.detalles) {

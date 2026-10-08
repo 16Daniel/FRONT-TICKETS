@@ -45,10 +45,15 @@ export class UmbralRadarService {
     const fechaAtencion = this.extraerFecha(t.fechaAtencion);
     const fechaFin = this.extraerFecha(t.fechaFin) || (t.idEstatusTicket === '3' ? new Date() : null);
 
-    const impacto = Math.min(3, Math.max(1, t.criticidad || 2));
-    const urgencia = Math.min(3, Math.max(1, t.urgencia || 2));
-    const celda = this.matrizUrgenciaService.obtenerCelda(matriz, impacto, urgencia);
-    const horasUrgenciaSla = celda?.horas ?? 24;
+    let horasUrgenciaSla = 24;
+    if (t.horasAtencion && t.horasAtencion > 0) {
+      horasUrgenciaSla = t.horasAtencion;
+    } else {
+      const impacto = Math.min(3, Math.max(1, t.criticidad || 2));
+      const urgencia = Math.min(3, Math.max(1, t.urgencia || 2));
+      const celda = this.matrizUrgenciaService.obtenerCelda(matriz, impacto, urgencia);
+      horasUrgenciaSla = celda?.horas ?? 24;
+    }
 
     let metSlaAtencion = false;
     if (fechaAtencion) {

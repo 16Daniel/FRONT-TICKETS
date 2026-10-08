@@ -19,6 +19,10 @@ export class Ticket {
   tiempoResolucion?: number;
   unidadResolucion?: 'm' | 'h' | 'd';
   horasResolucion?: number;
+  
+  horasAtencion?: number;
+  tiempoAtencion?: number;
+  unidadAtencion?: 'm' | 'h' | 'd';
 
   fecha: Timestamp | any = new Date();
   fechaAtencion?: Timestamp | any;
