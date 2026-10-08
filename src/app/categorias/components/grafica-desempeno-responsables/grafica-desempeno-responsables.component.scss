@@ -68,3 +68,14 @@
   width: 100%;
   position: relative;
 }
+
+.totales-footer {
+  border-top: 1px solid #e2e8f0;
+  
+  .total-col {
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+  }
+}
