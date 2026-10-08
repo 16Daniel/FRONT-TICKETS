@@ -11,6 +11,6 @@ export default [
     path: 'umbral-recurrencias',
     title: 'Umbral de Recurrencias',
     loadComponent: () =>
-      import('./pages/umbral-recurrencias/umbral-recurrencias.component').then(m => m.UmbralRecurrenciasComponent),
+      import('./pages/umbral-recurrencias-page/umbral-recurrencias-page.component').then(m => m.UmbralRecurrenciasPageComponent),
   }
 ] as Routes;

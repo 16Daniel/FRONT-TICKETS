@@ -26,7 +26,7 @@ import { GraficaDesempenoSucursalesComponent } from '../../components/grafica-de
 import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-desempeno-responsables/grafica-desempeno-responsables.component';
 
 @Component({
-  selector: 'app-umbral-recurrencias',
+  selector: 'app-umbral-recurrencias-page',
   standalone: true,
   imports: [
     CommonModule, 
@@ -39,10 +39,10 @@ import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-
     GraficaDesempenoSucursalesComponent,
     GraficaDesempenoResponsablesComponent
   ],
-  templateUrl: './umbral-recurrencias.component.html',
-  styleUrl: './umbral-recurrencias.component.scss'
+  templateUrl: './umbral-recurrencias-page.component.html',
+  styleUrl: './umbral-recurrencias-page.component.scss'
 })
-export class UmbralRecurrenciasComponent implements OnInit, OnDestroy {
+export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
   readonly String = String;
   areas: Area[] = [];
   areaSeleccionadaId: string = '1';
