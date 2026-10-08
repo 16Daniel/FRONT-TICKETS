@@ -36,6 +36,8 @@ import { SelectorArbolCategoriaComponent } from '../../../categorias/components/
 import { SeleccionArbolCategoria } from '../../../categorias/interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
+import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
+import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
@@ -74,6 +76,7 @@ export class CrearTicketDialogComponent implements OnInit {
   prioridadesTicket: PrioridadTicket[] = [];
   formCategoria: any = null;
   catUsuariosHelp: Usuario[] = [];
+  matrizUrgenciaLocal: MatrizUrgencia | null = null;
 
   esActivoFijo: boolean = false;
   activoFijo: ActivoFijo | undefined;
@@ -153,7 +156,8 @@ export class CrearTicketDialogComponent implements OnInit {
     private fixedAssetsService: FixedAssetsService,
     private firebaseStorage: FirebaseStorageService,
     public responsablesService: ResponsablesService,
-    private bitacoraService: BitacoraService
+    private bitacoraService: BitacoraService,
+    private matrizUrgenciaService: MatrizUrgenciaService
   ) {}
 
   ngOnInit(): void {
@@ -174,6 +178,22 @@ export class CrearTicketDialogComponent implements OnInit {
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
+
+    // Obtener la matriz de urgencia correspondiente al área
+    if (this.ticket.idArea && this.ticket.idArea !== '0') {
+      this.cargarMatrizArea(this.ticket.idArea);
+    } else if (this.idArea && this.idArea !== '0') {
+      this.cargarMatrizArea(this.idArea);
+    }
+  }
+
+  cargarMatrizArea(idArea: string): void {
+    this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).subscribe({
+      next: (matriz) => {
+        this.matrizUrgenciaLocal = matriz;
+      },
+      error: (err) => console.error('Error al cargar matriz de urgencia', err)
+    });
   }
 
   obtenerSucursales(): void {
@@ -210,6 +230,7 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.nombreCategoria = '';
     this.ticket.nombreSubcategoria = '';
     this.formCategoria = null;
+    this.cargarMatrizArea(String(this.ticket.idArea));
     this.cdr.detectChanges();
   }
 
@@ -243,6 +264,16 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.urgencia = Math.min(3, Math.max(1, urgUrg));
     this.ticket.score = scoreUrg;
     this.ticket.prioridad = prioUrg as any;
+    
+    this.ticket.tiempoResolucion = seleccion.tiempoResolucion;
+    this.ticket.unidadResolucion = seleccion.unidadResolucion;
+    this.ticket.horasResolucion = seleccion.horasResolucion;
+
+    // Calcular SLA de atención (Urgencia) basado en la matriz
+    const celda = this.matrizUrgenciaService.obtenerCelda(this.matrizUrgenciaLocal, this.ticket.criticidad, this.ticket.urgencia);
+    this.ticket.horasAtencion = celda.horas;
+    this.ticket.tiempoAtencion = celda.valor;
+    this.ticket.unidadAtencion = celda.unidad as any;
   }
 
   onLimpiarCategoria(): void {
@@ -255,6 +286,12 @@ export class CrearTicketDialogComponent implements OnInit {
     this.ticket.urgencia = undefined;
     this.ticket.score = undefined;
     this.ticket.prioridad = undefined;
+    this.ticket.tiempoResolucion = undefined;
+    this.ticket.unidadResolucion = undefined;
+    this.ticket.horasResolucion = undefined;
+    this.ticket.horasAtencion = undefined;
+    this.ticket.tiempoAtencion = undefined;
+    this.ticket.unidadAtencion = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {

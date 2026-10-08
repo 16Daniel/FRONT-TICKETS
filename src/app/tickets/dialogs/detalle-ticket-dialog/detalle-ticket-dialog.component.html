@@ -70,7 +70,7 @@
                 
                 <div class="text-center mt-2" style="font-size: 0.7rem;">
                   <span class="d-block text-muted">Atención</span>
-                  <span class="fw-bold">{{ gauge.horasUrgenciaTranscurridas }}h / {{ gauge.horasUrgenciaSla }}h</span>
+                  <span class="fw-bold">{{ gauge.formatearHorasLegible(gauge.horasUrgenciaTranscurridas) }} / {{ gauge.formatearHorasLegible(gauge.horasUrgenciaSla, ticket.tiempoAtencion, ticket.unidadAtencion) }}</span>
                 </div>
               </div>
             </div>
