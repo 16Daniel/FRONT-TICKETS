@@ -4,12 +4,14 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { UmbralRadarChartComponent } from '../umbral-radar-chart/umbral-radar-chart.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
-import { UmbralRadarService } from '../../../categorias/services/umbral-radar.service';
+import { KpiRadarService } from '../../services/kpi-radar.service';
+import { ExecutiveKpiFooterComponent } from '../executive-kpi-footer/executive-kpi-footer.component';
+import { PendingTicketsListComponent } from '../pending-tickets-list/pending-tickets-list.component';
 
 @Component({
   selector: 'app-grafica-desempeno-responsables',
   standalone: true,
-  imports: [CommonModule, NgxChartsModule, UmbralRadarChartComponent],
+  imports: [CommonModule, NgxChartsModule, UmbralRadarChartComponent, ExecutiveKpiFooterComponent, PendingTicketsListComponent],
   templateUrl: './grafica-desempeno-responsables.component.html',
   styleUrl: './grafica-desempeno-responsables.component.scss'
 })
@@ -25,7 +27,7 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
   
   selectedRadarItem: string = '';
 
-  constructor(private radarService: UmbralRadarService) {}
+  constructor(private radarService: KpiRadarService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tickets'] || changes['usuarios'] || changes['matrizUrgencia']) {
@@ -68,7 +70,13 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
     return [...this.datosBarras].reverse();
   }
 
-  totales: { label: string, value: string }[] = [];
+  totalesDirectivos = {
+    totalTickets: 0,
+    totalTerminados: 0,
+    terminadosPorcentaje: 0,
+    slaAtencion: 0,
+    slaResolucion: 0
+  };
 
   private actualizarTotales(): void {
     const data = this.selectedRadarItem && this.radarDataUsuarios[this.selectedRadarItem]
@@ -76,30 +84,17 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
       : this.radarDataGeneral;
 
     if (!data || data.length === 0) return;
-    const series = data[0].series;
+    const rawStats = data[0].rawStats;
     
-    // Extraer valores (0-100) y convertirlos a escala 0-10
-    const getVal = (name: string) => {
-      const item = series.find((s: any) => s.name === name);
-      return item ? item.value / 10 : 0;
-    };
-
-    const volRel = getVal('Volumen Relativo');
-    const tTerm = getVal('T. Terminados');
-    const slaAte = getVal('SLA Atención');
-    const slaRes = getVal('SLA Resolución');
-    const calSuc = getVal('Calif. Sucursal');
-
-    const prom = (volRel + tTerm + slaAte + slaRes + calSuc) / 5;
-
-    this.totales = [
-      { label: 'Volumen Relativo', value: volRel.toFixed(1) },
-      { label: 'T. Terminados', value: tTerm.toFixed(1) },
-      { label: 'SLA Atención', value: slaAte.toFixed(1) },
-      { label: 'SLA Resolución', value: slaRes.toFixed(1) },
-      { label: 'Calif. Sucursal', value: calSuc.toFixed(1) },
-      { label: 'Total', value: prom.toFixed(1) }
-    ];
+    if (rawStats) {
+      this.totalesDirectivos = {
+        totalTickets: rawStats.totalTickets,
+        totalTerminados: rawStats.totalTerminados,
+        terminadosPorcentaje: rawStats.totalTickets > 0 ? (rawStats.totalTerminados / rawStats.totalTickets) * 100 : 0,
+        slaAtencion: rawStats.totalTerminados > 0 ? (rawStats.slaAtencionMet / rawStats.totalTerminados) * 100 : 0,
+        slaResolucion: rawStats.totalTerminados > 0 ? (rawStats.slaResolucionMet / rawStats.totalTerminados) * 100 : 0
+      };
+    }
   }
 
   getChartHeight(): string {
@@ -123,6 +118,65 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
           console.groupEnd();
         }
       }
+    }
+  }
+
+  get pendingTicketsList(): Ticket[] {
+    if (!this.tickets) return [];
+    
+    let pending = this.tickets.filter(t => String(t.idEstatusTicket) !== '3');
+    
+    if (this.selectedRadarItem) {
+      const u = this.usuarios.find(user => {
+         return `${user.nombre} ${user.apellidoP}`.trim() === this.selectedRadarItem;
+      });
+      if (u) {
+        pending = pending.filter(t => t.idResponsable === u.id);
+      } else {
+        pending = [];
+      }
+    }
+
+    return pending.sort((a, b) => {
+       const da = this.extraerFechaStr(a.fecha)?.getTime() || 0;
+       const db = this.extraerFechaStr(b.fecha)?.getTime() || 0;
+       return da - db;
+    });
+  }
+
+  get closedTicketsWithSlaIssuesList(): Ticket[] {
+    if (!this.tickets) return [];
+    
+    let closed = this.tickets.filter(t => String(t.idEstatusTicket) === '3');
+    closed = closed.filter(t => this.radarService.ticketTuvoProblemaSla(t, this.matrizUrgencia));
+    
+    if (this.selectedRadarItem) {
+      const u = this.usuarios.find(user => {
+         return `${user.nombre} ${user.apellidoP}`.trim() === this.selectedRadarItem;
+      });
+      if (u) {
+        closed = closed.filter(t => t.idResponsable === u.id);
+      } else {
+        closed = [];
+      }
+    }
+
+    return closed.sort((a, b) => {
+       const da = this.extraerFechaStr(a.fecha)?.getTime() || 0;
+       const db = this.extraerFechaStr(b.fecha)?.getTime() || 0;
+       return da - db;
+    });
+  }
+
+  private extraerFechaStr(fechaRaw: any): Date | null {
+    if (!fechaRaw) return null;
+    try {
+      if (fechaRaw.toDate && typeof fechaRaw.toDate === 'function') {
+        return fechaRaw.toDate();
+      }
+      return new Date(fechaRaw);
+    } catch {
+      return null;
     }
   }
 }

@@ -38,13 +38,20 @@
     
   </div>
 
-  <!-- Pie de tarjeta: Totales -->
-  <div class="totales-footer mt-4 pt-3 d-flex justify-content-between text-center flex-wrap gap-2" *ngIf="totales.length > 0">
-    <div class="total-col flex-fill" *ngFor="let t of totales">
-      <div class="text-muted small fw-bold text-uppercase">{{ t.label }}</div>
-      <div class="fs-4 fw-bolder" [class.text-primary]="t.label === 'Total'" [class.text-dark]="t.label !== 'Total'">
-        {{ t.value }}
-      </div>
-    </div>
-  </div>
+  <app-executive-kpi-footer [totales]="totalesDirectivos"></app-executive-kpi-footer>
+
+  <app-pending-tickets-list 
+    [tituloSeccion]="'Tickets Pendientes'"
+    [tickets]="pendingTicketsList" 
+    [matrizUrgencia]="matrizUrgencia" 
+    [tituloContexto]="selectedRadarItem">
+  </app-pending-tickets-list>
+
+  <app-pending-tickets-list 
+    [tituloSeccion]="'Tickets Cerrados con SLA Incumplido'"
+    [tickets]="closedTicketsWithSlaIssuesList" 
+    [matrizUrgencia]="matrizUrgencia" 
+    [tituloContexto]="selectedRadarItem">
+  </app-pending-tickets-list>
+
 </div>

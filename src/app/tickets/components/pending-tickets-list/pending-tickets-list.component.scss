@@ -1,0 +1,11 @@
+.transition-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.ticket-badge-card {
+  &:hover .transition-hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    background-color: #f8fafc !important;
+  }
+}

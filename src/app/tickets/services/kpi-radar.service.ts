@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Ticket } from '../../tickets/interfaces/ticket.model';
-import { MatrizUrgencia } from '../interfaces/matriz-urgencia.interface';
-import { RadarStats } from '../interfaces/radar-stats.interface';
-import { MatrizUrgenciaService } from './matriz-urgencia.service';
+import { Ticket } from '../interfaces/ticket.model';
+import { MatrizUrgencia } from '../../categorias/interfaces/matriz-urgencia.interface';
+import { RadarStats } from '../../categorias/interfaces/radar-stats.interface';
+import { MatrizUrgenciaService } from '../../categorias/services/matriz-urgencia.service';
 import { DatesHelperService } from '../../shared/helpers/dates-helper.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UmbralRadarService {
+export class KpiRadarService {
   constructor(
     private matrizUrgenciaService: MatrizUrgenciaService,
     private datesHelper: DatesHelperService
@@ -113,8 +113,8 @@ export class UmbralRadarService {
       {
         name: name,
         detalles: stats.detalles,
+        rawStats: stats,
         series: [
-          { name: 'Volumen Relativo', value: Math.round(ptTickets) },
           { name: 'T. Terminados', value: Math.round(ptTerminados) },
           { name: 'SLA Atención', value: Math.round(ptSlaAtencion) },
           { name: 'SLA Resolución', value: Math.round(ptSlaResolucion) },
@@ -204,5 +204,54 @@ export class UmbralRadarService {
     });
 
     return { general: resultGeneral, diccionario: resultDict };
+  }
+
+  public ticketTuvoProblemaSla(t: Ticket, matriz: MatrizUrgencia | undefined): boolean {
+    const fechaCreacion = this.extraerFecha(t.fecha) || new Date();
+    const fechaAtencion = this.extraerFecha(t.fechaAtencion);
+    const fechaFin = this.extraerFecha(t.fechaFin) || (t.idEstatusTicket === '3' ? new Date() : null);
+
+    let horasUrgenciaSla = 24;
+    if (t.horasAtencion && t.horasAtencion > 0) {
+      horasUrgenciaSla = t.horasAtencion;
+    } else {
+      const impacto = Math.min(3, Math.max(1, t.criticidad || 2));
+      const urgencia = Math.min(3, Math.max(1, t.urgencia || 2));
+      const celda = this.matrizUrgenciaService.obtenerCelda(matriz, impacto, urgencia);
+      horasUrgenciaSla = celda?.horas ?? 24;
+    }
+
+    let metSlaAtencion = true;
+    if (fechaAtencion) {
+      const horasTranscurridas = (fechaAtencion.getTime() - fechaCreacion.getTime()) / (1000 * 60 * 60);
+      metSlaAtencion = horasTranscurridas <= horasUrgenciaSla;
+    } else {
+       // if not attended, check if time elapsed > sla
+       const horasTranscurridas = (new Date().getTime() - fechaCreacion.getTime()) / (1000 * 60 * 60);
+       metSlaAtencion = horasTranscurridas <= horasUrgenciaSla;
+    }
+
+    let horasResolucionSla = 24;
+    if (t.horasResolucion) {
+      horasResolucionSla = t.horasResolucion;
+    } else if (t.tiempoResolucion) {
+      const u = t.unidadResolucion || 'h';
+      horasResolucionSla = u === 'm' ? t.tiempoResolucion / 60 : (u === 'd' ? t.tiempoResolucion * 24 : t.tiempoResolucion);
+    } else {
+      horasResolucionSla = horasUrgenciaSla || 24;
+    }
+
+    let metSlaResolucion = true;
+    if (fechaAtencion) {
+      if (fechaFin) {
+        const horasTranscurridas = (fechaFin.getTime() - fechaAtencion.getTime()) / (1000 * 60 * 60);
+        metSlaResolucion = horasTranscurridas <= horasResolucionSla;
+      } else {
+         const horasTranscurridas = (new Date().getTime() - fechaAtencion.getTime()) / (1000 * 60 * 60);
+         metSlaResolucion = horasTranscurridas <= horasResolucionSla;
+      }
+    }
+
+    return !metSlaAtencion || !metSlaResolucion;
   }
 }
