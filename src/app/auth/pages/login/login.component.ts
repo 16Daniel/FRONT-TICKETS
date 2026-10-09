@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 
 import { AuthService } from '../../services/auth.service';
 import { UsersService } from '../../../usuarios/services/users.service';
+import { FcmService } from '../../../alertas/service/fcm.service';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,9 @@ export default class LoginComponent {
   public showpass: boolean = false;
   public typei: string = 'password';
 
+  protected fcmService = inject(FcmService);
+  tokenDisplay: string | null = null;
+
   constructor(
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
@@ -34,6 +38,18 @@ export default class LoginComponent {
     private usersService: UsersService,
     private authService: AuthService
   ) { }
+
+async ngOnInit() {
+    await this.fcmService.requestPermission();
+  }
+
+  copyToken() {
+    const token = this.fcmService.fcmToken();
+    if (token) {
+      navigator.clipboard.writeText(token);
+      alert('Token copiado al portapapeles');
+    }
+  }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });

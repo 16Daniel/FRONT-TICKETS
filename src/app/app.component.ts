@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { FcmService } from './alertas/service/fcm.service';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +12,18 @@ import { RouterOutlet } from '@angular/router';
 
 export class AppComponent {
   title = 'WEB-PLANEACION';
+private fcmService = inject(FcmService);
+
+  ngOnInit() {
+    this.requestPermission();
+    this.fcmService.listenMessages().subscribe((message) => {
+      alert(`Notificación: ${message.notification.title}\n${message.notification.body}`);
+    });
+  }
+
+  requestPermission() {
+    this.fcmService.requestPermission();
+  }
+
 
 }
