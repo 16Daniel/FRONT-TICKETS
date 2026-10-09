@@ -47,33 +47,5 @@
       [hasCategories]="categoriasActuales.length > 0">
     </app-umbral-arbol>
 
-    <!-- Sección de Gráficas Especializadas -->
-    <div class="charts-layout" *ngIf="!isApplyingFilters && tickets.length > 0">
-      
-      <!-- Fila 1: Categorías -->
-      <app-grafica-desempeno-categorias
-        [tickets]="tickets"
-        [matrizUrgencia]="matrizUrgenciaArea"
-        [colorScheme]="colorScheme">
-      </app-grafica-desempeno-categorias>
-
-      <!-- Fila 2: Sucursales -->
-      <app-grafica-desempeno-sucursales
-        [tickets]="tickets"
-        [sucursales]="sucursales"
-        [matrizUrgencia]="matrizUrgenciaArea"
-        [colorScheme]="colorScheme">
-      </app-grafica-desempeno-sucursales>
-
-      <!-- Fila 3: Usuarios Responsables -->
-      <app-grafica-desempeno-responsables
-        [tickets]="tickets"
-        [usuarios]="usuariosRol4"
-        [matrizUrgencia]="matrizUrgenciaArea"
-        [colorScheme]="colorScheme">
-      </app-grafica-desempeno-responsables>
-
-    </div>
-
   </div>
 </div>

@@ -1,1 +1,17 @@
-/* kpis tickets page styles */
+/* Rebel Wings Brand Design Tokens */
+$rw-primary: #d3152a;
+$rw-accent: #fdb813;
+$rw-dark: #1e1e24;
+$rw-canvas: #f4f6fa;
+
+.kpis-page-wrapper {
+  background-color: $rw-canvas;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem 1.5rem 4rem !important; /* El !important sobreescribe el estilo en línea si existiera */
+  width: 100%;
+}
+
+.kpis-content-container {
+  max-width: 1600px;
+  margin: 0 auto;
+}

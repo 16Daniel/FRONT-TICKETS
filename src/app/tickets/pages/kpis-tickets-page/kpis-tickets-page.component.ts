@@ -1,213 +1,161 @@
+import { Component, type OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { MultiSelectModule } from "primeng/multiselect";
 import { Subscription } from 'rxjs';
 
-import { GraficaGeneralTicketsComponent } from '../../components/grafica-general-tickets/grafica-general-tickets.component';
-import { Ticket } from '../../interfaces/ticket.model';
-import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../../categorias/models/categoria.model';
-import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
-import { AceiteService } from '../../../aceites/services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { TicketsService } from '../../services/tickets.service';
-import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { CategoriesService } from '../../../categorias/services/categories.service';
-import { StatusTicketService } from '../../services/status-ticket.service';
-import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
+import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Area } from '../../../areas/interfaces/area.model';
+import { KpisFiltrosComponent } from '../../components/kpis-filtros/kpis-filtros.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+
+import { Ticket } from '../../interfaces/ticket.model';
+import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { GraficaDesempenoCategoriasComponent } from '../../components/grafica-desempeno-categorias/grafica-desempeno-categorias.component';
+import { GraficaDesempenoSucursalesComponent } from '../../components/grafica-desempeno-sucursales/grafica-desempeno-sucursales.component';
+import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-desempeno-responsables/grafica-desempeno-responsables.component';
+
+// Servicios de datos para KPIs
+import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
+import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
 
 @Component({
   selector: 'app-kpis-tickets-page',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    CalendarModule,
-    DropdownModule,
-    ToastModule,
-    GraficaGeneralTicketsComponent,
-    MultiSelectModule
+    KpisFiltrosComponent,
+    PageHeaderComponent,
+    GraficaDesempenoCategoriasComponent,
+    GraficaDesempenoSucursalesComponent,
+    GraficaDesempenoResponsablesComponent
   ],
-  providers: [MessageService],
   templateUrl: './kpis-tickets-page.component.html',
   styleUrl: './kpis-tickets-page.component.scss',
 })
-
-export default class KpisTicketsPageComponent implements OnInit {
-  sucursales: Sucursal[] = [];
-  sucursalesSel: Sucursal[] = [];
-  loading: boolean = false;
-  fechaini: Date = new Date();
-  fechafin: Date = new Date();
-  tickets: Ticket[] = [];
-  todosLosTickets: Ticket[] = [];
+export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
+  readonly String = String;
+  
   areas: Area[] = [];
-  areasSel: Area[] = [];
-  subscripcionUsuarios: Subscription | undefined;
-  catusuarios: Usuario[] = [];
-  usuariosFiltro: Usuario[] = [];
-  categorias: Categoria[] = [];
-  estatusTicket: EstatusTicket[] = [];
-  mesesDistintos: string[] = [];
-  manteniminetos: MantenimientoSys[] = [];
-  finalizado: boolean = false;
+  areaSeleccionadaId: string = '1';
+  
+  sucursales: Sucursal[] = [];
+  usuariosRol4: any[] = [];
+  isApplyingFilters = false;
+
+  fechaInicio: Date | null = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  fechaFin: Date | null = new Date();
+  
+  sucursalesSeleccionadas: any[] = [];
+  usuariosSeleccionados: any[] = [];
+
+  // Propiedades para las gráficas
+  tickets: Ticket[] = [];
+  matrizUrgenciaArea?: MatrizUrgencia;
+  colorScheme: any = {
+    domain: ['#d3152a', '#fdb813', '#2563eb', '#16a34a', '#7c3aed', '#0f766e', '#b91c1c', '#ca8a04', '#64748b']
+  };
+
+  private subscripcionAreas?: Subscription;
+  private subscripcionSucursales?: Subscription;
+  private subscripcionUsuarios?: Subscription;
+  private subscripcionMatriz?: Subscription;
 
   constructor(
-    public aceiteService: AceiteService,
-    public cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
-    private messageService: MessageService,
-    private ticketsService: TicketsService,
-    private areasService: AreasService,
     private usersService: UsersService,
-    private categoriesService: CategoriesService,
-    private statusTicketService: StatusTicketService,
-    private mantenimientosSistemasService: MantenimientosSistemasService,
-  ) {
-    this.areasService.areas$.subscribe(result => this.areas = result);
-  }
-
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
+    private areasService: AreasService,
+    private kpisTicketsService: KpisTicketsService,
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.obtenerSucursales();
-    this.obtenerUsuarios();
-    this.obtenerCategorias();
-    this.obtenerEstatusTicket();
+    this.cargarAreas();
+    this.cargarFiltros();
+    this.cargarUsuarios();
   }
 
-  obtenerCategorias() {
-    this.categoriesService.get().subscribe({
-      next: (data) => {
-        this.categorias = data.map((item: any) => ({
-          ...item,
-          id: item.id.toString()
-        }));
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
+  ngOnDestroy(): void {
+    this.subscripcionAreas?.unsubscribe();
+    this.subscripcionSucursales?.unsubscribe();
+    this.subscripcionUsuarios?.unsubscribe();
+    this.subscripcionMatriz?.unsubscribe();
   }
 
-  obtenerSucursales() {
-    this.loading = true;
-    this.branchesService.get().subscribe({
-      next: (data) => {
-        this.sucursales = data;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.loading = false;
-      },
-    });
-  }
-
-  async obtenerTickets(): Promise<void> {
-    this.tickets = [];
-    this.todosLosTickets = [];
-    this.manteniminetos = [];
-    this.loading = true;
-    this.finalizado = false;
-    this.tickets = await this.ticketsService.obtenerTicketsEntreFechas(
-      this.fechaini,
-      this.fechafin
-    );
-
-    for (let suc of this.sucursalesSel) {
-      let tks = this.tickets.filter(x => x.idSucursal == suc.id);
-      this.todosLosTickets.push(...tks);
-    }
-    this.todosLosTickets = this.todosLosTickets.filter(x => this.areasSel.some(a => a.id == x.idArea));
-    this.usuariosFiltro = this.catusuarios.filter(u => this.areasSel.some(a => a.id == u.idArea));
-    let temp: Usuario[] = [];
-    for (let uf of this.usuariosFiltro) {
-      const existeSucursal = this.sucursalesSel.some(sucSeleccionada =>
-        uf.sucursales.some(sucUsuario =>
-          sucUsuario.id === sucSeleccionada.id
-        )
-      );
-
-      if (existeSucursal) {
-        temp.push(uf);
+  private cargarAreas(): void {
+    this.subscripcionAreas = this.areasService.areas$.subscribe((areas: Area[]) => {
+      this.areas = areas.filter((a: Area) => !a.eliminado);
+      if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
+        this.areaSeleccionadaId = String(this.areas[0].id);
       }
-    }
-    this.usuariosFiltro = [...temp];
-    this.mesesDistintos = this.obtenerMesesDistintos(this.fechaini, this.fechafin);
-
-    this.obtenerMantenimientosSys();
-  }
-
-  async obtenerMantenimientosSys(): Promise<void> {
-    this.manteniminetos = await this.mantenimientosSistemasService.obtenerMantenimientosEntreFechas(
-      this.fechaini,
-      this.fechafin);
-
-    this.loading = false;
-    this.finalizado = true;
-    this.cdr.detectChanges();
-  }
-
-  obtenerUsuarios() {
-    this.usersService.usuarios$.subscribe(usuarios => this.catusuarios = usuarios);
-  }
-
-  obtenerEstatusTicket() {
-    this.statusTicketService.get().subscribe({
-      next: (data) => {
-        this.estatusTicket = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
+      this.cargarMatrizYFiltros();
+      this.cdr.detectChanges();
     });
   }
 
-  obtenerMesesDistintos(fechaInicio: Date, fechaFin: Date, formato: string = 'MM/YYYY'): string[] {
-    const mesesUnicos = new Set<string>();
-
-    if (fechaInicio > fechaFin) {
-      [fechaInicio, fechaFin] = [fechaFin, fechaInicio];
-    }
-
-    const fechaActual = new Date(fechaInicio);
-    fechaActual.setDate(1); // Nos aseguramos de empezar desde el primer día del mes
-
-    while (fechaActual <= fechaFin) {
-      const mes = fechaActual.getMonth() + 1; // meses van de 0 a 11
-      const año = fechaActual.getFullYear();
-
-      let mesFormateado = formato
-        .replace('MM', mes.toString().padStart(2, '0'))
-        .replace('YYYY', año.toString());
-
-      mesesUnicos.add(mesFormateado);
-
-      // Avanzar al siguiente mes
-      fechaActual.setMonth(fechaActual.getMonth() + 1);
-    }
-
-    return Array.from(mesesUnicos).sort();
+  private cargarMatrizYFiltros(): void {
+    this.subscripcionMatriz?.unsubscribe();
+    this.subscripcionMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(this.areaSeleccionadaId).subscribe(mat => {
+      this.matrizUrgenciaArea = mat;
+      this.aplicarFiltros();
+    });
   }
 
-  cambiarareas() {
-    this.tickets = [];
-    this.manteniminetos = [];
+  cambiarArea(areaId: string | number): void {
+    this.areaSeleccionadaId = String(areaId);
+    this.tickets = []; // Limpiar tickets al cambiar de área
+    this.cargarMatrizYFiltros();
+  }
+
+  private cargarFiltros(): void {
+    this.subscripcionSucursales = this.branchesService.get().subscribe(sucursales => {
+      this.sucursales = sucursales;
+      this.cdr.detectChanges();
+    });
+  }
+
+  private cargarUsuarios(): void {
+    // Obtenemos todos los usuarios o los filtramos según sea necesario
+    this.subscripcionUsuarios = this.usersService.usuarios$.subscribe(usuarios => {
+      this.usuariosRol4 = usuarios.map(u => ({
+        ...u,
+        nombreCompleto: `${u.nombre} ${u.apellidoP} ${u.apellidoM}`.trim()
+      }));
+      this.cdr.detectChanges();
+    });
+  }
+
+  aplicarFiltrosEvent(event: any): void {
+    this.fechaInicio = event.fechaInicio;
+    this.fechaFin = event.fechaFin;
+    this.sucursalesSeleccionadas = event.sucursalesSeleccionadas || [];
+    this.usuariosSeleccionados = event.usuariosSeleccionados || [];
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros(): void {
+    this.isApplyingFilters = true;
+    const filtros: KpisFiltros = {
+      fechaInicio: this.fechaInicio,
+      fechaFin: this.fechaFin,
+      idSucursales: this.sucursalesSeleccionadas.map(s => String(s.id)),
+      idUsuarios: this.usuariosSeleccionados.map(u => String(u.id))
+    };
+
+    this.kpisTicketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
+      next: (tickets: Ticket[]) => {
+        this.tickets = tickets;
+        this.isApplyingFilters = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error aplicando filtros', err);
+        this.isApplyingFilters = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

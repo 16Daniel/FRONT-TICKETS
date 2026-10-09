@@ -2,9 +2,9 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { UmbralRadarChartComponent } from '../umbral-radar-chart/umbral-radar-chart.component';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
-import { UmbralRadarService } from '../../services/umbral-radar.service';
+import { Ticket } from '../../interfaces/ticket.model';
+import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { UmbralRadarService } from '../../../categorias/services/umbral-radar.service';
 
 @Component({
   selector: 'app-grafica-desempeno-categorias',
