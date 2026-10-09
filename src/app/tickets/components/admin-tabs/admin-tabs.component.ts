@@ -1,7 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { TabViewModule } from 'primeng/tabview';
 import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -14,8 +12,6 @@ import { Area } from '../../../areas/interfaces/area.model';
   selector: 'app-admin-tabs',
   standalone: true,
   imports: [
-    FormsModule,
-    TabViewModule,
     CommonModule,
     AdminAreaTabComponent
   ],
@@ -28,7 +24,7 @@ export class AdminTabsComponent implements OnInit, OnDestroy {
   areasTicket: Area[] = [];
   areasSub: Subscription | undefined;
   
-  activeIndex: number = 0;
+  areaSeleccionadaId: any;
   tabsActivos: Record<string, boolean> = {};
 
   constructor(
@@ -50,6 +46,7 @@ export class AdminTabsComponent implements OnInit, OnDestroy {
       this.areasTicket = filteredAreas;
       
       if (this.areasTicket.length > 0) {
+        this.areaSeleccionadaId = this.areasTicket[0].id;
         this.tabsActivos[this.areasTicket[0].nombre] = true;
       }
       this.cdr.detectChanges();
@@ -62,9 +59,8 @@ export class AdminTabsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTabChange(event: any) {
-    const header = event.originalEvent.target.innerText.trim();
-    this.activeIndex = event.index;
-    this.tabsActivos[header] = true;
+  cambiarArea(area: Area) {
+    this.areaSeleccionadaId = area.id;
+    this.tabsActivos[area.nombre] = true;
   }
 }

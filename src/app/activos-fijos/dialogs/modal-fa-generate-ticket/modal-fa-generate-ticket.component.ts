@@ -34,6 +34,8 @@ import { SelectorArbolCategoriaComponent } from '../../../categorias/components/
 import { SeleccionArbolCategoria } from '../../../categorias/interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
+import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
+import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
@@ -124,6 +126,7 @@ export class ModalFaGenerateTicketComponent implements OnInit {
   prioridadesTicket: PrioridadTicket[] = [];
   formCategoria: any = null;
   catUsuariosHelp: Usuario[] = [];
+  matrizUrgenciaLocal: MatrizUrgencia | null = null;
 
   urlsArchivos: string[] = [];
   archivosPreview: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string }[] = [];
@@ -145,7 +148,8 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     private ticketsPriorityService: TicketsPriorityService,
     private firebaseStorage: FirebaseStorageService,
     public responsablesService: ResponsablesService,
-    private bitacoraService: BitacoraService
+    private bitacoraService: BitacoraService,
+    private matrizUrgenciaService: MatrizUrgenciaService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -168,6 +172,16 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
     this.obtenerPrioridadesTicket();
+
+    // Obtener la matriz de urgencia correspondiente al área
+    if (this.ticket.idArea) {
+      this.matrizUrgenciaService.obtenerMatrizPorArea(String(this.ticket.idArea)).subscribe({
+        next: (matriz) => {
+          this.matrizUrgenciaLocal = matriz;
+        },
+        error: (err) => console.error('Error al cargar matriz de urgencia', err)
+      });
+    }
   }
 
   obtenerSucursales(): void {
@@ -237,6 +251,12 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.tiempoResolucion = seleccion.tiempoResolucion;
     this.ticket.unidadResolucion = seleccion.unidadResolucion;
     this.ticket.horasResolucion = seleccion.horasResolucion;
+
+    // Calcular SLA de atención (Urgencia) basado en la matriz
+    const celda = this.matrizUrgenciaService.obtenerCelda(this.matrizUrgenciaLocal, this.ticket.criticidad, this.ticket.urgencia);
+    this.ticket.horasAtencion = celda.horas;
+    this.ticket.tiempoAtencion = celda.valor;
+    this.ticket.unidadAtencion = celda.unidad as any;
   }
 
   onLimpiarCategoria(): void {
@@ -252,6 +272,9 @@ export class ModalFaGenerateTicketComponent implements OnInit {
     this.ticket.tiempoResolucion = undefined;
     this.ticket.unidadResolucion = undefined;
     this.ticket.horasResolucion = undefined;
+    this.ticket.horasAtencion = undefined;
+    this.ticket.tiempoAtencion = undefined;
+    this.ticket.unidadAtencion = undefined;
   }
 
   async enviarTicket(form: NgForm): Promise<void> {

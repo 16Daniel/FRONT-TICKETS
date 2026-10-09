@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { collection, doc, Firestore, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
-import { EstatusEisenhower } from '../models/estatus-eisenhower.model';
+import { EstatusEisenhower } from '../interfaces/estatus-eisenhower.interface';
 
 @Injectable({
   providedIn: 'root'

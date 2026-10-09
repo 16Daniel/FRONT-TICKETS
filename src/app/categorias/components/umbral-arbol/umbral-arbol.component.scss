@@ -1,80 +1,5 @@
-/* Rebel Wings Brand Design Tokens */
 $rw-primary: #d3152a;
-$rw-accent: #fdb813;
-$rw-dark: #1e1e24;
-$rw-canvas: #f4f6fa;
 
-.categories-tree-page-wrapper {
-  background-color: $rw-canvas;
-  min-height: calc(100vh - 64px);
-  padding: 1.5rem 1.5rem 4rem;
-  width: 100%;
-}
-
-.categories-content-container {
-  max-width: 1600px;
-  margin: 0 auto;
-}
-
-/* ==========================================================================
-   Area Selector Chips Header
-   ========================================================================== */
-.areas-chips-track {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #ffffff;
-  padding: 0.5rem 1rem;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.chip-area-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1rem;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #64748b;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  .area-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #cbd5e1;
-    transition: all 0.18s ease;
-  }
-
-  &:hover {
-    background-color: #f8fafc;
-    color: #0f172a;
-  }
-
-  &.is-active {
-    background-color: #fff1f2;
-    color: $rw-primary;
-    font-weight: 800;
-    border-color: #fecdd3;
-
-    .area-dot {
-      background-color: $rw-primary;
-    }
-  }
-}
-
-/* ==========================================================================
-   Organization Chart Styles
-   ========================================================================== */
 .org-chart-container {
   background: #ffffff;
   border-radius: 18px;
@@ -86,6 +11,23 @@ $rw-canvas: #f4f6fa;
   min-height: 500px;
   cursor: grab;
   text-align: center;
+
+  /* Estilos para que el scrollbar no quite los bordes redondeados en Windows */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 
   &.is-dragging {
     cursor: grabbing;
@@ -137,8 +79,8 @@ $rw-canvas: #f4f6fa;
 
 .org-chart-zoom-wrapper {
   transition: transform 0.2s ease-out;
-  display: inline-block; /* Ensure it wraps the content tightly for scaling */
-  min-width: 100%; /* Ensure it spans at least full width */
+  display: inline-block;
+  min-width: 100%;
 }
 
 .node-content {
@@ -184,17 +126,15 @@ $rw-canvas: #f4f6fa;
   }
 }
 
-/* Fix PrimeNG OrgChart Node Styling */
 ::ng-deep .p-organizationchart .p-organizationchart-node-content {
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
 }
 
-/* Fix PrimeNG OrgChart Connecting Lines */
 ::ng-deep .p-organizationchart {
   .p-organizationchart-line-down {
-    background-color: #94a3b8 !important; /* Color más oscuro para que resalte */
+    background-color: #94a3b8 !important;
     width: 2px !important;
     margin: 0 auto;
   }
@@ -208,7 +148,7 @@ $rw-canvas: #f4f6fa;
     color: #475569 !important;
     background: #f8fafc !important;
     border: 1px solid #cbd5e1 !important;
-    bottom: -1rem !important; /* Ajustar posición si interfiere */
+    bottom: -1rem !important;
     
     &:hover {
       background: #e2e8f0 !important;

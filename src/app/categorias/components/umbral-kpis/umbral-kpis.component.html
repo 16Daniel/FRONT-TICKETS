@@ -1,0 +1,46 @@
+    <!-- Fila de Tarjetas KPI -->
+    <div class="tree-kpi-grid mb-4" *ngIf="!isApplyingFilters" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="tree-kpi-card card-root">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-receipt"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Tickets Totales</span>
+          <span class="kpi-value">{{ totalTickets }}</span>
+          <span class="kpi-sub">en el periodo seleccionado</span>
+        </div>
+      </div>
+
+      <div class="tree-kpi-card card-leaves">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-trophy"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Mayor Recurrencia</span>
+          <span class="kpi-value" style="font-size: 1.2rem; line-height: 1.2;">{{ categoriaTopTickets ? categoriaTopTickets.nombre : 'N/A' }}</span>
+          <span class="kpi-sub">{{ categoriaTopTickets ? categoriaTopTickets.conteo + ' tickets' : 'Sin datos' }}</span>
+        </div>
+      </div>
+
+      <div class="tree-kpi-card card-user">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-user-voice"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Más Reportes</span>
+          <span class="kpi-value" style="font-size: 1.1rem; line-height: 1.2;">{{ usuarioTopTickets ? usuarioTopTickets.nombre : 'N/A' }}</span>
+          <span class="kpi-sub">{{ usuarioTopTickets ? usuarioTopTickets.conteo + ' tickets' : 'Sin datos' }}</span>
+        </div>
+      </div>
+
+      <div class="tree-kpi-card card-branch">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-store-alt"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Suc. Crítica</span>
+          <span class="kpi-value" style="font-size: 1.1rem; line-height: 1.2;">{{ sucursalTopTickets ? sucursalTopTickets.nombre : 'N/A' }}</span>
+          <span class="kpi-sub">{{ sucursalTopTickets ? sucursalTopTickets.conteo + ' tickets' : 'Sin datos' }}</span>
+        </div>
+      </div>
+    </div>

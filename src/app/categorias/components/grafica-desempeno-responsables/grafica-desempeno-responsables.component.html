@@ -1,0 +1,50 @@
+<div class="chart-card mt-4" *ngIf="datosBarras.length > 0">
+  <div class="chart-row-internal">
+    
+    <!-- Izquierda: Barras -->
+    <div class="chart-side flex-1 border-r">
+      <h3 class="chart-title">Tickets por Usuario</h3>
+      <p class="chart-subtitle text-muted mb-3" style="font-size: 0.85rem;">Clic en una barra para ver sus detalles SLA.</p>
+      <div class="chart-scroll-container">
+        <div class="chart-inner-wrapper" [style.height]="getChartHeight()">
+          <ngx-charts-bar-horizontal
+            [results]="reversedDatosBarras"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [legend]="false"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="false"
+            xAxisLabel="Cantidad de Tickets"
+            [barPadding]="8"
+            [roundEdges]="true"
+            [gradient]="false"
+            [tooltipDisabled]="false"
+            (select)="onSelect($event)">
+          </ngx-charts-bar-horizontal>
+        </div>
+      </div>
+    </div>
+
+    <!-- Derecha: Radar (Usuarios) -->
+    <div class="chart-side flex-1">
+      <app-umbral-radar-chart
+        [selectedItem]="selectedRadarItem"
+        [dataGeneral]="radarDataGeneral"
+        [dataDictionary]="radarDataUsuarios"
+        [colorScheme]="colorScheme">
+      </app-umbral-radar-chart>
+    </div>
+    
+  </div>
+
+  <!-- Pie de tarjeta: Totales -->
+  <div class="totales-footer mt-4 pt-3 d-flex justify-content-between text-center flex-wrap gap-2" *ngIf="totales.length > 0">
+    <div class="total-col flex-fill" *ngFor="let t of totales">
+      <div class="text-muted small fw-bold text-uppercase">{{ t.label }}</div>
+      <div class="fs-4 fw-bolder" [class.text-primary]="t.label === 'Total'" [class.text-dark]="t.label !== 'Total'">
+        {{ t.value }}
+      </div>
+    </div>
+  </div>
+</div>
