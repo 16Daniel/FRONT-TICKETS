@@ -1,11 +1,92 @@
 .transition-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .ticket-badge-card {
+  cursor: pointer;
+  user-select: none;
+
   &:hover .transition-hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    background-color: #f8fafc !important;
+    background-color: #ffffff !important;
+    border-color: #93c5fd !important;
+  }
+}
+
+.ticket-pill-wrapper {
+  padding: 3px 4px 3px 12px;
+  max-width: 100%;
+}
+
+.ticket-folio {
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.ticket-divider {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background-color: #cbd5e1;
+  margin: 0 8px;
+}
+
+.ticket-sucursal {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #475569;
+  max-width: 140px;
+
+  .sucursal-text {
+    max-width: 120px;
+  }
+}
+
+.ticket-categoria {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2563eb;
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 9999px;
+  padding: 1px 8px;
+  max-width: 160px;
+
+  .category-icon {
+    font-size: 0.7rem;
+    color: #3b82f6;
+  }
+
+  .categoria-text {
+    max-width: 130px;
+  }
+}
+
+.icon-mini {
+  font-size: 0.75rem;
+}
+
+.gauge-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .ticket-sucursal {
+    max-width: 100px;
+    .sucursal-text {
+      max-width: 80px;
+    }
+  }
+
+  .ticket-categoria {
+    max-width: 120px;
+    .categoria-text {
+      max-width: 90px;
+    }
   }
 }

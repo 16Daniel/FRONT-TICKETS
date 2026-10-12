@@ -43,6 +43,7 @@
   <app-pending-tickets-list 
     [tituloSeccion]="'Tickets Pendientes'"
     [tickets]="pendingTicketsList" 
+    [sucursales]="sucursales" 
     [matrizUrgencia]="matrizUrgencia" 
     [tituloContexto]="selectedRadarItem">
   </app-pending-tickets-list>
@@ -50,6 +51,7 @@
   <app-pending-tickets-list 
     [tituloSeccion]="'Tickets Cerrados con SLA Incumplido'"
     [tickets]="closedTicketsWithSlaIssuesList" 
+    [sucursales]="sucursales" 
     [matrizUrgencia]="matrizUrgencia" 
     [tituloContexto]="selectedRadarItem">
   </app-pending-tickets-list>

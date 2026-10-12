@@ -17,6 +17,7 @@ import { PendingTicketsListComponent } from '../pending-tickets-list/pending-tic
 })
 export class GraficaDesempenoCategoriasComponent implements OnChanges {
   @Input() tickets: Ticket[] = [];
+  @Input() sucursales: any[] = [];
   @Input() matrizUrgencia: MatrizUrgencia | undefined;
   @Input() colorScheme: any;
 
