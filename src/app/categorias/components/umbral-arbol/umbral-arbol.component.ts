@@ -20,6 +20,7 @@ export class UmbralArbolComponent implements OnChanges {
   @Input() areas: Area[] = [];
   @Input() areaSeleccionadaId: string = '';
   @Input() hasCategories: boolean = false;
+  @Input() umbralAlerta: number = 5;
 
   dataArbol: TreeNode[] = [];
   ticketCounts: { [key: string]: number } = {};
@@ -34,7 +35,7 @@ export class UmbralArbolComponent implements OnChanges {
   scrollTop = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['tickets'] || changes['categoriasActuales'] || changes['areaSeleccionadaId'] || changes['areas']) {
+    if (changes['tickets'] || changes['categoriasActuales'] || changes['areaSeleccionadaId'] || changes['areas'] || changes['umbralAlerta']) {
       this.procesarArbol();
     }
     if (changes['dataArbol'] || changes['categoriasActuales']) {
@@ -76,6 +77,8 @@ export class UmbralArbolComponent implements OnChanges {
   private mapearNodo(nodo: Categoria | Subcategoria): TreeNode {
     const hijos = nodo.subcategorias ? nodo.subcategorias.filter((s: Subcategoria) => !s.eliminado) : [];
     const esRama = nodo.tipo === 'rama' || hijos.length > 0 || nodo.activarSubcategorias;
+    const count = !esRama ? (this.ticketCounts[String(nodo.id)] || 0) : 0;
+    const isCritical = !esRama && count >= this.umbralAlerta;
 
     return {
       label: nodo.nombre,
@@ -84,7 +87,8 @@ export class UmbralArbolComponent implements OnChanges {
       data: {
         nodo: nodo,
         esRama: esRama,
-        ticketCount: !esRama ? (this.ticketCounts[String(nodo.id)] || 0) : 0
+        ticketCount: count,
+        isCritical: isCritical
       },
       children: hijos.map((h: Subcategoria) => this.mapearNodo(h))
     };

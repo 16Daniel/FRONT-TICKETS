@@ -1,0 +1,31 @@
+.top-chart-container {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+
+  .chart-wrapper {
+    width: 100%;
+    
+    ::ng-deep {
+      .ngx-charts {
+        text {
+          fill: #475569;
+          font-family: 'Inter', sans-serif;
+          font-size: 12px;
+        }
+      }
+      .gridline-path {
+        stroke: #f1f5f9;
+        stroke-width: 1;
+        stroke-dasharray: 4;
+      }
+      .data-label {
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        fill: #1e293b !important;
+      }
+    }
+  }
+}

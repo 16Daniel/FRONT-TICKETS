@@ -25,7 +25,8 @@
       [tickets]="tickets"
       [sucursales]="sucursales"
       [usuariosRol4]="usuariosRol4"
-      [isApplyingFilters]="isApplyingFilters">
+      [isApplyingFilters]="isApplyingFilters"
+      [umbralAlerta]="umbralAlerta">
     </app-umbral-kpis>
 
     <!-- Barra de Filtros -->
@@ -35,8 +36,17 @@
       [isApplyingFilters]="isApplyingFilters"
       [initialFechaInicio]="fechaInicio"
       [initialFechaFin]="fechaFin"
+      [initialUmbral]="umbralAlerta"
       (apply)="aplicarFiltrosEvent($event)">
     </app-umbral-filtros>
+
+    <!-- Gráfica Top Categorías con Fallas -->
+    <app-umbral-top-chart
+      *ngIf="!isApplyingFilters"
+      [tickets]="tickets"
+      [topN]="10"
+      [umbralAlerta]="umbralAlerta">
+    </app-umbral-top-chart>
 
     <!-- Árbol de Organización -->
     <app-umbral-arbol 
@@ -44,7 +54,8 @@
       [categoriasActuales]="categoriasActuales"
       [areas]="areas"
       [areaSeleccionadaId]="areaSeleccionadaId"
-      [hasCategories]="categoriasActuales.length > 0">
+      [hasCategories]="categoriasActuales.length > 0"
+      [umbralAlerta]="umbralAlerta">
     </app-umbral-arbol>
 
   </div>

@@ -1,5 +1,5 @@
     <!-- Fila de Tarjetas KPI -->
-    <div class="tree-kpi-grid mb-4" *ngIf="!isApplyingFilters" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="tree-kpi-grid mb-4" *ngIf="!isApplyingFilters" style="grid-template-columns: repeat(5, 1fr);">
       <div class="tree-kpi-card card-root">
         <div class="kpi-icon-wrap">
           <i class="bx bx-receipt"></i>
@@ -41,6 +41,17 @@
           <span class="kpi-label">Suc. Crítica</span>
           <span class="kpi-value" style="font-size: 1.1rem; line-height: 1.2;">{{ sucursalTopTickets ? sucursalTopTickets.nombre : 'N/A' }}</span>
           <span class="kpi-sub">{{ sucursalTopTickets ? sucursalTopTickets.conteo + ' tickets' : 'Sin datos' }}</span>
+        </div>
+      </div>
+
+      <div class="tree-kpi-card" style="background: #fef2f2; border-color: #fecdd3;">
+        <div class="kpi-icon-wrap" style="color: #e11d48; background: #ffe4e6;">
+          <i class="bx bx-error"></i>
+        </div>
+        <div class="kpi-info-wrap">
+          <span class="kpi-label">Cat. Críticas</span>
+          <span class="kpi-value" style="color: #be123c;">{{ categoriasCriticas }}</span>
+          <span class="kpi-sub">>= {{ umbralAlerta }} tickets</span>
         </div>
       </div>
     </div>

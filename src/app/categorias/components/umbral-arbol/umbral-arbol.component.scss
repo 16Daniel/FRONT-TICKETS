@@ -124,6 +124,30 @@ $rw-primary: #d3152a;
     border-color: #fef08a;
     .node-header i { color: #ca8a04; }
   }
+
+  &.node-critico {
+    background: #fef2f2 !important;
+    border-color: #ef4444 !important;
+    animation: pulse-border 2s infinite;
+    
+    .node-header i { color: #ef4444 !important; }
+    .node-label { color: #991b1b !important; }
+  }
+}
+
+@keyframes pulse-border {
+  0% { 
+    box-shadow: 
+      0 0 0 0 rgba(239, 68, 68, 0.8),
+      0 0 0 0 rgba(239, 68, 68, 0.5),
+      0 0 0 0 rgba(239, 68, 68, 0.3); 
+  }
+  100% { 
+    box-shadow: 
+      0 0 0 12px rgba(239, 68, 68, 0),
+      0 0 0 24px rgba(239, 68, 68, 0),
+      0 0 0 36px rgba(239, 68, 68, 0); 
+  }
 }
 
 ::ng-deep .p-organizationchart .p-organizationchart-node-content {

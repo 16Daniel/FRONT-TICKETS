@@ -20,6 +20,16 @@
         </p-calendar>
       </div>
 
+      <div class="filter-group" style="max-width: 120px;">
+        <label>Límite Alerta</label>
+        <input 
+          type="number" 
+          class="p-inputtext p-component w-100" 
+          [(ngModel)]="umbralAlerta" 
+          min="1" 
+          placeholder="Ej. 5">
+      </div>
+
       <div class="filter-group flex-grow-1">
         <label>Sucursales (Opcional)</label>
         <p-multiSelect 
@@ -46,10 +56,10 @@
         </p-multiSelect>
       </div>
 
-      <div class="filter-group" style="min-width: auto;">
+      <div class="filter-group action-btn-group">
         <button 
           type="button" 
-          class="btn btn-primary" 
+          class="btn btn-primary action-btn" 
           [disabled]="isApplyingFilters"
           (click)="onApply()">
           <i class="bx" [ngClass]="isApplyingFilters ? 'bx-loader-alt bx-spin' : 'bx-filter-alt'"></i>

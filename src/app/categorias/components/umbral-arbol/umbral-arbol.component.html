@@ -33,7 +33,7 @@
           </ng-template>
           
           <ng-template let-node pTemplate="hoja">
-            <div class="node-content node-hoja">
+            <div class="node-content node-hoja" [class.node-critico]="node.data.isCritical">
               <div class="node-header">
                 <i class="bx bx-tag"></i>
               </div>

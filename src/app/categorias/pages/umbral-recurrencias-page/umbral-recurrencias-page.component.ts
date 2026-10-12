@@ -17,6 +17,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { UmbralKpisComponent } from '../../components/umbral-kpis/umbral-kpis.component';
 import { UmbralFiltrosComponent } from '../../components/umbral-filtros/umbral-filtros.component';
 import { UmbralArbolComponent } from '../../components/umbral-arbol/umbral-arbol.component';
+import { UmbralTopChartComponent } from '../../components/umbral-top-chart/umbral-top-chart.component';
 
 @Component({
   selector: 'app-umbral-recurrencias-page',
@@ -27,7 +28,8 @@ import { UmbralArbolComponent } from '../../components/umbral-arbol/umbral-arbol
     PageHeaderComponent, 
     UmbralKpisComponent, 
     UmbralFiltrosComponent, 
-    UmbralArbolComponent
+    UmbralArbolComponent,
+    UmbralTopChartComponent
   ],
   templateUrl: './umbral-recurrencias-page.component.html',
   styleUrl: './umbral-recurrencias-page.component.scss'
@@ -39,6 +41,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   categoriasActuales: Categoria[] = [];
   isApplyingFilters = false;
+  umbralAlerta: number = 5;
 
   // Filter variables
   fechaInicio: Date | null = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -68,6 +71,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
     this.fechaFin = event.fechaFin;
     this.sucursalesSeleccionadas = event.sucursalesSeleccionadas;
     this.usuariosSeleccionados = event.usuariosSeleccionados;
+    this.umbralAlerta = event.umbralAlerta || 5;
     this.aplicarFiltros();
   }
 
