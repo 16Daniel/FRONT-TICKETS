@@ -29,7 +29,7 @@ export class PlaneacionCatService {
   }
 
   getAllProveedores(): Observable<ProveedorPlaneacion[]> {
-    return this.http.get<ProveedorPlaneacion[]>(`${this.url}Catalogos/getProveedoresActivos`, { headers: this.headers });
+    return this.http.get<ProveedorPlaneacion[]>(`${this.url}Catalogos/getProveedoresActivosTickets`, { headers: this.headers });
   }
 
   agregarProveedores(ids: number[], modulo: string): Observable<any> {
