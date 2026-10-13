@@ -87,7 +87,7 @@ export class GraficaDesempenoCategoriasComponent implements OnChanges {
   }
 
   get reversedDatosBarras() {
-    return [...this.datosBarras].reverse();
+    return this.datosBarras;
   }
 
   getChartHeight(): string {

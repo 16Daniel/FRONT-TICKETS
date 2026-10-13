@@ -7,6 +7,7 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="detalle-ticket-dialog-dialog"
+  (onShow)="onShow()"
   (onHide)="onHide()">
 
   <!-- Cabecera Personalizada -->
@@ -222,6 +223,7 @@
                         optionDisabled="disabled"
                         [(ngModel)]="ticket.idEstatusTicket" 
                         optionLabel="nombre"
+                        placeholder="Seleccionar estatus"
                         [showClear]="false" 
                         optionValue="id" 
                         (onChange)="actualizarEstatus($event.value)" 
@@ -302,6 +304,7 @@
                         [options]="tiposSoporte" 
                         [(ngModel)]="ticket.idTipoSoporte" 
                         optionLabel="name"
+                        placeholder="Seleccionar asistencia"
                         [showClear]="false" 
                         optionValue="id" 
                         (onChange)="actualizarTipoSoporte($event.value)" 

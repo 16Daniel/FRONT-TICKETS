@@ -68,7 +68,7 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
   }
 
   get reversedDatosBarras() {
-    return [...this.datosBarras].reverse();
+    return this.datosBarras;
   }
 
   totalesDirectivos = {
