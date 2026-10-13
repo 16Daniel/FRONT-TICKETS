@@ -10,14 +10,14 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CategoriesService } from '../../../categorias/services/categories.service';
 
 @Component({
-  selector: 'app-pending-tickets-list',
+  selector: 'app-lista-tickets-kpis',
   standalone: true,
   imports: [CommonModule, TicketSlaGaugeComponent, DetalleTicketDialogComponent],
   providers: [MessageService],
-  templateUrl: './pending-tickets-list.component.html',
-  styleUrl: './pending-tickets-list.component.scss'
+  templateUrl: './lista-tickets-kpis.component.html',
+  styleUrl: './lista-tickets-kpis.component.scss'
 })
-export class PendingTicketsListComponent implements OnInit, OnDestroy {
+export class ListaTicketsKpisComponent implements OnInit, OnDestroy {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: any[] = [];
   @Input() categorias: any[] = [];
@@ -40,7 +40,7 @@ export class PendingTicketsListComponent implements OnInit, OnDestroy {
       this.subs.add(
         this.branchesService.get().subscribe({
           next: (data) => (this.sucursales = data),
-          error: (err) => console.error('Error al cargar sucursales en PendingTicketsListComponent:', err)
+          error: (err) => console.error('Error al cargar sucursales en ListaTicketsKpisComponent:', err)
         })
       );
     }
@@ -49,7 +49,7 @@ export class PendingTicketsListComponent implements OnInit, OnDestroy {
       this.subs.add(
         this.categoriesService.get().subscribe({
           next: (data) => (this.categorias = data),
-          error: (err) => console.error('Error al cargar categorías en PendingTicketsListComponent:', err)
+          error: (err) => console.error('Error al cargar categorías en ListaTicketsKpisComponent:', err)
         })
       );
     }

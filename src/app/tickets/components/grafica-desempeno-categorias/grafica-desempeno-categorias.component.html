@@ -38,22 +38,22 @@
     
   </div>
 
-  <app-executive-kpi-footer [totales]="totalesDirectivos"></app-executive-kpi-footer>
+  <app-tarjetas-medidores-kpis [totales]="totalesDirectivos"></app-tarjetas-medidores-kpis>
 
-  <app-pending-tickets-list 
+  <app-lista-tickets-kpis 
     [tituloSeccion]="'Tickets Pendientes'"
     [tickets]="pendingTicketsList" 
     [sucursales]="sucursales" 
     [matrizUrgencia]="matrizUrgencia" 
     [tituloContexto]="selectedRadarItem">
-  </app-pending-tickets-list>
+  </app-lista-tickets-kpis>
 
-  <app-pending-tickets-list 
+  <app-lista-tickets-kpis 
     [tituloSeccion]="'Tickets Cerrados con SLA Incumplido'"
     [tickets]="closedTicketsWithSlaIssuesList" 
     [sucursales]="sucursales" 
     [matrizUrgencia]="matrizUrgencia" 
     [tituloContexto]="selectedRadarItem">
-  </app-pending-tickets-list>
+  </app-lista-tickets-kpis>
 
 </div>

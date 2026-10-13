@@ -5,13 +5,13 @@ import { UmbralRadarChartComponent } from '../umbral-radar-chart/umbral-radar-ch
 import { Ticket } from '../../interfaces/ticket.model';
 import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
 import { KpiRadarService } from '../../services/kpi-radar.service';
-import { ExecutiveKpiFooterComponent } from '../executive-kpi-footer/executive-kpi-footer.component';
-import { PendingTicketsListComponent } from '../pending-tickets-list/pending-tickets-list.component';
+import { TarjetasMedidoresKpisComponent } from '../tarjetas-medidores-kpis/tarjetas-medidores-kpis.component';
+import { ListaTicketsKpisComponent } from '../lista-tickets-kpis/lista-tickets-kpis.component';
 
 @Component({
   selector: 'app-grafica-desempeno-categorias',
   standalone: true,
-  imports: [CommonModule, NgxChartsModule, UmbralRadarChartComponent, ExecutiveKpiFooterComponent, PendingTicketsListComponent],
+  imports: [CommonModule, NgxChartsModule, UmbralRadarChartComponent, TarjetasMedidoresKpisComponent, ListaTicketsKpisComponent],
   templateUrl: './grafica-desempeno-categorias.component.html',
   styleUrl: './grafica-desempeno-categorias.component.scss'
 })

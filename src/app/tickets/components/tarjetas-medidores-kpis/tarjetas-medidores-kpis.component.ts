@@ -10,13 +10,13 @@ export interface TotalesDirectivos {
 }
 
 @Component({
-  selector: 'app-executive-kpi-footer',
+  selector: 'app-tarjetas-medidores-kpis',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './executive-kpi-footer.component.html',
-  styleUrl: './executive-kpi-footer.component.scss'
+  templateUrl: './tarjetas-medidores-kpis.component.html',
+  styleUrl: './tarjetas-medidores-kpis.component.scss'
 })
-export class ExecutiveKpiFooterComponent {
+export class TarjetasMedidoresKpisComponent {
   @Input() totales: TotalesDirectivos = {
     totalTickets: 0,
     totalTerminados: 0,
