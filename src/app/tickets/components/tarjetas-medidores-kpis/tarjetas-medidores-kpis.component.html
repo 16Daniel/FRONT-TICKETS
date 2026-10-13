@@ -19,7 +19,7 @@
 
   <div class="kpi-grid">
     <!-- Total Tickets (Normal) -->
-    <div class="kpi-card">
+    <div class="kpi-card kpi-clickable" [class.active]="filtroActivo === 'totales'" (click)="seleccionar('totales')">
       <div class="kpi-icon bg-light-primary text-primary">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><line x1="8" y1="7" x2="8" y2="17"></line><line x1="16" y1="7" x2="16" y2="17"></line></svg>
       </div>
@@ -30,7 +30,7 @@
     </div>
     
     <!-- Tickets Terminados (Speedometer) -->
-    <div class="kpi-card justify-content-between">
+    <div class="kpi-card kpi-clickable justify-content-between" [class.active]="filtroActivo === 'terminados'" (click)="seleccionar('terminados')">
       <div class="kpi-details flex-grow-0">
         <span class="kpi-label">Terminados</span>
         <span class="kpi-value text-muted" style="font-size: 1rem;">{{ totales.totalTerminados }} / {{ totales.totalTickets }}</span>
@@ -52,7 +52,7 @@
     </div>
 
     <!-- SLA Atención (Speedometer) -->
-    <div class="kpi-card justify-content-between">
+    <div class="kpi-card kpi-clickable justify-content-between" [class.active]="filtroActivo === 'slaAtencion'" (click)="seleccionar('slaAtencion')">
       <div class="kpi-details flex-grow-0">
         <span class="kpi-label">SLA Atención</span>
         <span class="kpi-value text-muted" style="font-size: 1rem;">Eficiencia</span>
@@ -74,7 +74,7 @@
     </div>
 
     <!-- SLA Resolución (Speedometer) -->
-    <div class="kpi-card justify-content-between">
+    <div class="kpi-card kpi-clickable justify-content-between" [class.active]="filtroActivo === 'slaResolucion'" (click)="seleccionar('slaResolucion')">
       <div class="kpi-details flex-grow-0">
         <span class="kpi-label">SLA Resolución</span>
         <span class="kpi-value text-muted" style="font-size: 1rem;">Eficiencia</span>

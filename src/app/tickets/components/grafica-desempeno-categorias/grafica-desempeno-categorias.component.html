@@ -38,21 +38,17 @@
     
   </div>
 
-  <app-tarjetas-medidores-kpis [totales]="totalesDirectivos"></app-tarjetas-medidores-kpis>
+  <app-tarjetas-medidores-kpis
+    [totales]="totalesDirectivos"
+    [filtroActivo]="filtroKpi"
+    (filtroChange)="onFiltroKpi($event)">
+  </app-tarjetas-medidores-kpis>
 
-  <app-lista-tickets-kpis 
-    [tituloSeccion]="'Tickets Pendientes'"
-    [tickets]="pendingTicketsList" 
-    [sucursales]="sucursales" 
-    [matrizUrgencia]="matrizUrgencia" 
-    [tituloContexto]="selectedRadarItem">
-  </app-lista-tickets-kpis>
-
-  <app-lista-tickets-kpis 
-    [tituloSeccion]="'Tickets Cerrados con SLA Incumplido'"
-    [tickets]="closedTicketsWithSlaIssuesList" 
-    [sucursales]="sucursales" 
-    [matrizUrgencia]="matrizUrgencia" 
+  <app-lista-tickets-kpis *ngIf="filtroKpi"
+    [tituloSeccion]="tituloKpi"
+    [tickets]="ticketsKpi"
+    [sucursales]="sucursales"
+    [matrizUrgencia]="matrizUrgencia"
     [tituloContexto]="selectedRadarItem">
   </app-lista-tickets-kpis>
 

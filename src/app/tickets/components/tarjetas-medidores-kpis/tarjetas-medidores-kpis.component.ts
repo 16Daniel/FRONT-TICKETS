@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { KpiFiltro } from '../../services/kpi-radar.service';
 
 export interface TotalesDirectivos {
   totalTickets: number;
@@ -24,6 +25,13 @@ export class TarjetasMedidoresKpisComponent {
     slaAtencion: 0,
     slaResolucion: 0
   };
+
+  @Input() filtroActivo: KpiFiltro | null = null;
+  @Output() filtroChange = new EventEmitter<KpiFiltro | null>();
+
+  seleccionar(filtro: KpiFiltro): void {
+    this.filtroChange.emit(this.filtroActivo === filtro ? null : filtro);
+  }
 
   getSlaClass(value: number): string {
     if (value >= 90) return 'text-success bg-light-success';

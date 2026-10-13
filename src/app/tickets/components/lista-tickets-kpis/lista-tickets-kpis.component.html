@@ -6,45 +6,31 @@
     <span class="badge bg-secondary rounded-pill">{{ tickets.length }} tickets</span>
   </div>
   
-  <div class="d-flex flex-wrap gap-2">
+  <div class="tickets-kpi-grid">
     <div 
-      class="ticket-badge-card" 
+      class="ticket-row" 
       *ngFor="let t of tickets" 
       (click)="abrirDetalleTicket(t)" 
       [title]="'Ticket ' + t.folio + ' - ' + obtenerNombreSucursal(t.idSucursal) + ' | ' + obtenerCategoriaTooltip(t)">
-      <div class="ticket-pill-wrapper d-flex align-items-center bg-white rounded-pill border shadow-sm transition-hover">
-        
-        <!-- Folio -->
-        <span class="ticket-folio fw-bold text-dark">
-          {{ t.folio }}
-        </span>
 
-        <span class="ticket-divider"></span>
-
-        <!-- Sucursal -->
-        <span class="ticket-sucursal d-flex align-items-center gap-1" [title]="'Sucursal: ' + obtenerNombreSucursal(t.idSucursal)">
-          <i class="pi pi-building text-muted icon-mini"></i>
-          <span class="text-truncate sucursal-text">{{ obtenerNombreSucursal(t.idSucursal) }}</span>
-        </span>
-
-        <span class="ticket-divider"></span>
-
-        <!-- Categoría Final -->
-        <span class="ticket-categoria d-flex align-items-center gap-1" [title]="'Categoría: ' + obtenerCategoriaTooltip(t)">
-          <i class="pi pi-tag category-icon icon-mini"></i>
-          <span class="text-truncate categoria-text">{{ obtenerCategoriaFinal(t) }}</span>
-        </span>
-
-        <!-- SLA Gauge -->
-        <div class="gauge-container ms-1">
-          <app-ticket-sla-gauge 
-            [ticket]="t" 
-            [matrizUrgencia]="matrizUrgencia" 
-            [size]="34">
-          </app-ticket-sla-gauge>
-        </div>
-
+      <div class="gauge-container">
+        <app-ticket-sla-gauge 
+          [ticket]="t" 
+          [matrizUrgencia]="matrizUrgencia" 
+          [size]="30">
+        </app-ticket-sla-gauge>
       </div>
+
+      <div class="ticket-info">
+        <span class="ticket-sucursal text-truncate">
+          <i class="pi pi-building icon-mini"></i> {{ obtenerNombreSucursal(t.idSucursal) }}
+        </span>
+        <span class="ticket-categoria text-truncate">
+          <i class="pi pi-tag icon-mini"></i> {{ obtenerCategoriaFinal(t) }}
+        </span>
+      </div>
+
+      <i class="pi pi-angle-right row-arrow"></i>
     </div>
   </div>
 </div>

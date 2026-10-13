@@ -91,3 +91,20 @@
 .bg-light-danger { background-color: rgba(220, 38, 38, 0.1); }
 .bg-danger { background-color: #dc2626; }
 .text-danger { color: #dc2626; }
+
+.kpi-clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  border: 1px solid transparent;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+  }
+
+  &.active {
+    border-color: #D3152A;
+    box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+  }
+}
+

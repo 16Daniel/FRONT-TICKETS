@@ -4,7 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { UmbralRadarChartComponent } from '../umbral-radar-chart/umbral-radar-chart.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
-import { KpiRadarService } from '../../services/kpi-radar.service';
+import { KpiFiltro, KpiRadarService, KPI_FILTRO_TITULOS } from '../../services/kpi-radar.service';
 import { TarjetasMedidoresKpisComponent } from '../tarjetas-medidores-kpis/tarjetas-medidores-kpis.component';
 import { ListaTicketsKpisComponent } from '../lista-tickets-kpis/lista-tickets-kpis.component';
 
@@ -65,6 +65,7 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
     this.radarDataUsuarios = radarResult.diccionario;
     
     this.actualizarTotales();
+    this.aplicarFiltroKpi();
   }
 
   get reversedDatosBarras() {
@@ -110,6 +111,7 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
       this.selectedRadarItem = this.selectedRadarItem === event.name ? '' : event.name;
       
       this.actualizarTotales();
+      this.aplicarFiltroKpi();
 
       if (this.selectedRadarItem && this.radarDataUsuarios[this.selectedRadarItem]) {
         const rawData = this.radarDataUsuarios[this.selectedRadarItem][0];
@@ -122,51 +124,29 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
     }
   }
 
-  get pendingTicketsList(): Ticket[] {
-    if (!this.tickets) return [];
-    
-    let pending = this.tickets.filter(t => String(t.idEstatusTicket) !== '3');
-    
-    if (this.selectedRadarItem) {
-      const u = this.usuarios.find(user => {
-         return `${user.nombre} ${user.apellidoP}`.trim() === this.selectedRadarItem;
-      });
-      if (u) {
-        pending = pending.filter(t => t.idResponsable === u.id);
-      } else {
-        pending = [];
-      }
-    }
+  filtroKpi: KpiFiltro | null = null;
+  ticketsKpi: Ticket[] = [];
 
-    return pending.sort((a, b) => {
-       const da = this.extraerFechaStr(a.fecha)?.getTime() || 0;
-       const db = this.extraerFechaStr(b.fecha)?.getTime() || 0;
-       return da - db;
-    });
+  get tituloKpi(): string {
+    return this.filtroKpi ? KPI_FILTRO_TITULOS[this.filtroKpi] : '';
   }
 
-  get closedTicketsWithSlaIssuesList(): Ticket[] {
-    if (!this.tickets) return [];
-    
-    let closed = this.tickets.filter(t => String(t.idEstatusTicket) === '3');
-    closed = closed.filter(t => this.radarService.ticketTuvoProblemaSla(t, this.matrizUrgencia));
-    
-    if (this.selectedRadarItem) {
-      const u = this.usuarios.find(user => {
-         return `${user.nombre} ${user.apellidoP}`.trim() === this.selectedRadarItem;
-      });
-      if (u) {
-        closed = closed.filter(t => t.idResponsable === u.id);
-      } else {
-        closed = [];
-      }
-    }
+  onFiltroKpi(filtro: KpiFiltro | null): void {
+    this.filtroKpi = filtro;
+    this.aplicarFiltroKpi();
+  }
 
-    return closed.sort((a, b) => {
-       const da = this.extraerFechaStr(a.fecha)?.getTime() || 0;
-       const db = this.extraerFechaStr(b.fecha)?.getTime() || 0;
-       return da - db;
-    });
+  private aplicarFiltroKpi(): void {
+    if (!this.filtroKpi || !this.tickets) {
+      this.ticketsKpi = [];
+      return;
+    }
+    let base = this.tickets;
+    if (this.selectedRadarItem) {
+      const u = this.usuarios.find(user => `${user.nombre} ${user.apellidoP}`.trim() === this.selectedRadarItem);
+      base = u ? base.filter(t => t.idResponsable === u.id) : [];
+    }
+    this.ticketsKpi = this.radarService.filtrarPorKpi(base, this.filtroKpi, this.matrizUrgencia);
   }
 
   private extraerFechaStr(fechaRaw: any): Date | null {

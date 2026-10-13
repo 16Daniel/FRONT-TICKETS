@@ -5,6 +5,15 @@ import { RadarStats } from '../../categorias/interfaces/radar-stats.interface';
 import { MatrizUrgenciaService } from '../../categorias/services/matriz-urgencia.service';
 import { DatesHelperService } from '../../shared/helpers/dates-helper.service';
 
+export type KpiFiltro = 'totales' | 'terminados' | 'slaAtencion' | 'slaResolucion';
+
+export const KPI_FILTRO_TITULOS: Record<KpiFiltro, string> = {
+  totales: 'Tickets Totales',
+  terminados: 'Tickets Terminados',
+  slaAtencion: 'Tickets Terminados con SLA de Atención Incumplido',
+  slaResolucion: 'Tickets Terminados con SLA de Resolución Incumplido'
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,6 +50,45 @@ export class KpiRadarService {
   }
 
   private procesarSlaTicket(t: Ticket, matriz: MatrizUrgencia | undefined, stats: RadarStats) {
+    const { atencion: metSlaAtencion, resolucion: metSlaResolucion } = this.evaluarSlaTicket(t, matriz);
+
+    const calSuc = Number(t.calificacionSucursal) || 0;
+    const calAna = Number(t.calificacionAnalista) || 0;
+    const isTerminado = String(t.idEstatusTicket) === '3';
+
+    stats.totalTickets++;
+    if (isTerminado) {
+      stats.totalTerminados++;
+      if (metSlaAtencion) stats.slaAtencionMet++;
+      if (metSlaResolucion) stats.slaResolucionMet++;
+    }
+    if (calSuc > 0) { stats.sumCalifSucursal += calSuc; stats.countCalifSucursal++; }
+    if (calAna > 0) { stats.sumCalifAnalista += calAna; stats.countCalifAnalista++; }
+    
+    stats.detalles.push({
+      folio: t.folio,
+      estatusTerminado: isTerminado ? 'SI' : 'NO',
+      cumplioSlaAtencion: isTerminado ? (metSlaAtencion ? 'SI' : 'NO') : 'N/A',
+      cumplioSlaResolucion: isTerminado ? (metSlaResolucion ? 'SI' : 'NO') : 'N/A',
+      calificacionSucursal: calSuc > 0 ? calSuc : 'N/A',
+      calificacionAnalista: calAna > 0 ? calAna : 'N/A'
+    });
+  }
+
+  /** Filtra tickets según la tarjeta KPI seleccionada (mismas reglas que los porcentajes de las tarjetas). */
+  public filtrarPorKpi(tickets: Ticket[], filtro: KpiFiltro, matriz: MatrizUrgencia | undefined): Ticket[] {
+    const terminado = (t: Ticket) => String(t.idEstatusTicket) === '3';
+    let lista: Ticket[];
+    switch (filtro) {
+      case 'terminados': lista = tickets.filter(terminado); break;
+      case 'slaAtencion': lista = tickets.filter(t => terminado(t) && !this.evaluarSlaTicket(t, matriz).atencion); break;
+      case 'slaResolucion': lista = tickets.filter(t => terminado(t) && !this.evaluarSlaTicket(t, matriz).resolucion); break;
+      default: lista = [...tickets];
+    }
+    return lista.sort((a, b) => (this.extraerFecha(a.fecha)?.getTime() || 0) - (this.extraerFecha(b.fecha)?.getTime() || 0));
+  }
+
+  public evaluarSlaTicket(t: Ticket, matriz: MatrizUrgencia | undefined): { atencion: boolean; resolucion: boolean } {
     const fechaCreacion = this.extraerFecha(t.fecha) || new Date();
     const fechaAtencion = this.extraerFecha(t.fechaAtencion);
     const fechaFin = this.extraerFecha(t.fechaFin) || (t.idEstatusTicket === '3' ? new Date() : null);
@@ -77,27 +125,7 @@ export class KpiRadarService {
       metSlaResolucion = horasTranscurridas <= horasResolucionSla;
     }
 
-    const calSuc = Number(t.calificacionSucursal) || 0;
-    const calAna = Number(t.calificacionAnalista) || 0;
-    const isTerminado = String(t.idEstatusTicket) === '3';
-
-    stats.totalTickets++;
-    if (isTerminado) {
-      stats.totalTerminados++;
-      if (metSlaAtencion) stats.slaAtencionMet++;
-      if (metSlaResolucion) stats.slaResolucionMet++;
-    }
-    if (calSuc > 0) { stats.sumCalifSucursal += calSuc; stats.countCalifSucursal++; }
-    if (calAna > 0) { stats.sumCalifAnalista += calAna; stats.countCalifAnalista++; }
-    
-    stats.detalles.push({
-      folio: t.folio,
-      estatusTerminado: isTerminado ? 'SI' : 'NO',
-      cumplioSlaAtencion: isTerminado ? (metSlaAtencion ? 'SI' : 'NO') : 'N/A',
-      cumplioSlaResolucion: isTerminado ? (metSlaResolucion ? 'SI' : 'NO') : 'N/A',
-      calificacionSucursal: calSuc > 0 ? calSuc : 'N/A',
-      calificacionAnalista: calAna > 0 ? calAna : 'N/A'
-    });
+    return { atencion: metSlaAtencion, resolucion: metSlaResolucion };
   }
 
   private formatRadarSeries(name: string, stats: RadarStats, maxTickets: number): any[] {
