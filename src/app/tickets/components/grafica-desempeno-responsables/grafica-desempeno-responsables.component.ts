@@ -77,7 +77,10 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
     totalTerminados: 0,
     terminadosPorcentaje: 0,
     slaAtencion: 0,
-    slaResolucion: 0
+    slaAtencionCumplidos: 0,
+    slaResolucion: 0,
+    slaResolucionCumplidos: 0,
+    totalMitigacion: 0
   };
 
   private actualizarTotales(): void {
@@ -94,7 +97,10 @@ export class GraficaDesempenoResponsablesComponent implements OnChanges {
         totalTerminados: rawStats.totalTerminados,
         terminadosPorcentaje: rawStats.totalTickets > 0 ? (rawStats.totalTerminados / rawStats.totalTickets) * 100 : 0,
         slaAtencion: rawStats.totalTerminados > 0 ? (rawStats.slaAtencionMet / rawStats.totalTerminados) * 100 : 0,
-        slaResolucion: rawStats.totalTerminados > 0 ? (rawStats.slaResolucionMet / rawStats.totalTerminados) * 100 : 0
+        slaAtencionCumplidos: rawStats.slaAtencionMet || 0,
+        slaResolucion: rawStats.totalTerminados > 0 ? (rawStats.slaResolucionMet / rawStats.totalTerminados) * 100 : 0,
+        slaResolucionCumplidos: rawStats.slaResolucionMet || 0,
+        totalMitigacion: rawStats.totalMitigacion || 0
       };
     }
   }

@@ -5,13 +5,14 @@ import { RadarStats } from '../../categorias/interfaces/radar-stats.interface';
 import { MatrizUrgenciaService } from '../../categorias/services/matriz-urgencia.service';
 import { DatesHelperService } from '../../shared/helpers/dates-helper.service';
 
-export type KpiFiltro = 'totales' | 'terminados' | 'slaAtencion' | 'slaResolucion';
+export type KpiFiltro = 'totales' | 'terminados' | 'slaAtencion' | 'slaResolucion' | 'mitigacion';
 
 export const KPI_FILTRO_TITULOS: Record<KpiFiltro, string> = {
   totales: 'Tickets Totales',
   terminados: 'Tickets Terminados',
   slaAtencion: 'Tickets Terminados con SLA de Atención Incumplido',
-  slaResolucion: 'Tickets Terminados con SLA de Resolución Incumplido'
+  slaResolucion: 'Tickets Terminados con SLA de Resolución Incumplido',
+  mitigacion: 'Tickets en Mitigación'
 };
 
 @Injectable({
@@ -27,6 +28,7 @@ export class KpiRadarService {
     return {
       totalTickets: 0,
       totalTerminados: 0,
+      totalMitigacion: 0,
       slaAtencionMet: 0,
       slaResolucionMet: 0,
       sumCalifSucursal: 0,
@@ -55,12 +57,16 @@ export class KpiRadarService {
     const calSuc = Number(t.calificacionSucursal) || 0;
     const calAna = Number(t.calificacionAnalista) || 0;
     const isTerminado = String(t.idEstatusTicket) === '3';
+    const isMitigacion = String(t.idEstatusTicket) === '8';
 
     stats.totalTickets++;
     if (isTerminado) {
       stats.totalTerminados++;
       if (metSlaAtencion) stats.slaAtencionMet++;
       if (metSlaResolucion) stats.slaResolucionMet++;
+    }
+    if (isMitigacion) {
+      stats.totalMitigacion = (stats.totalMitigacion || 0) + 1;
     }
     if (calSuc > 0) { stats.sumCalifSucursal += calSuc; stats.countCalifSucursal++; }
     if (calAna > 0) { stats.sumCalifAnalista += calAna; stats.countCalifAnalista++; }
@@ -83,6 +89,7 @@ export class KpiRadarService {
       case 'terminados': lista = tickets.filter(terminado); break;
       case 'slaAtencion': lista = tickets.filter(t => terminado(t) && !this.evaluarSlaTicket(t, matriz).atencion); break;
       case 'slaResolucion': lista = tickets.filter(t => terminado(t) && !this.evaluarSlaTicket(t, matriz).resolucion); break;
+      case 'mitigacion': lista = tickets.filter(t => String(t.idEstatusTicket) === '8'); break;
       default: lista = [...tickets];
     }
     return lista.sort((a, b) => (this.extraerFecha(a.fecha)?.getTime() || 0) - (this.extraerFecha(b.fecha)?.getTime() || 0));

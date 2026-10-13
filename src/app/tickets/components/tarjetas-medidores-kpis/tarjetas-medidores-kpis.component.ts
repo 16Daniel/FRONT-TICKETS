@@ -7,7 +7,10 @@ export interface TotalesDirectivos {
   totalTerminados: number;
   terminadosPorcentaje: number;
   slaAtencion: number;
+  slaAtencionCumplidos?: number;
   slaResolucion: number;
+  slaResolucionCumplidos?: number;
+  totalMitigacion?: number;
 }
 
 @Component({
@@ -23,7 +26,10 @@ export class TarjetasMedidoresKpisComponent {
     totalTerminados: 0,
     terminadosPorcentaje: 0,
     slaAtencion: 0,
-    slaResolucion: 0
+    slaAtencionCumplidos: 0,
+    slaResolucion: 0,
+    slaResolucionCumplidos: 0,
+    totalMitigacion: 0
   };
 
   @Input() filtroActivo: KpiFiltro | null = null;
