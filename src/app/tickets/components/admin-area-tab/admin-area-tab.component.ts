@@ -121,6 +121,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     slaResolucion: 0,
     slaResolucionCumplidos: 0
   };
+  private ticketsSlaMes: Ticket[] = [];
   private subscripcionSlaTickets?: Subscription;
   private subscripcionSlaMatriz?: Subscription;
 
@@ -205,7 +206,8 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     this.subscripcionSlaTickets?.unsubscribe();
     this.subscripcionSlaTickets = this.kpisTicketsService.getTicketsPorFiltros(this.idArea, filtros).subscribe({
       next: (tickets: Ticket[]) => {
-        this.procesarMetricasSla(tickets);
+        this.ticketsSlaMes = tickets || [];
+        this.procesarMetricasSla();
         this.loadingSla = false;
         this.cdr.detectChanges();
       },
@@ -217,10 +219,35 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     });
   }
 
-  private procesarMetricasSla(tickets: Ticket[]): void {
-    if (!tickets) return;
+  /** Misma regla que la vista del analista: responsable o involucrado (o toda el área si es guardia). */
+  private filtrarTicketsSlaPorUsuario(tickets: Ticket[], user: Usuario): Ticket[] {
+    const idUsuarioStr = String(user.id);
 
-    // Métricas generales del área: no se filtra por usuario
+    return tickets.filter(t => {
+      if (user.esGuardia) {
+        return String(t.idArea) === String(user.idArea);
+      }
+      const esResponsable = String(t.idResponsable) === idUsuarioStr;
+      const esEspecialista = String(t.idUsuarioEspecialista) === idUsuarioStr;
+      const esInvolucrado = Array.isArray(t.idInvolucrados) &&
+        t.idInvolucrados.map(String).includes(idUsuarioStr);
+      return esResponsable || esEspecialista || esInvolucrado;
+    });
+  }
+
+  get tituloSla(): string {
+    return this.usergroup
+      ? `Rendimiento de ${this.usergroup.nombre} ${this.usergroup.apellidoP}`
+      : 'Rendimiento general del mes actual';
+  }
+
+  private procesarMetricasSla(): void {
+    // Sin usuario agrupado: métricas generales del área.
+    // Con usuario agrupado: solo los tickets donde participa ese usuario.
+    const tickets = this.usergroup
+      ? this.filtrarTicketsSlaPorUsuario(this.ticketsSlaMes, this.usergroup)
+      : this.ticketsSlaMes;
+
     const totalTickets = tickets.length;
     const terminados = tickets.filter(t => String(t.idEstatusTicket) === '3');
     const totalTerminados = terminados.length;
@@ -382,12 +409,15 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     } else {
       this.tickets = this.todosLostickets;
     }
+
+    this.procesarMetricasSla();
   }
 
   agruparPorSucursal() {
     this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
+    this.procesarMetricasSla();
     this.cdr.detectChanges();
   }
 
