@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TicketsTabComponent } from '../../components/tickets-tab/tickets-tab.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
-import { TotalesSlaAnalista } from '../../components/tarjetas-sla-analista/tarjetas-sla-analista.component';
+import { TotalesSlaDashboard } from '../../components/tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
 import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
@@ -28,7 +28,7 @@ export default class AnalystHomePageComponent implements OnInit, OnDestroy {
   mesActualNombre: string = '';
   matrizUrgenciaArea?: MatrizUrgencia;
   
-  totalesSla: TotalesSlaAnalista = {
+  totalesSla: TotalesSlaDashboard = {
     totalTickets: 0,
     totalTerminados: 0,
     slaAtencion: 0,

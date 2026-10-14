@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export interface TotalesSlaAnalista {
+export interface TotalesSlaDashboard {
   totalTickets: number;
   totalTerminados: number;
   slaAtencion: number;
@@ -10,15 +10,17 @@ export interface TotalesSlaAnalista {
   slaResolucionCumplidos: number;
 }
 
+export type TotalesSlaAnalista = TotalesSlaDashboard;
+
 @Component({
-  selector: 'app-tarjetas-sla-analista',
+  selector: 'app-tarjetas-sla-dashboard',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './tarjetas-sla-analista.component.html',
-  styleUrl: './tarjetas-sla-analista.component.scss'
+  templateUrl: './tarjetas-sla-dashboard.component.html',
+  styleUrl: './tarjetas-sla-dashboard.component.scss'
 })
-export class TarjetasSlaAnalistaComponent {
-  @Input() totales: TotalesSlaAnalista = {
+export class TarjetasSlaDashboardComponent {
+  @Input() totales: TotalesSlaDashboard = {
     totalTickets: 0,
     totalTerminados: 0,
     slaAtencion: 0,

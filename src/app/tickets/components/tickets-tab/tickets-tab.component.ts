@@ -36,7 +36,7 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { TarjetasSlaAnalistaComponent, TotalesSlaAnalista } from '../tarjetas-sla-analista/tarjetas-sla-analista.component';
+import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -61,14 +61,14 @@ import { TarjetasSlaAnalistaComponent, TotalesSlaAnalista } from '../tarjetas-sl
     SolicitarCompraDialogComponent,
     AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
-    TarjetasSlaAnalistaComponent
+    TarjetasSlaDashboardComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',
   styleUrl: './tickets-tab.component.scss'
 })
 export class TicketsTabComponent implements OnInit {
-  @Input() totalesSla?: TotalesSlaAnalista;
+  @Input() totalesSla?: TotalesSlaDashboard;
   @Input() loadingSla: boolean = false;
   @Input() mesNombre: string = '';
 
