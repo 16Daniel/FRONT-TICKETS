@@ -68,8 +68,25 @@
     </div>
   </div>
 
-  <!-- Dashboard KPI Cards Row -->
-  <div class="dashboard-kpi-section mb-3">
+  <!-- Dashboard KPI Cards Row: Split Layout (Operación Diaria + Rendimiento Mensual) -->
+  <div class="dashboard-unified-kpi-row mb-3" *ngIf="totalesSla">
+    <div class="kpi-operational-col">
+      <app-iconos-notificaciones-tickets 
+        [tickets]="tickets" 
+        [usuario]="usuario"
+        [compras]="compras">
+      </app-iconos-notificaciones-tickets>
+    </div>
+    <div class="kpi-sla-col">
+      <app-tarjetas-sla-analista
+        [totales]="totalesSla"
+        [loading]="loadingSla"
+        [mesNombre]="mesNombre">
+      </app-tarjetas-sla-analista>
+    </div>
+  </div>
+
+  <div class="dashboard-kpi-section mb-3" *ngIf="!totalesSla">
     <app-iconos-notificaciones-tickets 
       [tickets]="tickets" 
       [usuario]="usuario"
