@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeNode } from 'primeng/api';
-import { OrganizationChartModule } from 'primeng/organizationchart';
+import { TreeModule } from 'primeng/tree';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Categoria } from '../../models/categoria.model';
 import { Area } from '../../../areas/interfaces/area.model';
@@ -10,7 +10,7 @@ import { Subcategoria } from '../../interfaces/subcategoria.interface';
 @Component({
   selector: 'app-umbral-arbol',
   standalone: true,
-  imports: [CommonModule, OrganizationChartModule],
+  imports: [CommonModule, TreeModule],
   templateUrl: './umbral-arbol.component.html',
   styleUrl: './umbral-arbol.component.scss'
 })
@@ -98,8 +98,10 @@ export class UmbralArbolComponent implements OnChanges {
     setTimeout(() => {
       if (this.panContainer && this.panContainer.nativeElement) {
         const el = this.panContainer.nativeElement;
-        if (el.scrollWidth > el.clientWidth) {
-          el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+        // La raíz queda a la izquierda: iniciar en el borde izquierdo y centrar en vertical
+        el.scrollLeft = 0;
+        if (el.scrollHeight > el.clientHeight) {
+          el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
         }
       }
     }, 100);

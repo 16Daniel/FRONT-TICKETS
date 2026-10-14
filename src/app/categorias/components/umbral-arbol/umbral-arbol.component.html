@@ -17,7 +17,7 @@
       </div>
 
       <div class="org-chart-zoom-wrapper" [style.transform]="'scale(' + zoomLevel + ')'" *ngIf="hasCategories && dataArbol.length > 0">
-        <p-organizationChart [value]="dataArbol">
+        <p-tree [value]="dataArbol" layout="horizontal">
           <ng-template let-node pTemplate="area">
             <div class="node-content node-area">
               <div class="node-header"><i class="bx bx-buildings"></i></div>
@@ -55,6 +55,6 @@
               </span>
             </div>
           </ng-template>
-        </p-organizationChart>
+        </p-tree>
       </div>
     </div>
