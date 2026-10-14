@@ -31,6 +31,7 @@ export class TarjetasSlaDashboardComponent {
 
   @Input() loading: boolean = false;
   @Input() mesNombre: string = '';
+  @Input() titulo: string = 'Tu rendimiento del mes actual';
 
   getSpeedometerOffset(value: number): number {
     const clamped = Math.max(0, Math.min(100, value || 0));

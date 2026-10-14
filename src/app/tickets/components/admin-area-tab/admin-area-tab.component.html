@@ -69,12 +69,22 @@
   </div>
 
   <!-- Dashboard KPI Cards Row (Floating directly on canvas) -->
-  <div class="dashboard-kpi-section mb-3">
-    <app-iconos-notificaciones-tickets 
-      [tickets]="tickets" 
-      [usuario]="usergroup"
-      [compras]="compras">
-    </app-iconos-notificaciones-tickets>
+  <div class="dashboard-unified-kpi-row mb-3">
+    <div class="kpi-operational-col">
+      <app-iconos-notificaciones-tickets 
+        [tickets]="tickets" 
+        [usuario]="usergroup"
+        [compras]="compras">
+      </app-iconos-notificaciones-tickets>
+    </div>
+    <div class="kpi-sla-col">
+      <app-tarjetas-sla-dashboard
+        [totales]="totalesSla"
+        [loading]="loadingSla"
+        [mesNombre]="mesActualNombre"
+        [titulo]="'Rendimiento general del mes actual'">
+      </app-tarjetas-sla-dashboard>
+    </div>
   </div>
 
   <!-- Action Buttons Toolbar Row (Floating directly on canvas) -->
