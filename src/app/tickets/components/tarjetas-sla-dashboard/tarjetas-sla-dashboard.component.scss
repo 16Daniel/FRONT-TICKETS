@@ -4,6 +4,13 @@
   height: 100%;
 }
 
+/* Dispositivos pequeños: se oculta igual que los iconos de notificaciones */
+@media (max-width: 768px) {
+  :host {
+    display: none !important;
+  }
+}
+
 .sla-consolidated-card {
   background: #ffffff;
   border-radius: 20px;

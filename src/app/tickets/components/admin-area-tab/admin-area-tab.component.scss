@@ -192,6 +192,13 @@ $rw-canvas: #f4f6fa;
   }
 }
 
+/* Dispositivos pequeños: se ocultan las tarjetas de notificaciones y el SLA */
+@media (max-width: 768px) {
+  .dashboard-unified-kpi-row {
+    display: none !important;
+  }
+}
+
 /* Actions Toolbar Row floating on canvas */
 .actions-toolbar-row {
   width: 100%;
