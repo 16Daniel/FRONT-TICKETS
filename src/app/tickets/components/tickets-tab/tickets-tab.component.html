@@ -7,7 +7,7 @@
         <i class="bx bx-shield-quarter"></i>
         <span>GUARDIA ACTIVA</span>
       </span>
-
+<!-- 
       <span class="active-view-badge" *ngIf="mostrarMantenimientosSistemas">
         <i class="bx bx-laptop"></i>
         <span>Mantenimiento IT (8X8)</span>
@@ -16,7 +16,7 @@
       <span class="active-view-badge" *ngIf="mostrarMantenimientosAV">
         <i class="bx bx-tv"></i>
         <span>Mantenimiento AV (6X6)</span>
-      </span>
+      </span> -->
 
       <!-- <span class="user-group-badge" *ngIf="usuario">
         <i class="bx bxs-user"></i>
@@ -30,7 +30,7 @@
         <i class="bx bx-wrench"></i> Vistas:
       </span>
 
-      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosSistemas" *ngIf="usuario.idArea == '2' || usuario.idArea == '1'">
+      <!-- <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosSistemas" *ngIf="usuario.idArea == '2' || usuario.idArea == '1'">
         <input 
           type="checkbox" 
           class="toggle-checkbox"
@@ -40,9 +40,9 @@
           <i class="bx bx-laptop"></i>
           <span>IT: 8X8</span>
         </span>
-      </label>
+      </label> -->
 
-      <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosAV" *ngIf="usuario.idArea == '1' || usuario.idArea == '2'">
+      <!-- <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosAV" *ngIf="usuario.idArea == '1' || usuario.idArea == '2'">
         <input 
           type="checkbox" 
           class="toggle-checkbox"
@@ -52,7 +52,7 @@
           <i class="bx bx-tv"></i>
           <span>AV: 6X6</span>
         </span>
-      </label>
+      </label> -->
 
       <label class="toggle-pill-item" [class.is-active]="usuario.esGuardia">
         <input 
@@ -118,12 +118,12 @@
         (click)="mostrarModalFilterTickets = true">
       </p-button>
 
-      <p-button 
+      <!-- <p-button 
         label="SOLICITAR COMPRA" 
         icon="pi pi-plus" 
         styleClass="p-button-secondary action-btn-custom"
         (click)="mostrarModalCompras = true">
-      </p-button>
+      </p-button> -->
     </div>
   </div>
 

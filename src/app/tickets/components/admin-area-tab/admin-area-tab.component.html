@@ -1,8 +1,8 @@
 <div class="tickets-tab-container">
 
   <!-- Top Bar: Context Badges & Maintenance Switches -->
-  <div class="tickets-top-bar">
-    <div class="header-title-group">
+  <!-- <div class="tickets-top-bar"> -->
+    <!-- <div class="header-title-group">
       <span class="active-view-badge" *ngIf="mostrarMantenimientosTI">
         <i class="bx bx-laptop"></i>
         <span>Mantenimiento IT (8X8)</span>
@@ -22,10 +22,10 @@
         <i class="bx bxs-user"></i>
         <span>{{ usergroup.nombre }} {{ usergroup.apellidoP }}</span>
       </span>
-    </div>
+    </div> -->
 
     <!-- Toggles for Mantenimientos -->
-    <div class="switches-toggle-group" *ngIf="idArea === '1' || idArea === '2' || idArea === '4'">
+    <!-- <div class="switches-toggle-group" *ngIf="idArea === '1' || idArea === '2' || idArea === '4'">
       <span class="switches-title">
         <i class="bx bx-wrench"></i> Mantenimientos:
       </span>
@@ -65,8 +65,8 @@
           <span>8X8</span>
         </span>
       </label>
-    </div>
-  </div>
+    </div> -->
+  <!-- </div> -->
 
   <!-- Dashboard KPI Cards Row (Floating directly on canvas) -->
   <div class="dashboard-unified-kpi-row mb-3">
@@ -118,7 +118,7 @@
         styleClass="p-button-danger action-btn-custom">
       </p-button>
 
-      <p-button 
+      <!-- <p-button 
         label="COMPRAS" 
         icon="pi pi-shopping-cart" 
         styleClass="btn-compras action-btn-custom" 
@@ -130,7 +130,7 @@
         icon="pi pi-plus" 
         styleClass="p-button-secondary action-btn-custom"
         (click)="mostrarModalSolicitarCompra = true">
-      </p-button>
+      </p-button> -->
     </div>
   </div>
 
