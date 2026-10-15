@@ -171,8 +171,8 @@
   }
   @else {
   <div *ngIf="usergroup == undefined" class="mt-2">
-    <app-branches-tickets-accordion [tickets]="tickets" [sucursales]="sucursales"
-      [idArea]="idArea"></app-branches-tickets-accordion>
+    <app-acordeon-tickets-por-sucursal [tickets]="tickets" [sucursales]="sucursales"
+      [idArea]="idArea"></app-acordeon-tickets-por-sucursal>
   </div>
 
   <div *ngIf="usergroup != undefined" class="mt-2">

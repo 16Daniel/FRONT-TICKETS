@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
+import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
 import { AcordeonTicketsPorUsuarioComponent } from '../../../tickets/components/acordeon-tickets-por-usuario/acordeon-tickets-por-usuario.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
@@ -57,7 +57,7 @@ import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.i
     ModalFilterTicketsComponent,
     CrearTicketDialogComponent,
     HistorialTicketsDialogComponent,
-    BranchesTicketsAccordionComponent,
+    AcordeonTicketsPorSucursalComponent,
     AcordeonTicketsPorUsuarioComponent,
     DetalleTicketDialogComponent,
     IconosNotificacionesTicketsComponent,

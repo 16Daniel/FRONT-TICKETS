@@ -58,7 +58,7 @@ Reservados para elementos corporativos, navegación principal, logotipos y boton
 
 ---
 
-### 📂 Acordeones de Sucursales (`branches-tickets-accordion` & `acordeon-tickets-por-usuario`)
+### 📂 Acordeones de Sucursales (`acordeon-tickets-por-sucursal` & `acordeon-tickets-por-usuario`)
 - Cabecera limpia: Muestra únicamente `[Badge Conteo]` + `[Nombre Sucursal]`.
 - Flechador de expansión `v` integrado a la derecha (`right: 1.25rem`) dentro de la tarjeta de cabecera.
 - Cuerpo desplegado (`p-accordion-content`) como tarjeta separada con `border-radius: 16px` y cinta de controles internos (`.accordion-subtoggles-strip`) en tono gris `#F8FAFC`.
