@@ -1,6 +1,9 @@
 <div class="top-chart-container mt-3 mb-4" *ngIf="datosBarras.length > 0">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fs-6 fw-bold text-dark m-0">Top {{ topN }} Categorías con más Fallas</h4>
+    <div>
+      <h4 class="fs-6 fw-bold text-dark m-0">{{ topN ? ('Top ' + topN + ' Categorías con más Fallas') : 'Categorías con más Fallas' }}</h4>
+      <span class="text-muted" style="font-size: 0.75rem;">Haz clic en una barra para ver sus tickets</span>
+    </div>
     <span class="badge bg-danger rounded-pill"><i class="bx bx-trending-up me-1"></i> Focos Rojos</span>
   </div>
   
@@ -18,7 +21,47 @@
       xAxisLabel="Cantidad de Tickets"
       [showDataLabel]="true"
       [barPadding]="8"
-      [animations]="true">
+      [animations]="true"
+      (select)="onSelect($event)">
     </ngx-charts-bar-horizontal>
+  </div>
+
+  <!-- Detalle de Tickets al seleccionar una Categoría -->
+  <div 
+    id="categoria-tickets-detalle-anchor" 
+    class="categoria-tickets-detalle mt-3" 
+    *ngIf="categoriaSeleccionada">
+    
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span class="badge bg-light text-dark border">
+        <i class="bx bx-filter-alt me-1 text-primary"></i> Categoría seleccionada: <strong>{{ categoriaSeleccionada }}</strong>
+      </span>
+
+      <button 
+        type="button" 
+        class="btn btn-sm btn-light border text-muted d-inline-flex align-items-center gap-1"
+        (click)="limpiarSeleccion()" 
+        title="Cerrar tickets">
+        <i class="bx bx-x"></i>
+        <span>Cerrar lista</span>
+      </button>
+    </div>
+
+    <!-- Tarjetas SLA de la Categoría Seleccionada -->
+    <div class="mb-3">
+      <app-tarjetas-sla-dashboard
+        [totales]="totalesSlaCategoria"
+        [titulo]="'Cumplimiento SLA: ' + categoriaSeleccionada">
+      </app-tarjetas-sla-dashboard>
+    </div>
+
+    <app-lista-tickets-kpis
+      [tituloSeccion]="'Tickets de la Categoría'"
+      [tituloContexto]="categoriaSeleccionada"
+      [tickets]="ticketsCategoria"
+      [sucursales]="sucursales"
+      [categorias]="categorias"
+      [matrizUrgencia]="matrizUrgenciaArea || matrizUrgencia">
+    </app-lista-tickets-kpis>
   </div>
 </div>

@@ -618,6 +618,26 @@ $rw-dark: #1e1e24;
       }
     }
   }
+
+  .ficha-sla-wrapper {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 0.85rem;
+
+    ::ng-deep app-tarjetas-sla-dashboard {
+      display: block !important;
+
+      .sla-consolidated-card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+
+        &:hover {
+          transform: none;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+      }
+    }
+  }
 }
 
 /* ==========================================================================

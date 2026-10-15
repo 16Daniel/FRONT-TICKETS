@@ -1,10 +1,15 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, OnDestroy, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Categoria } from '../../models/categoria.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
+import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../../../tickets/components/tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { KpiRadarService } from '../../../tickets/services/kpi-radar.service';
 
 export interface ItemBusquedaUmbral {
   nodo: Categoria | Subcategoria;
@@ -32,11 +37,11 @@ export interface DetalleNodoSeleccionado {
 @Component({
   selector: 'app-umbral-arbol',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TarjetasSlaDashboardComponent],
   templateUrl: './umbral-arbol.component.html',
   styleUrl: './umbral-arbol.component.scss'
 })
-export class UmbralArbolComponent implements OnChanges {
+export class UmbralArbolComponent implements OnInit, OnChanges, OnDestroy {
   @Input() tickets: Ticket[] = [];
   @Input() categoriasActuales: Categoria[] = [];
   @Input() areas: Area[] = [];
@@ -50,6 +55,31 @@ export class UmbralArbolComponent implements OnChanges {
 
   nodoSeleccionado: DetalleNodoSeleccionado | null = null;
 
+  totalesSlaNodo: TotalesSlaDashboard = {
+    totalTickets: 0,
+    totalTerminados: 0,
+    slaAtencion: 0,
+    slaAtencionCumplidos: 0,
+    slaResolucion: 0,
+    slaResolucionCumplidos: 0
+  };
+
+  private subscripcionMatriz?: Subscription;
+  matrizUrgenciaArea?: MatrizUrgencia;
+
+  constructor(
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private kpiRadarService: KpiRadarService
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarMatrizArea();
+  }
+
+  ngOnDestroy(): void {
+    this.subscripcionMatriz?.unsubscribe();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tickets'] || changes['categoriasActuales'] || changes['areaSeleccionadaId'] || changes['umbralAlerta']) {
       this.procesarTickets();
@@ -58,6 +88,19 @@ export class UmbralArbolComponent implements OnChanges {
       this.rutaNavegacionIds = [];
       this.busquedaTexto = '';
       this.nodoSeleccionado = null;
+      this.cargarMatrizArea();
+    }
+  }
+
+  private cargarMatrizArea(): void {
+    this.subscripcionMatriz?.unsubscribe();
+    if (this.areaSeleccionadaId) {
+      this.subscripcionMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(this.areaSeleccionadaId).subscribe(matriz => {
+        this.matrizUrgenciaArea = matriz;
+        if (this.nodoSeleccionado) {
+          this.actualizarSlaNodoSeleccionado();
+        }
+      });
     }
   }
 
@@ -78,6 +121,7 @@ export class UmbralArbolComponent implements OnChanges {
       const tickets = this.contarTickets(this.nodoSeleccionado.id, this.nodoSeleccionado.esRama);
       this.nodoSeleccionado.ticketCount = tickets;
       this.nodoSeleccionado.isCritical = !this.nodoSeleccionado.esRama && tickets >= this.umbralAlerta;
+      this.actualizarSlaNodoSeleccionado();
     }
   }
 
@@ -240,6 +284,8 @@ export class UmbralArbolComponent implements OnChanges {
       tiempoResolucion: nodo.tiempoResolucion,
       unidadResolucion: nodo.unidadResolucion
     };
+
+    this.actualizarSlaNodoSeleccionado();
   }
 
   seleccionarDesdeBusqueda(item: ItemBusquedaUmbral): void {
@@ -252,6 +298,87 @@ export class UmbralArbolComponent implements OnChanges {
 
   limpiarSeleccion(): void {
     this.nodoSeleccionado = null;
+    this.totalesSlaNodo = {
+      totalTickets: 0,
+      totalTerminados: 0,
+      slaAtencion: 0,
+      slaAtencionCumplidos: 0,
+      slaResolucion: 0,
+      slaResolucionCumplidos: 0
+    };
+  }
+
+  obtenerTicketsNodo(id: string | number, esRama: boolean, nodoRef?: Categoria | Subcategoria): Ticket[] {
+    if (!this.tickets || this.tickets.length === 0) return [];
+
+    const idStr = String(id);
+    if (!esRama) {
+      return this.tickets.filter(t => String(t.idSubcategoria || t.idCategoria) === idStr);
+    }
+
+    const nodo = nodoRef || this.buscarNodoPorId(idStr);
+    if (!nodo) {
+      return this.tickets.filter(t => String(t.idCategoria) === idStr || String(t.idSubcategoria) === idStr);
+    }
+
+    const idsSet = new Set<string>();
+    idsSet.add(idStr);
+
+    const recolectarIds = (item: Categoria | Subcategoria) => {
+      idsSet.add(String(item.id));
+      const hijos = (item.subcategorias || []).filter(s => !s.eliminado);
+      hijos.forEach(h => recolectarIds(h));
+    };
+
+    recolectarIds(nodo);
+
+    return this.tickets.filter(t => {
+      const ticketIdKey = String(t.idSubcategoria || t.idCategoria || '');
+      const catId = String(t.idCategoria || '');
+      return idsSet.has(ticketIdKey) || idsSet.has(catId);
+    });
+  }
+
+  calcularSlaTickets(ticketsNodo: Ticket[]): TotalesSlaDashboard {
+    const totalTickets = ticketsNodo.length;
+    const terminados = ticketsNodo.filter(t => String(t.idEstatusTicket) === '3');
+    const totalTerminados = terminados.length;
+
+    let slaAtencionCumplidos = 0;
+    let slaResolucionCumplidos = 0;
+
+    terminados.forEach(t => {
+      const evalSla = this.kpiRadarService.evaluarSlaTicket(t, this.matrizUrgenciaArea);
+      if (evalSla.atencion) {
+        slaAtencionCumplidos++;
+      }
+      if (evalSla.resolucion) {
+        slaResolucionCumplidos++;
+      }
+    });
+
+    const slaAtencion = totalTerminados > 0
+      ? (slaAtencionCumplidos / totalTerminados) * 100
+      : 0;
+
+    const slaResolucion = totalTerminados > 0
+      ? (slaResolucionCumplidos / totalTerminados) * 100
+      : 0;
+
+    return {
+      totalTickets,
+      totalTerminados,
+      slaAtencion,
+      slaAtencionCumplidos,
+      slaResolucion,
+      slaResolucionCumplidos
+    };
+  }
+
+  private actualizarSlaNodoSeleccionado(): void {
+    if (!this.nodoSeleccionado) return;
+    const ticketsNodo = this.obtenerTicketsNodo(this.nodoSeleccionado.id, this.nodoSeleccionado.esRama);
+    this.totalesSlaNodo = this.calcularSlaTickets(ticketsNodo);
   }
 
   private construirRutaTexto(nodo: Categoria | Subcategoria): string {

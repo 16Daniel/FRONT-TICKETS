@@ -117,52 +117,71 @@
   }
 
   /* Gauges Row */
+  /* Gauges Row */
   .card-gauges-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.85rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
     flex: 1;
-    padding-top: 0.25rem;
+    padding-top: 0.35rem;
   }
 
-  .gauge-column {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
-    gap: 0.5rem;
-    min-width: 0;
-  }
-
-  .gauge-info-side {
+  .gauge-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 0.85rem 1.15rem;
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    justify-content: space-between;
+    gap: 0.65rem;
     min-width: 0;
+    transition: all 0.2s ease;
 
-    .gauge-title-line {
+    &:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .gauge-card-header {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
+      justify-content: space-between;
+      gap: 0.5rem;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 0.45rem;
 
-      i {
-        font-size: 0.95rem;
+      .gauge-title-line {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.76rem;
+        font-weight: 700;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+
+        i {
+          font-size: 1.05rem;
+        }
       }
     }
 
-    .gauge-stats {
+    .gauge-card-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .gauge-info-side {
       display: flex;
       align-items: baseline;
-      gap: 0.3rem;
+      gap: 0.35rem;
+      min-width: 0;
 
       .gauge-ratio {
-        font-size: 1.35rem;
+        font-size: 1.4rem;
         font-weight: 900;
         color: #0f172a;
         line-height: 1;
@@ -170,7 +189,7 @@
       }
 
       .gauge-sub {
-        font-size: 0.68rem;
+        font-size: 0.7rem;
         font-weight: 600;
         color: #94a3b8;
         white-space: nowrap;
@@ -183,7 +202,6 @@
       padding: 0.15rem 0.5rem;
       border-radius: 12px;
       width: fit-content;
-      margin-top: 0.2rem;
       white-space: nowrap;
 
       &.badge-success {
@@ -210,44 +228,31 @@
         border: 1px solid #e2e8f0;
       }
     }
-  }
 
-  .gauge-visual-side {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    .gauge-visual-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
 
-    .speedometer-svg {
-      width: 82px;
-      height: 45px;
-      overflow: visible;
+      .speedometer-svg {
+        width: 82px;
+        height: 45px;
+        overflow: visible;
 
-      .fill {
-        transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+        .fill {
+          transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
       }
     }
   }
-
-  .gauge-divider {
-    width: 1px;
-    height: 52px;
-    background-color: #f1f5f9;
-    flex-shrink: 0;
-  }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 540px) {
   .sla-consolidated-card {
     .card-gauges-row {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1rem;
-    }
-
-    .gauge-divider {
-      width: 100%;
-      height: 1px;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
     }
   }
 }
