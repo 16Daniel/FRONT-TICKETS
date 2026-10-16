@@ -13,13 +13,13 @@ export interface TotalesSlaDashboard {
 export type TotalesSlaAnalista = TotalesSlaDashboard;
 
 @Component({
-  selector: 'app-tarjetas-sla-dashboard',
+  selector: 'app-tarjeta-rendimiento-sla',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './tarjetas-sla-dashboard.component.html',
-  styleUrl: './tarjetas-sla-dashboard.component.scss'
+  templateUrl: './tarjeta-rendimiento-sla.component.html',
+  styleUrl: './tarjeta-rendimiento-sla.component.scss'
 })
-export class TarjetasSlaDashboardComponent {
+export class TarjetaRendimientoSlaComponent {
   @Input() totales: TotalesSlaDashboard = {
     totalTickets: 0,
     totalTerminados: 0,

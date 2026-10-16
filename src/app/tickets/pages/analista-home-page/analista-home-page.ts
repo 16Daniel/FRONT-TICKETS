@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TicketsTabComponent } from '../../components/tickets-tab/tickets-tab.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
-import { TotalesSlaDashboard } from '../../components/tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
+import { TotalesSlaDashboard } from '../../components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
 import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';

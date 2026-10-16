@@ -8,14 +8,13 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { Comite } from '../../interfaces/comite';
 import { ComitesService } from '../../services/comites.service';
-import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({
   selector: 'app-tickets-comites-page',
   standalone: true,
-  imports: [CommonModule, TabViewModule, TableModule, PageHeaderComponent, BranchesTicketsAccordionComponent],
+  imports: [CommonModule, TabViewModule, TableModule, PageHeaderComponent],
   templateUrl: './tickets-comites-page.html',
   styleUrl: './tickets-comites-page.scss',
 })

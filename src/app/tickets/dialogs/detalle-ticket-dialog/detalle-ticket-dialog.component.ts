@@ -119,11 +119,11 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     return this.areasService.areas$;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ticket']) {
-      this.comitesSeleccionados = [...(this.ticket?.comites ?? [])];
-    }
-  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes['ticket']) {
+  //     this.comitesSeleccionados = [...(this.ticket?.comites ?? [])];
+  //   }
+  // }
 
   getResponsable(): Usuario | undefined {
     if (!this.ticket?.idResponsable) return undefined;
@@ -147,6 +147,10 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ticket']) {
+      this.comitesSeleccionados = [...(this.ticket?.comites ?? [])];
+    }
+
     if (changes['ticket'] && this.ticket) {
       this.normalizarValoresTicket();
       this.cdr.markForCheck();
