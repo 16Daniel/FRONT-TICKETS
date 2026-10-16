@@ -104,6 +104,12 @@ export class TicketsService {
     return docData(ticketDoc, { idField: 'id' }) as Observable<Ticket>;
   }
 
+  getByComite(idComite: string): Observable<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const q = query(ticketsCollection, where('comites', 'array-contains', idComite));
+    return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
+  }
+
   async update(data: any): Promise<void> {
     let collectionName = 'tickets';
     let docId = data.id;

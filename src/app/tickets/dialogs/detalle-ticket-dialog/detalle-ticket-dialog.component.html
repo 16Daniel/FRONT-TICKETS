@@ -22,16 +22,32 @@
   <!-- Cuerpo del Modal -->
   <div *ngIf="ticket" class="modal-ticket-body d-flex flex-column h-100 flex-grow-1">
     
-    <!-- Banner de Mitigación -->
-    <div *ngIf="ticket.idEstatusTicket === '8' && ultimaMitigacion" class="alert alert-warning m-3 d-flex align-items-center gap-3" style="background-color: #FFFBEB; border: 1px solid #FDE68A; color: #D97706; border-radius: 8px;">
-      <i class="bx bx-shield-quarter fs-2"></i>
-      <div class="flex-grow-1">
-        <h6 class="fw-bold mb-1 m-0">Ticket en Mitigación</h6>
-        <div class="text-dark" style="font-size: 0.85rem;" [innerHTML]="ultimaMitigacion.contenido"></div>
+    <div
+      class="ticket-alerts"
+      [class.ticket-alerts-split]="ticket.comites?.length && ticket.idEstatusTicket === '8' && ultimaMitigacion">
+      <!-- Banner de Mitigación -->
+      <div *ngIf="ticket.idEstatusTicket === '8' && ultimaMitigacion" class="alert alert-warning ticket-alert d-flex align-items-center gap-3">
+        <i class="bx bx-shield-quarter fs-2 flex-shrink-0"></i>
+        <div class="flex-grow-1">
+          <h6 class="fw-bold mb-1 m-0">Ticket en Mitigación</h6>
+          <div class="text-dark" style="font-size: 0.85rem;" [innerHTML]="ultimaMitigacion.contenido"></div>
+        </div>
+        <div class="text-end flex-shrink-0" style="font-size: 0.8rem;">
+          <span class="d-block fw-bold">{{ ultimaMitigacion.autor.nombre }}</span>
+          <span class="text-muted">{{ ultimaMitigacion.fechaCreacion ? (datesHelper.getDate(ultimaMitigacion.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}</span>
+        </div>
       </div>
-      <div class="text-end" style="font-size: 0.8rem;">
-        <span class="d-block fw-bold">{{ ultimaMitigacion.autor.nombre }}</span>
-        <span class="text-muted">{{ ultimaMitigacion.fechaCreacion ? (datesHelper.getDate(ultimaMitigacion.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}</span>
+
+      <div *ngIf="ticket.comites?.length" class="alert ticket-alert ticket-alert-committees d-flex align-items-center gap-3">
+        <i class="bx bx-group fs-2 flex-shrink-0"></i>
+        <div class="ticket-committees-content">
+          <h6 class="fw-bold m-0">Ticket asignado a comités</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <span *ngFor="let idComite of ticket.comites" class="badge bg-white text-dark border">
+              {{ obtenerNombreComite(idComite) }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -109,7 +125,7 @@
         <p-tabView class="flex-grow-1 d-flex flex-column" styleClass="ticket-detail-tabs mt-1 flex-grow-1 d-flex flex-column">
           
           <!-- Tab 1: Detalles Generales -->
-          <p-tabPanel header="Detalles Generales" leftIcon="bx bx-list-ul">
+          <p-tabPanel header="Detalles" leftIcon="bx bx-list-ul">
             <div class="ticket-card p-4 m-0 h-100" style="overflow-y: auto;">
               <div class="d-flex justify-content-between align-items-start mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
                 <div>
@@ -442,6 +458,62 @@
               </div>
             </div>
           </p-tabPanel>
+          <!-- Tab 5: Comités -->
+          <p-tabPanel header="Comités" leftIcon="bx bx-group">
+            <div class="ticket-card p-4 m-0 d-flex flex-column h-100" style="min-height: 250px;">
+              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="bx bx-group fs-5" style="color: #D3152A;"></i> COMITÉS ASIGNADOS
+              </h5>
+              <!-- <p class="text-muted mb-3">Selecciona los comités relacionados con este ticket.</p> -->
+              <p-multiSelect
+                [options]="(comitesService.comites$ | async) ?? []"
+                [(ngModel)]="comitesSeleccionados"
+                optionLabel="nombre"
+                optionValue="id"
+                [filter]="true"
+                filterBy="nombre"
+                [showClear]="false"
+                display="chip"
+                selectedItemsLabel="{0} comités seleccionados"
+                placeholder="Selecciona uno o más comités"
+                appendTo="body"
+                styleClass="w-100">
+              </p-multiSelect>
+              <div *ngIf="comitesSeleccionados.length" class="mt-4 d-flex flex-column flex-grow-1 committee-areas-section">
+                <h6 class="fw-bold text-uppercase text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                  ÁREAS DE LOS COMITÉS SELECCIONADOS
+                </h6>
+                <div class="committee-areas-scroll">
+                  <ng-container *ngIf="areas$ | async as areas">
+                    <div class="d-flex flex-column gap-2">
+                      <div *ngFor="let idComite of comitesSeleccionados" class="committee-areas-card">
+                        <div class="fw-bold mb-2">{{ obtenerNombreComite(idComite) }}</div>
+                        <ng-container *ngIf="obtenerComite(idComite) as comite">
+                          <div *ngIf="comite.areas?.length; else comiteSinAreas" class="d-flex flex-wrap gap-2">
+                            <span *ngFor="let idArea of comite.areas" class="badge committee-area-badge">
+                              {{ obtenerNombreArea(idArea, areas) }}
+                            </span>
+                          </div>
+                          <ng-template #comiteSinAreas>
+                            <span class="text-muted small">Este comité no tiene áreas asignadas.</span>
+                          </ng-template>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-4 modal-footer-actions">
+                <button
+                  class="btn-action btn-primary-rebel btn-sm px-4"
+                  [disabled]="guardandoComites || !ticket.id"
+                  (click)="guardarComites()">
+                  <i class="bx bx-save me-1"></i>
+                  {{ guardandoComites ? 'GUARDANDO...' : 'GUARDAR COMITÉS' }}
+                </button>
+              </div>
+            </div>
+          </p-tabPanel>
         </p-tabView>
 
 
@@ -480,7 +552,3 @@
   [imagenUrl]="urlVisorImagen"
   (closeEvent)="mostrarModalImagen = false">
 </app-modal-visor-imagenes>
-
-
-
-

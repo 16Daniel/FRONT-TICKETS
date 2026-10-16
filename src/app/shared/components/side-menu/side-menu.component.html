@@ -89,6 +89,27 @@
         <i class="bx bxs-dashboard nav-icon"></i>
         <span class="nav-label">Inicio</span>
       </a>
+
+       <a 
+        [routerLink]="'/main/comites/tickets'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol != '6'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bxs-group nav-icon"></i>
+        <span class="nav-label">Tickets comités</span>
+      </a>
+
+
+      <a 
+        [routerLink]="'/main/kpis'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-line-chart nav-icon"></i>
+        <span class="nav-label">KPIs</span>
+      </a>
     </div>
 
     <!-- Grupo: Control de versiones -->
@@ -189,6 +210,16 @@
         class="nav-item">
         <i class="bx bx-line-chart nav-icon"></i>
         <span class="nav-label">KPIs</span>
+        </a>
+      
+      <a 
+        [routerLink]="'/main/comites/admin'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-group nav-icon"></i>
+        <span class="nav-label">Comités</span>
       </a>
 
     </div>

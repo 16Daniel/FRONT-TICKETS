@@ -71,6 +71,10 @@ export const routes: Routes = [
       },
       {
         path: '',
+        loadChildren: () => import('./comites/comites.routes'),
+      },
+      {
+        path: '',
         redirectTo: '/main/home-a',
         pathMatch: 'full',
       },

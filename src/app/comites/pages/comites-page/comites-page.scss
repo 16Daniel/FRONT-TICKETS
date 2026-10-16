@@ -1,0 +1,165 @@
+/* Rebel Wings Brand Design Tokens */
+$rw-primary: #d3152a;
+$rw-accent: #fdb813;
+$rw-dark: #1e1e24;
+$rw-canvas: #f4f6fa;
+
+.areas-page-wrapper {
+  background-color: $rw-canvas;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem 1.5rem 4rem;
+  width: 100%;
+}
+
+.areas-content-container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Botones de Acción en Tabla
+   ========================================================================== */
+.btn-action-table {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #64748b;
+  font-size: 1.15rem;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+
+  i {
+    transition: transform 0.15s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    i {
+      transform: scale(1.1);
+    }
+  }
+
+  &.btn-action-info {
+    background-color: #ecfeff;
+    color: #0891b2;
+    border-color: #a5f3fc;
+  }
+
+  &.btn-action-danger {
+    background-color: #fef2f2;
+    color: #ef4444;
+    border-color: #fecaca;
+  }
+}
+
+/* ==========================================================================
+   Areas Toolbar
+   ========================================================================== */
+.areas-toolbar-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: #94a3b8;
+    font-size: 1.15rem;
+    pointer-events: none;
+  }
+
+  .areas-search-input {
+    padding: 0.55rem 2.2rem 0.55rem 2.4rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    width: 280px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+    &::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $rw-primary;
+      box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+      width: 320px;
+    }
+  }
+}
+
+.btn-rw-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.6rem 1.25rem;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  i {
+    font-size: 1.15rem;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38);
+    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(211, 21, 42, 0.2);
+  }
+}
+
+/* ==========================================================================
+   Areas Nodes Container (Tabla)
+   ========================================================================== */
+.areas-nodes-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
