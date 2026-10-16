@@ -238,7 +238,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   get tituloSla(): string {
     return this.usergroup
       ? `Rendimiento de ${this.usergroup.nombre} ${this.usergroup.apellidoP}`
-      : 'Rendimiento general del mes actual';
+      : 'Rendimiento general del mes';
   }
 
   private procesarMetricasSla(): void {
