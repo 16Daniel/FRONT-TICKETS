@@ -43,7 +43,7 @@ export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
-  @Input() mostrarTpvs: boolean = false;
+
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];

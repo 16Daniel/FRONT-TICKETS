@@ -49,7 +49,7 @@
       <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
         [idArea]="usuario.idArea"></app-grafica-tickets-30-dias>
       <app-requester-tickets-list *ngIf="!mostrarRadiografiaMap[item.id]" [tickets]="obtenerTicketsPorSucursal(item.id)" [esEspectadorActivo]="esEspectadorActivo"
-        (clickEvent)="abrirModalDetalleTicket($event)" [mostrarAccionFinalizar]="false"
+        (clickEvent)="abrirModalDetalleTicket($event)"
         [mostrarEstrellas]="false"></app-requester-tickets-list>
     </div>
   </p-accordionTab>

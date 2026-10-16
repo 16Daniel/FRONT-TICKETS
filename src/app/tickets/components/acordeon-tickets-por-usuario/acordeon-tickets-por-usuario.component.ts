@@ -30,6 +30,7 @@ export class AcordeonTicketsPorUsuarioComponent implements OnInit {
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
+  
   usuario: Usuario | any;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 

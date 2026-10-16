@@ -59,11 +59,11 @@ import { CategoriesService } from '../../../categorias/services/categories.servi
 })
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
-  @Input() mostrarAccionChat: boolean = true;
-  @Input() mostrarAccionPanico: boolean = true;
-  @Input() mostrarAccionFinalizar: boolean = true;
+  // @Input() mostrarAccionChat: boolean = true;
+  // @Input() mostrarAccionPanico: boolean = true;
+  // @Input() mostrarAccionFinalizar: boolean = true;
   @Input() mostrarEstrellas: boolean = true;
-  @Input() mostrarFedchaEstimacion: boolean = true;
+  // @Input() mostrarFedchaEstimacion: boolean = true;
   @Input() mostrarSucursal: boolean = false;
   @Input() esEspectadorActivo: boolean = false;
   @Input() mostrarFechaSolicitud: boolean = false;
