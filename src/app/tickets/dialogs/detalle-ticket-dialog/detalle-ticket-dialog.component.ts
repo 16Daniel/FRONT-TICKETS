@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, OnDestroy, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnDestroy, OnChanges, Output, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -9,6 +9,7 @@ import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
 import { Timestamp } from '@angular/fire/firestore';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
 import { Ticket } from '../../interfaces/ticket.model';
@@ -35,6 +36,8 @@ import { RatingStarsComponent } from '../../components/rating-stars/rating-stars
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
 import { BitacoraService } from '../../../shared/services/bitacora.service';
 import { Subscription } from 'rxjs';
+import { ComitesService } from '../../../comites/services/comites.service';
+import { Comite } from '../../../comites/interfaces/comite';
 
 @Component({
   selector: 'app-detalle-ticket-dialog',
@@ -54,13 +57,14 @@ import { Subscription } from 'rxjs';
     TabViewModule,
     BitacoraComponent,
     RatingStarsComponent,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule
   ],
   providers: [],
   templateUrl: './detalle-ticket-dialog.component.html',
   styleUrl: './detalle-ticket-dialog.component.scss',
 })
-export class DetalleTicketDialogComponent implements OnInit, OnDestroy {
+export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChanges {
   @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -78,6 +82,8 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy {
   categorias: any[] = [];
   estatusTickets: EstatusTicket[] = [];
   tiposSoporte: TipoSoporte[] = [];
+  comitesSeleccionados: string[] = [];
+  guardandoComites = false;
 
   historial: Bitacora[] = [];
   historialSub?: Subscription;
@@ -98,9 +104,20 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy {
     public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService,
     private cdr: ChangeDetectorRef,
-    private supportTypesService: SupportTypesService
+    private supportTypesService: SupportTypesService,
+    public comitesService: ComitesService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
+
+  get areas$() {
+    return this.areasService.areas$;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ticket']) {
+      this.comitesSeleccionados = [...(this.ticket?.comites ?? [])];
+    }
   }
 
   getResponsable(): Usuario | undefined {
@@ -170,6 +187,40 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.historialSub?.unsubscribe();
     this.mitigacionSub?.unsubscribe();
+  }
+
+  obtenerNombreComite(idComite: string): string {
+    const comite = this.comitesService.comites.find(
+      (item: Comite) => String(item.id) === String(idComite),
+    );
+    return comite?.nombre ?? idComite;
+  }
+
+  obtenerComite(idComite: string): Comite | undefined {
+    return this.comitesService.comites.find(
+      (comite) => String(comite.id) === String(idComite),
+    );
+  }
+
+  async guardarComites(): Promise<void> {
+    if (!this.ticket?.id) return;
+
+    this.guardandoComites = true;
+    const comites = [...this.comitesSeleccionados];
+    try {
+      await this.ticketsService.update({ id: this.ticket.id, comites });
+      this.ticket.comites = comites;
+      this.showMessage('success', 'Éxito', 'Comités asignados correctamente');
+    } catch (error) {
+      console.error('Error al asignar comités al ticket:', error);
+      this.showMessage(
+        'error',
+        'Error',
+        error instanceof Error ? error.message : 'No se pudieron guardar los comités.',
+      );
+    } finally {
+      this.guardandoComites = false;
+    }
   }
 
   onHide() {
@@ -528,9 +579,9 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy {
     this.urlVisorImagen = url;
   }
 
-  obtenerNombreArea(idArea?: string): string {
+  obtenerNombreArea(idArea: string | undefined, areas = this.areasService.areas): string {
     if (!idArea) return '---';
-    const found = this.areasService.areas?.find(a => String(a.id) === String(idArea));
+    const found = areas.find(a => String(a.id) === String(idArea));
     return found?.nombre || `Área ${idArea}`;
   }
 

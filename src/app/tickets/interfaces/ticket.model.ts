@@ -6,6 +6,7 @@ export class Ticket {
   usuariosEtiquetados?: string[] = [];
   idSucursal: any = '';
   idArea: string = '';
+  comites: string[] = [];
   idCategoria: string = '';
   idSubcategoria: string | null = null;
   idTipoSoporte: string | null = '';

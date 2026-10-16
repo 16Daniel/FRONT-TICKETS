@@ -90,6 +90,17 @@
         <span class="nav-label">Inicio</span>
       </a>
 
+       <a 
+        [routerLink]="'/main/comites/tickets'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol != '6'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bxs-group nav-icon"></i>
+        <span class="nav-label">Tickets comités</span>
+      </a>
+
+
       <a 
         [routerLink]="'/main/kpis'" 
         routerLinkActive="active"
@@ -188,6 +199,16 @@
         class="nav-item">
         <i class="bx bx-slider nav-icon"></i>
         <span class="nav-label">Umbral de Recurrencias</span>
+      </a>
+
+      <a 
+        [routerLink]="'/main/comites/admin'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-group nav-icon"></i>
+        <span class="nav-label">Comités</span>
       </a>
 
     </div>
