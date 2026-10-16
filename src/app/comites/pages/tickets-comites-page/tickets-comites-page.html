@@ -1,0 +1,61 @@
+<div class="tickets-comites-page">
+  <div class="tickets-comites-content">
+    <app-page-header
+      subtitle="Seguimiento por comité"
+      title="Tickets asignados a comités">
+    </app-page-header>
+
+    <ng-container *ngIf="comitesConTickets$ | async as comites">
+      <div *ngIf="comites.length; else sinComites" class="tickets-comites-card">
+        <p-tabView>
+          <p-tabPanel *ngFor="let comite of comites" [header]="comite.nombre">
+            <p-table
+              [value]="comite.tickets"
+              [tableStyle]="{ 'min-width': '45rem' }"
+              styleClass="p-datatable-gridlines table-tk"
+              [rowHover]="true">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>FOLIO</th>
+                  <th>FECHA</th>
+                  <th>SOLICITANTE</th>
+                  <th>DESCRIPCIÓN</th>
+                  <th>ESTATUS</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-ticket>
+                <tr>
+                  <td>{{ ticket.folio || ticket.id }}</td>
+                  <td>{{ obtenerFecha(ticket.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+                  <td>{{ ticket.solicitante || 'Sin solicitante' }}</td>
+                  <td>{{ ticket.descripcion || 'Sin descripción' }}</td>
+                  <td>{{ ticket.idEstatusTicket }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">
+                      No hay tickets asignados a este comité.
+                    </td>
+                  </tr>
+              </ng-template>
+            </p-table>
+            <p *ngIf="errorSucursales" class="alert alert-danger">{{ errorSucursales }}</p>
+            <!-- <app-branches-tickets-accordion
+              *ngIf="!errorSucursales"
+              [tickets]="comite.tickets"
+              [sucursales]="sucursales"
+              [idArea]="'1'">
+            </app-branches-tickets-accordion> -->
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </ng-container>
+
+    <ng-template #sinComites>
+      <div class="tickets-comites-card text-center text-muted py-5">
+        No hay comités disponibles.
+      </div>
+    </ng-template>
+  </div>
+</div>

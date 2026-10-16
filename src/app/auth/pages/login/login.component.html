@@ -57,6 +57,22 @@
   </div>
 </div>
 
+<div style="margin-top: 20px; padding: 15px; background-color: #f4f4f5; border: 1px dashed #71717a; border-radius: 8px;">
+  <h3 style="margin-top: 0;">🧪 Token FCM (Pruebas)</h3>
+  
+  <!-- Invocamos la Signal usando paréntesis () -->
+  <div *ngIf="fcmService.fcmToken() as token; else loadingOrDenied">
+    <p style="word-break: break-all; font-family: monospace; background: #fff; padding: 10px; border-radius: 4px;">
+      {{ token }}
+    </p>
+    <button (click)="copyToken()">📋 Copiar Token</button>
+  </div>
+
+  <ng-template #loadingOrDenied>
+    <p>Solicitando permisos o token no disponible aún...</p>
+  </ng-template>
+</div>
+
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
   [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
   [showTransformOptions]="'translateX(100%)'"></p-toast>
