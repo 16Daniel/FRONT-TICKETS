@@ -12,17 +12,17 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 
 @Component({
-  selector: 'app-analyst-home-page',
+  selector: 'app-analista-home-page',
   standalone: true,
   imports: [
     CommonModule,
     TicketsTabComponent,
     PageHeaderComponent
   ],
-  templateUrl: './analyst-home-page.html',
-  styleUrl: './analyst-home-page.scss'
+  templateUrl: './analista-home-page.html',
+  styleUrl: './analista-home-page.scss'
 })
-export default class AnalystHomePageComponent implements OnInit, OnDestroy {
+export default class AnalistaHomePageComponent implements OnInit, OnDestroy {
   usuario!: Usuario;
   loadingSla: boolean = false;
   mesActualNombre: string = '';

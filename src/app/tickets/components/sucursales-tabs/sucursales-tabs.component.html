@@ -31,12 +31,12 @@
     <p-tabPanel [header]="area.nombre | uppercase">
       <ng-container *ngIf="tabsActivos[area.nombre | uppercase]">
         
-        <app-branch-area-tab
+        <app-sucursal-area-tab
            [idArea]="area.id"
            [esEspectadorActivo]="esEspectadorActivo"
            [tickets]="filtrarTicketsPorArea(area.id)"
            [todosLosTickets]="todosLosTickets">
-        </app-branch-area-tab>
+        </app-sucursal-area-tab>
 
       </ng-container>
     </p-tabPanel>
