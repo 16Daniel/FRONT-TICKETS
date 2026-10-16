@@ -15,6 +15,8 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ResponsablesService } from '../../services/responsables.service';
+import { UsersService } from '../../services/users.service';
+import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Responsable } from '../../interfaces/responsable.interface';
 import { Usuario } from '../../interfaces/usuario.model';
@@ -45,12 +47,16 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   branchesService = inject(BranchesService);
   responsablesService = inject(ResponsablesService);
+  usersService = inject(UsersService);
+  areasService = inject(AreasService);
   messageService = inject(MessageService);
   cdr = inject(ChangeDetectorRef);
   mailService = inject(MailService);
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
+  usuariosMap = new Map<string, Usuario>();
+  areasMap = new Map<string, string>();
   responsables: Responsable[] = [];
   idSucursalSeleccionada: string | null = null;
 
@@ -85,11 +91,53 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
     );
 
     this.subs.add(
+      this.usersService.usuarios$.subscribe(usuarios => {
+        this.usuariosMap.clear();
+        usuarios.forEach(u => {
+          if (u.id) {
+            this.usuariosMap.set(u.id, u);
+          }
+        });
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subs.add(
+      this.areasService.areas$.subscribe(areas => {
+        this.areasMap.clear();
+        areas.forEach(a => {
+          if (a.id != null) {
+            this.areasMap.set(String(a.id), a.nombre);
+          }
+        });
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subs.add(
       this.responsablesService.responsables$.subscribe(r => {
         this.responsables = r;
         this.aplicarFiltro();
+        this.cdr.detectChanges();
       })
     );
+  }
+
+  obtenerNombreUsuario(idUsuario?: string): string {
+    if (!idUsuario) return '-';
+    const u = this.usuariosMap.get(idUsuario);
+    if (!u) return '-';
+    return `${u.nombre || ''} ${u.apellidoP || ''} ${u.apellidoM || ''}`.trim() || '-';
+  }
+
+  obtenerAreaUsuario(idUsuario?: string): string {
+    if (!idUsuario) return '-';
+    const u = this.usuariosMap.get(idUsuario);
+    if (!u) return '-';
+    if (!u.idArea || String(u.idArea) === '0' || String(u.idArea) === '') {
+      return 'SUCURSALES';
+    }
+    return this.areasMap.get(String(u.idArea)) || '-';
   }
 
   ngOnDestroy() {
@@ -112,6 +160,8 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   alCerrarModalCrear(recargar: boolean) {
     this.mostrarModalCrearResponsable = false;
+    this.aplicarFiltro();
+    this.cdr.detectChanges();
   }
 
   onSucursalChange(id: string) {
@@ -123,8 +173,10 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
     if (this.idSucursalSeleccionada === 'todos') {
       this.verTodosResponsables();
     } else {
-      this.responsables =
-        this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada, false);
+      this.responsables = [
+        ...this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada, false)
+      ];
+      this.cdr.detectChanges();
     }
   }
 
@@ -150,6 +202,8 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
     try {
       await this.responsablesService.delete(res.id);
+      this.aplicarFiltro();
+      this.cdr.detectChanges();
 
       Swal.fire({
         icon: 'success',
@@ -178,6 +232,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
     res.pin = nuevoPin;
 
     await this.responsablesService.update(res, res.id);
+    this.cdr.detectChanges();
     this.showMessage('success', 'Actualizado', 'PIN regenerado');
     this.enviarCorreo(res, nuevoPin);
   }
@@ -265,6 +320,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   verTodosResponsables() {
     this.idSucursalSeleccionada = 'todos';
-    this.responsables = this.responsablesService.responsables;
+    this.responsables = [...this.responsablesService.responsables];
+    this.cdr.detectChanges();
   }
 }
