@@ -40,11 +40,13 @@
       (apply)="aplicarFiltrosEvent($event)">
     </app-umbral-filtros>
 
-    <!-- Gráfica Top Categorías con Fallas -->
+    <!-- Gráfica Categorías con Fallas -->
     <app-umbral-top-chart
       *ngIf="!isApplyingFilters"
       [tickets]="tickets"
-      [topN]="10"
+      [sucursales]="sucursales"
+      [categorias]="categoriasActuales"
+      [idArea]="areaSeleccionadaId"
       [umbralAlerta]="umbralAlerta">
     </app-umbral-top-chart>
 

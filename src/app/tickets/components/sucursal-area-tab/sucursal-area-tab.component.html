@@ -57,8 +57,8 @@
 
 <div *ngIf="tickets.length > 0" class="p-1 mt-3">
   <div class="m-0 pb-4" style="background-color: transparent">
-    <app-priority-tickets-accordion [tickets]="tickets" [esEspectadorActivo]="esEspectadorActivo"
-      (clickEvent)="abrirModalDetalleTicket($event)" [mostrarTpvs]="mostrarTPVs"></app-priority-tickets-accordion>
+    <app-acordeon-tickets-por-prioridad [tickets]="tickets" [esEspectadorActivo]="esEspectadorActivo"
+      (clickEvent)="abrirModalDetalleTicket($event)" [mostrarTpvs]="mostrarTPVs"></app-acordeon-tickets-por-prioridad>
   </div>
 </div>
 

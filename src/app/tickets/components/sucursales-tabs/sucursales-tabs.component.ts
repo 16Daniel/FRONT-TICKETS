@@ -11,12 +11,12 @@ import { TicketsService } from '../../services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { BranchAreaTabComponent } from '../branch-area-tab/branch-area-tab.component';
+import { SucursalAreaTabComponent } from '../sucursal-area-tab/sucursal-area-tab.component';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({
-  selector: 'app-branches-tabs',
+  selector: 'app-sucursales-tabs',
   standalone: true,
   imports: [
     CommonModule,
@@ -24,13 +24,13 @@ import { AreasService } from '../../../areas/services/areas.service';
     FormsModule,
     MultiSelectModule,
     IconosNotificacionesTicketsComponent,
-    BranchAreaTabComponent
+    SucursalAreaTabComponent
   ],
-  templateUrl: './branches-tabs.component.html',
-  styleUrl: './branches-tabs.component.scss',
+  templateUrl: './sucursales-tabs.component.html',
+  styleUrl: './sucursales-tabs.component.scss',
 })
 
-export class BranchesTabsComponent implements OnDestroy, OnInit {
+export class SucursalesTabsComponent implements OnDestroy, OnInit {
   @Output() espectadorEmitter = new EventEmitter<boolean>();
 
   sucursales: Sucursal[] = [];

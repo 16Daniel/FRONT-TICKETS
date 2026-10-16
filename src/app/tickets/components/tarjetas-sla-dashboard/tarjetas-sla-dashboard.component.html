@@ -43,77 +43,80 @@
     <span>Calculando métricas SLA...</span>
   </div>
 
-  <!-- Contenido Principal: Dos medidores gemelos -->
+  <!-- Contenido Principal: Dos medidores gemelos en tarjetas claramente definidas -->
   <div class="card-gauges-row" *ngIf="!loading">
     
     <!-- 1. Medidor Tiempo de Atención -->
-    <div class="gauge-column">
-      <div class="gauge-info-side">
+    <div class="gauge-card">
+      <div class="gauge-card-header">
         <div class="gauge-title-line">
           <i class="bx bx-timer text-primary"></i>
           <span class="gauge-title">Atención</span>
-        </div>
-        <div class="gauge-stats">
-          <span class="gauge-ratio">{{ totales.slaAtencionCumplidos }} / {{ totales.totalTerminados }}</span>
-          <span class="gauge-sub">a tiempo</span>
         </div>
         <span class="mini-status-badge" [ngClass]="getSlaBadgeClass(totales.slaAtencion, totales.totalTerminados)">
           {{ getSlaBadgeText(totales.slaAtencion, totales.totalTerminados) }}
         </span>
       </div>
 
-      <div class="gauge-visual-side">
-        <svg viewBox="0 0 100 55" class="speedometer-svg">
-          <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="11" stroke-linecap="round"/>
-          <path class="fill"
-                [attr.stroke]="'url(#' + getGradientId(totales.slaAtencion) + ')'"
-                d="M 10 50 A 40 40 0 0 1 90 50"
-                fill="none"
-                stroke-width="11"
-                stroke-linecap="round"
-                stroke-dasharray="125.66"
-                [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaAtencion)"/>
-          <text x="50" y="47" text-anchor="middle" font-size="19" font-weight="900" fill="#0f172a">
-            {{ totales.slaAtencion | number:'1.0-0' }}%
-          </text>
-        </svg>
+      <div class="gauge-card-body">
+        <div class="gauge-info-side">
+          <span class="gauge-ratio">{{ totales.slaAtencionCumplidos }} / {{ totales.totalTerminados }}</span>
+          <span class="gauge-sub">a tiempo</span>
+        </div>
+
+        <div class="gauge-visual-side">
+          <svg viewBox="0 0 100 55" class="speedometer-svg">
+            <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="11" stroke-linecap="round"/>
+            <path class="fill"
+                  [attr.stroke]="'url(#' + getGradientId(totales.slaAtencion) + ')'"
+                  d="M 10 50 A 40 40 0 0 1 90 50"
+                  fill="none"
+                  stroke-width="11"
+                  stroke-linecap="round"
+                  stroke-dasharray="125.66"
+                  [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaAtencion)"/>
+            <text x="50" y="47" text-anchor="middle" font-size="19" font-weight="900" fill="#0f172a">
+              {{ totales.slaAtencion | number:'1.0-0' }}%
+            </text>
+          </svg>
+        </div>
       </div>
     </div>
 
-    <!-- Divisor vertical -->
-    <div class="gauge-divider"></div>
-
     <!-- 2. Medidor Tiempo de Resolución -->
-    <div class="gauge-column">
-      <div class="gauge-info-side">
+    <div class="gauge-card">
+      <div class="gauge-card-header">
         <div class="gauge-title-line">
           <i class="bx bx-check-shield text-success"></i>
           <span class="gauge-title">Resolución</span>
-        </div>
-        <div class="gauge-stats">
-          <span class="gauge-ratio">{{ totales.slaResolucionCumplidos }} / {{ totales.totalTerminados }}</span>
-          <span class="gauge-sub">a tiempo</span>
         </div>
         <span class="mini-status-badge" [ngClass]="getSlaBadgeClass(totales.slaResolucion, totales.totalTerminados)">
           {{ getSlaBadgeText(totales.slaResolucion, totales.totalTerminados) }}
         </span>
       </div>
 
-      <div class="gauge-visual-side">
-        <svg viewBox="0 0 100 55" class="speedometer-svg">
-          <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="11" stroke-linecap="round"/>
-          <path class="fill"
-                [attr.stroke]="'url(#' + getGradientId(totales.slaResolucion) + ')'"
-                d="M 10 50 A 40 40 0 0 1 90 50"
-                fill="none"
-                stroke-width="11"
-                stroke-linecap="round"
-                stroke-dasharray="125.66"
-                [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaResolucion)"/>
-          <text x="50" y="47" text-anchor="middle" font-size="19" font-weight="900" fill="#0f172a">
-            {{ totales.slaResolucion | number:'1.0-0' }}%
-          </text>
-        </svg>
+      <div class="gauge-card-body">
+        <div class="gauge-info-side">
+          <span class="gauge-ratio">{{ totales.slaResolucionCumplidos }} / {{ totales.totalTerminados }}</span>
+          <span class="gauge-sub">a tiempo</span>
+        </div>
+
+        <div class="gauge-visual-side">
+          <svg viewBox="0 0 100 55" class="speedometer-svg">
+            <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="11" stroke-linecap="round"/>
+            <path class="fill"
+                  [attr.stroke]="'url(#' + getGradientId(totales.slaResolucion) + ')'"
+                  d="M 10 50 A 40 40 0 0 1 90 50"
+                  fill="none"
+                  stroke-width="11"
+                  stroke-linecap="round"
+                  stroke-dasharray="125.66"
+                  [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaResolucion)"/>
+            <text x="50" y="47" text-anchor="middle" font-size="19" font-weight="900" fill="#0f172a">
+              {{ totales.slaResolucion | number:'1.0-0' }}%
+            </text>
+          </svg>
+        </div>
       </div>
     </div>
 

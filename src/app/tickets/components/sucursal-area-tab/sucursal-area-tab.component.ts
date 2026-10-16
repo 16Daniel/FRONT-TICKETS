@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { PriorityTicketsAccordionComponent } from '../../../tickets/components/priority-tickets-accordion/priority-tickets-accordion.component';
+import { AcordeonTicketsPorPrioridadComponent } from '../../../tickets/components/acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -31,7 +31,7 @@ import { ModalMateinanceMttoCheckComponent } from '../../../mantenimientos/dialo
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 
 @Component({
-  selector: 'app-branch-area-tab',
+  selector: 'app-sucursal-area-tab',
   standalone: true,
   imports: [
     DialogModule,
@@ -44,7 +44,7 @@ import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-t
     HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
-    PriorityTicketsAccordionComponent,
+    AcordeonTicketsPorPrioridadComponent,
     ModalBranchRatingComponent,
     FormsModule,
     CheckMantenimientoSisAvComponent,
@@ -53,10 +53,10 @@ import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-t
     ModalMateinanceMttoCheckComponent,
     IconosNotificacionesTicketsComponent
   ],
-  templateUrl: './branch-area-tab.component.html',
-  styleUrl: './branch-area-tab.component.scss',
+  templateUrl: './sucursal-area-tab.component.html',
+  styleUrl: './sucursal-area-tab.component.scss',
 })
-export class BranchAreaTabComponent implements OnInit, OnDestroy {
+export class SucursalAreaTabComponent implements OnInit, OnDestroy {
   @Input() idArea!: string;
   @Input() tickets: Ticket[] = [];
   @Input() todosLosTickets: Ticket[] = [];

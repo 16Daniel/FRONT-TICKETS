@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { BadgeModule } from 'primeng/badge';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
-  selector: 'app-user-tickets-accordion',
+  selector: 'app-acordeon-tickets-por-usuario',
   standalone: true,
   imports: [
     BadgeModule,
@@ -22,14 +22,15 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     TpvsDevicesTableComponent,
     GraficaTickets30DiasComponent
   ],
-  templateUrl: './user-tickets-accordion.component.html',
-  styleUrl: './user-tickets-accordion.component.scss',
+  templateUrl: './acordeon-tickets-por-usuario.component.html',
+  styleUrl: './acordeon-tickets-por-usuario.component.scss',
 })
-export class UserTicketsAccordionComponent {
+export class AcordeonTicketsPorUsuarioComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
+  
   usuario: Usuario | any;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 
@@ -118,6 +119,4 @@ export class UserTicketsAccordionComponent {
   obtenerSucursal(id: string) {
     return this.sucursales.find(x => x.id == id);
   }
-
-
 }

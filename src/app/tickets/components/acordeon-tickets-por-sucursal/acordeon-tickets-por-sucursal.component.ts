@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
@@ -6,7 +6,6 @@ import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 import { TooltipModule } from 'primeng/tooltip';
-
 
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
@@ -21,7 +20,7 @@ import { TablaTvsBocinasComponent } from "../../../mantenimientos/components/tab
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
-  selector: 'app-branches-tickets-accordion',
+  selector: 'app-acordeon-tickets-por-sucursal',
   standalone: true,
   imports: [
     DropdownModule,
@@ -36,16 +35,15 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     GraficaTickets30DiasComponent,
     TablaTvsBocinasComponent,
     NivelesAudioComponent
-],
-  templateUrl: './branches-tickets-accordion.component.html',
-  styleUrl: './branches-tickets-accordion.component.scss',
+  ],
+  templateUrl: './acordeon-tickets-por-sucursal.component.html',
+  styleUrl: './acordeon-tickets-por-sucursal.component.scss',
 })
-
-export class BranchesTicketsAccordionComponent {
+export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
-  @Input() mostrarTpvs: boolean = false;
+
   areas: Area[] = [];
   ticket: Ticket | undefined;
   usuariosHelp: Usuario[] = [];
@@ -111,7 +109,6 @@ export class BranchesTicketsAccordionComponent {
     };
   }
 
-
   obtenerColorTexto(value: number): string {
     let str = '';
 
@@ -161,6 +158,4 @@ export class BranchesTicketsAccordionComponent {
 
   verificarTicketsPendientesValidar = (tickets: Ticket[]) =>
     tickets.filter(x => x.validacionAdmin == false && x.idEstatusTicket == '3').length > 0;
-
-
 }

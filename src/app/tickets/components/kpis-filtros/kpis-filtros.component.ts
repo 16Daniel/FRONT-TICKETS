@@ -15,7 +15,6 @@ export class KpisFiltrosComponent implements OnInit {
   @Input() sucursales: any[] = [];
   @Input() usuariosRol4: any[] = [];
   @Input() isApplyingFilters: boolean = false;
-  
   @Input() initialFechaInicio: Date | null = null;
   @Input() initialFechaFin: Date | null = null;
 

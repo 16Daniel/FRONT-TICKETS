@@ -6,14 +6,14 @@ export const TICKETS_ROUTES: Routes = [
     path: 'home',
     title: 'Inicio',
     loadComponent: () =>
-      import('./pages/branch-home-page/branch-home-page'),
+      import('./pages/sucursal-home-page/sucursal-home-page'),
     canActivate: [HomeGuard],
   },
   {
     path: 'home-s',
     title: 'Inicio',
     loadComponent: () =>
-      import('./pages/analyst-home-page/analyst-home-page'),
+      import('./pages/analista-home-page/analista-home-page'),
     canActivate: [HomeGuard],
   },
   {

@@ -11,7 +11,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
-  selector: 'app-priority-tickets-accordion',
+  selector: 'app-acordeon-tickets-por-prioridad',
   standalone: true,
   imports: [
     RequesterTicketsListComponent,
@@ -21,10 +21,10 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     TooltipModule,
     TpvsDevicesTableComponent
   ],
-  templateUrl: './priority-tickets-accordion.component.html',
-  styleUrl: './priority-tickets-accordion.component.scss',
+  templateUrl: './acordeon-tickets-por-prioridad.component.html',
+  styleUrl: './acordeon-tickets-por-prioridad.component.scss',
 })
-export class PriorityTicketsAccordionComponent implements OnInit {
+export class AcordeonTicketsPorPrioridadComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() esEspectadorActivo: boolean = false;
   @Input() mostrarTpvs: boolean = false;
