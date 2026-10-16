@@ -14,14 +14,16 @@ export class UmbralKpisComponent implements OnChanges {
   @Input() sucursales: any[] = [];
   @Input() usuariosRol4: any[] = [];
   @Input() isApplyingFilters: boolean = false;
+  @Input() umbralAlerta: number = 5;
 
   totalTickets: number = 0;
+  categoriasCriticas: number = 0;
   categoriaTopTickets: { nombre: string, conteo: number } | null = null;
   usuarioTopTickets: { nombre: string, conteo: number } | null = null;
   sucursalTopTickets: { nombre: string, conteo: number } | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['tickets'] || changes['sucursales'] || changes['usuariosRol4']) {
+    if (changes['tickets'] || changes['sucursales'] || changes['usuariosRol4'] || changes['umbralAlerta']) {
       this.calcularKpis();
     }
   }
@@ -74,6 +76,14 @@ export class UmbralKpisComponent implements OnChanges {
         }
       }
     });
+
+    let crits = 0;
+    Object.keys(nameCounts).forEach(name => {
+      if (nameCounts[name] >= this.umbralAlerta) {
+        crits++;
+      }
+    });
+    this.categoriasCriticas = crits;
 
     this.categoriaTopTickets = maxTickets > 0 ? { nombre: topCatName, conteo: maxTickets } : null;
     this.usuarioTopTickets = maxUsuarios > 0 ? { nombre: topUsuarioName, conteo: maxUsuarios } : null;

@@ -197,3 +197,63 @@ $rw-canvas: #f4f6fa;
     }
   }
 }
+
+/* Unified Dashboard KPI Row: Operación Diaria (Izquierda) + Rendimiento Mensual SLA (Derecha) */
+.dashboard-unified-kpi-row {
+  display: flex;
+  gap: 1.15rem;
+  align-items: stretch;
+  width: 100%;
+
+  .kpi-operational-col {
+    flex: 1 1 58%;
+    min-width: 0;
+
+    ::ng-deep .dashboard-kpi-container {
+      padding: 0;
+      height: 100%;
+      align-items: stretch;
+      gap: 0.85rem;
+      /* Una sola fila: las tarjetas visibles se reparten el ancho disponible */
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+
+      .kpi-dashboard-card {
+        height: 100%;
+        padding: 1rem 1rem;
+      }
+    }
+  }
+
+  .kpi-sla-col {
+    flex: 1 1 42%;
+    min-width: 320px;
+    display: flex;
+
+    app-tarjetas-sla-dashboard {
+      width: 100%;
+      display: flex;
+    }
+  }
+}
+
+@media (max-width: 1250px) {
+  .dashboard-unified-kpi-row {
+    flex-direction: column;
+
+    .kpi-operational-col,
+    .kpi-sla-col {
+      flex: 1 1 100%;
+      width: 100%;
+    }
+  }
+}
+
+/* Dispositivos pequeños: se ocultan las tarjetas de notificaciones y el SLA */
+@media (max-width: 768px) {
+  .dashboard-unified-kpi-row {
+    display: none !important;
+  }
+}
+

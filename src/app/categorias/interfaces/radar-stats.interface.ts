@@ -1,6 +1,7 @@
 export interface RadarStats {
   totalTickets: number;
   totalTerminados: number;
+  totalMitigacion?: number;
   slaAtencionMet: number;
   slaResolucionMet: number;
   sumCalifSucursal: number;

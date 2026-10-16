@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -36,6 +36,7 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -59,13 +60,18 @@ import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-t
     AcordeonMantenimientosMantenimientoComponent,
     SolicitarCompraDialogComponent,
     AcordeonMantenimientosAudioVideoComponent,
-    IconosNotificacionesTicketsComponent
+    IconosNotificacionesTicketsComponent,
+    TarjetasSlaDashboardComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',
   styleUrl: './tickets-tab.component.scss'
 })
 export class TicketsTabComponent implements OnInit {
+  @Input() totalesSla?: TotalesSlaDashboard;
+  @Input() loadingSla: boolean = false;
+  @Input() mesNombre: string = '';
+
   mostrarModalGenerateTicket: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;

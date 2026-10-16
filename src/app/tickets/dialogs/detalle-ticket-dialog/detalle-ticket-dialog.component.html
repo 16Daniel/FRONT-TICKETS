@@ -7,6 +7,7 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="detalle-ticket-dialog-dialog"
+  (onShow)="onShow()"
   (onHide)="onHide()">
 
   <!-- Cabecera Personalizada -->
@@ -217,11 +218,12 @@
                   <span class="info-label"><i class="bx bx-info-circle"></i> Estatus</span>
                   <div class="mt-1 d-flex">
                     <!-- Dropdown para Admin (Roles 1 y 5) -->
-                    <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
+                    <p-dropdown *ngIf="(usuario?.idRol === '1' || usuario?.idRol === '5') && ticket.idEstatusTicket !== '3'"
                         [options]="estatusTicketsOpciones" 
                         optionDisabled="disabled"
                         [(ngModel)]="ticket.idEstatusTicket" 
                         optionLabel="nombre"
+                        placeholder="Seleccionar estatus"
                         [showClear]="false" 
                         optionValue="id" 
                         (onChange)="actualizarEstatus($event.value)" 
@@ -241,8 +243,8 @@
                         </ng-template>
                     </p-dropdown>
 
-                    <!-- Etiqueta estática para otros usuarios -->
-                    <ng-container *ngIf="usuario?.idRol !== '1' && usuario?.idRol !== '5'">
+                    <!-- Etiqueta estática para otros usuarios o ticket finalizado (estatus 3) -->
+                    <ng-container *ngIf="(usuario?.idRol !== '1' && usuario?.idRol !== '5') || ticket.idEstatusTicket === '3'">
                       <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
                         <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
                           <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
@@ -298,10 +300,11 @@
                 <div class="info-item">
                   <span class="info-label"><i class="bx bx-headphone"></i> Asistencia</span>
                   <div class="mt-1 d-flex">
-                    <p-dropdown *ngIf="usuario?.idRol === '1' || usuario?.idRol === '5'"
+                    <p-dropdown *ngIf="(usuario?.idRol === '1' || usuario?.idRol === '5') && ticket.idEstatusTicket !== '3'"
                         [options]="tiposSoporte" 
                         [(ngModel)]="ticket.idTipoSoporte" 
                         optionLabel="name"
+                        placeholder="Seleccionar asistencia"
                         [showClear]="false" 
                         optionValue="id" 
                         (onChange)="actualizarTipoSoporte($event.value)" 
@@ -318,7 +321,7 @@
                             </div>
                         </ng-template>
                     </p-dropdown>
-                    <span *ngIf="usuario?.idRol !== '1' && usuario?.idRol !== '5'" class="info-value text-uppercase fw-bold text-dark">
+                    <span *ngIf="(usuario?.idRol !== '1' && usuario?.idRol !== '5') || ticket.idEstatusTicket === '3'" class="info-value text-uppercase fw-bold text-dark">
                       {{ obtenerNombreTipoSoporte(ticket.idTipoSoporte) }}
                     </span>
                   </div>

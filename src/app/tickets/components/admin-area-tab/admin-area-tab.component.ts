@@ -9,10 +9,11 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
-import { BranchesTicketsAccordionComponent } from '../../../tickets/components/branches-tickets-accordion/branches-tickets-accordion.component';
-import { UserTicketsAccordionComponent } from '../../../tickets/components/user-tickets-accordion/user-tickets-accordion.component';
+import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
+import { AcordeonTicketsPorUsuarioComponent } from '../../../tickets/components/acordeon-tickets-por-usuario/acordeon-tickets-por-usuario.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
@@ -39,6 +40,10 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
+import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
+import { KpiRadarService } from '../../services/kpi-radar.service';
+import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
+import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
 
 @Component({
   selector: 'app-admin-area-tab',
@@ -52,15 +57,16 @@ import { MaintenanceMtooService } from '../../../mantenimientos/services/mainten
     ModalFilterTicketsComponent,
     CrearTicketDialogComponent,
     HistorialTicketsDialogComponent,
-    BranchesTicketsAccordionComponent,
-    UserTicketsAccordionComponent,
+    AcordeonTicketsPorSucursalComponent,
+    AcordeonTicketsPorUsuarioComponent,
     DetalleTicketDialogComponent,
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
     AcordeonMantenimientosSistemasComponent,
     AcordeonMantenimientosAudioVideoComponent,
-    AcordeonMantenimientosMantenimientoComponent
+    AcordeonMantenimientosMantenimientoComponent,
+    TarjetasSlaDashboardComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-area-tab.component.html',
@@ -103,6 +109,22 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
 
   subscripcionTicket: Subscription | undefined;
 
+  // SLA general del área (mes actual, sin filtrar por usuario)
+  loadingSla: boolean = false;
+  mesActualNombre: string = '';
+  matrizUrgenciaArea?: MatrizUrgencia;
+  totalesSla: TotalesSlaDashboard = {
+    totalTickets: 0,
+    totalTerminados: 0,
+    slaAtencion: 0,
+    slaAtencionCumplidos: 0,
+    slaResolucion: 0,
+    slaResolucionCumplidos: 0
+  };
+  private ticketsSlaMes: Ticket[] = [];
+  private subscripcionSlaTickets?: Subscription;
+  private subscripcionSlaMatriz?: Subscription;
+
   constructor(
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
@@ -113,18 +135,24 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     private datesHelper: DatesHelperService,
     private maintenanceSysService: MantenimientosSistemasService,
     private maintenanceAvService: MaintenanceAvService,
-    private maintenanceMttoService: MaintenanceMtooService
+    private maintenanceMttoService: MaintenanceMtooService,
+    private kpisTicketsService: KpisTicketsService,
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private kpiRadarService: KpiRadarService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
   }
 
   ngOnInit() {
+    this.definirMesActual();
     this.obtenerTickets();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerCompras();
+    this.cargarDatosSlaMes();
   }
+
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -140,6 +168,119 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     if (this.subscripcionTicket) {
       this.subscripcionTicket.unsubscribe();
     }
+    this.subscripcionSlaTickets?.unsubscribe();
+    this.subscripcionSlaMatriz?.unsubscribe();
+  }
+
+  private definirMesActual(): void {
+    const now = new Date();
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    this.mesActualNombre = `${meses[now.getMonth()]} ${now.getFullYear()}`;
+  }
+
+  private cargarDatosSlaMes(): void {
+    this.loadingSla = true;
+    const now = new Date();
+    const fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    // Matriz de urgencia del área para evaluar los tiempos de SLA
+    this.subscripcionSlaMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(this.idArea).subscribe({
+      next: (matriz) => {
+        this.matrizUrgenciaArea = matriz;
+        this.consultarTicketsSlaMes(fechaInicio, fechaFin);
+      },
+      error: (err) => {
+        console.error('Error al obtener matriz de urgencia:', err);
+        this.consultarTicketsSlaMes(fechaInicio, fechaFin);
+      }
+    });
+  }
+
+  private consultarTicketsSlaMes(fechaInicio: Date, fechaFin: Date): void {
+    const filtros: KpisFiltros = { fechaInicio, fechaFin };
+
+    this.subscripcionSlaTickets?.unsubscribe();
+    this.subscripcionSlaTickets = this.kpisTicketsService.getTicketsPorFiltros(this.idArea, filtros).subscribe({
+      next: (tickets: Ticket[]) => {
+        this.ticketsSlaMes = tickets || [];
+        this.procesarMetricasSla();
+        this.loadingSla = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al obtener tickets del mes actual para el área:', err);
+        this.loadingSla = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /** Misma regla que la vista del analista: responsable o involucrado (o toda el área si es guardia). */
+  private filtrarTicketsSlaPorUsuario(tickets: Ticket[], user: Usuario): Ticket[] {
+    const idUsuarioStr = String(user.id);
+
+    return tickets.filter(t => {
+      if (user.esGuardia) {
+        return String(t.idArea) === String(user.idArea);
+      }
+      const esResponsable = String(t.idResponsable) === idUsuarioStr;
+      const esEspecialista = String(t.idUsuarioEspecialista) === idUsuarioStr;
+      const esInvolucrado = Array.isArray(t.idInvolucrados) &&
+        t.idInvolucrados.map(String).includes(idUsuarioStr);
+      return esResponsable || esEspecialista || esInvolucrado;
+    });
+  }
+
+  get tituloSla(): string {
+    return this.usergroup
+      ? `Rendimiento de ${this.usergroup.nombre} ${this.usergroup.apellidoP}`
+      : 'Rendimiento general del mes actual';
+  }
+
+  private procesarMetricasSla(): void {
+    // Sin usuario agrupado: métricas generales del área.
+    // Con usuario agrupado: solo los tickets donde participa ese usuario.
+    const tickets = this.usergroup
+      ? this.filtrarTicketsSlaPorUsuario(this.ticketsSlaMes, this.usergroup)
+      : this.ticketsSlaMes;
+
+    const totalTickets = tickets.length;
+    const terminados = tickets.filter(t => String(t.idEstatusTicket) === '3');
+    const totalTerminados = terminados.length;
+
+    let slaAtencionCumplidos = 0;
+    let slaResolucionCumplidos = 0;
+
+    terminados.forEach(t => {
+      const evalSla = this.kpiRadarService.evaluarSlaTicket(t, this.matrizUrgenciaArea);
+      if (evalSla.atencion) {
+        slaAtencionCumplidos++;
+      }
+      if (evalSla.resolucion) {
+        slaResolucionCumplidos++;
+      }
+    });
+
+    const slaAtencion = totalTerminados > 0
+      ? (slaAtencionCumplidos / totalTerminados) * 100
+      : 0;
+
+    const slaResolucion = totalTerminados > 0
+      ? (slaResolucionCumplidos / totalTerminados) * 100
+      : 0;
+
+    this.totalesSla = {
+      totalTickets,
+      totalTerminados,
+      slaAtencion,
+      slaAtencionCumplidos,
+      slaResolucion,
+      slaResolucionCumplidos
+    };
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -268,12 +409,15 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     } else {
       this.tickets = this.todosLostickets;
     }
+
+    this.procesarMetricasSla();
   }
 
   agruparPorSucursal() {
     this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
+    this.procesarMetricasSla();
     this.cdr.detectChanges();
   }
 

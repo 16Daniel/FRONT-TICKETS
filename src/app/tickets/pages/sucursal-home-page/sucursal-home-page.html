@@ -1,0 +1,14 @@
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header 
+      subtitle="MESA DE AYUDA & TICKETS" 
+      title="Panel de Sucursal">
+    </app-page-header>
+    
+    <div *ngIf="esEspectadorActivo" class="alert alert-warning text-center fw-bold" style="margin-top: 15px;">
+      🚨 ESPECTADOR ACTIVO 🚨
+    </div>
+
+    <app-sucursales-tabs (espectadorEmitter)="activarEspectador($event)"></app-sucursales-tabs>
+  </div>
+</div>

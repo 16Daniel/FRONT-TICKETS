@@ -1,0 +1,111 @@
+<div class="tarjetas-medidores-kpis mt-4 pt-3 border-top" *ngIf="totales.totalTickets > 0">
+  <!-- Definición de gradientes para los velocímetros -->
+  <svg width="0" height="0" class="position-absolute">
+    <defs>
+      <linearGradient id="grad-success" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#4ade80" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#16a34a" stop-opacity="1"/>
+      </linearGradient>
+      <linearGradient id="grad-warning" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#facc15" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#ca8a04" stop-opacity="1"/>
+      </linearGradient>
+      <linearGradient id="grad-danger" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#f87171" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#dc2626" stop-opacity="1"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="kpi-grid">
+    <!-- Total Tickets (Normal) -->
+    <div class="kpi-card kpi-clickable" [class.active]="filtroActivo === 'totales'" (click)="seleccionar('totales')">
+      <div class="kpi-icon bg-light-primary text-primary">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><line x1="8" y1="7" x2="8" y2="17"></line><line x1="16" y1="7" x2="16" y2="17"></line></svg>
+      </div>
+      <div class="kpi-details">
+        <span class="kpi-label">Tickets Totales</span>
+        <span class="kpi-value">{{ totales.totalTickets }}</span>
+      </div>
+    </div>
+
+    <!-- Mitigación (Normal) -->
+    <div class="kpi-card kpi-clickable" [class.active]="filtroActivo === 'mitigacion'" (click)="seleccionar('mitigacion')">
+      <div class="kpi-icon bg-light-warning text-warning">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      </div>
+      <div class="kpi-details">
+        <span class="kpi-label">Mitigación</span>
+        <span class="kpi-value">{{ totales.totalMitigacion || 0 }}</span>
+      </div>
+    </div>
+    
+    <!-- Tickets Terminados (Speedometer) -->
+    <div class="kpi-card kpi-clickable justify-content-between" [class.active]="filtroActivo === 'terminados'" (click)="seleccionar('terminados')">
+      <div class="kpi-details flex-grow-0">
+        <span class="kpi-label">Terminados</span>
+        <span class="kpi-value text-muted" style="font-size: 1rem;">{{ totales.totalTerminados }} / {{ totales.totalTickets }}</span>
+      </div>
+      <div class="speedometer-container">
+        <svg viewBox="0 0 100 55" class="speedometer-svg">
+          <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round"/>
+          <path class="fill" 
+                [attr.stroke]="'url(#' + getGradientId(totales.terminadosPorcentaje) + ')'"
+                d="M 10 50 A 40 40 0 0 1 90 50" 
+                fill="none" 
+                stroke-width="12" 
+                stroke-linecap="round" 
+                stroke-dasharray="125.66" 
+                [style.stroke-dashoffset]="getSpeedometerOffset(totales.terminadosPorcentaje)"/>
+          <text x="50" y="47" text-anchor="middle" font-size="20" font-weight="900" fill="#1e293b">{{ totales.terminadosPorcentaje | number:'1.0-0' }}%</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- SLA Atención (Speedometer) -->
+    <div class="kpi-card kpi-clickable justify-content-between" [class.active]="filtroActivo === 'slaAtencion'" (click)="seleccionar('slaAtencion')">
+      <div class="kpi-details flex-grow-0">
+        <span class="kpi-label">SLA Atención</span>
+        <span class="kpi-value text-muted" style="font-size: 1rem;">{{ totales.slaAtencionCumplidos || 0 }} / {{ totales.totalTerminados }}</span>
+      </div>
+      <div class="speedometer-container">
+        <svg viewBox="0 0 100 55" class="speedometer-svg">
+          <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round"/>
+          <path class="fill" 
+                [attr.stroke]="'url(#' + getGradientId(totales.slaAtencion) + ')'"
+                d="M 10 50 A 40 40 0 0 1 90 50" 
+                fill="none" 
+                stroke-width="12" 
+                stroke-linecap="round" 
+                stroke-dasharray="125.66" 
+                [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaAtencion)"/>
+          <text x="50" y="47" text-anchor="middle" font-size="20" font-weight="900" fill="#1e293b">{{ totales.slaAtencion | number:'1.0-0' }}%</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- SLA Resolución (Speedometer) -->
+    <div class="kpi-card kpi-clickable justify-content-between" [class.active]="filtroActivo === 'slaResolucion'" (click)="seleccionar('slaResolucion')">
+      <div class="kpi-details flex-grow-0">
+        <span class="kpi-label">SLA Resolución</span>
+        <span class="kpi-value text-muted" style="font-size: 1rem;">{{ totales.slaResolucionCumplidos || 0 }} / {{ totales.totalTerminados }}</span>
+      </div>
+      <div class="speedometer-container">
+        <svg viewBox="0 0 100 55" class="speedometer-svg">
+          <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round"/>
+          <path class="fill" 
+                [attr.stroke]="'url(#' + getGradientId(totales.slaResolucion) + ')'"
+                d="M 10 50 A 40 40 0 0 1 90 50" 
+                fill="none" 
+                stroke-width="12" 
+                stroke-linecap="round" 
+                stroke-dasharray="125.66" 
+                [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaResolucion)"/>
+          <text x="50" y="47" text-anchor="middle" font-size="20" font-weight="900" fill="#1e293b">{{ totales.slaResolucion | number:'1.0-0' }}%</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
