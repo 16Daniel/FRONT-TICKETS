@@ -1,6 +1,7 @@
 export class Responsable {
   id?: string;
   idSucursal: string = '';
+  idUsuario: string = '';
   nombre: string = '';
   posicion: string = '';
   color: string = '#000000';

@@ -78,8 +78,11 @@ export class ResponsablesService {
         `${this.pathName}/${idResponsable}`
       );
       await updateDoc(docRef, { eliminado: true });
+      this._responsables = this._responsables.filter(r => r.id !== idResponsable);
+      this._responsablesSubject.next(this._responsables);
     } catch (error) {
       console.error('Error al eliminar responsable:', error);
+      throw error;
     }
   }
 

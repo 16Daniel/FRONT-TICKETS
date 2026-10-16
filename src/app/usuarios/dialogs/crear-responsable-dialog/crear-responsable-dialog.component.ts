@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -6,10 +6,12 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { AvatarModule } from 'ngx-avatars';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { Responsable } from '../../interfaces/responsable.interface';
 import { ResponsablesService } from '../../services/responsables.service';
+import { UsersService } from '../../services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { MailService, EnviarCorreoRequest } from '../../../shared/services/mail.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -29,13 +31,14 @@ import { Usuario } from '../../interfaces/usuario.model';
   templateUrl: './crear-responsable-dialog.component.html',
   styleUrl: './crear-responsable-dialog.component.scss'
 })
-export class CrearResponsableDialogComponent implements OnInit {
+export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
   @Input() mostrarModal: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() responsable: Responsable = new Responsable;
   @Input() esNuevo: boolean = true;
   
   responsablesService = inject(ResponsablesService);
+  usersService = inject(UsersService);
   branchesService = inject(BranchesService);
   messageService = inject(MessageService);
   mailService = inject(MailService);
@@ -43,26 +46,75 @@ export class CrearResponsableDialogComponent implements OnInit {
 
   sucursales: Sucursal[] = [];
   sucursalesMap = new Map<string, string>();
+  usuarios: Usuario[] = [];
+  usuariosFiltrados: (Usuario & { nombreCompleto: string })[] = [];
   usuario!: Usuario;
   cargando = false;
+  private subs = new Subscription();
 
   ngOnInit() {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     
     // Solo asignamos si es nuevo (aunque desde el padre ya se puede enviar seteado)
     if (this.esNuevo && this.usuario.sucursales?.length > 0) {
-      this.responsable.idSucursal = this.usuario.sucursales[0].id;
+      if (!this.responsable.idSucursal || this.responsable.idSucursal === 'todos') {
+        this.responsable.idSucursal = this.usuario.sucursales[0].id;
+      }
       this.responsable.color = '#1e1e24';
     }
 
-    this.branchesService.get().subscribe({
-      next: (data) => {
-        this.sucursales = data;
-        this.sucursalesMap.clear();
-        data.forEach(s => this.sucursalesMap.set(s.id!, s.nombre));
-        this.cdr.detectChanges();
-      }
-    });
+    this.subs.add(
+      this.branchesService.get().subscribe({
+        next: (data) => {
+          this.sucursales = data;
+          this.sucursalesMap.clear();
+          data.forEach(s => this.sucursalesMap.set(s.id!, s.nombre));
+          this.cdr.detectChanges();
+        }
+      })
+    );
+
+    this.subs.add(
+      this.usersService.usuarios$.subscribe({
+        next: (data) => {
+          this.usuarios = data;
+          this.filtrarUsuariosPorSucursal();
+          this.cdr.detectChanges();
+        }
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
+
+  onSucursalChange() {
+    this.filtrarUsuariosPorSucursal();
+  }
+
+  filtrarUsuariosPorSucursal() {
+    if (!this.responsable.idSucursal) {
+      this.usuariosFiltrados = [];
+      this.responsable.idUsuario = '';
+      return;
+    }
+
+    this.usuariosFiltrados = this.usuarios
+      .filter(u =>
+        u.sucursales?.some(s => String(s.id) === String(this.responsable.idSucursal))
+      )
+      .map(u => ({
+        ...u,
+        nombreCompleto: `${u.nombre || ''} ${u.apellidoP || ''} ${u.apellidoM || ''}`.trim()
+      }));
+
+    if (
+      this.responsable.idUsuario &&
+      !this.usuariosFiltrados.some(u => u.id === this.responsable.idUsuario)
+    ) {
+      this.responsable.idUsuario = '';
+    }
   }
 
   async enviar(form: NgForm) {
