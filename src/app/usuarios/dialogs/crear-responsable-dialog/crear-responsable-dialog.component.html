@@ -48,9 +48,23 @@
                 <p-dropdown [options]="sucursales" [(ngModel)]="responsable.idSucursal" name="sucursal" optionValue="id" optionLabel="nombre"
                     [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Selecciona sucursal"
                     [style]="{width:'100%'}" #formSucursalCtrl="ngModel" styleClass="rw-dropdown" appendTo="body"
-                    [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}" required>
+                    [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}"
+                    (onChange)="onSucursalChange()" required>
                 </p-dropdown>
                 <small *ngIf="formSucursalCtrl.invalid && formSucursalCtrl.touched" class="p-error d-block mt-1">
+                    Campo requerido.
+                </small>
+            </div>
+
+            <div class="col-12">
+                <label class="rw-form-label">Usuario</label>
+                <p-dropdown [options]="usuariosFiltrados" [(ngModel)]="responsable.idUsuario" name="idUsuario" optionValue="id" optionLabel="nombreCompleto"
+                    [filter]="true" filterBy="nombreCompleto,email" [showClear]="true" placeholder="Selecciona un usuario"
+                    emptyMessage="No hay usuarios para esta sucursal" emptyFilterMessage="No se encontraron resultados"
+                    [style]="{width:'100%'}" #formUsuarioCtrl="ngModel" styleClass="rw-dropdown" appendTo="body"
+                    [ngClass]="{'p-invalid': formUsuarioCtrl.invalid && formUsuarioCtrl.touched}" required>
+                </p-dropdown>
+                <small *ngIf="formUsuarioCtrl.invalid && formUsuarioCtrl.touched" class="p-error d-block mt-1">
                     Campo requerido.
                 </small>
             </div>
