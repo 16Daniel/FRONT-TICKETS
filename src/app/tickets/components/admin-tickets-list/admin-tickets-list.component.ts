@@ -56,11 +56,8 @@ import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini
 
 export class AdminTicketsListComponent {
   @Input() tickets: Ticket[] = [];
-  @Input() mostrarAccionChat: boolean = true;
-  @Input() mostrarAccionFinalizar: boolean = true;
-  @Input() mostrarEstrellas: boolean = true;
-  @Input() mostrarFedchaEstimacion: boolean = true;
   @Input() mostrarAccionValidar: boolean = true;
+
   sucursales: Sucursal[] = [];
   tiposSoporte: TipoSoporte[] = [];
   estatusTicket: EstatusTicket[] = [];

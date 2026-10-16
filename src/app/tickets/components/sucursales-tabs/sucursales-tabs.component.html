@@ -1,0 +1,55 @@
+<div class="d-flex" style="margin-right: 10px; margin-bottom: 15px;">
+  <div class="d-flex align-items-center gap-3 ms-auto">
+    <p-multiSelect *ngIf="esEspectadorActivo" [style]="{ 'width': '300px' }" [options]="sucursales" name="sucursales"
+      [(ngModel)]="sucursalesSeleccionadas" optionLabel="nombre" #formsucursalesCtrl="ngModel"
+      placeholder="SELECCIONA LAS SUCURSALES">
+    </p-multiSelect>
+
+    <div class="switches-toggle-group">
+      <span class="switches-title">
+        <i class="bx bx-wrench"></i> Vistas:
+      </span>
+      <label class="toggle-pill-item" [class.is-active]="esEspectadorActivo">
+        <input 
+          type="checkbox" 
+          class="toggle-checkbox"
+          [(ngModel)]="esEspectadorActivo" 
+          (change)="onToggleEspectador()">
+        <span class="toggle-pill-btn">
+          <i class="bx bx-shield"></i>
+          <span>Modo Espectador</span>
+        </span>
+      </label>
+    </div>
+  </div>
+</div>
+
+
+<!-- Tabs dinámicos por áreas activas -->
+<p-tabView (onChange)="onTabChange($event)" [activeIndex]="activeIndex">
+  @for (area of areasTicket; track area.id) {
+    <p-tabPanel [header]="area.nombre | uppercase">
+      <ng-container *ngIf="tabsActivos[area.nombre | uppercase]">
+        
+        <app-sucursal-area-tab
+           [idArea]="area.id"
+           [esEspectadorActivo]="esEspectadorActivo"
+           [tickets]="filtrarTicketsPorArea(area.id)"
+           [todosLosTickets]="todosLosTickets">
+        </app-sucursal-area-tab>
+
+      </ng-container>
+    </p-tabPanel>
+  }
+</p-tabView>
+
+<!-- Estado sin tickets general (si no hubiera ninguno y no estuviera cargando) -->
+<div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"
+  *ngIf="tickets.length == 0">
+  @if (loading) {
+  <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
+  }@else {
+  <i class="bx bx-file-blank bx-md" style="color: rgb(43, 92, 226)"></i>
+  <p>SIN TICKETS PENDIENTES</p>
+  }
+</div>

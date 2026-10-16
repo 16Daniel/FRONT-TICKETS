@@ -46,6 +46,8 @@
             <th>POSICIÓN</th>
             <th>CORREO</th>
             <th>SUCURSAL</th>
+            <th>USUARIO</th>
+            <th>ÁREA</th>
             <th>COLOR</th>
             <th class="text-center">GLOBAL</th>
             <th class="text-center">PIN</th>
@@ -69,6 +71,16 @@
               <span class="text-secondary fw-medium">
                 {{ sucursalesMap.get(res.idSucursal) }}
               </span>
+            </td>
+
+            <!-- USUARIO -->
+            <td>
+              {{ obtenerNombreUsuario(res.idUsuario) }}
+            </td>
+
+            <!-- ÁREA -->
+            <td>
+              {{ obtenerAreaUsuario(res.idUsuario) }}
             </td>
 
             <!-- COLOR -->
@@ -107,7 +119,7 @@
 
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="8">
+            <td colspan="10">
               <div class="d-flex flex-column align-items-center justify-content-center text-center p-5 w-100" style="min-height: 400px;">
                 <i class="bx bx-user-x mb-3" style="font-size: 5rem; color: #cbd5e1;"></i>
                 <h5 class="fw-bold" style="color: #64748b; letter-spacing: 0.02em;">No hay responsables registrados</h5>

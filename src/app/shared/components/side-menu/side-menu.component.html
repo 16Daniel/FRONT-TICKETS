@@ -128,7 +128,7 @@
     </div>
 
     <!-- Grupo: Gestión y Administración -->
-    <div class="nav-group" *ngIf="usuario.idRol == '1' || usuario.idRol == '5'">
+    <div class="nav-group" *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'">
       <span class="nav-group-title">Gestión y Admin</span>
 
       <a 
@@ -144,6 +144,7 @@
       <a 
         [routerLink]="'/main/responsables'" 
         routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
         (click)="closemenu()" 
         class="nav-item">
         <i class="bx bx-key nav-icon"></i>
@@ -201,6 +202,16 @@
         <span class="nav-label">Umbral de Recurrencias</span>
       </a>
 
+      <a 
+        [routerLink]="'/main/kpis'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-line-chart nav-icon"></i>
+        <span class="nav-label">KPIs</span>
+        </a>
+      
       <a 
         [routerLink]="'/main/comites/admin'" 
         routerLinkActive="active"

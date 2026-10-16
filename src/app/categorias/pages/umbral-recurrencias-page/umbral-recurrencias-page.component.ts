@@ -17,13 +17,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { UmbralKpisComponent } from '../../components/umbral-kpis/umbral-kpis.component';
 import { UmbralFiltrosComponent } from '../../components/umbral-filtros/umbral-filtros.component';
 import { UmbralArbolComponent } from '../../components/umbral-arbol/umbral-arbol.component';
-import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
-
-// Nuevos componentes de gráficas
-import { GraficaDesempenoCategoriasComponent } from '../../components/grafica-desempeno-categorias/grafica-desempeno-categorias.component';
-import { GraficaDesempenoSucursalesComponent } from '../../components/grafica-desempeno-sucursales/grafica-desempeno-sucursales.component';
-import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-desempeno-responsables/grafica-desempeno-responsables.component';
+import { UmbralTopChartComponent } from '../../components/umbral-top-chart/umbral-top-chart.component';
 
 @Component({
   selector: 'app-umbral-recurrencias-page',
@@ -35,9 +29,7 @@ import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-
     UmbralKpisComponent, 
     UmbralFiltrosComponent, 
     UmbralArbolComponent,
-    GraficaDesempenoCategoriasComponent,
-    GraficaDesempenoSucursalesComponent,
-    GraficaDesempenoResponsablesComponent
+    UmbralTopChartComponent
   ],
   templateUrl: './umbral-recurrencias-page.component.html',
   styleUrl: './umbral-recurrencias-page.component.scss'
@@ -49,10 +41,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   categoriasActuales: Categoria[] = [];
   isApplyingFilters = false;
-
-  colorScheme: any = {
-    domain: ['#d3152a', '#fdb813', '#2563eb', '#16a34a', '#7c3aed', '#0f766e', '#b91c1c', '#ca8a04', '#64748b']
-  };
+  umbralAlerta: number = 5;
 
   // Filter variables
   fechaInicio: Date | null = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -64,21 +53,16 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   // Datos crudos
   tickets: Ticket[] = [];
-  matrizUrgenciaArea?: MatrizUrgencia;
-
   private subscripcionAreas?: Subscription;
   private subscripcionCategorias?: Subscription;
   private subscripcionSucursales?: Subscription;
   private subscripcionUsuarios?: Subscription;
-  private subscripcionMatriz?: Subscription;
-
   constructor(
     private areasService: AreasService,
     private categoriesService: CategoriesService,
     private branchesService: BranchesService,
     private usersService: UsersService,
     private umbralTicketsService: UmbralTicketsService,
-    private matrizUrgenciaService: MatrizUrgenciaService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -87,6 +71,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
     this.fechaFin = event.fechaFin;
     this.sucursalesSeleccionadas = event.sucursalesSeleccionadas;
     this.usuariosSeleccionados = event.usuariosSeleccionados;
+    this.umbralAlerta = event.umbralAlerta || 5;
     this.aplicarFiltros();
   }
 
@@ -100,7 +85,6 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
     this.subscripcionCategorias?.unsubscribe();
     this.subscripcionSucursales?.unsubscribe();
     this.subscripcionUsuarios?.unsubscribe();
-    this.subscripcionMatriz?.unsubscribe();
   }
 
   private cargarFiltros(): void {
@@ -151,25 +135,21 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
       if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
         this.areaSeleccionadaId = String(this.areas[0].id);
       }
-      this.cargarMatrizYFiltros();
+      this.cargarDatosArea();
       this.cdr.detectChanges();
     });
   }
 
-  private cargarMatrizYFiltros(): void {
-    this.subscripcionMatriz?.unsubscribe();
-    this.subscripcionMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(this.areaSeleccionadaId).subscribe(mat => {
-      this.matrizUrgenciaArea = mat;
-      this.cargarCategorias();
-      this.cargarUsuariosPorArea();
-      this.aplicarFiltros();
-    });
+  private cargarDatosArea(): void {
+    this.cargarCategorias();
+    this.cargarUsuariosPorArea();
+    this.aplicarFiltros();
   }
 
   cambiarArea(areaId: string | number): void {
     this.areaSeleccionadaId = String(areaId);
     this.tickets = []; // Limpiar tickets al cambiar de área
-    this.cargarMatrizYFiltros();
+    this.cargarDatosArea();
   }
 
   private cargarCategorias(): void {

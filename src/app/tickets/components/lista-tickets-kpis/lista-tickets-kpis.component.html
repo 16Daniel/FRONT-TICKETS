@@ -1,0 +1,43 @@
+<div class="pending-tickets-section mt-4 pt-3 border-top" *ngIf="tickets.length > 0">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fs-6 fw-bold text-dark m-0">
+      {{ tituloSeccion }} <span *ngIf="tituloContexto" class="text-primary">({{ tituloContexto }})</span>
+    </h4>
+    <span class="badge bg-secondary rounded-pill">{{ tickets.length }} tickets</span>
+  </div>
+  
+  <div class="tickets-kpi-grid">
+    <div 
+      class="ticket-row" 
+      *ngFor="let t of tickets" 
+      (click)="abrirDetalleTicket(t)" 
+      [title]="'Ticket ' + t.folio + ' - ' + obtenerNombreSucursal(t.idSucursal) + ' | ' + obtenerCategoriaTooltip(t)">
+
+      <div class="gauge-container">
+        <app-ticket-sla-gauge 
+          [ticket]="t" 
+          [matrizUrgencia]="matrizUrgencia" 
+          [size]="30">
+        </app-ticket-sla-gauge>
+      </div>
+
+      <div class="ticket-info">
+        <span class="ticket-sucursal text-truncate">
+          <i class="pi pi-building icon-mini"></i> {{ obtenerNombreSucursal(t.idSucursal) }}
+        </span>
+        <span class="ticket-categoria text-truncate">
+          <i class="pi pi-tag icon-mini"></i> {{ obtenerCategoriaFinal(t) }}
+        </span>
+      </div>
+
+      <i class="pi pi-angle-right row-arrow"></i>
+    </div>
+  </div>
+</div>
+
+<app-detalle-ticket-dialog 
+  *ngIf="selectedTicketForDialog"
+  [ticket]="selectedTicketForDialog" 
+  [showModalTicketDetail]="showTicketDialog"
+  (closeEvent)="cerrarDetalleTicket()">
+</app-detalle-ticket-dialog>

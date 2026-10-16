@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, OnDestroy, OnChanges, Output, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, OnDestroy, Output, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -64,7 +64,7 @@ import { Comite } from '../../../comites/interfaces/comite';
   templateUrl: './detalle-ticket-dialog.component.html',
   styleUrl: './detalle-ticket-dialog.component.scss',
 })
-export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChanges {
+export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestroy {
   @Input() ticket: Ticket | undefined;
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -91,6 +91,11 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChange
   ultimaMitigacion: Bitacora | null = null;
   mitigacionSub?: Subscription;
   estatusAnterior?: string;
+
+  statusTicketSub?: Subscription;
+  supportTypesSub?: Subscription;
+  categoriesSub?: Subscription;
+  branchesSub?: Subscription;
 
   constructor(
     private ticketsService: TicketsService,
@@ -130,35 +135,84 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChange
     return this.usersService.usuarios.filter(u => this.ticket!.idInvolucrados.includes(u.id!));
   }
 
+  private normalizarValoresTicket(): void {
+    if (this.ticket) {
+      if (this.ticket.idEstatusTicket !== undefined && this.ticket.idEstatusTicket !== null) {
+        this.ticket.idEstatusTicket = String(this.ticket.idEstatusTicket);
+      }
+      if (this.ticket.idTipoSoporte !== undefined && this.ticket.idTipoSoporte !== null) {
+        this.ticket.idTipoSoporte = String(this.ticket.idTipoSoporte);
+      }
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ticket'] && this.ticket) {
+      this.normalizarValoresTicket();
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    }
+    if (changes['showModalTicketDetail'] && this.showModalTicketDetail) {
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    }
+  }
+
+  onShow(): void {
+    this.normalizarValoresTicket();
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+  }
+
   ngOnInit(): void {
+    this.normalizarValoresTicket();
+
     this.sucursales = (this.branchesService as any).sucursales || [];
     if (!this.sucursales || this.sucursales.length === 0) {
-      this.branchesService.get().subscribe({
-        next: (data) => (this.sucursales = data),
+      this.branchesSub = this.branchesService.get().subscribe({
+        next: (data) => {
+          this.sucursales = data;
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        },
         error: () => { }
       });
     }
 
-    this.categoriesService.get().subscribe({
+    this.categoriesSub = this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
         }));
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: () => { }
     });
 
-    this.statusTicketService.get().subscribe({
+    this.statusTicketSub = this.statusTicketService.get().subscribe({
       next: (data) => {
-        this.estatusTickets = data;
+        this.estatusTickets = (data || []).map((item: any) => ({
+          ...item,
+          id: String(item.id)
+        }));
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: () => { }
     });
 
-    this.supportTypesService.get().subscribe({
+    this.supportTypesSub = this.supportTypesService.get().subscribe({
       next: (data) => {
-        this.tiposSoporte = data;
+        this.tiposSoporte = (data || []).map((item: any) => ({
+          ...item,
+          id: String(item.id),
+          name: item.name || item.nombre || '',
+          nombre: item.nombre || item.name || ''
+        }));
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: () => { }
     });
@@ -169,6 +223,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChange
       this.historialSub = this.bitacoraService.getBitacoras('TICKETS', this.ticket.id, 'SISTEMA')
         .subscribe(data => {
           this.historial = data ? data.slice().reverse() : [];
+          this.cdr.markForCheck();
           this.cdr.detectChanges();
         });
 
@@ -179,6 +234,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChange
           } else {
             this.ultimaMitigacion = null;
           }
+          this.cdr.markForCheck();
           this.cdr.detectChanges();
         });
     }
@@ -187,6 +243,10 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChange
   ngOnDestroy(): void {
     this.historialSub?.unsubscribe();
     this.mitigacionSub?.unsubscribe();
+    this.statusTicketSub?.unsubscribe();
+    this.supportTypesSub?.unsubscribe();
+    this.categoriesSub?.unsubscribe();
+    this.branchesSub?.unsubscribe();
   }
 
   obtenerNombreComite(idComite: string): string {
@@ -269,7 +329,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChange
       .update(this.ticket)
       .then(async () => {
         const ts = this.tiposSoporte.find(x => String(x.id) === String(idTipoSoporte));
-        await this.registrarBitacoraSistema(`Tipo de asistencia actualizado a: <b>${ts?.name || 'Desconocido'}</b>`);
+        await this.registrarBitacoraSistema(`Tipo de asistencia actualizado a: <b>${ts?.name || (ts as any)?.nombre || 'Desconocido'}</b>`);
         this.showMessage('success', 'Éxito', 'Asistencia actualizada correctamente');
       })
       .catch((error) => console.error(error));
@@ -278,7 +338,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnDestroy, OnChange
   obtenerNombreTipoSoporte(id?: string | null): string {
     if (!id) return 'NO DEFINIDO';
     const ts = this.tiposSoporte.find(x => String(x.id) === String(id));
-    return ts ? (ts.name || 'NO DEFINIDO') : 'NO DEFINIDO';
+    return ts ? (ts.name || (ts as any)?.nombre || 'NO DEFINIDO') : 'NO DEFINIDO';
   }
 
   mostrarSwalMitigacion(idEstatusTicket: string) {

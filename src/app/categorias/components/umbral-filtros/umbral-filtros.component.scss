@@ -31,6 +31,23 @@
     flex: 1 1 200px;
   }
 
+  .action-btn-group {
+    flex: 1 1 100%;
+    
+    @media (min-width: 768px) {
+      flex: 0 0 auto;
+      margin-left: auto;
+    }
+  }
+
+  .action-btn {
+    width: 100%;
+    
+    @media (min-width: 768px) {
+      width: auto;
+    }
+  }
+
   /* Overrides para componentes PrimeNG y Botones según DESIGN-SYSTEM.md */
   .btn-primary {
     background-color: #d3152a !important; /* Rojo Rebel */
