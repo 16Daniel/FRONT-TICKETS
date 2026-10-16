@@ -13,13 +13,13 @@ export interface TotalesSlaDashboard {
 export type TotalesSlaAnalista = TotalesSlaDashboard;
 
 @Component({
-  selector: 'app-tarjetas-sla-dashboard',
+  selector: 'app-tarjeta-rendimiento-sla',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './tarjetas-sla-dashboard.component.html',
-  styleUrl: './tarjetas-sla-dashboard.component.scss'
+  templateUrl: './tarjeta-rendimiento-sla.component.html',
+  styleUrl: './tarjeta-rendimiento-sla.component.scss'
 })
-export class TarjetasSlaDashboardComponent {
+export class TarjetaRendimientoSlaComponent {
   @Input() totales: TotalesSlaDashboard = {
     totalTickets: 0,
     totalTerminados: 0,
@@ -31,7 +31,7 @@ export class TarjetasSlaDashboardComponent {
 
   @Input() loading: boolean = false;
   @Input() mesNombre: string = '';
-  @Input() titulo: string = 'Tu rendimiento del mes actual';
+  @Input() titulo: string = 'Tu rendimiento del mes';
 
   getSpeedometerOffset(value: number): number {
     const clamped = Math.max(0, Math.min(100, value || 0));
@@ -45,17 +45,18 @@ export class TarjetasSlaDashboardComponent {
     return 'grad-sla-danger';
   }
 
-  getSlaBadgeClass(value: number, totalTerminados: number): string {
-    if (totalTerminados === 0) return 'badge-neutral';
-    if (value >= 90) return 'badge-success';
-    if (value >= 75) return 'badge-warning';
-    return 'badge-danger';
+  getCalificacionPromedio(): number {
+    if (!this.totales || this.totales.totalTerminados === 0) return 0;
+    const promedioPorcentaje = ((this.totales.slaAtencion || 0) + (this.totales.slaResolucion || 0)) / 2;
+    const calificacion = promedioPorcentaje / 10;
+    return Math.max(0, Math.min(10, calificacion));
   }
 
-  getSlaBadgeText(value: number, totalTerminados: number): string {
-    if (totalTerminados === 0) return 'Sin registros';
-    if (value >= 90) return 'Excelente (≥90%)';
-    if (value >= 75) return 'Aceptable (≥75%)';
-    return 'Por mejorar (<75%)';
+  getCalificacionClass(): string {
+    if (!this.totales || this.totales.totalTerminados === 0) return 'score-neutral';
+    const cal = this.getCalificacionPromedio();
+    if (cal >= 9.0) return 'score-success';
+    if (cal >= 7.5) return 'score-warning';
+    return 'score-danger';
   }
 }

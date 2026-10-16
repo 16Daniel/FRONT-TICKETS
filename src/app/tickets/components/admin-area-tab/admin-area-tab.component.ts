@@ -13,7 +13,7 @@ import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components
 import { AcordeonTicketsPorUsuarioComponent } from '../../../tickets/components/acordeon-tickets-por-usuario/acordeon-tickets-por-usuario.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
+import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
@@ -66,7 +66,7 @@ import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.i
     AcordeonMantenimientosSistemasComponent,
     AcordeonMantenimientosAudioVideoComponent,
     AcordeonMantenimientosMantenimientoComponent,
-    TarjetasSlaDashboardComponent
+    TarjetaRendimientoSlaComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-area-tab.component.html',
@@ -238,7 +238,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   get tituloSla(): string {
     return this.usergroup
       ? `Rendimiento de ${this.usergroup.nombre} ${this.usergroup.apellidoP}`
-      : 'Rendimiento general del mes actual';
+      : 'Rendimiento general del mes';
   }
 
   private procesarMetricasSla(): void {

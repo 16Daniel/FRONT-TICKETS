@@ -11,7 +11,8 @@
       class="ticket-row" 
       *ngFor="let t of tickets" 
       (click)="abrirDetalleTicket(t)" 
-      [title]="'Ticket ' + t.folio + ' - ' + obtenerNombreSucursal(t.idSucursal) + ' | ' + obtenerCategoriaTooltip(t)">
+      [pTooltip]="'Ticket ' + t.folio"
+      tooltipPosition="top">
 
       <div class="gauge-container">
         <app-ticket-sla-gauge 

@@ -6,7 +6,7 @@ import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Categoria } from '../../models/categoria.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
-import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../../../tickets/components/tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
+import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../../../tickets/components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { KpiRadarService } from '../../../tickets/services/kpi-radar.service';
@@ -37,7 +37,7 @@ export interface DetalleNodoSeleccionado {
 @Component({
   selector: 'app-umbral-arbol',
   standalone: true,
-  imports: [CommonModule, FormsModule, TarjetasSlaDashboardComponent],
+  imports: [CommonModule, FormsModule, TarjetaRendimientoSlaComponent],
   templateUrl: './umbral-arbol.component.html',
   styleUrl: './umbral-arbol.component.scss'
 })

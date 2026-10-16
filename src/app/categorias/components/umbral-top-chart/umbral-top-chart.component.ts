@@ -4,7 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Subscription } from 'rxjs';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { ListaTicketsKpisComponent } from '../../../tickets/components/lista-tickets-kpis/lista-tickets-kpis.component';
-import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../../../tickets/components/tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
+import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../../../tickets/components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { KpiRadarService } from '../../../tickets/services/kpi-radar.service';
@@ -12,7 +12,7 @@ import { KpiRadarService } from '../../../tickets/services/kpi-radar.service';
 @Component({
   selector: 'app-umbral-top-chart',
   standalone: true,
-  imports: [CommonModule, NgxChartsModule, ListaTicketsKpisComponent, TarjetasSlaDashboardComponent],
+  imports: [CommonModule, NgxChartsModule, ListaTicketsKpisComponent, TarjetaRendimientoSlaComponent],
   templateUrl: './umbral-top-chart.component.html',
   styleUrl: './umbral-top-chart.component.scss'
 })

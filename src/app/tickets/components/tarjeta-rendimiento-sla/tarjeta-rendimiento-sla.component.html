@@ -23,17 +23,19 @@
       <div class="header-icon">
         <i class="bx bx-tachometer"></i>
       </div>
-      <div class="header-texts">
-        <h4 class="header-title">{{ titulo }}</h4>
-        <span class="header-sub">Métricas de cumplimiento de SLA</span>
-      </div>
+      <h4 class="header-title">{{ titulo }}</h4>
     </div>
 
-    <div class="header-badge-box" *ngIf="mesNombre">
-      <span class="month-pill">
+    <div class="header-badge-box" *ngIf="!loading">
+      <span class="month-pill" *ngIf="mesNombre">
         <i class="bx bx-calendar"></i>
         <span>{{ mesNombre }}</span>
       </span>
+      <div class="score-pill" [ngClass]="getCalificacionClass()">
+        <i class="bx bxs-star"></i>
+        <span class="score-label">Calificación:</span>
+        <span class="score-value">{{ getCalificacionPromedio() | number:'1.1-1' }}</span>
+      </div>
     </div>
   </div>
 
@@ -53,15 +55,11 @@
           <i class="bx bx-timer text-primary"></i>
           <span class="gauge-title">Atención</span>
         </div>
-        <span class="mini-status-badge" [ngClass]="getSlaBadgeClass(totales.slaAtencion, totales.totalTerminados)">
-          {{ getSlaBadgeText(totales.slaAtencion, totales.totalTerminados) }}
-        </span>
       </div>
 
       <div class="gauge-card-body">
         <div class="gauge-info-side">
           <span class="gauge-ratio">{{ totales.slaAtencionCumplidos }} / {{ totales.totalTerminados }}</span>
-          <span class="gauge-sub">a tiempo</span>
         </div>
 
         <div class="gauge-visual-side">
@@ -90,15 +88,11 @@
           <i class="bx bx-check-shield text-success"></i>
           <span class="gauge-title">Resolución</span>
         </div>
-        <span class="mini-status-badge" [ngClass]="getSlaBadgeClass(totales.slaResolucion, totales.totalTerminados)">
-          {{ getSlaBadgeText(totales.slaResolucion, totales.totalTerminados) }}
-        </span>
       </div>
 
       <div class="gauge-card-body">
         <div class="gauge-info-side">
           <span class="gauge-ratio">{{ totales.slaResolucionCumplidos }} / {{ totales.totalTerminados }}</span>
-          <span class="gauge-sub">a tiempo</span>
         </div>
 
         <div class="gauge-visual-side">

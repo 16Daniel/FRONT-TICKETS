@@ -6,13 +6,14 @@ import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.i
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { MessageService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CategoriesService } from '../../../categorias/services/categories.service';
 
 @Component({
   selector: 'app-lista-tickets-kpis',
   standalone: true,
-  imports: [CommonModule, TicketSlaGaugeComponent, DetalleTicketDialogComponent],
+  imports: [CommonModule, TooltipModule, TicketSlaGaugeComponent, DetalleTicketDialogComponent],
   providers: [MessageService],
   templateUrl: './lista-tickets-kpis.component.html',
   styleUrl: './lista-tickets-kpis.component.scss'
