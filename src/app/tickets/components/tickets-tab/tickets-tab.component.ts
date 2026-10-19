@@ -36,7 +36,7 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
 import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
-import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../tarjetas-sla-dashboard/tarjetas-sla-dashboard.component';
+import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -61,7 +61,7 @@ import { TarjetasSlaDashboardComponent, TotalesSlaDashboard } from '../tarjetas-
     SolicitarCompraDialogComponent,
     AcordeonMantenimientosAudioVideoComponent,
     IconosNotificacionesTicketsComponent,
-    TarjetasSlaDashboardComponent
+    TarjetaRendimientoSlaComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',
