@@ -16,6 +16,7 @@ import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ChatMantenimientoAudioVideoComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 
 @Component({
   selector: 'app-chat-notifications-button',
@@ -25,7 +26,8 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
     ButtonModule,
     ModalMaintenanceChatComponent,
     AdminComprasChatComponent,
-    ChatMantenimientoAudioVideoComponent
+    ChatMantenimientoAudioVideoComponent,
+    DetalleTicketDialogComponent
   ],
   providers: [MessageService],
   templateUrl: './chat-notifications-button.component.html',

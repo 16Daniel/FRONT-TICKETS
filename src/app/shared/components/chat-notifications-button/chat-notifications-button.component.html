@@ -48,6 +48,10 @@
 
 
 <!-- Chats -->
+<app-detalle-ticket-dialog *ngIf="mostrarModalChatTicket" [showModalTicketDetail]="mostrarModalChatTicket"
+  [ticket]="ticket" (closeEvent)="cerrarChatTicket()">
+</app-detalle-ticket-dialog>
+
 <app-modal-maintenance-chat *ngIf="mostrarModalChatMantenimiento" [mostrarModal]="mostrarModalChatMantenimiento"
   [idMnatenimiento]="mantenimiento?.id" [idArea]="idArea" (closeEvent)="cerrarChatMantenimiento()">
 </app-modal-maintenance-chat>

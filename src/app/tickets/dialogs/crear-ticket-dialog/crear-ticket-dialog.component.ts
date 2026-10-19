@@ -36,8 +36,10 @@ import { SelectorArbolCategoriaComponent } from '../../../categorias/components/
 import { SeleccionArbolCategoria } from '../../../categorias/interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
 import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
@@ -157,7 +159,8 @@ export class CrearTicketDialogComponent implements OnInit {
     private firebaseStorage: FirebaseStorageService,
     public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService,
-    private matrizUrgenciaService: MatrizUrgenciaService
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private mensajesPendientesService: MensajesPendientesService
   ) {}
 
   ngOnInit(): void {
@@ -370,6 +373,7 @@ export class CrearTicketDialogComponent implements OnInit {
           this.ticket.archivos = urls;
           const ticketId = await this.ticketsService.create({ ...this.ticket });
           await this.registrarBitacoraSistema(ticketId, folio);
+          await this.crearAlertasMenciones(ticketId);
           await this.ticketsService.incrementarContadorTickets();
           Swal.close();
           Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
@@ -381,6 +385,7 @@ export class CrearTicketDialogComponent implements OnInit {
           await this.ticketsService.incrementarContadorTickets();
           const ticketId = await this.ticketsService.create({ ...this.ticket });
           await this.registrarBitacoraSistema(ticketId, folio);
+          await this.crearAlertasMenciones(ticketId);
           Swal.close();
           Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
           this.closeEvent.emit();
@@ -389,11 +394,55 @@ export class CrearTicketDialogComponent implements OnInit {
       this.ticket.archivos = [];
       const ticketId = await this.ticketsService.create({ ...this.ticket });
       await this.registrarBitacoraSistema(ticketId, folio);
+      await this.crearAlertasMenciones(ticketId);
       await this.ticketsService.incrementarContadorTickets();
       Swal.close();
       Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
       this.closeEvent.emit();
     }
+  }
+
+  async crearAlertasMenciones(ticketId: string): Promise<void> {
+    if (!this.ticket.usuariosEtiquetados || this.ticket.usuariosEtiquetados.length === 0) {
+      return;
+    }
+
+    let responsableRemitente: Responsable | null = null;
+    const rawResp = localStorage.getItem('responsable-tareas');
+    if (rawResp) {
+      responsableRemitente = JSON.parse(rawResp);
+    }
+
+    const idUsuarioRemitente = responsableRemitente?.idUsuario || this.usuarioActivo?.id || '';
+    const nombreRemitente =
+      responsableRemitente?.nombre ||
+      `${this.usuarioActivo?.nombre || ''} ${this.usuarioActivo?.apellidoP || ''}`.trim() ||
+      this.ticket.solicitante ||
+      'Sistema';
+
+    const participantes = this.ticket.usuariosEtiquetados
+      .map(idResponsable =>
+        this.responsablesService.responsables.find(
+          r => r.id === idResponsable || r.idUsuario === idResponsable
+        )
+      )
+      .filter((r): r is Responsable => !!r && !!r.idUsuario)
+      .map(r => ({ idUsuario: r.idUsuario }));
+
+    if (participantes.length === 0) {
+      return;
+    }
+
+    await this.mensajesPendientesService.crearMensajesPendientes(
+      'Tickets',
+      ticketId,
+      {
+        idUsuario: idUsuarioRemitente,
+        nombre: nombreRemitente,
+        comentario: this.ticket.descripcion,
+      },
+      participantes
+    );
   }
 
   async registrarBitacoraSistema(ticketId: string, folio: string): Promise<void> {

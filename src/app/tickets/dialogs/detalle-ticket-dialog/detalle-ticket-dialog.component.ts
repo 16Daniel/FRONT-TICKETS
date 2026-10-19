@@ -38,6 +38,7 @@ import { BitacoraService } from '../../../shared/services/bitacora.service';
 import { Subscription } from 'rxjs';
 import { ComitesService } from '../../../comites/services/comites.service';
 import { Comite } from '../../../comites/interfaces/comite';
+import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 
 @Component({
   selector: 'app-detalle-ticket-dialog',
@@ -111,6 +112,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     private cdr: ChangeDetectorRef,
     private supportTypesService: SupportTypesService,
     public comitesService: ComitesService,
+    private mensajesPendientesService: MensajesPendientesService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -146,6 +148,16 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     }
   }
 
+  private marcarNotificacionesLeidas(): void {
+    if (this.ticket?.id && this.usuario?.id) {
+      this.mensajesPendientesService.marcarComoLeidos(
+        this.ticket.id,
+        'Tickets',
+        this.usuario.id
+      );
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ticket']) {
       this.comitesSeleccionados = [...(this.ticket?.comites ?? [])];
@@ -153,10 +165,12 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
 
     if (changes['ticket'] && this.ticket) {
       this.normalizarValoresTicket();
+      this.marcarNotificacionesLeidas();
       this.cdr.markForCheck();
       this.cdr.detectChanges();
     }
     if (changes['showModalTicketDetail'] && this.showModalTicketDetail) {
+      this.marcarNotificacionesLeidas();
       this.cdr.markForCheck();
       this.cdr.detectChanges();
     }
@@ -164,12 +178,14 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
 
   onShow(): void {
     this.normalizarValoresTicket();
+    this.marcarNotificacionesLeidas();
     this.cdr.markForCheck();
     this.cdr.detectChanges();
   }
 
   ngOnInit(): void {
     this.normalizarValoresTicket();
+    this.marcarNotificacionesLeidas();
 
     this.sucursales = (this.branchesService as any).sucursales || [];
     if (!this.sucursales || this.sucursales.length === 0) {
