@@ -73,6 +73,7 @@ export class CrearTicketDialogComponent implements OnInit {
   ticket: Ticket = new Ticket();
   sucursales: Sucursal[] = [];
   usuarioActivo: Usuario = new Usuario();
+  responsableActivo: Responsable | null = null;
   areas: Area[] = [];
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
@@ -81,7 +82,8 @@ export class CrearTicketDialogComponent implements OnInit {
   matrizUrgenciaLocal: MatrizUrgencia | null = null;
 
   esActivoFijo: boolean = false;
-  activoFijo: ActivoFijo | undefined;
+  desdeActivoFijo: boolean = false;
+  @Input() activoFijo: ActivoFijo | undefined;
 
   urlsArchivos: string[] = [];
   archivosPreview: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string }[] = [];
@@ -165,7 +167,17 @@ export class CrearTicketDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.areas = this.areasService.areas;
-    if (this.idArea !== '0') {
+    if (this.activoFijo && this.activoFijo.referencia) {
+      this.desdeActivoFijo = true;
+      this.esActivoFijo = true;
+      this.ticket.referenciaActivoFijo = this.activoFijo.referencia;
+      const areaEncontrada = this.areas.find(x => String(x.id) === String(this.activoFijo!.idArea));
+      if (areaEncontrada) {
+        this.ticket.idArea = areaEncontrada.id;
+      } else if (this.activoFijo.idArea) {
+        this.ticket.idArea = String(this.activoFijo.idArea);
+      }
+    } else if (this.idArea !== '0') {
       const areaEncontrada = this.areas.find(x => String(x.id) === String(this.idArea));
       if (areaEncontrada) {
         this.ticket.idArea = areaEncontrada.id;
@@ -177,6 +189,15 @@ export class CrearTicketDialogComponent implements OnInit {
       this.usuarioActivo = JSON.parse(rawUser);
     }
 
+    const rawResp = localStorage.getItem('responsable-tareas');
+    if (rawResp) {
+      this.responsableActivo = JSON.parse(rawResp);
+    }
+
+    this.ticket.solicitante =
+      this.responsableActivo?.nombre ||
+      `${this.usuarioActivo?.nombre || ''} ${this.usuarioActivo?.apellidoP || ''}`.trim();
+
     this.obtenerSucursales();
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
@@ -184,7 +205,7 @@ export class CrearTicketDialogComponent implements OnInit {
 
     // Obtener la matriz de urgencia correspondiente al área
     if (this.ticket.idArea && this.ticket.idArea !== '0') {
-      this.cargarMatrizArea(this.ticket.idArea);
+      this.cargarMatrizArea(String(this.ticket.idArea));
     } else if (this.idArea && this.idArea !== '0') {
       this.cargarMatrizArea(this.idArea);
     }
@@ -203,7 +224,10 @@ export class CrearTicketDialogComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        if (this.usuarioActivo.sucursales?.length > 0) {
+        if (this.desdeActivoFijo && this.activoFijo?.idSucursal) {
+          const sucEncontrada = data.find(s => String(s.id) === String(this.activoFijo!.idSucursal));
+          this.ticket.idSucursal = sucEncontrada ? sucEncontrada.id : this.activoFijo.idSucursal;
+        } else if (this.usuarioActivo.sucursales?.length > 0) {
           this.ticket.idSucursal = parseInt(this.usuarioActivo.sucursales[0].id, 10);
         }
         this.cdr.detectChanges();

@@ -5,7 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
-import { ModalFaGenerateTicketComponent } from '../../dialogs/modal-fa-generate-ticket/modal-fa-generate-ticket.component';
+import { CrearTicketDialogComponent } from '../../../tickets/dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { ModalFixedAssetTicketsComponent } from '../../dialogs/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../dialogs/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { FixedAssetsService } from '../../services/fixed-assets.service';
@@ -31,7 +31,7 @@ import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.interfac
     ModalFixedAssetTicketsComponent,
     ModalFixedAssetMaintenanceComponent,
     ButtonModule,
-    ModalFaGenerateTicketComponent
+    CrearTicketDialogComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './fixed-assets-detail-page.component.html',
@@ -163,6 +163,27 @@ export default class FixedAssetsDetailPageComponent implements OnInit {
     return this.activo.mantenimientos
       .filter(m => !m.eliminado)
       .reduce((total, m) => total + (m.costo || 0), 0);
+  }
+
+  get superaCostoActivo(): boolean {
+    return !!this.activo.costo && this.getCostoTotalMantenimientos() > this.activo.costo;
+  }
+
+  obtenerClaseEstatus(idEstatus: string): string {
+    const estatus = (this.nombreEstatusActivoFijo(idEstatus) || '').toUpperCase().trim();
+    if (['NUEVO', 'ACTIVO', 'BUENO', 'OPERATIVO'].includes(estatus)) {
+      return 'status-ok';
+    }
+    if (['USADO', 'REGULAR', 'POR VALIDAR'].includes(estatus)) {
+      return 'status-warning';
+    }
+    if (['EN REPARACIÓN', 'EN REPARACION', 'REPARADO', 'POR INSTALAR'].includes(estatus)) {
+      return 'status-purple';
+    }
+    if (['DESCOMPUESTO', 'BAJA', 'DAÑADO', 'CRÍTICO'].includes(estatus)) {
+      return 'status-critical';
+    }
+    return 'status-info';
   }
 
   nombreSucursal = (idSucursal: string) => this.sucursales.find(x => x.id == idSucursal)?.nombre;
