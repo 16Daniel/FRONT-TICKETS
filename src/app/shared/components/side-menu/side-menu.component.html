@@ -90,6 +90,16 @@
         <span class="nav-label">Inicio</span>
       </a>
 
+      <a 
+        [routerLink]="'/main/mis-tickets'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol != '6'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-receipt nav-icon"></i>
+        <span class="nav-label">Mis tickets</span>
+      </a>
+
        <a 
         [routerLink]="'/main/comites/tickets'" 
         routerLinkActive="active"
