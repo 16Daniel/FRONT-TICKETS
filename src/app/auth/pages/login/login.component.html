@@ -1,78 +1,177 @@
-<div class="container" style="height: 100vh;">
-  <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-6 col-xxl-5">
-      <div class="card border border-light-subtle rounded-4">
-        <div class="card-body p-3 p-md-4 p-xl-5">
+<div class="login-viewport">
+  
+  <!-- Ambient background glow decoration -->
+  <div class="login-ambient-glow" aria-hidden="true"></div>
 
-          <div class="text-center mb-4">
-            <!-- <img src="/front/planeacion/assets/img/RW_LogoWEB.png" alt="Logo" width="60%"> -->
-            <img src="/front/tickets/assets/img/RW_LogoWEB.png" alt="Logo" width="60%">
+  <!-- Main Card Container -->
+  <div class="login-main-container">
+    <div class="login-card">
+
+      <!-- Left Panel: Brand Showcase (Desktop) -->
+      <div class="brand-hero-panel">
+        <div>
+          <div class="hero-top-badge">
+            <span class="badge-pulse-dot"></span>
+            <span>Plataforma Operativa ERP</span>
           </div>
-          <h4 class="text-center mb-4">BIENVENID{{'@'}}</h4>
 
-          <form action="#!">
-            <div class="row gy-3 overflow-hidden">
-              <div class="col-12">
-                <div class="form-floating mb-3">
-                  <input type="email" class="form-control" placeholder="name@example.com" required [(ngModel)]="email"
-                    [ngModelOptions]="{standalone: true}">
-                  <label class="form-label">Email</label>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-floating mb-3">
-                  <input [type]="typei" class="form-control" placeholder="Password" required [(ngModel)]="pass"
-                    [ngModelOptions]="{standalone: true}">
-                  <label class="form-label">Password</label>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="showpass"
-                    (click)="showpasschange()" [ngModelOptions]="{standalone: true}">
-                  <label class="form-check-label">Mostrar contraseña</label>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="d-grid">
-                  <div class="d-flex justify-content-center" *ngIf="loading">
-                    <div class="lds-ring">
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                    </div>
-                  </div>
-                  <button class="btn bg-p-b p-3" type="submit" (click)="onLogin()" [disabled]="loading"> INICIAR SESIÓN
-                  </button>
-                </div>
-              </div>
+          <div class="hero-content">
+            <h1 class="hero-main-title">
+              Gestión operativa <br>
+              <span class="highlight-red">Rebel Wings</span>
+            </h1>
+            <p class="hero-description">
+              Ecosistema integral para la administración de sucursales, activos fijos, talento y operaciones restauranteras.
+            </p>
+          </div>
 
+          <div class="hero-features-list">
+            <div class="feature-item">
+              <div class="feature-icon-wrap">
+                <i class="bx bx-support"></i>
+              </div>
+              <div class="feature-text">
+                <span class="feature-title">Mesa de Ayuda & Tickets</span>
+                <span class="feature-subtitle">Gestión de incidencias, trazabilidad por sucursal y tiempos SLA</span>
+              </div>
             </div>
-          </form>
+
+            <div class="feature-item">
+              <div class="feature-icon-wrap">
+                <i class="bx bx-wrench"></i>
+              </div>
+              <div class="feature-text">
+                <span class="feature-title">Activos Fijos & Mantenimientos</span>
+                <span class="feature-subtitle">Catálogo de maquinaria, freidoras e intervenciones preventivas</span>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon-wrap">
+                <i class="bx bx-user-check"></i>
+              </div>
+              <div class="feature-text">
+                <span class="feature-title">Control de Nómina y Personal</span>
+                <span class="feature-subtitle">Checadas biométricas, historial laboral y gestión de plantilla</span>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon-wrap">
+                <i class="bx bx-package"></i>
+              </div>
+              <div class="feature-text">
+                <span class="feature-title">CEDIS, Inventarios & Aceites</span>
+                <span class="feature-subtitle">Control de recolección de aceite, mermas y suministros operativos</span>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div class="hero-footer-note">
+          <i class="bx bxs-shield"></i>
+          <span>ERP Rebel Wings · Acceso seguro institucional</span>
+        </div>
+      </div>
+
+      <!-- Right Panel: Login Form -->
+      <div class="form-card-panel">
+        
+        <!-- Mobile Brand Tag (only on smaller screens) -->
+        <div class="brand-header-mobile">
+          <span class="mobile-tag">ERP Rebel Wings</span>
+        </div>
+
+        <!-- Logo -->
+        <div class="logo-wrapper">
+          <img 
+            [src]="logoUrl" 
+            alt="Rebel Wings Logo" 
+            class="brand-logo-img" 
+            (error)="onLogoError($event)" />
+        </div>
+
+        <!-- Heading -->
+        <div class="form-header-text">
+          <h2 class="welcome-title">¡Bienvenido!</h2>
+          <p class="welcome-subtitle">Ingresa tus credenciales para acceder al sistema</p>
+        </div>
+
+        <!-- Login Form -->
+        <form (ngSubmit)="onLogin()" autocomplete="on" class="modern-login-form">
+
+          <!-- Email Input Group -->
+          <div class="input-field-group">
+            <label class="field-label" for="login-email">Correo Electrónico</label>
+            <div class="input-control-wrapper">
+              <i class="bx bx-envelope leading-icon"></i>
+              <input 
+                id="login-email"
+                type="email" 
+                class="form-text-input" 
+                placeholder="ejemplo@rebelwings.com" 
+                required 
+                autocomplete="email"
+                [(ngModel)]="email"
+                [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+
+          <!-- Password Input Group -->
+          <div class="input-field-group">
+            <label class="field-label" for="login-password">Contraseña</label>
+            <div class="input-control-wrapper">
+              <i class="bx bx-lock-alt leading-icon"></i>
+              <input 
+                id="login-password"
+                [type]="typei" 
+                class="form-text-input" 
+                placeholder="••••••••••••" 
+                required 
+                autocomplete="current-password"
+                [(ngModel)]="pass"
+                [ngModelOptions]="{standalone: true}">
+              
+              <button 
+                type="button" 
+                class="trailing-action-btn" 
+                (click)="showpasschange()" 
+                [title]="showpass ? 'Ocultar contraseña' : 'Ver contraseña'"
+                [attr.aria-label]="showpass ? 'Ocultar contraseña' : 'Ver contraseña'">
+                <i class="bx" [ngClass]="showpass ? 'bx-show' : 'bx-hide'"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit CTA Button -->
+          <button 
+            type="submit" 
+            class="btn-login-submit" 
+            [disabled]="loading">
+            <ng-container *ngIf="loading; else normalState">
+              <span class="button-spinner"></span>
+              <span>Iniciando sesión...</span>
+            </ng-container>
+            <ng-template #normalState>
+              <span>INICIAR SESIÓN</span>
+              <i class="bx bx-right-arrow-alt"></i>
+            </ng-template>
+          </button>
+
+        </form>
+
       </div>
 
     </div>
   </div>
+
 </div>
 
-<div style="margin-top: 20px; padding: 15px; background-color: #f4f4f5; border: 1px dashed #71717a; border-radius: 8px;">
-  <h3 style="margin-top: 0;">🧪 Token FCM (Pruebas)</h3>
-  
-  <!-- Invocamos la Signal usando paréntesis () -->
-  <div *ngIf="fcmService.fcmToken() as token; else loadingOrDenied">
-    <p style="word-break: break-all; font-family: monospace; background: #fff; padding: 10px; border-radius: 4px;">
-      {{ token }}
-    </p>
-    <button (click)="copyToken()">📋 Copiar Token</button>
-  </div>
-
-  <ng-template #loadingOrDenied>
-    <p>Solicitando permisos o token no disponible aún...</p>
-  </ng-template>
-</div>
-
-<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
-  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<!-- PrimeNG Toast Notifications -->
+<p-toast 
+  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" 
+  [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" 
+  [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'">
+</p-toast>

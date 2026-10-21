@@ -3,10 +3,12 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
@@ -65,7 +67,7 @@ Quill.register('modules/magicUrl', MagicUrl);
   templateUrl: './crear-ticket-dialog.component.html',
   styleUrl: './crear-ticket-dialog.component.scss',
 })
-export class CrearTicketDialogComponent implements OnInit {
+export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   @Input() mostrarModalGenerateTicket: boolean = false;
   @Input() idArea: string = '0';
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -75,6 +77,8 @@ export class CrearTicketDialogComponent implements OnInit {
   usuarioActivo: Usuario = new Usuario();
   responsableActivo: Responsable | null = null;
   areas: Area[] = [];
+  private areasSub: Subscription | undefined;
+  private areaInicialAsignada: boolean = false;
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
   formCategoria: any = null;
@@ -166,23 +170,20 @@ export class CrearTicketDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.areas = this.areasService.areas;
     if (this.activoFijo && this.activoFijo.referencia) {
       this.desdeActivoFijo = true;
       this.esActivoFijo = true;
       this.ticket.referenciaActivoFijo = this.activoFijo.referencia;
-      const areaEncontrada = this.areas.find(x => String(x.id) === String(this.activoFijo!.idArea));
-      if (areaEncontrada) {
-        this.ticket.idArea = areaEncontrada.id;
-      } else if (this.activoFijo.idArea) {
+      if (this.activoFijo.idArea) {
         this.ticket.idArea = String(this.activoFijo.idArea);
       }
     } else if (this.idArea !== '0') {
-      const areaEncontrada = this.areas.find(x => String(x.id) === String(this.idArea));
-      if (areaEncontrada) {
-        this.ticket.idArea = areaEncontrada.id;
-      }
+      this.ticket.idArea = String(this.idArea);
     }
+
+    // Suscripción reactiva a las áreas (mismo patrón que admin-tabs):
+    // si el listener de Firestore aún no ha emitido, el modal se llena en cuanto lleguen los datos.
+    this.obtenerAreas();
 
     const rawUser = localStorage.getItem('rwuserdatatk');
     if (rawUser) {
@@ -211,6 +212,36 @@ export class CrearTicketDialogComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.areasSub?.unsubscribe();
+  }
+
+  obtenerAreas(): void {
+    this.areasService.initListener();
+    this.areasSub = this.areasService.areas$.subscribe((areas) => {
+      this.areas = areas.filter((a) => a.activarTickets === true);
+      this.asignarAreaInicial();
+      this.cdr.detectChanges();
+    });
+  }
+
+  /** Empata el área preseleccionada (activo fijo o @Input idArea) con la opción real del catálogo. */
+  private asignarAreaInicial(): void {
+    if (this.areaInicialAsignada || this.areas.length === 0) return;
+
+    const idBuscado = this.desdeActivoFijo
+      ? this.activoFijo?.idArea
+      : this.idArea !== '0' ? this.idArea : null;
+
+    if (idBuscado) {
+      const areaEncontrada = this.areas.find((x) => String(x.id) === String(idBuscado));
+      if (areaEncontrada) {
+        this.ticket.idArea = areaEncontrada.id;
+      }
+    }
+    this.areaInicialAsignada = true;
+  }
+
   cargarMatrizArea(idArea: string): void {
     this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).subscribe({
       next: (matriz) => {
@@ -228,7 +259,7 @@ export class CrearTicketDialogComponent implements OnInit {
           const sucEncontrada = data.find(s => String(s.id) === String(this.activoFijo!.idSucursal));
           this.ticket.idSucursal = sucEncontrada ? sucEncontrada.id : this.activoFijo.idSucursal;
         } else if (this.usuarioActivo.sucursales?.length > 0) {
-          this.ticket.idSucursal = parseInt(this.usuarioActivo.sucursales[0].id, 10);
+          this.ticket.idSucursal = this.usuarioActivo.sucursales[0].id;
         }
         this.cdr.detectChanges();
       },

@@ -10,5 +10,6 @@ export interface ResultadoFormularioNodo {
   unidadResolucion?: 'm' | 'h' | 'd';
   horasResolucion?: number;
   evidenciaObligatoria?: boolean;
+  alertaWhatsapp?: boolean;
 
 }

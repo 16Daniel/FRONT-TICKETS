@@ -1,0 +1,271 @@
+/* Rebel Wings Brand Design Tokens */
+$rw-primary: #d3152a;
+$rw-accent: #fdb813;
+$rw-dark: #1e1e24;
+$rw-canvas: #f4f6fa;
+
+/* Semáforo Funcional de Datos (DESIGN-SYSTEM.md) */
+$status-completed: #10b981;
+$status-completed-bg: #f0fdf4;
+$status-info: #0f62fe;
+$status-info-bg: #eff6ff;
+
+.mis-tickets-page-wrapper {
+  background-color: $rw-canvas;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem 1.5rem 4rem;
+  width: 100%;
+}
+
+.mis-tickets-content-container {
+  max-width: 1650px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Toolbar Bar (Búsqueda)
+   ========================================================================== */
+.mis-tickets-toolbar-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: #94a3b8;
+    font-size: 1.15rem;
+    pointer-events: none;
+  }
+
+  .mis-tickets-search-input {
+    padding: 0.55rem 2.2rem 0.55rem 2.4rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    width: 320px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+    &::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $rw-primary;
+      box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+      width: 380px;
+    }
+
+    @media (max-width: 576px) {
+      width: 100%;
+      &:focus {
+        width: 100%;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   Contenedor Principal (Tarjeta Blanca Homologada con Áreas y Roles)
+   ========================================================================== */
+.mis-tickets-nodes-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+/* ==========================================================================
+   Empty State (Dentro de la Tarjeta Blanca)
+   ========================================================================== */
+.tickets-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 2rem;
+  text-align: center;
+
+  .empty-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.1rem;
+    margin-bottom: 1rem;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.is-completed {
+      background-color: $status-completed-bg;
+      color: $status-completed;
+      border: 1px solid rgba(16, 185, 129, 0.22);
+    }
+
+    &.is-loading {
+      background-color: $status-info-bg;
+      color: $status-info;
+      border: 1px solid rgba(15, 98, 254, 0.2);
+    }
+  }
+
+  .empty-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.28rem 0.8rem;
+    border-radius: 999px;
+    background-color: $status-completed-bg;
+    color: $status-completed;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    font-size: 0.725rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.65rem;
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: $status-completed;
+    }
+  }
+
+  h4 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 0.45rem;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: #64748b;
+    max-width: 420px;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+/* ==========================================================================
+   Botón CTA Vacío
+   ========================================================================== */
+.btn-rw-cta-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.35rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  i {
+    font-size: 1.15rem;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(211, 21, 42, 0.36);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Botón Flotante (FAB) Crear Ticket
+   ========================================================================== */
+.btn-flotante-crear-ticket {
+  position: fixed;
+    // bottom: 2.25rem;
+  top: 6.25rem;
+  right: 2.25rem;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+    // z-index: 1000;
+  z-index: 995;
+  box-shadow: 0 8px 24px rgba(211, 21, 42, 0.4), 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+
+  i {
+    font-size: 2.1rem;
+    line-height: 1;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &:hover {
+        // transform: translateY(-4px) scale(1.08);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 14px 30px rgba(211, 21, 42, 0.5), 0 4px 10px rgba(0, 0, 0, 0.16);
+    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+
+    i {
+      transform: rotate(90deg);
+    }
+  }
+
+  &:active {
+        // transform: translateY(-1px) scale(0.96);
+    transform: translateY(0) scale(0.96);
+    box-shadow: 0 6px 16px rgba(211, 21, 42, 0.35);
+  }
+
+  @media (max-width: 576px) {
+    top: 6.75rem;
+        // bottom: 1.25rem;
+    right: 1.25rem;
+    width: 52px;
+    height: 52px;
+
+    i {
+      font-size: 1.8rem;
+    }
+  }
+}

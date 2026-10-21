@@ -319,7 +319,8 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
             tiempoResolucion: datos.tiempoResolucion,
             unidadResolucion: datos.unidadResolucion,
             horasResolucion: datos.horasResolucion,
-            evidenciaObligatoria: datos.evidenciaObligatoria
+            evidenciaObligatoria: datos.evidenciaObligatoria,
+            alertaWhatsapp: datos.alertaWhatsapp
           } : {})
         };
         await this.categoriesService.create(nuevaCat);
@@ -349,7 +350,8 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
             tiempoResolucion: datos.tiempoResolucion,
             unidadResolucion: datos.unidadResolucion,
             horasResolucion: datos.horasResolucion,
-            evidenciaObligatoria: datos.evidenciaObligatoria
+            evidenciaObligatoria: datos.evidenciaObligatoria,
+            alertaWhatsapp: datos.alertaWhatsapp
           } : {})
         };
         info.nodo.subcategorias.push(nuevaSub);
@@ -387,6 +389,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
         objetivo.unidadResolucion = datos.unidadResolucion;
         objetivo.horasResolucion = datos.horasResolucion;
         objetivo.evidenciaObligatoria = datos.evidenciaObligatoria;
+        objetivo.alertaWhatsapp = datos.alertaWhatsapp;
       } else {
         objetivo.activarSubcategorias = true;
         objetivo.urgencia = undefined;
@@ -394,6 +397,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
         objetivo.unidadResolucion = undefined;
         objetivo.horasResolucion = undefined;
         objetivo.evidenciaObligatoria = false;
+        objetivo.alertaWhatsapp = false;
       }
       delete (objetivo as any).estimacion;
       delete (objetivo as any).slaRes;

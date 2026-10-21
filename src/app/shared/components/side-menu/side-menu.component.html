@@ -90,6 +90,16 @@
         <span class="nav-label">Inicio</span>
       </a>
 
+      <a 
+        [routerLink]="'/main/mis-tickets'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol != '6'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-receipt nav-icon"></i>
+        <span class="nav-label">Mis tickets</span>
+      </a>
+
        <a 
         [routerLink]="'/main/comites/tickets'" 
         routerLinkActive="active"
@@ -307,9 +317,9 @@
       </a>
 
       <a 
-        [routerLink]="'/cedis/control-aceite'" 
+        [routerLink]="'/main/control-aceite'" 
         routerLinkActive="active"
-        *ngIf="usuario.controlDeAceite == true" 
+        *ngIf="usuario.controlDeAceite == true || usuario.idRol == '1' || usuario.idRol == '5'" 
         (click)="closemenu()" 
         class="nav-item">
         <i class="bx bx-droplet nav-icon"></i>
