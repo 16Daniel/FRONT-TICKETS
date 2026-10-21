@@ -1,5 +1,5 @@
 <p-dialog 
-  header="GENERAR TICKET" 
+  [header]="desdeActivoFijo ? 'GENERAR TICKET DESDE ACTIVO FIJO' : 'GENERAR TICKET'" 
   [modal]="true" 
   [(visible)]="mostrarModalGenerateTicket" 
   [style]="{ width: '52rem' }"
@@ -9,6 +9,17 @@
   styleClass="modal-ticket-rw">
 
   <form #form="ngForm" (ngSubmit)="enviarTicket(form)" class="formulario-ticket">
+
+    <!-- Tarjeta Informativa del Activo Fijo -->
+    <div class="tarjeta-activo-destacada" *ngIf="desdeActivoFijo && activoFijo">
+      <div class="activo-icono-wrap">
+        <i class="bx bx-barcode"></i>
+      </div>
+      <div class="activo-info-texto">
+        <span class="activo-referencia">Activo Fijo: {{ activoFijo.referencia }}</span>
+        <span class="activo-descripcion">{{ activoFijo.descripcion }}</span>
+      </div>
+    </div>
 
     <!-- Fila 1: Sucursal y Área -->
     <div class="grid-dos-columnas">
@@ -27,7 +38,7 @@
           [showClear]="true"
           placeholder="Seleccionar sucursal..." 
           [style]="{width:'100%'}"
-          [disabled]="usuarioActivo.idRol == '2' || usuarioActivo.idRol == '3'">
+          [disabled]="desdeActivoFijo || usuarioActivo.idRol == '2' || usuarioActivo.idRol == '3'">
           <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
               <div>{{ selectedOption.nombre }}</div>
@@ -53,7 +64,7 @@
           optionLabel="nombre"
           [filter]="true" 
           filterBy="nombre" 
-          [disabled]="idArea != '0'" 
+          [disabled]="desdeActivoFijo || idArea != '0'" 
           [showClear]="false"
           placeholder="Seleccionar área..." 
           [style]="{width:'100%'}" 
@@ -96,16 +107,12 @@
         placeholder="Nombre de quien solicita..."
         [(ngModel)]="ticket.solicitante" 
         name="nombreSolicitante"
-        [ngClass]="{'input-invalido': formNombreSolicitanteCtrl.invalid && formNombreSolicitanteCtrl.touched}"
-        #formNombreSolicitanteCtrl="ngModel" 
-        required>
-      <small *ngIf="formNombreSolicitanteCtrl.invalid && formNombreSolicitanteCtrl.touched" class="p-error">
-        El nombre del solicitante es requerido.
-      </small>
+        [disabled]="true"
+        readonly>
     </div>
 
     <!-- Fila 4: Vinculación de Activo Fijo (Opcional) -->
-    <div class="tarjeta-activo-fijo">
+    <div class="tarjeta-activo-fijo" *ngIf="!desdeActivoFijo">
       <div class="switch-activo-wrap">
         <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
           <input 
