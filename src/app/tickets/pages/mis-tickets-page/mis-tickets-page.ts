@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
+import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { TicketsService } from '../../services/tickets.service';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -19,9 +21,11 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
     CommonModule,
     FormsModule,
     ToastModule,
+    TooltipModule,
     PageHeaderComponent,
     RequesterTicketsListComponent,
     DetalleTicketDialogComponent,
+    CrearTicketDialogComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './mis-tickets-page.html',
@@ -33,6 +37,7 @@ export default class MisTicketsPageComponent implements OnInit, OnDestroy {
   tickets: Ticket[] = [];
   ticketSeleccionado: Ticket | undefined;
   mostrarModalTicketDetail: boolean = false;
+  mostrarModalGenerateTicket: boolean = false;
   loading: boolean = false;
   filtroTexto: string = '';
 
@@ -108,6 +113,21 @@ export default class MisTicketsPageComponent implements OnInit, OnDestroy {
   abrirModalDetalleTicket(ticket: Ticket | any): void {
     this.ticketSeleccionado = ticket;
     this.mostrarModalTicketDetail = true;
+  }
+
+  abrirModalCrearTicket(): void {
+    this.mostrarModalGenerateTicket = true;
+  }
+
+  alCerrarModalCrearTicket(ticketCreado?: boolean): void {
+    this.mostrarModalGenerateTicket = false;
+    if (ticketCreado) {
+      this.obtenerMisTickets();
+    }
+  }
+
+  get idAreaUsuario(): string {
+    return this.usuario?.idArea ? String(this.usuario.idArea) : '0';
   }
 
   private ordenarTickets(tickets: Ticket[]): Ticket[] {

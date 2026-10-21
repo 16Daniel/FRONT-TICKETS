@@ -28,7 +28,7 @@
           (click)="mostrarModalMantenimientos = true">
           <i class="bx bx-wrench"></i>
           <span>MANTENIMIENTOS</span>
-          <span class="btn-badge" *ngIf="activo.mantenimientos?.length">{{ activo.mantenimientos.length }}</span>
+          <span class="btn-badge" *ngIf="activo.mantenimientos.length">{{ activo.mantenimientos.length }}</span>
         </button>
 
         <button
@@ -149,7 +149,7 @@
         </div>
         <div class="card-content-body">
           <span class="card-category-label">No. Mantenimientos</span>
-          <span class="card-metric-value">{{ activo.mantenimientos?.length || 0 }}</span>
+          <span class="card-metric-value">{{ activo.mantenimientos.length || 0 }}</span>
           <div class="card-footer-meta">
             <span class="card-helper-note">Ver historial de intervenciones</span>
             <i class="bx bx-right-arrow-alt arrow-icon"></i>

@@ -42,6 +42,14 @@
           <h4>Sin tickets pendientes</h4>
           <p *ngIf="filtroTexto">No se encontraron tickets que coincidan con "{{ filtroTexto }}".</p>
           <p *ngIf="!filtroTexto">No tienes solicitudes activas o en proceso registradas en este momento.</p>
+          <button 
+            *ngIf="!filtroTexto" 
+            type="button" 
+            class="btn-rw-cta-empty mt-3" 
+            (click)="abrirModalCrearTicket()">
+            <i class="bx bx-plus"></i>
+            <span>CREAR TICKET</span>
+          </button>
         }
       </div>
 
@@ -57,6 +65,17 @@
 
     </div>
   </div>
+
+  <!-- Botón Flotante para Crear Ticket -->
+  <button 
+    type="button" 
+    class="btn-flotante-crear-ticket" 
+    (click)="abrirModalCrearTicket()"
+    pTooltip="Crear nuevo ticket" 
+    tooltipPosition="left"
+    aria-label="Crear nuevo ticket">
+    <i class="bx bx-plus"></i>
+  </button>
 </div>
 
 <app-detalle-ticket-dialog
@@ -65,6 +84,12 @@
   [showModalTicketDetail]="mostrarModalTicketDetail"
   (closeEvent)="mostrarModalTicketDetail = false">
 </app-detalle-ticket-dialog>
+
+<app-crear-ticket-dialog
+  *ngIf="mostrarModalGenerateTicket"
+  [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="alCerrarModalCrearTicket($event)">
+</app-crear-ticket-dialog>
 
 <p-toast
   [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"

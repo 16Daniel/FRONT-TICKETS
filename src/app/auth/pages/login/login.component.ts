@@ -93,13 +93,13 @@ export default class LoginComponent {
 
         localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
 
-        if (userd.idRol === '6') {
-          this.router.navigate(['/cedis/recoleccion']);
-          this.loading = false;
-          this.cdr.markForCheck();
-          Swal.close();
-          return;
-        }
+        // if (userd.idRol === '6') {
+        //   this.router.navigate(['/cedis/recoleccion']);
+        //   this.loading = false;
+        //   this.cdr.markForCheck();
+        //   Swal.close();
+        //   return;
+        // }
 
         this.router.navigate(['/tareas/selecciona-responsable']);
       }

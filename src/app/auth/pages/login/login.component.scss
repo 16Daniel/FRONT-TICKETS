@@ -136,17 +136,17 @@ $rw-canvas: #f4f6fa;
 }
 
 .hero-content {
-  margin: 2.5rem 0;
+  margin: 1.75rem 0 1.5rem;
   position: relative;
   z-index: 1;
 
   .hero-main-title {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     line-height: 1.18;
     color: #ffffff;
     letter-spacing: -0.03em;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 
     .highlight-red {
       color: #ff334b;
@@ -155,9 +155,9 @@ $rw-canvas: #f4f6fa;
 
   .hero-description {
     color: #94a3b8;
-    font-size: 0.95rem;
-    line-height: 1.55;
-    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
     max-width: 380px;
   }
 }
@@ -165,7 +165,7 @@ $rw-canvas: #f4f6fa;
 .hero-features-list {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 0.95rem;
 
   .feature-item {
     display: flex;

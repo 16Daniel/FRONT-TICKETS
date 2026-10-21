@@ -175,3 +175,97 @@ $status-info-bg: #eff6ff;
     line-height: 1.5;
   }
 }
+
+/* ==========================================================================
+   Botón CTA Vacío
+   ========================================================================== */
+.btn-rw-cta-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.35rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  i {
+    font-size: 1.15rem;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(211, 21, 42, 0.36);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Botón Flotante (FAB) Crear Ticket
+   ========================================================================== */
+.btn-flotante-crear-ticket {
+  position: fixed;
+    // bottom: 2.25rem;
+  top: 6.25rem;
+  right: 2.25rem;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+    // z-index: 1000;
+  z-index: 995;
+  box-shadow: 0 8px 24px rgba(211, 21, 42, 0.4), 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+
+  i {
+    font-size: 2.1rem;
+    line-height: 1;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &:hover {
+        // transform: translateY(-4px) scale(1.08);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 14px 30px rgba(211, 21, 42, 0.5), 0 4px 10px rgba(0, 0, 0, 0.16);
+    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+
+    i {
+      transform: rotate(90deg);
+    }
+  }
+
+  &:active {
+        // transform: translateY(-1px) scale(0.96);
+    transform: translateY(0) scale(0.96);
+    box-shadow: 0 6px 16px rgba(211, 21, 42, 0.35);
+  }
+
+  @media (max-width: 576px) {
+    top: 6.75rem;
+        // bottom: 1.25rem;
+    right: 1.25rem;
+    width: 52px;
+    height: 52px;
+
+    i {
+      font-size: 1.8rem;
+    }
+  }
+}

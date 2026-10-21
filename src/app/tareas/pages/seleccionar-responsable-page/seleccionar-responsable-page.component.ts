@@ -50,10 +50,10 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
     }, 0);
   }
 
-  onPinValidado(responsable: Responsable) {
-    localStorage.setItem('responsable-tareas', JSON.stringify(responsable));
-    this.router.navigate(['/main/home-a']);
-  }
+  // onPinValidado(responsable: Responsable) {
+  //   localStorage.setItem('responsable-tareas', JSON.stringify(responsable));
+  //   this.router.navigate(['/main/home-a']);
+  // }
 
   onPinChange(): void {
     // Limpiar caracteres no numéricos

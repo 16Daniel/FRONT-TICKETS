@@ -228,7 +228,7 @@ export class CrearTicketDialogComponent implements OnInit {
           const sucEncontrada = data.find(s => String(s.id) === String(this.activoFijo!.idSucursal));
           this.ticket.idSucursal = sucEncontrada ? sucEncontrada.id : this.activoFijo.idSucursal;
         } else if (this.usuarioActivo.sucursales?.length > 0) {
-          this.ticket.idSucursal = parseInt(this.usuarioActivo.sucursales[0].id, 10);
+          this.ticket.idSucursal = this.usuarioActivo.sucursales[0].id;
         }
         this.cdr.detectChanges();
       },

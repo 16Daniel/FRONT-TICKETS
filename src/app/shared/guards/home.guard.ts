@@ -38,7 +38,7 @@ export class HomeGuard implements CanActivate {
     if (allowedRoute) {
       this.router.navigate([allowedRoute]);
     } else {
-      this.router.navigate(['/auth/login']); // Si el rol no es válido
+      this.router.navigate(['/main/mis-tickets']); // Si el rol no es válido
     }
 
     return false;
