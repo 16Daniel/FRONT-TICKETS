@@ -317,9 +317,9 @@
       </a>
 
       <a 
-        [routerLink]="'/cedis/control-aceite'" 
+        [routerLink]="'/main/control-aceite'" 
         routerLinkActive="active"
-        *ngIf="usuario.controlDeAceite == true" 
+        *ngIf="usuario.controlDeAceite == true || usuario.idRol == '1' || usuario.idRol == '5'" 
         (click)="closemenu()" 
         class="nav-item">
         <i class="bx bx-droplet nav-icon"></i>

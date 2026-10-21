@@ -4,6 +4,12 @@ import { Routes } from '@angular/router';
  * Rutas que viven dentro de /main
  */
 export const ACEITES_MAIN_ROUTES: Routes = [
+  {
+    path: 'control-aceite',
+    title: 'Control de aceite',
+    loadComponent: () =>
+      import('./pages/aceite-page/aceite-page.component'),
+  },
 ];
 
 /**
