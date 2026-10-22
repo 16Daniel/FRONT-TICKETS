@@ -48,7 +48,7 @@
         <p-multiSelect
           inputId="comiteAreas"
           [options]="(areasService.areas$ | async) ?? []"
-          [(ngModel)]="comite.areas"
+          [ngModel]="comite.areas"
           name="areas"
           optionLabel="nombre"
           optionValue="id"
@@ -60,8 +60,40 @@
           selectedItemsLabel="{0} áreas seleccionadas"
           placeholder="Selecciona las áreas del comité"
           appendTo="body"
+          (ngModelChange)="onAreasChange($event)"
           styleClass="w-100">
         </p-multiSelect>
+      </div>
+
+      <div class="col-12">
+        <label class="rw-form-label" for="comiteResponsables">RESPONSABLES</label>
+        <p-multiSelect
+          inputId="comiteResponsables"
+          [options]="responsablesFiltrados"
+          [(ngModel)]="comite.idsResponsables"
+          name="idsResponsables"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre"
+          [showClear]="true"
+          display="chip"
+          [maxSelectedLabels]="3"
+          selectedItemsLabel="{0} responsables seleccionados"
+          placeholder="Selecciona los responsables del comité"
+          [disabled]="!comite.areas?.length"
+          appendTo="body"
+          styleClass="w-100">
+          <ng-template let-responsable pTemplate="item">
+            <div class="d-flex flex-column">
+              <span>{{ responsable.nombre }}</span>
+              <small class="text-muted">{{ obtenerAreaResponsable(responsable) }}</small>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+        <small *ngIf="!comite.areas?.length" class="text-muted d-block mt-1">
+          Selecciona al menos un área para consultar sus responsables.
+        </small>
       </div>
     </div>
 
