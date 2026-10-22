@@ -23,6 +23,46 @@ $rw-canvas: #f4f6fa;
 /* ==========================================================================
    Inputs y Controles
    ========================================================================== */
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: #94a3b8;
+    font-size: 1.15rem;
+    pointer-events: none;
+  }
+
+  .users-search-input {
+    height: 48px;
+    padding: 0 1rem 0 2.4rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    width: 280px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+    &::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $rw-primary;
+      box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+      width: 320px;
+    }
+  }
+}
+
 .users-input {
   height: 48px;
   border-radius: 12px;

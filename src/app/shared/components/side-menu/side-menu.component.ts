@@ -1,21 +1,19 @@
-import { ChangeDetectionStrategy, Component, type OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, type OnInit, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuItem } from 'primeng/api';
-import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { AvatarModule } from 'ngx-avatars';
 
 import { DocumentsService } from '../../services/documents.service';
-
+import { VersionControlService } from '../../../versiones/services/version-control.service';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { environment } from '../../../../environments/environments';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { AvatarModule } from 'ngx-avatars';
-import { VersionControlService } from '../../../versiones/services/version-control.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -23,30 +21,30 @@ import { VersionControlService } from '../../../versiones/services/version-contr
   imports: [
     CommonModule, 
     FormsModule, 
-    MenubarModule, 
     ButtonModule, 
-    ChatNotificationsButtonComponent,
-    AlertNotificationsButtonComponent,
+    TooltipModule,
     AvatarModule,
-    RouterLink
+    RouterLink,
+    RouterLinkActive,
+    ChatNotificationsButtonComponent,
+    AlertNotificationsButtonComponent
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class SideMenuComponent implements OnInit, OnDestroy {
-  items: MenuItem[] = [];
+  usuario!: Usuario;
+  responsable: Responsable | null = null;
+  responsableTarea: Responsable | null = null;
+  tituloBanner: string = '';
   showmenu: boolean = false;
   isPinned: boolean = true;
-  usuario: Usuario;
-  urlbase: string = '';
-  tituloBanner: string;
   isCheckingValidadorConsumos: boolean = false;
   isCheckingValidadorCupones: boolean = false;
 
-  responsableTarea: Responsable | null = null;
   versionActual: any;
+  private routerSub?: Subscription;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -54,15 +52,36 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     public documentsService: DocumentsService,
     private versionControlService: VersionControlService
   ) {
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
+    this.cargarUsuarios();
+  }
 
-    if (this.usuario.idRol == '2') {
-      this.tituloBanner = this.usuario.sucursales[0].nombre;
+  cargarUsuarios(): void {
+    const rawUser = localStorage.getItem('rwuserdatatk');
+    this.usuario = rawUser ? JSON.parse(rawUser) : null;
+
+    const rawResp = localStorage.getItem('responsable-tareas');
+    this.responsable = rawResp ? JSON.parse(rawResp) : null;
+    this.responsableTarea = this.responsable;
+
+    if (this.usuario) {
+      if (this.usuario.idRol == '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
+        this.tituloBanner = this.usuario.sucursales[0].nombre;
+      } else {
+        this.tituloBanner = `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
+      }
+    } else {
+      this.tituloBanner = '';
     }
-    else {
-      this.tituloBanner = `${this.usuario.nombre} ${this.usuario.apellidoP}`;
+
+    this.cdr.markForCheck();
+  }
+
+  get nombreCuenta(): string {
+    if (!this.usuario) return '';
+    if (this.usuario.idRol === '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
+      return this.usuario.sucursales[0].nombre;
     }
+    return `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
   }
 
   ngOnInit(): void {
@@ -71,52 +90,45 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
     });
 
-    // Read pinned status from localStorage (default to true)
-    const savedPin = localStorage.getItem('rw_sidebar_pinned');
+    this.routerSub = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.cargarUsuarios();
+        this.closemenu();
+      });
+
+    const savedPin = typeof window !== 'undefined' ? localStorage.getItem('rw_sidebar_pinned') : null;
     this.isPinned = savedPin !== null ? savedPin === 'true' : true;
 
-    if (this.isPinned && window.innerWidth > 1024) {
+    if (this.isPinned && typeof window !== 'undefined' && window.innerWidth > 1024) {
       this.showmenu = true;
     }
 
     this.updateBodyPinClass();
+  }
 
-    this.items = [
-      {
-        label: 'Inicio',
-        icon: 'pi pi-home',
-        route: '/home',
-      },
-      {
-        label: 'Metas',
-        icon: 'pi pi-bullseye',
-        route: '/metas',
-      },
-    ];
+  @HostListener('window:storage')
+  onStorageChange(): void {
+    this.cargarUsuarios();
+  }
 
-    let origin = window.location.origin;
-    let url = '';
-
-    if (environment.production == true) {
-      url = '/front/tickets';
-    }
-    this.urlbase = origin + url + '/#/main/ticket/';
+  @HostListener('window:resize')
+  onResize(): void {
+    this.updateBodyPinClass();
   }
 
   ngOnDestroy(): void {
     if (typeof document !== 'undefined') {
       document.body.classList.remove('sidebar-pinned');
     }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(): void {
-    this.updateBodyPinClass();
+    this.routerSub?.unsubscribe();
   }
 
   togglePin(): void {
     this.isPinned = !this.isPinned;
-    localStorage.setItem('rw_sidebar_pinned', String(this.isPinned));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('rw_sidebar_pinned', String(this.isPinned));
+    }
     if (this.isPinned) {
       this.showmenu = true;
     }
@@ -131,11 +143,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   }
 
   closemenu(): void {
-    if (!this.isPinned || window.innerWidth <= 1024) {
+    if (!this.isPinned || (typeof window !== 'undefined' && window.innerWidth <= 1024)) {
       this.showmenu = false;
       this.updateBodyPinClass();
+      this.cdr.markForCheck();
     }
-    this.cdr.markForCheck();
   }
 
   updateBodyPinClass(): void {
@@ -146,6 +158,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         document.body.classList.remove('sidebar-pinned');
       }
     }
+  }
+
+  cambiarUsuarioPin(): void {
+    this.closemenu();
+    this.router.navigate(['/usuarios/selecciona-responsable']);
   }
 
   abrirValidador(tipo: 'consumos' | 'cupones', event?: Event): void {

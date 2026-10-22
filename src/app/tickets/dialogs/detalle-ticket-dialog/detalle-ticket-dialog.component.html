@@ -234,7 +234,7 @@
                   <span class="info-label"><i class="bx bx-info-circle"></i> Estatus</span>
                   <div class="mt-1 d-flex">
                     <!-- Dropdown para Admin (Roles 1 y 5) -->
-                    <p-dropdown *ngIf="(usuario?.idRol === '1' || usuario?.idRol === '5') && ticket.idEstatusTicket !== '3'"
+                    <p-dropdown *ngIf="(usuario.idRol === '1' || usuario.idRol === '5') && ticket.idEstatusTicket !== '3'"
                         [options]="estatusTicketsOpciones" 
                         optionDisabled="disabled"
                         [(ngModel)]="ticket.idEstatusTicket" 
@@ -260,7 +260,7 @@
                     </p-dropdown>
 
                     <!-- Etiqueta estática para otros usuarios o ticket finalizado (estatus 3) -->
-                    <ng-container *ngIf="(usuario?.idRol !== '1' && usuario?.idRol !== '5') || ticket.idEstatusTicket === '3'">
+                    <ng-container *ngIf="(usuario.idRol !== '1' && usuario.idRol !== '5') || ticket.idEstatusTicket === '3'">
                       <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
                         <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
                           <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
@@ -316,7 +316,7 @@
                 <div class="info-item">
                   <span class="info-label"><i class="bx bx-headphone"></i> Asistencia</span>
                   <div class="mt-1 d-flex">
-                    <p-dropdown *ngIf="(usuario?.idRol === '1' || usuario?.idRol === '5') && ticket.idEstatusTicket !== '3'"
+                    <p-dropdown *ngIf="(usuario.idRol === '1' || usuario.idRol === '5') && ticket.idEstatusTicket !== '3'"
                         [options]="tiposSoporte" 
                         [(ngModel)]="ticket.idTipoSoporte" 
                         optionLabel="name"
@@ -337,7 +337,7 @@
                             </div>
                         </ng-template>
                     </p-dropdown>
-                    <span *ngIf="(usuario?.idRol !== '1' && usuario?.idRol !== '5') || ticket.idEstatusTicket === '3'" class="info-value text-uppercase fw-bold text-dark">
+                    <span *ngIf="(usuario.idRol !== '1' && usuario.idRol !== '5') || ticket.idEstatusTicket === '3'" class="info-value text-uppercase fw-bold text-dark">
                       {{ obtenerNombreTipoSoporte(ticket.idTipoSoporte) }}
                     </span>
                   </div>
@@ -380,10 +380,10 @@
               </div>
 
               <!-- Tarjeta de Archivos -->
-              <div class="ticket-card p-4 m-0 d-flex flex-column h-100" *ngIf="ticket.archivos?.length">
+              <div class="ticket-card p-4 m-0 d-flex flex-column h-100" *ngIf="ticket.archivos && ticket.archivos.length">
                 <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2 flex-shrink-0" style="font-size: 0.8rem; letter-spacing: 0.5px;">
                   <i class="bx bx-folder-open fs-5" style="color: #D3152A;"></i> ARCHIVOS DEL TICKET 
-                  <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos?.length }}</span>
+                  <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos.length }}</span>
                 </h5>
                 <div class="archivos-list d-flex flex-column gap-2 flex-grow-1" style="overflow-y: auto; min-height: 0; padding-right: 0.5rem;">
                   <div *ngFor="let archivo of ticket.archivos" class="archivo-list-item d-flex align-items-center p-2" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; transition: all 0.2s; cursor: default;">
@@ -391,7 +391,7 @@
                     <!-- Icono o Miniatura pequeña -->
                     <div class="archivo-icon me-3" style="width: 44px; height: 44px; flex-shrink: 0; overflow: hidden; border-radius: 6px;">
                       <!-- Si es imagen -->
-                      <ng-container *ngIf="archivo.tipo?.startsWith('image/') || archivo.url?.match('.jpg|.jpeg|.png|.gif'); else docPreview">
+                      <ng-container *ngIf="(archivo.tipo && archivo.tipo.startsWith('image/')) || (archivo.url && archivo.url.match('.jpg|.jpeg|.png|.gif')); else docPreview">
                         <div (click)="abrirModalImagen(archivo.url)" class="w-100 h-100" style="cursor: pointer;" pTooltip="Clic para ampliar" tooltipPosition="top">
                           <img [src]="archivo.url" [alt]="archivo.nombre" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
                         </div>
@@ -489,7 +489,7 @@
                       <div *ngFor="let idComite of comitesSeleccionados" class="committee-areas-card">
                         <div class="fw-bold mb-2">{{ obtenerNombreComite(idComite) }}</div>
                         <ng-container *ngIf="obtenerComite(idComite) as comite">
-                          <div *ngIf="comite.areas?.length; else comiteSinAreas" class="d-flex flex-wrap gap-2">
+                          <div *ngIf="comite.areas.length; else comiteSinAreas" class="d-flex flex-wrap gap-2">
                             <span *ngFor="let idArea of comite.areas" class="badge committee-area-badge">
                               {{ obtenerNombreArea(idArea, areas) }}
                             </span>
@@ -542,7 +542,7 @@
           class="flex-grow-1 d-flex flex-column h-100"
           [modulo]="'TICKETS'" 
           [permitirModoComite]="true"
-          [comiteDisponible]="!!ticket?.comites?.length"
+          [comiteDisponible]="ticket.comites.length > 0"
           [puedeAccederComite]="puedeAccederBitacoraComite"
           [referenciaId]="ticket.id" 
           [usuariosEtiquetables]="responsablesService.responsables">

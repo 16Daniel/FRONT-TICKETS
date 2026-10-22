@@ -81,7 +81,7 @@
           [maxSelectedLabels]="3"
           selectedItemsLabel="{0} responsables seleccionados"
           placeholder="Selecciona los responsables del comité"
-          [disabled]="!comite.areas?.length"
+          [disabled]="!comite.areas.length"
           appendTo="body"
           styleClass="w-100">
           <ng-template let-responsable pTemplate="item">
@@ -91,7 +91,7 @@
             </div>
           </ng-template>
         </p-multiSelect>
-        <small *ngIf="!comite.areas?.length" class="text-muted d-block mt-1">
+        <small *ngIf="!comite.areas.length" class="text-muted d-block mt-1">
           Selecciona al menos un área para consultar sus responsables.
         </small>
       </div>

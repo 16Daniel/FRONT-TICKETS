@@ -4,7 +4,7 @@
     <button 
       type="button" 
       class="nav-toggle-btn" 
-      (click)="showmenu = !showmenu" 
+      (click)="toggleMenu()" 
       [attr.aria-expanded]="showmenu" 
       aria-label="Abrir menú de navegación">
       <i class="bx" [ngClass]="showmenu ? 'bx-x' : 'bx-menu'"></i>
@@ -18,18 +18,8 @@
   </div>
 
   <div class="navbar-right">
-
     <app-alert-notifications-button></app-alert-notifications-button>
     <app-chat-notifications-button></app-chat-notifications-button>
-<!-- 
-    <div class="user-avatar-wrapper" *ngIf="usuario && usuario.idRol !== '6'">
-      <ngx-avatars 
-        [name]="responsableTarea?.nombre || usuario.nombre" 
-        [size]="34" 
-        pTooltip="{{ responsableTarea?.nombre || usuario.nombre }}" 
-        [bgColor]="responsableTarea?.color || '#D3152A'">
-      </ngx-avatars>
-    </div> -->
   </div>
 </header>
 
@@ -121,6 +111,27 @@
         <i class="bx bx-line-chart nav-icon"></i>
         <span class="nav-label">KPIs</span>
       </a>
+
+      <a 
+        [routerLink]="'/main/categorias/umbral-recurrencias'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-slider nav-icon"></i>
+        <span class="nav-label">Umbral de Recurrencias</span>
+      </a>
+      
+      <a 
+        [routerLink]="'/main/comites/admin'" 
+        routerLinkActive="active"
+        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
+        (click)="closemenu()" 
+        class="nav-item">
+        <i class="bx bx-group nav-icon"></i>
+        <span class="nav-label">Comités</span>
+      </a>
+
     </div>
 
     <!-- Grupo: Control de versiones -->
@@ -201,36 +212,6 @@
         class="nav-item">
         <i class="bx bx-grid-alt nav-icon"></i>
         <span class="nav-label">Categorías</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/categorias/umbral-recurrencias'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-slider nav-icon"></i>
-        <span class="nav-label">Umbral de Recurrencias</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/kpis'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-line-chart nav-icon"></i>
-        <span class="nav-label">KPIs</span>
-        </a>
-      
-      <a 
-        [routerLink]="'/main/comites/admin'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-group nav-icon"></i>
-        <span class="nav-label">Comités</span>
       </a>
 
     </div>
@@ -448,24 +429,107 @@
 
   </div>
 
-  <!-- Drawer Footer: User Profile & Logout -->
-  <div class="drawer-footer" *ngIf="usuario">
-    <div class="user-profile">
-      <div class="user-avatar-footer">
+  <!-- Drawer Footer: Barra compacta de usuario con acciones integradas -->
+  <div class="drawer-footer-compact" *ngIf="usuario">
+    <!-- Usuario PIN Activo -->
+    <div class="compact-user-bar" *ngIf="responsable">
+      <div class="user-avatar-compact">
         <ngx-avatars 
-          [name]="usuario.nombre + ' ' + usuario.apellidoP" 
-          [size]="36" 
+          [name]="responsable.nombre" 
+          [size]="34" 
+          [bgColor]="responsable.color || '#D3152A'">
+        </ngx-avatars>
+        <span class="compact-pin-dot" title="PIN activo"></span>
+      </div>
+
+      <div class="compact-user-info" [title]="responsable.nombre + ' (' + (responsable.posicion || 'Responsable en turno') + ')'">
+        <div class="compact-user-name">{{ responsable.nombre }}</div>
+        <div class="compact-user-role">{{ responsable.posicion || 'Responsable en turno' }}</div>
+      </div>
+
+      <div class="compact-actions">
+        <button 
+          type="button" 
+          class="compact-action-btn" 
+          (click)="cambiarUsuarioPin()" 
+          pTooltip="Cambiar usuario PIN" 
+          tooltipPosition="top"
+          aria-label="Cambiar usuario PIN">
+          <i class="bx bx-user-pin"></i>
+        </button>
+
+        <button 
+          type="button" 
+          class="compact-action-btn btn-logout" 
+          (click)="logout()" 
+          pTooltip="Cerrar sesión" 
+          tooltipPosition="top"
+          aria-label="Cerrar sesión">
+          <i class="bx bx-log-out"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Si no hay usuario PIN -->
+    <div class="compact-user-bar unassigned-bar" *ngIf="!responsable && usuario.idRol !== '6'">
+      <div class="user-avatar-compact empty-avatar-compact" (click)="cambiarUsuarioPin()">
+        <i class="bx bx-user-pin"></i>
+      </div>
+
+      <div class="compact-user-info cursor-pointer" (click)="cambiarUsuarioPin()">
+        <div class="compact-user-name text-danger">Sin usuario PIN</div>
+        <div class="compact-user-role">Clic para asignar</div>
+      </div>
+
+      <div class="compact-actions">
+        <button 
+          type="button" 
+          class="compact-action-btn btn-highlight-pin" 
+          (click)="cambiarUsuarioPin()" 
+          pTooltip="Asignar usuario PIN" 
+          tooltipPosition="top"
+          aria-label="Asignar usuario PIN">
+          <i class="bx bx-plus-circle"></i>
+        </button>
+
+        <button 
+          type="button" 
+          class="compact-action-btn btn-logout" 
+          (click)="logout()" 
+          pTooltip="Cerrar sesión" 
+          tooltipPosition="top"
+          aria-label="Cerrar sesión">
+          <i class="bx bx-log-out"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Rol 6 o fallback de solo usuario -->
+    <div class="compact-user-bar" *ngIf="!responsable && usuario.idRol === '6'">
+      <div class="user-avatar-compact">
+        <ngx-avatars 
+          [name]="nombreCuenta" 
+          [size]="34" 
           [bgColor]="'#0F62FE'">
         </ngx-avatars>
       </div>
-      <div class="user-info">
-        <span class="user-name">{{ usuario.nombre }} {{ usuario.apellidoP }}</span>
-        <span class="user-role">ERP User <ng-container *ngIf="versionActual">| v{{ versionActual.version }}</ng-container></span>
+
+      <div class="compact-user-info" [title]="nombreCuenta">
+        <div class="compact-user-name">{{ nombreCuenta }}</div>
+        <div class="compact-user-role">Cuenta CEDIS</div>
+      </div>
+
+      <div class="compact-actions">
+        <button 
+          type="button" 
+          class="compact-action-btn btn-logout" 
+          (click)="logout()" 
+          pTooltip="Cerrar sesión" 
+          tooltipPosition="top"
+          aria-label="Cerrar sesión">
+          <i class="bx bx-log-out"></i>
+        </button>
       </div>
     </div>
-    <button type="button" class="logout-btn" (click)="logout()">
-      <i class="bx bx-log-out"></i>
-      <span>Cerrar sesión</span>
-    </button>
   </div>
 </aside>
