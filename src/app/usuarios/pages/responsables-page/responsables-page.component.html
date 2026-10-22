@@ -10,7 +10,17 @@
     <!-- Toolbar -->
     <div class="users-toolbar-bar mb-4">
       <div class="toolbar-left">
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <div class="search-input-wrapper">
+            <i class="bx bx-search search-icon"></i>
+            <input 
+              type="text" 
+              #filterInput
+              (input)="dt.filterGlobal(filterInput.value, 'contains')"
+              placeholder="Buscar responsable..." 
+              class="users-search-input" />
+          </div>
+
           <p-dropdown 
             [options]="sucursales" 
             [(ngModel)]="idSucursalSeleccionada" 
@@ -38,7 +48,7 @@
 
     <!-- Contenedor de la Tabla -->
     <div class="users-nodes-container">
-      <p-table [value]="responsables" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines table-tk">
+      <p-table #dt [value]="responsables" [globalFilterFields]="['nombre', 'posicion', 'correo', 'pin']" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines table-tk">
 
         <ng-template pTemplate="header">
           <tr>
@@ -48,8 +58,8 @@
             <th>SUCURSAL</th>
             <th>USUARIO</th>
             <th>ÁREA</th>
-            <th>COLOR</th>
-            <th class="text-center">GLOBAL</th>
+            <!-- <th>COLOR</th>
+            <th class="text-center">GLOBAL</th> -->
             <th class="text-center">PIN</th>
             <th class="text-center" style="width: 140px;">ACCIONES</th>
           </tr>
@@ -84,16 +94,16 @@
             </td>
 
             <!-- COLOR -->
-            <td>
+            <!-- <td>
               <ngx-avatars [name]="res.nombre || ' '" [size]="30" [bgColor]="res.color"></ngx-avatars>
-            </td>
+            </td> -->
 
             <!-- ES GLOBAL -->
-            <td class="text-center">
+            <!-- <td class="text-center">
               <span class="badge" [ngClass]="res.esGlobal ? 'bg-success' : 'bg-secondary'">
                 {{ res.esGlobal ? 'SI' : 'NO' }}
               </span>
-            </td>
+            </td> -->
 
             <!-- PIN -->
             <td class="text-center">

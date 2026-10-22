@@ -1,29 +1,3 @@
-<!-- Header Navigation Bar (Fixed 64px) -->
-<header class="erp-navbar">
-  <div class="navbar-left">
-    <button 
-      type="button" 
-      class="nav-toggle-btn" 
-      (click)="showmenu = !showmenu" 
-      [attr.aria-expanded]="showmenu" 
-      aria-label="Abrir menú de navegación">
-      <i class="bx" [ngClass]="showmenu ? 'bx-x' : 'bx-menu'"></i>
-    </button>
-  </div>
-
-  <div class="navbar-center">
-    <div class="brand-container">
-      <span class="branch-badge" *ngIf="tituloBanner">{{ tituloBanner }}</span>
-    </div>
-  </div>
-
-  <div class="navbar-right">
-
-    <app-alert-notifications-button></app-alert-notifications-button>
-    <app-chat-notifications-button></app-chat-notifications-button>
-  </div>
-</header>
-
 <!-- Drawer Backdrop Overlay (only shown when unpinned) -->
 <div 
   class="sidebar-backdrop" 
@@ -430,81 +404,107 @@
 
   </div>
 
-  <!-- Drawer Footer: User Profiles (Responsable + ERP) & Actions -->
-  <div class="drawer-footer" *ngIf="usuario">
-    <!-- Grupo de Avatares / Perfiles Coexistiendo -->
-    <div class="drawer-profiles-group">
-      <!-- Perfil 1: Usuario PIN / Responsable -->
-      <div class="user-profile-card responsable-profile" *ngIf="responsable">
-        <div class="user-avatar-footer">
-          <ngx-avatars 
-            [name]="responsable.nombre" 
-            [size]="36" 
-            [bgColor]="responsable.color || '#D3152A'">
-          </ngx-avatars>
-          <span class="profile-pin-indicator" title="PIN activo">
-            <i class="bx bx-shield-quarter"></i>
-          </span>
-        </div>
-        <div class="user-info">
-          <div class="user-info-row">
-            <span class="user-name" [title]="responsable.nombre">{{ responsable.nombre }}</span>
-            <span class="badge-pill-pin">PIN</span>
-          </div>
-          <span class="user-role">{{ responsable.posicion || 'Responsable en turno' }}</span>
-        </div>
+  <!-- Drawer Footer: Barra compacta de usuario con acciones integradas -->
+  <div class="drawer-footer-compact" *ngIf="usuario">
+    <!-- Usuario PIN Activo -->
+    <div class="compact-user-bar" *ngIf="responsable">
+      <div class="user-avatar-compact">
+        <ngx-avatars 
+          [name]="responsable.nombre" 
+          [size]="34" 
+          [bgColor]="responsable.color || '#D3152A'">
+        </ngx-avatars>
+        <span class="compact-pin-dot" title="PIN activo"></span>
       </div>
 
-      <!-- Alerta / Aviso si no hay responsable activo -->
-      <div class="user-profile-card unassigned-profile" *ngIf="!responsable && usuario.idRol !== '6'">
-        <div class="user-avatar-footer empty-avatar">
+      <div class="compact-user-info" [title]="responsable.nombre + ' (' + (responsable.posicion || 'Responsable en turno') + ')'">
+        <div class="compact-user-name">{{ responsable.nombre }}</div>
+        <div class="compact-user-role">{{ responsable.posicion || 'Responsable en turno' }}</div>
+      </div>
+
+      <div class="compact-actions">
+        <button 
+          type="button" 
+          class="compact-action-btn" 
+          (click)="cambiarUsuarioPin()" 
+          pTooltip="Cambiar usuario PIN" 
+          tooltipPosition="top"
+          aria-label="Cambiar usuario PIN">
           <i class="bx bx-user-pin"></i>
-        </div>
-        <div class="user-info">
-          <span class="user-name">Sin usuario PIN</span>
-          <span class="user-role">Haz clic en Cambiar PIN</span>
-        </div>
-      </div>
+        </button>
 
-      <!-- Perfil 2: Cuenta ERP / Sucursal -->
-      <!-- <div class="user-profile-card erp-profile">
-        <div class="user-avatar-footer">
-          <ngx-avatars 
-            [name]="nombreCuenta" 
-            [size]="34" 
-            [bgColor]="'#0F62FE'">
-          </ngx-avatars>
-        </div>
-        <div class="user-info">
-          <div class="user-info-row">
-            <span class="user-name" [title]="nombreCuenta">{{ nombreCuenta }}</span>
-            <span class="badge-pill-erp">{{ usuario.idRol == '2' ? 'Sucursal' : 'ERP' }}</span>
-          </div>
-          <span class="user-role">
-            {{ usuario.idRol == '2' ? 'Sucursal ERP' : 'Cuenta ERP' }}
-            <ng-container *ngIf="versionActual">| v{{ versionActual.version }}</ng-container>
-          </span>
-        </div>
-      </div> -->
+        <button 
+          type="button" 
+          class="compact-action-btn btn-logout" 
+          (click)="logout()" 
+          pTooltip="Cerrar sesión" 
+          tooltipPosition="top"
+          aria-label="Cerrar sesión">
+          <i class="bx bx-log-out"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Botones de Acción: Cambiar PIN y Cerrar Sesión -->
-    <div class="drawer-footer-actions">
-      <button 
-        type="button" 
-        class="change-pin-btn" 
-        (click)="cambiarUsuarioPin()">
+    <!-- Si no hay usuario PIN -->
+    <div class="compact-user-bar unassigned-bar" *ngIf="!responsable && usuario.idRol !== '6'">
+      <div class="user-avatar-compact empty-avatar-compact" (click)="cambiarUsuarioPin()">
         <i class="bx bx-user-pin"></i>
-        <span>Cambiar usuario PIN</span>
-      </button>
+      </div>
 
-      <button 
-        type="button" 
-        class="logout-btn" 
-        (click)="logout()">
-        <i class="bx bx-log-out"></i>
-        <span>Cerrar sesión</span>
-      </button>
+      <div class="compact-user-info cursor-pointer" (click)="cambiarUsuarioPin()">
+        <div class="compact-user-name text-danger">Sin usuario PIN</div>
+        <div class="compact-user-role">Clic para asignar</div>
+      </div>
+
+      <div class="compact-actions">
+        <button 
+          type="button" 
+          class="compact-action-btn btn-highlight-pin" 
+          (click)="cambiarUsuarioPin()" 
+          pTooltip="Asignar usuario PIN" 
+          tooltipPosition="top"
+          aria-label="Asignar usuario PIN">
+          <i class="bx bx-plus-circle"></i>
+        </button>
+
+        <button 
+          type="button" 
+          class="compact-action-btn btn-logout" 
+          (click)="logout()" 
+          pTooltip="Cerrar sesión" 
+          tooltipPosition="top"
+          aria-label="Cerrar sesión">
+          <i class="bx bx-log-out"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Rol 6 o fallback de solo usuario -->
+    <div class="compact-user-bar" *ngIf="!responsable && usuario.idRol === '6'">
+      <div class="user-avatar-compact">
+        <ngx-avatars 
+          [name]="nombreCuenta" 
+          [size]="34" 
+          [bgColor]="'#0F62FE'">
+        </ngx-avatars>
+      </div>
+
+      <div class="compact-user-info" [title]="nombreCuenta">
+        <div class="compact-user-name">{{ nombreCuenta }}</div>
+        <div class="compact-user-role">Cuenta CEDIS</div>
+      </div>
+
+      <div class="compact-actions">
+        <button 
+          type="button" 
+          class="compact-action-btn btn-logout" 
+          (click)="logout()" 
+          pTooltip="Cerrar sesión" 
+          tooltipPosition="top"
+          aria-label="Cerrar sesión">
+          <i class="bx bx-log-out"></i>
+        </button>
+      </div>
     </div>
   </div>
 </aside>
