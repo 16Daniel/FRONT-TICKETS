@@ -1,24 +1,19 @@
-import { ChangeDetectionStrategy, Component, type OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { ChangeDetectionStrategy, Component, type OnInit, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuItem } from 'primeng/api';
-import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { AvatarModule } from 'ngx-avatars';
 
 import { DocumentsService } from '../../services/documents.service';
-
+import { VersionControlService } from '../../../versiones/services/version-control.service';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { environment } from '../../../../environments/environments';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { AvatarModule } from 'ngx-avatars';
-import { VersionControlService } from '../../../versiones/services/version-control.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -26,28 +21,25 @@ import { VersionControlService } from '../../../versiones/services/version-contr
   imports: [
     CommonModule, 
     FormsModule, 
-    MenubarModule, 
     ButtonModule, 
     TooltipModule,
-    ChatNotificationsButtonComponent,
-    AlertNotificationsButtonComponent,
     AvatarModule,
-    RouterLink
+    RouterLink,
+    RouterLinkActive,
+    ChatNotificationsButtonComponent,
+    AlertNotificationsButtonComponent
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class SideMenuComponent implements OnInit, OnDestroy {
-  items: MenuItem[] = [];
-  showmenu: boolean = false;
-  isPinned: boolean = true;
-  usuario: Usuario;
+  usuario!: Usuario;
   responsable: Responsable | null = null;
   responsableTarea: Responsable | null = null;
-  urlbase: string = '';
   tituloBanner: string = '';
+  showmenu: boolean = false;
+  isPinned: boolean = true;
   isCheckingValidadorConsumos: boolean = false;
   isCheckingValidadorCupones: boolean = false;
 
@@ -60,17 +52,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     public documentsService: DocumentsService,
     private versionControlService: VersionControlService
   ) {
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!);
-    this.responsableTarea = this.responsable;
-
-    if (this.usuario) {
-      if (this.usuario.idRol == '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
-        this.tituloBanner = this.usuario.sucursales[0].nombre;
-      } else {
-        this.tituloBanner = `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
-      }
-    }
+    this.cargarUsuarios();
   }
 
   cargarUsuarios(): void {
@@ -87,7 +69,10 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       } else {
         this.tituloBanner = `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
       }
+    } else {
+      this.tituloBanner = '';
     }
+
     this.cdr.markForCheck();
   }
 
@@ -109,43 +94,27 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         this.cargarUsuarios();
+        this.closemenu();
       });
 
-    // Read pinned status from localStorage (default to true)
-    const savedPin = localStorage.getItem('rw_sidebar_pinned');
+    const savedPin = typeof window !== 'undefined' ? localStorage.getItem('rw_sidebar_pinned') : null;
     this.isPinned = savedPin !== null ? savedPin === 'true' : true;
 
-    if (this.isPinned && window.innerWidth > 1024) {
+    if (this.isPinned && typeof window !== 'undefined' && window.innerWidth > 1024) {
       this.showmenu = true;
     }
 
     this.updateBodyPinClass();
-
-    this.items = [
-      {
-        label: 'Inicio',
-        icon: 'pi pi-home',
-        route: '/home',
-      },
-      {
-        label: 'Metas',
-        icon: 'pi pi-bullseye',
-        route: '/metas',
-      },
-    ];
-
-    let origin = window.location.origin;
-    let url = '';
-
-    if (environment.production == true) {
-      url = '/front/tickets';
-    }
-    this.urlbase = origin + url + '/#/main/ticket/';
   }
 
   @HostListener('window:storage')
   onStorageChange(): void {
     this.cargarUsuarios();
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.updateBodyPinClass();
   }
 
   ngOnDestroy(): void {
@@ -155,14 +124,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.routerSub?.unsubscribe();
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(): void {
-    this.updateBodyPinClass();
-  }
-
   togglePin(): void {
     this.isPinned = !this.isPinned;
-    localStorage.setItem('rw_sidebar_pinned', String(this.isPinned));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('rw_sidebar_pinned', String(this.isPinned));
+    }
     if (this.isPinned) {
       this.showmenu = true;
     }
@@ -177,11 +143,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   }
 
   closemenu(): void {
-    if (!this.isPinned || window.innerWidth <= 1024) {
+    if (!this.isPinned || (typeof window !== 'undefined' && window.innerWidth <= 1024)) {
       this.showmenu = false;
       this.updateBodyPinClass();
+      this.cdr.markForCheck();
     }
-    this.cdr.markForCheck();
   }
 
   updateBodyPinClass(): void {
