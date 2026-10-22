@@ -1,5 +1,14 @@
 import { Routes } from '@angular/router';
 
+export const USUARIOS_ROOT_ROUTES: Routes = [
+  {
+    path: 'usuarios/selecciona-responsable',
+    title: 'Selecciona quien eres',
+    loadComponent: () =>
+      import('./pages/seleccionar-responsable-page/seleccionar-responsable-page.component'),
+  },
+];
+
 export const USUARIOS_MAIN_ROUTES: Routes = [
   {
     path: 'users',

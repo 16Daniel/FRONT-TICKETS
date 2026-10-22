@@ -101,7 +101,7 @@ export default class LoginComponent {
         //   return;
         // }
 
-        this.router.navigate(['/tareas/selecciona-responsable']);
+        this.router.navigate(['/usuarios/selecciona-responsable']);
       }
       this.loading = false;
       this.cdr.markForCheck();
