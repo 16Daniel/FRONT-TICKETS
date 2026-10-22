@@ -1,8 +1,8 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../interfaces/responsable.interface';
 import { CommonModule } from '@angular/common';
-import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { ResponsablesService } from '../../services/responsables.service';
+import { Usuario } from '../../interfaces/usuario.model';
 import { Router } from '@angular/router';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
@@ -30,7 +30,6 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
   errorPin = '';
   responsableSeleccionado: any = null;
 
-
   constructor(private router: Router) { }
 
   ngOnInit(): void {
@@ -49,11 +48,6 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
       this.pinInput?.nativeElement.focus();
     }, 0);
   }
-
-  // onPinValidado(responsable: Responsable) {
-  //   localStorage.setItem('responsable-tareas', JSON.stringify(responsable));
-  //   this.router.navigate(['/main/home-a']);
-  // }
 
   onPinChange(): void {
     // Limpiar caracteres no numéricos
@@ -89,7 +83,6 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
   }
 
   cancelar() {
-    this.router.navigate(['/auth/login']); // o donde definas
+    this.router.navigate(['/auth/login']);
   }
-
 }

@@ -19,7 +19,7 @@ export class ResponsableGuard implements CanActivate {
         return true; 
       }
 
-    this.router.navigate(['/tareas/selecciona-responsable']);
+    this.router.navigate(['/usuarios/selecciona-responsable']);
     return false;
   }
 }

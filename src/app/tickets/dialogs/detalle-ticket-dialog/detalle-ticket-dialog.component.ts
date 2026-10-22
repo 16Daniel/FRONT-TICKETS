@@ -343,7 +343,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
       const id = String(s.id);
       return {
         ...s,
-        disabled: id === '3' || id === '7'
+        disabled: id === '2' || id === '3' || id === '7'
       };
     });
   }

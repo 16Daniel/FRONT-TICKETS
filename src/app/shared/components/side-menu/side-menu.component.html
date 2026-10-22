@@ -21,15 +21,6 @@
 
     <app-alert-notifications-button></app-alert-notifications-button>
     <app-chat-notifications-button></app-chat-notifications-button>
-<!-- 
-    <div class="user-avatar-wrapper" *ngIf="usuario && usuario.idRol !== '6'">
-      <ngx-avatars 
-        [name]="responsableTarea?.nombre || usuario.nombre" 
-        [size]="34" 
-        pTooltip="{{ responsableTarea?.nombre || usuario.nombre }}" 
-        [bgColor]="responsableTarea?.color || '#D3152A'">
-      </ngx-avatars>
-    </div> -->
   </div>
 </header>
 
@@ -448,24 +439,81 @@
 
   </div>
 
-  <!-- Drawer Footer: User Profile & Logout -->
+  <!-- Drawer Footer: User Profiles (Responsable + ERP) & Actions -->
   <div class="drawer-footer" *ngIf="usuario">
-    <div class="user-profile">
-      <div class="user-avatar-footer">
-        <ngx-avatars 
-          [name]="usuario.nombre + ' ' + usuario.apellidoP" 
-          [size]="36" 
-          [bgColor]="'#0F62FE'">
-        </ngx-avatars>
+    <!-- Grupo de Avatares / Perfiles Coexistiendo -->
+    <div class="drawer-profiles-group">
+      <!-- Perfil 1: Usuario PIN / Responsable -->
+      <div class="user-profile-card responsable-profile" *ngIf="responsable">
+        <div class="user-avatar-footer">
+          <ngx-avatars 
+            [name]="responsable.nombre" 
+            [size]="36" 
+            [bgColor]="responsable.color || '#D3152A'">
+          </ngx-avatars>
+          <span class="profile-pin-indicator" title="PIN activo">
+            <i class="bx bx-shield-quarter"></i>
+          </span>
+        </div>
+        <div class="user-info">
+          <div class="user-info-row">
+            <span class="user-name" [title]="responsable.nombre">{{ responsable.nombre }}</span>
+            <span class="badge-pill-pin">PIN</span>
+          </div>
+          <span class="user-role">{{ responsable.posicion || 'Responsable en turno' }}</span>
+        </div>
       </div>
-      <div class="user-info">
-        <span class="user-name">{{ usuario.nombre }} {{ usuario.apellidoP }}</span>
-        <span class="user-role">ERP User <ng-container *ngIf="versionActual">| v{{ versionActual.version }}</ng-container></span>
+
+      <!-- Alerta / Aviso si no hay responsable activo -->
+      <div class="user-profile-card unassigned-profile" *ngIf="!responsable && usuario.idRol !== '6'">
+        <div class="user-avatar-footer empty-avatar">
+          <i class="bx bx-user-pin"></i>
+        </div>
+        <div class="user-info">
+          <span class="user-name">Sin usuario PIN</span>
+          <span class="user-role">Haz clic en Cambiar PIN</span>
+        </div>
       </div>
+
+      <!-- Perfil 2: Cuenta ERP / Sucursal -->
+      <!-- <div class="user-profile-card erp-profile">
+        <div class="user-avatar-footer">
+          <ngx-avatars 
+            [name]="nombreCuenta" 
+            [size]="34" 
+            [bgColor]="'#0F62FE'">
+          </ngx-avatars>
+        </div>
+        <div class="user-info">
+          <div class="user-info-row">
+            <span class="user-name" [title]="nombreCuenta">{{ nombreCuenta }}</span>
+            <span class="badge-pill-erp">{{ usuario.idRol == '2' ? 'Sucursal' : 'ERP' }}</span>
+          </div>
+          <span class="user-role">
+            {{ usuario.idRol == '2' ? 'Sucursal ERP' : 'Cuenta ERP' }}
+            <ng-container *ngIf="versionActual">| v{{ versionActual.version }}</ng-container>
+          </span>
+        </div>
+      </div> -->
     </div>
-    <button type="button" class="logout-btn" (click)="logout()">
-      <i class="bx bx-log-out"></i>
-      <span>Cerrar sesión</span>
-    </button>
+
+    <!-- Botones de Acción: Cambiar PIN y Cerrar Sesión -->
+    <div class="drawer-footer-actions">
+      <button 
+        type="button" 
+        class="change-pin-btn" 
+        (click)="cambiarUsuarioPin()">
+        <i class="bx bx-user-pin"></i>
+        <span>Cambiar usuario PIN</span>
+      </button>
+
+      <button 
+        type="button" 
+        class="logout-btn" 
+        (click)="logout()">
+        <i class="bx bx-log-out"></i>
+        <span>Cerrar sesión</span>
+      </button>
+    </div>
   </div>
 </aside>

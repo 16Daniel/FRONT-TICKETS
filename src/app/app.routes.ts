@@ -108,7 +108,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./tareas/tareas.routes').then(m => m.TAREAS_ROOT_ROUTES)
+    loadChildren: () => import('./usuarios/usuarios.routes').then(m => m.USUARIOS_ROOT_ROUTES)
   },
   {
     path: '',

@@ -127,12 +127,6 @@
   gap: 12px;
 }
 
-.user-avatar-wrapper {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
 /* ==========================================================================
    Backdrop Overlay
    ========================================================================== */
@@ -248,34 +242,42 @@
     top: var(--erp-navbar-height);
     transform: translateX(0);
     box-shadow: none;
-    z-index: 990;
-    border-right: 1px solid var(--erp-border);
+    z-index: 990; /* Sits below navbar */
   }
 
   .sidebar-drawer.is-pinned .close-drawer-btn {
-    display: none; /* In pinned mode, unpin is used instead of close */
+    display: none;
   }
 }
 
-/* Drawer Content & Navigation Groups */
+/* ==========================================================================
+   Drawer Navigation Content
+   ========================================================================== */
 .drawer-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px 12px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+/* Custom Scrollbar */
 .drawer-content::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 .drawer-content::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
+  background: #e2e8f0;
   border-radius: 4px;
 }
 
+.drawer-content::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Navigation Groups */
 .nav-group {
   display: flex;
   flex-direction: column;
@@ -288,17 +290,17 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--erp-text-muted);
-  padding: 0 10px 6px 10px;
+  padding: 6px 12px 4px 12px;
 }
 
-/* Navigation Items */
+/* Navigation Items (Links) */
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 12px;
+  padding: 9px 12px;
   border-radius: 8px;
-  color: var(--erp-text-secondary);
+  color: var(--erp-text-primary);
   text-decoration: none;
   font-size: 13.5px;
   font-weight: 500;
@@ -308,7 +310,7 @@
 
 .nav-item:hover {
   background-color: var(--erp-color-hover);
-  color: var(--erp-text-primary);
+  color: var(--erp-color-primary);
 }
 
 .nav-item.active {
@@ -321,20 +323,20 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 15%;
-  bottom: 15%;
+  top: 6px;
+  bottom: 6px;
   width: 3px;
   background-color: var(--erp-color-primary);
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-radius: 0 4px 4px 0;
 }
 
 .nav-icon {
   font-size: 18px;
-  flex-shrink: 0;
   color: var(--erp-text-secondary);
+  transition: var(--erp-transition);
 }
 
+.nav-item:hover .nav-icon,
 .nav-item.active .nav-icon {
   color: var(--erp-color-primary);
 }
@@ -351,9 +353,11 @@
   color: var(--erp-text-muted);
 }
 
-/* Drawer Footer */
+/* ==========================================================================
+   Drawer Footer & Dual User Profiles
+   ========================================================================== */
 .drawer-footer {
-  padding: 16px;
+  padding: 14px 16px;
   border-top: 1px solid var(--erp-border);
   background-color: var(--erp-bg-card);
   display: flex;
@@ -361,16 +365,83 @@
   gap: 12px;
 }
 
-.user-profile {
+.drawer-profiles-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.user-profile-card {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: var(--erp-transition);
+}
+
+.user-profile-card.responsable-profile {
+  background-color: #fdf2f3;
+  border-color: rgba(211, 21, 42, 0.15);
+}
+
+.user-profile-card.erp-profile {
+  background-color: #f0f6ff;
+  border-color: rgba(15, 98, 254, 0.15);
+}
+
+.user-profile-card.unassigned-profile {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+.user-avatar-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-pin-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 15px;
+  height: 15px;
+  background-color: var(--erp-color-primary);
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+.empty-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  border: 1px dashed #d1d5db;
+  color: var(--erp-text-secondary);
+  font-size: 18px;
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
+.user-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
 }
 
 .user-name {
@@ -382,9 +453,74 @@
   text-overflow: ellipsis;
 }
 
+.badge-pill-pin {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background-color: rgba(211, 21, 42, 0.15);
+  color: var(--erp-color-primary);
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
+.badge-pill-erp {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background-color: rgba(15, 98, 254, 0.12);
+  color: #0f62fe;
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
 .user-role {
   font-size: 11px;
   color: var(--erp-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.change-pin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--erp-border);
+  background-color: #ffffff;
+  color: var(--erp-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--erp-transition);
+}
+
+.change-pin-btn i {
+  font-size: 16px;
+  color: var(--erp-color-primary);
+}
+
+.change-pin-btn:hover {
+  background-color: var(--erp-color-hover);
+  border-color: rgba(211, 21, 42, 0.3);
+  color: var(--erp-color-primary);
+}
+
+.change-pin-btn:focus-visible {
+  outline: 2px solid var(--erp-color-primary);
 }
 
 .logout-btn {
@@ -393,12 +529,12 @@
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 9px;
+  padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid var(--erp-border);
+  border: 1px solid transparent;
   background-color: transparent;
   color: var(--erp-color-danger);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--erp-transition);

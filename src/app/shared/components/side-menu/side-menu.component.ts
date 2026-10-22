@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, type OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { DocumentsService } from '../../services/documents.service';
 
@@ -25,6 +28,7 @@ import { VersionControlService } from '../../../versiones/services/version-contr
     FormsModule, 
     MenubarModule, 
     ButtonModule, 
+    TooltipModule,
     ChatNotificationsButtonComponent,
     AlertNotificationsButtonComponent,
     AvatarModule,
@@ -40,13 +44,15 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   showmenu: boolean = false;
   isPinned: boolean = true;
   usuario: Usuario;
+  responsable: Responsable | null = null;
+  responsableTarea: Responsable | null = null;
   urlbase: string = '';
-  tituloBanner: string;
+  tituloBanner: string = '';
   isCheckingValidadorConsumos: boolean = false;
   isCheckingValidadorCupones: boolean = false;
 
-  responsableTarea: Responsable | null = null;
   versionActual: any;
+  private routerSub?: Subscription;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -55,14 +61,42 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     private versionControlService: VersionControlService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
+    this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!);
+    this.responsableTarea = this.responsable;
 
-    if (this.usuario.idRol == '2') {
-      this.tituloBanner = this.usuario.sucursales[0].nombre;
+    if (this.usuario) {
+      if (this.usuario.idRol == '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
+        this.tituloBanner = this.usuario.sucursales[0].nombre;
+      } else {
+        this.tituloBanner = `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
+      }
     }
-    else {
-      this.tituloBanner = `${this.usuario.nombre} ${this.usuario.apellidoP}`;
+  }
+
+  cargarUsuarios(): void {
+    const rawUser = localStorage.getItem('rwuserdatatk');
+    this.usuario = rawUser ? JSON.parse(rawUser) : null;
+
+    const rawResp = localStorage.getItem('responsable-tareas');
+    this.responsable = rawResp ? JSON.parse(rawResp) : null;
+    this.responsableTarea = this.responsable;
+
+    if (this.usuario) {
+      if (this.usuario.idRol == '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
+        this.tituloBanner = this.usuario.sucursales[0].nombre;
+      } else {
+        this.tituloBanner = `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
+      }
     }
+    this.cdr.markForCheck();
+  }
+
+  get nombreCuenta(): string {
+    if (!this.usuario) return '';
+    if (this.usuario.idRol === '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
+      return this.usuario.sucursales[0].nombre;
+    }
+    return `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
   }
 
   ngOnInit(): void {
@@ -70,6 +104,12 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       if (result.length > 0) this.versionActual = result[0];
       this.cdr.markForCheck();
     });
+
+    this.routerSub = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.cargarUsuarios();
+      });
 
     // Read pinned status from localStorage (default to true)
     const savedPin = localStorage.getItem('rw_sidebar_pinned');
@@ -103,10 +143,16 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.urlbase = origin + url + '/#/main/ticket/';
   }
 
+  @HostListener('window:storage')
+  onStorageChange(): void {
+    this.cargarUsuarios();
+  }
+
   ngOnDestroy(): void {
     if (typeof document !== 'undefined') {
       document.body.classList.remove('sidebar-pinned');
     }
+    this.routerSub?.unsubscribe();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -146,6 +192,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         document.body.classList.remove('sidebar-pinned');
       }
     }
+  }
+
+  cambiarUsuarioPin(): void {
+    this.closemenu();
+    this.router.navigate(['/usuarios/selecciona-responsable']);
   }
 
   abrirValidador(tipo: 'consumos' | 'cupones', event?: Event): void {
