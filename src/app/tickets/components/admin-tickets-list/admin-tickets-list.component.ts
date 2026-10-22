@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -54,7 +55,7 @@ import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini
   styleUrl: './admin-tickets-list.component.scss',
 })
 
-export class AdminTicketsListComponent {
+export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() mostrarAccionValidar: boolean = true;
 
@@ -78,6 +79,14 @@ export class AdminTicketsListComponent {
 
   @Input() idArea: string = '';
 
+  private usersSub?: Subscription;
+  private areasSub?: Subscription;
+  private categoriesSub?: Subscription;
+  private branchesSub?: Subscription;
+  private supportTypesSub?: Subscription;
+  private ticketsPrioritySub?: Subscription;
+  private statusTicketSub?: Subscription;
+
   constructor(
     private ticketsService: TicketsService,
     private usersService: UsersService,
@@ -91,7 +100,7 @@ export class AdminTicketsListComponent {
     private statusTicketService: StatusTicketService,
     public datesHelper: DatesHelperService,
   ) {
-    this.areas = this.areasService.areas;
+    this.initAreas();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerPrioridadesTicket();
@@ -100,12 +109,37 @@ export class AdminTicketsListComponent {
     this.obtenerCategorias();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idArea'] && !changes['idArea'].firstChange) {
+      this.obtenerCategorias();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.usersSub?.unsubscribe();
+    this.areasSub?.unsubscribe();
+    this.categoriesSub?.unsubscribe();
+    this.branchesSub?.unsubscribe();
+    this.supportTypesSub?.unsubscribe();
+    this.ticketsPrioritySub?.unsubscribe();
+    this.statusTicketSub?.unsubscribe();
+  }
+
+  initAreas() {
+    this.areasService.initListener();
+    this.areas = this.areasService.areas;
+    this.areasSub = this.areasService.areas$.subscribe((areas) => {
+      this.areas = areas;
+      this.cdr.detectChanges();
+    });
+  }
+
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   obtenerSucursales() {
-    this.branchesService.get().subscribe({
+    this.branchesSub = this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
         this.cdr.detectChanges();
@@ -118,7 +152,7 @@ export class AdminTicketsListComponent {
   }
 
   obtenerTiposSoporte() {
-    this.supportTypesService.get().subscribe({
+    this.supportTypesSub = this.supportTypesService.get().subscribe({
       next: (data) => {
         this.tiposSoporte = data;
         this.cdr.detectChanges();
@@ -131,7 +165,7 @@ export class AdminTicketsListComponent {
   }
 
   obtenerEstatusTicket() {
-    this.statusTicketService.get().subscribe({
+    this.statusTicketSub = this.statusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTicket = data;
         this.cdr.detectChanges();
@@ -149,7 +183,7 @@ export class AdminTicketsListComponent {
   }
 
   obtenerPrioridadesTicket() {
-    this.ticketsPriorityService.get().subscribe({
+    this.ticketsPrioritySub = this.ticketsPriorityService.get().subscribe({
       next: (data) => {
         this.prioridadesTicket = data;
         this.cdr.detectChanges();
@@ -162,13 +196,16 @@ export class AdminTicketsListComponent {
   }
 
   obtenerCategorias() {
-    this.categoriesService.get().subscribe({
+    this.categoriesSub?.unsubscribe();
+    this.categoriesSub = this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
         }));
-        this.categorias = this.categorias.filter(x => x.idArea == this.idArea);
+        if (this.idArea && this.idArea.trim() !== '') {
+          this.categorias = this.categorias.filter(x => String(x.idArea) === String(this.idArea));
+        }
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -194,7 +231,12 @@ export class AdminTicketsListComponent {
   }
 
   obtenerUsuariosHelp() {
+    this.usersService.initListener();
     this.usuariosHelp = this.usersService.usuarios;
+    this.usersSub = this.usersService.usuarios$.subscribe((users) => {
+      this.usuariosHelp = users;
+      this.cdr.detectChanges();
+    });
   }
 
   showMessage(sev: string, summ: string, det: string) {

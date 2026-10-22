@@ -1,4 +1,4 @@
-<p-table *ngIf="usuariosHelp.length>0" [value]="tickets" [tableStyle]="{
+<p-table [value]="tickets" [tableStyle]="{
     'min-width': '10rem'
   }" styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="65vh" selectionMode="single"
     [(selection)]="ticketSeleccionado" (onRowSelect)="onClick()">
