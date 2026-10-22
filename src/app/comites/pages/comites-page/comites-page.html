@@ -41,6 +41,7 @@
                   <th>ID</th>
                   <th>NOMBRE</th>
                   <th>ÁREAS</th>
+                  <th>RESPONSABLES</th>
                   <th style="width: 120px; text-align: center;">ACCIONES</th>
               </tr>
           </ng-template>
@@ -58,6 +59,18 @@
                     </ng-container>
                     <ng-template #sinAreas>
                       <span class="text-muted">Sin áreas asignadas</span>
+                    </ng-template>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="comite.idsResponsables?.length; else sinResponsables">
+                      <span
+                        *ngFor="let idResponsable of comite.idsResponsables"
+                        class="badge bg-light text-dark me-1 mb-1">
+                        {{ obtenerNombreResponsable(idResponsable) }}
+                      </span>
+                    </ng-container>
+                    <ng-template #sinResponsables>
+                      <span class="text-muted">Sin responsables asignados</span>
                     </ng-template>
                   </td>
                   <td>

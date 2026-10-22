@@ -31,6 +31,7 @@ import { AvatarModule } from 'ngx-avatars';
 import { TabViewModule } from 'primeng/tabview';
 import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
@@ -61,7 +62,7 @@ import { MensajesPendientesService } from '../../../shared/services/mensajes-pen
     DropdownModule,
     MultiSelectModule
   ],
-  providers: [],
+  providers: [MessageService],
   templateUrl: './detalle-ticket-dialog.component.html',
   styleUrl: './detalle-ticket-dialog.component.scss',
 })
@@ -73,6 +74,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
   public fileUtils = FileUtils;
 
   usuario: Usuario;
+  responsableTarea: Responsable | null;
   mostrarModalEspecialistas: boolean = false;
   mostrarModalImagen: boolean = false;
 
@@ -115,6 +117,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     private mensajesPendientesService: MensajesPendientesService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+    this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
   }
 
   get areas$() {
@@ -280,6 +283,34 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     return this.comitesService.comites.find(
       (comite) => String(comite.id) === String(idComite),
     );
+  }
+
+  obtenerResponsablesComite(comite: Comite): Responsable[] {
+    return (comite.idsResponsables ?? [])
+      .map((idResponsable) =>
+        this.responsablesService.responsables.find(
+          (responsable) => String(responsable.id) === String(idResponsable),
+        ),
+      )
+      .filter((responsable): responsable is Responsable => Boolean(responsable));
+  }
+
+  get puedeAccederBitacoraComite(): boolean {
+    const idResponsable = this.responsableTarea?.id;
+    if (!idResponsable) return false;
+
+    return (this.ticket?.comites ?? []).some((idComite) =>
+      this.obtenerComite(idComite)?.idsResponsables?.some(
+        (idAsignado) => String(idAsignado) === String(idResponsable),
+      ),
+    );
+  }
+
+  obtenerAreaResponsableComite(responsable: Responsable): string {
+    const usuario = this.usersService.usuarios.find(
+      (item) => String(item.id) === String(responsable.idUsuario),
+    );
+    return this.obtenerNombreArea(usuario?.idArea);
   }
 
   async guardarComites(): Promise<void> {

@@ -2,19 +2,26 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, map, of, Subscription, switchMap } from 'rxjs';
 import { TabViewModule } from 'primeng/tabview';
-import { TableModule } from 'primeng/table';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { Comite } from '../../interfaces/comite';
 import { ComitesService } from '../../services/comites.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-tickets-comites-page',
   standalone: true,
-  imports: [CommonModule, TabViewModule, TableModule, PageHeaderComponent],
+  imports: [
+    CommonModule,
+    TabViewModule,
+    PageHeaderComponent,
+    AcordeonTicketsPorSucursalComponent,
+  ],
+  providers: [MessageService],
   templateUrl: './tickets-comites-page.html',
   styleUrl: './tickets-comites-page.scss',
 })
@@ -47,6 +54,19 @@ export class TicketsComitesPage implements OnInit, OnDestroy {
     private branchesService: BranchesService,
   ) {}
 
+  obtenerSucursalesConTickets(tickets: Ticket[]): Sucursal[] {
+    const idsSucursales = new Set(
+      tickets
+        .map((ticket) => ticket.idSucursal)
+        .filter((idSucursal) => idSucursal !== null && idSucursal !== undefined && idSucursal !== '')
+        .map((idSucursal) => String(idSucursal)),
+    );
+
+    return this.sucursales.filter(
+      (sucursal) => sucursal.id != null && idsSucursales.has(String(sucursal.id)),
+    );
+  }
+
   ngOnInit(): void {
     this.sucursalesSub = this.branchesService.get().subscribe({
       next: (sucursales) => {
@@ -62,13 +82,5 @@ export class TicketsComitesPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sucursalesSub?.unsubscribe();
-  }
-
-  obtenerFecha(fecha: Ticket['fecha']): Date | null {
-    if (!fecha) return null;
-    if (fecha instanceof Date) return fecha;
-    if (typeof fecha.toDate === 'function') return fecha.toDate();
-    const parsedDate = new Date(fecha);
-    return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
   }
 }
