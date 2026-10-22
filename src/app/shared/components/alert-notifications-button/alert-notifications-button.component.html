@@ -30,12 +30,15 @@
 
     <div class="filter-row">
       <label for="alert-type-filter">Filtrar por tipo</label>
-      <select id="alert-type-filter" [value]="selectedTipo" (change)="seleccionarTipo($event)">
-        <option value="">Todos los tipos</option>
-        <option *ngFor="let tipo of categorias" [value]="tipo.id">
-          {{ tipo.nombre || tipo.categoria }}
-        </option>
-      </select>
+      <p-dropdown
+        inputId="alert-type-filter"
+        [options]="opcionesTipoAlerta"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="selectedTipo"
+        (onChange)="seleccionarTipo($event.value)"
+        styleClass="filter-dropdown">
+      </p-dropdown>
     </div>
 
     <p *ngIf="errorMessage" class="error-message" role="alert">{{ errorMessage }}</p>
@@ -43,7 +46,7 @@
     <div *ngIf="loading" class="empty-state">Cargando alertas...</div>
 
     <ng-container *ngIf="!loading">
-      <section class="alert-section">
+      <section class="alert-section" style="min-height: 120px;">
         <h3>Nuevas <span>{{ alertasNuevas.length }}</span></h3>
         <p *ngIf="!alertasNuevas.length" class="section-empty">
           No tienes alertas nuevas para este filtro.

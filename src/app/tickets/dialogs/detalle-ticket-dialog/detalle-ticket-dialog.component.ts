@@ -40,6 +40,7 @@ import { Subscription } from 'rxjs';
 import { ComitesService } from '../../../comites/services/comites.service';
 import { Comite } from '../../../comites/interfaces/comite';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
+import { HistorialAlertasService } from '../../../alertas/service/historial-alertas.service';
 
 @Component({
   selector: 'app-detalle-ticket-dialog',
@@ -115,6 +116,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     private supportTypesService: SupportTypesService,
     public comitesService: ComitesService,
     private mensajesPendientesService: MensajesPendientesService,
+    private historialAlertasService: HistorialAlertasService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
@@ -321,6 +323,56 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     try {
       await this.ticketsService.update({ id: this.ticket.id, comites });
       this.ticket.comites = comites;
+
+      const idsUsuarios = new Set<string>();
+      for (const idComite of comites) {
+        const comite = this.obtenerComite(idComite);
+        for (const idResponsable of comite?.idsResponsables ?? []) {
+          const responsable = this.responsablesService.responsables.find(
+            item => String(item.id) === String(idResponsable)
+          );
+          if (responsable?.idUsuario) {
+            idsUsuarios.add(String(responsable.idUsuario));
+          }
+        }
+      }
+      for (const idInvolucrado of this.ticket.idInvolucrados ?? []) {
+        idsUsuarios.add(String(idInvolucrado));
+      }
+      if (this.ticket.idResponsable) {
+        idsUsuarios.add(String(this.ticket.idResponsable));
+      }
+
+      try {
+        const usuarios = Array.from(idsUsuarios).sort();
+        const alertasExistentes = await this.historialAlertasService
+          .obtenerAlertasPorTicketYTipo(this.ticket.id, '9');
+        const alertaAnterior = alertasExistentes
+          .sort((a, b) => this.obtenerFechaAlerta(b.fecha) - this.obtenerFechaAlerta(a.fecha))[0];
+        const comitesOrdenados = [...comites].map(String).sort();
+        const huboCambios = !alertaAnterior ||
+          !this.sonIguales(alertaAnterior.comites ?? [], comitesOrdenados) ||
+          !this.sonIguales(alertaAnterior.usuarios ?? [], usuarios);
+
+        if (huboCambios) {
+          await this.historialAlertasService.registrarAlerta({
+            ticketId: this.ticket.id,
+            fecha: Timestamp.now(),
+            idAlerta: '9',
+            usuarios,
+            comites: comitesOrdenados
+          });
+        }
+      } catch (error) {
+        console.error('Error al registrar la alerta de comités:', error);
+        this.showMessage(
+          'warn',
+          'Comités guardados',
+          'Los comités se asignaron, pero no fue posible registrar la alerta.'
+        );
+        return;
+      }
+
       this.showMessage('success', 'Éxito', 'Comités asignados correctamente');
     } catch (error) {
       console.error('Error al asignar comités al ticket:', error);
@@ -332,6 +384,19 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     } finally {
       this.guardandoComites = false;
     }
+  }
+
+  private sonIguales(a: string[], b: string[]): boolean {
+    const valoresA = [...a].map(String).sort();
+    const valoresB = [...b].map(String).sort();
+    return valoresA.length === valoresB.length &&
+      valoresA.every((valor, indice) => valor === valoresB[indice]);
+  }
+
+  private obtenerFechaAlerta(fecha: Timestamp | Date | string): number {
+    if (fecha instanceof Date) return fecha.getTime();
+    if (typeof fecha === 'string') return new Date(fecha).getTime();
+    return fecha.toDate().getTime();
   }
 
   onHide() {
@@ -445,39 +510,60 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
 
     const estatus = this.estatusTickets.find(x => String(x.id) === String(idEstatusTicket));
     this.ticket.idEstatusTicket = idEstatusTicket;
-    
-    this.ticketsService
-      .update(this.ticket)
-      .then(async () => {
-        this.estatusAnterior = idEstatusTicket;
-        await this.registrarBitacoraSistema(`Estatus actualizado a: <b>${estatus?.nombre || 'Mitigación'}</b>`);
-        
-        let responsable: any = null;
-        const rawResp = localStorage.getItem('responsable-tareas');
-        if (rawResp) {
-          responsable = JSON.parse(rawResp);
-        }
-        
-        const bitacoraEntry: Bitacora = {
-          modulo: 'TICKETS',
-          referenciaId: this.ticket!.id!,
-          tipo: 'MITIGACION',
-          contenido: `<b>Comentario:</b> ${comentario}<br><b>Fecha Estimada:</b> ${fecha}`,
-          autor: {
-            id: responsable?.id || this.usuario?.id || 'SISTEMA',
-            nombre: responsable?.nombre || (this.usuario ? `${this.usuario.nombre} ${this.usuario.apellidoP}` : 'Sistema'),
-            color: responsable?.color || '#94a3b8'
-          },
-          fechaCreacion: Timestamp.now()
-        };
-        await this.bitacoraService.addEntrada(bitacoraEntry);
-        
-        this.showMessage('success', 'Éxito', 'Estatus actualizado y mitigación registrada');
-      })
-      .catch((error) => {
-        console.error(error);
-        if (this.estatusAnterior) this.ticket!.idEstatusTicket = this.estatusAnterior;
-      });
+
+    try {
+      await this.ticketsService.update(this.ticket);
+      this.estatusAnterior = idEstatusTicket;
+      await this.registrarBitacoraSistema(`Estatus actualizado a: <b>${estatus?.nombre || 'Mitigación'}</b>`);
+
+      let responsable: any = null;
+      const rawResp = localStorage.getItem('responsable-tareas');
+      if (rawResp) {
+        responsable = JSON.parse(rawResp);
+      }
+
+      const bitacoraEntry: Bitacora = {
+        modulo: 'TICKETS',
+        referenciaId: this.ticket.id!,
+        tipo: 'MITIGACION',
+        contenido: `<b>Comentario:</b> ${comentario}<br><b>Fecha Estimada:</b> ${fecha}`,
+        autor: {
+          id: responsable?.id || this.usuario?.id || 'SISTEMA',
+          nombre: responsable?.nombre || (this.usuario ? `${this.usuario.nombre} ${this.usuario.apellidoP}` : 'Sistema'),
+          color: responsable?.color || '#94a3b8'
+        },
+        fechaCreacion: Timestamp.now()
+      };
+      await this.bitacoraService.addEntrada(bitacoraEntry);
+
+      let involucrados = this.ticket.idInvolucrados || [];
+      if (this.ticket.idResponsable) {
+        involucrados = [...involucrados, this.ticket.idResponsable];
+      }
+      const usuariosAlerta = new Set(involucrados);
+      if (this.ticket.idResponsable) {
+        usuariosAlerta.add(this.ticket.idResponsable);
+      }
+
+      try {
+        await this.historialAlertasService.registrarAlerta({
+          ticketId: this.ticket.id!,
+          fecha: Timestamp.now(),
+          idAlerta: '8',
+          usuarios: Array.from(usuariosAlerta)
+        });
+      } catch (error) {
+        console.error('Error al registrar la alerta de mitigación:', error);
+        this.showMessage('warn', 'Mitigación guardada', 'La mitigación se guardó, pero no fue posible registrar la alerta.');
+        return;
+      }
+
+      this.showMessage('success', 'Éxito', 'Estatus actualizado y mitigación registrada');
+    } catch (error) {
+      console.error('Error al guardar la mitigación:', error);
+      if (this.estatusAnterior) this.ticket.idEstatusTicket = this.estatusAnterior;
+      this.showMessage('error', 'Error', 'No fue posible guardar la mitigación');
+    }
   }
 
   private showRatingSwal(
