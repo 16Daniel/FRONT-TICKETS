@@ -497,6 +497,20 @@
                           <ng-template #comiteSinAreas>
                             <span class="text-muted small">Este comité no tiene áreas asignadas.</span>
                           </ng-template>
+                          <div class="mt-3">
+                            <div class="small fw-bold text-muted text-uppercase mb-2">Responsables y áreas</div>
+                            <ng-container *ngIf="obtenerResponsablesComite(comite) as responsablesComite">
+                              <div *ngIf="responsablesComite.length; else comiteSinResponsables" class="d-flex flex-column gap-2">
+                                <div *ngFor="let responsable of responsablesComite" class="d-flex justify-content-between align-items-center gap-2">
+                                  <span class="fw-semibold">{{ responsable.nombre }}</span>
+                                  <span class="badge committee-area-badge">{{ obtenerAreaResponsableComite(responsable) }}</span>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <ng-template #comiteSinResponsables>
+                              <span class="text-muted small">Este comité no tiene responsables asignados.</span>
+                            </ng-template>
+                          </div>
                         </ng-container>
                       </div>
                     </div>
@@ -527,6 +541,9 @@
         <app-bitacora 
           class="flex-grow-1 d-flex flex-column h-100"
           [modulo]="'TICKETS'" 
+          [permitirModoComite]="true"
+          [comiteDisponible]="!!ticket?.comites?.length"
+          [puedeAccederComite]="puedeAccederBitacoraComite"
           [referenciaId]="ticket.id" 
           [usuariosEtiquetables]="responsablesService.responsables">
         </app-bitacora>

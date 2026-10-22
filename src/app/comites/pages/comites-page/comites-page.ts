@@ -13,6 +13,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Comite } from '../../interfaces/comite';
 import { ComitesService } from '../../services/comites.service';
 import { AreasService } from '../../../areas/services/areas.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 
 @Component({
   selector: 'app-comites-page',
@@ -41,6 +42,7 @@ export class ComitesPage {
      private confirmationService: ConfirmationService,
      public comitesService: ComitesService,
      public areasService: AreasService,
+     public responsablesService: ResponsablesService,
      private messageService: MessageService,
    ) { }
 
@@ -49,6 +51,13 @@ export class ComitesPage {
        (item) => String(item.id) === String(idArea),
      );
      return area?.nombre ?? idArea;
+   }
+
+   obtenerNombreResponsable(idResponsable: string): string {
+     const responsable = this.responsablesService.responsables.find(
+       (item) => String(item.id) === String(idResponsable),
+     );
+     return responsable?.nombre ?? idResponsable;
    }
  
    abrirModalCrearComite() {

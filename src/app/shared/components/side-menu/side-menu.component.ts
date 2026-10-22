@@ -13,6 +13,7 @@ import { filter } from 'rxjs/operators';
 import { DocumentsService } from '../../services/documents.service';
 
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
+import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
@@ -28,7 +29,8 @@ import { VersionControlService } from '../../../versiones/services/version-contr
     MenubarModule, 
     ButtonModule, 
     TooltipModule,
-    ChatNotificationsButtonComponent, 
+    ChatNotificationsButtonComponent,
+    AlertNotificationsButtonComponent,
     AvatarModule,
     RouterLink
   ],

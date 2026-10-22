@@ -34,7 +34,7 @@
         </ng-template>
 
         <!-- Sub-toggles inside accordion body -->
-        <div class="accordion-subtoggles-strip">
+        <div class="accordion-subtoggles-strip" *ngIf="escomite == false">
             <div class="form-check form-switch d-flex align-items-center gap-2 m-0" *ngIf="idArea == '1'">
                 <input class="form-check-input custom-switch" type="checkbox" role="switch"
                     [(ngModel)]="mostrarSistemasMap[item.id]" />
@@ -53,12 +53,12 @@
         </div>
 
         <!-- SECCION: NIVELES DE AUDIO -->
-        <app-niveles-audio [sucursal]="item" *ngIf="mostrarAudioVideoMap[item.id] && idArea == '2'"></app-niveles-audio>
+        <app-niveles-audio [sucursal]="item" *ngIf="mostrarAudioVideoMap[item.id] && idArea == '2' && escomite == false"></app-niveles-audio>
 
         <div class="accordion-tables-wrapper">
-            <app-tpvs-devices-table *ngIf="mostrarSistemasMap[item.id]" [sucursal]="item"></app-tpvs-devices-table>
-            <app-tabla-tvs-bocinas *ngIf="mostrarAudioVideoMap[item.id]" [sucursal]="item"></app-tabla-tvs-bocinas>
-            <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
+            <app-tpvs-devices-table *ngIf="mostrarSistemasMap[item.id] && escomite == false" [sucursal]="item"></app-tpvs-devices-table>
+            <app-tabla-tvs-bocinas *ngIf="mostrarAudioVideoMap[item.id] && escomite == false" [sucursal]="item"></app-tabla-tvs-bocinas>
+            <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id] && escomite == false" [idSucursal]="item.id"
                 [idArea]="idArea"></app-grafica-tickets-30-dias>
             <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" *ngIf="!mostrarRadiografiaMap[item.id]"
                 [idArea]="idArea"></app-admin-tickets-list>
