@@ -110,6 +110,21 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 
+  async obtenerUltimosTicketsPorUsuario(idUsuario: string): Promise<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const ticketsQuery = query(
+      ticketsCollection,
+      where('idUsuario', '==', idUsuario),
+      orderBy('fecha', 'desc'),
+      limit(3)
+    );
+    const snapshot = await getDocs(ticketsQuery);
+    return snapshot.docs.map(documento => ({
+      id: documento.id,
+      ...documento.data()
+    } as Ticket));
+  }
+
   async update(data: any): Promise<void> {
     let collectionName = 'tickets';
     let docId = data.id;

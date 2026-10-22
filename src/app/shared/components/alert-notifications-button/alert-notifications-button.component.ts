@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 import {
+  ALERTA_TICKET_WHATSAPP_ID,
   CategoriaAlerta,
   HistorialAlerta,
   HistorialAlertasService
@@ -14,7 +17,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 @Component({
   selector: 'app-alert-notifications-button',
   standalone: true,
-  imports: [CommonModule, DetalleTicketDialogComponent],
+  imports: [CommonModule, FormsModule, DropdownModule, DetalleTicketDialogComponent],
   templateUrl: './alert-notifications-button.component.html',
   styleUrl: './alert-notifications-button.component.scss'
 })
@@ -37,6 +40,16 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
 
   private get idUsuario(): string {
     return String(this.usuario.id);
+  }
+
+  get opcionesTipoAlerta(): { label: string; value: string }[] {
+    return [
+      { label: 'Todos los tipos', value: '' },
+      ...this.categorias.map(tipo => ({
+        label: tipo.nombre || tipo.categoria,
+        value: tipo.id
+      }))
+    ];
   }
 
   constructor(
@@ -111,8 +124,8 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
     this.showNotifications = !this.showNotifications;
   }
 
-  seleccionarTipo(event: Event): void {
-    this.selectedTipo = (event.target as HTMLSelectElement).value;
+  seleccionarTipo(tipo: string): void {
+    this.selectedTipo = tipo;
   }
 
   async marcarComoLeida(alerta: HistorialAlerta): Promise<void> {
@@ -172,7 +185,8 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
 
   obtenerNombreTipo(idAlerta: string): string {
     const categoria = this.categorias.find(tipo => tipo.id === idAlerta);
-    return categoria?.nombre || categoria?.categoria || 'Alerta';
+    if (categoria) return categoria.nombre || categoria.categoria || 'Alerta';
+    return idAlerta === ALERTA_TICKET_WHATSAPP_ID ? 'Ticket con alerta WhatsApp' : 'Alerta';
   }
 
   obtenerFecha(fecha: HistorialAlerta['fecha']): Date {

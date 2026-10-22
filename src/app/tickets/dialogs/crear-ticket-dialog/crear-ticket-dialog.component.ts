@@ -49,6 +49,10 @@ import { MentionUtils } from '../../../shared/utils/mention.utils';
 import MagicUrl from 'quill-magic-url';
 import { BitacoraService } from '../../../shared/services/bitacora.service';
 import { Timestamp } from '@angular/fire/firestore';
+import { WhatsappService } from '../../../areas/services/whatsapp.service';
+import {
+  HistorialAlertasService
+} from '../../../alertas/service/historial-alertas.service';
 
 Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
 Quill.register('modules/magicUrl', MagicUrl);
@@ -82,6 +86,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   categorias: Categoria[] = [];
   prioridadesTicket: PrioridadTicket[] = [];
   formCategoria: any = null;
+  private alertaWhatsappSeleccionada = false;
   catUsuariosHelp: Usuario[] = [];
   matrizUrgenciaLocal: MatrizUrgencia | null = null;
 
@@ -166,7 +171,9 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService,
     private matrizUrgenciaService: MatrizUrgenciaService,
-    private mensajesPendientesService: MensajesPendientesService
+    private mensajesPendientesService: MensajesPendientesService,
+    private whatsappService: WhatsappService,
+    private historialAlertasService: HistorialAlertasService
   ) {}
 
   ngOnInit(): void {
@@ -288,6 +295,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     this.ticket.nombreCategoria = '';
     this.ticket.nombreSubcategoria = '';
     this.formCategoria = null;
+    this.alertaWhatsappSeleccionada = false;
     this.cargarMatrizArea(String(this.ticket.idArea));
     this.cdr.detectChanges();
   }
@@ -307,6 +315,9 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   /* Selección de Categoría desde el Árbol */
   onSeleccionarCategoria(seleccion: SeleccionArbolCategoria): void {
     this.formCategoria = seleccion.categoria;
+    this.alertaWhatsappSeleccionada =
+      seleccion.categoria.alertaWhatsapp === true ||
+      seleccion.subcategoria?.alertaWhatsapp === true;
     this.ticket.idCategoria = seleccion.idCategoria;
     this.ticket.nombreCategoria = seleccion.nombreCategoria;
     this.ticket.idSubcategoria = seleccion.idSubcategoria || null;
@@ -336,6 +347,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
 
   onLimpiarCategoria(): void {
     this.formCategoria = null;
+    this.alertaWhatsappSeleccionada = false;
     this.ticket.idCategoria = '';
     this.ticket.nombreCategoria = '';
     this.ticket.idSubcategoria = null;
@@ -421,40 +433,137 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     this.ticket.idUsuario = this.usuarioActivo.id;
     this.ticket.usuariosEtiquetados = MentionUtils.extraerUsuariosEtiquetados(this.ticket.descripcion);
     this.ticket.folio = folio;
-    // await this.whatsappService.enviarMensajeTexto('120363418021345457@g.us', 'Se ha creado un nuevo ticket con folio: ' + folio + ' y categoría: ' + this.ticket.nombreCategoria + (this.ticket.nombreSubcategoria ? ' - ' + this.ticket.nombreSubcategoria : ''));
-    if (this.archivos.length > 0) {
-      this.firebaseStorage.cargarArchivosTicket(this.archivos)
-        .then(async urls => {
-          this.ticket.archivos = urls;
-          const ticketId = await this.ticketsService.create({ ...this.ticket });
-          await this.registrarBitacoraSistema(ticketId, folio);
-          await this.crearAlertasMenciones(ticketId);
-          await this.ticketsService.incrementarContadorTickets();
-          Swal.close();
-          Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
-          this.closeEvent.emit();
-        })
-        .catch(async err => {
-          console.error('Error al subir una o más imágenes:', err);
-          this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
-          await this.ticketsService.incrementarContadorTickets();
-          const ticketId = await this.ticketsService.create({ ...this.ticket });
-          await this.registrarBitacoraSistema(ticketId, folio);
-          await this.crearAlertasMenciones(ticketId);
-          Swal.close();
-          Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
-          this.closeEvent.emit();
-        });
-    } else {
-      this.ticket.archivos = [];
-      const ticketId = await this.ticketsService.create({ ...this.ticket });
-      await this.registrarBitacoraSistema(ticketId, folio);
-      await this.crearAlertasMenciones(ticketId);
-      await this.ticketsService.incrementarContadorTickets();
-      Swal.close();
-      Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
-      this.closeEvent.emit();
+    let alertaTicketRepetido = false;
+    try {
+      const ultimosTickets = await this.ticketsService.obtenerUltimosTicketsPorUsuario(
+        String(this.usuarioActivo.id)
+      );
+      alertaTicketRepetido = ultimosTickets.length === 3 &&
+        ultimosTickets.every(ticket =>
+          String(ticket.idSucursal) === String(this.ticket.idSucursal) &&
+          String(ticket.idCategoria) === String(this.ticket.idCategoria) &&
+          (
+            !this.ticket.idSubcategoria ||
+            String(ticket.idSubcategoria ?? '') === String(this.ticket.idSubcategoria)
+          )
+        );
+    } catch (error) {
+      console.error('Error al revisar los tickets recientes del usuario:', error);
+      this.showMessage(
+        'warn',
+        'No se pudo validar el historial',
+        'El ticket se creará, pero no fue posible revisar si se repite entre los últimos tickets.'
+      );
     }
+
+    let archivosSubidos: { url: string; nombre: string; tipo: string }[] = [];
+
+    if (this.archivos.length > 0) {
+      try {
+        archivosSubidos = await this.firebaseStorage.cargarArchivosTicket(this.archivos);
+      } catch (error) {
+        console.error('Error al subir una o más imágenes:', error);
+        this.showMessage('warn', 'Warning', 'Error al subir una o más imágenes');
+      }
+    }
+
+    this.ticket.archivos = archivosSubidos;
+    const ticketId = await this.ticketsService.create({ ...this.ticket });
+    if (alertaTicketRepetido) {
+      await this.registrarAlertaTicketRepetido(ticketId);
+    }
+    await this.enviarAlertaWhatsappSiCorresponde(ticketId);
+    await this.registrarBitacoraSistema(ticketId, folio);
+    await this.crearAlertasMenciones(ticketId);
+    await this.ticketsService.incrementarContadorTickets();
+    Swal.close();
+    Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
+    this.closeEvent.emit();
+  }
+
+  private async registrarAlertaTicketRepetido(ticketId: string): Promise<void> {
+    const usuarios = new Set<string>(this.ticket.idInvolucrados || []);
+    if (this.ticket.idResponsable) {
+      usuarios.add(String(this.ticket.idResponsable));
+    }
+
+    try {
+      await this.historialAlertasService.registrarAlerta({
+        ticketId,
+        fecha: Timestamp.now(),
+        idAlerta: '7',
+        usuarios: Array.from(usuarios)
+      });
+    } catch (error) {
+      console.error('Error al registrar la alerta de ticket repetido:', error);
+      this.showMessage(
+        'warn',
+        'Ticket creado',
+        'El ticket se creó, pero no fue posible registrar la alerta de posible repetición.'
+      );
+    }
+  }
+
+  private async enviarAlertaWhatsappSiCorresponde(ticketId: string): Promise<void> {
+    if (!this.alertaWhatsappSeleccionada) {
+      return;
+    }
+
+    try {
+      await this.whatsappService.enviarMensajeTexto(
+        '120363412785054674@g.us',
+        this.construirMensajeAlertaWhatsapp()
+      );
+    } catch (error) {
+      console.error('Error al enviar la alerta del ticket por WhatsApp:', error);
+      this.showMessage('warn', 'Error al enviar WhatsApp', 'El ticket se creó, pero no fue posible enviar la alerta.');
+      return;
+    }
+
+    try {
+      let involucrados = this.ticket.idInvolucrados || [];
+      if(this.ticket.idResponsable !== '') {
+        involucrados = [...involucrados, this.ticket.idResponsable];
+      }
+      await this.historialAlertasService.registrarAlerta({
+        ticketId,
+        fecha: Timestamp.now(),
+        idAlerta: '1',
+        usuarios: involucrados
+      });
+    } catch (error) {
+      console.error('Error al registrar la alerta del ticket:', error);
+      this.showMessage('warn', 'Error al registrar alerta', 'El mensaje se envió, pero no fue posible guardar la alerta en el historial.');
+    }
+  }
+
+  private construirMensajeAlertaWhatsapp(): string {
+    const sucursal = this.sucursales.find(
+      item => String(item.id) === String(this.ticket.idSucursal)
+    )?.nombre || String(this.ticket.idSucursal);
+    const area = this.areas.find(
+      item => String(item.id) === String(this.ticket.idArea)
+    )?.nombre || String(this.ticket.idArea);
+    const descripcion = this.ticket.descripcion
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/gi, ' ')
+      .trim();
+    const descripcionCorta = descripcion.length > 500
+      ? `${descripcion.slice(0, 497)}...`
+      : descripcion;
+
+    return [
+      '*🚨TICKET DE ALTA PRIORIDAD:*',
+      `*Área:* ${area}`,
+      `*Sucursal:* ${sucursal}`,
+      `*Categoría:* ${this.ticket.nombreCategoria || 'Sin categoría'}${this.ticket.nombreSubcategoria ? ` - ${this.ticket.nombreSubcategoria}` : ''}`,
+      `*Folio:* ${this.ticket.folio}`,
+      `*Prioridad:* ${this.ticket.prioridad || 'Sin prioridad'} (score ${this.ticket.score ?? 'N/D'})`,
+      `*Solicitante:* ${this.ticket.solicitante || 'Sin especificar'}`,
+      `*Descripción:* ${descripcionCorta || 'Sin descripción'}`
+    ].join('\n');
   }
 
   async crearAlertasMenciones(ticketId: string): Promise<void> {

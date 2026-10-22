@@ -124,13 +124,20 @@
   font-size: 12px;
 }
 
-.filter-row select {
+:host ::ng-deep .filter-dropdown {
   width: 100%;
-  padding: 7px 9px;
-  border: 1px solid #d1d5db;
+}
+
+:host ::ng-deep .filter-dropdown .p-dropdown {
+  width: 100%;
+  border-color: #d1d5db;
   border-radius: 6px;
-  background: #ffffff;
+}
+
+:host ::ng-deep .filter-dropdown .p-dropdown-label {
+  padding: 7px 9px;
   color: #111827;
+  font-size: 12px;
 }
 
 .alert-section {
