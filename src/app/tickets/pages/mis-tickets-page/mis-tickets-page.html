@@ -1,0 +1,100 @@
+<div class="mis-tickets-page-wrapper">
+  <div class="mis-tickets-content-container">
+    <app-page-header
+      subtitle="MESA DE AYUDA & TICKETS"
+      title="Mis Tickets">
+    </app-page-header>
+
+    <!-- Barra de Herramientas y Filtros (Homologada con Áreas y Roles) -->
+    <div class="mis-tickets-toolbar-bar mb-4" *ngIf="todosLosTickets.length > 0">
+      <div class="toolbar-left">
+        <div class="search-input-wrapper">
+          <i class="bx bx-search search-icon"></i>
+          <input 
+            type="text" 
+            [(ngModel)]="filtroTexto"
+            (ngModelChange)="aplicarFiltro()"
+            placeholder="Buscar por folio, categoría o descripción..." 
+            class="mis-tickets-search-input" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenedor Principal (Tarjeta Blanca Homologada con Áreas y Roles) -->
+    <div class="mis-tickets-nodes-container">
+
+      <!-- Estado Vacío / Cargando -->
+      <div class="tickets-empty-state" *ngIf="tickets.length === 0">
+        @if (loading) {
+          <div class="empty-icon is-loading">
+            <i class="bx bx-loader-alt bx-spin"></i>
+          </div>
+          <h4>Cargando tus tickets...</h4>
+          <p>Consultando tus solicitudes activas en tiempo real.</p>
+        } @else {
+          <div class="empty-icon is-completed">
+            <i class="bx bx-check-shield"></i>
+          </div>
+          <span class="empty-status-pill">
+            <span class="status-dot"></span>
+            0 Pendientes
+          </span>
+          <h4>Sin tickets pendientes</h4>
+          <p *ngIf="filtroTexto">No se encontraron tickets que coincidan con "{{ filtroTexto }}".</p>
+          <p *ngIf="!filtroTexto">No tienes solicitudes activas o en proceso registradas en este momento.</p>
+          <button 
+            *ngIf="!filtroTexto" 
+            type="button" 
+            class="btn-rw-cta-empty mt-3" 
+            (click)="abrirModalCrearTicket()">
+            <i class="bx bx-plus"></i>
+            <span>CREAR TICKET</span>
+          </button>
+        }
+      </div>
+
+      <!-- Lista de Tickets -->
+      <div *ngIf="tickets.length > 0" class="w-100">
+        <app-requester-tickets-list
+          [tickets]="tickets"
+          [mostrarEstrellas]="false"
+          [mostrarSucursal]="true"
+          (clickEvent)="abrirModalDetalleTicket($event)">
+        </app-requester-tickets-list>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Botón Flotante para Crear Ticket -->
+  <button 
+    type="button" 
+    class="btn-flotante-crear-ticket" 
+    (click)="abrirModalCrearTicket()"
+    pTooltip="Crear nuevo ticket" 
+    tooltipPosition="left"
+    aria-label="Crear nuevo ticket">
+    <i class="bx bx-plus"></i>
+  </button>
+</div>
+
+<app-detalle-ticket-dialog
+  *ngIf="mostrarModalTicketDetail"
+  [ticket]="ticketSeleccionado"
+  [showModalTicketDetail]="mostrarModalTicketDetail"
+  (closeEvent)="mostrarModalTicketDetail = false">
+</app-detalle-ticket-dialog>
+
+<app-crear-ticket-dialog
+  *ngIf="mostrarModalGenerateTicket"
+  [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  (closeEvent)="alCerrarModalCrearTicket($event)">
+</app-crear-ticket-dialog>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'">
+</p-toast>

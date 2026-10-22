@@ -42,6 +42,12 @@ export const TICKETS_ROUTES: Routes = [
     title: 'KPIs',
     loadComponent: () =>
       import('./pages/kpis-tickets-page/kpis-tickets-page.component'),
+  },
+  {
+    path: 'mis-tickets',
+    title: 'Mis Tickets',
+    loadComponent: () =>
+      import('./pages/mis-tickets-page/mis-tickets-page'),
   }
 ];
 

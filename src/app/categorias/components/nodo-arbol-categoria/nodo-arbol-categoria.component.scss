@@ -172,6 +172,32 @@ $rw-primary: #d3152a;
           font-size: 0.8rem;
         }
       }
+
+      &.pildora-evidencia {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        font-weight: 700;
+        text-transform: none;
+
+        i {
+          color: #dc2626;
+          font-size: 0.825rem;
+        }
+      }
+
+      &.pildora-whatsapp {
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+        font-weight: 700;
+        text-transform: none;
+
+        i {
+          color: #16a34a;
+          font-size: 0.85rem;
+        }
+      }
     }
 
     .insignia-conteo-hijos {

@@ -10,9 +10,11 @@ import { EditorModule } from 'primeng/editor';
 import { Bitacora } from '../../interfaces/bitacora.model';
 import { BitacoraService } from '../../services/bitacora.service';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { DatesHelperService } from '../../helpers/dates-helper.service';
 import { MentionUtils } from '../../utils/mention.utils';
 import { FirebaseStorageService } from '../../services/firebase-storage.service';
+import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
 import { FileUtils } from '../../utils/file.utils';
 
 import Quill from 'quill';
@@ -108,6 +110,7 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
     private bitacoraService: BitacoraService,
     public datesHelper: DatesHelperService,
     private firebaseStorage: FirebaseStorageService,
+    private mensajesPendientesService: MensajesPendientesService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -263,6 +266,7 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       await this.bitacoraService.addEntrada(nuevaBitacora);
+      await this.crearAlertasMenciones(usuariosEtiquetados, nuevaBitacora.contenido);
       
       // Limpiar después de enviar
       this.nuevoMensaje = '';
@@ -276,5 +280,55 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
       this.subiendoArchivos = false;
       this.cdr.detectChanges();
     }
+  }
+
+  private async crearAlertasMenciones(usuariosEtiquetados: string[], comentario: string): Promise<void> {
+    if (!usuariosEtiquetados || usuariosEtiquetados.length === 0 || !this.referenciaId) {
+      return;
+    }
+
+    let responsableRemitente: Responsable | null = this.usuarioActual || null;
+    if (!responsableRemitente) {
+      const rawResp = localStorage.getItem('responsable-tareas');
+      if (rawResp) {
+        responsableRemitente = JSON.parse(rawResp);
+      }
+    }
+
+    let usuarioSesion: Usuario | null = null;
+    const rawUser = localStorage.getItem('rwuserdatatk');
+    if (rawUser) {
+      usuarioSesion = JSON.parse(rawUser);
+    }
+
+    const idUsuarioRemitente = responsableRemitente?.idUsuario || usuarioSesion?.id || '';
+    const nombreRemitente =
+      responsableRemitente?.nombre ||
+      `${usuarioSesion?.nombre || ''} ${usuarioSesion?.apellidoP || ''}`.trim() ||
+      'Usuario Actual';
+
+    const participantes = usuariosEtiquetados
+      .map(idResponsable =>
+        this.usuariosEtiquetables.find(
+          r => r.id === idResponsable || r.idUsuario === idResponsable
+        )
+      )
+      .filter((r): r is Responsable => !!r && !!r.idUsuario)
+      .map(r => ({ idUsuario: r.idUsuario }));
+
+    if (participantes.length === 0) {
+      return;
+    }
+
+    await this.mensajesPendientesService.crearMensajesPendientes(
+      'Tickets',
+      this.referenciaId,
+      {
+        idUsuario: idUsuarioRemitente,
+        nombre: nombreRemitente,
+        comentario
+      },
+      participantes
+    );
   }
 }

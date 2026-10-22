@@ -132,23 +132,51 @@
           </div>
         </div>
 
-        <!-- Evidencia Obligatoria -->
-        <div class="mt-4 mb-2 p-3 rounded border" style="background-color: #f8fafc;">
-          <div class="form-check form-switch d-flex align-items-center m-0 gap-2">
-            <input 
-              class="form-check-input mt-0" 
-              type="checkbox" 
-              role="switch" 
-              id="switchEvidenciaObli"
-              style="width: 2.5rem; height: 1.25rem; cursor: pointer;"
-              [(ngModel)]="evidenciaObligatoria">
-            <label class="form-check-label fw-bold mb-0 text-dark" for="switchEvidenciaObli" style="cursor: pointer;">
-              ¿Exigir adjuntar evidencia fotográfica o documental?
-            </label>
-          </div>
-          <small class="text-muted d-block mt-1 ms-5">
-            Si se activa, el usuario no podrá enviar el ticket si no adjunta al menos un archivo.
-          </small>
+        <!-- Opciones Adicionales de la Categoría: Evidencia y WhatsApp -->
+        <div class="opciones-adicionales-grid mt-4">
+
+          <!-- Opción 1: Evidencia Obligatoria -->
+          <label class="tarjeta-opcion-toggle" [class.esta-activo]="evidenciaObligatoria" for="switchEvidenciaObli">
+            <div class="cuerpo-opcion">
+              <div class="icono-opcion icono-evidencia">
+                <i class="bx bx-camera"></i>
+              </div>
+              <div class="textos-opcion">
+                <span class="titulo-opcion">Evidencia obligatoria</span>
+                <span class="descripcion-opcion">Exigir adjuntar fotografía o archivo documental al levantar el ticket</span>
+              </div>
+            </div>
+            <div class="switch-wrap">
+              <input 
+                class="switch-checkbox" 
+                type="checkbox" 
+                id="switchEvidenciaObli"
+                [(ngModel)]="evidenciaObligatoria">
+              <span class="switch-slider switch-slider-evidencia"></span>
+            </div>
+          </label>
+
+          <!-- Opción 2: Alerta por WhatsApp -->
+          <label class="tarjeta-opcion-toggle toggle-whatsapp" [class.esta-activo]="alertaWhatsapp" for="switchAlertaWhatsapp">
+            <div class="cuerpo-opcion">
+              <div class="icono-opcion icono-whatsapp">
+                <i class="bx bxl-whatsapp"></i>
+              </div>
+              <div class="textos-opcion">
+                <span class="titulo-opcion">Alerta por WhatsApp</span>
+                <span class="descripcion-opcion">Enviar notificación automática a grupo de WhatsApp al generarse un ticket</span>
+              </div>
+            </div>
+            <div class="switch-wrap">
+              <input 
+                class="switch-checkbox" 
+                type="checkbox" 
+                id="switchAlertaWhatsapp"
+                [(ngModel)]="alertaWhatsapp">
+              <span class="switch-slider switch-slider-whatsapp"></span>
+            </div>
+          </label>
+
         </div>
       </div>
     </div>

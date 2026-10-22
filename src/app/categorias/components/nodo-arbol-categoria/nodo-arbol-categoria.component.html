@@ -55,6 +55,24 @@
               {{ obtenerLabelTiempoResolucion(nodo) }}
             </span>
 
+            <!-- Insignia Evidencia Obligatoria -->
+            <span *ngIf="!esRama(nodo) && nodo.evidenciaObligatoria" 
+                  class="insignia-pildora pildora-evidencia" 
+                  pTooltip="Exige adjuntar evidencia documental o fotográfica" 
+                  tooltipPosition="top">
+              <i class="bx bx-camera"></i>
+              Evidencia
+            </span>
+
+            <!-- Insignia Alerta WhatsApp -->
+            <span *ngIf="!esRama(nodo) && nodo.alertaWhatsapp" 
+                  class="insignia-pildora pildora-whatsapp" 
+                  pTooltip="Notifica automáticamente a WhatsApp al crearse el ticket" 
+                  tooltipPosition="top">
+              <i class="bx bxl-whatsapp"></i>
+              WhatsApp
+            </span>
+
             <!-- Conteo de subcategorías para ramas -->
             <span *ngIf="esRama(nodo)" class="insignia-conteo-hijos">
               <i class="bx bx-git-branch"></i>
