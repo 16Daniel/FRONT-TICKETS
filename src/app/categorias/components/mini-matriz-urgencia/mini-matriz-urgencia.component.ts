@@ -113,6 +113,46 @@ export class MiniMatrizUrgenciaComponent {
     return 'Bajo';
   }
 
+  esScoreCritico(tk: Ticket | any): boolean {
+    if (!tk) return false;
+    return this.obtenerCoordenadasTicket(tk).score > 8 || this.tieneAlertaWhatsapp(tk);
+  }
+
+  tieneAlertaWhatsapp(tk: Ticket | any): boolean {
+    if (!tk) return false;
+    if (tk.alertaWhatsapp === true) return true;
+
+    if (tk.idCategoria && this.categorias && this.categorias.length) {
+      const cat = this.categorias.find(c => String(c.id) === String(tk.idCategoria));
+      if (cat) {
+        if (cat.alertaWhatsapp === true) return true;
+        if (tk.idSubcategoria && cat.subcategorias) {
+          return this.tieneAlertaEnSubcategoria(cat.subcategorias, String(tk.idSubcategoria));
+        }
+      }
+    }
+    return false;
+  }
+
+  private tieneAlertaEnSubcategoria(subcategorias: any[], idBuscado: string): boolean {
+    if (!subcategorias || !subcategorias.length) return false;
+    for (const sub of subcategorias) {
+      if (String(sub.id) === idBuscado) {
+        return sub.alertaWhatsapp === true;
+      }
+      if (sub.subcategorias && sub.subcategorias.length > 0) {
+        if (this.tieneAlertaEnSubcategoria(sub.subcategorias, idBuscado)) {
+          return true;
+        }
+        const encontradaEnHijos = this.buscarSubcategoriaRecursiva(sub.subcategorias, idBuscado);
+        if (encontradaEnHijos && sub.alertaWhatsapp === true) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   esCeldaActiva(tk: Ticket | any, imp: number, urg: number): boolean {
     if (!tk) return false;
     const coord = this.obtenerCoordenadasTicket(tk);
