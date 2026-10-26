@@ -5,18 +5,25 @@
       title="Mis Tickets">
     </app-page-header>
 
-    <!-- Barra de Herramientas y Filtros (Homologada con Áreas y Roles) -->
-    <div class="mis-tickets-toolbar-bar mb-4" *ngIf="todosLosTickets.length > 0">
-      <div class="toolbar-left">
-        <div class="search-input-wrapper">
-          <i class="bx bx-search search-icon"></i>
-          <input 
-            type="text" 
-            [(ngModel)]="filtroTexto"
-            (ngModelChange)="aplicarFiltro()"
-            placeholder="Buscar por folio, categoría o descripción..." 
-            class="mis-tickets-search-input" />
-        </div>
+    <!-- Action Buttons & Toolbar Row (Homologado con tickets-tab) -->
+    <div class="actions-toolbar-row mb-4">
+      <div class="search-input-wrapper" *ngIf="todosLosTickets.length > 0">
+        <i class="bx bx-search search-icon"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="filtroTexto"
+          (ngModelChange)="aplicarFiltro()"
+          placeholder="Buscar por folio, categoría o descripción..." 
+          class="mis-tickets-search-input" />
+      </div>
+
+      <div class="actions-buttons-container">
+        <p-button 
+          label="CREAR TICKET" 
+          icon="pi pi-plus" 
+          styleClass="p-button-primary action-btn-custom"
+          (click)="abrirModalCrearTicket()">
+        </p-button>
       </div>
     </div>
 
@@ -65,17 +72,6 @@
 
     </div>
   </div>
-
-  <!-- Botón Flotante para Crear Ticket -->
-  <button 
-    type="button" 
-    class="btn-flotante-crear-ticket" 
-    (click)="abrirModalCrearTicket()"
-    pTooltip="Crear nuevo ticket" 
-    tooltipPosition="left"
-    aria-label="Crear nuevo ticket">
-    <i class="bx bx-plus"></i>
-  </button>
 </div>
 
 <app-detalle-ticket-dialog
