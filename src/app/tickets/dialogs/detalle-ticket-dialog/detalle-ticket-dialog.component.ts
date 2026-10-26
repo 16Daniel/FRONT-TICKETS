@@ -315,6 +315,85 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     return this.obtenerNombreArea(usuario?.idArea);
   }
 
+  mostrarSwalAgregarComite(): void {
+    if (!this.ticket?.id) return;
+
+    const comitesDisponibles = this.comitesService.comites || [];
+    const seleccionadosSet = new Set<string>((this.comitesSeleccionados ?? []).map(String));
+
+    const opcionesHtml = comitesDisponibles.length > 0
+      ? comitesDisponibles.map(c => {
+          const idStr = String(c.id);
+          const isChecked = seleccionadosSet.has(idStr);
+          return `
+            <label class="swal-comite-item ${isChecked ? 'selected' : ''}" data-nombre="${(c.nombre || '').toLowerCase()}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid ${isChecked ? '#D3152A' : '#e2e8f0'}; background: ${isChecked ? '#FFF1F2' : '#ffffff'}; border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.15s ease;">
+              <input type="checkbox" class="swal-comite-checkbox form-check-input m-0" value="${idStr}" ${isChecked ? 'checked' : ''} style="cursor: pointer;">
+              <span style="font-size: 0.9rem; font-weight: 600; color: #1e293b;">${c.nombre}</span>
+            </label>
+          `;
+        }).join('')
+      : `<div class="text-center text-muted py-3" style="font-size: 0.9rem;">No hay comités registrados</div>`;
+
+    Swal.fire({
+      title: 'Agregar a Comité',
+      html: `
+        <div class="text-start" style="font-family: inherit;">
+          <label class="form-label fw-bold mb-2" style="font-size: 0.9rem;">Selecciona uno o más comités:</label>
+          <input type="text" id="swal-comite-search" class="form-control mb-2" placeholder="Buscar comité..." style="border-radius: 8px; font-size: 0.88rem;">
+          <div id="swal-comites-list" style="max-height: 240px; overflow-y: auto; padding-right: 4px;">
+            ${opcionesHtml}
+          </div>
+        </div>
+      `,
+      width: '500px',
+      showCancelButton: true,
+      confirmButtonColor: '#D3152A',
+      cancelButtonColor: '#1E1E24',
+      confirmButtonText: 'Guardar Comités',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost'
+      },
+      didOpen: () => {
+        const searchInput = document.getElementById('swal-comite-search') as HTMLInputElement;
+        const items = document.querySelectorAll('.swal-comite-item');
+        items.forEach(item => {
+          const checkbox = item.querySelector('.swal-comite-checkbox') as HTMLInputElement;
+          checkbox?.addEventListener('change', () => {
+            const el = item as HTMLElement;
+            if (checkbox.checked) {
+              el.classList.add('selected');
+              el.style.borderColor = '#D3152A';
+              el.style.background = '#FFF1F2';
+            } else {
+              el.classList.remove('selected');
+              el.style.borderColor = '#e2e8f0';
+              el.style.background = '#ffffff';
+            }
+          });
+        });
+
+        searchInput?.addEventListener('input', () => {
+          const term = searchInput.value.trim().toLowerCase();
+          items.forEach(item => {
+            const el = item as HTMLElement;
+            const nombre = el.getAttribute('data-nombre') || '';
+            el.style.display = nombre.includes(term) ? 'flex' : 'none';
+          });
+        });
+      },
+      preConfirm: () => {
+        const checked = Array.from(document.querySelectorAll('.swal-comite-checkbox:checked')) as HTMLInputElement[];
+        return checked.map(cb => cb.value);
+      }
+    }).then((result) => {
+      if (result.isConfirmed && Array.isArray(result.value)) {
+        this.comitesSeleccionados = result.value;
+        this.guardarComites();
+      }
+    });
+  }
+
   async guardarComites(): Promise<void> {
     if (!this.ticket?.id) return;
 
@@ -323,6 +402,14 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     try {
       await this.ticketsService.update({ id: this.ticket.id, comites });
       this.ticket.comites = comites;
+
+      const nombresComites = comites.map(id => this.obtenerNombreComite(id)).join(', ');
+      const mensajeBitacora = comites.length > 0
+        ? `Ticket agregado a comité(s): <b>${nombresComites}</b>`
+        : `Se removieron los comités asignados al ticket`;
+      await this.registrarBitacoraSistema(mensajeBitacora);
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
 
       const idsUsuarios = new Set<string>();
       for (const idComite of comites) {
@@ -383,6 +470,8 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
       );
     } finally {
       this.guardandoComites = false;
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     }
   }
 

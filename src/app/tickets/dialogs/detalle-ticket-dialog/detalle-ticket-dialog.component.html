@@ -461,10 +461,28 @@
           <!-- Tab 5: Comités -->
           <p-tabPanel header="Comités" leftIcon="bx bx-group">
             <div class="ticket-card p-4 m-0 d-flex flex-column h-100" style="min-height: 250px;">
-              <h5 class="sub-title mb-3 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+              <h5 class="d-none">
                 <i class="bx bx-group fs-5" style="color: #D3152A;"></i> COMITÉS ASIGNADOS
               </h5>
-              <!-- <p class="text-muted mb-3">Selecciona los comités relacionados con este ticket.</p> -->
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="sub-title m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                  <i class="bx bx-group fs-5" style="color: #D3152A;"></i> COMITÉS ASIGNADOS
+                </h5>
+                <div class="modal-footer-actions m-0 p-0">
+                  <button
+                    class="btn-action btn-primary-rebel btn-sm px-4"
+                    [disabled]="guardandoComites || !ticket.id"
+                    (click)="mostrarSwalAgregarComite()">
+                    <i class="bx bx-plus"></i>
+                    <span>{{ guardandoComites ? 'GUARDANDO...' : 'AGREGAR A COMITÉ' }}</span>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="!comitesSeleccionados.length" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
+                <i class="bx bx-group mb-3" style="font-size: 2.5rem; color: #94a3b8;"></i>
+                <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Sin comités asignados</p>
+              </div>
+              <ng-container *ngIf="false">
               <p-multiSelect
                 [options]="(comitesService.comites$ | async) ?? []"
                 [(ngModel)]="comitesSeleccionados"
@@ -479,7 +497,8 @@
                 appendTo="body"
                 styleClass="w-100">
               </p-multiSelect>
-              <div *ngIf="comitesSeleccionados.length" class="mt-4 d-flex flex-column flex-grow-1 committee-areas-section">
+              </ng-container>
+              <div *ngIf="comitesSeleccionados.length" class="mt-2 d-flex flex-column flex-grow-1 committee-areas-section">
                 <h6 class="fw-bold text-uppercase text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                   ÁREAS DE LOS COMITÉS SELECCIONADOS
                 </h6>
@@ -517,7 +536,7 @@
                   </ng-container>
                 </div>
               </div>
-              <div class="d-flex justify-content-end mt-4 modal-footer-actions">
+              <div class="d-none">
                 <button
                   class="btn-action btn-primary-rebel btn-sm px-4"
                   [disabled]="guardandoComites || !ticket.id"
