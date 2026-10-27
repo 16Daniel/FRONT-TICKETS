@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
 
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
@@ -22,6 +23,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
     FormsModule,
     ToastModule,
     TooltipModule,
+    ButtonModule,
     PageHeaderComponent,
     RequesterTicketsListComponent,
     DetalleTicketDialogComponent,

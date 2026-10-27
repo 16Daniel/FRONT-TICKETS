@@ -97,24 +97,17 @@
         (click)="mostrarModalGenerateTicket = true">
       </p-button>
 
-      <!-- <p-button 
-        label="HISTORIAL TICKETS" 
-        icon="pi pi-history" 
-        styleClass="p-button-warning action-btn-custom"
-        (click)="mostrarModalHistorial = true">
-      </p-button>
-
-      <p-button 
-        label="FILTRAR TICKETS" 
-        icon="pi pi-filter" 
-        styleClass="p-button-success action-btn-custom"
-        (click)="mostrarModalFilterTickets = true">
-      </p-button> -->
-
       <p-button 
         (onClick)="opg.toggle($event)" 
         icon="pi pi-users" 
         label="AGRUPAR" 
+        styleClass="p-button-danger action-btn-custom">
+      </p-button>
+
+      <p-button 
+        (onClick)="opf.toggle($event)" 
+        icon="pi pi-filter" 
+        label="FILTROS" 
         styleClass="p-button-danger action-btn-custom">
       </p-button>
 
@@ -143,6 +136,27 @@
 
       <button *ngFor="let item of usuariosHelp" class="btn p-2 btn-light" (click)="agrupar(item)">
         <i class="bx bxs-user"></i>&nbsp;{{ item.nombre + " " + item.apellidoP | uppercase }}
+      </button>
+    </div>
+  </p-overlayPanel>
+
+  <!-- Overlay Panel for Filtros -->
+  <p-overlayPanel #opf>
+    <div class="d-flex flex-column justify-content-center p-3 gap-2">
+      <button *ngIf="filtroActivo" class="btn p-2 btn-light text-start" (click)="aplicarFiltroRapido(null); opf.hide()">
+        <i class="bx bx-reset"></i>&nbsp;VER TODO
+      </button>
+
+      <button class="btn p-2 text-start" [ngClass]="filtroActivo === 'slaAtencion' ? 'btn-danger text-white' : 'btn-light'" (click)="aplicarFiltroRapido('slaAtencion'); opf.hide()">
+        <i class="bx bx-time-five"></i>&nbsp;SLA ATENCIÓN
+      </button>
+
+      <button class="btn p-2 text-start" [ngClass]="filtroActivo === 'slaResolucion' ? 'btn-danger text-white' : 'btn-light'" (click)="aplicarFiltroRapido('slaResolucion'); opf.hide()">
+        <i class="bx bx-check-shield"></i>&nbsp;SLA RESOLUCIÓN
+      </button>
+
+      <button class="btn p-2 btn-light text-start" (click)="aplicarFiltroRapido('desbloqueo'); opf.hide()">
+        <i class="bx bx-lock-open-alt"></i>&nbsp;DESBLOQUEO
       </button>
     </div>
   </p-overlayPanel>

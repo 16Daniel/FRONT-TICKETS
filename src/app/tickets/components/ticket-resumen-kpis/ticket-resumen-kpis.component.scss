@@ -1,0 +1,65 @@
+.ticket-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.kpi-card {
+  padding: 0.65rem 0.8rem;
+}
+
+.kpi-title {
+  margin: 0 0 0.45rem 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748B;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.kpi-sub-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #94A3B8;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.kpi-icon-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.kpi-icon-mitigacion {
+  background-color: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #D97706;
+}
+
+.kpi-icon-comite {
+  background-color: #F5F0FF;
+  border: 1px solid #D8B4FE;
+  color: #7E22CE;
+}
+
+.kpi-icon-inactive {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #94A3B8;
+}

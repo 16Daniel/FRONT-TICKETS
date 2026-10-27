@@ -33,25 +33,21 @@ Quill.register('modules/magicUrl', MagicUrl);
 export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
   @Input() modulo!: string;
   @Input() referenciaId!: string;
+  @Input() tipo: Bitacora['tipo'] = 'COMENTARIO';
   @Input() usuariosEtiquetables: Responsable[] = [];
-  @Input() permitirModoComite = false;
-  @Input() comiteDisponible = false;
-  @Input() puedeAccederComite = false;
-  
+
   // Usuario actual (simulado o inyectado después)
   @Input() usuarioActual!: Responsable;
 
-  moduloActivo = '';
   bitacoras: Bitacora[] = [];
   nuevoMensaje: string = '';
   cargando: boolean = true;
-  
+
   archivosSeleccionados: File[] = [];
   subiendoArchivos: boolean = false;
-  
+
   fileUtils = FileUtils;
-  private borradoresPorModulo: Record<string, { mensaje: string; archivos: File[] }> = {};
-  
+
   // Configuración de módulos de Quill
   editorModules = {
     mention: {
@@ -65,14 +61,14 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
           return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
         };
 
-        const values = this.usuariosEtiquetables.map(u => ({ 
-          id: u.id, 
+        const values = this.usuariosEtiquetables.map(u => ({
+          id: u.id,
           value: u.nombre,
           color: u.color,
           posicion: u.posicion,
           initials: getInitials(u.nombre)
         }));
-        
+
         console.log('Quill Mention Source Triggered. Search:', searchTerm, 'Values available:', values.length);
         if (searchTerm.length === 0) {
           renderList(values, searchTerm);
@@ -87,7 +83,7 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
         div.style.alignItems = 'center';
         div.style.gap = '10px';
         div.style.padding = '4px 0';
-        
+
         const avatarStr = `
           <div style="width: 28px; height: 28px; border-radius: 50%; background-color: ${item.color || '#94a3b8'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0;">
             ${item.initials}
@@ -124,33 +120,12 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    let recargar = false;
-
     if (changes['referenciaId']) {
-      this.borradoresPorModulo = {};
       this.nuevoMensaje = '';
       this.archivosSeleccionados = [];
-      this.moduloActivo = this.modulo;
-      recargar = true;
-    } else if (changes['modulo']) {
-      this.moduloActivo = this.modulo;
-      const borrador = this.borradoresPorModulo[this.moduloActivo];
-      this.nuevoMensaje = borrador?.mensaje ?? '';
-      this.archivosSeleccionados = borrador?.archivos ?? [];
-      recargar = true;
     }
 
-    if (!this.comiteDisponible && this.moduloActivo === 'COMITE') {
-      this.cambiarModulo(this.modulo);
-      return;
-    }
-
-    if (changes['puedeAccederComite'] && !this.puedeAccederComite && this.moduloActivo === 'COMITE') {
-      this.cambiarModulo(this.modulo);
-      return;
-    }
-
-    if (recargar && this.moduloActivo && this.referenciaId) {
+    if ((changes['modulo'] || changes['referenciaId'] || changes['tipo']) && this.modulo && this.referenciaId) {
       this.cargarBitacoras();
     }
   }
@@ -160,16 +135,9 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   cargarBitacoras() {
-    if (this.moduloActivo === 'COMITE' && !this.puedeAccederComite) {
-      this.sub?.unsubscribe();
-      this.bitacoras = [];
-      this.cargando = false;
-      return;
-    }
-
     this.cargando = true;
     this.sub?.unsubscribe();
-    this.sub = this.bitacoraService.getBitacoras(this.moduloActivo, this.referenciaId)
+    this.sub = this.bitacoraService.getBitacoras(this.modulo, this.referenciaId, this.tipo)
       .subscribe({
         next: (data) => {
           // Invertimos el arreglo para mostrar los más recientes primero (descendente)
@@ -185,30 +153,7 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  cambiarModulo(modulo: string) {
-    if (
-      this.subiendoArchivos ||
-      modulo === this.moduloActivo ||
-      (modulo === 'COMITE' && (!this.comiteDisponible || !this.puedeAccederComite))
-    ) {
-      return;
-    }
-
-    this.borradoresPorModulo[this.moduloActivo] = {
-      mensaje: this.nuevoMensaje,
-      archivos: this.archivosSeleccionados
-    };
-    this.moduloActivo = modulo;
-
-    const borrador = this.borradoresPorModulo[modulo];
-    this.nuevoMensaje = borrador?.mensaje ?? '';
-    this.archivosSeleccionados = borrador?.archivos ?? [];
-    this.cargarBitacoras();
-  }
-
   onFileSelected(event: Event) {
-    if (this.moduloActivo === 'COMITE' && !this.puedeAccederComite) return;
-
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const nuevosArchivos = Array.from(input.files);
@@ -225,17 +170,15 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async enviarComentario() {
-    if (this.moduloActivo === 'COMITE' && !this.puedeAccederComite) return;
-
-    // Si no hay mensaje pero hay archivos, podemos permitir enviarlo (o requerir mensaje, depende). 
+    // Si no hay mensaje pero hay archivos, podemos permitir enviarlo (o requerir mensaje, depende).
     // Lo común es requerir mensaje O archivos.
     const tieneMensaje = this.nuevoMensaje && this.nuevoMensaje.trim() !== '';
     const tieneArchivos = this.archivosSeleccionados.length > 0;
-    
+
     if (!tieneMensaje && !tieneArchivos) return;
-    
+
     this.subiendoArchivos = true;
-    
+
     // Obtener el responsable actual
     const currentId = this.usuarioActual?.id || 'default';
     const currentName = this.usuarioActual?.nombre || 'Usuario Actual';
@@ -244,9 +187,9 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
     const usuariosEtiquetados = MentionUtils.extraerUsuariosEtiquetados(this.nuevoMensaje);
 
     const nuevaBitacora: Bitacora = {
-      modulo: this.moduloActivo,
+      modulo: this.modulo,
       referenciaId: this.referenciaId,
-      tipo: 'COMENTARIO',
+      tipo: this.tipo,
       contenido: this.nuevoMensaje || '', // Puede ir vacío si solo manda archivo
       autor: {
         id: currentId,
@@ -267,14 +210,13 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
 
       await this.bitacoraService.addEntrada(nuevaBitacora);
       await this.crearAlertasMenciones(usuariosEtiquetados, nuevaBitacora.contenido);
-      
+
       // Limpiar después de enviar
       this.nuevoMensaje = '';
       this.archivosSeleccionados = [];
-      delete this.borradoresPorModulo[this.moduloActivo];
       this.subiendoArchivos = false;
       this.cdr.detectChanges();
-      
+
     } catch (error) {
       console.error('Error al enviar comentario con archivos:', error);
       this.subiendoArchivos = false;

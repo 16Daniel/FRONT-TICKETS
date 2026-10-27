@@ -14,7 +14,7 @@ export class BitacoraService {
   /**
    * Obtiene las entradas de bitácora para un módulo y referencia específica.
    */
-  getBitacoras(modulo: string, referenciaId: string, tipo: string = 'COMENTARIO'): Observable<Bitacora[]> {
+  getBitacoras(modulo: string, referenciaId: string, tipo: Bitacora['tipo'] = 'COMENTARIO'): Observable<Bitacora[]> {
     const bitacorasRef = collection(this.firestore, this.collectionName);
     const q = query(
       bitacorasRef,

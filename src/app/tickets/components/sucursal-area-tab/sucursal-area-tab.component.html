@@ -1,9 +1,19 @@
 <!-- Tarjetas informativas (KPIs) -->
-<div class="dashboard-kpi-section mb-4 mt-3">
+<div class="dashboard-unified-kpi-row mb-4 mt-3">
+  <div class="kpi-operational-col">
   <app-iconos-notificaciones-tickets 
     [tickets]="tickets" 
     [usuario]="usuario">
   </app-iconos-notificaciones-tickets>
+  </div>
+  <div class="kpi-sla-col">
+    <app-tarjeta-rendimiento-sla
+      [totales]="totalesSla"
+      [loading]="loadingSla"
+      [mesNombre]="mesActualNombre"
+      titulo="Rendimiento del mes en tu sucursal">
+    </app-tarjeta-rendimiento-sla>
+  </div>
 </div>
 
 <div class="actions-toolbar-row mt-3 mb-4">

@@ -128,7 +128,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   obtenerCatalogoEstatusTickets() {
     this.statusTicketsService
       .get()
-      .subscribe((result) => (this.estatusTickets = result));
+      .subscribe((result) => {
+        this.estatusTickets = result;
+        this.cdr.detectChanges();
+      });
   }
 
   observaActualizacionesChatTicket(changes: SimpleChanges) {
@@ -155,7 +158,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerAreas() {
-    this.areasService.areas$.subscribe(areas => this.areas = areas);
+    this.areasService.areas$.subscribe(areas => {
+      this.areas = areas;
+      this.cdr.detectChanges();
+    });
   }
 
   onClick() {
@@ -188,7 +194,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.usersService.usuarios$.subscribe(usuarios => {
+      this.usuariosHelp = usuarios;
+      this.cdr.detectChanges();
+    });
   }
 
   obtenerNombreEstatusTicket(idEstatusTicket: string) {

@@ -1,0 +1,30 @@
+<div
+  *ngIf="ticket"
+  class="ticket-alerts"
+  [class.ticket-alerts-split]="ticket.comites && ticket.comites.length && ticket.idEstatusTicket === '8' && ultimaMitigacion">
+  <!-- Banner de Mitigación -->
+  <div *ngIf="ticket.idEstatusTicket === '8' && ultimaMitigacion" class="alert alert-warning ticket-alert d-flex align-items-center gap-3">
+    <i class="bx bx-shield-quarter fs-2 flex-shrink-0"></i>
+    <div class="flex-grow-1">
+      <h6 class="fw-bold mb-1 m-0">Ticket en Mitigación</h6>
+      <div class="text-dark" style="font-size: 0.85rem;" [innerHTML]="ultimaMitigacion.contenido"></div>
+    </div>
+    <div class="text-end flex-shrink-0" style="font-size: 0.8rem;">
+      <span class="d-block fw-bold">{{ ultimaMitigacion.autor.nombre }}</span>
+      <span class="text-muted">{{ ultimaMitigacion.fechaCreacion ? (datesHelper.getDate(ultimaMitigacion.fechaCreacion) | date: 'dd/MM/yyyy hh:mm a') : 'Justo ahora' }}</span>
+    </div>
+  </div>
+
+  <!-- Banner de Comités -->
+  <!-- <div *ngIf="ticket.comites && ticket.comites.length" class="alert ticket-alert ticket-alert-committees d-flex align-items-center gap-3">
+    <i class="bx bx-group fs-2 flex-shrink-0"></i>
+    <div class="ticket-committees-content">
+      <h6 class="fw-bold m-0">Ticket asignado a comités</h6>
+      <div class="d-flex flex-wrap gap-2">
+        <span *ngFor="let idComite of ticket.comites" class="badge bg-white text-dark border">
+          {{ obtenerNombreComite(idComite) }}
+        </span>
+      </div>
+    </div>
+  </div> -->
+</div>

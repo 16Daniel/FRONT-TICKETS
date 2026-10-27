@@ -208,13 +208,16 @@ export class TicketsTabComponent implements OnInit {
       .subscribe({
         next: (data) => {
           // console.log('Tickets obtenidos:', data);
+          // El ticket más reciente se calcula antes de ordenar por prioridad
+          const ticketMasReciente = [...data].sort((a, b) => this.obtenerTiempoTicket(b) - this.obtenerTiempoTicket(a))[0];
+          data = this.ordenarTickets(data);
           if (
             data.length > this.todosLosTickets.length &&
             !this.paginaCargaPrimeraVez
           ) {
             this.tickets = data;
             this.todosLosTickets = data;
-            this.ultimoNuevoTicket = this.tickets[0];
+            this.ultimoNuevoTicket = ticketMasReciente;
             this.notificationService.enviarNotificacion('NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre);
             this.showMessage('info', 'NUEVO TICKET ASIGNADO', 'SUCURSAL: ' + this.sucursales.filter(x => x.id == this.ultimoNuevoTicket?.idSucursal)[0].nombre, 100000);
           }
@@ -232,6 +235,22 @@ export class TicketsTabComponent implements OnInit {
           console.error('Error al escuchar los tickets:', error);
         },
       });
+  }
+
+  /** Mismo orden que la vista de administrador: prioridad (score) descendente y luego fecha más reciente. */
+  private ordenarTickets(tickets: Ticket[]): Ticket[] {
+    return [...tickets].sort((a, b) => {
+      const scoreA = (a as any).score || (((a as any).criticidad && (a as any).urgencia) ? (a as any).criticidad * (a as any).urgencia : 4);
+      const scoreB = (b as any).score || (((b as any).criticidad && (b as any).urgencia) ? (b as any).criticidad * (b as any).urgencia : 4);
+      if (scoreB !== scoreA) {
+        return scoreB - scoreA;
+      }
+      return this.obtenerTiempoTicket(b) - this.obtenerTiempoTicket(a);
+    });
+  }
+
+  private obtenerTiempoTicket(t: Ticket): number {
+    return t.fecha?.toDate ? t.fecha.toDate().getTime() : (t.fecha ? new Date(t.fecha).getTime() : 0);
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
