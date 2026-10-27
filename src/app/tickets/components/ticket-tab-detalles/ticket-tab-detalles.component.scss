@@ -1,0 +1,136 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  min-height: 0;
+}
+
+.ticket-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+}
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+
+  i {
+    font-size: 0.55rem;
+  }
+}
+
+.summary-info-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .info-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    i {
+      font-size: 0.95rem;
+      color: #94A3B8;
+    }
+  }
+
+  .info-value {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1E1E24;
+    line-height: 1.35;
+  }
+
+  .subcategoria-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    color: #D3152A;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+}
+
+.desbloqueo-check-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #94A3B8;
+    background-color: #F8FAFC;
+  }
+
+  &.checked {
+    background-color: #FFF1F2;
+    border-color: #D3152A;
+    color: #D3152A;
+  }
+
+  .form-check-input {
+    cursor: pointer;
+    border-color: #94A3B8;
+
+    &:checked {
+      background-color: #D3152A;
+      border-color: #D3152A;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.15rem rgba(211, 21, 42, 0.2);
+    }
+  }
+}

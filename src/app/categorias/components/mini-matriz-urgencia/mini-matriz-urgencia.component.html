@@ -1,4 +1,7 @@
-<div class="mini-matriz-wrapper mini-matriz-urgencia" [pTooltip]="obtenerTooltipMatriz(ticket)" tooltipPosition="top">
+<div class="mini-matriz-wrapper mini-matriz-urgencia"
+    [class.is-critical-pulse]="esScoreCritico(ticket)"
+    [pTooltip]="obtenerTooltipMatriz(ticket)"
+    tooltipPosition="top">
     <div class="mini-matriz-grid">
         <span *ngFor="let celda of celdasMatriz"
             class="celda-mm"

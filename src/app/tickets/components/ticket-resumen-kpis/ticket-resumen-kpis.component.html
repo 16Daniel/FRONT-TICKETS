@@ -1,0 +1,111 @@
+<div class="row g-2 align-items-stretch" *ngIf="ticket">
+  <!-- SLA -->
+  <div class="col-md-3 d-flex flex-column">
+    <div class="ticket-card kpi-card flex-grow-1 d-flex flex-column justify-content-between">
+      <h5 class="kpi-title text-center">Cumplimiento SLA</h5>
+      
+      <div class="d-flex align-items-center justify-content-center my-1">
+        <app-ticket-sla-gauge #gauge [ticket]="ticket" [size]="56" [categorias]="categorias"></app-ticket-sla-gauge>
+      </div>
+      
+      <div class="text-center lh-sm" style="font-size: 0.68rem;">
+        <span class="text-muted me-1">Resolución:</span>
+        <span class="fw-bold text-dark">{{ gauge.formatearHorasLegible(gauge.horasResolucionTranscurridas) }} / {{ gauge.formatearHorasLegible(gauge.horasResolucionSla, gauge.tiempoResolucionOriginal, gauge.unidadResolucionOriginal) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matriz -->
+  <div class="col-md-3 d-flex flex-column">
+    <div class="ticket-card kpi-card flex-grow-1 d-flex flex-column justify-content-between">
+      <h5 class="kpi-title text-center">Urgencia e Impacto</h5>
+      
+      <div class="d-flex align-items-center justify-content-center my-1">
+        <app-mini-matriz-urgencia [ticket]="ticket" [categorias]="categorias"></app-mini-matriz-urgencia>
+      </div>
+      
+      <div class="text-center lh-sm" style="font-size: 0.68rem;">
+        <span class="text-muted me-1">Atención:</span>
+        <span class="fw-bold text-dark">{{ gauge.formatearHorasLegible(gauge.horasUrgenciaTranscurridas) }} / {{ gauge.formatearHorasLegible(gauge.horasUrgenciaSla, ticket.tiempoAtencion, ticket.unidadAtencion) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Responsables -->
+  <div class="col-md-3 d-flex flex-column">
+    <div class="ticket-card kpi-card flex-grow-1 d-flex flex-column justify-content-between">
+      <h5 class="kpi-title">Equipo Asignado</h5>
+      
+      <div class="d-flex flex-column justify-content-center gap-2 flex-grow-1">
+        <div *ngIf="getResponsable() as resp" class="d-flex align-items-center gap-2" [pTooltip]="resp.email" tooltipPosition="top">
+          <ngx-avatars [name]="resp.nombre + ' ' + resp.apellidoP" [size]="30" [round]="true"></ngx-avatars>
+          <div class="lh-1 text-truncate">
+            <span class="kpi-sub-label d-block">RESPONSABLE</span>
+            <span class="d-block fw-bold text-truncate" style="font-size: 0.8rem; color: #1e293b;">
+              {{ resp.nombre }} {{ resp.apellidoP }}
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="getInvolucrados().length > 0">
+          <span class="kpi-sub-label d-block mb-1">INVOLUCRADOS</span>
+          <div class="d-flex flex-wrap gap-1">
+            <ngx-avatars
+              *ngFor="let inv of getInvolucrados()"
+              [name]="inv.nombre + ' ' + inv.apellidoP"
+              [size]="26"
+              [round]="true"
+              [pTooltip]="inv.nombre + ' ' + inv.apellidoP"
+              tooltipPosition="top">
+            </ngx-avatars>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado Especial (Mitigación y Comité) -->
+  <div class="col-md-3 d-flex flex-column">
+    <div class="ticket-card kpi-card flex-grow-1 d-flex flex-column justify-content-between">
+      <h5 class="kpi-title">Estado Especial</h5>
+
+      <div class="d-flex flex-column justify-content-center gap-2 flex-grow-1">
+        <!-- Sección MITIGACIÓN -->
+        <div class="d-flex align-items-center gap-2">
+          <div
+            class="kpi-icon-circle"
+            [ngClass]="ticket.idEstatusTicket === '8' ? 'kpi-icon-mitigacion' : 'kpi-icon-inactive'">
+            <i class="bx bx-shield-quarter"></i>
+          </div>
+          <div class="lh-1 text-truncate">
+            <span class="kpi-sub-label d-block">MITIGACIÓN</span>
+            <span
+              class="d-block fw-bold text-truncate"
+              style="font-size: 0.8rem;"
+              [style.color]="ticket.idEstatusTicket === '8' ? '#D97706' : '#64748B'">
+              {{ ticket.idEstatusTicket === '8' ? 'En Mitigación' : 'No aplica' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Sección COMITÉ -->
+        <div class="d-flex align-items-center gap-2">
+          <div
+            class="kpi-icon-circle"
+            [ngClass]="ticket.comites && ticket.comites.length > 0 ? 'kpi-icon-comite' : 'kpi-icon-inactive'">
+            <i class="bx bx-group"></i>
+          </div>
+          <div class="lh-1 text-truncate">
+            <span class="kpi-sub-label d-block">COMITÉ ({{ ticket.comites ? ticket.comites.length : 0 }})</span>
+            <span
+              class="d-block fw-bold text-truncate"
+              style="font-size: 0.8rem;"
+              [style.color]="ticket.comites && ticket.comites.length > 0 ? '#7E22CE' : '#64748B'">
+              {{ ticket.comites && ticket.comites.length > 0 ? 'En Comité' : 'Sin asignar' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

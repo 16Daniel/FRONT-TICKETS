@@ -24,7 +24,6 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimient
 import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
 
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -106,6 +105,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   usuario: Usuario;
   sucursal: Sucursal | undefined;
   usergroup: Usuario | undefined;
+  filtroActivo: 'slaAtencion' | 'slaResolucion' | 'desbloqueo' | null = null;
 
   subscripcionTicket: Subscription | undefined;
 
@@ -152,7 +152,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     this.obtenerCompras();
     this.cargarDatosSlaMes();
   }
-
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -310,8 +309,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
           const timeB = b.fecha?.toDate ? b.fecha.toDate().getTime() : (b.fecha ? new Date(b.fecha).getTime() : 0);
           return timeB - timeA;
         });
-        
-        this.todosLostickets = [...this.tickets];
 
         if (this.ticket != undefined) {
           let temp = this.tickets.filter((x) => x.id == this.ticket!.id);
@@ -320,14 +317,12 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.tickets = this.tickets.filter(x => x.validacionAdmin != true);
-        
-        // Convert to string for category consistency
-        this.tickets = this.tickets.map((item: any) => ({
+        this.todosLostickets = this.tickets.filter(x => x.validacionAdmin != true).map((item: any) => ({
           ...item,
           idCategoria: item.idCategoria ? item.idCategoria.toString() : item.idCategoria
         }));
 
+        this.aplicarFiltrosVista();
         this.cdr.detectChanges();
         setTimeout(() => { Swal.close(); }, 1000);
       },
@@ -403,22 +398,88 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   agrupar(user: Usuario) {
     this.usergroup = user;
     this.mostrarAgrupacion = true;
-
-    if (this.usergroup.idRol === '7') {
-      this.tickets = this.tickets.filter(x => x.idUsuarioEspecialista == this.usergroup!.id);
-    } else {
-      this.tickets = this.todosLostickets;
-    }
-
+    this.aplicarFiltrosVista();
     this.procesarMetricasSla();
+    this.cdr.detectChanges();
   }
 
   agruparPorSucursal() {
-    this.tickets = this.todosLostickets;
     this.usergroup = undefined;
     this.mostrarAgrupacion = true;
+    this.aplicarFiltrosVista();
     this.procesarMetricasSla();
     this.cdr.detectChanges();
+  }
+
+  aplicarFiltroRapido(filtro: 'slaAtencion' | 'slaResolucion' | 'desbloqueo' | null) {
+    if (filtro === 'desbloqueo') {
+      // Pendiente de implementar lógica de desbloqueo
+      return;
+    }
+    this.filtroActivo = this.filtroActivo === filtro ? null : filtro;
+    this.aplicarFiltrosVista();
+    this.cdr.detectChanges();
+  }
+
+  private aplicarFiltrosVista(): void {
+    let lista = [...this.todosLostickets];
+
+    if (this.usergroup?.idRol === '7') {
+      lista = lista.filter(x => x.idUsuarioEspecialista == this.usergroup!.id);
+    }
+
+    if (this.filtroActivo === 'slaAtencion') {
+      lista = lista.filter(t => this.tieneSlaAtencionVencido(t));
+    } else if (this.filtroActivo === 'slaResolucion') {
+      lista = lista.filter(t => this.tieneSlaResolucionVencido(t));
+    }
+
+    this.tickets = lista;
+  }
+
+  private obtenerHorasUrgenciaSla(t: Ticket): number {
+    if (t.horasAtencion && t.horasAtencion > 0) {
+      return t.horasAtencion;
+    }
+    const impacto = Math.min(3, Math.max(1, t.criticidad || 2));
+    const urgencia = Math.min(3, Math.max(1, t.urgencia || 2));
+    const celda = this.matrizUrgenciaService.obtenerCelda(this.matrizUrgenciaArea, impacto, urgencia);
+    return celda?.horas ?? 24;
+  }
+
+  private tieneSlaAtencionVencido(t: Ticket): boolean {
+    const fechaCreacion = t.fecha?.toDate ? t.fecha.toDate() : (t.fecha ? this.datesHelper.getDate(t.fecha) : new Date());
+    const fechaAtencion = t.fechaAtencion
+      ? (t.fechaAtencion?.toDate ? t.fechaAtencion.toDate() : this.datesHelper.getDate(t.fechaAtencion))
+      : null;
+    const horasUrgenciaSla = this.obtenerHorasUrgenciaSla(t);
+    const refFin = fechaAtencion || new Date();
+    const horasTranscurridas = Math.max(0, refFin.getTime() - fechaCreacion.getTime()) / (1000 * 60 * 60);
+    return horasTranscurridas > horasUrgenciaSla;
+  }
+
+  private tieneSlaResolucionVencido(t: Ticket): boolean {
+    const fechaAtencion = t.fechaAtencion
+      ? (t.fechaAtencion?.toDate ? t.fechaAtencion.toDate() : this.datesHelper.getDate(t.fechaAtencion))
+      : null;
+    if (!fechaAtencion) return false;
+
+    let horasResolucionSla = 24;
+    if (t.horasResolucion && t.horasResolucion > 0) {
+      horasResolucionSla = t.horasResolucion;
+    } else if (t.tiempoResolucion && t.tiempoResolucion > 0) {
+      const u = t.unidadResolucion || 'h';
+      horasResolucionSla = u === 'm' ? t.tiempoResolucion / 60 : (u === 'd' ? t.tiempoResolucion * 24 : t.tiempoResolucion);
+    } else {
+      horasResolucionSla = this.obtenerHorasUrgenciaSla(t) || 24;
+    }
+
+    const fechaFin = t.fechaFin
+      ? (t.fechaFin?.toDate ? t.fechaFin.toDate() : this.datesHelper.getDate(t.fechaFin))
+      : null;
+    const refFin = fechaFin || new Date();
+    const horasTranscurridas = Math.max(0, refFin.getTime() - fechaAtencion.getTime()) / (1000 * 60 * 60);
+    return horasTranscurridas > horasResolucionSla;
   }
 
   abrirModalDetalleTicket(itemticket: Ticket | any) {

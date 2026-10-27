@@ -1,0 +1,65 @@
+<div class="modal-footer-actions m-0 p-0" *ngIf="hasVisibleActions">
+  <!-- Botón RECHAZAR SOPORTE -->
+  <button
+    *ngIf="showBtnRechazar"
+    class="btn-action" style="background-color: #EF4444; color: white;"
+    (click)="onClickRechazar(ticket)">
+    <i class="bx bx-undo"></i>
+    <span>RECHAZAR SOPORTE</span>
+  </button>
+
+  <!-- Botón FINALIZAR TICKET -->
+  <button
+    *ngIf="showBtnFinalizar"
+    class="btn-action" style="background-color: #10B981; color: white;"
+    (click)="onClickFinalizar(ticket)">
+    <i class="bx bx-check-circle"></i>
+    <span>FINALIZAR TICKET</span>
+  </button>
+
+  <!-- Botón VALIDAR TICKET -->
+  <button
+    *ngIf="showBtnValidar"
+    class="btn-action" style="background-color: #10B981; color: white;"
+    (click)="onClickPendienteValidarSucursal()">
+    <i class="bx bx-check-double"></i>
+    <span>VALIDAR TICKET</span>
+  </button>
+
+  <!-- Botón VALIDACIÓN ADMINISTRADOR -->
+  <button
+    *ngIf="showBtnValidacionAdmin"
+    class="btn-action btn-action-admin" style="background-color: #a300ff; color: white;"
+    (click)="onClickValidacionAdmin(ticket)">
+    <i class="bx bxs-badge-check"></i>
+    <span>VALIDACIÓN ADMINISTRADOR</span>
+  </button>
+
+  <!-- Botón ASIGNAR A ESPECIALISTA -->
+  <button
+    *ngIf="showBtnAsignar"
+    class="btn-action btn-secondary-rebel"
+    (click)="onClickAsignarEspecialista()">
+    <i class="bx bx-user-pin"></i>
+    <span>ASIGNAR A ESPECIALISTA</span>
+  </button>
+
+  <!-- Botón TRABAJAR (Inicia atención y registra fechaAtencion) -->
+  <button
+    *ngIf="showBtnTrabajar"
+    class="btn-action btn-primary-rebel"
+    (click)="onClickTrabajarTicket()">
+    <i class="bx bx-play-circle"></i>
+    <span>TRABAJAR TICKET</span>
+  </button>
+</div>
+
+<!-- Modal Asignar Especialista -->
+<app-seleccionar-usuario-especialista-dialog
+  *ngIf="mostrarModalEspecialistas"
+  [mostrarModal]="mostrarModalEspecialistas"
+  [idSucursal]="idSucursalEspecialista"
+  [ticket]="ticket"
+  [idArea]="usuario.idArea"
+  (closeEvent)="mostrarModalEspecialistas = false">
+</app-seleccionar-usuario-especialista-dialog>

@@ -1,0 +1,57 @@
+.ticket-alerts {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+
+  &:empty {
+    display: none;
+    margin: 0;
+  }
+
+  .ticket-alert {
+    flex: 1 1 100%;
+    min-width: 0;
+    margin: 0;
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 8px;
+    color: #D97706;
+  }
+
+  &.ticket-alerts-split .ticket-alert {
+    flex-basis: 0;
+  }
+}
+
+.ticket-committees-content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  min-width: 0;
+}
+
+.ticket-alert-committees {
+  background: #F5F0FF !important;
+  background-color: #F5F0FF !important;
+  border: 1px solid #D8B4FE !important;
+  color: #7E22CE !important;
+
+  .badge {
+    background-color: #F3E8FF !important;
+    border-color: #D8B4FE !important;
+    color: #6B21A8 !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .ticket-alerts {
+    flex-direction: column;
+
+    .ticket-alert,
+    &.ticket-alerts-split .ticket-alert {
+      flex-basis: auto;
+      width: 100%;
+    }
+  }
+}

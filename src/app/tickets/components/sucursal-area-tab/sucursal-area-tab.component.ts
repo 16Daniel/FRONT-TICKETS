@@ -29,6 +29,12 @@ import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimie
 import { ModalMaintenanceMttoHistoryComponent } from '../../../mantenimientos/dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
 import { ModalMateinanceMttoCheckComponent } from '../../../mantenimientos/dialogs/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
+import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
+import { KpisTicketsService } from '../../services/kpis-tickets.service';
+import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
+import { KpiRadarService } from '../../services/kpi-radar.service';
+import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sucursal-area-tab',
@@ -51,7 +57,8 @@ import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-t
     HistorialMantenimeintoSysAvComponent,
     ModalMaintenanceMttoHistoryComponent,
     ModalMateinanceMttoCheckComponent,
-    IconosNotificacionesTicketsComponent
+    IconosNotificacionesTicketsComponent,
+    TarjetaRendimientoSlaComponent
   ],
   templateUrl: './sucursal-area-tab.component.html',
   styleUrl: './sucursal-area-tab.component.scss',
@@ -88,13 +95,31 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
   private unsubscribe!: () => void;
   private unsubscribeAV!: () => void;
   private unsubscribeMtto!: () => void;
+  private subscripcionSlaTickets?: Subscription;
+  private subscripcionSlaMatriz?: Subscription;
+
+  // Rendimiento SLA del mes
+  loadingSla: boolean = false;
+  mesActualNombre: string = '';
+  matrizUrgenciaArea?: MatrizUrgencia;
+  totalesSla: TotalesSlaDashboard = {
+    totalTickets: 0,
+    totalTerminados: 0,
+    slaAtencion: 0,
+    slaAtencionCumplidos: 0,
+    slaResolucion: 0,
+    slaResolucionCumplidos: 0
+  };
 
   constructor(
     public cdr: ChangeDetectorRef,
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private maintenanceAvService: MaintenanceAvService,
     private maintenanceMtooService: MaintenanceMtooService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private kpisTicketsService: KpisTicketsService,
+    private matrizUrgenciaService: MatrizUrgenciaService,
+    private kpiRadarService: KpiRadarService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursal = this.usuario.sucursales[0];
@@ -102,9 +127,13 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.obtenerMantenimientoActivo();
+    this.definirMesActual();
+    this.cargarDatosSlaMes();
   }
 
   ngOnDestroy(): void {
+    this.subscripcionSlaTickets?.unsubscribe();
+    this.subscripcionSlaMatriz?.unsubscribe();
     if (this.unsubscribe) {
       this.unsubscribe();
     }
@@ -228,6 +257,81 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
       },
       reject: () => { },
     });
+  }
+
+  private definirMesActual(): void {
+    const now = new Date();
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    this.mesActualNombre = `${meses[now.getMonth()]} ${now.getFullYear()}`;
+  }
+
+  private cargarDatosSlaMes(): void {
+    if (!this.usuario || !this.idArea) return;
+
+    this.loadingSla = true;
+    const now = new Date();
+    const fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    const idArea = String(this.idArea);
+
+    this.subscripcionSlaMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).subscribe({
+      next: (matriz) => {
+        this.matrizUrgenciaArea = matriz;
+        this.consultarTicketsMes(idArea, fechaInicio, fechaFin);
+      },
+      error: (err) => {
+        console.error('Error al obtener matriz de urgencia:', err);
+        this.consultarTicketsMes(idArea, fechaInicio, fechaFin);
+      }
+    });
+  }
+
+  private consultarTicketsMes(idArea: string, fechaInicio: Date, fechaFin: Date): void {
+    const idSucursales = (this.usuario.sucursales || []).map((s: any) => String(s.id));
+
+    this.subscripcionSlaTickets?.unsubscribe();
+    this.subscripcionSlaTickets = this.kpisTicketsService
+      .getTicketsPorFiltros(idArea, { fechaInicio, fechaFin, idSucursales })
+      .subscribe({
+        next: (tickets: Ticket[]) => {
+          this.procesarMetricasSla(tickets);
+          this.loadingSla = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al obtener tickets del mes actual para sucursal:', err);
+          this.loadingSla = false;
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  private procesarMetricasSla(tickets: Ticket[]): void {
+    if (!tickets) return;
+
+    const terminados = tickets.filter(t => String(t.idEstatusTicket) === '3');
+    const totalTerminados = terminados.length;
+
+    let slaAtencionCumplidos = 0;
+    let slaResolucionCumplidos = 0;
+
+    terminados.forEach(t => {
+      const evalSla = this.kpiRadarService.evaluarSlaTicket(t, this.matrizUrgenciaArea);
+      if (evalSla.atencion) slaAtencionCumplidos++;
+      if (evalSla.resolucion) slaResolucionCumplidos++;
+    });
+
+    this.totalesSla = {
+      totalTickets: tickets.length,
+      totalTerminados,
+      slaAtencion: totalTerminados > 0 ? (slaAtencionCumplidos / totalTerminados) * 100 : 0,
+      slaAtencionCumplidos,
+      slaResolucion: totalTerminados > 0 ? (slaResolucionCumplidos / totalTerminados) * 100 : 0,
+      slaResolucionCumplidos
+    };
   }
 
   verificarTicketsPorValidar(tickets: Ticket[]) {
