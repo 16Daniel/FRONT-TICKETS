@@ -21,15 +21,12 @@
 
   <!-- Cuerpo del Modal -->
   <div *ngIf="ticket" class="modal-ticket-body d-flex flex-column h-100 flex-grow-1">
-    
-    <!-- Banners Superiores (Mitigación / Comités) -->
-    <app-ticket-banners-alert [ticket]="ticket"></app-ticket-banners-alert>
 
     <div class="row flex-grow-1 m-0">
       <!-- Columna Izquierda: Detalle del Ticket -->
-      <div class="col-lg-7 d-flex flex-column gap-4 pb-3 pb-lg-0 h-100">
+      <div class="col-lg-7 d-flex flex-column gap-3 pb-3 pb-lg-0 h-100">
         
-        <!-- TOP: SLA, Matriz y Responsables -->
+        <!-- TOP: SLA, Matriz, Responsables y Estado Especial -->
         <app-ticket-resumen-kpis
           [ticket]="ticket"
           [categorias]="categorias">
@@ -69,6 +66,11 @@
             <app-ticket-tab-comites [ticket]="ticket"></app-ticket-tab-comites>
           </p-tabPanel>
 
+          <!-- Tab 6: Mitigación (Solo visible si está en mitigación) -->
+          <p-tabPanel *ngIf="ticket.idEstatusTicket === '8'" header="Mitigación" leftIcon="bx bx-shield-quarter">
+            <app-ticket-tab-mitigacion [ticket]="ticket"></app-ticket-tab-mitigacion>
+          </p-tabPanel>
+
         </p-tabView>
       </div>
       
@@ -77,7 +79,6 @@
         <app-bitacora 
           class="flex-grow-1 d-flex flex-column h-100"
           [modulo]="'TICKETS'" 
-          [permitirModoComite]="true"
           [comiteDisponible]="ticket.comites.length > 0"
           [puedeAccederComite]="puedeAccederBitacoraComite"
           [referenciaId]="ticket.id" 

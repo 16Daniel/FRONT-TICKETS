@@ -4,21 +4,21 @@
   <div class="bitacora-header p-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
     <h5 class="m-0 fw-bold d-flex align-items-center gap-2" style="color: #475569;">
       <i class="bx bx-list-ul fs-4 text-muted"></i>
-      {{ moduloActivo === 'COMITE' ? 'Bitácora de comité' : 'Bitácora del ticket' }}
+      {{ tipo === 'COMITE' ? 'Bitácora de comité' : 'Bitácora del ticket' }}
     </h5>
     <span class="text-muted" style="font-size: 0.8rem;">
-      {{ moduloActivo === 'COMITE' ? 'Comentarios exclusivos de los involucrados en comités.' : 'Comentarios y actividad general del ticket.' }}
+      {{ tipo === 'COMITE' ? 'Comentarios exclusivos de los involucrados en comités.' : 'Comentarios y actividad general del ticket.' }}
     </span>
 
-    <div *ngIf="permitirModoComite && comiteDisponible" class="bitacora-mode-switch mt-3" role="tablist" aria-label="Tipo de bitácora">
+    <div *ngIf="comiteDisponible" class="bitacora-mode-switch mt-3" role="tablist" aria-label="Tipo de bitácora">
       <button
         type="button"
         role="tab"
         class="bitacora-mode-option"
-        [class.active]="moduloActivo === 'TICKETS'"
-        [attr.aria-selected]="moduloActivo === 'TICKETS'"
+        [class.active]="tipo === 'COMENTARIO'"
+        [attr.aria-selected]="tipo === 'COMENTARIO'"
         [disabled]="subiendoArchivos"
-        (click)="cambiarModulo('TICKETS')">
+        (click)="cambiarTipo('COMENTARIO')">
         <i class="bx bx-message-square-detail"></i>
         <span>Ticket</span>
       </button>
@@ -26,11 +26,11 @@
         type="button"
         role="tab"
         class="bitacora-mode-option"
-        [class.active]="moduloActivo === 'COMITE'"
-        [attr.aria-selected]="moduloActivo === 'COMITE'"
+        [class.active]="tipo === 'COMITE'"
+        [attr.aria-selected]="tipo === 'COMITE'"
         [disabled]="!puedeAccederComite || subiendoArchivos"
-        [title]="!puedeAccederComite ? 'Debes ser responsable de un comité asignado para acceder a esta bitácora' : subiendoArchivos ? 'Espera a que termine el envío del comentario' : 'Ver comentarios exclusivos de comités'"
-        (click)="cambiarModulo('COMITE')">
+        [title]="!puedeAccederComite ? 'Debes ser responsable de un comité asignado para acceder a esta bitácora' : 'Ver comentarios exclusivos de comités'"
+        (click)="cambiarTipo('COMITE')">
         <i class="bx bx-group"></i>
         <span>Comités</span>
         <i *ngIf="!puedeAccederComite" class="bx bx-lock-alt mode-lock-icon" aria-hidden="true"></i>
@@ -39,7 +39,7 @@
   </div>
 
   <!-- Lista de Bitácoras (Timeline) -->
-  <div *ngIf="moduloActivo !== 'COMITE' || puedeAccederComite; else accesoComiteDenegado" class="bitacora-body flex-grow-1 p-4" style="overflow-y: auto; background-color: #f8fafc;">
+  <div class="bitacora-body flex-grow-1 p-4" style="overflow-y: auto; background-color: #f8fafc;">
     
     <div *ngIf="cargando" class="text-center text-muted py-5">
       <i class="bx bx-loader-alt bx-spin fs-2"></i>
@@ -84,7 +84,7 @@
   </div>
 
   <!-- Zona de Input (Quill / P-Editor) -->
-  <div *ngIf="moduloActivo !== 'COMITE' || puedeAccederComite" class="bitacora-footer p-3" style="border-top: 1px solid #e2e8f0; background: #fff; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+  <div class="bitacora-footer p-3" style="border-top: 1px solid #e2e8f0; background: #fff; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
     <!-- Usamos p-editor nativo de primeng con módulos quill-mention -->
     <p-editor [(ngModel)]="nuevoMensaje" [modules]="editorModules" [style]="{'height':'100px'}" placeholder="Escribe un comentario y usa @ para etiquetar...">
       <ng-template pTemplate="header">
@@ -135,11 +135,3 @@
   </div>
 
 </div>
-
-<ng-template #accesoComiteDenegado>
-  <div class="bitacora-body flex-grow-1 p-4 d-flex flex-column justify-content-center align-items-center text-center text-muted">
-    <i class="bx bx-lock-alt mb-3" style="font-size: 3rem; color: #94a3b8;"></i>
-    <p class="m-0 fw-bold">Acceso restringido</p>
-    <p class="m-0 mt-1" style="font-size: 0.85rem;">Solo los responsables asignados a un comité del ticket pueden ver y comentar en esta bitácora.</p>
-  </div>
-</ng-template>

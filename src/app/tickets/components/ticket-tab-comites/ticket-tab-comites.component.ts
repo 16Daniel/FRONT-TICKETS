@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
+import { AvatarModule } from 'ngx-avatars';
 import { MessageService } from 'primeng/api';
 import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
@@ -16,7 +17,7 @@ import { TicketDetailHelperService } from '../../services/ticket-detail-helper.s
 @Component({
   selector: 'app-ticket-tab-comites',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarModule],
   templateUrl: './ticket-tab-comites.component.html',
   styleUrl: './ticket-tab-comites.component.scss',
 })

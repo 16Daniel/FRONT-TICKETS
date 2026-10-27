@@ -29,13 +29,13 @@ import { ComitesService } from '../../../comites/services/comites.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
 
-import { TicketBannersAlertComponent } from '../../components/ticket-banners-alert/ticket-banners-alert.component';
 import { TicketResumenKpisComponent } from '../../components/ticket-resumen-kpis/ticket-resumen-kpis.component';
 import { TicketTabDetallesComponent } from '../../components/ticket-tab-detalles/ticket-tab-detalles.component';
 import { TicketTabDescripcionComponent } from '../../components/ticket-tab-descripcion/ticket-tab-descripcion.component';
 import { TicketTabArchivosComponent } from '../../components/ticket-tab-archivos/ticket-tab-archivos.component';
 import { TicketTabHistorialComponent } from '../../components/ticket-tab-historial/ticket-tab-historial.component';
 import { TicketTabComitesComponent } from '../../components/ticket-tab-comites/ticket-tab-comites.component';
+import { TicketTabMitigacionComponent } from '../../components/ticket-tab-mitigacion/ticket-tab-mitigacion.component';
 
 @Component({
   selector: 'app-detalle-ticket-dialog',
@@ -45,13 +45,13 @@ import { TicketTabComitesComponent } from '../../components/ticket-tab-comites/t
     DialogModule,
     TabViewModule,
     BitacoraComponent,
-    TicketBannersAlertComponent,
     TicketResumenKpisComponent,
     TicketTabDetallesComponent,
     TicketTabDescripcionComponent,
     TicketTabArchivosComponent,
     TicketTabHistorialComponent,
     TicketTabComitesComponent,
+    TicketTabMitigacionComponent,
   ],
   providers: [MessageService],
   templateUrl: './detalle-ticket-dialog.component.html',

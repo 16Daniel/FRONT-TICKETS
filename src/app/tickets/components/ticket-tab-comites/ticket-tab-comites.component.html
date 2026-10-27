@@ -1,60 +1,103 @@
-<div class="ticket-card p-4 m-0 d-flex flex-column h-100" style="min-height: 250px;" *ngIf="ticket">
-  <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="ticket-card p-4 m-0 d-flex flex-column h-100" style="min-height: 250px; overflow-y: auto;" *ngIf="ticket">
+  <!-- Cabecera homologada con el resto de tabs -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
     <h5 class="sub-title m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
       <i class="bx bx-group fs-5" style="color: #D3152A;"></i> COMITÉS ASIGNADOS
+      <span *ngIf="comitesSeleccionados.length" class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">
+        {{ comitesSeleccionados.length }}
+      </span>
     </h5>
+
     <div class="modal-footer-actions m-0 p-0">
       <button
-        class="btn-action btn-primary-rebel btn-sm px-4"
+        type="button"
+        class="btn-action btn-primary-rebel"
         [disabled]="guardandoComites || !ticket.id"
         (click)="mostrarSwalAgregarComite()">
-        <i class="bx bx-plus"></i>
+        <i class="bx" [ngClass]="guardandoComites ? 'bx-loader-alt bx-spin' : 'bx-plus'"></i>
         <span>{{ guardandoComites ? 'GUARDANDO...' : 'AGREGAR A COMITÉ' }}</span>
       </button>
     </div>
   </div>
 
-  <div *ngIf="!comitesSeleccionados.length" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4 text-muted">
-    <i class="bx bx-group mb-3" style="font-size: 2.5rem; color: #94a3b8;"></i>
-    <p class="m-0" style="font-size: 0.9rem; font-weight: 600;">Sin comités asignados</p>
+  <!-- Estado Vacío homologado con Archivos / Historial -->
+  <div *ngIf="!comitesSeleccionados.length" class="empty-state-box flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-4">
+    <i class="bx bx-group mb-2" style="font-size: 2.5rem; color: #94a3b8;"></i>
+    <p class="m-0 text-muted" style="font-size: 0.9rem; font-weight: 600;">Sin comités asignados</p>
+    <span class="text-muted mt-1" style="font-size: 0.8rem;">Asigna uno o más comités para dar seguimiento interdisciplinario.</span>
   </div>
 
-  <div *ngIf="comitesSeleccionados.length" class="mt-2 d-flex flex-column flex-grow-1 committee-areas-section">
-    <h6 class="fw-bold text-uppercase text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">
-      ÁREAS DE LOS COMITÉS SELECCIONADOS
-    </h6>
-    <div class="committee-areas-scroll">
-      <ng-container *ngIf="areas$ | async as areas">
-        <div class="d-flex flex-column gap-2">
-          <div *ngFor="let idComite of comitesSeleccionados" class="committee-areas-card">
-            <div class="fw-bold mb-2">{{ obtenerNombreComite(idComite) }}</div>
-            <ng-container *ngIf="obtenerComite(idComite) as comite">
-              <div *ngIf="comite.areas.length; else comiteSinAreas" class="d-flex flex-wrap gap-2">
-                <span *ngFor="let idArea of comite.areas" class="badge committee-area-badge">
+  <!-- Lista de Comités Asignados -->
+  <div *ngIf="comitesSeleccionados.length" class="comites-list d-flex flex-column gap-3 flex-grow-1" style="overflow-y: auto; min-height: 0; padding-right: 0.25rem;">
+    <ng-container *ngIf="areas$ | async as areas">
+      <div *ngFor="let idComite of comitesSeleccionados" class="committee-card">
+        
+        <!-- Encabezado de tarjeta del comité -->
+        <div class="committee-card-header d-flex align-items-center gap-2 mb-3 pb-2">
+          <div class="committee-icon-circle">
+            <i class="bx bx-group"></i>
+          </div>
+          <div class="lh-sm">
+            <span class="d-block fw-bold" style="font-size: 0.95rem; color: #1E1E24;">
+              {{ obtenerNombreComite(idComite) }}
+            </span>
+            <span class="text-muted" style="font-size: 0.72rem; font-weight: 600;">
+              Comité de seguimiento
+            </span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="obtenerComite(idComite) as comite">
+          <div class="row g-3">
+            <!-- Columna: Áreas del Comité -->
+            <div class="col-md-5">
+              <span class="info-label mb-2">
+                <i class="bx bx-briefcase"></i> Áreas involucradas
+              </span>
+              <div *ngIf="comite.areas.length; else comiteSinAreas" class="d-flex flex-wrap gap-2 mt-1">
+                <span *ngFor="let idArea of comite.areas" class="area-pill">
+                  <i class="bx bx-buildings"></i>
                   {{ obtenerNombreArea(idArea, areas) }}
                 </span>
               </div>
               <ng-template #comiteSinAreas>
-                <span class="text-muted small">Este comité no tiene áreas asignadas.</span>
+                <span class="text-muted fst-italic d-block mt-1" style="font-size: 0.82rem;">Sin áreas asignadas</span>
               </ng-template>
-              <div class="mt-3">
-                <div class="small fw-bold text-muted text-uppercase mb-2">Responsables y áreas</div>
-                <ng-container *ngIf="obtenerResponsablesComite(comite) as responsablesComite">
-                  <div *ngIf="responsablesComite.length; else comiteSinResponsables" class="d-flex flex-column gap-2">
-                    <div *ngFor="let responsable of responsablesComite" class="d-flex justify-content-between align-items-center gap-2">
-                      <span class="fw-semibold">{{ responsable.nombre }}</span>
-                      <span class="badge committee-area-badge">{{ obtenerAreaResponsableComite(responsable) }}</span>
+            </div>
+
+            <!-- Columna: Responsables del Comité -->
+            <div class="col-md-7">
+              <span class="info-label mb-2">
+                <i class="bx bx-user-check"></i> Responsables asignados
+              </span>
+              <ng-container *ngIf="obtenerResponsablesComite(comite) as responsablesComite">
+                <div *ngIf="responsablesComite.length; else comiteSinResponsables" class="d-flex flex-column gap-2 mt-1">
+                  <div *ngFor="let responsable of responsablesComite" class="responsable-item d-flex justify-content-between align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-2 text-truncate">
+                      <ngx-avatars
+                        [name]="responsable.nombre"
+                        [size]="28"
+                        [round]="true"
+                        [bgColor]="responsable.color || '#D3152A'">
+                      </ngx-avatars>
+                      <span class="fw-bold text-truncate" style="font-size: 0.85rem; color: #1E1E24;">
+                        {{ responsable.nombre }}
+                      </span>
                     </div>
+                    <span class="area-pill flex-shrink-0">
+                      {{ obtenerAreaResponsableComite(responsable) }}
+                    </span>
                   </div>
-                </ng-container>
-                <ng-template #comiteSinResponsables>
-                  <span class="text-muted small">Este comité no tiene responsables asignados.</span>
-                </ng-template>
-              </div>
-            </ng-container>
+                </div>
+              </ng-container>
+              <ng-template #comiteSinResponsables>
+                <span class="text-muted fst-italic d-block mt-1" style="font-size: 0.82rem;">Sin responsables asignados</span>
+              </ng-template>
+            </div>
           </div>
-        </div>
-      </ng-container>
-    </div>
+        </ng-container>
+
+      </div>
+    </ng-container>
   </div>
 </div>

@@ -1,9 +1,11 @@
 <div class="d-flex flex-column gap-4 h-100" style="overflow-y: auto;" *ngIf="ticket">
   <!-- Estado Vacío -->
   <div class="ticket-card p-4 m-0 h-100" *ngIf="!ticket.archivos || ticket.archivos.length === 0">
-    <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
-      <i class="bx bx-file fs-5" style="color: #D3152A;"></i> ARCHIVOS ADJUNTOS
-    </h5>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+      <h5 class="sub-title m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+        <i class="bx bx-file fs-5" style="color: #D3152A;"></i> ARCHIVOS ADJUNTOS
+      </h5>
+    </div>
     <div class="text-center py-4" style="border: 2px dashed #cbd5e1; border-radius: 12px; background-color: #f8fafc;">
       <i class="bx bx-folder-minus mb-2" style="font-size: 2.5rem; color: #94a3b8;"></i>
       <p class="m-0 text-muted" style="font-size: 0.9rem; font-weight: 600;">No hay archivos adjuntos</p>
@@ -12,10 +14,12 @@
 
   <!-- Tarjeta de Archivos -->
   <div class="ticket-card p-4 m-0 d-flex flex-column h-100" *ngIf="ticket.archivos && ticket.archivos.length">
-    <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2 flex-shrink-0" style="font-size: 0.8rem; letter-spacing: 0.5px;">
-      <i class="bx bx-folder-open fs-5" style="color: #D3152A;"></i> ARCHIVOS DEL TICKET 
-      <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos.length }}</span>
-    </h5>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 pb-3 flex-shrink-0" style="border-bottom: 1px solid #e2e8f0;">
+      <h5 class="sub-title m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+        <i class="bx bx-folder-open fs-5" style="color: #D3152A;"></i> ARCHIVOS DEL TICKET 
+        <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos.length }}</span>
+      </h5>
+    </div>
     <div class="archivos-list d-flex flex-column gap-2 flex-grow-1" style="overflow-y: auto; min-height: 0; padding-right: 0.5rem;">
       <div *ngFor="let archivo of ticket.archivos" class="archivo-list-item d-flex align-items-center p-2" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; transition: all 0.2s; cursor: default;">
         
