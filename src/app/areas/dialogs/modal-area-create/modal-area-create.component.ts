@@ -11,9 +11,7 @@ import { Area, EscalationLevel, OrganigramaAsignacion, OrganigramaNode } from '.
 import { AreasService } from '../../../areas/services/areas.service';
 import { EscalationManagerComponent } from '../../components/escalation-manager.component/escalation-manager.component';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { UsersService } from '../../../usuarios/services/users.service';
 
 @Component({
   selector: 'app-modal-area-create',
@@ -33,9 +31,7 @@ export class ModalAreaCreateComponent implements OnDestroy {
   parentLevels = signal<EscalationLevel[]>([]);
   grupoNuevosTickets = signal<string>('');
   organigrama: OrganigramaNode[] = [];
-  usuarios: Usuario[] = [];
   responsables: Responsable[] = [];
-  opcionesUsuarios: { id: string; nombre: string }[] = [];
   opcionesResponsables: { id: string; nombre: string }[] = [];
   private subscriptions = new Subscription();
 
@@ -43,19 +39,10 @@ export class ModalAreaCreateComponent implements OnDestroy {
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private areasService: AreasService,
-    private usersService: UsersService,
     private responsablesService: ResponsablesService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.subscriptions.add(
-      this.usersService.usuarios$.subscribe(usuarios => {
-        this.usuarios = usuarios;
-        this.opcionesUsuarios = usuarios
-          .filter(usuario => Boolean(usuario.id))
-          .map(usuario => ({ id: String(usuario.id), nombre: this.nombreUsuario(usuario) }));
-      })
-    );
     this.subscriptions.add(
       this.responsablesService.responsables$.subscribe(responsables => {
         this.responsables = responsables;
@@ -129,7 +116,7 @@ export class ModalAreaCreateComponent implements OnDestroy {
 
   agregarNivelRaiz(): void {
     if (this.organigrama.length > 0) return;
-    this.organigrama = [this.crearNodoOrganigrama()];
+    this.organigrama = [this.crearNodoOrganigrama(true)];
   }
 
   agregarSubnivel(nodo: OrganigramaNode): void {
@@ -171,35 +158,13 @@ export class ModalAreaCreateComponent implements OnDestroy {
     this.organigrama = this.eliminarNodoDeArbol(this.organigrama, nodo.key);
   }
 
-  cambiarTipoPersona(nodo: OrganigramaNode, asignacionId: string, esResponsable: boolean): void {
-    this.actualizarAsignacion(nodo, asignacionId, asignacion => ({
-      ...asignacion,
-      tipoPersona: esResponsable ? 'responsable' : 'usuario',
-      personaId: '',
-      nombre: ''
-    }));
-  }
-
   actualizarPersona(nodo: OrganigramaNode, asignacion: OrganigramaAsignacion, personaId: string | null): void {
     const idPersona = personaId ?? '';
-    const opciones = asignacion.tipoPersona === 'responsable'
-      ? this.opcionesResponsables
-      : this.opcionesUsuarios;
     this.actualizarAsignacion(nodo, asignacion.id, actual => ({
       ...actual,
       personaId: idPersona,
-      nombre: opciones.find(opcion => opcion.id === idPersona)?.nombre ?? ''
+      nombre: this.opcionesResponsables.find(opcion => opcion.id === idPersona)?.nombre ?? ''
     }));
-  }
-
-  nombreUsuario(usuario?: Usuario): string {
-    return usuario
-      ? [usuario.nombre, usuario.apellidoP, usuario.apellidoM].filter(Boolean).join(' ')
-      : '';
-  }
-
-  esNodoRaiz(nodo: OrganigramaNode): boolean {
-    return this.organigrama.some(raiz => raiz.key === nodo.key);
   }
 
   onHide() {
@@ -273,7 +238,7 @@ export class ModalAreaCreateComponent implements OnDestroy {
   private crearAsignacion(): OrganigramaAsignacion {
     return {
       id: crypto.randomUUID(),
-      tipoPersona: 'usuario',
+      tipoPersona: 'responsable',
       personaId: '',
       nombre: ''
     };
@@ -288,13 +253,18 @@ export class ModalAreaCreateComponent implements OnDestroy {
         nombre?: string;
       };
       const asignados = datosAnteriores.asignados?.length
-        ? datosAnteriores.asignados.map(asignacion => ({ ...asignacion }))
+        ? datosAnteriores.asignados.map(asignacion => ({
+          ...asignacion,
+          tipoPersona: 'responsable' as const,
+          personaId: asignacion.tipoPersona === 'responsable' ? asignacion.personaId : '',
+          nombre: asignacion.tipoPersona === 'responsable' ? asignacion.nombre : ''
+        }))
         : datosAnteriores.personaId
           ? [{
             id: crypto.randomUUID(),
-            tipoPersona: datosAnteriores.tipoPersona ?? 'usuario',
-            personaId: datosAnteriores.personaId,
-            nombre: datosAnteriores.nombre ?? ''
+            tipoPersona: 'responsable' as const,
+            personaId: datosAnteriores.tipoPersona === 'responsable' ? datosAnteriores.personaId : '',
+            nombre: datosAnteriores.tipoPersona === 'responsable' ? datosAnteriores.nombre ?? '' : ''
           }]
           : [];
 

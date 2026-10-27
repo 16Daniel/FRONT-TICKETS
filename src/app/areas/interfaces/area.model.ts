@@ -25,7 +25,7 @@ export interface OrganigramaNode {
 
 export interface OrganigramaAsignacion {
   id: string;
-  tipoPersona: 'usuario' | 'responsable';
+  tipoPersona: 'responsable';
   personaId: string;
   nombre: string;
 }

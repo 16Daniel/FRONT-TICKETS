@@ -99,7 +99,7 @@
       <div class="organigrama-toolbar">
         <div>
           <h3 class="organigrama-title">Organigrama del área</h3>
-          <p class="text-muted mb-0">Define el puesto de cada nivel y asigna usuarios o responsables desde el segundo nivel.</p>
+          <p class="text-muted mb-0">Define cada puesto, asigna responsables y agrega subniveles desde cualquier nivel.</p>
         </div>
         <button
           *ngIf="organigrama.length === 0"
@@ -128,20 +128,10 @@
                 placeholder="Nombre del puesto"
                 (ngModelChange)="actualizarPuesto(nodo, $event)">
 
-              <div *ngIf="!esNodoRaiz(nodo)" class="organigrama-asignaciones">
+              <div class="organigrama-asignaciones">
                 <div *ngFor="let asignacion of nodo.data.asignados" class="organigrama-asignacion">
-                  <label class="organigrama-switch">
-                    <input
-                      type="checkbox"
-                      role="switch"
-                      [ngModel]="asignacion.tipoPersona === 'responsable'"
-                      [name]="'organigrama_tipo_' + asignacion.id"
-                      (ngModelChange)="cambiarTipoPersona(nodo, asignacion.id, $event)">
-                    <span>{{ asignacion.tipoPersona === 'responsable' ? 'Responsables' : 'Usuarios' }}</span>
-                  </label>
-
                   <p-dropdown
-                    [options]="asignacion.tipoPersona === 'responsable' ? opcionesResponsables : opcionesUsuarios"
+                    [options]="opcionesResponsables"
                     [ngModel]="asignacion.personaId"
                     [name]="'organigrama_persona_' + asignacion.id"
                     optionLabel="nombre"
@@ -150,14 +140,14 @@
                     filterBy="nombre"
                     [showClear]="true"
                     [appendTo]="'body'"
-                    [placeholder]="asignacion.tipoPersona === 'responsable' ? 'Selecciona responsable' : 'Selecciona usuario'"
-                    styleClass="w-100"
+                    placeholder="Selecciona responsable"
+                    styleClass="w-100 organigrama-responsable-select"
                     (ngModelChange)="actualizarPersona(nodo, asignacion, $event)">
                   </p-dropdown>
 
                   <button
                     type="button"
-                    class="btn btn-sm btn-outline-danger"
+                    class="organigrama-action organigrama-action-danger"
                     aria-label="Eliminar asignación"
                     (click)="eliminarAsignacion(nodo, asignacion.id)">
                     <i class="bx bx-trash"></i>
@@ -166,22 +156,22 @@
 
                 <button
                   type="button"
-                  class="btn btn-sm btn-outline-primary align-self-start"
+                  class="organigrama-action align-self-start"
                   (click)="agregarAsignacion(nodo)">
-                  <i class="bx bx-plus"></i> Agregar usuario o responsable
+                  <i class="bx bx-plus"></i> Agregar responsable
                 </button>
               </div>
 
               <div class="organigrama-node-actions">
                 <button
                   type="button"
-                  class="btn btn-sm btn-outline-primary"
+                  class="organigrama-action"
                   (click)="agregarSubnivel(nodo)">
                   <i class="bx bx-plus"></i> Subnivel
                 </button>
                 <button
                   type="button"
-                  class="btn btn-sm btn-outline-danger"
+                  class="organigrama-action organigrama-action-danger"
                   (click)="eliminarNodo(nodo)">
                   <i class="bx bx-trash"></i> Eliminar
                 </button>

@@ -62,11 +62,24 @@
                     </ng-template>
                   </td>
                   <td>
-                    <ng-container *ngIf="comite.idsResponsables.length; else sinResponsables">
+                    <ng-container *ngIf="obtenerResponsables(comite).length; else sinResponsables">
                       <span
-                        *ngFor="let idResponsable of comite.idsResponsables"
-                        class="badge bg-light text-dark me-1 mb-1">
-                        {{ obtenerNombreResponsable(idResponsable) }}
+                        *ngFor="let responsable of obtenerResponsables(comite)"
+                        class="comite-responsable-avatar"
+                        [pTooltip]="comite.idResponsableLider === responsable.id
+                          ? 'LÍDER DEL COMITÉ: ' + responsable.nombre
+                          : responsable.nombre"
+                        tooltipPosition="top">
+                        <i
+                          *ngIf="comite.idResponsableLider === responsable.id"
+                          class="bx bx-crown comite-avatar-crown"
+                          aria-label="Líder del comité">
+                        </i>
+                        <ngx-avatars
+                          [name]="responsable.nombre"
+                          [size]="36"
+                          [bgColor]="responsable.color || '#D3152A'">
+                        </ngx-avatars>
                       </span>
                     </ng-container>
                     <ng-template #sinResponsables>

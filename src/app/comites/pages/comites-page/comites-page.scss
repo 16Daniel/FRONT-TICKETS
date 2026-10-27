@@ -163,3 +163,21 @@ $rw-canvas: #f4f6fa;
   padding: 1.5rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
+
+.comite-responsable-avatar {
+  position: relative;
+  display: inline-flex;
+  margin: 0.25rem 0.4rem 0.25rem 0;
+  vertical-align: middle;
+}
+
+.comite-avatar-crown {
+  position: absolute;
+  z-index: 1;
+  top: -0.55rem;
+  left: 50%;
+  color: $rw-accent;
+  font-size: 0.9rem;
+  text-shadow: 0 0 2px rgba(30, 30, 36, 0.55);
+  transform: translateX(-50%);
+}
