@@ -2,12 +2,15 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Messaging, getToken, onMessage } from '@angular/fire/messaging';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environments';
+import { Usuario } from '../../usuarios/interfaces/usuario.model';
+import { UsersService } from '../../usuarios/services/users.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FcmService {
   private messaging = inject(Messaging);
+  private usersService = inject(UsersService);
   fcmToken = signal<string | null>(null);
 
   async requestPermission(): Promise<string | null> {
@@ -38,7 +41,12 @@ export class FcmService {
 
       if (token) {
         console.log('FCM Token obtenido con éxito:', token);
-        this.fcmToken.set(token); // Actualizamos la signal
+        this.fcmToken.set(token);
+        try {
+          await this.saveTokenForCurrentUser(token);
+        } catch (error) {
+          console.error('Error al guardar el token FCM del usuario:', error);
+        }
         return token;
       }
       return null;
@@ -50,6 +58,29 @@ export class FcmService {
       }
       return null;
     }
+  }
+
+  private async saveTokenForCurrentUser(token: string): Promise<void> {
+    const storedUser = localStorage.getItem('rwuserdatatk');
+    if (!storedUser) return;
+
+    const user = JSON.parse(storedUser) as Usuario;
+    if (typeof user.id !== 'string' || !user.id) {
+      console.error('No se puede guardar el token FCM: el usuario de la sesión no tiene un id válido.');
+      return;
+    }
+
+    const tokens = Array.isArray(user.fcmToken)
+      ? [...new Set(user.fcmToken.filter((storedToken) => typeof storedToken === 'string'))]
+      : [];
+
+    if (tokens.includes(token)) return;
+    if (tokens.length >= 3) tokens.splice(0, tokens.length - 2);
+    tokens.push(token);
+
+    await this.usersService.updateUserFcmTokens(user.id, tokens);
+    user.fcmToken = tokens;
+    localStorage.setItem('rwuserdatatk', JSON.stringify(user));
   }
 
   listenMessages(): Observable<any> {
