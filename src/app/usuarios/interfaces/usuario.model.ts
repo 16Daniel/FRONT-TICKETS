@@ -14,4 +14,5 @@ export class Usuario {
   idArea: string | any;
   controlDeAceite?: boolean | null;
   especialidad: string = '';
+  fcmToken: string[] = [];
 }
