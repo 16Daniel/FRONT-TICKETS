@@ -1,0 +1,163 @@
+<div class="ticket-card p-4 m-0 h-100" style="overflow-y: auto;" *ngIf="ticket">
+  <div class="d-flex justify-content-between align-items-start mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+    <div>
+      <h3 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 mb-1" style="font-size: 1.5rem;">
+        <i class="bx bx-hash text-muted"></i>{{ ticket.folio }}
+      </h3>
+      <span class="text-muted" style="font-size: 0.85rem;">Detalles generales de la solicitud</span>
+    </div>
+    
+    <!-- Botonera de Acciones -->
+    <app-ticket-acciones-bar [ticket]="ticket" [usuario]="usuario"></app-ticket-acciones-bar>
+  </div>
+
+  <!-- Sección de Calificaciones (Solo visible si está finalizado) -->
+  <ng-container *ngIf="ticket.idEstatusTicket === '3'">
+    <div class="d-flex flex-wrap gap-4 mb-4" style="background: #f8fafc; padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid #e2e8f0; align-items: center;">
+      <h5 class="m-0 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px; border-right: 2px solid #e2e8f0; padding-right: 1.5rem; height: 100%;">
+        <i class="bx bx-star text-warning fs-4"></i> EVALUACIÓN
+      </h5>
+      
+      <div class="d-flex flex-column gap-1">
+        <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Calificación Sucursal</span>
+        <app-rating-stars [rating]="ticket.calificacionSucursal" [editable]="false"></app-rating-stars>
+      </div>
+
+      <div style="width: 1px; height: 35px; background: #cbd5e1; margin: 0 0.5rem;" *ngIf="ticket.calificacionAnalista"></div>
+
+      <div class="d-flex flex-column gap-1" *ngIf="ticket.calificacionAnalista">
+        <span class="text-muted" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Calificación Analista</span>
+        <app-rating-stars [rating]="ticket.calificacionAnalista" [editable]="false"></app-rating-stars>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="summary-info-grid">
+    <!-- Row 1 -->
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-user"></i> Solicitante</span>
+      <span class="info-value text-uppercase">{{ ticket.solicitante || 'No registrado' }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-folder"></i> Categoría</span>
+      <span class="info-value">
+        {{ ticket.nombreCategoria || 'Sin categoría' }}
+        <span *ngIf="ticket.nombreSubcategoria" class="subcategoria-tag">
+          <i class="bx bx-chevron-right"></i> {{ ticket.nombreSubcategoria }}
+        </span>
+      </span>
+    </div>
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-info-circle"></i> Estatus</span>
+      <div class="mt-1 d-flex">
+        <!-- Dropdown para Admin (Roles 1 y 5) -->
+        <p-dropdown *ngIf="(usuario.idRol === '1' || usuario.idRol === '5') && ticket.idEstatusTicket !== '3'"
+            [options]="estatusTicketsOpciones" 
+            optionDisabled="disabled"
+            [(ngModel)]="ticket.idEstatusTicket" 
+            optionLabel="nombre"
+            placeholder="Seleccionar estatus"
+            [showClear]="false" 
+            optionValue="id" 
+            (onChange)="actualizarEstatus($event.value)" 
+            styleClass="table-select-custom"
+            appendTo="body">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="d-flex align-items-center gap-1 justify-content-center">
+                    <i class="bx {{ selectedOption?.icon }} {{ selectedOption?.animation }}" [style.color]="selectedOption?.color"></i>
+                    <span>{{ selectedOption?.nombre }}</span>
+                </div>
+            </ng-template>
+            <ng-template let-st pTemplate="item">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bx {{ st.icon }} {{ st.animation }}" [style.color]="st.color"></i>
+                    <span>{{ st.nombre }}</span>
+                </div>
+            </ng-template>
+        </p-dropdown>
+
+        <!-- Etiqueta estática para otros usuarios o ticket finalizado (estatus 3) -->
+        <ng-container *ngIf="(usuario.idRol !== '1' && usuario.idRol !== '5') || ticket.idEstatusTicket === '3'">
+          <ng-container *ngIf="obtenerEstatus(ticket.idEstatusTicket) as estatus; else estatusDesconocido">
+            <div class="status-pill" [ngStyle]="getEstatusStyle(estatus)">
+              <i *ngIf="estatus.icon" class="bx {{ estatus.icon }} {{ estatus.animation }}"></i>
+              <span *ngIf="!estatus.icon" class="status-dot" [ngStyle]="{'background-color': estatus.color || '#64748B'}"></span>
+              {{ estatus.nombre }}
+            </div>
+          </ng-container>
+          <ng-template #estatusDesconocido>
+            <div class="status-pill" [ngStyle]="getEstatusStyle()">
+              <span class="status-dot" [ngStyle]="{'background-color': '#94A3B8'}"></span>
+              Desconocido
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-store-alt"></i> Sucursal</span>
+      <span class="info-value">{{ obtenerNombreSucursal(ticket.idSucursal) }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-calendar"></i> Creación</span>
+      <span class="info-value">{{ datesHelper.getDate(ticket.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-error"></i> Prioridad</span>
+      <div class="mt-1 d-flex">
+        <div *ngIf="ticket.prioridad" class="priority-badge"
+             [ngStyle]="{
+               'background-color': obtenerPrioridadColor(ticket.prioridad).bg,
+               'color': obtenerPrioridadColor(ticket.prioridad).text,
+               'border': '1px solid ' + obtenerPrioridadColor(ticket.prioridad).border
+             }">
+          <i class="bx bxs-circle"></i> Urgencia: {{ ticket.prioridad }}
+        </div>
+        <span *ngIf="!ticket.prioridad" class="info-value text-muted">No definida</span>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-briefcase"></i> Área</span>
+      <span class="info-value">{{ obtenerNombreArea(ticket.idArea) }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-time-five"></i> Inicio Atención</span>
+      <span class="info-value" [class.text-muted]="!ticket.fechaAtencion">
+        {{ ticket.fechaAtencion ? (datesHelper.getDate(ticket.fechaAtencion) | date: 'dd/MM/yyyy hh:mm a') : 'Pendiente de inicio' }}
+      </span>
+    </div>
+    <div class="info-item">
+      <span class="info-label"><i class="bx bx-headphone"></i> Asistencia</span>
+      <div class="mt-1 d-flex">
+        <p-dropdown *ngIf="(usuario.idRol === '1' || usuario.idRol === '5') && ticket.idEstatusTicket !== '3'"
+            [options]="tiposSoporte" 
+            [(ngModel)]="ticket.idTipoSoporte" 
+            optionLabel="name"
+            placeholder="Seleccionar asistencia"
+            [showClear]="false" 
+            optionValue="id" 
+            (onChange)="actualizarTipoSoporte($event.value)" 
+            styleClass="table-select-custom"
+            appendTo="body">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="d-flex align-items-center gap-1">
+                    <span>{{ selectedOption?.name || selectedOption?.nombre }}</span>
+                </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                <div class="d-flex align-items-center gap-1">
+                    <span>{{ item.name || item.nombre }}</span>
+                </div>
+            </ng-template>
+        </p-dropdown>
+        <span *ngIf="(usuario.idRol !== '1' && usuario.idRol !== '5') || ticket.idEstatusTicket === '3'" class="info-value text-uppercase fw-bold text-dark">
+          {{ obtenerNombreTipoSoporte(ticket.idTipoSoporte) }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

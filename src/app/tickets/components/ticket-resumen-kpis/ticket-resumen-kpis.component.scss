@@ -1,0 +1,35 @@
+.ticket-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.kpi-status-alert {
+  border-radius: 8px;
+  line-height: 1.2;
+}
+
+.kpi-alert-mitigacion {
+  background-color: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #D97706;
+}
+
+.kpi-alert-committees {
+  background-color: #F5F0FF;
+  border: 1px solid #D8B4FE;
+  color: #7E22CE;
+}
+
+.kpi-alert-empty {
+  background-color: #F8FAFC;
+  border: 1px dashed #E2E8F0;
+  color: #94A3B8;
+}

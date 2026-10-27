@@ -1,46 +1,41 @@
-import { Component, EventEmitter, Input, OnInit, OnChanges, OnDestroy, Output, ChangeDetectorRef, SimpleChanges } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-import Swal from 'sweetalert2';
-import { AccordionModule } from 'primeng/accordion';
-import { CardModule } from 'primeng/card';
-import { TooltipModule } from 'primeng/tooltip';
-import { Timestamp } from '@angular/fire/firestore';
-import { DropdownModule } from 'primeng/dropdown';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { TabViewModule } from 'primeng/tabview';
+import { Subscription } from 'rxjs';
 
-import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { TicketsService } from '../../services/tickets.service';
-import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialogs/seleccionar-usuario-especialista-dialog/seleccionar-usuario-especialista-dialog.component';
-import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { AreasService } from '../../../areas/services/areas.service';
+import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
+import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CategoriesService } from '../../../categorias/services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
-import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
-import { TicketSlaGaugeComponent } from '../../components/ticket-sla-gauge/ticket-sla-gauge.component';
-import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
 import { SupportTypesService } from '../../services/support-types.service';
-import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
-import { UsersService } from '../../../usuarios/services/users.service';
-import { AvatarModule } from 'ngx-avatars';
-import { TabViewModule } from 'primeng/tabview';
-import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { FileUtils } from '../../../shared/utils/file.utils';
-import { RatingStarsComponent } from '../../components/rating-stars/rating-stars.component';
-import { Bitacora } from '../../../shared/interfaces/bitacora.model';
-import { BitacoraService } from '../../../shared/services/bitacora.service';
-import { Subscription } from 'rxjs';
 import { ComitesService } from '../../../comites/services/comites.service';
-import { Comite } from '../../../comites/interfaces/comite';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
-import { HistorialAlertasService } from '../../../alertas/service/historial-alertas.service';
+import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
+
+import { TicketBannersAlertComponent } from '../../components/ticket-banners-alert/ticket-banners-alert.component';
+import { TicketResumenKpisComponent } from '../../components/ticket-resumen-kpis/ticket-resumen-kpis.component';
+import { TicketTabDetallesComponent } from '../../components/ticket-tab-detalles/ticket-tab-detalles.component';
+import { TicketTabDescripcionComponent } from '../../components/ticket-tab-descripcion/ticket-tab-descripcion.component';
+import { TicketTabArchivosComponent } from '../../components/ticket-tab-archivos/ticket-tab-archivos.component';
+import { TicketTabHistorialComponent } from '../../components/ticket-tab-historial/ticket-tab-historial.component';
+import { TicketTabComitesComponent } from '../../components/ticket-tab-comites/ticket-tab-comites.component';
 
 @Component({
   selector: 'app-detalle-ticket-dialog',
@@ -48,20 +43,15 @@ import { HistorialAlertasService } from '../../../alertas/service/historial-aler
   imports: [
     CommonModule,
     DialogModule,
-    FormsModule,
-    AccordionModule,
-    SeleccionarUsuarioEspecialistaComponent,
-    CardModule,
-    TooltipModule,
-    ModalVisorImagenesComponent,
-    TicketSlaGaugeComponent,
-    MiniMatrizUrgenciaComponent,
-    AvatarModule,
     TabViewModule,
     BitacoraComponent,
-    RatingStarsComponent,
-    DropdownModule,
-    MultiSelectModule
+    TicketBannersAlertComponent,
+    TicketResumenKpisComponent,
+    TicketTabDetallesComponent,
+    TicketTabDescripcionComponent,
+    TicketTabArchivosComponent,
+    TicketTabHistorialComponent,
+    TicketTabComitesComponent,
   ],
   providers: [MessageService],
   templateUrl: './detalle-ticket-dialog.component.html',
@@ -72,74 +62,31 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
   @Input() showModalTicketDetail: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  public fileUtils = FileUtils;
-
   usuario: Usuario;
   responsableTarea: Responsable | null;
-  mostrarModalEspecialistas: boolean = false;
-  mostrarModalImagen: boolean = false;
 
-
-  idSucursalEspecialista: string = '';
-  urlVisorImagen: string = '';
   sucursales: any[] = [];
   categorias: any[] = [];
   estatusTickets: EstatusTicket[] = [];
   tiposSoporte: TipoSoporte[] = [];
-  comitesSeleccionados: string[] = [];
-  guardandoComites = false;
 
-  historial: Bitacora[] = [];
-  historialSub?: Subscription;
-
-  ultimaMitigacion: Bitacora | null = null;
-  mitigacionSub?: Subscription;
-  estatusAnterior?: string;
-
-  statusTicketSub?: Subscription;
-  supportTypesSub?: Subscription;
-  categoriesSub?: Subscription;
-  branchesSub?: Subscription;
+  private statusTicketSub?: Subscription;
+  private supportTypesSub?: Subscription;
+  private categoriesSub?: Subscription;
+  private branchesSub?: Subscription;
 
   constructor(
-    private ticketsService: TicketsService,
-    private messageService: MessageService,
-    public datesHelper: DatesHelperService,
-    private areasService: AreasService,
     private branchesService: BranchesService,
     private categoriesService: CategoriesService,
     private statusTicketService: StatusTicketService,
-    private usersService: UsersService,
-    public responsablesService: ResponsablesService,
-    private bitacoraService: BitacoraService,
-    private cdr: ChangeDetectorRef,
     private supportTypesService: SupportTypesService,
+    public responsablesService: ResponsablesService,
     public comitesService: ComitesService,
     private mensajesPendientesService: MensajesPendientesService,
-    private historialAlertasService: HistorialAlertasService,
+    private cdr: ChangeDetectorRef
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
-  }
-
-  get areas$() {
-    return this.areasService.areas$;
-  }
-
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['ticket']) {
-  //     this.comitesSeleccionados = [...(this.ticket?.comites ?? [])];
-  //   }
-  // }
-
-  getResponsable(): Usuario | undefined {
-    if (!this.ticket?.idResponsable) return undefined;
-    return this.usersService.usuarios.find(u => u.id === this.ticket!.idResponsable);
-  }
-
-  getInvolucrados(): Usuario[] {
-    if (!this.ticket?.idInvolucrados || !this.ticket.idInvolucrados.length) return [];
-    return this.usersService.usuarios.filter(u => this.ticket!.idInvolucrados.includes(u.id!));
   }
 
   private normalizarValoresTicket(): void {
@@ -164,10 +111,6 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ticket']) {
-      this.comitesSeleccionados = [...(this.ticket?.comites ?? [])];
-    }
-
     if (changes['ticket'] && this.ticket) {
       this.normalizarValoresTicket();
       this.marcarNotificacionesLeidas();
@@ -200,7 +143,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
           this.cdr.markForCheck();
           this.cdr.detectChanges();
         },
-        error: () => { }
+        error: () => {},
       });
     }
 
@@ -208,24 +151,24 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
       next: (data) => {
         this.categorias = data.map((item: any) => ({
           ...item,
-          id: item.id.toString()
+          id: item.id.toString(),
         }));
         this.cdr.markForCheck();
         this.cdr.detectChanges();
       },
-      error: () => { }
+      error: () => {},
     });
 
     this.statusTicketSub = this.statusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTickets = (data || []).map((item: any) => ({
           ...item,
-          id: String(item.id)
+          id: String(item.id),
         }));
         this.cdr.markForCheck();
         this.cdr.detectChanges();
       },
-      error: () => { }
+      error: () => {},
     });
 
     this.supportTypesSub = this.supportTypesService.get().subscribe({
@@ -234,724 +177,37 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
           ...item,
           id: String(item.id),
           name: item.name || item.nombre || '',
-          nombre: item.nombre || item.name || ''
+          nombre: item.nombre || item.name || '',
         }));
         this.cdr.markForCheck();
         this.cdr.detectChanges();
       },
-      error: () => { }
+      error: () => {},
     });
-
-    if (this.ticket?.id) {
-      this.estatusAnterior = this.ticket.idEstatusTicket;
-
-      this.historialSub = this.bitacoraService.getBitacoras('TICKETS', this.ticket.id, 'SISTEMA')
-        .subscribe(data => {
-          this.historial = data ? data.slice().reverse() : [];
-          this.cdr.markForCheck();
-          this.cdr.detectChanges();
-        });
-
-      this.mitigacionSub = this.bitacoraService.getBitacoras('TICKETS', this.ticket.id, 'MITIGACION')
-        .subscribe(data => {
-          if (data && data.length > 0) {
-            this.ultimaMitigacion = data[data.length - 1];
-          } else {
-            this.ultimaMitigacion = null;
-          }
-          this.cdr.markForCheck();
-          this.cdr.detectChanges();
-        });
-    }
   }
 
   ngOnDestroy(): void {
-    this.historialSub?.unsubscribe();
-    this.mitigacionSub?.unsubscribe();
     this.statusTicketSub?.unsubscribe();
     this.supportTypesSub?.unsubscribe();
     this.categoriesSub?.unsubscribe();
     this.branchesSub?.unsubscribe();
   }
 
-  obtenerNombreComite(idComite: string): string {
-    const comite = this.comitesService.comites.find(
-      (item: Comite) => String(item.id) === String(idComite),
-    );
-    return comite?.nombre ?? idComite;
-  }
-
-  obtenerComite(idComite: string): Comite | undefined {
-    return this.comitesService.comites.find(
-      (comite) => String(comite.id) === String(idComite),
-    );
-  }
-
-  obtenerResponsablesComite(comite: Comite): Responsable[] {
-    return (comite.idsResponsables ?? [])
-      .map((idResponsable) =>
-        this.responsablesService.responsables.find(
-          (responsable) => String(responsable.id) === String(idResponsable),
-        ),
-      )
-      .filter((responsable): responsable is Responsable => Boolean(responsable));
-  }
-
   get puedeAccederBitacoraComite(): boolean {
     const idResponsable = this.responsableTarea?.id;
     if (!idResponsable) return false;
 
-    return (this.ticket?.comites ?? []).some((idComite) =>
-      this.obtenerComite(idComite)?.idsResponsables?.some(
-        (idAsignado) => String(idAsignado) === String(idResponsable),
-      ),
-    );
-  }
-
-  obtenerAreaResponsableComite(responsable: Responsable): string {
-    const usuario = this.usersService.usuarios.find(
-      (item) => String(item.id) === String(responsable.idUsuario),
-    );
-    return this.obtenerNombreArea(usuario?.idArea);
-  }
-
-  mostrarSwalAgregarComite(): void {
-    if (!this.ticket?.id) return;
-
-    const comitesDisponibles = this.comitesService.comites || [];
-    const seleccionadosSet = new Set<string>((this.comitesSeleccionados ?? []).map(String));
-
-    const opcionesHtml = comitesDisponibles.length > 0
-      ? comitesDisponibles.map(c => {
-          const idStr = String(c.id);
-          const isChecked = seleccionadosSet.has(idStr);
-          return `
-            <label class="swal-comite-item ${isChecked ? 'selected' : ''}" data-nombre="${(c.nombre || '').toLowerCase()}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid ${isChecked ? '#D3152A' : '#e2e8f0'}; background: ${isChecked ? '#FFF1F2' : '#ffffff'}; border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.15s ease;">
-              <input type="checkbox" class="swal-comite-checkbox form-check-input m-0" value="${idStr}" ${isChecked ? 'checked' : ''} style="cursor: pointer;">
-              <span style="font-size: 0.9rem; font-weight: 600; color: #1e293b;">${c.nombre}</span>
-            </label>
-          `;
-        }).join('')
-      : `<div class="text-center text-muted py-3" style="font-size: 0.9rem;">No hay comités registrados</div>`;
-
-    Swal.fire({
-      title: 'Agregar a Comité',
-      html: `
-        <div class="text-start" style="font-family: inherit;">
-          <label class="form-label fw-bold mb-2" style="font-size: 0.9rem;">Selecciona uno o más comités:</label>
-          <input type="text" id="swal-comite-search" class="form-control mb-2" placeholder="Buscar comité..." style="border-radius: 8px; font-size: 0.88rem;">
-          <div id="swal-comites-list" style="max-height: 240px; overflow-y: auto; padding-right: 4px;">
-            ${opcionesHtml}
-          </div>
-        </div>
-      `,
-      width: '500px',
-      showCancelButton: true,
-      confirmButtonColor: '#D3152A',
-      cancelButtonColor: '#1E1E24',
-      confirmButtonText: 'Guardar Comités',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        container: 'swal-topmost'
-      },
-      didOpen: () => {
-        const searchInput = document.getElementById('swal-comite-search') as HTMLInputElement;
-        const items = document.querySelectorAll('.swal-comite-item');
-        items.forEach(item => {
-          const checkbox = item.querySelector('.swal-comite-checkbox') as HTMLInputElement;
-          checkbox?.addEventListener('change', () => {
-            const el = item as HTMLElement;
-            if (checkbox.checked) {
-              el.classList.add('selected');
-              el.style.borderColor = '#D3152A';
-              el.style.background = '#FFF1F2';
-            } else {
-              el.classList.remove('selected');
-              el.style.borderColor = '#e2e8f0';
-              el.style.background = '#ffffff';
-            }
-          });
-        });
-
-        searchInput?.addEventListener('input', () => {
-          const term = searchInput.value.trim().toLowerCase();
-          items.forEach(item => {
-            const el = item as HTMLElement;
-            const nombre = el.getAttribute('data-nombre') || '';
-            el.style.display = nombre.includes(term) ? 'flex' : 'none';
-          });
-        });
-      },
-      preConfirm: () => {
-        const checked = Array.from(document.querySelectorAll('.swal-comite-checkbox:checked')) as HTMLInputElement[];
-        return checked.map(cb => cb.value);
-      }
-    }).then((result) => {
-      if (result.isConfirmed && Array.isArray(result.value)) {
-        this.comitesSeleccionados = result.value;
-        this.guardarComites();
-      }
-    });
-  }
-
-  async guardarComites(): Promise<void> {
-    if (!this.ticket?.id) return;
-
-    this.guardandoComites = true;
-    const comites = [...this.comitesSeleccionados];
-    try {
-      await this.ticketsService.update({ id: this.ticket.id, comites });
-      this.ticket.comites = comites;
-
-      const nombresComites = comites.map(id => this.obtenerNombreComite(id)).join(', ');
-      const mensajeBitacora = comites.length > 0
-        ? `Ticket agregado a comité(s): <b>${nombresComites}</b>`
-        : `Se removieron los comités asignados al ticket`;
-      await this.registrarBitacoraSistema(mensajeBitacora);
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
-
-      const idsUsuarios = new Set<string>();
-      for (const idComite of comites) {
-        const comite = this.obtenerComite(idComite);
-        for (const idResponsable of comite?.idsResponsables ?? []) {
-          const responsable = this.responsablesService.responsables.find(
-            item => String(item.id) === String(idResponsable)
-          );
-          if (responsable?.idUsuario) {
-            idsUsuarios.add(String(responsable.idUsuario));
-          }
-        }
-      }
-      for (const idInvolucrado of this.ticket.idInvolucrados ?? []) {
-        idsUsuarios.add(String(idInvolucrado));
-      }
-      if (this.ticket.idResponsable) {
-        idsUsuarios.add(String(this.ticket.idResponsable));
-      }
-
-      try {
-        const usuarios = Array.from(idsUsuarios).sort();
-        const alertasExistentes = await this.historialAlertasService
-          .obtenerAlertasPorTicketYTipo(this.ticket.id, '9');
-        const alertaAnterior = alertasExistentes
-          .sort((a, b) => this.obtenerFechaAlerta(b.fecha) - this.obtenerFechaAlerta(a.fecha))[0];
-        const comitesOrdenados = [...comites].map(String).sort();
-        const huboCambios = !alertaAnterior ||
-          !this.sonIguales(alertaAnterior.comites ?? [], comitesOrdenados) ||
-          !this.sonIguales(alertaAnterior.usuarios ?? [], usuarios);
-
-        if (huboCambios) {
-          await this.historialAlertasService.registrarAlerta({
-            ticketId: this.ticket.id,
-            fecha: Timestamp.now(),
-            idAlerta: '9',
-            usuarios,
-            comites: comitesOrdenados
-          });
-        }
-      } catch (error) {
-        console.error('Error al registrar la alerta de comités:', error);
-        this.showMessage(
-          'warn',
-          'Comités guardados',
-          'Los comités se asignaron, pero no fue posible registrar la alerta.'
-        );
-        return;
-      }
-
-      this.showMessage('success', 'Éxito', 'Comités asignados correctamente');
-    } catch (error) {
-      console.error('Error al asignar comités al ticket:', error);
-      this.showMessage(
-        'error',
-        'Error',
-        error instanceof Error ? error.message : 'No se pudieron guardar los comités.',
+    return (this.ticket?.comites ?? []).some((idComite) => {
+      const comite = this.comitesService.comites.find(
+        (c) => String(c.id) === String(idComite)
       );
-    } finally {
-      this.guardandoComites = false;
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
-    }
-  }
-
-  private sonIguales(a: string[], b: string[]): boolean {
-    const valoresA = [...a].map(String).sort();
-    const valoresB = [...b].map(String).sort();
-    return valoresA.length === valoresB.length &&
-      valoresA.every((valor, indice) => valor === valoresB[indice]);
-  }
-
-  private obtenerFechaAlerta(fecha: Timestamp | Date | string): number {
-    if (fecha instanceof Date) return fecha.getTime();
-    if (typeof fecha === 'string') return new Date(fecha).getTime();
-    return fecha.toDate().getTime();
-  }
-
-  onHide() {
-    this.closeEvent.emit(); // Cerrar modal
-  }
-
-  get estatusTicketsOpciones(): any[] {
-    return this.estatusTickets.map(s => {
-      const id = String(s.id);
-      return {
-        ...s,
-        disabled: id === '2' || id === '3' || id === '7'
-      };
+      return comite?.idsResponsables?.some(
+        (idAsignado) => String(idAsignado) === String(idResponsable)
+      );
     });
   }
 
-  showMessage(sev: string, summ: string, det: string) {
-    this.messageService.add({ severity: sev, summary: summ, detail: det });
-  }
-
-  actualizarEstatus(idEstatusTicket: string) {
-    if (!this.ticket) return;
-
-    if (String(idEstatusTicket) === '8') {
-      this.mostrarSwalMitigacion(idEstatusTicket);
-      return;
-    }
-
-    this.ticketsService
-      .update(this.ticket)
-      .then(async () => {
-        this.estatusAnterior = idEstatusTicket;
-        const estatus = this.estatusTickets.find(x => String(x.id) === String(idEstatusTicket));
-        await this.registrarBitacoraSistema(`Estatus actualizado a: <b>${estatus?.nombre || 'Desconocido'}</b>`);
-        this.showMessage('success', 'Éxito', 'Estatus actualizado correctamente');
-      })
-      .catch((error) => {
-        console.error(error);
-        if (this.estatusAnterior) this.ticket!.idEstatusTicket = this.estatusAnterior;
-      });
-  }
-
-  actualizarTipoSoporte(idTipoSoporte: string) {
-    if (!this.ticket) return;
-    this.ticketsService
-      .update(this.ticket)
-      .then(async () => {
-        const ts = this.tiposSoporte.find(x => String(x.id) === String(idTipoSoporte));
-        await this.registrarBitacoraSistema(`Tipo de asistencia actualizado a: <b>${ts?.name || (ts as any)?.nombre || 'Desconocido'}</b>`);
-        this.showMessage('success', 'Éxito', 'Asistencia actualizada correctamente');
-      })
-      .catch((error) => console.error(error));
-  }
-
-  obtenerNombreTipoSoporte(id?: string | null): string {
-    if (!id) return 'NO DEFINIDO';
-    const ts = this.tiposSoporte.find(x => String(x.id) === String(id));
-    return ts ? (ts.name || (ts as any)?.nombre || 'NO DEFINIDO') : 'NO DEFINIDO';
-  }
-
-  mostrarSwalMitigacion(idEstatusTicket: string) {
-    Swal.fire({
-      title: 'Mitigación de Ticket',
-      html: `
-        <div class="text-start" style="font-family: inherit;">
-          <label class="form-label fw-bold mb-1" style="font-size: 0.9rem;">Comentario Breve:</label>
-          <textarea id="mitigacion-comentario" class="form-control mb-3" rows="3" placeholder="Ingrese el motivo o comentario de mitigación..." style="border-radius: 8px;"></textarea>
-          
-          <label class="form-label fw-bold mb-1" style="font-size: 0.9rem;">Fecha Estimada:</label>
-          <input type="date" id="mitigacion-fecha" class="form-control" style="border-radius: 8px;">
-        </div>
-      `,
-      width: '500px',
-      showCancelButton: true,
-      confirmButtonColor: '#D3152A',
-      cancelButtonColor: '#1E1E24',
-      confirmButtonText: 'Guardar Mitigación',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        container: 'swal-topmost'
-      },
-      preConfirm: () => {
-        const comentario = (document.getElementById('mitigacion-comentario') as HTMLTextAreaElement).value.trim();
-        const fecha = (document.getElementById('mitigacion-fecha') as HTMLInputElement).value;
-        if (!comentario) {
-          Swal.showValidationMessage('El comentario es requerido');
-          return false;
-        }
-        if (!fecha) {
-          Swal.showValidationMessage('La fecha estimada es requerida');
-          return false;
-        }
-        return { comentario, fecha };
-      }
-    }).then((result) => {
-      if (result.isConfirmed && result.value) {
-        this.guardarMitigacion(idEstatusTicket, result.value.comentario, result.value.fecha);
-      } else {
-        if (this.estatusAnterior && this.ticket) {
-          // Revert back
-          setTimeout(() => {
-            this.ticket!.idEstatusTicket = this.estatusAnterior!;
-          });
-        }
-      }
-    });
-  }
-
-  async guardarMitigacion(idEstatusTicket: string, comentario: string, fecha: string) {
-    if (!this.ticket) return;
-
-    const estatus = this.estatusTickets.find(x => String(x.id) === String(idEstatusTicket));
-    this.ticket.idEstatusTicket = idEstatusTicket;
-
-    try {
-      await this.ticketsService.update(this.ticket);
-      this.estatusAnterior = idEstatusTicket;
-      await this.registrarBitacoraSistema(`Estatus actualizado a: <b>${estatus?.nombre || 'Mitigación'}</b>`);
-
-      let responsable: any = null;
-      const rawResp = localStorage.getItem('responsable-tareas');
-      if (rawResp) {
-        responsable = JSON.parse(rawResp);
-      }
-
-      const bitacoraEntry: Bitacora = {
-        modulo: 'TICKETS',
-        referenciaId: this.ticket.id!,
-        tipo: 'MITIGACION',
-        contenido: `<b>Comentario:</b> ${comentario}<br><b>Fecha Estimada:</b> ${fecha}`,
-        autor: {
-          id: responsable?.id || this.usuario?.id || 'SISTEMA',
-          nombre: responsable?.nombre || (this.usuario ? `${this.usuario.nombre} ${this.usuario.apellidoP}` : 'Sistema'),
-          color: responsable?.color || '#94a3b8'
-        },
-        fechaCreacion: Timestamp.now()
-      };
-      await this.bitacoraService.addEntrada(bitacoraEntry);
-
-      let involucrados = this.ticket.idInvolucrados || [];
-      if (this.ticket.idResponsable) {
-        involucrados = [...involucrados, this.ticket.idResponsable];
-      }
-      const usuariosAlerta = new Set(involucrados);
-      if (this.ticket.idResponsable) {
-        usuariosAlerta.add(this.ticket.idResponsable);
-      }
-
-      try {
-        await this.historialAlertasService.registrarAlerta({
-          ticketId: this.ticket.id!,
-          fecha: Timestamp.now(),
-          idAlerta: '8',
-          usuarios: Array.from(usuariosAlerta)
-        });
-      } catch (error) {
-        console.error('Error al registrar la alerta de mitigación:', error);
-        this.showMessage('warn', 'Mitigación guardada', 'La mitigación se guardó, pero no fue posible registrar la alerta.');
-        return;
-      }
-
-      this.showMessage('success', 'Éxito', 'Estatus actualizado y mitigación registrada');
-    } catch (error) {
-      console.error('Error al guardar la mitigación:', error);
-      if (this.estatusAnterior) this.ticket.idEstatusTicket = this.estatusAnterior;
-      this.showMessage('error', 'Error', 'No fue posible guardar la mitigación');
-    }
-  }
-
-  private showRatingSwal(
-    title: string,
-    message: string,
-    confirmButtonText: string,
-    onConfirm: (rating: number) => void
-  ) {
-    Swal.fire({
-      title: title,
-      html: `
-        <style>
-          .rating-container { display: flex; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
-          .rating-option { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; padding: 12px 8px; border: 2px solid #e2e8f0; border-radius: 12px; 
-            transition: all 0.2s ease; flex: 1; min-width: 70px; background: #ffffff;
-          }
-          .rating-option:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
-          .rating-option.selected { border-color: #D3152A; background: #FFF1F2; box-shadow: 0 4px 6px -1px rgba(211, 21, 42, 0.1); }
-          .rating-stars { font-size: 1.2rem; line-height: 1; margin-bottom: 8px; color: #cbd5e1; letter-spacing: 1px; display: flex; }
-          .rating-option:hover .rating-stars { color: #FDB813; }
-          .rating-option.selected .rating-stars { color: #FDB813; }
-          .rating-text { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; text-align: center; }
-          .rating-option.selected .rating-text { color: #D3152A; font-weight: 800; }
-        </style>
-        <p class="text-muted" style="font-size: 0.95rem; margin-bottom: 5px;">${message}</p>
-        <p class="text-dark fw-bold m-0 mt-3" style="font-size: 1.05rem;">Por favor, califica la atención recibida:</p>
-        <div class="rating-container" id="custom-rating">
-          <div class="rating-option" data-value="1">
-            <div class="rating-stars">★</div>
-            <div class="rating-text">Malo</div>
-          </div>
-          <div class="rating-option" data-value="2">
-            <div class="rating-stars">★★</div>
-            <div class="rating-text">Regular</div>
-          </div>
-          <div class="rating-option" data-value="3">
-            <div class="rating-stars">★★★</div>
-            <div class="rating-text">Bueno</div>
-          </div>
-          <div class="rating-option" data-value="4">
-            <div class="rating-stars">★★★★</div>
-            <div class="rating-text">Muy<br>Bueno</div>
-          </div>
-          <div class="rating-option" data-value="5">
-            <div class="rating-stars">★★★★★</div>
-            <div class="rating-text">Excelente</div>
-          </div>
-        </div>
-        <input type="hidden" id="rating-value" value="">
-      `,
-      width: '600px',
-      showCancelButton: true,
-      confirmButtonColor: '#D3152A',
-      cancelButtonColor: '#1E1E24',
-      confirmButtonText: confirmButtonText,
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        container: 'swal-topmost'
-      },
-      didOpen: () => {
-        const options = document.querySelectorAll('.rating-option');
-        const input = document.getElementById('rating-value') as HTMLInputElement;
-        options.forEach(opt => {
-          opt.addEventListener('click', () => {
-            options.forEach(o => o.classList.remove('selected'));
-            opt.classList.add('selected');
-            input.value = opt.getAttribute('data-value') || '';
-            Swal.resetValidationMessage();
-          });
-        });
-      },
-      preConfirm: () => {
-        const val = (document.getElementById('rating-value') as HTMLInputElement).value;
-        if (!val) {
-          Swal.showValidationMessage('Debes seleccionar una calificación para continuar');
-          return false;
-        }
-        return Number(val);
-      }
-    }).then((result) => {
-      if (result.isConfirmed && result.value) {
-        onConfirm(result.value);
-      }
-    });
-  }
-
-  onClickTrabajarTicket() {
-    if (!this.ticket) return;
-
-    this.ticket.idEstatusTicket = '2';
-
-    if (!this.ticket.fechaAtencion) {
-      this.ticket.fechaAtencion = Timestamp.now();
-    }
-
-    this.ticketsService
-      .update(this.ticket)
-      .then(async () => {
-        await this.registrarBitacoraSistema(`Ticket en atención (Trabajando)`);
-        this.showMessage('success', 'Success', 'Enviado correctamente');
-      })
-      .catch((error) => console.error(error));
-  }
-
-  onClickPendienteValidarSucursal() {
-    this.showRatingSwal(
-      'Validar Ticket',
-      'El estado del ticket se cambiará a <b>POR VALIDAR</b>.',
-      'Sí, enviar a validar',
-      (rating) => {
-        this.ticket!.idEstatusTicket = '7';
-        this.ticket!.idResponsable = this.usuario.id;
-        this.ticket!.calificacionAnalista = rating;
-
-        this.ticketsService
-          .update(this.ticket)
-          .then(async () => {
-            await this.registrarBitacoraSistema(`Ticket enviado a <b>VALIDAR</b> por el analista</b>`);
-            this.showMessage('success', 'Éxito', 'Ticket enviado a validación correctamente');
-          })
-          .catch((error) => console.error(error));
-      }
-    );
-  }
-
-  onClickValidacionAdmin(ticket: Ticket | any) {
-    Swal.fire({
-      title: 'Confirmación',
-      text: 'Validar ticket cerrado ¿Desea continuar?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#D3152A',
-      cancelButtonColor: '#1E1E24',
-      confirmButtonText: 'Sí, continuar',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        container: 'swal-topmost'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        ticket.validacionAdmin = true;
-        this.ticketsService
-          .update(ticket)
-          .then(async () => {
-            await this.registrarBitacoraSistema(`Validación de administrador <b>confirmada</b>`);
-            this.showMessage('success', 'Éxito', 'Validación correcta');
-          })
-          .catch((error) => console.error(error));
-      }
-    });
-  }
-
-  onClickAsignarEspecialista() {
-    this.idSucursalEspecialista = this.ticket?.idSucursal;
-    this.mostrarModalEspecialistas = true;
-  }
-
-  onClickFinalizar(ticket: Ticket | any) {
-    this.showRatingSwal(
-      'Finalizar Ticket',
-      'El ticket se cerrará y cambiará a <b>FINALIZADO</b>.',
-      'Sí, finalizar ticket',
-      (rating) => {
-        ticket.idEstatusTicket = '3';
-        ticket.calificacionSucursal = rating;
-        ticket.fechaFin = Timestamp.now();
-
-        this.ticketsService
-          .update(ticket)
-          .then(async () => {
-            await this.registrarBitacoraSistema(`Ticket <b>FINALIZADO</b> por la sucursal</b>`);
-            this.showMessage('success', 'Éxito', 'Ticket finalizado correctamente');
-          })
-          .catch((error) => console.error(error));
-      }
-    );
-  }
-
-  onClickRechazar(ticket: Ticket | any) {
-    Swal.fire({
-      title: 'Confirmación',
-      text: 'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#D3152A',
-      cancelButtonColor: '#1E1E24',
-      confirmButtonText: 'Sí, continuar',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        container: 'swal-topmost'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        ticket.idEstatusTicket = '1';
-        this.ticketsService
-          .update(ticket)
-          .then(async () => {
-            await this.registrarBitacoraSistema(`Soporte <b>RECHAZADO</b> por la sucursal. El ticket regresa a <b>POR RESOLVER</b>`);
-            this.showMessage('success', 'Éxito', 'Enviado correctamente');
-          })
-          .catch((error) => console.error(error));
-      }
-    });
-  }
-
-  abrirModalImagen(url: string) {
-    this.mostrarModalImagen = true;
-    this.urlVisorImagen = url;
-  }
-
-  obtenerNombreArea(idArea: string | undefined, areas = this.areasService.areas): string {
-    if (!idArea) return '---';
-    const found = areas.find(a => String(a.id) === String(idArea));
-    return found?.nombre || `Área ${idArea}`;
-  }
-
-  obtenerNombreSucursal(idSucursal?: any): string {
-    if (!idSucursal) return '---';
-    const found = this.sucursales?.find(s => String(s.id) === String(idSucursal));
-    return found?.nombre || `Sucursal ${idSucursal}`;
-  }
-
-  obtenerEstatus(idStatus?: string): EstatusTicket | undefined {
-    if (!idStatus) return undefined;
-    return this.estatusTickets.find(s => String(s.id) === String(idStatus));
-  }
-
-  getEstatusStyle(estatus?: EstatusTicket): any {
-    const c = estatus?.color && estatus.color.startsWith('#') ? estatus.color : '#64748B';
-    return {
-      'background-color': c + '1A',
-      'color': c,
-      'border': '1px solid ' + c + '40'
-    };
-  }
-
-  obtenerPrioridadColor(prio?: string): { bg: string; text: string; border: string } {
-    switch (prio) {
-      case 'Crítico': return { bg: '#FFF1F2', text: '#EF4444', border: '#FECDD3' };
-      case 'Alto': return { bg: '#FFFBEB', text: '#D97706', border: '#FDE68A' };
-      case 'Medio': return { bg: '#FEFCE8', text: '#CA8A04', border: '#FEF08A' };
-      case 'Bajo': return { bg: '#F0FDF4', text: '#16A34A', border: '#BBF7D0' };
-      default: return { bg: '#F8FAFC', text: '#64748B', border: '#E2E8F0' };
-    }
-  }
-
-  get showBtnAsignar(): boolean {
-    return this.usuario?.idArea === '4' &&
-      this.usuario?.idRol === '5' &&
-      this.ticket?.idEstatusTicket === '2' &&
-      !this.ticket?.esAsignadoEspecialista;
-  }
-
-  get showBtnTrabajar(): boolean {
-    return this.usuario?.idRol === '4' &&
-      !!this.ticket?.idEstatusTicket &&
-      ['1', '4', '6'].includes(this.ticket.idEstatusTicket);
-  }
-
-  get showBtnValidar(): boolean {
-    return this.usuario?.idRol === '4' &&
-      this.ticket?.idEstatusTicket === '2';
-  }
-
-  get showBtnFinalizar(): boolean {
-    return this.usuario?.idRol === '2' && this.ticket?.idEstatusTicket === '7';
-  }
-
-  get showBtnRechazar(): boolean {
-    return this.usuario?.idRol === '2' && this.ticket?.idEstatusTicket === '7';
-  }
-
-  get showBtnValidacionAdmin(): boolean {
-    return (this.usuario?.idRol === '1' || this.usuario?.idRol === '5') &&
-      this.ticket?.idEstatusTicket === '3' &&
-      !this.ticket?.validacionAdmin;
-  }
-
-  async registrarBitacoraSistema(contenido: string): Promise<void> {
-    if (!this.ticket?.id) return;
-    let responsable: any = null;
-    const rawResp = localStorage.getItem('responsable-tareas');
-    if (rawResp) {
-      responsable = JSON.parse(rawResp);
-    }
-    const bitacoraEntry: any = {
-      modulo: 'TICKETS',
-      referenciaId: this.ticket.id,
-      tipo: 'SISTEMA',
-      contenido: contenido,
-      autor: {
-        id: responsable?.id || 'SISTEMA',
-        nombre: responsable?.nombre || 'Sistema',
-        color: responsable?.color || '#94a3b8'
-      },
-      fechaCreacion: Timestamp.now()
-    };
-    await this.bitacoraService.addEntrada(bitacoraEntry);
+  onHide(): void {
+    this.closeEvent.emit();
   }
 }

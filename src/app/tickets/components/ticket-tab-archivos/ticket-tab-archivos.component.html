@@ -1,0 +1,66 @@
+<div class="d-flex flex-column gap-4 h-100" style="overflow-y: auto;" *ngIf="ticket">
+  <!-- Estado Vacío -->
+  <div class="ticket-card p-4 m-0 h-100" *ngIf="!ticket.archivos || ticket.archivos.length === 0">
+    <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+      <i class="bx bx-file fs-5" style="color: #D3152A;"></i> ARCHIVOS ADJUNTOS
+    </h5>
+    <div class="text-center py-4" style="border: 2px dashed #cbd5e1; border-radius: 12px; background-color: #f8fafc;">
+      <i class="bx bx-folder-minus mb-2" style="font-size: 2.5rem; color: #94a3b8;"></i>
+      <p class="m-0 text-muted" style="font-size: 0.9rem; font-weight: 600;">No hay archivos adjuntos</p>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Archivos -->
+  <div class="ticket-card p-4 m-0 d-flex flex-column h-100" *ngIf="ticket.archivos && ticket.archivos.length">
+    <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2 flex-shrink-0" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+      <i class="bx bx-folder-open fs-5" style="color: #D3152A;"></i> ARCHIVOS DEL TICKET 
+      <span class="badge" style="background: #e2e8f0; color: #475569; font-size: 0.75rem;">{{ ticket.archivos.length }}</span>
+    </h5>
+    <div class="archivos-list d-flex flex-column gap-2 flex-grow-1" style="overflow-y: auto; min-height: 0; padding-right: 0.5rem;">
+      <div *ngFor="let archivo of ticket.archivos" class="archivo-list-item d-flex align-items-center p-2" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; transition: all 0.2s; cursor: default;">
+        
+        <!-- Icono o Miniatura pequeña -->
+        <div class="archivo-icon me-3" style="width: 44px; height: 44px; flex-shrink: 0; overflow: hidden; border-radius: 6px;">
+          <!-- Si es imagen -->
+          <ng-container *ngIf="(archivo.tipo && archivo.tipo.startsWith('image/')) || (archivo.url && archivo.url.match('.jpg|.jpeg|.png|.gif')); else docPreview">
+            <div (click)="abrirModalImagen(archivo.url)" class="w-100 h-100" style="cursor: pointer;" pTooltip="Clic para ampliar" tooltipPosition="top">
+              <img [src]="archivo.url" [alt]="archivo.nombre" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            </div>
+          </ng-container>
+          <!-- Si es documento -->
+          <ng-template #docPreview>
+            <div class="d-flex align-items-center justify-content-center w-100 h-100" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+              <i [class]="fileUtils.obtenerIconoArchivo(archivo.nombre, archivo.tipo)" style="font-size: 1.5rem;" [style.color]="fileUtils.obtenerColorArchivo(archivo.nombre, archivo.tipo)"></i>
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Detalles del archivo -->
+        <div class="archivo-details flex-grow-1 text-truncate">
+          <div class="fw-bold text-dark text-truncate" style="font-size: 0.85rem;" [title]="archivo.nombre || 'Archivo'">
+            {{ archivo.nombre || 'Archivo adjunto' }}
+          </div>
+          <div class="text-muted text-truncate text-uppercase" style="font-size: 0.7rem;">
+            {{ archivo.tipo || 'Documento' }}
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="archivo-actions ms-3">
+          <a [href]="archivo.url" target="_blank" class="btn btn-sm" pTooltip="Abrir en pestaña nueva" tooltipPosition="left" style="background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; border-radius: 6px;">
+            <i class="bx bx-link-external fs-6"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Visor de Imágenes -->
+<app-modal-visor-imagenes
+  *ngIf="mostrarModalImagen"
+  [mostrarModal]="mostrarModalImagen"
+  [imagenUrl]="urlVisorImagen"
+  (closeEvent)="mostrarModalImagen = false">
+</app-modal-visor-imagenes>

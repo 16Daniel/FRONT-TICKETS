@@ -1,0 +1,15 @@
+<div class="ticket-card p-4 m-0 h-100" style="min-height: 250px; overflow-y: auto;" *ngIf="ticket">
+  <h5 class="sub-title mb-4 fw-bold text-uppercase text-muted d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+    <i class="bx bx-detail fs-5" style="color: #D3152A;"></i> DESCRIPCIÓN DEL TICKET
+  </h5>
+  
+  <ng-container *ngIf="ticket.descripcion; else noDescripcion">
+    <div class="description-text" [innerHTML]="ticket.descripcion"></div>
+  </ng-container>
+  <ng-template #noDescripcion>
+    <div class="empty-description">
+      <i class="bx bx-info-circle"></i>
+      <span>Sin descripción registrada en este ticket.</span>
+    </div>
+  </ng-template>
+</div>
