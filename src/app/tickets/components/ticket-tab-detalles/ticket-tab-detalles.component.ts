@@ -195,6 +195,23 @@ export class TicketTabDetallesComponent implements OnInit, OnChanges {
       .catch((error) => console.error(error));
   }
 
+  actualizarRevisionDesbloqueo(): void {
+    if (!this.ticket?.id) return;
+    const revisado = !!this.ticket.revisionDesbloqueo;
+    this.ticketsService
+      .update({ id: this.ticket.id, revisionDesbloqueo: revisado })
+      .then(async () => {
+        await this.helper.registrarBitacoraSistema(
+          this.ticket.id!,
+          revisado
+            ? 'Ticket marcado como <b>REVISADO EN JUNTA DE DESBLOQUEO</b>'
+            : 'Se desmarcó la <b>REVISIÓN EN JUNTA DE DESBLOQUEO</b>'
+        );
+        this.showMessage('success', 'Éxito', 'Revisión en junta de desbloqueo actualizada');
+      })
+      .catch((error) => console.error(error));
+  }
+
   obtenerNombreTipoSoporte(id?: string | null): string {
     if (!id) return 'NO DEFINIDO';
     const ts = this.tiposSoporte.find((x) => String(x.id) === String(id));

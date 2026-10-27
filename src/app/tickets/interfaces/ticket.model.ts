@@ -46,6 +46,7 @@ export class Ticket {
 
 
   validacionAdmin: boolean = false;
+  revisionDesbloqueo: boolean = false;
   referenciaActivoFijo: string | undefined;
 
   esAsignadoEspecialista: boolean = false;

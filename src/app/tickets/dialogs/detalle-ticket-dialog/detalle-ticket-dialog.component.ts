@@ -19,6 +19,7 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
+import { Bitacora } from '../../../shared/interfaces/bitacora.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CategoriesService } from '../../../categorias/services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
@@ -64,6 +65,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
 
   usuario: Usuario;
   responsableTarea: Responsable | null;
+  tipoBitacora: Bitacora['tipo'] = 'COMENTARIO';
 
   sucursales: any[] = [];
   categorias: any[] = [];
@@ -112,6 +114,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ticket'] && this.ticket) {
+      this.tipoBitacora = 'COMENTARIO';
       this.normalizarValoresTicket();
       this.marcarNotificacionesLeidas();
       this.cdr.markForCheck();
@@ -125,6 +128,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
   }
 
   onShow(): void {
+    this.tipoBitacora = 'COMENTARIO';
     this.normalizarValoresTicket();
     this.marcarNotificacionesLeidas();
     this.cdr.markForCheck();
@@ -205,6 +209,18 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
         (idAsignado) => String(idAsignado) === String(idResponsable)
       );
     });
+  }
+
+  get tipoBitacoraEfectivo(): Bitacora['tipo'] {
+    if (this.tipoBitacora === 'COMITE' && (!this.ticket?.comites?.length || !this.puedeAccederBitacoraComite)) {
+      return 'COMENTARIO';
+    }
+    return this.tipoBitacora;
+  }
+
+  cambiarTipoBitacora(tipo: 'COMENTARIO' | 'COMITE'): void {
+    if (tipo === 'COMITE' && !this.puedeAccederBitacoraComite) return;
+    this.tipoBitacora = tipo;
   }
 
   onHide(): void {

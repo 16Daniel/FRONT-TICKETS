@@ -35,8 +35,6 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
   @Input() referenciaId!: string;
   @Input() tipo: Bitacora['tipo'] = 'COMENTARIO';
   @Input() usuariosEtiquetables: Responsable[] = [];
-  @Input() comiteDisponible = false;
-  @Input() puedeAccederComite = false;
 
   // Usuario actual (simulado o inyectado después)
   @Input() usuarioActual!: Responsable;
@@ -123,17 +121,11 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['referenciaId']) {
-      this.tipo = 'COMENTARIO';
       this.nuevoMensaje = '';
       this.archivosSeleccionados = [];
     }
 
-    const resetComite = (!this.comiteDisponible || !this.puedeAccederComite) && this.tipo === 'COMITE';
-    if (resetComite) {
-      this.tipo = 'COMENTARIO';
-    }
-
-    if ((changes['modulo'] || changes['referenciaId'] || changes['tipo'] || resetComite) && this.modulo && this.referenciaId) {
+    if ((changes['modulo'] || changes['referenciaId'] || changes['tipo']) && this.modulo && this.referenciaId) {
       this.cargarBitacoras();
     }
   }
@@ -159,12 +151,6 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
           this.cdr.detectChanges();
         }
       });
-  }
-
-  cambiarTipo(tipo: Bitacora['tipo']) {
-    if (this.tipo === tipo) return;
-    this.tipo = tipo;
-    this.cargarBitacoras();
   }
 
   onFileSelected(event: Event) {

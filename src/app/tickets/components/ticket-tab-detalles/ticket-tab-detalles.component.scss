@@ -93,3 +93,44 @@
     font-size: 0.85rem;
   }
 }
+
+.desbloqueo-check-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #94A3B8;
+    background-color: #F8FAFC;
+  }
+
+  &.checked {
+    background-color: #FFF1F2;
+    border-color: #D3152A;
+    color: #D3152A;
+  }
+
+  .form-check-input {
+    cursor: pointer;
+    border-color: #94A3B8;
+
+    &:checked {
+      background-color: #D3152A;
+      border-color: #D3152A;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.15rem rgba(211, 21, 42, 0.2);
+    }
+  }
+}

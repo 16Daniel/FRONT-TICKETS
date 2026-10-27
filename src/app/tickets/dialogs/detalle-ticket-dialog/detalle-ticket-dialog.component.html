@@ -74,13 +74,38 @@
         </p-tabView>
       </div>
       
-      <!-- Columna Derecha: Bitácora -->
-      <div class="col-lg-5 d-flex flex-column h-100">
+      <!-- Columna Derecha: Switch de Tipo + Bitácora -->
+      <div class="col-lg-5 d-flex flex-column gap-2 h-100">
+        <div *ngIf="ticket.comites && ticket.comites.length > 0" class="bitacora-mode-switch" role="tablist" aria-label="Tipo de bitácora">
+          <button
+            type="button"
+            role="tab"
+            class="bitacora-mode-option"
+            [class.active]="tipoBitacoraEfectivo === 'COMENTARIO'"
+            [attr.aria-selected]="tipoBitacoraEfectivo === 'COMENTARIO'"
+            (click)="cambiarTipoBitacora('COMENTARIO')">
+            <i class="bx bx-message-square-detail"></i>
+            <span>Ticket</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="bitacora-mode-option"
+            [class.active]="tipoBitacoraEfectivo === 'COMITE'"
+            [attr.aria-selected]="tipoBitacoraEfectivo === 'COMITE'"
+            [disabled]="!puedeAccederBitacoraComite"
+            [title]="!puedeAccederBitacoraComite ? 'Debes ser responsable de un comité asignado para acceder a esta bitácora' : 'Ver comentarios exclusivos de comités'"
+            (click)="cambiarTipoBitacora('COMITE')">
+            <i class="bx bx-group"></i>
+            <span>Comités</span>
+            <i *ngIf="!puedeAccederBitacoraComite" class="bx bx-lock-alt mode-lock-icon" aria-hidden="true"></i>
+          </button>
+        </div>
+
         <app-bitacora 
           class="flex-grow-1 d-flex flex-column h-100"
           [modulo]="'TICKETS'" 
-          [comiteDisponible]="ticket.comites.length > 0"
-          [puedeAccederComite]="puedeAccederBitacoraComite"
+          [tipo]="tipoBitacoraEfectivo"
           [referenciaId]="ticket.id" 
           [usuariosEtiquetables]="responsablesService.responsables">
         </app-bitacora>

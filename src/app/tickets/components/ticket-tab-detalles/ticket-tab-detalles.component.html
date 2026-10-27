@@ -159,5 +159,20 @@
         </span>
       </div>
     </div>
+
+    <!-- Row 4: Junta de Desbloqueo -->
+    <div class="info-item" style="grid-column: 1 / -1;">
+      <span class="info-label"><i class="bx bx-check-shield"></i> Junta de Desbloqueo</span>
+      <div class="mt-1">
+        <label class="desbloqueo-check-pill" [class.checked]="ticket.revisionDesbloqueo">
+          <input
+            type="checkbox"
+            class="form-check-input m-0"
+            [(ngModel)]="ticket.revisionDesbloqueo"
+            (change)="actualizarRevisionDesbloqueo()" />
+          <span>¿Se revisó en junta desbloqueo?</span>
+        </label>
+      </div>
+    </div>
   </div>
 </div>
