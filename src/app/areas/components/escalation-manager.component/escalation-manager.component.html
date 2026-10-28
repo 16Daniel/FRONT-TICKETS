@@ -8,13 +8,13 @@
             <label>GRUPO DE NOTIFICACIÓN DE NEVOS TICKETS</label>
             <p-dropdown
               [options]="gruposWhatsapp()"
-              [(ngModel)]="grupoNuevosTickets"
+              [ngModel]="grupoNuevosTickets()"
+              (ngModelChange)="cambiarGrupoNuevosTickets($event)"
               [optionValue]="'id'"
               optionLabel="name"
               placeholder="Seleccione un grupo de WhatsApp"
-              filter="true"
+              [filter]="true"
               [filterBy]="'name'"
-              (onChange)="cambiarGrupoNuevosTickets($event)"
               [showClear]="false">
             </p-dropdown>
             </div>
@@ -83,9 +83,9 @@
               [optionValue]="'id'"
               optionLabel="name"
               placeholder="Seleccione un grupo de WhatsApp"
-              filter="true"
+              [filter]="true"
               [filterBy]="'name'"
-              (onchange)="onGrupoChange($event, itemr)"
+              (onChange)="onGrupoChange($event.value, itemr)"
               [showClear]="false">
             </p-dropdown>
             </div>

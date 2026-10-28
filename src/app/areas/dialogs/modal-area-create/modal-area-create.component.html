@@ -96,106 +96,19 @@
         <app-escalation-manager [(levels)]="parentLevels" [(grupoNuevosTickets)]="grupoNuevosTickets"></app-escalation-manager>
     </p-tabPanel>
     <p-tabPanel header="ORGANIGRAMA" leftIcon="bx bx-sitemap">
-      <div class="organigrama-toolbar">
-        <div>
-          <h3 class="organigrama-title">Organigrama del área</h3>
-          <p class="text-muted mb-0">Define el puesto de cada nivel y asigna usuarios o responsables desde el segundo nivel.</p>
-        </div>
-        <button
-          *ngIf="organigrama.length === 0"
-          type="button"
-          class="btn-rw-cta"
-          (click)="agregarNivelRaiz()">
-          <i class="bx bx-plus"></i>
-          <span>AGREGAR PUESTO RAÍZ</span>
-        </button>
-      </div>
-
-      <div *ngIf="organigrama.length === 0" class="organigrama-empty">
-        El organigrama todavía no tiene puestos.
-      </div>
-
-      <div *ngIf="organigrama.length > 0" class="organigrama-chart">
-        <p-organizationChart [value]="organigrama" styleClass="area-organization-chart">
-          <ng-template let-nodo pTemplate="default">
-            <div class="organigrama-node">
-              <label class="rw-form-label mb-0" [for]="'organigrama_puesto_' + nodo.key">Puesto</label>
-              <input
-                class="form-control rw-input organigrama-select"
-                [id]="'organigrama_puesto_' + nodo.key"
-                [ngModel]="nodo.data.puesto"
-                [name]="'organigrama_puesto_' + nodo.key"
-                placeholder="Nombre del puesto"
-                (ngModelChange)="actualizarPuesto(nodo, $event)">
-
-              <div *ngIf="!esNodoRaiz(nodo)" class="organigrama-asignaciones">
-                <div *ngFor="let asignacion of nodo.data.asignados" class="organigrama-asignacion">
-                  <label class="organigrama-switch">
-                    <input
-                      type="checkbox"
-                      role="switch"
-                      [ngModel]="asignacion.tipoPersona === 'responsable'"
-                      [name]="'organigrama_tipo_' + asignacion.id"
-                      (ngModelChange)="cambiarTipoPersona(nodo, asignacion.id, $event)">
-                    <span>{{ asignacion.tipoPersona === 'responsable' ? 'Responsables' : 'Usuarios' }}</span>
-                  </label>
-
-                  <p-dropdown
-                    [options]="asignacion.tipoPersona === 'responsable' ? opcionesResponsables : opcionesUsuarios"
-                    [ngModel]="asignacion.personaId"
-                    [name]="'organigrama_persona_' + asignacion.id"
-                    optionLabel="nombre"
-                    optionValue="id"
-                    [filter]="true"
-                    filterBy="nombre"
-                    [showClear]="true"
-                    [appendTo]="'body'"
-                    [placeholder]="asignacion.tipoPersona === 'responsable' ? 'Selecciona responsable' : 'Selecciona usuario'"
-                    styleClass="w-100"
-                    (ngModelChange)="actualizarPersona(nodo, asignacion, $event)">
-                  </p-dropdown>
-
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-outline-danger"
-                    aria-label="Eliminar asignación"
-                    (click)="eliminarAsignacion(nodo, asignacion.id)">
-                    <i class="bx bx-trash"></i>
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary align-self-start"
-                  (click)="agregarAsignacion(nodo)">
-                  <i class="bx bx-plus"></i> Agregar usuario o responsable
-                </button>
-              </div>
-
-              <div class="organigrama-node-actions">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary"
-                  (click)="agregarSubnivel(nodo)">
-                  <i class="bx bx-plus"></i> Subnivel
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-danger"
-                  (click)="eliminarNodo(nodo)">
-                  <i class="bx bx-trash"></i> Eliminar
-                </button>
-              </div>
-            </div>
-          </ng-template>
-        </p-organizationChart>
-      </div>
+      <app-organigrama-editor
+        [areaId]="area?.id || ''"
+        [legacyOrganigrama]="area?.organigrama || []"
+        (organigramaChange)="actualizarOrganigrama($event)"
+        (validityChange)="actualizarValidezOrganigrama($event)"
+        (readyChange)="actualizarEstadoCargaOrganigrama($event)">
+      </app-organigrama-editor>
     </p-tabPanel>
 </p-tabView>
    </div>
     
     <div class="d-flex justify-content-end mt-5 pt-3 border-top">
-      <button type="submit" class="btn-rw-cta" [disabled]="form.invalid">
+      <button type="submit" class="btn-rw-cta" [disabled]="form.invalid || !organigramaListo">
         <i class='bx bx-check-circle'></i>
         <span *ngIf="esNuevaArea">CREAR ÁREA</span>
         <span *ngIf="!esNuevaArea">GUARDAR CAMBIOS</span>

@@ -12,7 +12,9 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from '@angular/fire/firestore';
+import { AreaOrganigrama } from '../interfaces/area-organigrama.model';
 
 @Injectable({
   providedIn: 'root',
@@ -50,18 +52,36 @@ export class AreasService {
     });
   }
 
-  async create(area: Area): Promise<void> {
+  async create(area: Area, organigrama?: AreaOrganigrama): Promise<void> {
     const documentRef = doc(this.firestore, `${this.pathName}/${area.id}`);
     const snapshot = await getDoc(documentRef);
 
     if (snapshot.exists()) {
       throw new Error(`El área con id ${area.id} ya existe.`);
     }
+
+    if (organigrama) {
+      const batch = writeBatch(this.firestore);
+      batch.set(documentRef, area);
+      batch.set(doc(this.firestore, `areas_organigrama/${area.id}`), organigrama);
+      await batch.commit();
+      return;
+    }
+
     await setDoc(documentRef, area);
   }
 
-  async update(area: Partial<Area>, idArea: string): Promise<void> {
+  async update(area: Partial<Area>, idArea: string, organigrama?: AreaOrganigrama): Promise<void> {
     const documentRef = doc(this.firestore, `${this.pathName}/${idArea}`);
+
+    if (organigrama) {
+      const batch = writeBatch(this.firestore);
+      batch.update(documentRef, area);
+      batch.set(doc(this.firestore, `areas_organigrama/${idArea}`), organigrama);
+      await batch.commit();
+      return;
+    }
+
     return updateDoc(documentRef, area);
   }
 

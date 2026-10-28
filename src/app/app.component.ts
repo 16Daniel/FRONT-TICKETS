@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FcmService } from './alertas/service/fcm.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,12 @@ private fcmService = inject(FcmService);
   ngOnInit() {
     this.requestPermission();
     this.fcmService.listenMessages().subscribe((message) => {
-      alert(`Notificación: ${message.notification.title}\n${message.notification.body}`);
+      Swal.fire({
+        title: message.notification?.title || 'Notificación',
+        text: message.notification?.body || '',
+        icon: 'info',
+        confirmButtonColor: '#D3152A',
+      });
     });
   }
 

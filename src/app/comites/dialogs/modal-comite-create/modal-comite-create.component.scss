@@ -62,3 +62,59 @@
     cursor: not-allowed;
   }
 }
+
+.comite-responsables {
+  margin-top: 1rem;
+}
+
+.comite-responsables-label {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.comite-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 0.35rem 0.2rem;
+}
+
+.comite-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #d3152a;
+    outline-offset: 3px;
+  }
+
+  &.selected {
+    box-shadow: 0 0 0 3px #fdb813;
+  }
+}
+
+.comite-avatar-crown {
+  position: absolute;
+  z-index: 1;
+  top: -0.65rem;
+  left: 50%;
+  color: #fdb813;
+  font-size: 0.9rem;
+  text-shadow: 0 0 2px rgba(30, 30, 36, 0.55);
+  transform: translateX(-50%);
+}

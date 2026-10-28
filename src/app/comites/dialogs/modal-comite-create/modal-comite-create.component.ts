@@ -12,11 +12,13 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { Comite } from '../../interfaces/comite';
 import { ComitesService } from '../../services/comites.service';
 import { Subscription } from 'rxjs';
+import { AvatarComponent } from 'ngx-avatars';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-modal-comite-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule, MultiSelectModule],
+  imports: [CommonModule, FormsModule, DialogModule, MultiSelectModule, AvatarComponent, TooltipModule],
   templateUrl: './modal-comite-create.component.html',
   styleUrl: './modal-comite-create.component.scss',
 })
@@ -61,6 +63,7 @@ export class ModalComiteCreateComponent implements OnInit, OnDestroy {
         ...this.comite,
         areas: [...(this.comite.areas ?? [])],
         idsResponsables: [...(this.comite.idsResponsables ?? [])],
+        idResponsableLider: this.comite.idResponsableLider ?? '',
       };
       this.idComiteEditar = this.comite.id ?? '';
       this.actualizarResponsablesFiltrados();
@@ -73,6 +76,7 @@ export class ModalComiteCreateComponent implements OnInit, OnDestroy {
         id: await this.comitesService.obtenerSecuencial(),
         areas: this.comite.areas ?? [],
         idsResponsables: this.comite.idsResponsables ?? [],
+        idResponsableLider: this.comite.idResponsableLider ?? '',
         eliminado: false,
       };
       this.actualizarResponsablesFiltrados();
@@ -104,6 +108,25 @@ export class ModalComiteCreateComponent implements OnInit, OnDestroy {
     this.comite.idsResponsables = (this.comite.idsResponsables ?? []).filter((id) =>
       idsDisponibles.has(id),
     );
+    this.validarLiderSeleccionado();
+  }
+
+  onResponsablesChange(idsResponsables: string[] | null): void {
+    this.comite.idsResponsables = idsResponsables ?? [];
+    this.validarLiderSeleccionado();
+  }
+
+  seleccionarLider(responsable: Responsable): void {
+    if (responsable.id && this.comite.idsResponsables.includes(responsable.id)) {
+      this.comite.idResponsableLider = responsable.id;
+    }
+  }
+
+  obtenerResponsablesSeleccionados(): Responsable[] {
+    const idsSeleccionados = new Set(this.comite.idsResponsables ?? []);
+    return this.responsablesFiltrados.filter(
+      (responsable) => responsable.id && idsSeleccionados.has(responsable.id),
+    );
   }
 
   async enviar(form: NgForm): Promise<void> {
@@ -128,6 +151,7 @@ export class ModalComiteCreateComponent implements OnInit, OnDestroy {
           nombre: this.comite.nombre.trim(),
           areas: [...(this.comite.areas ?? [])],
           idsResponsables: [...(this.comite.idsResponsables ?? [])],
+          idResponsableLider: this.comite.idResponsableLider,
           eliminado: false,
         });
         this.showMessage('success', 'Éxito', 'Comité creado correctamente');
@@ -137,6 +161,7 @@ export class ModalComiteCreateComponent implements OnInit, OnDestroy {
             nombre: this.comite.nombre.trim(),
             areas: [...(this.comite.areas ?? [])],
             idsResponsables: [...(this.comite.idsResponsables ?? [])],
+            idResponsableLider: this.comite.idResponsableLider,
           },
           this.idComiteEditar,
         );
@@ -172,6 +197,15 @@ export class ModalComiteCreateComponent implements OnInit, OnDestroy {
     this.responsablesFiltrados = this.responsables.filter((responsable) =>
       idsUsuarios.has(String(responsable.idUsuario)),
     );
+  }
+
+  private validarLiderSeleccionado(): void {
+    if (
+      this.comite.idResponsableLider &&
+      !(this.comite.idsResponsables ?? []).includes(this.comite.idResponsableLider)
+    ) {
+      this.comite.idResponsableLider = '';
+    }
   }
 
   obtenerAreaResponsable(responsable: Responsable): string {
