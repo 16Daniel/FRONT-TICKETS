@@ -8,7 +8,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
 import { AcordeonTicketsPorUsuarioComponent } from '../../../tickets/components/acordeon-tickets-por-usuario/acordeon-tickets-por-usuario.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
@@ -53,7 +52,6 @@ import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.i
     FormsModule,
     ConfirmDialogModule,
     OverlayPanelModule,
-    ModalFilterTicketsComponent,
     CrearTicketDialogComponent,
     HistorialTicketsDialogComponent,
     AcordeonTicketsPorSucursalComponent,

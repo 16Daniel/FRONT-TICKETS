@@ -73,3 +73,15 @@ export interface ArticuloComboDelivery
   codarticulo:number;
   nombre:string; 
 }
+
+export interface LogDiccionarioDelivery {
+  id: number;
+  articulo: string;
+  marca: string;
+  plataforma: string;
+  modificador?: string | null;
+  procesado: boolean;
+  sucursal?: string | null;
+  idpedido?: string | null;
+  jsonpedido?: string | null;
+}

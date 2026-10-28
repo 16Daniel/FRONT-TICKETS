@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments.prod';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { GrupoWhatsapp } from '../interfaces/area.model';
+import { GrupoWhatsapp } from '../interfaces/grupo-whatsapp.interface';
 import { firstValueFrom, Observable } from 'rxjs';
 
 @Injectable({
