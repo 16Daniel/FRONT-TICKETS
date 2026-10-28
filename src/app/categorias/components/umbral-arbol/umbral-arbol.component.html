@@ -1,0 +1,259 @@
+<div class="explorador-umbral-card mt-3">
+
+  <!-- Estado Vacío: Si no hay categorías en el área -->
+  <div class="tree-empty-state" *ngIf="!hasCategories || categoriasActuales.length === 0">
+    <div class="empty-icon">
+      <i class="bx bx-git-repo-forked"></i>
+    </div>
+    <h4>Esta área aún no tiene categorías</h4>
+    <p>Debes crear categorías en el catálogo para ver su estructura jerárquica y recurrencia de tickets.</p>
+  </div>
+
+  <!-- Contenido Principal del Explorador Vertical -->
+  <div class="explorador-contenido" *ngIf="hasCategories && categoriasActuales.length > 0">
+
+    <!-- Cabecera Superior: Título, KPIs de Resumen y Filtro Rápido -->
+    <div class="explorador-cabecera">
+      <div class="cabecera-info">
+        <div class="titulo-area">
+          <i class="bx bx-sitemap icono-area"></i>
+          <div>
+            <h5 class="m-0 fw-bold text-dark">{{ obtenerAreaNombre() }}</h5>
+            <span class="subtexto-cabecera">Explorador de categorías y detección de recurrencias</span>
+          </div>
+        </div>
+
+        <!-- Badges KPI rápidos del área -->
+        <div class="resumen-kpis-area">
+          <div class="kpi-mini-pill" title="Total de tickets en esta área">
+            <i class="bx bx-receipt text-primary"></i>
+            <span><strong>{{ obtenerTotalTicketsArea() }}</strong> tickets</span>
+          </div>
+
+          <div class="kpi-mini-pill" [class.kpi-critico]="obtenerTotalHojasCriticas() > 0" title="Categorías que superan el umbral de alerta">
+            <i class="bx" [ngClass]="obtenerTotalHojasCriticas() > 0 ? 'bx-error-circle text-danger' : 'bx-check-circle text-success'"></i>
+            <span><strong>{{ obtenerTotalHojasCriticas() }}</strong> críticas (≥ {{ umbralAlerta }})</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Migas de Pan (Breadcrumbs) si no hay búsqueda activa -->
+      <div class="navegacion-rutas" *ngIf="!busquedaTexto.trim()">
+        <div class="miga-pan-contenedor">
+          <button 
+            type="button" 
+            class="miga-item" 
+            [class.es-activo]="rutaNavegacionIds.length === 0"
+            (click)="navegarNivel(-1)">
+            <i class="bx bx-home-alt"></i>
+            <span>Raíz del Área</span>
+          </button>
+
+          <ng-container *ngFor="let paso of obtenerRutaActual(); let i = index">
+            <span class="miga-separador">›</span>
+            <button 
+              type="button" 
+              class="miga-item"
+              [class.es-activo]="i === rutaNavegacionIds.length - 1"
+              (click)="navegarNivel(i)">
+              {{ paso.nombre }}
+            </button>
+          </ng-container>
+        </div>
+
+        <!-- Botón para subir un nivel -->
+        <button 
+          *ngIf="rutaNavegacionIds.length > 0"
+          type="button" 
+          class="btn-subir-nivel" 
+          (click)="subirNivel()"
+          title="Regresar un nivel">
+          <i class="bx bx-arrow-back"></i>
+          <span>Subir nivel</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Buscador Predictivo -->
+    <div class="buscador-caja">
+      <i class="bx bx-search icono-buscador"></i>
+      <input 
+        type="text" 
+        class="input-buscador" 
+        placeholder="Buscar categoría o subcategoría en el árbol… (ej. terminal, impresora, fuga)"
+        [(ngModel)]="busquedaTexto"
+        name="busquedaUmbral">
+      <button 
+        *ngIf="busquedaTexto.trim()" 
+        type="button" 
+        class="btn-limpiar-busqueda" 
+        (click)="busquedaTexto = ''"
+        title="Limpiar búsqueda">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+
+    <!-- Lista de Navegación Vertical -->
+    <div class="lista-navegacion-arbol">
+
+      <!-- Modo 1: Resultados de Búsqueda Predictiva -->
+      <ng-container *ngIf="busquedaTexto.trim()">
+        <div *ngIf="obtenerResultadosBusqueda().length === 0" class="estado-vacio-arbol">
+          <i class="bx bx-search-alt"></i>
+          <p>No se encontraron categorías para "<strong>{{ busquedaTexto }}</strong>"</p>
+        </div>
+
+        <div 
+          *ngFor="let item of obtenerResultadosBusqueda()" 
+          class="fila-nodo-nav"
+          [class.es-carpeta]="item.esRama"
+          [class.es-hoja]="!item.esRama"
+          [class.esta-seleccionado]="estaNodoSeleccionado(item.nodo.id)"
+          [class.fila-critica]="item.isCritical"
+          (click)="seleccionarDesdeBusqueda(item)">
+          
+          <div class="nodo-info-principal">
+            <i class="bx" [ngClass]="item.esRama ? 'bx-folder icono-tipo-rama' : 'bx-tag icono-tipo-hoja'"></i>
+            <div class="nodo-textos">
+              <span class="nodo-nombre">{{ item.nodo.nombre }}</span>
+              <span class="nodo-ruta-padre">{{ item.rutaCompleta }}</span>
+            </div>
+          </div>
+
+          <div class="nodo-metadatos">
+            <!-- Badge de Tickets / Recurrencia -->
+            <span class="badge-tickets" [class.badge-critico]="item.isCritical" [class.badge-con-tickets]="item.ticketCount > 0 && !item.isCritical">
+              <i class="bx" [ngClass]="item.isCritical ? 'bx-error-circle' : (item.ticketCount > 0 ? 'bx-time-five' : 'bx-check-circle')"></i>
+              {{ item.ticketCount }} {{ item.ticketCount === 1 ? 'ticket' : 'tickets' }}
+            </span>
+
+            <i *ngIf="item.esRama" class="bx bx-chevron-right icono-flecha-rama"></i>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Modo 2: Exploración Jerárquica del Árbol Nivel por Nivel -->
+      <ng-container *ngIf="!busquedaTexto.trim()">
+        <div *ngIf="obtenerHijosNivelActual().length === 0" class="estado-vacio-arbol">
+          <i class="bx bx-folder-open"></i>
+          <p>No hay subcategorías en este nivel</p>
+        </div>
+
+        <div 
+          *ngFor="let n of obtenerHijosNivelActual()" 
+          class="fila-nodo-nav"
+          [class.es-carpeta]="esRama(n)"
+          [class.es-hoja]="!esRama(n)"
+          [class.esta-seleccionado]="estaNodoSeleccionado(n.id)"
+          [class.fila-critica]="esCritico(n)"
+          (click)="seleccionarNodo(n)">
+          
+          <!-- Icono + Nombre -->
+          <div class="nodo-info-principal">
+            <div class="icono-wrap">
+              <i class="bx" [ngClass]="esRama(n) ? 'bx-folder icono-tipo-rama' : 'bx-tag icono-tipo-hoja'"></i>
+              <span class="punto-alerta" *ngIf="esCritico(n)" title="Supera o contiene alertas de umbral"></span>
+            </div>
+            
+            <div class="nodo-textos">
+              <span class="nodo-nombre">{{ n.nombre }}</span>
+              <span class="nodo-subtexto" *ngIf="esRama(n)">
+                {{ (n.subcategorias || []).length }} {{ (n.subcategorias || []).length === 1 ? 'subcategoría' : 'subcategorías' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Indicadores Derechos y Acciones -->
+          <div class="nodo-metadatos">
+            <!-- Conteo de tickets acumulados en la rama o en la hoja -->
+            <span 
+              class="badge-tickets" 
+              [class.badge-critico]="esCritico(n)"
+              [class.badge-con-tickets]="contarTickets(n.id, esRama(n), n) > 0 && !esCritico(n)"
+              [class.badge-cero]="contarTickets(n.id, esRama(n), n) === 0">
+              <i class="bx" [ngClass]="esCritico(n) ? 'bx-error-circle' : (contarTickets(n.id, esRama(n), n) > 0 ? 'bx-receipt' : 'bx-check-circle')"></i>
+              {{ contarTickets(n.id, esRama(n), n) }} {{ contarTickets(n.id, esRama(n), n) === 1 ? 'ticket' : 'tickets' }}
+            </span>
+
+            <!-- Botón explorar carpeta -->
+            <button 
+              *ngIf="esRama(n)" 
+              type="button" 
+              class="btn-abrir-carpeta" 
+              (click)="$event.stopPropagation(); profundizarRama(n); seleccionarNodo(n)"
+              title="Abrir subcategorías">
+              <span>Explorar</span>
+              <i class="bx bx-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+
+    <!-- Ficha de Detalle / Previsualización del Nodo Seleccionado -->
+    <div class="ficha-previsualizacion" [class.tiene-seleccion]="!!nodoSeleccionado" [class.es-critica]="nodoSeleccionado?.isCritical">
+      <div class="ficha-contenido" *ngIf="nodoSeleccionado">
+        <div class="ficha-superior">
+          <div class="ficha-etiqueta-ruta">
+            <i class="bx" [ngClass]="nodoSeleccionado.isCritical ? 'bx-error-alt text-danger' : (nodoSeleccionado.esRama ? 'bx-folder' : 'bx-tag')"></i>
+            <span class="ruta-texto">{{ nodoSeleccionado.rutaCompleta }}</span>
+          </div>
+
+          <button type="button" class="btn-deseleccionar" (click)="limpiarSeleccion()" title="Cerrar detalle">
+            <i class="bx bx-x"></i>
+          </button>
+        </div>
+
+        <div class="ficha-inferior">
+          <div class="ficha-estadisticas">
+            <div class="item-stat">
+              <span class="stat-label">Tipo:</span>
+              <span class="stat-valor">{{ nodoSeleccionado.esRama ? 'Carpeta / Rama' : 'Categoría Hoja' }}</span>
+            </div>
+
+            <div class="item-stat">
+              <span class="stat-label">Recurrencia:</span>
+              <span class="stat-valor fw-bold" [class.text-danger]="nodoSeleccionado.isCritical">
+                {{ nodoSeleccionado.ticketCount }} {{ nodoSeleccionado.ticketCount === 1 ? 'ticket' : 'tickets' }}
+              </span>
+            </div>
+
+            <div class="item-stat" *ngIf="!nodoSeleccionado.esRama">
+              <span class="stat-label">Estado Umbral ({{ umbralAlerta }}):</span>
+              <span class="badge-alerta-status" [class.status-critico]="nodoSeleccionado.isCritical" [class.status-ok]="!nodoSeleccionado.isCritical">
+                <i class="bx" [ngClass]="nodoSeleccionado.isCritical ? 'bx-error' : 'bx-check'"></i>
+                {{ nodoSeleccionado.isCritical ? 'Umbral Excedido' : 'Dentro del Umbral' }}
+              </span>
+            </div>
+
+            <div class="item-stat" *ngIf="nodoSeleccionado.prioridad">
+              <span class="stat-label">Prioridad:</span>
+              <span class="insignia-prioridad">{{ nodoSeleccionado.prioridad }}</span>
+            </div>
+
+            <div class="item-stat" *ngIf="nodoSeleccionado.tiempoResolucion">
+              <span class="stat-label">SLA:</span>
+              <span class="stat-valor">{{ nodoSeleccionado.tiempoResolucion }} {{ nodoSeleccionado.unidadResolucion || 'h' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjetas SLA Dashboard de la Categoría Seleccionada -->
+        <div class="ficha-sla-wrapper mt-3">
+          <app-tarjeta-rendimiento-sla
+            [totales]="totalesSlaNodo"
+            [titulo]="'Cumplimiento SLA: ' + nodoSeleccionado.nombre">
+          </app-tarjeta-rendimiento-sla>
+        </div>
+      </div>
+
+      <div class="ficha-vacia" *ngIf="!nodoSeleccionado">
+        <i class="bx bx-info-circle"></i>
+        <span>Haz clic en cualquier categoría para inspeccionar su recurrencia, rutas y umbral de alerta.</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>

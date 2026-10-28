@@ -77,7 +77,7 @@
     </div>
     <div class="col-md-4">
       <p class="fw-bold">CALIFICACIÓN</p>
-      <p-dropdown [options]="opcionesCalificacion" [(ngModel)]="calificacion" name="calificacion" optionLabel="label"
+      <p-dropdown [options]="opcionesCalificacion" [(ngModel)]="calificacionSucursal" name="calificacionSucursal" optionLabel="label"
         optionValue="value" [showClear]="true" placeholder="SELECCIONAR CALIFICACIÓN" [style]="{width:'100%'}">
         <!-- Ítem seleccionado -->
         <ng-template pTemplate="selectedItem" let-seleccionado>
@@ -130,7 +130,7 @@
 
   <br>
   <app-requester-tickets-list [tickets]="ticketsFiltrados" (clickEvent)="abrirModalDetalleTicket($event)"
-    [mostrarAcciones]="false" [mostrarEstrellas]="true" [mostrarFedchaEstimacion]="false" [mostrarSucursal]="true"
+    [mostrarEstrellas]="true" [mostrarSucursal]="true"
     [mostrarFechaSolicitud]="true" [mostrarFechaTermino]="true" [mostrarDescripcion]="true"></app-requester-tickets-list>
 </p-dialog>
 
@@ -138,8 +138,8 @@
 
 
 
-<app-modal-ticket-detail *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
-  (closeEvent)="showModalTicketDetail = false"></app-modal-ticket-detail>
+<app-detalle-ticket-dialog *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false"></app-detalle-ticket-dialog>
 
 <app-modal-filter-tickets [showModalFilterTickets]="showModalFilterTickets" [tickets]="todosLosTickets"
   (closeEvent)="showModalFilterTickets = false" (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>

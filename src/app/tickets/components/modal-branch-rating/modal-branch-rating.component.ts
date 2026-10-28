@@ -84,7 +84,7 @@ export class ModalBranchRatingComponent {
     let total = 0;
 
     tickets.forEach(ticket => {
-      total += ticket.calificacion;
+      total += ticket.calificacionSucursal;
     });
 
     this.calificacion30TicketsAnalista = Math.round(total / tickets.length);

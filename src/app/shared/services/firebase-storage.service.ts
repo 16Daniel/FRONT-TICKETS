@@ -52,6 +52,46 @@ export class FirebaseStorageService {
     return Promise.all(promesas);
   }
 
+  async cargarArchivosTicket(archivos: File[]): Promise<{url: string, nombre: string, tipo: string}[]> {
+    const storage = getStorage();
+    const now = new Date();
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    const promesas = archivos.map((archivo) => {
+      return new Promise<{url: string, nombre: string, tipo: string}>((resolve, reject) => {
+        const timestamp = Date.now();
+        const nombreUnico = `${timestamp}_${archivo.name}`;
+
+        const rutaFinal = `${this.CARPETA_EVIDENCIAS_TICKET}/${yearMonth}/${nombreUnico}`;
+        const fileRef = ref(storage, rutaFinal);
+        const uploadTask = uploadBytesResumable(fileRef, archivo);
+
+        uploadTask.on(
+          'state_changed',
+          null,
+          (error) => {
+            console.error(`Error al subir ${archivo.name}`, error);
+            reject(error);
+          },
+          async () => {
+            try {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve({
+                url: url,
+                nombre: archivo.name,
+                tipo: archivo.type || 'application/octet-stream'
+              });
+            } catch (err) {
+              reject(err);
+            }
+          }
+        );
+      });
+    });
+
+    return Promise.all(promesas);
+  }
+
   async cargarImagenesEvidenciasMantenimiento(archivo: File, area: string): Promise<string> {
     const storage = getStorage();
 

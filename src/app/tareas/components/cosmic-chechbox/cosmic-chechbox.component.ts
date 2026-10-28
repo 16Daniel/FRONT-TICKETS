@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Timestamp } from '@angular/fire/firestore';
 
 import { Tarea } from '../../interfaces/tarea.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { TareasService } from '../../services/tareas.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { TareasService } from '../../services/tareas.service';
 })
 export class CosmicChechboxComponent implements OnInit {
   @Input() tarea: Tarea | undefined;
-  responsable: ResponsableTarea | undefined;
+  responsable: Responsable | undefined;
   tareasService = inject(TareasService);
   checkRevision: boolean = false;
 

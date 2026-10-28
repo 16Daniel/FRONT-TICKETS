@@ -1,0 +1,55 @@
+<p-accordion class="custom-branches-accordion w-full" [activeIndex]="activeIndex">
+    <p-accordionTab *ngFor="let item of ordenarSucursalesUser(usuarioAgrupacion.sucursales)">
+
+        <ng-template pTemplate="header">
+            <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(contarTickets(item.id))">
+
+                <div class="branch-info-group">
+                    <!-- Clean Number Badge ONLY -->
+                    <div class="branch-count-badge">
+                        {{ contarTickets(item.id) }}
+                    </div>
+
+                    <!-- Branch Name ONLY -->
+                    <span class="branch-title">{{ item.nombre }}</span>
+                </div>
+
+                <!-- Action / Alert Badges -->
+                <div class="branch-actions-indicators">
+                    <span class="indicator-badge badge-pending" 
+                        *ngIf="verificarTicketsPendientesValidar(filtrarTicketsPorSucursal(item.id))" 
+                        pTooltip="PENDIENTE VALIDAR" tooltipPosition="top">
+                        <i class="bx bx-check-double"></i>
+                    </span>
+
+                    <span class="indicator-badge badge-new" 
+                        *ngIf="verificarTicketsNuevos(filtrarTicketsPorSucursal(item.id))" 
+                        pTooltip="NUEVO TICKET" tooltipPosition="top">
+                        <i class="bx bx-bell"></i>
+                    </span>
+
+                    
+                </div>
+
+            </div>
+        </ng-template>
+
+        <!-- Sub-toggles inside accordion body -->
+        <div class="accordion-subtoggles-strip">
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+                <input class="form-check-input custom-switch" type="checkbox" role="switch"
+                    [(ngModel)]="mostrarRadiografiaMap[item.id]">
+                <label class="form-check-label m-0">📊 MÁS INFORMACIÓN</label>
+            </div>
+        </div>
+
+        <div class="accordion-tables-wrapper">
+            <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea == '1'"
+                [sucursal]="obtenerSucursal(item.id)!"></app-tpvs-devices-table>
+            <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
+                [idArea]="idArea"></app-grafica-tickets-30-dias>
+            <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" [idArea]="idArea"
+                *ngIf="!mostrarRadiografiaMap[item.id]"></app-admin-tickets-list>
+        </div>
+    </p-accordionTab>
+</p-accordion>

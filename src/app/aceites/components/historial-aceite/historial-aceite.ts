@@ -12,7 +12,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { ReporteAceiteTab } from "../reporte-aceite-tab/reporte-aceite-tab";
 import { AceiteService } from '../../services/aceite.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { EntregaAceite } from '../../interfaces/aceite.model';
+import { EntregaAceite } from '../../models/aceite.model';
 @Component({
   selector: 'app-historial-aceite',
   standalone: true,

@@ -1,0 +1,14 @@
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header 
+      subtitle="MESA DE AYUDA & TICKETS" 
+      title="Panel de Analista">
+    </app-page-header>
+
+    <app-tickets-tab
+      [totalesSla]="totalesSla"
+      [loadingSla]="loadingSla"
+      [mesNombre]="mesActualNombre">
+    </app-tickets-tab>
+  </div>
+</div>

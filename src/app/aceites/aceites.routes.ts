@@ -5,10 +5,10 @@ import { Routes } from '@angular/router';
  */
 export const ACEITES_MAIN_ROUTES: Routes = [
   {
-    path: 'kpis',
-    title: 'KPIS',
+    path: 'control-aceite',
+    title: 'Control de aceite',
     loadComponent: () =>
-      import('./layout/admin-reports-tab/admin-reports-tab.component'),
+      import('./pages/aceite-page/aceite-page.component'),
   },
 ];
 

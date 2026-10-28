@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SucursalRegion } from '../interfaces/sucursal-region.interface';
-import { PreciosAyc } from '../interfaces/precios-AyC.interface';
+import { PreciosAyc } from '../interfaces/precios-ayc.interface';
 import { colorPrecioayc } from '../interfaces/color-precio-ayc.interface';
 
 @Injectable({

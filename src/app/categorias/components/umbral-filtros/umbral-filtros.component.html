@@ -1,0 +1,69 @@
+    <!-- Filtros -->
+    <div class="filters-bar mb-3">
+      <div class="filter-group">
+        <label>Fecha Inicio</label>
+        <p-calendar 
+          [(ngModel)]="fechaInicio" 
+          dateFormat="dd/mm/yy" 
+          [showIcon]="true"
+          placeholder="Selecciona inicio">
+        </p-calendar>
+      </div>
+
+      <div class="filter-group">
+        <label>Fecha Fin</label>
+        <p-calendar 
+          [(ngModel)]="fechaFin" 
+          dateFormat="dd/mm/yy" 
+          [showIcon]="true"
+          placeholder="Selecciona fin">
+        </p-calendar>
+      </div>
+
+      <div class="filter-group" style="max-width: 150px;">
+        <label>Límite Recurrencia</label>
+        <input 
+          type="number" 
+          class="p-inputtext p-component w-100" 
+          [(ngModel)]="umbralAlerta" 
+          min="1" 
+          placeholder="Ej. 5">
+      </div>
+
+      <div class="filter-group flex-grow-1">
+        <label>Sucursales (Opcional)</label>
+        <p-multiSelect 
+          [options]="sucursales" 
+          [(ngModel)]="sucursalesSeleccionadas" 
+          optionLabel="nombre" 
+          placeholder="Todas las sucursales"
+          [filter]="true"
+          display="chip"
+          [style]="{'width':'100%'}">
+        </p-multiSelect>
+      </div>
+
+      <div class="filter-group flex-grow-1">
+        <label>Usuarios Soporte (Opcional)</label>
+        <p-multiSelect 
+          [options]="usuariosRol4" 
+          [(ngModel)]="usuariosSeleccionados" 
+          optionLabel="nombreCompleto" 
+          placeholder="Todos los especialistas"
+          [filter]="true"
+          display="chip"
+          [style]="{'width':'100%'}">
+        </p-multiSelect>
+      </div>
+
+      <div class="filter-group action-btn-group">
+        <button 
+          type="button" 
+          class="btn btn-primary action-btn" 
+          [disabled]="isApplyingFilters"
+          (click)="onApply()">
+          <i class="bx" [ngClass]="isApplyingFilters ? 'bx-loader-alt bx-spin' : 'bx-filter-alt'"></i>
+          {{ isApplyingFilters ? 'Calculando...' : 'Aplicar' }}
+        </button>
+      </div>
+    </div>

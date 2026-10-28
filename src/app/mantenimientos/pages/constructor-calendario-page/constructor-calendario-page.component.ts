@@ -12,7 +12,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { EditorModule } from 'primeng/editor';
 import { Subscription } from 'rxjs';
 
-import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -52,7 +52,7 @@ import { DispositivosSucursalesService } from '../../../sucursales/services/disp
     ToastModule,
     CalendarModule,
     EditorModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     CalendarioComponent,
     ModalColorsComponent,
     TarjetaSucursalPorVisitarComponent,
@@ -132,16 +132,16 @@ export default class ContructorCalendarioPageComponent implements OnInit {
           this.tickets = data;
           let arr_temp: Ticket[] = [];
           let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '1'
+            (x) => x.prioridad === 'Crítico'
           );
           let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '2'
+            (x) => x.prioridad === 'Alto'
           );
           let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '3'
+            (x) => x.prioridad === 'Medio'
           );
           let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '4'
+            (x) => x.prioridad === 'Bajo'
           );
 
           temp1 = temp1.sort(

@@ -1,0 +1,118 @@
+<div class="sla-consolidated-card" [class.is-loading]="loading">
+  <!-- Definición de gradientes SVG para los velocímetros -->
+  <svg width="0" height="0" class="position-absolute" style="visibility: hidden;">
+    <defs>
+      <linearGradient id="grad-sla-success" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#4ade80" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#16a34a" stop-opacity="1"/>
+      </linearGradient>
+      <linearGradient id="grad-sla-warning" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#facc15" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#ca8a04" stop-opacity="1"/>
+      </linearGradient>
+      <linearGradient id="grad-sla-danger" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#f87171" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#dc2626" stop-opacity="1"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Encabezado de la Tarjeta Consolidada -->
+  <div class="card-header-bar">
+    <div class="header-title-box">
+      <div class="header-icon">
+        <i class="bx bx-tachometer"></i>
+      </div>
+      <h4 class="header-title">{{ titulo }}</h4>
+    </div>
+
+    <div class="header-badge-box" *ngIf="!loading">
+      <span class="month-pill" *ngIf="mesNombre">
+        <i class="bx bx-calendar"></i>
+        <span>{{ mesNombre }}</span>
+      </span>
+      <div class="score-pill" [ngClass]="getCalificacionClass()">
+        <i class="bx bxs-star"></i>
+        <span class="score-label">Calificación:</span>
+        <span class="score-value">{{ getCalificacionPromedio() | number:'1.1-1' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="card-loading" *ngIf="loading">
+    <i class="bx bx-loader-alt bx-spin"></i>
+    <span>Calculando métricas SLA...</span>
+  </div>
+
+  <!-- Contenido Principal: Dos medidores gemelos en tarjetas claramente definidas -->
+  <div class="card-gauges-row" *ngIf="!loading">
+    
+    <!-- 1. Medidor Tiempo de Atención -->
+    <div class="gauge-card">
+      <div class="gauge-card-header">
+        <div class="gauge-title-line">
+          <i class="bx bx-timer text-primary"></i>
+          <span class="gauge-title">Atención</span>
+        </div>
+      </div>
+
+      <div class="gauge-card-body">
+        <div class="gauge-info-side">
+          <span class="gauge-ratio">{{ totales.slaAtencionCumplidos }} / {{ totales.totalTerminados }}</span>
+        </div>
+
+        <div class="gauge-visual-side">
+          <svg viewBox="0 0 100 55" class="speedometer-svg">
+            <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="11" stroke-linecap="round"/>
+            <path class="fill"
+                  [attr.stroke]="'url(#' + getGradientId(totales.slaAtencion) + ')'"
+                  d="M 10 50 A 40 40 0 0 1 90 50"
+                  fill="none"
+                  stroke-width="11"
+                  stroke-linecap="round"
+                  stroke-dasharray="125.66"
+                  [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaAtencion)"/>
+            <text x="50" y="47" text-anchor="middle" font-size="19" font-weight="900" fill="#0f172a">
+              {{ totales.slaAtencion | number:'1.0-0' }}%
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Medidor Tiempo de Resolución -->
+    <div class="gauge-card">
+      <div class="gauge-card-header">
+        <div class="gauge-title-line">
+          <i class="bx bx-check-shield text-success"></i>
+          <span class="gauge-title">Resolución</span>
+        </div>
+      </div>
+
+      <div class="gauge-card-body">
+        <div class="gauge-info-side">
+          <span class="gauge-ratio">{{ totales.slaResolucionCumplidos }} / {{ totales.totalTerminados }}</span>
+        </div>
+
+        <div class="gauge-visual-side">
+          <svg viewBox="0 0 100 55" class="speedometer-svg">
+            <path class="track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="11" stroke-linecap="round"/>
+            <path class="fill"
+                  [attr.stroke]="'url(#' + getGradientId(totales.slaResolucion) + ')'"
+                  d="M 10 50 A 40 40 0 0 1 90 50"
+                  fill="none"
+                  stroke-width="11"
+                  stroke-linecap="round"
+                  stroke-dasharray="125.66"
+                  [style.stroke-dashoffset]="getSpeedometerOffset(totales.slaResolucion)"/>
+            <text x="50" y="47" text-anchor="middle" font-size="19" font-weight="900" fill="#0f172a">
+              {{ totales.slaResolucion | number:'1.0-0' }}%
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

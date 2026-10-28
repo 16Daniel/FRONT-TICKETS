@@ -9,11 +9,11 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { TareasService } from '../../services/tareas.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
@@ -37,7 +37,7 @@ export class TarjetaTareasComponent implements OnInit {
   @Input() nombreSucursal: string = '';
   @Input() esOtraSucursal: boolean = false;
   etiquetas: EtiquetaTarea[] = [];
-  responsables: ResponsableTarea[] = [];
+  responsables: Responsable[] = [];
   sucursales: Sucursal[] = [];
   estatusTareas: EstatusTarea[] = [];
   estatusMap = new Map<string, string>();
@@ -45,11 +45,11 @@ export class TarjetaTareasComponent implements OnInit {
   tareasService = inject(TareasService);
   messageService = inject(MessageService);
   labelsTasksService = inject(LabelsTasksService);
-  taskResponsibleService = inject(TaskResponsibleService);
+  responsablesService = inject(ResponsablesService);
   sucursalesService = inject(BranchesService);
   estatusService = inject(StatusTaskService);
   usuario: Usuario;
-  responsable: ResponsableTarea;
+  responsable: Responsable;
   constructor(public cdr: ChangeDetectorRef) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsable = JSON.parse(localStorage.getItem('responsable-tareas')!);
@@ -69,9 +69,9 @@ export class TarjetaTareasComponent implements OnInit {
       this.etiquetas = et;
     });
 
-    this.taskResponsibleService.responsables$.subscribe(responsable => {
+    this.responsablesService.responsables$.subscribe(responsable => {
       this.responsables = responsable;
-      this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
+      this.responsables = this.responsablesService.filtrarPorSucursal(this.tarea.idSucursal);
     });
   }
 

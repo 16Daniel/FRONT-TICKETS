@@ -1,35 +1,54 @@
 import { Timestamp } from '@angular/fire/firestore';
-import { Comentario } from '../../shared/interfaces/comentario-chat.model';
-import { ParticipanteChat } from '../../shared/interfaces/participante-chat.model';
-
 export class Ticket {
   id?: string | any;
   idUsuario: string = '';
-  idResponsables: string[] = [];
+  idInvolucrados: string[] = [];
+  usuariosEtiquetados?: string[] = [];
   idSucursal: any = '';
   idArea: string = '';
+  comites: string[] = [];
   idCategoria: string = '';
   idSubcategoria: string | null = null;
   idTipoSoporte: string | null = '';
   idEstatusTicket: string = '1';
-  idPrioridadTicket: string = '';
+  
+  criticidad?: number;
+  urgencia?: number;
+  score?: number;
+  prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo';
+  
+  tiempoResolucion?: number;
+  unidadResolucion?: 'm' | 'h' | 'd';
+  horasResolucion?: number;
+  
+  horasAtencion?: number;
+  tiempoAtencion?: number;
+  unidadAtencion?: 'm' | 'h' | 'd';
+
   fecha: Timestamp | any = new Date();
-  fechaEstimacion: Timestamp | any;
+  fechaAtencion?: Timestamp | any;
   fechaFin: Timestamp | null = null;
   solicitante: string = '';
-  idResponsableFinaliza: string = '';
+  idResponsable: string = '';
+
   nombreCategoria: string | null = '';
   nombreSubcategoria: string | null = '';
+
   descripcion: string = '';
-  comentarios: Comentario[] = [];
-  imagenesEvidencia: string[] = [];
-  comentariosFinales?: string | null;
+
+
+  archivos?: { url: string; nombre: string; tipo: string; }[] = [];
   folio: string = '';
-  calificacion: number = 0;
-  calificacionAnalista: number = 0;
-  participantesChat: ParticipanteChat[] = [];
+
+
+  calificacionSucursal: number = 0; // Calificación que da la sucursal
+  calificacionAnalista: number = 0; // Calificación que da el analista
+
+
   validacionAdmin: boolean = false;
+  revisionDesbloqueo: boolean = false;
   referenciaActivoFijo: string | undefined;
+
   esAsignadoEspecialista: boolean = false;
   idUsuarioEspecialista: string = '';
   codProveedor?:number|null|undefined; 

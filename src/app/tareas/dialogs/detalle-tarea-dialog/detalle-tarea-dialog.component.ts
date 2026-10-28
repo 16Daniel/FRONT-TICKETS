@@ -17,14 +17,14 @@ import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { AvatarModule } from 'ngx-avatars';
 import { SubirImgsTareasDialogComponent } from '../subir-imgs-tareas-dialog/subir-imgs-tareas-dialog.component';
 import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";
@@ -76,11 +76,11 @@ export class DetalleTareaDialogComponent implements OnInit {
   areas: Area[] = [];
   editandoDescripcion = false;
   descripcionEditada = '';
-  responsables: ResponsableTarea[] = [];
+  responsables: Responsable[] = [];
   areasMap: Record<string, string> = {};
 
   idsResponsablesAuxEmail: string[] = [];
-  responsableTarea!: ResponsableTarea;
+  responsableTarea!: Responsable;
 
   mostrarPanelTareasAsociadas = false;
   mostrarPanelProyectos = false;
@@ -94,7 +94,7 @@ export class DetalleTareaDialogComponent implements OnInit {
   private statusTaskService = inject(StatusTaskService);
   private labelsTasksService = inject(LabelsTasksService);
   private areasService = inject(AreasService);
-  private taskResponsibleService = inject(TaskResponsibleService);
+  private responsablesService = inject(ResponsablesService);
   private mailService = inject(MailService);
 
   ngOnInit(): void {
@@ -112,9 +112,9 @@ export class DetalleTareaDialogComponent implements OnInit {
 
     });
 
-    this.taskResponsibleService.responsables$.subscribe(responsables => {
+    this.responsablesService.responsables$.subscribe(responsables => {
       this.responsables = responsables;
-      this.responsables = this.taskResponsibleService.filtrarPorSucursal(this.tarea.idSucursal);
+      this.responsables = this.responsablesService.filtrarPorSucursal(this.tarea.idSucursal);
     });
 
     this.areasService.areas$.subscribe(areas => {
@@ -310,7 +310,7 @@ export class DetalleTareaDialogComponent implements OnInit {
     this.guardarCambios();
   }
 
-  enviarCorreo(responsable: ResponsableTarea) {
+  enviarCorreo(responsable: Responsable) {
 
     const request: EnviarCorreoRequest = {
       titulo: `Nueva tarea asignada: ${this.tarea.titulo}`,
@@ -329,7 +329,7 @@ export class DetalleTareaDialogComponent implements OnInit {
     });
   }
 
-  private generarBodyCorreo(responsable: ResponsableTarea): string {
+  private generarBodyCorreo(responsable: Responsable): string {
     return `
     <div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #333; line-height: 1.4;">
 
@@ -396,7 +396,7 @@ export class DetalleTareaDialogComponent implements OnInit {
     );
   }
 
-  onSeleccionarLider(responsable: ResponsableTarea) {
+  onSeleccionarLider(responsable: Responsable) {
     if (this.tarea.idResponsablePrincipal == responsable.id) {
       this.tarea.idResponsablePrincipal = null;
     }

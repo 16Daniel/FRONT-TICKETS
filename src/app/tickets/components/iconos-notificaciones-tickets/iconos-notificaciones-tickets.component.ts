@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { Ticket } from '../../interfaces/ticket.model';
@@ -8,20 +9,26 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 @Component({
   selector: 'app-iconos-notificaciones-tickets',
   standalone: true,
-  imports: [TooltipModule],
+  imports: [CommonModule, TooltipModule],
   templateUrl: './iconos-notificaciones-tickets.component.html',
   styleUrl: './iconos-notificaciones-tickets.component.scss'
 })
-export class IconosNotificacionesTicketsComponent {
+export class IconosNotificacionesTicketsComponent implements OnInit {
   @Input() tickets: Ticket[] = [];
   @Input() compras: Compra[] = [];
-  @Input() usuario?: Usuario;
+  @Input() usuario?: Usuario | any;
+
+  loggedUser: Usuario | any;
+
+  ngOnInit(): void {
+    this.loggedUser = JSON.parse(localStorage.getItem('rwuserdatatk')!);
+  }
 
   /**
-   * Devuelve los ids de sucursales del usuario
+   * Devuelve los ids de sucursales del usuario (solo si se pasó un usuario para filtrar)
    */
   private get sucursalesUsuario(): string[] {
-    return this.usuario?.sucursales?.map(s => s.id) ?? [];
+    return this.usuario?.sucursales?.map((s: any) => s.id) ?? [];
   }
 
   /**

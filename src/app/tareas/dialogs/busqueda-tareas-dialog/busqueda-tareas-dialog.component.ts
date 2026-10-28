@@ -12,7 +12,7 @@ import { TareasService } from '../../services/tareas.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AvataresResponsablesTareaComponent } from '../../components/avatares-responsables-tarea/avatares-responsables-tarea.component';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 
 @Component({
   selector: 'app-busqueda-tareas-dialog',
@@ -33,7 +33,7 @@ import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
 })
 export class BusquedaTareasDialogComponent {
   @Input() mostrarModal: boolean = false;
-  @Input() responsables: ResponsableTarea[] = [];
+  @Input() responsables: Responsable[] = [];
   @Output() closeEvent = new EventEmitter<void>();
   @Output() seleccionarTarea = new EventEmitter<Tarea>();
 

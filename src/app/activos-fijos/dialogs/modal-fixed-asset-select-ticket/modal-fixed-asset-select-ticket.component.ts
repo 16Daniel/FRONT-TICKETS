@@ -11,13 +11,13 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
 
 @Component({
   selector: 'app-modal-fixed-asset-select-ticket',
   standalone: true,
-  imports: [CommonModule, DialogModule, TableModule, ModalTicketDetailComponent, TooltipModule],
+  imports: [CommonModule, DialogModule, TableModule, DetalleTicketDialogComponent, TooltipModule],
   templateUrl: './modal-fixed-asset-select-ticket.component.html',
   styleUrl: './modal-fixed-asset-select-ticket.component.scss'
 })

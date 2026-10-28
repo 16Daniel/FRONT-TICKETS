@@ -5,7 +5,6 @@ import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
 import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
-import { ModalTicketChatComponent } from '../../../tickets/dialogs/modal-ticket-chat/modal-ticket-chat.component';
 import { ModalMaintenanceChatComponent } from '../../../mantenimientos/dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
@@ -17,6 +16,7 @@ import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ChatMantenimientoAudioVideoComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
+import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 
 @Component({
   selector: 'app-chat-notifications-button',
@@ -24,10 +24,10 @@ import { MaintenanceAvService } from '../../../mantenimientos/services/maintenan
   imports: [
     CommonModule,
     ButtonModule,
-    ModalTicketChatComponent,
     ModalMaintenanceChatComponent,
     AdminComprasChatComponent,
-    ChatMantenimientoAudioVideoComponent
+    ChatMantenimientoAudioVideoComponent,
+    DetalleTicketDialogComponent
   ],
   providers: [MessageService],
   templateUrl: './chat-notifications-button.component.html',

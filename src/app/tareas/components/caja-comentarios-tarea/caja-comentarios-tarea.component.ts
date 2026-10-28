@@ -9,11 +9,11 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
 import { FormatCommentPipe } from '../../../shared/pipes/format-comment.pipe';
 import { TareasService } from '../../services/tareas.service';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 
 @Component({
@@ -25,7 +25,7 @@ import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.
 })
 export class CajaComentariosTareaComponent implements OnInit {
   @Input() tarea: Tarea = new Tarea;
-  responsableActivo!: ResponsableTarea;
+  responsableActivo!: Responsable;
 
   nuevoComentario: string = '';
   usuario!: Usuario;
@@ -36,14 +36,14 @@ export class CajaComentariosTareaComponent implements OnInit {
 
   @ViewChild('textareaComentario') textareaComentario!: import('@angular/core').ElementRef<HTMLTextAreaElement>;
 
-  responsablesTarea: ResponsableTarea[] = [];
-  responsablesFiltrados: ResponsableTarea[] = [];
+  responsablesTarea: Responsable[] = [];
+  responsablesFiltrados: Responsable[] = [];
   mostrarMenciones: boolean = false;
   textoBusquedaMencion: string = '';
 
   constructor(
     private tareasService: TareasService,
-    private taskResponsibleService: TaskResponsibleService,
+    private responsablesService: ResponsablesService,
     private firebaseStorageService: FirebaseStorageService,
     private mailService: MailService,
     private cdr: ChangeDetectorRef,
@@ -60,7 +60,7 @@ export class CajaComentariosTareaComponent implements OnInit {
       }
     });
 
-    this.taskResponsibleService.responsables$.subscribe(responsables => {
+    this.responsablesService.responsables$.subscribe(responsables => {
       if (this.tarea.idsResponsables && this.tarea.idsResponsables.length > 0) {
         this.responsablesTarea = responsables.filter(r => this.tarea.idsResponsables.includes(r.id!));
       } else {
@@ -183,7 +183,7 @@ export class CajaComentariosTareaComponent implements OnInit {
     this.mostrarMenciones = false;
   }
 
-  seleccionarMencion(responsable: ResponsableTarea) {
+  seleccionarMencion(responsable: Responsable) {
     const textarea = this.textareaComentario.nativeElement;
     const cursorPos = textarea.selectionStart;
     const value = this.nuevoComentario;

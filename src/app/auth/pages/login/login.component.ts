@@ -16,16 +16,17 @@ import { UsersService } from '../../../usuarios/services/users.service';
   imports: [CommonModule, FormsModule, ToastModule],
   providers: [MessageService],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export default class LoginComponent {
   public email: string = '';
   public pass: string = '';
   public loading: boolean = false;
   public showpass: boolean = false;
   public typei: string = 'password';
+
+  public logoUrl: string = 'assets/img/RW_LogoWEB.png';
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -35,22 +36,36 @@ export default class LoginComponent {
     private authService: AuthService
   ) { }
 
+  onLogoError(event: any) {
+    if (this.logoUrl !== '/front/tickets/assets/img/RW_LogoWEB.png') {
+      this.logoUrl = '/front/tickets/assets/img/RW_LogoWEB.png';
+      this.cdr.markForCheck();
+    }
+  }
+
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
   showpasschange() {
     this.showpass = !this.showpass;
-    if (this.showpass == true) {
+    if (this.showpass) {
       this.typei = 'text';
-      this.cdr.detectChanges();
     } else {
       this.typei = 'password';
-      this.cdr.detectChanges();
     }
+    this.cdr.markForCheck();
   }
 
   async onLogin() {
+    if (!this.email || !this.pass) {
+      this.showMessage('warn', 'Atención', 'Por favor ingresa tu correo y contraseña');
+      return;
+    }
+
+    this.loading = true;
+    this.cdr.markForCheck();
+
     Swal.fire({
       target: document.body,
       allowOutsideClick: false,
@@ -70,38 +85,32 @@ export default class LoginComponent {
 
         if (!userd) {
           this.showMessage('error', 'Error', 'Usuario no encontrado');
+          this.loading = false;
+          this.cdr.markForCheck();
+          Swal.close();
           return;
         }
 
-         localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
+        localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
 
-        if (userd.idRol === '6') {
-          this.router.navigate(['/cedis/recoleccion']);
-           Swal.close();
-          return;
-        }
-
-
-
-        this.router.navigate(['/tareas/selecciona-responsable']);
-        // if (userd.idRol === '1' || userd.idRol === '5') {
-        //   this.router.navigate(['/main/home-a']);
-        // } else if (userd.idRol === '2' || userd.idRol === '3') {
-        //   this.router.navigate(['/main/home']);
-        // } else if (userd.idRol === '4') {
-        //   this.router.navigate(['/main/home-s']);
-        // } else if (userd.idRol === '6') {
+        // if (userd.idRol === '6') {
         //   this.router.navigate(['/cedis/recoleccion']);
-        // } else if (userd.idRol === '7') {
-        //   this.router.navigate(['/main/home-specialist']);
-        // } else if (userd.idRol === '8') {
-        //   this.router.navigate(['/nomina/control-de-personal']);
+        //   this.loading = false;
+        //   this.cdr.markForCheck();
+        //   Swal.close();
+        //   return;
         // }
+
+        this.router.navigate(['/usuarios/selecciona-responsable']);
       }
+      this.loading = false;
+      this.cdr.markForCheck();
       Swal.close();
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      this.showMessage('error', 'Error', 'Error al autenticar');
+      this.showMessage('error', 'Error', 'Error al autenticar. Verifica tus credenciales.');
+      this.loading = false;
+      this.cdr.markForCheck();
       Swal.close();
     }
   }

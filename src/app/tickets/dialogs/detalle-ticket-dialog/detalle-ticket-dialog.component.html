@@ -1,0 +1,115 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="showModalTicketDetail"
+  [style]="{ width: '85rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '95vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="detalle-ticket-dialog-dialog"
+  (onShow)="onShow()"
+  (onHide)="onHide()">
+
+  <!-- Cabecera Personalizada -->
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header w-100 d-flex justify-content-between align-items-center">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-receipt text-danger"></i> Detalle de Ticket
+      </h4>
+    </div>
+  </ng-template>
+
+  <!-- Cuerpo del Modal -->
+  <div *ngIf="ticket" class="modal-ticket-body d-flex flex-column h-100 flex-grow-1">
+
+    <div class="row flex-grow-1 m-0">
+      <!-- Columna Izquierda: Detalle del Ticket -->
+      <div class="col-lg-7 d-flex flex-column gap-3 pb-3 pb-lg-0 h-100">
+        
+        <!-- TOP: SLA, Matriz, Responsables y Estado Especial -->
+        <app-ticket-resumen-kpis
+          [ticket]="ticket"
+          [categorias]="categorias">
+        </app-ticket-resumen-kpis>
+
+        <!-- MIDDLE & BOTTOM: Tabs -->
+        <p-tabView class="flex-grow-1 d-flex flex-column" styleClass="ticket-detail-tabs mt-1 flex-grow-1 d-flex flex-column">
+          
+          <!-- Tab 1: Detalles Generales -->
+          <p-tabPanel header="Detalles" leftIcon="bx bx-list-ul">
+            <app-ticket-tab-detalles
+              [ticket]="ticket"
+              [usuario]="usuario"
+              [estatusTickets]="estatusTickets"
+              [tiposSoporte]="tiposSoporte"
+              [sucursales]="sucursales">
+            </app-ticket-tab-detalles>
+          </p-tabPanel>
+
+          <!-- Tab 2: Descripción -->
+          <p-tabPanel header="Descripción" leftIcon="bx bx-detail">
+            <app-ticket-tab-descripcion [ticket]="ticket"></app-ticket-tab-descripcion>
+          </p-tabPanel>
+
+          <!-- Tab 3: Archivos y Evidencia -->
+          <p-tabPanel header="Archivos" leftIcon="bx bx-folder-open">
+            <app-ticket-tab-archivos [ticket]="ticket"></app-ticket-tab-archivos>
+          </p-tabPanel>
+
+          <!-- Tab 4: Historial -->
+          <p-tabPanel header="Historial" leftIcon="bx bx-history">
+            <app-ticket-tab-historial [ticket]="ticket"></app-ticket-tab-historial>
+          </p-tabPanel>
+
+          <!-- Tab 5: Comités -->
+          <p-tabPanel header="Comités" leftIcon="bx bx-group">
+            <app-ticket-tab-comites [ticket]="ticket"></app-ticket-tab-comites>
+          </p-tabPanel>
+
+          <!-- Tab 6: Mitigación (Solo visible si está en mitigación) -->
+          <p-tabPanel *ngIf="ticket.idEstatusTicket === '8'" header="Mitigación" leftIcon="bx bx-shield-quarter">
+            <app-ticket-tab-mitigacion [ticket]="ticket"></app-ticket-tab-mitigacion>
+          </p-tabPanel>
+
+        </p-tabView>
+      </div>
+      
+      <!-- Columna Derecha: Switch de Tipo + Bitácora -->
+      <div class="col-lg-5 d-flex flex-column gap-2 h-100">
+        <div *ngIf="ticket.comites && ticket.comites.length > 0" class="bitacora-mode-switch" role="tablist" aria-label="Tipo de bitácora">
+          <button
+            type="button"
+            role="tab"
+            class="bitacora-mode-option"
+            [class.active]="tipoBitacoraEfectivo === 'COMENTARIO'"
+            [attr.aria-selected]="tipoBitacoraEfectivo === 'COMENTARIO'"
+            (click)="cambiarTipoBitacora('COMENTARIO')">
+            <i class="bx bx-message-square-detail"></i>
+            <span>Ticket</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="bitacora-mode-option"
+            [class.active]="tipoBitacoraEfectivo === 'COMITE'"
+            [attr.aria-selected]="tipoBitacoraEfectivo === 'COMITE'"
+            [disabled]="!puedeAccederBitacoraComite"
+            [title]="!puedeAccederBitacoraComite ? 'Debes ser responsable de un comité asignado para acceder a esta bitácora' : 'Ver comentarios exclusivos de comités'"
+            (click)="cambiarTipoBitacora('COMITE')">
+            <i class="bx bx-group"></i>
+            <span>Comités</span>
+            <i *ngIf="!puedeAccederBitacoraComite" class="bx bx-lock-alt mode-lock-icon" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <app-bitacora 
+          class="flex-grow-1 d-flex flex-column h-100"
+          [modulo]="'TICKETS'" 
+          [tipo]="tipoBitacoraEfectivo"
+          [referenciaId]="ticket.id" 
+          [usuariosEtiquetables]="responsablesService.responsables">
+        </app-bitacora>
+      </div>
+    </div>
+  </div>
+</p-dialog>

@@ -1,3 +1,7 @@
 :host {
   display: block;
 }
+
+.home {
+  padding-top: var(--erp-navbar-height, 64px);
+}

@@ -16,7 +16,7 @@ import { AgregarRecoleccionComponent } from '../../dialogs/agregar-recoleccion.c
 import { HistorialAceite } from '../../components/historial-aceite/historial-aceite';
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { EntregaAceite } from '../../interfaces/aceite.model';
+import { EntregaAceite } from '../../models/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { RegistrosPendientesPageComponent } from '../registros-pendientes-page/registros-pendientes-page';
 

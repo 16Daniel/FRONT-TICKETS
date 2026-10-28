@@ -90,6 +90,11 @@ export class UsersService {
     return updateDoc(userRef, { esGuardia });
   }
 
+  async updateUserFcmTokens(userId: string, fcmToken: string[]): Promise<void> {
+    const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
+    return updateDoc(userRef, { fcmToken });
+  }
+
   async getUsuarioById(id: string): Promise<Usuario | null> {
     return this._usuarios.find(u => u.id === id) || null;
   }

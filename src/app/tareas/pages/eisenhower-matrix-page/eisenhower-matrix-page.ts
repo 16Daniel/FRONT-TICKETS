@@ -13,7 +13,7 @@ import { Tarea } from '../../interfaces/tarea.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { Subscription } from 'rxjs';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 import { TarjetaTareaEisenhowerComponent } from '../../components/tarjeta-tarea-eisenhower/tarjeta-tarea-eisenhower.component';
@@ -44,8 +44,8 @@ export class EisenhowerMatrixPageComponent implements OnInit {
   etiquetaSeleccionada: string = '';
   allTasks: Tarea[] = [];
 
-  responsablesTodos: ResponsableTarea[] = [];
-  responsablesFiltrados: ResponsableTarea[] = [];
+  responsablesTodos: Responsable[] = [];
+  responsablesFiltrados: Responsable[] = [];
   responsableSeleccionado: string = '';
 
   mostrarModalDetalleTarea: boolean = false;

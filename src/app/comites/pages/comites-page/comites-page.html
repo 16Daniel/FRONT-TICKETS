@@ -1,0 +1,108 @@
+<div class="areas-page-wrapper">
+  <div class="areas-content-container">
+
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Gestión de Comités" 
+      title="Catálogo de Comités">
+    </app-page-header>
+
+    <!-- Barra de Herramientas y Filtros -->
+    <div class="areas-toolbar-bar mb-4">
+      <div class="toolbar-left">
+        <div class="search-input-wrapper">
+          <i class="bx bx-search search-icon"></i>
+          <input 
+            type="text" 
+            #filterInput
+            (input)="dt.filterGlobal(filterInput.value, 'contains')"
+            placeholder="Buscar comité..." 
+            class="areas-search-input" />
+        </div>
+      </div>
+
+      <div class="toolbar-right">
+        <button 
+          type="button" 
+          class="btn-rw-cta" 
+          (click)="abrirModalCrearComite()">
+          <i class="bx bx-plus"></i>
+          <span>NUEVO COMITÉ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor Principal (Tabla) -->
+    <div class="areas-nodes-container">
+      <p-table #dt [value]="(comitesService.comites$ | async) ?? []" [globalFilterFields]="['nombre']" [tableStyle]="{ 'min-width': '10rem' }"
+          styleClass="p-datatable-gridlines table-tk">
+          <ng-template pTemplate="header">
+              <tr>
+                  <th>ID</th>
+                  <th>NOMBRE</th>
+                  <th>ÁREAS</th>
+                  <th>RESPONSABLES</th>
+                  <th style="width: 120px; text-align: center;">ACCIONES</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-comite>
+              <tr [pSelectableRow]="comite">
+                  <td>{{ comite.id }}</td>
+                  <td>{{ comite.nombre }}</td>
+                  <td>
+                    <ng-container *ngIf="comite.areas.length; else sinAreas">
+                      <span
+                        *ngFor="let idArea of comite.areas"
+                        class="badge bg-light text-dark me-1 mb-1">
+                        {{ obtenerNombreArea(idArea) }}
+                      </span>
+                    </ng-container>
+                    <ng-template #sinAreas>
+                      <span class="text-muted">Sin áreas asignadas</span>
+                    </ng-template>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="comite.idsResponsables.length; else sinResponsables">
+                      <span
+                        *ngFor="let idResponsable of comite.idsResponsables"
+                        class="badge bg-light text-dark me-1 mb-1">
+                        {{ obtenerNombreResponsable(idResponsable) }}
+                      </span>
+                    </ng-container>
+                    <ng-template #sinResponsables>
+                      <span class="text-muted">Sin responsables asignados</span>
+                    </ng-template>
+                  </td>
+                  <td>
+                      <div class="d-flex justify-content-start align-items-center gap-2" style="justify-content: center !important;">
+                          <button class="btn-action-table btn-action-info" (click)="abrirModalEditarComite(comite)"
+                              pTooltip="EDITAR" tooltipPosition="top">
+                              <i class="bx bx-edit"></i>
+                          </button>
+                          <button class="btn-action-table btn-action-danger" (click)="confirmaEliminacion(comite.id)"
+                              pTooltip="ELIMINAR" tooltipPosition="top">
+                              <i class="bx bx-trash"></i>
+                          </button>
+                      </div>
+                  </td>
+              </tr>
+          </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+    [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+    [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog>
+    <ng-template pTemplate="message" let-message>
+        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+            <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+            <p>{{ message.message }}</p>
+        </div>
+    </ng-template>
+</p-confirmDialog>
+
+<app-modal-comite-create *ngIf="mostrarModalComite" [mostrarModalCrearComite]="mostrarModalComite"
+    (closeEvent)="cerrarModalComite()" [comite]="comiteSeleccionado" [esNuevoComite]="esNuevoComite"></app-modal-comite-create>

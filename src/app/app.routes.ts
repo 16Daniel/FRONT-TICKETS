@@ -59,6 +59,22 @@ export const routes: Routes = [
       },
       {
         path: '',
+        loadChildren: () => import('./comensales/comensales.routes')
+      },
+      {
+        path: '',
+        loadChildren: () => import('./tareas/tareas.routes').then(m => m.TAREAS_MAIN_ROUTES)
+      },
+      {
+        path: 'categorias',
+        loadChildren: () => import('./categorias/categorias.routes')
+      },
+      {
+        path: '',
+        loadChildren: () => import('./comites/comites.routes'),
+      },
+      {
+        path: '',
         redirectTo: '/main/home-a',
         pathMatch: 'full',
       },
@@ -92,7 +108,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./tareas/tareas.routes')
+    loadChildren: () => import('./usuarios/usuarios.routes').then(m => m.USUARIOS_ROOT_ROUTES)
   },
   {
     path: '',

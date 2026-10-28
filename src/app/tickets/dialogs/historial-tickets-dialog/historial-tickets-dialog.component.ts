@@ -16,14 +16,14 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filter-tickets.component';
-import { ModalTicketDetailComponent } from '../modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -44,7 +44,7 @@ import { ProveedorPlaneacion } from '../../../compras/interfaces/ProveedorPlanea
     FormsModule,
     ModalFilterTicketsComponent,
     CommonModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     DropdownModule,
     MultiSelectModule
   ],
@@ -70,7 +70,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
 
   idCategoria: string = ''
   idsucursales: string[] = [];
-  calificacion?: number;
+  calificacionSucursal?: number;
 
   textoBusqueda: string = '';
   ticketsFiltrados: Ticket[] = [];
@@ -137,7 +137,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
       this.idsucursales,
       this.idArea,
       (this.idCategoria ? this.idCategoria.toString() : undefined),
-      this.calificacion
+      this.calificacionSucursal
     ).then(tickets => {
       this.tickets = tickets;
       this.ticketsFiltrados = [...this.tickets];
@@ -252,14 +252,12 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
       SUCURSAL: this.obtenerNombreSucursal(t.idSucursal),
       AREA: this.obtenerNombreArea(t.idArea),
       SOLICITANTE: t.solicitante ? t.solicitante.toUpperCase() : '',
-      RESPONSABLE: this.obtenerNombreResponsable(t.idResponsableFinaliza),
+      RESPONSABLE: this.obtenerNombreResponsable(t.idResponsable),
       CATEGORÍA: t.nombreCategoria || '',
       SUBCATEGORÍA: t.idSubcategoria == null ? 'N/A' : t.nombreSubcategoria,
       ESTATUS: this.obtenerNombreEstatusTicket(t.idEstatusTicket),
-      CALIFICACIÓN: t.calificacion || 0,
-      DESCRIPCIÓN: this.truncateExcelText(t.descripcion),
-      'PROVEEDOR': this.getNombreProveedor(t.codProveedor),
-      'FIN DEL SOPORTE': t.fechaFinSoporte ? this.formatDate(t.fechaFinSoporte): 'N/A'
+      CALIFICACIÓN: t.calificacionSucursal || 0,
+      DESCRIPCIÓN: this.truncateExcelText(t.descripcion)
     }));
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);

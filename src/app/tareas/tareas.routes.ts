@@ -1,15 +1,12 @@
 import { Routes } from '@angular/router';
 
-/**
- * Rutas globales (fuera de /main)
- */
-export const TAREAS_ROUTES: Routes = [
+export const TAREAS_MAIN_ROUTES: Routes = [
   {
-    path: 'tareas/selecciona-responsable',
-    title: 'Selecciona quien eres',
+    path: 'tareas',
+    title: 'Tareas',
     loadComponent: () =>
-      import('./pages/seleccionar-responsable-page/seleccionar-responsable-page.component'),
-  },
+      import('./pages/tareas-page/tareas-page.component').then(m => m.TareasPageComponent),
+  }
 ];
 
-export default TAREAS_ROUTES;
+export default TAREAS_MAIN_ROUTES;

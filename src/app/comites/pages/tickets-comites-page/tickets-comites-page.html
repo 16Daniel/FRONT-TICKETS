@@ -1,0 +1,39 @@
+<div class="tickets-comites-page">
+  <div class="tickets-comites-content">
+    <app-page-header
+      subtitle="Seguimiento por comité"
+      title="Tickets asignados a comités">
+    </app-page-header>
+
+    <ng-container *ngIf="comitesConTickets$ | async as comites">
+      <div *ngIf="comites.length; else sinComites" class="tickets-comites-card">
+        <p-tabView>
+          <p-tabPanel *ngFor="let comite of comites" [header]="comite.nombre">
+            <p *ngIf="errorSucursales" class="alert alert-danger">{{ errorSucursales }}</p>
+            <ng-container *ngIf="obtenerSucursalesConTickets(comite.tickets) as sucursalesDelComite">
+              <app-acordeon-tickets-por-sucursal
+                *ngIf="!errorSucursales && sucursalesDelComite.length"
+                [tickets]="comite.tickets"
+                [sucursales]="sucursalesDelComite"
+                [idArea]="''" 
+                [escomite]="true"
+                >
+              </app-acordeon-tickets-por-sucursal>
+              <p
+                *ngIf="!errorSucursales && !sucursalesDelComite.length"
+                class="text-center text-muted py-4">
+                No hay tickets asignados a sucursales disponibles para este comité.
+              </p>
+            </ng-container>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </ng-container>
+
+    <ng-template #sinComites>
+      <div class="tickets-comites-card text-center text-muted py-5">
+        No hay comités disponibles.
+      </div>
+    </ng-template>
+  </div>
+</div>

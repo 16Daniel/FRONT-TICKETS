@@ -1,0 +1,64 @@
+<div class="kpis-page-wrapper">
+  <div class="kpis-content-container">
+    
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Reportes y Estadísticas" 
+      title="KPIs Tickets">
+    </app-page-header>
+
+    <!-- Barra Selector de Áreas por Chips (debajo del título) -->
+    <div class="areas-chips-track mb-4">
+      <button 
+        *ngFor="let area of areas" 
+        type="button" 
+        class="chip-area-pill"
+        [class.is-active]="String(area.id) === areaSeleccionadaId"
+        (click)="cambiarArea(area.id)">
+        <span class="area-dot"></span>
+        <span class="area-name">{{ area.nombre }}</span>
+      </button>
+    </div>
+    
+    <!-- Componente de filtros propio de KPIs -->
+    <app-kpis-filtros
+      [sucursales]="sucursales"
+      [usuariosRol4]="usuariosRol4"
+      [isApplyingFilters]="isApplyingFilters"
+      [initialFechaInicio]="fechaInicio"
+      [initialFechaFin]="fechaFin"
+      (apply)="aplicarFiltrosEvent($event)">
+    </app-kpis-filtros>
+
+    <!-- Sección de Gráficas Especializadas -->
+    <div class="charts-layout" *ngIf="!isApplyingFilters && tickets.length > 0">
+      
+      <!-- Fila 1: Categorías -->
+      <app-grafica-desempeno-categorias
+        [tickets]="tickets"
+        [sucursales]="sucursales"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-categorias>
+
+      <!-- Fila 2: Sucursales -->
+      <app-grafica-desempeno-sucursales
+        [tickets]="tickets"
+        [sucursales]="sucursales"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-sucursales>
+
+      <!-- Fila 3: Usuarios Responsables -->
+      <app-grafica-desempeno-responsables
+        [tickets]="tickets"
+        [sucursales]="sucursales"
+        [usuarios]="usuariosRol4"
+        [matrizUrgencia]="matrizUrgenciaArea"
+        [colorScheme]="colorScheme">
+      </app-grafica-desempeno-responsables>
+
+    </div>
+    
+  </div>
+</div>

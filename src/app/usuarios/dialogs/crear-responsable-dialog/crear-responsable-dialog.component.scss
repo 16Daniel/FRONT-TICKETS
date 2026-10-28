@@ -1,0 +1,126 @@
+$rw-primary: #d3152a;
+$rw-canvas: #f4f6fa;
+$rw-dark: #1e1e24;
+
+:host ::ng-deep .dialog-modern {
+    .p-dialog-header {
+        background: #ffffff;
+        padding: 1.5rem;
+        
+        .p-dialog-title {
+            font-weight: 800;
+            color: $rw-dark;
+            letter-spacing: 0.02em;
+        }
+    }
+
+    .p-dialog-content {
+        padding: 1.5rem;
+        background: #ffffff;
+    }
+}
+
+.rw-form-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.rw-input {
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+    &::placeholder {
+        color: #94a3b8;
+        font-weight: 400;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: $rw-primary;
+        box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+    }
+
+    &.p-invalid {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+    }
+}
+
+:host ::ng-deep .rw-dropdown {
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+
+    &.p-focus {
+        border-color: $rw-primary;
+        box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+    }
+
+    &.p-invalid {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+    }
+
+    .p-dropdown-label {
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+}
+
+.btn-rw-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  
+    i {
+      font-size: 1.25rem;
+    }
+  
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38);
+      background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+    }
+  
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(211, 21, 42, 0.2);
+    }
+  
+    &:disabled {
+      background: #e2e8f0;
+      color: #94a3b8;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+  }
+
+.form-switch .form-check-input:checked {
+    background-color: $rw-primary;
+    border-color: $rw-primary;
+}

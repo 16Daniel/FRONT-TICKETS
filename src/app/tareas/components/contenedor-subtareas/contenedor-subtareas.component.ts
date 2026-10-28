@@ -6,8 +6,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
-import { TaskResponsibleService } from '../../services/task-responsible.service';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 
 @Component({
   selector: 'app-contenedor-subtareas',
@@ -26,12 +26,12 @@ export class ContenedorSubtareasComponent implements OnInit, DoCheck {
   @Output() subtareaEliminada = new EventEmitter<any>();
   @Output() responsableEditado = new EventEmitter<any>();
 
-  resposablesService = inject(TaskResponsibleService);
+  resposablesService = inject(ResponsablesService);
 
   nuevaSubtarea: string = '';
-  responsables: ResponsableTarea[] = [];
+  responsables: Responsable[] = [];
 
-  private todosLosResponsables: ResponsableTarea[] = [];
+  private todosLosResponsables: Responsable[] = [];
   private idsResponsablesAnterior: string[] = [];
 
   ngOnInit(): void {

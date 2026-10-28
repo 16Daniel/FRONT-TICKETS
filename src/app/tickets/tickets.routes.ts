@@ -6,14 +6,14 @@ export const TICKETS_ROUTES: Routes = [
     path: 'home',
     title: 'Inicio',
     loadComponent: () =>
-      import('./pages/branch-home-page/branch-home-page'),
+      import('./pages/sucursal-home-page/sucursal-home-page'),
     canActivate: [HomeGuard],
   },
   {
     path: 'home-s',
     title: 'Inicio',
     loadComponent: () =>
-      import('./pages/analyst-home-page/analyst-home-page'),
+      import('./pages/analista-home-page/analista-home-page'),
     canActivate: [HomeGuard],
   },
   {
@@ -30,17 +30,24 @@ export const TICKETS_ROUTES: Routes = [
       import('./pages/specialist-home-page/specialist-home-page'),
     canActivate: [HomeGuard],
   },
-  {
-    path: 'categories',
-    title: 'Categorias',
-    loadComponent: () =>
-      import('./pages/categories-pages/categories-page'),
-  },
+
    {
     path: 'no-conformidad',
     title: 'No conformidad',
     loadComponent: () =>
       import('../compras/components/tabla-devoluciones/tabla-devoluciones'),
+  },
+  {
+    path: 'kpis',
+    title: 'KPIs',
+    loadComponent: () =>
+      import('./pages/kpis-tickets-page/kpis-tickets-page.component'),
+  },
+  {
+    path: 'mis-tickets',
+    title: 'Mis Tickets',
+    loadComponent: () =>
+      import('./pages/mis-tickets-page/mis-tickets-page'),
   }
 ];
 

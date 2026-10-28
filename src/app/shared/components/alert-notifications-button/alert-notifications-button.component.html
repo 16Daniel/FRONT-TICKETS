@@ -1,0 +1,109 @@
+<div class="alert-notification-wrapper">
+  <button
+    type="button"
+    class="notification-trigger-btn"
+    [class.active]="showNotifications"
+    (click)="toggleNotifications()"
+    aria-label="Alertas"
+    [attr.aria-expanded]="showNotifications">
+    <span class="trigger-icon-container">
+      <i class="pi pi-bell trigger-icon"></i>
+      <span *ngIf="alertasNuevas.length" class="notification-badge">
+        {{ alertasNuevas.length }}
+      </span>
+    </span>
+    <span class="trigger-label">Alertas</span>
+  </button>
+
+  <section
+    class="alert-dropdown"
+    *ngIf="showNotifications"
+    (click)="$event.stopPropagation()"
+    aria-label="Panel de alertas">
+    <header class="dropdown-header">
+      <div class="header-title">
+        <i class="pi pi-bell"></i>
+        <span>Alertas</span>
+      </div>
+      <span class="count-badge">{{ alertasNuevas.length }} nuevas</span>
+    </header>
+
+    <div class="filter-row">
+      <label for="alert-type-filter">Filtrar por tipo</label>
+      <p-dropdown
+        inputId="alert-type-filter"
+        [options]="opcionesTipoAlerta"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="selectedTipo"
+        (onChange)="seleccionarTipo($event.value)"
+        styleClass="filter-dropdown">
+      </p-dropdown>
+    </div>
+
+    <p *ngIf="errorMessage" class="error-message" role="alert">{{ errorMessage }}</p>
+    <p *ngIf="loadingTicket" class="empty-state">Cargando ticket...</p>
+    <div *ngIf="loading" class="empty-state">Cargando alertas...</div>
+
+    <ng-container *ngIf="!loading">
+      <section class="alert-section" style="min-height: 120px;">
+        <h3>Nuevas <span>{{ alertasNuevas.length }}</span></h3>
+        <p *ngIf="!alertasNuevas.length" class="section-empty">
+          No tienes alertas nuevas para este filtro.
+        </p>
+        <ul *ngIf="alertasNuevas.length" class="alert-list">
+          <li *ngFor="let alerta of alertasNuevas" class="alert-item">
+            <button type="button" class="alert-open-btn" (click)="abrirTicket(alerta)"
+              [attr.aria-label]="'Abrir ticket ' + alerta.ticketId + ': ' + obtenerNombreTipo(alerta.idAlerta)">
+              <span class="item-icon">
+                <i class="pi pi-exclamation-circle"></i>
+              </span>
+              <span class="item-content">
+                <span class="item-title">{{ obtenerNombreTipo(alerta.idAlerta) }}</span>
+                <span class="item-detail">Ticket: {{ alerta.ticketId }}</span>
+                <time>{{ obtenerFecha(alerta.fecha) | date:'dd/MM/yyyy HH:mm' }}</time>
+              </span>
+            </button>
+            <button
+              type="button"
+              class="mark-read-btn"
+              [disabled]="marcandoComoLeidas.has(alerta.id)"
+              (click)="marcarComoLeida(alerta)"
+              [attr.aria-label]="'Marcar como leída: ' + obtenerNombreTipo(alerta.idAlerta)">
+              <i class="pi pi-check"></i>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section class="alert-section read-section">
+        <h3>Leídas <span>Últimos 30 días · {{ alertasLeidasRecientes.length }}</span></h3>
+        <p *ngIf="!alertasLeidasRecientes.length" class="section-empty">
+          No hay alertas leídas recientes para este filtro.
+        </p>
+        <ul *ngIf="alertasLeidasRecientes.length" class="alert-list">
+          <li *ngFor="let alerta of alertasLeidasRecientes" class="alert-item read-item">
+            <button type="button" class="alert-open-btn" (click)="abrirTicket(alerta)"
+              [attr.aria-label]="'Abrir ticket ' + alerta.ticketId + ': ' + obtenerNombreTipo(alerta.idAlerta)">
+              <span class="item-icon">
+                <i class="pi pi-check-circle"></i>
+              </span>
+              <span class="item-content">
+                <span class="item-title">{{ obtenerNombreTipo(alerta.idAlerta) }}</span>
+                <span class="item-detail">Ticket: {{ alerta.ticketId }}</span>
+                <time>{{ obtenerFecha(alerta.fecha) | date:'dd/MM/yyyy HH:mm' }}</time>
+              </span>
+            </button>
+          </li>
+        </ul>
+      </section>
+    </ng-container>
+  </section>
+</div>
+
+<app-detalle-ticket-dialog
+  *ngIf="ticketDetalle"
+  [ticket]="ticketDetalle"
+  [showModalTicketDetail]="showTicketDetail"
+  (closeEvent)="cerrarDetalleTicket()">
+</app-detalle-ticket-dialog>

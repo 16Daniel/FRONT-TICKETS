@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  min-height: 0;
+}
+
+.ticket-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.mitigacion-banner {
+  background-color: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 12px;
+  color: #D97706;
+}
+
+.mitigacion-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: #FEF3C7;
+  color: #D97706;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mitigacion-badge {
+  background-color: #FEF3C7;
+  border: 1px solid #FDE68A;
+  color: #B45309;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.4px;
+}

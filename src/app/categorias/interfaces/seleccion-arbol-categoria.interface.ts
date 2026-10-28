@@ -1,0 +1,19 @@
+import { Categoria } from '../models/categoria.model';
+import { Subcategoria } from './subcategoria.interface';
+
+export interface SeleccionArbolCategoria {
+  categoria: Categoria;
+  subcategoria?: Subcategoria;
+  idCategoria: string;
+  idSubcategoria?: string | null;
+  nombreCategoria: string;
+  nombreSubcategoria?: string | null;
+  rutaCompleta: string;
+  prioridad?: 'Crítico' | 'Alto' | 'Medio' | 'Bajo' | string;
+  score?: number;
+  criticidad?: number;
+  urgencia?: number;
+  tiempoResolucion?: number;
+  unidadResolucion?: 'm' | 'h' | 'd';
+  horasResolucion?: number;
+}

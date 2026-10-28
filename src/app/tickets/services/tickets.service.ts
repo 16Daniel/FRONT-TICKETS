@@ -31,9 +31,27 @@ export class TicketsService {
 
   constructor(private firestore: Firestore) { }
 
-  async create(ticket: Ticket) {
+  /**
+   * Elimina campos con valor undefined para evitar errores de Firestore:
+   * "Function updateDoc() called with invalid data. Unsupported field value: undefined"
+   */
+  private sanitizarParaFirestore(data: any): any {
+    if (!data || typeof data !== 'object') return data;
+    const limpio: any = Array.isArray(data) ? [] : {};
+    Object.keys(data).forEach((key) => {
+      const valor = data[key];
+      if (valor !== undefined) {
+        limpio[key] = valor;
+      }
+    });
+    return limpio;
+  }
+
+  async create(ticket: any) {
     const ref = collection(this.firestore, 'tickets');
-    const docRef = await addDoc(ref, ticket);
+    const ticketLimpio = this.sanitizarParaFirestore(ticket);
+    delete ticketLimpio.id;
+    const docRef = await addDoc(ref, ticketLimpio);
     return docRef.id;
   }
 
@@ -86,11 +104,34 @@ export class TicketsService {
     return docData(ticketDoc, { idField: 'id' }) as Observable<Ticket>;
   }
 
+  getByComite(idComite: string): Observable<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const q = query(ticketsCollection, where('comites', 'array-contains', idComite));
+    return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
+  }
+
+  async obtenerUltimosTicketsPorUsuario(idUsuario: string): Promise<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const ticketsQuery = query(
+      ticketsCollection,
+      where('idUsuario', '==', idUsuario),
+      orderBy('fecha', 'desc'),
+      limit(3)
+    );
+    const snapshot = await getDocs(ticketsQuery);
+    return snapshot.docs.map(documento => ({
+      id: documento.id,
+      ...documento.data()
+    } as Ticket));
+  }
+
   async update(data: any): Promise<void> {
     let collectionName = 'tickets';
     let docId = data.id;
     const documentRef = doc(this.firestore, `${collectionName}/${docId}`);
-    return updateDoc(documentRef, data);
+    const dataLimpia = this.sanitizarParaFirestore(data);
+    delete dataLimpia.id;
+    return updateDoc(documentRef, dataLimpia);
   }
 
   getByBranchId(idSucursal: string): Observable<any[]> {
@@ -128,22 +169,6 @@ export class TicketsService {
     });
   }
 
-  updateLastCommentRead(
-    ticketId: string,
-    idUsuario: string,
-    ultimoComentarioLeido: number
-  ) {
-    const ticketRef = doc(this.firestore, `tickets/${ticketId}`);
-
-    // Actualizar el índice del último comentario leído para un participante
-    return updateDoc(ticketRef, {
-      participantesChat: arrayUnion({
-        idUsuario,
-        ultimoComentarioLeido,
-      }),
-    });
-  }
-
   private parseTimestampToDate(tsmp: any): Date {
     if (tsmp instanceof Timestamp) {
       return tsmp.toDate();
@@ -160,7 +185,7 @@ export class TicketsService {
     idsSucursales: string[],
     idArea?: string,
     idCategoria?: string,
-    calificacion?: number
+    calificacionSucursal?: number
   ): Promise<Ticket[]> {
     if (!idsSucursales || idsSucursales.length === 0) {
       return [];
@@ -188,7 +213,7 @@ export class TicketsService {
 
       if (idArea) filtros.push(where('idArea', '==', idArea));
       if (idCategoria) filtros.push(where('idCategoria', '==', idCategoria));
-      if (calificacion) filtros.push(where('calificacion', '==', calificacion));
+      if (calificacionSucursal) filtros.push(where('calificacionSucursal', '==', calificacionSucursal));
 
       const q = query(collectionRef, ...filtros);
       const querySnapshot = await getDocs(q);
@@ -261,7 +286,7 @@ export class TicketsService {
       ];
 
       if (!esGuardia) {
-        filtros.push(where('idResponsables', 'array-contains', idUsuario));
+        filtros.push(where('idInvolucrados', 'array-contains', idUsuario));
       }
 
       const q = query(collectionRef, ...filtros);
@@ -435,7 +460,7 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 
-   async getTicketsUltimos30Dias(idSucursal: string, idArea: string) {
+  async getTicketsUltimos30Dias(idSucursal: string, idArea: string) {
     const hoy = new Date();
     const hace30Dias = new Date();
     hace30Dias.setDate(hoy.getDate() - 30);

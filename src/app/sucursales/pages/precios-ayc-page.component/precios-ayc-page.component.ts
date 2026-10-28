@@ -4,7 +4,7 @@ import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 
 import { PreciosaycService } from '../../services/preciosayc.service';
-import { PreciosAyc } from '../../interfaces/precios-AyC.interface';
+import { PreciosAyc } from '../../interfaces/precios-ayc.interface';
 import { colorPrecioayc } from '../../interfaces/color-precio-ayc.interface';
 import { AgregarPrecioAycDialogComponent } from '../../dialogs/agregar-precio-ayc-dialog/agregar-precio-ayc-dialog.component';
 import { PreciosAycDialogComponent } from '../../dialogs/precios-ayc-dialog/precios-ayc-dialog.component';

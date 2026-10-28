@@ -24,9 +24,7 @@ import { TicketsService } from '../../services/tickets.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
-import { ModalFinalizeTicketComponent } from '../../dialogs/modal-finalize-ticket/modal-finalize-ticket.component';
-import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
-import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
+
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
@@ -34,15 +32,17 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
+import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
+import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { Categoria } from '../../../categorias/models/categoria.model';
+import { CategoriesService } from '../../../categorias/services/categories.service';
+
 @Component({
   selector: 'app-requester-tickets-list',
   standalone: true,
   imports: [
     TableModule,
     CommonModule,
-    ModalFinalizeTicketComponent,
-    ModalTicketChatComponent,
-    ModalValidateTicketComponent,
     AccordionModule,
     BadgeModule,
     RatingStarsComponent,
@@ -50,6 +50,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     ConfirmDialogModule,
     DropdownModule,
     FormsModule,
+    TicketSlaGaugeComponent,
+    MiniMatrizUrgenciaComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './requester-tickets-list.component.html',
@@ -57,13 +59,11 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 })
 export class RequesterTicketsListComponent implements OnInit, OnChanges {
   @Input() tickets: Ticket[] = [];
-  @Input() mostrarAcciones: boolean = true;
-  @Input() mostrarAccionChat: boolean = true;
-  @Input() mostrarAccionPanico: boolean = true;
-  @Input() mostrarAccionFinalizar: boolean = true;
+  // @Input() mostrarAccionChat: boolean = true;
+  // @Input() mostrarAccionPanico: boolean = true;
+  // @Input() mostrarAccionFinalizar: boolean = true;
   @Input() mostrarEstrellas: boolean = true;
-  @Input() mostrarFedchaEstimacion: boolean = true;
-  @Input() mostrarAccionValidar: boolean = true;
+  // @Input() mostrarFedchaEstimacion: boolean = true;
   @Input() mostrarSucursal: boolean = false;
   @Input() esEspectadorActivo: boolean = false;
   @Input() mostrarFechaSolicitud: boolean = false;
@@ -72,8 +72,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
 
   @Output() clickEvent = new EventEmitter<Ticket>();
 
-  showModalFinalizeTicket: boolean = false;
-  mostrarModalValidarTicket: boolean = false;
   showModalChatTicket: boolean = false;
   areas: Area[] = [];
   ticketSeleccionado: Ticket | undefined;
@@ -84,6 +82,8 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   estatusTickets: EstatusTicket[] = [];
   sucursales: Sucursal[] = [];
 
+  categorias: Categoria[] = [];
+
   constructor(
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
@@ -93,9 +93,26 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private areasService: AreasService,
     private statusTicketsService: StatusTicketService,
     private branchesService: BranchesService,
+    private categoriesService: CategoriesService
   ) {
     this.obtenerCatalogoEstatusTickets();
     this.obtenerSucursales();
+    this.obtenerCategorias();
+  }
+
+  obtenerCategorias() {
+    this.categoriesService.get().subscribe({
+      next: (data) => {
+        this.categorias = data.map((item: any) => ({
+          ...item,
+          id: item.id.toString()
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   ngOnInit(): void {
@@ -111,7 +128,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   obtenerCatalogoEstatusTickets() {
     this.statusTicketsService
       .get()
-      .subscribe((result) => (this.estatusTickets = result));
+      .subscribe((result) => {
+        this.estatusTickets = result;
+        this.cdr.detectChanges();
+      });
   }
 
   observaActualizacionesChatTicket(changes: SimpleChanges) {
@@ -123,15 +143,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     }
   }
 
-  obtenerNombreArea(idArea: string): string {
-    let nombre = '';
-    let area = this.areas.filter((x) => x.id == idArea);
-    if (area.length > 0) {
-      nombre = area[0].nombre;
-    }
-    return nombre;
-  }
-
   obtenerNombreSucursal(idSucursal: string): string {
     let str = '';
     let temp = this.sucursales.filter((x) => x.id == idSucursal);
@@ -141,29 +152,16 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     return str;
   }
 
-  obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
-
-    if (value == '2') {
-      str = '#ff0000';
-    }
-
-    if (value == '3') {
-      str = '#ffe800';
-    }
-
-    if (value == '4') {
-      str = '#61ff00';
-    }
-
-    if (value == '1') {
-      str = 'black';
-    }
-    return str;
+  obtenerEstatusInfo(idStatus?: string): any {
+    if (!idStatus) return undefined;
+    return this.estatusTickets.find(s => String(s.id) === String(idStatus));
   }
 
   obtenerAreas() {
-    this.areasService.areas$.subscribe(areas => this.areas = areas);
+    this.areasService.areas$.subscribe(areas => {
+      this.areas = areas;
+      this.cdr.detectChanges();
+    });
   }
 
   onClick() {
@@ -196,70 +194,10 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
-  }
-
-  actualizaTicketEstatusSucursal(idTicket: string) {
-    let temp = this.tickets.filter((x) => x.id == idTicket);
-    if (temp.length > 0) {
-      let ticket = temp[0];
-      ticket.idPrioridadTicket = '1';
-
-      this.ticketsService
-        .update(ticket)
-        .then(() => {
-          this.showMessage('success', 'Success', 'Enviado correctamente');
-        })
-        .catch((error) =>
-          console.error('Error al actualizar los comentarios:', error)
-        );
-    }
-  }
-
-  onPanicoClick(idTicket: string) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.actualizaTicketEstatusSucursal(idTicket);
-      },
-      reject: () => { },
+    this.usersService.usuarios$.subscribe(usuarios => {
+      this.usuariosHelp = usuarios;
+      this.cdr.detectChanges();
     });
-  }
-
-  onClickFinalizar(ticket: Ticket) {
-    this.ticketAccion = ticket;
-    this.showModalFinalizeTicket = true;
-  }
-
-  onClickChat(ticket: Ticket) {
-    this.ticketAccion = ticket;
-    this.showModalChatTicket = true;
-  }
-
-  verificarChatNoLeido(ticket: Ticket) {
-    const participantes = ticket.participantesChat.sort(
-      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
-    );
-    const participante = participantes.find(
-      (p) => p.idUsuario === this.usuario.id
-    );
-
-    if (participante) {
-      const ultimoComentarioLeido = this.showModalChatTicket
-        ? ticket.comentarios.length
-        : participante.ultimoComentarioLeido;
-      const comentarios = ticket.comentarios;
-
-      // Si el último comentario leído es menor que la longitud actual de los comentarios
-      return comentarios.length > ultimoComentarioLeido;
-    }
-
-    return false;
   }
 
   obtenerNombreEstatusTicket(idEstatusTicket: string) {
@@ -269,56 +207,6 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     )[0].nombre;
 
     return nombre;
-  }
-
-  actualizaTicket(ticket: Ticket) {
-    this.ticketsService
-      .update(ticket)
-      .then(() => { })
-      .catch((error) => console.error(error));
-  }
-
-  filrarEstatusTickets() {
-    return this.estatusTickets.filter((x) => x.id == '1' || x.id == '2');
-  }
-
-  onClickValidar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.ticketAccion = ticket;
-        this.mostrarModalValidarTicket = true;
-      },
-      reject: () => { },
-    });
-  }
-
-  onClickRechazar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        ticket.idEstatusTicket = '1';
-        this.ticketsService
-          .update(ticket)
-          .then(() => {
-            this.showMessage('success', 'Success', 'Enviado correctamente');
-          })
-          .catch((error) => console.error(error));
-      },
-      reject: () => { },
-    });
   }
 
   obtenerSucursales() {
@@ -333,4 +221,5 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
       },
     });
   }
+
 }

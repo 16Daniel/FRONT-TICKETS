@@ -1,23 +1,22 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Timestamp } from '@firebase/firestore';
+import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
+import { DialogModule } from 'primeng/dialog';
 
-import { ModalValidateTicketComponent } from '../../dialogs/modal-validate-ticket/modal-validate-ticket.component';
-import { ModalTicketChatComponent } from '../../dialogs/modal-ticket-chat/modal-ticket-chat.component';
-import { ModalTicketDetailComponent } from '../../dialogs/modal-ticket-detail/modal-ticket-detail.component';
+import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
-import { Categoria } from '../../interfaces/categoria.mdoel';
+import { Categoria } from '../../../categorias/models/categoria.model';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -25,13 +24,14 @@ import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from '../../../categorias/services/categories.service';
 import { SupportTypesService } from '../../services/support-types.service';
 import { TicketsPriorityService } from '../../services/tickets-priority.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
+import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
 
 @Component({
   selector: 'app-admin-tickets-list',
@@ -43,25 +43,22 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
     TableModule,
     BadgeModule,
     AccordionModule,
-    ModalValidateTicketComponent,
-    ModalTicketChatComponent,
     ConfirmDialogModule,
-    ModalTicketDetailComponent,
+    DetalleTicketDialogComponent,
     TooltipModule,
-    CalendarModule
+    CalendarModule,
+    DialogModule,
+    TicketSlaGaugeComponent,
+    MiniMatrizUrgenciaComponent
   ],
   templateUrl: './admin-tickets-list.component.html',
   styleUrl: './admin-tickets-list.component.scss',
 })
 
-export class AdminTicketsListComponent {
+export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() tickets: Ticket[] = [];
-  @Input() mostrarAcciones: boolean = true;
-  @Input() mostrarAccionChat: boolean = true;
-  @Input() mostrarAccionFinalizar: boolean = true;
-  @Input() mostrarEstrellas: boolean = true;
-  @Input() mostrarFedchaEstimacion: boolean = true;
   @Input() mostrarAccionValidar: boolean = true;
+
   sucursales: Sucursal[] = [];
   tiposSoporte: TipoSoporte[] = [];
   estatusTicket: EstatusTicket[] = [];
@@ -71,6 +68,8 @@ export class AdminTicketsListComponent {
   mostrarModalTicketDetail: boolean = false;
   mostrarModalValidarTicket: boolean = false;
   showModalChatTicket: boolean = false;
+  private rutaCache = new WeakMap<Ticket, { key: string; info: { ruta: string; categoriaRaiz: string; rutaPadres: string; hoja: string } }>();
+
   areas: Area[] = [];
   ticket: Ticket | undefined;
   ticketAccion: Ticket | any;
@@ -79,6 +78,14 @@ export class AdminTicketsListComponent {
   ticketSeleccionado: Ticket | undefined;
 
   @Input() idArea: string = '';
+
+  private usersSub?: Subscription;
+  private areasSub?: Subscription;
+  private categoriesSub?: Subscription;
+  private branchesSub?: Subscription;
+  private supportTypesSub?: Subscription;
+  private ticketsPrioritySub?: Subscription;
+  private statusTicketSub?: Subscription;
 
   constructor(
     private ticketsService: TicketsService,
@@ -91,11 +98,9 @@ export class AdminTicketsListComponent {
     private supportTypesService: SupportTypesService,
     private ticketsPriorityService: TicketsPriorityService,
     private statusTicketService: StatusTicketService,
-    private confirmationService: ConfirmationService,
     public datesHelper: DatesHelperService,
-    private mensajesPendientesService: MensajesPendientesService
   ) {
-    this.areas = this.areasService.areas;
+    this.initAreas();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerPrioridadesTicket();
@@ -104,12 +109,37 @@ export class AdminTicketsListComponent {
     this.obtenerCategorias();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idArea'] && !changes['idArea'].firstChange) {
+      this.obtenerCategorias();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.usersSub?.unsubscribe();
+    this.areasSub?.unsubscribe();
+    this.categoriesSub?.unsubscribe();
+    this.branchesSub?.unsubscribe();
+    this.supportTypesSub?.unsubscribe();
+    this.ticketsPrioritySub?.unsubscribe();
+    this.statusTicketSub?.unsubscribe();
+  }
+
+  initAreas() {
+    this.areasService.initListener();
+    this.areas = this.areasService.areas;
+    this.areasSub = this.areasService.areas$.subscribe((areas) => {
+      this.areas = areas;
+      this.cdr.detectChanges();
+    });
+  }
+
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   obtenerSucursales() {
-    this.branchesService.get().subscribe({
+    this.branchesSub = this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
         this.cdr.detectChanges();
@@ -122,7 +152,7 @@ export class AdminTicketsListComponent {
   }
 
   obtenerTiposSoporte() {
-    this.supportTypesService.get().subscribe({
+    this.supportTypesSub = this.supportTypesService.get().subscribe({
       next: (data) => {
         this.tiposSoporte = data;
         this.cdr.detectChanges();
@@ -135,7 +165,7 @@ export class AdminTicketsListComponent {
   }
 
   obtenerEstatusTicket() {
-    this.statusTicketService.get().subscribe({
+    this.statusTicketSub = this.statusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTicket = data;
         this.cdr.detectChanges();
@@ -147,8 +177,13 @@ export class AdminTicketsListComponent {
     });
   }
 
+  obtenerEstatusInfo(idStatus?: string): any {
+    if (!idStatus) return undefined;
+    return this.estatusTicket.find(s => String(s.id) === String(idStatus));
+  }
+
   obtenerPrioridadesTicket() {
-    this.ticketsPriorityService.get().subscribe({
+    this.ticketsPrioritySub = this.ticketsPriorityService.get().subscribe({
       next: (data) => {
         this.prioridadesTicket = data;
         this.cdr.detectChanges();
@@ -161,13 +196,16 @@ export class AdminTicketsListComponent {
   }
 
   obtenerCategorias() {
-    this.categoriesService.get().subscribe({
+    this.categoriesSub?.unsubscribe();
+    this.categoriesSub = this.categoriesService.get().subscribe({
       next: (data) => {
         this.categorias = data.map((item: any) => ({
           ...item,
           id: item.id.toString()
         }));
-        this.categorias = this.categorias.filter(x => x.idArea == this.idArea);
+        if (this.idArea && this.idArea.trim() !== '') {
+          this.categorias = this.categorias.filter(x => String(x.idArea) === String(this.idArea));
+        }
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -186,43 +224,43 @@ export class AdminTicketsListComponent {
     return name;
   }
 
-  obtenerNombreSucursal(idSucursal: string): string {
-    let str = '';
-    let temp = this.sucursales.filter((x) => x.id == idSucursal);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
+  obtenerNombreTipoSoporte(idTipoSoporte?: string | null): string {
+    if (!idTipoSoporte) return 'NO DEFINIDO';
+    let temp = this.tiposSoporte.find((x) => String(x.id) === String(idTipoSoporte));
+    return temp ? temp.name : 'NO DEFINIDO';
   }
 
   obtenerUsuariosHelp() {
+    this.usersService.initListener();
     this.usuariosHelp = this.usersService.usuarios;
+    this.usersSub = this.usersService.usuarios$.subscribe((users) => {
+      this.usuariosHelp = users;
+      this.cdr.detectChanges();
+    });
   }
 
   showMessage(sev: string, summ: string, det: string) {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  actualizarEstatus(ticket: Ticket | any, idEstatusTicket: string) {
-    if (idEstatusTicket == '3') ticket.fechaFin = new Date();
-
-    this.actualizaTicket(ticket);
-  }
-
   actualizaTicket(ticket: Ticket) {
-    let nombreCategoria = this.categorias.find(x => x.id == ticket.idCategoria)?.nombre!;
+    const cat = this.categorias.find(x => String(x.id) === String(ticket.idCategoria));
+    const nombreCategoria = cat?.nombre || ticket.nombreCategoria || '';
 
-    let nombreSubcategoria = this.categorias
-      .find(x => x.id == ticket.idCategoria)?.subcategorias ?
-      this.categorias
-        .find(x => x.id == ticket.idCategoria)?.subcategorias.find(x => x.id == ticket.idSubcategoria)?.nombre!
-      : '';
+    let nombreSubcategoria = ticket.nombreSubcategoria || '';
+    if (cat?.subcategorias && ticket.idSubcategoria) {
+      const sub = this.buscarSubcategoriaRecursiva(cat.subcategorias, String(ticket.idSubcategoria));
+      if (sub?.nombre) {
+        nombreSubcategoria = sub.nombre;
+      }
+    }
 
     ticket = {
       ...ticket,
-      nombreCategoria,
-      nombreSubcategoria: nombreSubcategoria != undefined ? nombreSubcategoria : 'N/A'
-    }
+      nombreCategoria: nombreCategoria || '',
+      nombreSubcategoria: nombreSubcategoria || '',
+      idSubcategoria: ticket.idSubcategoria ?? null
+    };
 
     this.ticketsService
       .update({ ...ticket })
@@ -230,161 +268,128 @@ export class AdminTicketsListComponent {
       .catch((error) => console.error(error));
   }
 
-  onClickChat(ticket: Ticket) {
-    this.ticketAccion = ticket;
-    this.showModalChatTicket = true;
-  }
-
-  verificarChatNoLeido(ticket: Ticket) {
-    const participantes = ticket.participantesChat.sort(
-      (a, b) => b.ultimoComentarioLeido - a.ultimoComentarioLeido
-    );
-    const participante = participantes.find(
-      (p) => p.idUsuario === this.usuario.id
-    );
-
-    if (participante) {
-      const ultimoComentarioLeido = this.showModalChatTicket
-        ? ticket.comentarios.length
-        : participante.ultimoComentarioLeido;
-      const comentarios = ticket.comentarios;
-
-      // Si el último comentario leído es menor que la longitud actual de los comentarios
-      return comentarios.length > ultimoComentarioLeido;
-    }
-
-    return false;
-  }
-
-  onClickRechazar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        ticket.idEstatusTicket = '1';
-        this.ticketsService
-          .update(ticket)
-          .then(() => {
-            this.showMessage('success', 'Success', 'Enviado correctamente');
-          })
-          .catch((error) => console.error(error));
-      },
-      reject: () => { },
-    });
-  }
-
-  onClickValidar(ticket: Ticket) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'El estado del ticket se cambiará a "POR VALIDAR" ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        this.ticketAccion = ticket;
-        this.mostrarModalValidarTicket = true;
-      },
-      reject: () => { },
-    });
-  }
-
-  onClickValidacionAdmin(ticket: Ticket) {
-
-    const usuariosUnicosMap = new Map<string, { idUsuario: string }>();
-    ticket.participantesChat.forEach(p => {
-      usuariosUnicosMap.set(p.idUsuario, p);
-    });
-    const usuariosUnicos = Array.from(usuariosUnicosMap.values());
-
-    usuariosUnicos.forEach(async participante => {
-      await this.mensajesPendientesService.marcarComoLeidos(
-        ticket.id,
-        'Tickets',
-        participante.idUsuario
-      );
-    });
-
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message:
-        'Validar ticket cerrado ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        ticket.validacionAdmin = true;
-        this.actualizaTicket(ticket);
-      },
-      reject: () => { },
-    });
-  }
-
   abrirModalDetalleTicket(itemticket: Ticket | any) {
     this.mostrarModalTicketDetail = true;
     this.ticket = itemticket;
   }
 
-  ManejadorDeFecha(date: Date, tk: Ticket) {
-    tk!.fechaEstimacion = Timestamp.fromDate(date);
-    this.actualizaTicket(tk);
+  onClick() {
+    if (this.ticketSeleccionado) {
+      this.abrirModalDetalleTicket(this.ticketSeleccionado);
+    }
   }
 
   obtenerSubcategorias = (idCategoria: string) => this.categorias.find(x => x.id == idCategoria)?.subcategorias;
 
-  obtenerBackgroundColorPrioridad(value: string): string {
-    let str = '';
-
-    if (value == '2') {
-      str = '#ff0000';
-    }
-
-    if (value == '3') {
-      str = '#ffe800';
-    }
-
-    if (value == '4') {
-      str = '#61ff00';
-    }
-
-    if (value == '1') {
-      str = 'black';
-    }
-    return str;
+  clasificarPrioridad(score: number): string {
+    if (score >= 7) return 'Crítico';
+    if (score >= 5) return 'Alto';
+    if (score >= 3) return 'Medio';
+    return 'Bajo';
   }
 
-  onPanicoClick(idTicket: string) {
-    this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: 'El estado del ticket se cambiará a Pánico ¿Desea continuar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
-      accept: () => {
-        let temp = this.tickets.filter((x) => x.id == idTicket);
-        if (temp.length > 0) {
-          let ticket = temp[0];
-          ticket.idPrioridadTicket = '1';
+  buscarSubcategoriaRecursiva(subcategorias: any[], idBuscado: string): any | null {
+    if (!subcategorias || !subcategorias.length) return null;
+    for (const sub of subcategorias) {
+      if (String(sub.id) === idBuscado) return sub;
+      if (sub.subcategorias && sub.subcategorias.length > 0) {
+        const found = this.buscarSubcategoriaRecursiva(sub.subcategorias, idBuscado);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
 
-          this.ticketsService
-            .update(ticket)
-            .then(() => {
-              this.showMessage('success', 'Success', 'Enviado correctamente');
-            })
-            .catch((error) =>
-              console.error('Error al actualizar los comentarios:', error)
-            );
+  obtenerInfoRutaTicket(tk: Ticket): { ruta: string; categoriaRaiz: string; rutaPadres: string; hoja: string } {
+    if (!tk) {
+      return { ruta: 'Sin Categoría', categoriaRaiz: '', rutaPadres: '', hoja: 'Sin Categoría' };
+    }
+
+    const cacheKey = `${tk.idCategoria}_${tk.idSubcategoria}_${tk.nombreCategoria}_${tk.nombreSubcategoria}_${this.categorias.length}`;
+    const cached = this.rutaCache.get(tk);
+    if (cached && cached.key === cacheKey) {
+      return cached.info;
+    }
+
+    let resultado = { ruta: 'Sin Categoría', categoriaRaiz: '', rutaPadres: '', hoja: 'Sin Categoría' };
+
+    if (this.categorias && this.categorias.length > 0) {
+      const idSubBuscado = tk.idSubcategoria ? String(tk.idSubcategoria) : null;
+      const idCatBuscado = tk.idCategoria ? String(tk.idCategoria) : null;
+
+      if (idSubBuscado) {
+        for (const cat of this.categorias) {
+          const buscarTrail = (lista: any[], trail: string[]): string[] | null => {
+            for (const sub of lista) {
+              if (sub.eliminado) continue;
+              const nuevoTrail = [...trail, sub.nombre];
+              if (String(sub.id) === idSubBuscado) {
+                return nuevoTrail;
+              }
+              if (sub.subcategorias && sub.subcategorias.length > 0) {
+                const res = buscarTrail(sub.subcategorias, nuevoTrail);
+                if (res) return res;
+              }
+            }
+            return null;
+          };
+
+          if (cat.subcategorias && cat.subcategorias.length > 0) {
+            const trail = buscarTrail(cat.subcategorias, [cat.nombre]);
+            if (trail) {
+              const ruta = trail.join(' › ');
+              const categoriaRaiz = cat.nombre;
+              const hoja = trail[trail.length - 1];
+              const rutaPadres = trail.length > 1 ? trail.slice(0, -1).join(' › ') : '';
+              resultado = { ruta, categoriaRaiz, rutaPadres, hoja };
+              this.rutaCache.set(tk, { key: cacheKey, info: resultado });
+              return resultado;
+            }
+          }
         }
-      },
-      reject: () => { },
-    });
+      }
+
+      if (idCatBuscado) {
+        const cat = this.categorias.find(c => String(c.id) === idCatBuscado);
+        if (cat) {
+          if (tk.nombreSubcategoria) {
+            resultado = {
+              ruta: `${cat.nombre} › ${tk.nombreSubcategoria}`,
+              categoriaRaiz: cat.nombre,
+              rutaPadres: cat.nombre,
+              hoja: tk.nombreSubcategoria
+            };
+          } else {
+            resultado = {
+              ruta: cat.nombre,
+              categoriaRaiz: cat.nombre,
+              rutaPadres: '',
+              hoja: cat.nombre
+            };
+          }
+          this.rutaCache.set(tk, { key: cacheKey, info: resultado });
+          return resultado;
+        }
+      }
+    }
+
+    if (tk.nombreCategoria && tk.nombreSubcategoria) {
+      resultado = {
+        ruta: `${tk.nombreCategoria} › ${tk.nombreSubcategoria}`,
+        categoriaRaiz: tk.nombreCategoria,
+        rutaPadres: tk.nombreCategoria,
+        hoja: tk.nombreSubcategoria
+      };
+    } else if (tk.nombreCategoria) {
+      resultado = {
+        ruta: tk.nombreCategoria,
+        categoriaRaiz: tk.nombreCategoria,
+        rutaPadres: '',
+        hoja: tk.nombreCategoria
+      };
+    }
+
+    this.rutaCache.set(tk, { key: cacheKey, info: resultado });
+    return resultado;
   }
 }

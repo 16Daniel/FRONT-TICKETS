@@ -1,5 +1,9 @@
 export const environment = {
   production: false,
+  whatsappApiConfig: {
+    instancia: 'instance193874',
+    token: 'mc4aconssqvu8m89'
+  },
   firebaseConfig: {
     apiKey: 'AIzaSyDuI2ZbIGAyUThv5p5l6aff8gcJYapyqww',
     authDomain: 'rw-operamx-tickets.firebaseapp.com',
@@ -26,4 +30,5 @@ export const environment = {
   idAdministracion: "QvSLmxLZjJnaGPPsA7zi",
   idServicio: "hHqyRWm306Zmb5XADbbR",
   idDireccion: "Mcaolq7LySn81CSX4n5L",
+  vapidKey: "BG3IDd16xNfinwPfKlYWKRJSIpdql9Cjt5B5Ke-nPn4q2pC9ScQLf1BCkUGcemmHMuVOKaOVjoMAQGPHP9pmdsU"
 };

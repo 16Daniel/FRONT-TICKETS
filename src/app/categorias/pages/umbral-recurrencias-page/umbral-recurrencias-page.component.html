@@ -1,0 +1,64 @@
+<div class="categories-tree-page-wrapper">
+  <div class="categories-content-container">
+
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header 
+      subtitle="Configuración de Umbrales" 
+      title="Umbral de Recurrencias">
+    </app-page-header>
+
+    <!-- Barra Selector de Áreas por Chips (debajo del título) -->
+    <div class="areas-chips-track mb-4">
+      <button 
+        *ngFor="let area of areas" 
+        type="button" 
+        class="chip-area-pill"
+        [class.is-active]="String(area.id) === areaSeleccionadaId"
+        (click)="cambiarArea(area.id)">
+        <span class="area-dot"></span>
+        <span class="area-name">{{ area.nombre }}</span>
+      </button>
+    </div>
+
+    <!-- Tarjetas KPI -->
+    <app-umbral-kpis 
+      [tickets]="tickets"
+      [sucursales]="sucursales"
+      [usuariosRol4]="usuariosRol4"
+      [isApplyingFilters]="isApplyingFilters"
+      [umbralAlerta]="umbralAlerta">
+    </app-umbral-kpis>
+
+    <!-- Barra de Filtros -->
+    <app-umbral-filtros 
+      [sucursales]="sucursales"
+      [usuariosRol4]="usuariosRol4"
+      [isApplyingFilters]="isApplyingFilters"
+      [initialFechaInicio]="fechaInicio"
+      [initialFechaFin]="fechaFin"
+      [initialUmbral]="umbralAlerta"
+      (apply)="aplicarFiltrosEvent($event)">
+    </app-umbral-filtros>
+
+    <!-- Gráfica Categorías con Fallas -->
+    <app-umbral-top-chart
+      *ngIf="!isApplyingFilters"
+      [tickets]="tickets"
+      [sucursales]="sucursales"
+      [categorias]="categoriasActuales"
+      [idArea]="areaSeleccionadaId"
+      [umbralAlerta]="umbralAlerta">
+    </app-umbral-top-chart>
+
+    <!-- Árbol de Organización -->
+    <app-umbral-arbol 
+      [tickets]="tickets"
+      [categoriasActuales]="categoriasActuales"
+      [areas]="areas"
+      [areaSeleccionadaId]="areaSeleccionadaId"
+      [hasCategories]="categoriasActuales.length > 0"
+      [umbralAlerta]="umbralAlerta">
+    </app-umbral-arbol>
+
+  </div>
+</div>

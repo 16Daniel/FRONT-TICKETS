@@ -1,0 +1,67 @@
+<p-accordion class="custom-branches-accordion w-full">
+    <p-accordionTab *ngFor="let item of sucursales">
+        <ng-template pTemplate="header">
+            <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(contarTickets(item.id))">
+                
+                <div class="branch-info-group">
+                    <!-- Clean Number Badge ONLY -->
+                    <div class="branch-count-badge">
+                        {{ contarTickets(item.id) }}
+                    </div>
+
+                    <!-- Branch Name ONLY -->
+                    <span class="branch-title">{{ item.nombre }}</span>
+                </div>
+
+                <!-- Action / Alert Badges -->
+                <div class="branch-actions-indicators">
+                    <span class="indicator-badge badge-pending" 
+                        *ngIf="verificarTicketsPendientesValidar(filtrarTicketsPorSucursal(item.id))" 
+                        pTooltip="PENDIENTE VALIDAR" tooltipPosition="top">
+                        <i class="bx bx-check-double"></i>
+                    </span>
+
+                    <span class="indicator-badge badge-new" 
+                        *ngIf="verificarTicketsNuevos(filtrarTicketsPorSucursal(item.id))" 
+                        pTooltip="NUEVO TICKET" tooltipPosition="top">
+                        <i class="bx bx-bell"></i>
+                    </span>
+
+                    
+                </div>
+
+            </div>
+        </ng-template>
+
+        <!-- Sub-toggles inside accordion body -->
+        <div class="accordion-subtoggles-strip" *ngIf="escomite == false">
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0" *ngIf="idArea == '1'">
+                <input class="form-check-input custom-switch" type="checkbox" role="switch"
+                    [(ngModel)]="mostrarSistemasMap[item.id]" />
+                <label class="form-check-label m-0">💻 TABLETAS | TPVs</label>
+            </div>
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0" *ngIf="idArea == '1'">
+                <input class="form-check-input custom-switch" type="checkbox" role="switch"
+                    [(ngModel)]="mostrarAudioVideoMap[item.id]" />
+                <label class="form-check-label m-0">🔊 TVs | BOCINAS</label>
+            </div>
+            <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+                <input class="form-check-input custom-switch" type="checkbox" role="switch"
+                    [(ngModel)]="mostrarRadiografiaMap[item.id]" />
+                <label class="form-check-label m-0">📊 MÁS INFORMACIÓN</label>
+            </div>
+        </div>
+
+        <!-- SECCION: NIVELES DE AUDIO -->
+        <app-niveles-audio [sucursal]="item" *ngIf="mostrarAudioVideoMap[item.id] && idArea == '2' && escomite == false"></app-niveles-audio>
+
+        <div class="accordion-tables-wrapper">
+            <app-tpvs-devices-table *ngIf="mostrarSistemasMap[item.id] && escomite == false" [sucursal]="item"></app-tpvs-devices-table>
+            <app-tabla-tvs-bocinas *ngIf="mostrarAudioVideoMap[item.id] && escomite == false" [sucursal]="item"></app-tabla-tvs-bocinas>
+            <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id] && escomite == false" [idSucursal]="item.id"
+                [idArea]="idArea"></app-grafica-tickets-30-dias>
+            <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" *ngIf="!mostrarRadiografiaMap[item.id]"
+                [idArea]="idArea"></app-admin-tickets-list>
+        </div>
+    </p-accordionTab>
+</p-accordion>

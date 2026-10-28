@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { AvatarComponent } from "ngx-avatars";
 import { TooltipModule } from 'primeng/tooltip';
-import { ResponsableTarea } from '../../interfaces/responsable-tarea.interface';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,11 +14,11 @@ import { CommonModule } from '@angular/common';
 })
 export class AvataresResponsablesTareaComponent {
   @Input() tarea: Tarea = new Tarea;
-  @Input() responsables: ResponsableTarea[] = [];
+  @Input() responsables: Responsable[] = [];
   @Input() mostrarCorona: boolean = false;
-  @Output() responsableLiderEvent = new EventEmitter<ResponsableTarea>();
+  @Output() responsableLiderEvent = new EventEmitter<Responsable>();
 
-  onSeleccionarLider(responsable: ResponsableTarea) {
+  onSeleccionarLider(responsable: Responsable) {
     this.responsableLiderEvent.emit(responsable);
   }
 

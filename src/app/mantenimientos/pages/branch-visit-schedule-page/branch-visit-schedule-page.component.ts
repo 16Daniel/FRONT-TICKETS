@@ -98,16 +98,16 @@ export default class BranchVisitSchedulePageComponent implements OnInit {
           this.tickets = data;
           let arr_temp: Ticket[] = [];
           let temp1: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '1'
+            (x) => x.prioridad === 'Crítico'
           );
           let temp2: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '2'
+            (x) => x.prioridad === 'Alto'
           );
           let temp3: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '3'
+            (x) => x.prioridad === 'Medio'
           );
           let temp4: Ticket[] = this.tickets.filter(
-            (x) => x.idPrioridadTicket == '4'
+            (x) => x.prioridad === 'Bajo'
           );
 
           temp1 = temp1.sort(

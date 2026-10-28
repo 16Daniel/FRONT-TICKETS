@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { AceiteService } from '../../services/aceite.service';
-import { Sucursal } from '../../../models/sucursal.model';
+import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 
 @Component({

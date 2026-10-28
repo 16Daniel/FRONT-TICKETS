@@ -13,6 +13,12 @@ import { PrioridadTicket } from '../interfaces/prioridad-ticket.model';
 @Injectable({
   providedIn: 'root',
 })
+
+// SE VA A ELIMIANR ESTE SERVICIO
+
+
+
+
 export class TicketsPriorityService {
   pathName: string = 'cat_prioridad_tickets';
 

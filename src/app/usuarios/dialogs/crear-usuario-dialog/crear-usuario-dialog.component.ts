@@ -114,7 +114,7 @@ export class CrearUsuarioDialogComponent implements OnInit {
   }
 
   actualizarUsuario() {
-    this.usuario.idArea = this.usuario.idArea.toString();
+    this.usuario.idArea = this.usuario.idArea ? this.usuario.idArea.toString() : '';
 
     this.documentsService
       .updateDoc('usuarios', this.usuario)
