@@ -16,7 +16,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { FieldPath, Timestamp } from 'firebase/firestore';
 import { environment } from '../../../environments/environments';
 import { AreaOrganigramaService } from '../../areas/services/area-organigrama.service';
-import { OrganigramaNodo } from '../../areas/interfaces/area-organigrama.model';
+import { OrganigramaNodo } from '../../areas/interfaces/organigrama-nodo.interface';
 
 export interface HistorialAlerta {
   id: string;
