@@ -94,7 +94,7 @@
             [class.active]="tipoBitacoraEfectivo === 'COMITE'"
             [attr.aria-selected]="tipoBitacoraEfectivo === 'COMITE'"
             [disabled]="!puedeAccederBitacoraComite"
-            [title]="!puedeAccederBitacoraComite ? 'Debes ser responsable de un comité asignado para acceder a esta bitácora' : 'Ver comentarios exclusivos de comités'"
+            [title]="!puedeAccederBitacoraComite ? 'Debes pertenecer a un comité asignado para acceder a esta bitácora' : 'Ver comentarios exclusivos de comités'"
             (click)="cambiarTipoBitacora('COMITE')">
             <i class="bx bx-group"></i>
             <span>Comités</span>
