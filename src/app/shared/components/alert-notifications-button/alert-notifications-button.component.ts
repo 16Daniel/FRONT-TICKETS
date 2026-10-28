@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { Timestamp } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 import {
-  ALERTA_TICKET_WHATSAPP_ID,
   CategoriaAlerta,
   HistorialAlerta,
   HistorialAlertasService
@@ -13,6 +14,9 @@ import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-t
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Bitacora } from '../../interfaces/bitacora.model';
+import { BitacoraService } from '../../services/bitacora.service';
 
 @Component({
   selector: 'app-alert-notifications-button',
@@ -55,6 +59,7 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
   constructor(
     private historialAlertasService: HistorialAlertasService,
     private ticketsService: TicketsService,
+    private bitacoraService: BitacoraService,
     private cdr: ChangeDetectorRef
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -131,12 +136,50 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
   async marcarComoLeida(alerta: HistorialAlerta): Promise<void> {
     if (this.marcandoComoLeidas.has(alerta.id)) return;
 
+    const confirmacion = await Swal.fire({
+      title: '¿Marcar como leída?',
+      text: 'Al confirmar, indicas que ya revisaste esta alerta.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, marcar como leída',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
     this.marcandoComoLeidas.add(alerta.id);
     this.errorMessage = '';
     this.cdr.detectChanges();
     try {
       await this.historialAlertasService.marcarComoLeida(alerta.id, this.idUsuario);
       alerta.lecturas = { ...alerta.lecturas, [this.idUsuario]: true };
+      try {
+        let responsable: Responsable | null = null;
+        const rawResponsable = localStorage.getItem('responsable-tareas');
+        if (rawResponsable) {
+          responsable = JSON.parse(rawResponsable) as Responsable;
+        }
+
+        const nombreUsuario = [this.usuario?.nombre, this.usuario?.apellidoP]
+          .filter(Boolean)
+          .join(' ');
+        const bitacoraEntry: Bitacora = {
+          modulo: 'TICKETS',
+          referenciaId: alerta.ticketId,
+          tipo: 'SISTEMA',
+          contenido: 'Confirmó la lectura de una alerta relacionada con este ticket.',
+          autor: {
+            id: responsable?.id || this.usuario?.id || 'SISTEMA',
+            nombre: responsable?.nombre || nombreUsuario || 'Sistema',
+            color: responsable?.color || '#94a3b8'
+          },
+          fechaCreacion: Timestamp.now()
+        };
+        await this.bitacoraService.addEntrada(bitacoraEntry);
+      } catch (error) {
+        console.error('Error al registrar la lectura de la alerta en el historial del ticket:', error);
+        this.errorMessage = 'La alerta se marcó como leída, pero no fue posible registrar la acción en el historial del ticket.';
+      }
     } catch (error) {
       console.error('Error al marcar la alerta como leída:', error);
       this.errorMessage = 'No fue posible marcar la alerta como leída.';
@@ -186,7 +229,7 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
   obtenerNombreTipo(idAlerta: string): string {
     const categoria = this.categorias.find(tipo => tipo.id === idAlerta);
     if (categoria) return categoria.nombre || categoria.categoria || 'Alerta';
-    return idAlerta === ALERTA_TICKET_WHATSAPP_ID ? 'Ticket con alerta WhatsApp' : 'Alerta';
+    return 'Alerta';
   }
 
   obtenerFecha(fecha: HistorialAlerta['fecha']): Date {

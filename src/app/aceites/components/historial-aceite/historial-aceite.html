@@ -39,6 +39,7 @@
     <p-table [value]="entregasH" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
+          <th>FOLIO</th>
           <th>SUCURSAL</th>
           <th>FECHA</th>
           <th>FECHA RECOLECCIÓN</th>
@@ -57,6 +58,7 @@
         'bg-success': record.intercambio == 2,
         'bg-warning': record.intercambio == 3
         }">
+          <td>{{record.folio}}</td>
           <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
           <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
           @if(record.fechaRecoleccion == null)
@@ -113,6 +115,7 @@
     <p-table [value]="entregasTAH" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
+          <th>FOLIO</th>
           <th>SUCURSAL</th>
           <th>FECHA</th>
           <th>FECHA RECOLECCIÓN</th>
@@ -130,6 +133,7 @@
         'bg-success': record.intercambio == 2,
         'bg-warning': record.intercambio == 3
         }">
+          <td>{{record.folio}}</td>
           <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
           <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
           @if(record.fechaRecoleccion == null)

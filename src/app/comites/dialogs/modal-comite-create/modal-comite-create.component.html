@@ -70,7 +70,7 @@
         <p-multiSelect
           inputId="comiteResponsables"
           [options]="responsablesFiltrados"
-          [(ngModel)]="comite.idsResponsables"
+          [ngModel]="comite.idsResponsables"
           name="idsResponsables"
           optionLabel="nombre"
           optionValue="id"
@@ -83,6 +83,7 @@
           placeholder="Selecciona los responsables del comité"
           [disabled]="!comite.areas.length"
           appendTo="body"
+          (ngModelChange)="onResponsablesChange($event)"
           styleClass="w-100">
           <ng-template let-responsable pTemplate="item">
             <div class="d-flex flex-column">
@@ -94,6 +95,32 @@
         <small *ngIf="!comite.areas.length" class="text-muted d-block mt-1">
           Selecciona al menos un área para consultar sus responsables.
         </small>
+        <div *ngIf="obtenerResponsablesSeleccionados().length" class="comite-responsables">
+          <span class="comite-responsables-label">
+            {{ comite.idResponsableLider ? 'Líder del comité' : 'Haz clic en un avatar para elegir al líder' }}
+          </span>
+          <div class="comite-avatars">
+            <button
+              *ngFor="let responsable of obtenerResponsablesSeleccionados()"
+              type="button"
+              class="comite-avatar"
+              [class.selected]="comite.idResponsableLider === responsable.id"
+              [attr.aria-label]="'Elegir a ' + responsable.nombre + ' como líder del comité'"
+              [attr.aria-pressed]="comite.idResponsableLider === responsable.id"
+              (click)="seleccionarLider(responsable)"
+              [pTooltip]="comite.idResponsableLider === responsable.id
+                ? 'LÍDER DEL COMITÉ: ' + responsable.nombre
+                : 'Elegir como líder: ' + responsable.nombre"
+              tooltipPosition="top">
+              <i class="bx bx-crown comite-avatar-crown" *ngIf="comite.idResponsableLider === responsable.id"></i>
+              <ngx-avatars
+                [name]="responsable.nombre"
+                [size]="36"
+                [bgColor]="responsable.color || '#D3152A'">
+              </ngx-avatars>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 

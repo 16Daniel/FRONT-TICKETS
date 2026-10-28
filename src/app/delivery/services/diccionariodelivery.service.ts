@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Articulo, CatMarcasDelivery, ClientesDelivery, ComboDelivery, ComboDeliveryDTO, DiccionarioItem, ModificadorArt } from '../interfaces/diccionariodelivery';
+import { Articulo, CatMarcasDelivery, ClientesDelivery, ComboDelivery, ComboDeliveryDTO, DiccionarioItem, LogDiccionarioDelivery, ModificadorArt } from '../interfaces/diccionariodelivery';
 import { TabCombosDelivery } from '../components/tab-combos-delivery/tab-combos-delivery';
 
 @Injectable({
@@ -94,5 +94,14 @@ export class DiccionariodeliveryService
   eliminarCombo(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}PedidosDelivery/eliminarCombo/${id}`,{ headers: this.headers });
   }
+
+   getLogs(): Observable<LogDiccionarioDelivery[]> {
+    return this.http.get<LogDiccionarioDelivery[]>(`${this.apiUrl}PedidosDelivery/getLogDiccionarioDelivery`,{ headers: this.headers });
+  }
+
+   updateLog(idl:number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}PedidosDelivery/updateLogDiccionarioDelivery/`+idl,{ headers: this.headers });
+  }
+
 
 }

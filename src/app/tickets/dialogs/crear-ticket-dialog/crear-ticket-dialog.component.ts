@@ -42,6 +42,7 @@ import { Responsable } from '../../../usuarios/interfaces/responsable.interface'
 import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
 import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
+import { environment } from '../../../../environments/environments';
 
 import Quill from 'quill';
 import { Mention, MentionBlot } from 'quill-mention';
@@ -97,6 +98,9 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   urlsArchivos: string[] = [];
   archivosPreview: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string }[] = [];
   archivos: File[] = [];
+  // public catproveedores:ProveedorPlaneacion[] = []; 
+  public catproveedores:any[] = []; 
+  public formProveedor: any = null; 
 
   get requiereEvidencia(): boolean {
     const requierePorCategoria = this.formCategoria?.evidenciaObligatoria === true;
@@ -499,7 +503,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
       this.showMessage(
         'warn',
         'Ticket creado',
-        'El ticket se creó, pero no fue posible registrar la alerta de posible repetición.'
+        'El ticket se creó, pero no fue posible registrar la alerta de posible repetición o enviar su notificación.'
       );
     }
   }
@@ -511,7 +515,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
 
     try {
       await this.whatsappService.enviarMensajeTexto(
-        '120363412785054674@g.us',
+        environment.grupoWAGerencias,
         this.construirMensajeAlertaWhatsapp()
       );
     } catch (error) {
@@ -533,7 +537,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
       });
     } catch (error) {
       console.error('Error al registrar la alerta del ticket:', error);
-      this.showMessage('warn', 'Error al registrar alerta', 'El mensaje se envió, pero no fue posible guardar la alerta en el historial.');
+      this.showMessage('warn', 'Error al registrar alerta', 'El mensaje se envió, pero no fue posible guardar la alerta o enviar su notificación push.');
     }
   }
 
@@ -750,4 +754,15 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
       categoria.trim().toUpperCase()
     );
   }
+
+  requiereProveedor():boolean
+{ 
+  if(this.formCategoria == undefined || this.formCategoria == null)
+    {
+      return false;  
+    }
+  let idCategoria = this.formCategoria.id; 
+  let categorias:number[] = [46,47,48,49,50,51,52,53,56,59,62]
+  return categorias.includes(idCategoria)
+}
 }

@@ -5,13 +5,15 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { TabViewModule } from 'primeng/tabview';
 import { Area, EscalationLevel } from '../../../areas/interfaces/area.model';
+import { AreaOrganigrama } from '../../../areas/interfaces/area-organigrama.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { EscalationManagerComponent } from '../../components/escalation-manager.component/escalation-manager.component';
+import { OrganigramaEditorComponent } from '../../components/organigrama-editor/organigrama-editor.component';
 
 @Component({
   selector: 'app-modal-area-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule, TabViewModule, EscalationManagerComponent],
+  imports: [CommonModule, FormsModule, DialogModule, TabViewModule, EscalationManagerComponent, OrganigramaEditorComponent],
   templateUrl: './modal-area-create.component.html',
   styleUrl: './modal-area-create.component.scss'
 })
@@ -25,6 +27,19 @@ export class ModalAreaCreateComponent {
   idAreaEditar: string = '';
   parentLevels = signal<EscalationLevel[]>([]);
   grupoNuevosTickets = signal<string>('');
+  organigrama: AreaOrganigrama = {
+    areaId: '',
+    raiz: {
+      key: '',
+      id: 1,
+      nombre: 'Dirección',
+      personaId: '',
+      nombreResponsable: '',
+      children: [],
+    },
+  };
+  organigramaListo = false;
+  organigramaValido = false;
 
   constructor(
     private messageService: MessageService,
@@ -85,6 +100,18 @@ export class ModalAreaCreateComponent {
     };
   }
 
+  actualizarOrganigrama(organigrama: AreaOrganigrama): void {
+    this.organigrama = organigrama;
+  }
+
+  actualizarValidezOrganigrama(valido: boolean): void {
+    this.organigramaValido = valido;
+  }
+
+  actualizarEstadoCargaOrganigrama(listo: boolean): void {
+    this.organigramaListo = listo;
+  }
+
   onHide() {
     this.closeEvent.emit(false); // Cerrar modal
   }
@@ -99,7 +126,21 @@ export class ModalAreaCreateComponent {
       return;
     }
 
-    this.esNuevaArea ? this.crear() : this.actualizar();
+    if (!this.organigramaListo) {
+      this.showMessage('error', 'Error', 'Espera a que cargue el organigrama antes de guardar.');
+      return;
+    }
+
+    if (!this.organigramaValido) {
+      this.showMessage('error', 'Error', 'Asigna al menos un responsable en cada nivel del organigrama.');
+      return;
+    }
+
+    if (this.esNuevaArea) {
+      await this.crear();
+    } else {
+      await this.actualizar();
+    }
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -107,11 +148,13 @@ export class ModalAreaCreateComponent {
   }
 
   async crear() {
-    this.area = { ...this.area, id: String(this.area.id) }
-    this.area.nivelesNotificacion = this.parentLevels();
-    this.area.gruponotificacion = this.grupoNuevosTickets();
+    this.area = { ...this.area, id: String(this.area.id) };
+    const areaParaGuardar = this.prepararAreaParaGuardar();
     try {
-      await this.areasService.create({ ...this.area });
+      await this.areasService.create(areaParaGuardar, {
+        ...this.organigrama,
+        areaId: String(this.area.id),
+      });
       this.cdr.detectChanges();
       this.closeEvent.emit(false); // Cerrar modal
       this.showMessage('success', 'Success', 'Guardado correctamente');
@@ -121,19 +164,33 @@ export class ModalAreaCreateComponent {
     }
   }
 
-  actualizar() {
-    this.area = { ...this.area, id: String(this.area.id) }
-    this.area.nivelesNotificacion = this.parentLevels();
-    this.area.gruponotificacion = this.grupoNuevosTickets();
-    this.areasService
-      .update(this.area, this.idAreaEditar)
-      .then(() => {
-        this.cdr.detectChanges();
-        this.closeEvent.emit(false); // Cerrar modal
-        this.showMessage('success', 'Success', 'Enviado correctamente');
-      })
-      .catch((error) =>
-        console.error('Error al actualizar los comentarios:', error)
+  async actualizar() {
+    this.area = { ...this.area, id: String(this.area.id) };
+    const areaParaGuardar = this.prepararAreaParaGuardar();
+    try {
+      await this.areasService.update(areaParaGuardar, this.idAreaEditar, {
+        ...this.organigrama,
+        areaId: this.idAreaEditar,
+      });
+      this.cdr.detectChanges();
+      this.closeEvent.emit(false); // Cerrar modal
+      this.showMessage('success', 'Success', 'Enviado correctamente');
+    } catch (error) {
+      this.showMessage(
+        'error',
+        'Error',
+        error instanceof Error ? error.message : 'No se pudo actualizar el área.'
       );
+    }
+  }
+
+  private prepararAreaParaGuardar(): Area {
+    const area: Area = {
+      ...this.area,
+      nivelesNotificacion: this.parentLevels(),
+      gruponotificacion: this.grupoNuevosTickets(),
+    };
+    delete area.organigrama;
+    return area;
   }
 }

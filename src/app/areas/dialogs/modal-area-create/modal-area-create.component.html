@@ -95,11 +95,20 @@
     <p-tabPanel header="NOTIFICACIONES" leftIcon="bx bx-bell">
         <app-escalation-manager [(levels)]="parentLevels" [(grupoNuevosTickets)]="grupoNuevosTickets"></app-escalation-manager>
     </p-tabPanel>
+    <p-tabPanel header="ORGANIGRAMA" leftIcon="bx bx-sitemap">
+      <app-organigrama-editor
+        [areaId]="area?.id || ''"
+        [legacyOrganigrama]="area?.organigrama || []"
+        (organigramaChange)="actualizarOrganigrama($event)"
+        (validityChange)="actualizarValidezOrganigrama($event)"
+        (readyChange)="actualizarEstadoCargaOrganigrama($event)">
+      </app-organigrama-editor>
+    </p-tabPanel>
 </p-tabView>
    </div>
     
     <div class="d-flex justify-content-end mt-5 pt-3 border-top">
-      <button type="submit" class="btn-rw-cta" [disabled]="form.invalid">
+      <button type="submit" class="btn-rw-cta" [disabled]="form.invalid || !organigramaListo">
         <i class='bx bx-check-circle'></i>
         <span *ngIf="esNuevaArea">CREAR ÁREA</span>
         <span *ngIf="!esNuevaArea">GUARDAR CAMBIOS</span>
