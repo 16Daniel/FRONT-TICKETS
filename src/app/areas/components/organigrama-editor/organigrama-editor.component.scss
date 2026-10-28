@@ -1,38 +1,166 @@
+/* Rebel Wings Brand & Semaphore Tokens */
+$rw-primary: #d3152a;
+$rw-primary-soft: #fff1f2;
+$rw-dark: #1e1e24;
+$rw-canvas: #f4f6fa;
+
+.organigrama-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+/* ==========================================================================
+   Cabecera del Organigrama
+   ========================================================================== */
 .organigrama-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.organigrama-header-info {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.organigrama-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: $rw-primary-soft;
+  border: 1px solid #fecdd3;
+  color: $rw-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
 }
 
 .organigrama-title {
-  margin: 0 0 0.25rem;
-  color: #334155;
-  font-size: 1.1rem;
-  font-weight: 700;
+  margin: 0 0 0.15rem;
+  color: $rw-dark;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
+.organigrama-subtitle {
+  font-size: 0.825rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.organigrama-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Semáforo de Estado de Datos (DESIGN-SYSTEM.md) */
+.organigrama-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  &.status-complete {
+    background-color: #f0fdf4;
+    color: #059669;
+    border: 1px solid #bbf7d0;
+
+    .status-dot {
+      background-color: #10b981;
+    }
+  }
+
+  &.status-pending {
+    background-color: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+
+    .status-dot {
+      background-color: #f59e0b;
+    }
+  }
+}
+
+/* ==========================================================================
+   Lienzo del Organigrama (Canvas #F4F6FA)
+   ========================================================================== */
 .organigrama-chart-container {
   max-width: 100%;
-  overflow: auto;
-  padding: 1rem 0.5rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 1.75rem 1.25rem 3.5rem;
+  background-color: $rw-canvas;
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 18px 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  min-height: 440px;
 }
 
+/* ==========================================================================
+   Tarjeta de Nodo del Organigrama (Floating Card)
+   ========================================================================== */
 .organigrama-node {
   display: flex;
-  width: 18rem;
+  width: 18.5rem;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.65rem;
+  gap: 0.75rem;
   text-align: left;
+  position: relative;
 
   h4 {
     margin: 0;
-    color: #334155;
-    font-size: 0.95rem;
-    font-weight: 700;
+    color: $rw-dark;
+    font-size: 0.92rem;
+    font-weight: 800;
     text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  /* Colores de Jerarquía por Nivel */
+  &.level-1 .organigrama-node-level {
+    background-color: #f1f5f9;
+    color: $rw-dark;
+    border-color: #cbd5e1;
+  }
+
+  &.level-2 .organigrama-node-level {
+    background-color: $rw-primary-soft;
+    color: $rw-primary;
+    border-color: #fecdd3;
+  }
+
+  &.level-3 .organigrama-node-level {
+    background-color: #eff6ff;
+    color: #0f62fe;
+    border-color: #bfdbfe;
+  }
+
+  &.level-4 .organigrama-node-level {
+    background-color: #f0fdf4;
+    color: #059669;
+    border-color: #bbf7d0;
   }
 }
 
@@ -41,77 +169,215 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.organigrama-node-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
 .organigrama-node-level {
-  display: block;
-  margin-bottom: 0.25rem;
-  color: #d3152a;
-  font-size: 0.75rem;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 0.68rem;
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  i {
+    font-size: 0.85rem;
+  }
 }
 
+/* ==========================================================================
+   Selector Homologado de Persona (.table-select-custom / DESIGN-SYSTEM.md)
+   ========================================================================== */
 .organigrama-persona-selector {
   position: relative;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.selector-mini-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  i {
+    color: #94a3b8;
+    font-size: 0.8rem;
+  }
 }
 
 .organigrama-persona-trigger {
   display: flex;
   width: 100%;
-  min-height: 2.75rem;
+  min-height: 3rem;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.35rem 0.55rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  gap: 0.65rem;
+  padding: 0.45rem 0.7rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
   background: #ffffff;
   color: #334155;
   text-align: left;
   cursor: pointer;
+  transition: all 0.2s ease;
 
-  span {
+  &:hover {
+    border-color: #94a3b8;
+    background-color: #f8fafc;
+  }
+
+  &.is-open,
+  &:focus-visible {
+    outline: none;
+    border-color: $rw-primary;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+  }
+
+  &:not(.is-assigned) {
+    border-style: dashed;
+    background-color: #f8fafc;
+  }
+
+  .placeholder-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: $rw-primary;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .persona-selected-info {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+
+    .persona-selected-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: $rw-dark;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .persona-selected-status {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #10b981;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  .organigrama-persona-placeholder {
+    flex: 1;
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  &:focus-visible {
-    outline: 2px solid rgba(211, 21, 42, 0.35);
-    outline-offset: 1px;
+  .trigger-chevron {
+    font-size: 1.15rem;
+    color: #64748b;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  &.is-open .trigger-chevron {
+    transform: rotate(180deg);
+    color: $rw-primary;
   }
 }
 
-.organigrama-persona-placeholder {
-  color: #64748b;
-}
-
+/* Panel Flotante de Opciones */
 .organigrama-persona-panel {
   position: absolute;
-  z-index: 1100;
-  top: calc(100% + 0.25rem);
+  z-index: 1200;
+  top: calc(100% + 0.35rem);
   right: 0;
   left: 0;
-  max-height: 16rem;
-  overflow: auto;
-  padding: 0.35rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
   background: #ffffff;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.18), 0 8px 12px -6px rgba(15, 23, 42, 0.08);
+}
+
+.organigrama-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.4rem;
+
+  .search-icon {
+    position: absolute;
+    left: 0.65rem;
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+  }
 }
 
 .organigrama-persona-search {
-  position: sticky;
-  top: 0;
   width: 100%;
-  margin-bottom: 0.25rem;
-  padding: 0.5rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  background: #ffffff;
+  padding: 0.45rem 0.65rem 0.45rem 2rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e293b;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  &:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: $rw-primary;
+    box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+  }
+}
+
+.organigrama-options-list {
+  max-height: 13.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
 .organigrama-persona-option {
@@ -119,91 +385,200 @@
   width: 100%;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.4rem;
+  padding: 0.45rem 0.55rem;
   border: 0;
-  border-radius: 6px;
+  border-radius: 8px;
   background: transparent;
   color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
   text-align: left;
   cursor: pointer;
+  transition: all 0.15s ease;
 
   &:hover,
   &:focus-visible {
-    background: #fff1f2;
+    background: #f1f5f9;
+    color: #0f172a;
     outline: none;
   }
 
-  span {
+  &.is-selected {
+    background: $rw-primary-soft;
+    color: $rw-primary;
+    font-weight: 700;
+  }
+
+  .option-name {
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  .option-check {
+    font-size: 1.1rem;
+    color: $rw-primary;
+    flex-shrink: 0;
+  }
 }
 
 .organigrama-persona-empty {
-  margin: 0;
-  padding: 0.7rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem 0.5rem;
   color: #64748b;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+
+  i {
+    font-size: 1.35rem;
+    color: #94a3b8;
+  }
 }
 
+/* ==========================================================================
+   Botones de Acción del Nodo
+   ========================================================================== */
 .organigrama-add,
-.organigrama-remove,
 .organigrama-retry {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.65rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #ffffff;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
   color: #475569;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.18s ease;
+
+  i {
+    font-size: 1rem;
+    color: $rw-primary;
+  }
 
   &:hover {
-    border-color: rgba(211, 21, 42, 0.3);
-    background: #fff1f2;
-    color: #d3152a;
+    border-style: solid;
+    border-color: #fecdd3;
+    background: $rw-primary-soft;
+    color: $rw-primary;
+    transform: translateY(-1px);
   }
 }
 
 .organigrama-add {
-  align-self: flex-start;
+  width: 100%;
 }
 
 .organigrama-remove {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  color: #ef4444;
+  font-size: 1rem;
+  padding: 0;
+  cursor: pointer;
   flex: 0 0 auto;
-  color: #b91c1c;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(239, 68, 68, 0.15);
+  }
 }
 
 .organigrama-message {
-  padding: 1rem;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 2rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
   background: #f8fafc;
   color: #475569;
+  font-weight: 600;
+
+  i {
+    font-size: 1.35rem;
+    color: $rw-primary;
+  }
 }
 
 .organigrama-error {
+  background: #fff1f2;
+  border-color: #fecdd3;
   color: #b91c1c;
 }
 
-::ng-deep .area-organization-chart {
-  .p-organizationchart-node-content {
-    padding: 0.75rem !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 12px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+/* ==========================================================================
+   PrimeNG OrganizationChart Overrides
+   ========================================================================== */
+:host ::ng-deep .area-organization-chart {
+  .p-organizationchart-table {
+    margin: 0 auto;
   }
 
-  .p-organizationchart-line-down,
+  .p-organizationchart-node-content {
+    padding: 0.95rem 1rem !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+
+    &:hover {
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    &:has(.organigrama-node.level-1) {
+      border-top: 4px solid $rw-dark !important;
+    }
+
+    &:has(.organigrama-node.level-2) {
+      border-top: 4px solid $rw-primary !important;
+    }
+
+    &:has(.organigrama-node.level-3) {
+      border-top: 4px solid #0f62fe !important;
+    }
+
+    &:has(.organigrama-node.level-4) {
+      border-top: 4px solid #10b981 !important;
+    }
+
+    &:has(.organigrama-node.is-selector-open) {
+      z-index: 50;
+      border-color: $rw-primary !important;
+    }
+  }
+
+  .p-organizationchart-line-down {
+    background: #cbd5e1 !important;
+    width: 2px !important;
+  }
+
   .p-organizationchart-line-left,
   .p-organizationchart-line-right,
   .p-organizationchart-line-top {
     border-color: #cbd5e1 !important;
+    border-width: 2px !important;
   }
 }
 

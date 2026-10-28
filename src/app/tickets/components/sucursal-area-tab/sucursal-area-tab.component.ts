@@ -7,7 +7,6 @@ import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
-import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { AcordeonTicketsPorPrioridadComponent } from '../../../tickets/components/acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
 import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
@@ -46,7 +45,6 @@ import { Subscription } from 'rxjs';
     CommonModule,
     CrearTicketDialogComponent,
     DetalleTicketDialogComponent,
-    ModalFilterTicketsComponent,
     HistorialTicketsDialogComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
