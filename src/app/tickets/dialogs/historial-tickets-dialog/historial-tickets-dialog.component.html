@@ -140,6 +140,3 @@
 
 <app-detalle-ticket-dialog *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
   (closeEvent)="showModalTicketDetail = false"></app-detalle-ticket-dialog>
-
-<app-modal-filter-tickets [showModalFilterTickets]="showModalFilterTickets" [tickets]="todosLosTickets"
-  (closeEvent)="showModalFilterTickets = false" (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>

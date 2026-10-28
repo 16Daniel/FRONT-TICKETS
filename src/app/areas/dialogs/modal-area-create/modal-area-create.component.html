@@ -1,120 +1,246 @@
 <p-dialog
-  [header]="!esNuevaArea ? 'ACTUALIZAR ÁREA' : 'CREAR ÁREA'"
-  [(visible)]="mostrarModalCrearArea"
   [modal]="true"
-  [breakpoints]="{ '768px': '95vw', '560px': '100vw' }"
-  [style]="{ width: '70rem', maxWidth: '95vw' }"
+  [(visible)]="mostrarModalCrearArea"
+  [style]="{ width: '78rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '95vw', '575px': '100vw' }"
   [maximizable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="modal-area-rw"
   (onHide)="onHide()">
-  
-  <form #form="ngForm" (ngSubmit)="enviar(form)" class="mt-3">
-    <div class="row gy-4">
-      
-      <div class="col-12 col-md-6">
-        <label class="rw-form-label">ID</label>
-        <input [disabled]="true" class="form-control rw-input" type="text" placeholder="ID (Automático)"
-          [(ngModel)]="area.id" name="id" [ngClass]="{'p-invalid': formidCtrl.invalid && formidCtrl.touched}"
-          #formidCtrl="ngModel" required>
-        <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error d-block mt-1">
-          Campo requerido.
-        </small>
-      </div>
 
-      <div class="col-12 col-md-6">
-        <label class="rw-form-label">NOMBRE</label>
-        <input class="form-control rw-input" type="text" placeholder="Nombre del Área"
-          [(ngModel)]="area.nombre" name="nombre"
-          [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
-          required>
-        <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error d-block mt-1">
-          Campo requerido.
-        </small>
-      </div>
-
-      <div class="col-12">
-        <div class="d-flex align-items-center p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-          <div class="form-check form-switch m-0 d-flex align-items-center gap-3 flex-wrap">
-            <input class="form-check-input m-0" type="checkbox" role="switch" id="switchActivarTickets"
-              style="width: 3.5rem; height: 2rem; cursor: pointer;" name="activarTickets" 
-              [(ngModel)]="area.activarTickets">
-            <label class="form-check-label rw-form-label m-0" for="switchActivarTickets" style="cursor: pointer; margin-bottom: 0 !important;">
-              ¿ACTIVAR MÓDULO DE TICKETS?
-            </label>
-          </div>
+  <!-- Cabecera Personalizada -->
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header w-100 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <div class="header-icon-badge">
+          <i class="bx" [ngClass]="esNuevaArea ? 'bx-plus-circle' : 'bx-buildings'"></i>
+        </div>
+        <div>
+          <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+            {{ !esNuevaArea ? 'Actualizar Área Operativa' : 'Crear Nueva Área Operativa' }}
+          </h4>
+          <span class="header-subtitle">Configuración general, horarios de atención, notificaciones y organigrama</span>
         </div>
       </div>
 
+      <span class="area-id-pill" *ngIf="area?.id">
+        <i class="bx bx-hash"></i> ID {{ area.id }}
+      </span>
+    </div>
+  </ng-template>
+
+  <!-- Cuerpo del Modal -->
+  <form #form="ngForm" (ngSubmit)="enviar(form)" class="formulario-area">
+
+    <!-- Tarjeta Superior: Datos Generales del Área -->
+    <div class="area-card area-general-card">
+      <div class="grid-dos-columnas">
+        <div class="campo-grupo">
+          <label class="etiqueta-formulario">
+            <i class="bx bx-hash"></i> ID del Área
+          </label>
+          <input
+            [disabled]="true"
+            class="input-texto-rw"
+            type="text"
+            placeholder="ID (Automático)"
+            [(ngModel)]="area.id"
+            name="id"
+            [ngClass]="{ 'input-invalido': formidCtrl.invalid && formidCtrl.touched }"
+            #formidCtrl="ngModel"
+            required>
+          <small *ngIf="formidCtrl.invalid && formidCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="campo-grupo">
+          <label class="etiqueta-formulario">
+            <i class="bx bx-layer"></i> Nombre del Área
+          </label>
+          <input
+            class="input-texto-rw"
+            type="text"
+            placeholder="Escribe el nombre del área operativa..."
+            [(ngModel)]="area.nombre"
+            name="nombre"
+            [ngClass]="{ 'input-invalido': formNombreCtrl.invalid && formNombreCtrl.touched }"
+            #formNombreCtrl="ngModel"
+            required>
+          <small *ngIf="formNombreCtrl.invalid && formNombreCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+      </div>
+
+      <!-- Switch de Activación de Tickets -->
+      <div class="tarjeta-switch-tickets" [class.is-active]="area.activarTickets">
+        <div class="switch-info-group">
+          <div class="switch-icon-circle">
+            <i class="bx bx-receipt"></i>
+          </div>
+          <div class="switch-text-content">
+            <label class="switch-title" for="switchActivarTickets">
+              ¿Activar módulo de tickets?
+            </label>
+            <span class="switch-helper">
+              Habilita que sucursales y departamentos puedan generar tickets dirigidos a esta área.
+            </span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+          <span class="status-pill" [ngClass]="area.activarTickets ? 'status-active' : 'status-inactive'">
+            <span class="status-dot"></span>
+            {{ area.activarTickets ? 'ACTIVO' : 'INACTIVO' }}
+          </span>
+          <div class="form-check form-switch m-0 d-flex align-items-center">
+            <input
+              class="form-check-input switch-rw m-0"
+              type="checkbox"
+              role="switch"
+              id="switchActivarTickets"
+              name="activarTickets"
+              [(ngModel)]="area.activarTickets">
+          </div>
+        </div>
+      </div>
     </div>
 
-   <div class="mt-4">
-        <p-tabView>
-    <p-tabPanel header="HORARIO DE TRABAJO DEL ÁREA" leftIcon="bx bx-support">
-      <div class="row gy-3">
-        <div class="col-12 col-md-6" *ngFor="let dia of diasSemana">
-          <label class="rw-form-label d-block mb-2">{{ dia.label }}</label>
-          <div class="d-flex align-items-center gap-2 flex-column flex-md-row">
-            <input
-              type="time"
-              class="form-control rw-input w-100"
-              [(ngModel)]="area.horarioTrabajo[dia.key].inicio"
-              [name]="'area_horario_trabajo_' + dia.key + '_inicio'"
-              aria-label="Hora de entrada del área">
-            <span class="text-muted d-none d-md-inline">-</span>
-            <input
-              type="time"
-              class="form-control rw-input w-100"
-              [(ngModel)]="area.horarioTrabajo[dia.key].fin"
-              [name]="'area_horario_trabajo_' + dia.key + '_fin'"
-              aria-label="Hora de salida del área">
+    <!-- Sección de Pestañas -->
+    <p-tabView styleClass="area-config-tabs">
+
+      <!-- Tab 1: Horario de Trabajo -->
+      <p-tabPanel header="Horario de Trabajo" leftIcon="bx bx-time-five">
+        <div class="area-card area-tab-card">
+          <div class="tab-section-header">
+            <div class="tab-section-icon">
+              <i class="bx bx-support"></i>
+            </div>
+            <div>
+              <h5 class="tab-section-title">Horario de Trabajo del Área</h5>
+              <p class="tab-section-subtitle mb-0">
+                Define la jornada habitual de atención operativa para cada día de la semana.
+              </p>
+            </div>
+          </div>
+
+          <div class="horarios-grid">
+            <div class="horario-dia-card" *ngFor="let dia of diasSemana">
+              <div class="dia-card-header">
+                <i class="bx bx-calendar-event"></i>
+                <span>{{ dia.label }}</span>
+              </div>
+              <div class="dia-time-inputs">
+                <div class="time-field">
+                  <span class="time-mini-label">Entrada</span>
+                  <input
+                    type="time"
+                    class="input-texto-rw"
+                    [(ngModel)]="area.horarioTrabajo[dia.key].inicio"
+                    [name]="'area_horario_trabajo_' + dia.key + '_inicio'"
+                    aria-label="Hora de entrada del área">
+                </div>
+                <i class="bx bx-right-arrow-alt time-separator"></i>
+                <div class="time-field">
+                  <span class="time-mini-label">Salida</span>
+                  <input
+                    type="time"
+                    class="input-texto-rw"
+                    [(ngModel)]="area.horarioTrabajo[dia.key].fin"
+                    [name]="'area_horario_trabajo_' + dia.key + '_fin'"
+                    aria-label="Hora de salida del área">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </p-tabPanel>
-    <p-tabPanel header="HORARIO DE GUARDIA" leftIcon="bx bx-shield">
-      <div class="row gy-3">
-        <div class="col-12 col-md-6" *ngFor="let dia of diasSemana">
-          <label class="rw-form-label d-block mb-2">{{ dia.label }}</label>
-          <div class="d-flex align-items-center gap-2 flex-column flex-md-row">
-            <input
-              type="time"
-              class="form-control rw-input w-100"
-              [(ngModel)]="area.horarioGuardia[dia.key].inicio"
-              [name]="'area_horario_guardia_' + dia.key + '_inicio'"
-              aria-label="Hora de entrada de guardia">
-            <span class="text-muted d-none d-md-inline">-</span>
-            <input
-              type="time"
-              class="form-control rw-input w-100"
-              [(ngModel)]="area.horarioGuardia[dia.key].fin"
-              [name]="'area_horario_guardia_' + dia.key + '_fin'"
-              aria-label="Hora de salida de guardia">
+      </p-tabPanel>
+
+      <!-- Tab 2: Horario de Guardia -->
+      <p-tabPanel header="Horario de Guardia" leftIcon="bx bx-shield-quarter">
+        <div class="area-card area-tab-card">
+          <div class="tab-section-header">
+            <div class="tab-section-icon">
+              <i class="bx bx-shield-quarter"></i>
+            </div>
+            <div>
+              <h5 class="tab-section-title">Horario de Guardia</h5>
+              <p class="tab-section-subtitle mb-0">
+                Configura las ventanas de atención de guardia fuera de horario laboral.
+              </p>
+            </div>
+          </div>
+
+          <div class="horarios-grid">
+            <div class="horario-dia-card" *ngFor="let dia of diasSemana">
+              <div class="dia-card-header">
+                <i class="bx bx-shield"></i>
+                <span>{{ dia.label }}</span>
+              </div>
+              <div class="dia-time-inputs">
+                <div class="time-field">
+                  <span class="time-mini-label">Inicio</span>
+                  <input
+                    type="time"
+                    class="input-texto-rw"
+                    [(ngModel)]="area.horarioGuardia[dia.key].inicio"
+                    [name]="'area_horario_guardia_' + dia.key + '_inicio'"
+                    aria-label="Hora de entrada de guardia">
+                </div>
+                <i class="bx bx-right-arrow-alt time-separator"></i>
+                <div class="time-field">
+                  <span class="time-mini-label">Fin</span>
+                  <input
+                    type="time"
+                    class="input-texto-rw"
+                    [(ngModel)]="area.horarioGuardia[dia.key].fin"
+                    [name]="'area_horario_guardia_' + dia.key + '_fin'"
+                    aria-label="Hora de salida de guardia">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </p-tabPanel>
-    <p-tabPanel header="NOTIFICACIONES" leftIcon="bx bx-bell">
-        <app-escalation-manager [(levels)]="parentLevels" [(grupoNuevosTickets)]="grupoNuevosTickets"></app-escalation-manager>
-    </p-tabPanel>
-    <p-tabPanel header="ORGANIGRAMA" leftIcon="bx bx-sitemap">
-      <app-organigrama-editor
-        [areaId]="area?.id || ''"
-        [legacyOrganigrama]="area?.organigrama || []"
-        (organigramaChange)="actualizarOrganigrama($event)"
-        (validityChange)="actualizarValidezOrganigrama($event)"
-        (readyChange)="actualizarEstadoCargaOrganigrama($event)">
-      </app-organigrama-editor>
-    </p-tabPanel>
-</p-tabView>
-   </div>
-    
-    <div class="d-flex justify-content-end mt-5 pt-3 border-top">
+      </p-tabPanel>
+
+      <!-- Tab 3: Notificaciones -->
+      <p-tabPanel header="Notificaciones" leftIcon="bx bx-bell">
+        <div class="area-card area-tab-card">
+          <app-escalation-manager
+            [(levels)]="parentLevels"
+            [(grupoNuevosTickets)]="grupoNuevosTickets">
+          </app-escalation-manager>
+        </div>
+      </p-tabPanel>
+
+      <!-- Tab 4: Organigrama -->
+      <p-tabPanel header="Organigrama" leftIcon="bx bx-sitemap">
+        <div class="area-card area-tab-card">
+          <app-organigrama-editor
+            [areaId]="area?.id || ''"
+            [legacyOrganigrama]="area?.organigrama || []"
+            (organigramaChange)="actualizarOrganigrama($event)"
+            (validityChange)="actualizarValidezOrganigrama($event)"
+            (readyChange)="actualizarEstadoCargaOrganigrama($event)">
+          </app-organigrama-editor>
+        </div>
+      </p-tabPanel>
+
+    </p-tabView>
+
+    <!-- Barra de Acciones del Modal -->
+    <div class="barra-acciones-modal">
+      <button type="button" class="btn-cancelar-modal" (click)="onHide()">
+        Cancelar
+      </button>
       <button type="submit" class="btn-rw-cta" [disabled]="form.invalid || !organigramaListo">
-        <i class='bx bx-check-circle'></i>
+        <i class="bx bx-check-circle"></i>
         <span *ngIf="esNuevaArea">CREAR ÁREA</span>
         <span *ngIf="!esNuevaArea">GUARDAR CAMBIOS</span>
       </button>
     </div>
 
   </form>
-
 </p-dialog>

@@ -216,10 +216,6 @@
   <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
     (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>
 
-  <app-modal-filter-tickets [showModalFilterTickets]="mostrarModalFilterTickets" [tickets]="todosLostickets"
-    [sucursales]="sucursales" (closeEvent)="mostrarModalFilterTickets = false"
-    (ticketsFiltradosEvent)="tickets = $event"></app-modal-filter-tickets>
-
   <app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
     (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-historial-tickets-dialog>
 

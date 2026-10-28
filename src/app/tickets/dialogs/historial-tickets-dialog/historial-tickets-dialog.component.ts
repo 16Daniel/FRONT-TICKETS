@@ -15,7 +15,6 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { ModalFilterTicketsComponent } from '../modal-filter-tickets/modal-filter-tickets.component';
 import { DetalleTicketDialogComponent } from '../detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -42,7 +41,6 @@ import { ProveedorPlaneacion } from '../../../compras/interfaces/ProveedorPlanea
     RequesterTicketsListComponent,
     CalendarModule,
     FormsModule,
-    ModalFilterTicketsComponent,
     CommonModule,
     DetalleTicketDialogComponent,
     DropdownModule,
