@@ -112,7 +112,6 @@
                 ? 'LÍDER DEL COMITÉ: ' + responsable.nombre
                 : 'Elegir como líder: ' + responsable.nombre"
               tooltipPosition="top">
-              <i class="bx bx-crown comite-avatar-crown" *ngIf="comite.idResponsableLider === responsable.id"></i>
               <ngx-avatars
                 [name]="responsable.nombre"
                 [size]="36"
