@@ -169,7 +169,7 @@ export class TicketTabComitesComponent implements OnInit, OnChanges {
         this.showMessage(
           'warn',
           'Comités guardados',
-          'Los comités se asignaron, pero no fue posible registrar la alerta.'
+          'Los comités se asignaron, pero no fue posible registrar la alerta o enviar su notificación push.'
         );
         return;
       }

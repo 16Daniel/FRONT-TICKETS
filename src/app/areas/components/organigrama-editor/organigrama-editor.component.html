@@ -1,0 +1,117 @@
+<div class="organigrama-toolbar">
+  <div>
+    <h3 class="organigrama-title">Organigrama del área</h3>
+    <p class="text-muted mb-0">
+      Dirección y gerencia tienen un responsable; agrega coordinadores y responsables debajo de cada uno.
+    </p>
+  </div>
+  <button
+    type="button"
+    class="organigrama-retry"
+    *ngIf="errorCarga"
+    (click)="cargarOrganigrama()">
+    Reintentar carga
+  </button>
+</div>
+
+<div *ngIf="cargando" class="organigrama-message" role="status">Cargando organigrama...</div>
+<div *ngIf="errorCarga" class="organigrama-message organigrama-error" role="alert">{{ errorCarga }}</div>
+
+<div *ngIf="!cargando && !errorCarga" class="organigrama-chart-container">
+  <p-organizationChart
+    [value]="nodosOrganigrama"
+    styleClass="area-organization-chart">
+    <ng-template let-nodo pTemplate="default">
+      <ng-container *ngIf="nodo.data as nivel">
+        <article class="organigrama-node">
+          <div class="organigrama-node-heading">
+            <div>
+              <span class="organigrama-node-level">Nivel {{ nivel.id }}</span>
+              <h4>{{ nivel.nombre }}</h4>
+            </div>
+            <button
+              *ngIf="nivel.id === 3 && gerente.children.length > 1"
+              type="button"
+              class="organigrama-remove"
+              aria-label="Eliminar coordinador"
+              (click)="$event.stopPropagation(); eliminarCoordinador(nivel.key)">
+              <i class="bx bx-trash"></i>
+            </button>
+            <button
+              *ngIf="nivel.id === 4 && puedeEliminarResponsable(nodo.data.padreKey)"
+              type="button"
+              class="organigrama-remove"
+              aria-label="Eliminar responsable"
+              (click)="$event.stopPropagation(); eliminarResponsablePorClave(nodo.data.padreKey, nivel.key)">
+              <i class="bx bx-trash"></i>
+            </button>
+          </div>
+
+          <div class="organigrama-persona-selector">
+            <button
+              type="button"
+              class="organigrama-persona-trigger"
+              [attr.aria-expanded]="selectorAbiertoKey === nivel.key"
+              (click)="$event.stopPropagation(); alternarSelector(nivel.key)">
+              <ng-container *ngIf="obtenerResponsable(nivel.personaId) as responsable; else sinResponsable">
+                <ngx-avatars
+                  [name]="obtenerIniciales(responsable.nombre)"
+                  [size]="30"
+                  [bgColor]="responsable.color">
+                </ngx-avatars>
+                <span>{{ responsable.nombre }}</span>
+              </ng-container>
+              <ng-template #sinResponsable>
+                <span class="organigrama-persona-placeholder">Selecciona una persona</span>
+              </ng-template>
+              <i class="bx bx-chevron-down"></i>
+            </button>
+
+            <div
+              *ngIf="selectorAbiertoKey === nivel.key"
+              class="organigrama-persona-panel"
+              (click)="$event.stopPropagation()">
+              <input
+                type="search"
+                class="organigrama-persona-search"
+                placeholder="Buscar persona..."
+                aria-label="Buscar persona"
+                [value]="busquedaResponsable"
+                (input)="actualizarBusqueda($event)">
+              <button
+                *ngFor="let opcion of obtenerOpcionesFiltradas()"
+                type="button"
+                class="organigrama-persona-option"
+                (click)="actualizarPersonaPorClave(nivel.key, opcion.id)">
+                <ngx-avatars
+                  [name]="obtenerIniciales(opcion.nombre)"
+                  [size]="30"
+                  [bgColor]="opcion.color">
+                </ngx-avatars>
+                <span>{{ opcion.nombre }}</span>
+              </button>
+              <p *ngIf="obtenerOpcionesFiltradas().length === 0" class="organigrama-persona-empty">
+                No se encontraron personas.
+              </p>
+            </div>
+          </div>
+
+          <button
+            *ngIf="nivel.id === 2"
+            type="button"
+            class="organigrama-add"
+            (click)="$event.stopPropagation(); agregarCoordinador()">
+            <i class="bx bx-plus"></i> Agregar coordinador
+          </button>
+          <button
+            *ngIf="nivel.id === 3"
+            type="button"
+            class="organigrama-add"
+            (click)="$event.stopPropagation(); agregarResponsablePorClave(nivel.key)">
+            <i class="bx bx-plus"></i> Agregar responsable
+          </button>
+        </article>
+      </ng-container>
+    </ng-template>
+  </p-organizationChart>
+</div>

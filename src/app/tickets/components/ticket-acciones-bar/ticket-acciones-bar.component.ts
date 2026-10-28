@@ -7,6 +7,12 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { TicketDetailHelperService } from '../../services/ticket-detail-helper.service';
 import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialogs/seleccionar-usuario-especialista-dialog/seleccionar-usuario-especialista-dialog.component';
+import { CategoriesService } from '../../../categorias/services/categories.service';
+import { Categoria } from '../../../categorias/models/categoria.model';
+import { Subcategoria } from '../../../categorias/interfaces/subcategoria.interface';
+import { WhatsappService } from '../../../areas/services/whatsapp.service';
+import { firstValueFrom, take } from 'rxjs';
+import { environment } from '../../../../environments/environments';
 
 @Component({
   selector: 'app-ticket-acciones-bar',
@@ -25,7 +31,9 @@ export class TicketAccionesBarComponent {
   constructor(
     private ticketsService: TicketsService,
     private messageService: MessageService,
-    private helper: TicketDetailHelperService
+    private helper: TicketDetailHelperService,
+    private categoriesService: CategoriesService,
+    private whatsappService: WhatsappService
   ) {}
 
   get hasVisibleActions(): boolean {
@@ -166,6 +174,7 @@ export class TicketAccionesBarComponent {
     this.ticketsService
       .update(ticket)
       .then(async () => {
+        await this.enviarAvisoResolucionWhatsappSiCorresponde(ticket);
         await this.helper.registrarBitacoraSistema(
           ticket.id!,
           `Ticket <b>FINALIZADO</b> por la sucursal</b>`
@@ -173,6 +182,63 @@ export class TicketAccionesBarComponent {
         this.showMessage('success', 'Éxito', 'Ticket finalizado correctamente');
       })
       .catch((error) => console.error(error));
+  }
+
+  private async enviarAvisoResolucionWhatsappSiCorresponde(ticket: Ticket): Promise<void> {
+    try {
+      const categorias = await firstValueFrom(
+        this.categoriesService.get(String(ticket.idArea)).pipe(take(1))
+      );
+      const categoria = categorias.find(
+        (item: Categoria) => String(item.id) === String(ticket.idCategoria)
+      );
+      const subcategoria = categoria && ticket.idSubcategoria
+        ? this.buscarSubcategoria(categoria.subcategorias, String(ticket.idSubcategoria))
+        : undefined;
+
+      if (categoria?.alertaWhatsapp !== true && subcategoria?.alertaWhatsapp !== true) {
+        return;
+      }
+
+      const nombreCategoria = ticket.nombreCategoria || categoria?.nombre || 'Sin categoría';
+      const categoriaCompleta = ticket.nombreSubcategoria
+        ? `${nombreCategoria} - ${ticket.nombreSubcategoria}`
+        : nombreCategoria;
+      const mensaje = [
+        '✅ *TICKET DE URGENCIA RESUELTO*',
+        `*Folio:* ${ticket.folio || 'Sin folio'}`,
+        `*Categoría:* ${categoriaCompleta}`,
+        `*Prioridad:* ${ticket.prioridad || 'Sin especificar'}`,
+      ].join('\n');
+
+      await this.whatsappService.enviarMensajeTexto(
+        environment.grupoWAGerencias,
+        mensaje
+      );
+    } catch (error) {
+      console.error('Error al enviar el aviso de resolución por WhatsApp:', error);
+      this.showMessage(
+        'warn',
+        'Error al enviar WhatsApp',
+        'El ticket se finalizó, pero no fue posible enviar el aviso de resolución.'
+      );
+    }
+  }
+
+  private buscarSubcategoria(
+    subcategorias: Subcategoria[] | undefined,
+    idSubcategoria: string
+  ): Subcategoria | undefined {
+    for (const subcategoria of subcategorias || []) {
+      if (String(subcategoria.id) === idSubcategoria) {
+        return subcategoria;
+      }
+      const encontrada = this.buscarSubcategoria(subcategoria.subcategorias, idSubcategoria);
+      if (encontrada) {
+        return encontrada;
+      }
+    }
+    return undefined;
   }
 
   async onClickRechazar(ticket: Ticket | any): Promise<void> {

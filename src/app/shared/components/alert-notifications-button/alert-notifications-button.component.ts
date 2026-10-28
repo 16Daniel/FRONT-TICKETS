@@ -6,7 +6,6 @@ import { Timestamp } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import {
-  ALERTA_TICKET_WHATSAPP_ID,
   CategoriaAlerta,
   HistorialAlerta,
   HistorialAlertasService
@@ -230,7 +229,7 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
   obtenerNombreTipo(idAlerta: string): string {
     const categoria = this.categorias.find(tipo => tipo.id === idAlerta);
     if (categoria) return categoria.nombre || categoria.categoria || 'Alerta';
-    return idAlerta === ALERTA_TICKET_WHATSAPP_ID ? 'Ticket con alerta WhatsApp' : 'Alerta';
+    return 'Alerta';
   }
 
   obtenerFecha(fecha: HistorialAlerta['fecha']): Date {

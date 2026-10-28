@@ -1,29 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
-import { OrganizationChartModule } from 'primeng/organizationchart';
 import { TabViewModule } from 'primeng/tabview';
-import { Subscription } from 'rxjs';
-import { Area, EscalationLevel, OrganigramaAsignacion, OrganigramaNode } from '../../../areas/interfaces/area.model';
+import { Area, EscalationLevel } from '../../../areas/interfaces/area.model';
+import { AreaOrganigrama } from '../../../areas/interfaces/area-organigrama.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { EscalationManagerComponent } from '../../components/escalation-manager.component/escalation-manager.component';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { OrganigramaEditorComponent } from '../../components/organigrama-editor/organigrama-editor.component';
 
 @Component({
   selector: 'app-modal-area-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule, DropdownModule, TabViewModule, OrganizationChartModule, EscalationManagerComponent],
+  imports: [CommonModule, FormsModule, DialogModule, TabViewModule, EscalationManagerComponent, OrganigramaEditorComponent],
   templateUrl: './modal-area-create.component.html',
   styleUrl: './modal-area-create.component.scss'
 })
 
-export class ModalAreaCreateComponent implements OnDestroy {
+export class ModalAreaCreateComponent {
 
   @Input() mostrarModalCrearArea: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
@@ -32,44 +27,27 @@ export class ModalAreaCreateComponent implements OnDestroy {
   idAreaEditar: string = '';
   parentLevels = signal<EscalationLevel[]>([]);
   grupoNuevosTickets = signal<string>('');
-  organigrama: OrganigramaNode[] = [];
-  usuarios: Usuario[] = [];
-  responsables: Responsable[] = [];
-  opcionesUsuarios: { id: string; nombre: string }[] = [];
-  opcionesResponsables: { id: string; nombre: string }[] = [];
-  private subscriptions = new Subscription();
+  organigrama: AreaOrganigrama = {
+    areaId: '',
+    raiz: {
+      key: '',
+      id: 1,
+      nombre: 'Dirección',
+      personaId: '',
+      nombreResponsable: '',
+      children: [],
+    },
+  };
+  organigramaListo = false;
+  organigramaValido = false;
 
   constructor(
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private areasService: AreasService,
-    private usersService: UsersService,
-    private responsablesService: ResponsablesService
+    private areasService: AreasService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.subscriptions.add(
-      this.usersService.usuarios$.subscribe(usuarios => {
-        this.usuarios = usuarios;
-        this.opcionesUsuarios = usuarios
-          .filter(usuario => Boolean(usuario.id))
-          .map(usuario => ({ id: String(usuario.id), nombre: this.nombreUsuario(usuario) }));
-      })
-    );
-    this.subscriptions.add(
-      this.responsablesService.responsables$.subscribe(responsables => {
-        this.responsables = responsables;
-        this.opcionesResponsables = responsables
-          .filter(responsable => Boolean(responsable.id))
-          .map(responsable => ({
-            id: String(responsable.id),
-            nombre: responsable.posicion
-              ? `${responsable.nombre} - ${responsable.posicion}`
-              : responsable.nombre
-          }));
-      })
-    );
-
     if (!this.esNuevaArea) {
       this.idAreaEditar = this.area.id;
     }
@@ -98,11 +76,6 @@ export class ModalAreaCreateComponent implements OnDestroy {
       this.grupoNuevosTickets.set(this.area.gruponotificacion);
     }
 
-    this.organigrama = this.clonarOrganigrama(this.area.organigrama ?? []);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   diasSemana = [
@@ -127,79 +100,16 @@ export class ModalAreaCreateComponent implements OnDestroy {
     };
   }
 
-  agregarNivelRaiz(): void {
-    if (this.organigrama.length > 0) return;
-    this.organigrama = [this.crearNodoOrganigrama()];
+  actualizarOrganigrama(organigrama: AreaOrganigrama): void {
+    this.organigrama = organigrama;
   }
 
-  agregarSubnivel(nodo: OrganigramaNode): void {
-    this.organigrama = this.actualizarNodo(this.organigrama, nodo.key, actual => ({
-      ...actual,
-      expanded: true,
-      children: [...actual.children, this.crearNodoOrganigrama(true)]
-    }));
+  actualizarValidezOrganigrama(valido: boolean): void {
+    this.organigramaValido = valido;
   }
 
-  agregarAsignacion(nodo: OrganigramaNode): void {
-    this.organigrama = this.actualizarNodo(this.organigrama, nodo.key, actual => ({
-      ...actual,
-      data: {
-        ...actual.data,
-        asignados: [...actual.data.asignados, this.crearAsignacion()]
-      }
-    }));
-  }
-
-  eliminarAsignacion(nodo: OrganigramaNode, asignacionId: string): void {
-    this.organigrama = this.actualizarNodo(this.organigrama, nodo.key, actual => ({
-      ...actual,
-      data: {
-        ...actual.data,
-        asignados: actual.data.asignados.filter(asignacion => asignacion.id !== asignacionId)
-      }
-    }));
-  }
-
-  actualizarPuesto(nodo: OrganigramaNode, puesto: string): void {
-    this.organigrama = this.actualizarNodo(this.organigrama, nodo.key, actual => ({
-      ...actual,
-      data: { ...actual.data, puesto }
-    }));
-  }
-
-  eliminarNodo(nodo: OrganigramaNode): void {
-    this.organigrama = this.eliminarNodoDeArbol(this.organigrama, nodo.key);
-  }
-
-  cambiarTipoPersona(nodo: OrganigramaNode, asignacionId: string, esResponsable: boolean): void {
-    this.actualizarAsignacion(nodo, asignacionId, asignacion => ({
-      ...asignacion,
-      tipoPersona: esResponsable ? 'responsable' : 'usuario',
-      personaId: '',
-      nombre: ''
-    }));
-  }
-
-  actualizarPersona(nodo: OrganigramaNode, asignacion: OrganigramaAsignacion, personaId: string | null): void {
-    const idPersona = personaId ?? '';
-    const opciones = asignacion.tipoPersona === 'responsable'
-      ? this.opcionesResponsables
-      : this.opcionesUsuarios;
-    this.actualizarAsignacion(nodo, asignacion.id, actual => ({
-      ...actual,
-      personaId: idPersona,
-      nombre: opciones.find(opcion => opcion.id === idPersona)?.nombre ?? ''
-    }));
-  }
-
-  nombreUsuario(usuario?: Usuario): string {
-    return usuario
-      ? [usuario.nombre, usuario.apellidoP, usuario.apellidoM].filter(Boolean).join(' ')
-      : '';
-  }
-
-  esNodoRaiz(nodo: OrganigramaNode): boolean {
-    return this.organigrama.some(raiz => raiz.key === nodo.key);
+  actualizarEstadoCargaOrganigrama(listo: boolean): void {
+    this.organigramaListo = listo;
   }
 
   onHide() {
@@ -216,7 +126,21 @@ export class ModalAreaCreateComponent implements OnDestroy {
       return;
     }
 
-    this.esNuevaArea ? this.crear() : this.actualizar();
+    if (!this.organigramaListo) {
+      this.showMessage('error', 'Error', 'Espera a que cargue el organigrama antes de guardar.');
+      return;
+    }
+
+    if (!this.organigramaValido) {
+      this.showMessage('error', 'Error', 'Asigna al menos un responsable en cada nivel del organigrama.');
+      return;
+    }
+
+    if (this.esNuevaArea) {
+      await this.crear();
+    } else {
+      await this.actualizar();
+    }
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -224,12 +148,13 @@ export class ModalAreaCreateComponent implements OnDestroy {
   }
 
   async crear() {
-    this.area = { ...this.area, id: String(this.area.id) }
-    this.area.nivelesNotificacion = this.parentLevels();
-    this.area.gruponotificacion = this.grupoNuevosTickets();
-    this.area.organigrama = this.clonarOrganigrama(this.organigrama);
+    this.area = { ...this.area, id: String(this.area.id) };
+    const areaParaGuardar = this.prepararAreaParaGuardar();
     try {
-      await this.areasService.create({ ...this.area });
+      await this.areasService.create(areaParaGuardar, {
+        ...this.organigrama,
+        areaId: String(this.area.id),
+      });
       this.cdr.detectChanges();
       this.closeEvent.emit(false); // Cerrar modal
       this.showMessage('success', 'Success', 'Guardado correctamente');
@@ -240,12 +165,13 @@ export class ModalAreaCreateComponent implements OnDestroy {
   }
 
   async actualizar() {
-    this.area = { ...this.area, id: String(this.area.id) }
-    this.area.nivelesNotificacion = this.parentLevels();
-    this.area.gruponotificacion = this.grupoNuevosTickets();
-    this.area.organigrama = this.clonarOrganigrama(this.organigrama);
+    this.area = { ...this.area, id: String(this.area.id) };
+    const areaParaGuardar = this.prepararAreaParaGuardar();
     try {
-      await this.areasService.update(this.area, this.idAreaEditar);
+      await this.areasService.update(areaParaGuardar, this.idAreaEditar, {
+        ...this.organigrama,
+        areaId: this.idAreaEditar,
+      });
       this.cdr.detectChanges();
       this.closeEvent.emit(false); // Cerrar modal
       this.showMessage('success', 'Success', 'Enviado correctamente');
@@ -258,87 +184,13 @@ export class ModalAreaCreateComponent implements OnDestroy {
     }
   }
 
-  private crearNodoOrganigrama(conAsignacion: boolean = false): OrganigramaNode {
-    return {
-      key: crypto.randomUUID(),
-      expanded: true,
-      data: {
-        puesto: '',
-        asignados: conAsignacion ? [this.crearAsignacion()] : []
-      },
-      children: []
+  private prepararAreaParaGuardar(): Area {
+    const area: Area = {
+      ...this.area,
+      nivelesNotificacion: this.parentLevels(),
+      gruponotificacion: this.grupoNuevosTickets(),
     };
-  }
-
-  private crearAsignacion(): OrganigramaAsignacion {
-    return {
-      id: crypto.randomUUID(),
-      tipoPersona: 'usuario',
-      personaId: '',
-      nombre: ''
-    };
-  }
-
-  private clonarOrganigrama(nodos: OrganigramaNode[]): OrganigramaNode[] {
-    return nodos.map(nodo => {
-      const datosAnteriores = nodo.data as OrganigramaNode['data'] & {
-        asignados?: OrganigramaAsignacion[];
-        personaId?: string;
-        tipoPersona?: 'usuario' | 'responsable';
-        nombre?: string;
-      };
-      const asignados = datosAnteriores.asignados?.length
-        ? datosAnteriores.asignados.map(asignacion => ({ ...asignacion }))
-        : datosAnteriores.personaId
-          ? [{
-            id: crypto.randomUUID(),
-            tipoPersona: datosAnteriores.tipoPersona ?? 'usuario',
-            personaId: datosAnteriores.personaId,
-            nombre: datosAnteriores.nombre ?? ''
-          }]
-          : [];
-
-      return {
-        ...nodo,
-        data: {
-          puesto: datosAnteriores.puesto || datosAnteriores.nombre || '',
-          asignados
-        },
-        children: this.clonarOrganigrama(nodo.children ?? [])
-      };
-    });
-  }
-
-  private actualizarNodo(
-    nodos: OrganigramaNode[],
-    key: string,
-    actualizar: (nodo: OrganigramaNode) => OrganigramaNode
-  ): OrganigramaNode[] {
-    return nodos.map(nodo => nodo.key === key
-      ? actualizar(nodo)
-      : { ...nodo, children: this.actualizarNodo(nodo.children, key, actualizar) }
-    );
-  }
-
-  private actualizarAsignacion(
-    nodo: OrganigramaNode,
-    asignacionId: string,
-    actualizar: (asignacion: OrganigramaAsignacion) => OrganigramaAsignacion
-  ): void {
-    this.organigrama = this.actualizarNodo(this.organigrama, nodo.key, actual => ({
-      ...actual,
-      data: {
-        ...actual.data,
-        asignados: actual.data.asignados.map(asignacion =>
-          asignacion.id === asignacionId ? actualizar(asignacion) : asignacion
-        )
-      }
-    }));
-  }
-
-  private eliminarNodoDeArbol(nodos: OrganigramaNode[], key: string): OrganigramaNode[] {
-    return nodos
-      .filter(nodo => nodo.key !== key)
-      .map(nodo => ({ ...nodo, children: this.eliminarNodoDeArbol(nodo.children, key) }));
+    delete area.organigrama;
+    return area;
   }
 }

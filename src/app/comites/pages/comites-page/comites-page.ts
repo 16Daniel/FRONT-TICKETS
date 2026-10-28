@@ -14,6 +14,7 @@ import { Comite } from '../../interfaces/comite';
 import { ComitesService } from '../../services/comites.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
+import { AvatarComponent } from 'ngx-avatars';
 
 @Component({
   selector: 'app-comites-page',
@@ -26,6 +27,7 @@ import { ResponsablesService } from '../../../usuarios/services/responsables.ser
       TooltipModule,
       InputTextModule,
       ConfirmDialogModule,
+      AvatarComponent,
       ModalComiteCreateComponent,
       PageHeaderComponent],
   providers: [ConfirmationService, MessageService],
@@ -58,6 +60,13 @@ export class ComitesPage {
        (item) => String(item.id) === String(idResponsable),
      );
      return responsable?.nombre ?? idResponsable;
+   }
+
+   obtenerResponsables(comite: Comite) {
+     const idsSeleccionados = new Set(comite.idsResponsables ?? []);
+     return this.responsablesService.responsables.filter(
+       (responsable) => responsable.id && idsSeleccionados.has(responsable.id),
+     );
    }
  
    abrirModalCrearComite() {

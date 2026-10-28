@@ -1,0 +1,215 @@
+.organigrama-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.organigrama-title {
+  margin: 0 0 0.25rem;
+  color: #334155;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.organigrama-chart-container {
+  max-width: 100%;
+  overflow: auto;
+  padding: 1rem 0.5rem;
+}
+
+.organigrama-node {
+  display: flex;
+  width: 18rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.65rem;
+  text-align: left;
+
+  h4 {
+    margin: 0;
+    color: #334155;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+}
+
+.organigrama-node-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.organigrama-node-level {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #d3152a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.organigrama-persona-selector {
+  position: relative;
+  min-width: 0;
+}
+
+.organigrama-persona-trigger {
+  display: flex;
+  width: 100%;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  text-align: left;
+  cursor: pointer;
+
+  span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(211, 21, 42, 0.35);
+    outline-offset: 1px;
+  }
+}
+
+.organigrama-persona-placeholder {
+  color: #64748b;
+}
+
+.organigrama-persona-panel {
+  position: absolute;
+  z-index: 1100;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  left: 0;
+  max-height: 16rem;
+  overflow: auto;
+  padding: 0.35rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+}
+
+.organigrama-persona-search {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  margin-bottom: 0.25rem;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.organigrama-persona-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.4rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #334155;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: #fff1f2;
+    outline: none;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.organigrama-persona-empty {
+  margin: 0;
+  padding: 0.7rem 0.4rem;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.organigrama-add,
+.organigrama-remove,
+.organigrama-retry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    border-color: rgba(211, 21, 42, 0.3);
+    background: #fff1f2;
+    color: #d3152a;
+  }
+}
+
+.organigrama-add {
+  align-self: flex-start;
+}
+
+.organigrama-remove {
+  flex: 0 0 auto;
+  color: #b91c1c;
+}
+
+.organigrama-message {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+}
+
+.organigrama-error {
+  color: #b91c1c;
+}
+
+::ng-deep .area-organization-chart {
+  .p-organizationchart-node-content {
+    padding: 0.75rem !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .p-organizationchart-line-down,
+  .p-organizationchart-line-left,
+  .p-organizationchart-line-right,
+  .p-organizationchart-line-top {
+    border-color: #cbd5e1 !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .organigrama-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
