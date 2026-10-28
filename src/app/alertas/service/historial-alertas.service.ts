@@ -15,6 +15,8 @@ import {
 import { firstValueFrom, Observable } from 'rxjs';
 import { FieldPath, Timestamp } from 'firebase/firestore';
 import { environment } from '../../../environments/environments';
+import { AreaOrganigramaService } from '../../areas/services/area-organigrama.service';
+import { OrganigramaNodo } from '../../areas/interfaces/area-organigrama.model';
 
 export interface HistorialAlerta {
   id: string;
@@ -47,7 +49,8 @@ export class HistorialAlertasService {
 
   constructor(
     private firestore: Firestore,
-    private http: HttpClient
+    private http: HttpClient,
+    private areaOrganigramaService: AreaOrganigramaService
   ) {}
 
   obtenerAlertasPorUsuario(idUsuario: string): Observable<HistorialAlerta[]> {
@@ -81,10 +84,115 @@ export class HistorialAlertasService {
   }
 
   async registrarAlerta(alerta: Omit<HistorialAlerta, 'id'>): Promise<string> {
+    const usuariosAdicionales = await this.obtenerUsuariosDelOrganigrama(alerta);
+    const alertaConUsuarios = {
+      ...alerta,
+      usuarios: Array.from(new Set([...alerta.usuarios.map(String), ...usuariosAdicionales]))
+    };
     const alertasRef = collection(this.firestore, this.nombbre_coleccion);
-    const docRef = await addDoc(alertasRef, alerta);
-    await this.enviarNotificacionPush(alerta);
+    const docRef = await addDoc(alertasRef, alertaConUsuarios);
+    await this.enviarNotificacionPush(alertaConUsuarios);
     return docRef.id;
+  }
+
+  private async obtenerUsuariosDelOrganigrama(
+    alerta: Omit<HistorialAlerta, 'id'>
+  ): Promise<string[]> {
+    if (String(alerta.idAlerta) === '9') {
+      return this.obtenerUsuariosLideresComites(alerta.ticketId);
+    }
+
+    const niveles = ['1', '7'].includes(String(alerta.idAlerta))
+      ? [2]
+      : String(alerta.idAlerta) === '8'
+        ? [1, 2]
+        : [];
+    if (!niveles.length) {
+      return [];
+    }
+
+    const ticketSnapshot = await getDoc(doc(this.firestore, 'tickets', alerta.ticketId));
+    const ticket = ticketSnapshot.data() as { idArea?: unknown } | undefined;
+    if (!ticketSnapshot.exists() || ticket?.idArea === undefined || ticket.idArea === null) {
+      return [];
+    }
+
+    const organigrama = await this.areaOrganigramaService.obtenerPorArea(String(ticket.idArea));
+    const personaIds = niveles
+      .map(nivel => this.buscarNodoPorNivel(organigrama?.raiz, nivel)?.personaId)
+      .filter((personaId): personaId is string => typeof personaId === 'string' && Boolean(personaId.trim()))
+      .map(personaId => personaId.trim());
+    const usuarios = await Promise.all(personaIds.map(personaId =>
+      this.obtenerUsuarioDelResponsable(personaId)
+    ));
+    return Array.from(new Set(usuarios.filter((idUsuario): idUsuario is string => Boolean(idUsuario))));
+  }
+
+  private async obtenerUsuariosLideresComites(ticketId: string): Promise<string[]> {
+    const ticketSnapshot = await getDoc(doc(this.firestore, 'tickets', ticketId));
+    const ticket = ticketSnapshot.data() as { comites?: unknown } | undefined;
+    if (!ticketSnapshot.exists() || !Array.isArray(ticket?.comites)) {
+      return [];
+    }
+
+    const idsComites = Array.from(new Set(
+      ticket.comites.filter((idComite): idComite is string =>
+        typeof idComite === 'string' && Boolean(idComite.trim())
+      ).map(idComite => idComite.trim())
+    ));
+    const comitesSnapshots = await Promise.all(idsComites.map(idComite =>
+      getDoc(doc(this.firestore, 'cat_comites', idComite))
+    ));
+    return this.obtenerUsuariosLideresDeComites(comitesSnapshots);
+  }
+
+  private async obtenerUsuariosLideresDeComites(
+    comitesSnapshots: Array<{ exists: () => boolean; data: () => unknown }>
+  ): Promise<string[]> {
+    const idsResponsablesLideres = comitesSnapshots.flatMap(snapshot => {
+      const comite = snapshot.data() as { idResponsableLider?: unknown } | undefined;
+      return snapshot.exists() &&
+        typeof comite?.idResponsableLider === 'string' &&
+        comite.idResponsableLider.trim()
+        ? [comite.idResponsableLider.trim()]
+        : [];
+    });
+    const idsUsuarios = await Promise.all(idsResponsablesLideres.map(idResponsable =>
+      this.obtenerUsuarioDelResponsable(idResponsable)
+    ));
+    return Array.from(new Set(idsUsuarios.filter((idUsuario): idUsuario is string => Boolean(idUsuario))));
+  }
+
+  private async obtenerUsuarioDelResponsable(personaId: string): Promise<string | null> {
+    const responsableSnapshot = await getDoc(doc(this.firestore, 'responsables', personaId));
+    const datosResponsable = responsableSnapshot.data() as { idUsuario?: unknown } | undefined;
+    const idUsuario = datosResponsable?.idUsuario;
+    if (!responsableSnapshot.exists() || typeof idUsuario !== 'string' || !idUsuario.trim()) {
+      return null;
+    }
+
+    const usuarioId = idUsuario.trim();
+    const usuarioSnapshot = await getDoc(doc(this.firestore, 'usuarios', usuarioId));
+    return usuarioSnapshot.exists() ? usuarioId : null;
+  }
+
+  private buscarNodoPorNivel(
+    nodo: OrganigramaNodo | undefined,
+    nivel: number
+  ): OrganigramaNodo | undefined {
+    if (!nodo) {
+      return undefined;
+    }
+    if (Number(nodo.id) === nivel) {
+      return nodo;
+    }
+    for (const hijo of nodo.children ?? []) {
+      const encontrado = this.buscarNodoPorNivel(hijo, nivel);
+      if (encontrado) {
+        return encontrado;
+      }
+    }
+    return undefined;
   }
 
   private async enviarNotificacionPush(alerta: Omit<HistorialAlerta, 'id'>): Promise<void> {
