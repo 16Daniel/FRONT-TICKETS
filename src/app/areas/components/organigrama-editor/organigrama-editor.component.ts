@@ -4,11 +4,9 @@ import { TreeNode } from 'primeng/api';
 import { OrganizationChartModule } from 'primeng/organizationchart';
 import { Subscription } from 'rxjs';
 import { AvatarModule } from 'ngx-avatars';
-import {
-  AreaOrganigrama,
-  OrganigramaLegacyNode,
-  OrganigramaNodo,
-} from '../../interfaces/area-organigrama.model';
+import { AreaOrganigrama } from '../../interfaces/area-organigrama.model';
+import { OrganigramaLegacyNode } from '../../interfaces/organigrama-legacy-node.interface';
+import { OrganigramaNodo } from '../../interfaces/organigrama-nodo.interface';
 import { AreaOrganigramaService } from '../../services/area-organigrama.service';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
@@ -88,6 +86,30 @@ export class OrganigramaEditorComponent implements OnChanges, OnDestroy {
 
   get gerente(): OrganigramaNodo {
     return this.raiz.children[0];
+  }
+
+  get esOrganigramaValido(): boolean {
+    return this.esValido();
+  }
+
+  obtenerIconoNivel(id: number): string {
+    switch (id) {
+      case 1:
+        return 'bx bx-buildings';
+      case 2:
+        return 'bx bx-briefcase-alt-2';
+      case 3:
+        return 'bx bx-user-voice';
+      default:
+        return 'bx bx-user-check';
+    }
+  }
+
+  cerrarSelector(): void {
+    if (this.selectorAbiertoKey !== null) {
+      this.selectorAbiertoKey = null;
+      this.busquedaResponsable = '';
+    }
   }
 
   agregarCoordinador(): void {

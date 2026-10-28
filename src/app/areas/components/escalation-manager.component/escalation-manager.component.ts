@@ -8,7 +8,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DividerModule } from 'primeng/divider';
-import { EscalationLevel, GrupoWhatsapp, ResponsableNivel } from '../../interfaces/area.model';
+import { EscalationLevel } from '../../interfaces/escalation-level.interface';
+import { GrupoWhatsapp } from '../../interfaces/grupo-whatsapp.interface';
+import { ResponsableNivel } from '../../interfaces/responsable-nivel.interface';
 import { WhatsappService } from '../../services/whatsapp.service';
 import { DropdownModule } from 'primeng/dropdown';
 

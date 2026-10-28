@@ -98,6 +98,9 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   urlsArchivos: string[] = [];
   archivosPreview: { nombre: string, tipo: string, imgBase64?: string, icono?: string, color?: string }[] = [];
   archivos: File[] = [];
+  // public catproveedores:ProveedorPlaneacion[] = []; 
+  public catproveedores:any[] = []; 
+  public formProveedor: any = null; 
 
   get requiereEvidencia(): boolean {
     const requierePorCategoria = this.formCategoria?.evidenciaObligatoria === true;
@@ -751,4 +754,15 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
       categoria.trim().toUpperCase()
     );
   }
+
+  requiereProveedor():boolean
+{ 
+  if(this.formCategoria == undefined || this.formCategoria == null)
+    {
+      return false;  
+    }
+  let idCategoria = this.formCategoria.id; 
+  let categorias:number[] = [46,47,48,49,50,51,52,53,56,59,62]
+  return categorias.includes(idCategoria)
+}
 }

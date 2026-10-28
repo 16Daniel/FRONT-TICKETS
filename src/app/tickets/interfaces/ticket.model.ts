@@ -51,4 +51,6 @@ export class Ticket {
 
   esAsignadoEspecialista: boolean = false;
   idUsuarioEspecialista: string = '';
+  codProveedor?:number|null|undefined; 
+  fechaFinSoporte: Timestamp | any;
 }

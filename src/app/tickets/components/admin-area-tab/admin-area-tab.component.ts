@@ -8,7 +8,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { ModalFilterTicketsComponent } from '../../../tickets/dialogs/modal-filter-tickets/modal-filter-tickets.component';
 import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
 import { AcordeonTicketsPorUsuarioComponent } from '../../../tickets/components/acordeon-tickets-por-usuario/acordeon-tickets-por-usuario.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
@@ -53,7 +52,6 @@ import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.i
     FormsModule,
     ConfirmDialogModule,
     OverlayPanelModule,
-    ModalFilterTicketsComponent,
     CrearTicketDialogComponent,
     HistorialTicketsDialogComponent,
     AcordeonTicketsPorSucursalComponent,
@@ -105,7 +103,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   usuario: Usuario;
   sucursal: Sucursal | undefined;
   usergroup: Usuario | undefined;
-  filtroActivo: 'slaAtencion' | 'slaResolucion' | 'desbloqueo' | null = null;
+  filtroActivo: 'slaAtencion' | 'slaResolucion' | 'desbloqueo' | 'panico' | null = null;
 
   subscripcionTicket: Subscription | undefined;
 
@@ -411,11 +409,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  aplicarFiltroRapido(filtro: 'slaAtencion' | 'slaResolucion' | 'desbloqueo' | null) {
-    if (filtro === 'desbloqueo') {
-      // Pendiente de implementar lógica de desbloqueo
-      return;
-    }
+  aplicarFiltroRapido(filtro: 'slaAtencion' | 'slaResolucion' | 'desbloqueo' | 'panico' | null) {
     this.filtroActivo = this.filtroActivo === filtro ? null : filtro;
     this.aplicarFiltrosVista();
     this.cdr.detectChanges();
@@ -432,6 +426,10 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
       lista = lista.filter(t => this.tieneSlaAtencionVencido(t));
     } else if (this.filtroActivo === 'slaResolucion') {
       lista = lista.filter(t => this.tieneSlaResolucionVencido(t));
+    } else if (this.filtroActivo === 'desbloqueo') {
+      lista = lista.filter(t => t.revisionDesbloqueo === true);
+    } else if (this.filtroActivo === 'panico') {
+      lista = lista.filter(t => Number(t.score) > 8);
     }
 
     this.tickets = lista;
