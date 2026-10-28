@@ -155,8 +155,12 @@
         <i class="bx bx-check-shield"></i>&nbsp;SLA RESOLUCIÓN
       </button>
 
-      <button class="btn p-2 btn-light text-start" (click)="aplicarFiltroRapido('desbloqueo'); opf.hide()">
+      <button class="btn p-2 text-start" [ngClass]="filtroActivo === 'desbloqueo' ? 'btn-danger text-white' : 'btn-light'" (click)="aplicarFiltroRapido('desbloqueo'); opf.hide()">
         <i class="bx bx-lock-open-alt"></i>&nbsp;DESBLOQUEO
+      </button>
+
+      <button class="btn p-2 text-start" [ngClass]="filtroActivo === 'panico' ? 'btn-danger text-white' : 'btn-light'" (click)="aplicarFiltroRapido('panico'); opf.hide()">
+        <i class="bx bxs-hot"></i>&nbsp;PÁNICO
       </button>
     </div>
   </p-overlayPanel>
