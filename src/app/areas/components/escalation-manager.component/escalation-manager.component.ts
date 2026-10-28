@@ -1,5 +1,4 @@
-import { Component, input, model, type OnInit } from '@angular/core';
-import { signal } from '@angular/core';
+import { Component, model, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -97,9 +96,12 @@ export class EscalationManagerComponent implements OnInit {
 
   obtenerGrupoWhatsapp(): void {
     this.whatsappService.obtenergrupos().subscribe({
-      next: (grupos) => {
-        this.gruposWhatsapp.set(grupos);
-        console.log('Grupos de WhatsApp obtenidos:', grupos);
+      next: (respuesta: unknown) => {
+        try {
+          this.gruposWhatsapp.set(this.normalizarGruposWhatsapp(respuesta));
+        } catch (error) {
+          console.error('La API de WhatsApp devolvió una respuesta de grupos inválida:', error);
+        }
       },
       error: (error) => {
         console.error('Error al obtener los grupos de WhatsApp:', error);
@@ -107,15 +109,40 @@ export class EscalationManagerComponent implements OnInit {
     });
   }
 
-  onGrupoChange(event: any, itemr: ResponsableNivel): void {
-    debugger
-    const selectedGroupId = event.value;
+  private normalizarGruposWhatsapp(respuesta: unknown): GrupoWhatsapp[] {
+    let grupos: unknown = respuesta;
+
+    if (!Array.isArray(grupos) && typeof grupos === 'object' && grupos !== null) {
+      const resultado = grupos as Record<string, unknown>;
+      grupos = resultado['groups'] ?? resultado['data'] ?? resultado['results'];
+    }
+
+    if (!Array.isArray(grupos)) {
+      throw new TypeError('Se esperaba una lista de grupos de WhatsApp.');
+    }
+
+    return grupos.map((grupo: unknown, indice: number) => {
+      if (typeof grupo !== 'object' || grupo === null) {
+        throw new TypeError(`El grupo en la posición ${indice} no es válido.`);
+      }
+
+      const registro = grupo as Record<string, unknown>;
+      const id = registro['id'];
+      const name = registro['name'];
+      if (typeof id !== 'string' || typeof name !== 'string') {
+        throw new TypeError(`El grupo en la posición ${indice} no contiene id y name válidos.`);
+      }
+
+      return { id, name };
+    });
+  }
+
+  onGrupoChange(selectedGroupId: string, itemr: ResponsableNivel): void {
     itemr.name = this.gruposWhatsapp().find(g => g.id === selectedGroupId)?.name || '';
   }
 
-  cambiarGrupoNuevosTickets(event: any): void {
-    debugger
-    this.grupoNuevosTickets.set(event.value);
+  cambiarGrupoNuevosTickets(grupoId: string): void {
+    this.grupoNuevosTickets.set(grupoId);
   }
 
 }

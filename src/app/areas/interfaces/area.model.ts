@@ -7,7 +7,7 @@ export class Area {
   horarioGuardia:any = {};
   nivelesNotificacion: EscalationLevel[] = []; 
   gruponotificacion: string = '';
-  organigrama: OrganigramaNode[] = [];
+  organigrama?: OrganigramaNode[];
 }
 
 export interface OrganigramaNode {
