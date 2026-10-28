@@ -167,7 +167,7 @@ export class TicketTabDetallesComponent implements OnInit, OnChanges {
         this.showMessage(
           'warn',
           'Mitigación guardada',
-          'La mitigación se guardó, pero no fue posible registrar la alerta.'
+          'La mitigación se guardó, pero no fue posible registrar la alerta o enviar su notificación push.'
         );
         return;
       }
