@@ -208,10 +208,108 @@
       <!-- Tab 3: Notificaciones -->
       <p-tabPanel header="Notificaciones" leftIcon="bx bx-bell">
         <div class="area-card area-tab-card">
-          <app-escalation-manager
-            [(levels)]="parentLevels"
-            [(grupoNuevosTickets)]="grupoNuevosTickets">
-          </app-escalation-manager>
+          <div class="tab-section-header">
+            <div class="tab-section-icon">
+              <i class="bx bxl-whatsapp"></i>
+            </div>
+            <div>
+              <h5 class="tab-section-title">Notificaciones por WhatsApp (opcional)</h5>
+              <p class="tab-section-subtitle mb-0">
+                Elige el grupo y los eventos de tickets que se notificarán para esta área.
+              </p>
+            </div>
+          </div>
+
+          <div class="campo-grupo grupo-whatsapp-field">
+            <label class="etiqueta-formulario" for="grupoNotificacionArea">
+              <i class="bx bxl-whatsapp"></i> Grupo de WhatsApp
+            </label>
+            <p-dropdown
+              inputId="grupoNotificacionArea"
+              [options]="gruposWhatsapp"
+              [(ngModel)]="area.gruponotificacion"
+              name="grupoNotificacionArea"
+              optionValue="id"
+              optionLabel="name"
+              placeholder="Seleccione un grupo de WhatsApp..."
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              [loading]="cargandoGruposWhatsapp"
+              [style]="{ width: '100%' }">
+            </p-dropdown>
+            <small *ngIf="errorGruposWhatsapp" class="p-error">{{ errorGruposWhatsapp }}</small>
+          </div>
+
+          <div class="notificaciones-lista">
+            <div class="notificacion-opcion" [class.is-active]="area.notificacionesTicket.ticketCreado">
+              <div class="notificacion-opcion-info">
+                <span class="notificacion-opcion-icon"><i class="bx bx-plus-circle"></i></span>
+                <span>
+                  <label class="notificacion-opcion-titulo" for="notificarTicketCreado">Nuevo ticket</label>
+                  <small>Enviar una notificación cuando se cree un ticket.</small>
+                </span>
+              </div>
+              <input
+                class="form-check-input switch-rw"
+                type="checkbox"
+                role="switch"
+                id="notificarTicketCreado"
+                name="notificarTicketCreado"
+                [(ngModel)]="area.notificacionesTicket.ticketCreado">
+            </div>
+
+            <div class="notificacion-opcion" [class.is-active]="area.notificacionesTicket.ticketCerrado">
+              <div class="notificacion-opcion-info">
+                <span class="notificacion-opcion-icon"><i class="bx bx-check-circle"></i></span>
+                <span>
+                  <label class="notificacion-opcion-titulo" for="notificarTicketCerrado">Ticket cerrado</label>
+                  <small>Enviar una notificación cuando se cierre un ticket.</small>
+                </span>
+              </div>
+              <input
+                class="form-check-input switch-rw"
+                type="checkbox"
+                role="switch"
+                id="notificarTicketCerrado"
+                name="notificarTicketCerrado"
+                [(ngModel)]="area.notificacionesTicket.ticketCerrado">
+            </div>
+
+            <div class="notificacion-opcion" [class.is-active]="area.notificacionesTicket.superaTA">
+              <div class="notificacion-opcion-info">
+                <span class="notificacion-opcion-icon"><i class="bx bx-time-five"></i></span>
+                <span>
+                  <label class="notificacion-opcion-titulo" for="notificarSuperaTA">TA superado</label>
+                  <small>Enviar una notificación cuando se supere el TA del ticket.</small>
+                </span>
+              </div>
+              <input
+                class="form-check-input switch-rw"
+                type="checkbox"
+                role="switch"
+                id="notificarSuperaTA"
+                name="notificarSuperaTA"
+                [(ngModel)]="area.notificacionesTicket.superaTA">
+            </div>
+
+            <div class="notificacion-opcion" [class.is-active]="area.notificacionesTicket.superaTR">
+              <div class="notificacion-opcion-info">
+                <span class="notificacion-opcion-icon"><i class="bx bx-alarm-exclamation"></i></span>
+                <span>
+                  <label class="notificacion-opcion-titulo" for="notificarSuperaTR">TR superado</label>
+                  <small>Enviar una notificación cuando se supere el TR del ticket.</small>
+                </span>
+              </div>
+              <input
+                class="form-check-input switch-rw"
+                type="checkbox"
+                role="switch"
+                id="notificarSuperaTR"
+                name="notificarSuperaTR"
+                [(ngModel)]="area.notificacionesTicket.superaTR">
+            </div>
+          </div>
         </div>
       </p-tabPanel>
 

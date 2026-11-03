@@ -388,6 +388,84 @@ $rw-canvas: #f4f6fa;
   flex-shrink: 0;
 }
 
+.grupo-whatsapp-field {
+  max-width: 42rem;
+  margin-bottom: 1.25rem;
+}
+
+.notificaciones-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.notificacion-opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+
+  &.is-active {
+    border-color: #fecdd3;
+    background-color: #fffafb;
+
+    .notificacion-opcion-icon {
+      color: $rw-primary;
+      background-color: $rw-primary-soft;
+      border-color: #fecdd3;
+    }
+  }
+
+  .switch-rw {
+    flex-shrink: 0;
+  }
+}
+
+.notificacion-opcion-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+
+  > span:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  small {
+    color: #64748b;
+    font-size: 0.75rem;
+  }
+}
+
+.notificacion-opcion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #64748b;
+  font-size: 1.15rem;
+  transition: all 0.2s ease;
+}
+
+.notificacion-opcion-titulo {
+  color: $rw-dark;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 /* ==========================================================================
    Barra de Acciones del Modal
    ========================================================================== */

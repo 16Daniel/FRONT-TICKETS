@@ -10,9 +10,12 @@ import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialo
 import { CategoriesService } from '../../../categorias/services/categories.service';
 import { Categoria } from '../../../categorias/models/categoria.model';
 import { Subcategoria } from '../../../categorias/interfaces/subcategoria.interface';
+import { AreasService } from '../../../areas/services/areas.service';
 import { WhatsappService } from '../../../areas/services/whatsapp.service';
 import { firstValueFrom, take } from 'rxjs';
 import { environment } from '../../../../environments/environments';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsersService } from '../../../usuarios/services/users.service';
 
 @Component({
   selector: 'app-ticket-acciones-bar',
@@ -33,7 +36,10 @@ export class TicketAccionesBarComponent {
     private messageService: MessageService,
     private helper: TicketDetailHelperService,
     private categoriesService: CategoriesService,
-    private whatsappService: WhatsappService
+    private areasService: AreasService,
+    private whatsappService: WhatsappService,
+    private branchesService: BranchesService,
+    private usersService: UsersService
   ) {}
 
   get hasVisibleActions(): boolean {
@@ -185,6 +191,14 @@ export class TicketAccionesBarComponent {
   }
 
   private async enviarAvisoResolucionWhatsappSiCorresponde(ticket: Ticket): Promise<void> {
+    const areaTicket = this.areasService.areas.find(
+      area => String(area.id) === String(ticket.idArea)
+    );
+    const grupoNotificacionArea = areaTicket?.notificacionesTicket?.ticketCerrado === true
+      ? areaTicket.gruponotificacion?.trim()
+      : '';
+    let notificarPorCategoria = false;
+
     try {
       const categorias = await firstValueFrom(
         this.categoriesService.get(String(ticket.idArea)).pipe(take(1))
@@ -196,32 +210,90 @@ export class TicketAccionesBarComponent {
         ? this.buscarSubcategoria(categoria.subcategorias, String(ticket.idSubcategoria))
         : undefined;
 
-      if (categoria?.alertaWhatsapp !== true && subcategoria?.alertaWhatsapp !== true) {
-        return;
-      }
-
-      const nombreCategoria = ticket.nombreCategoria || categoria?.nombre || 'Sin categoría';
-      const categoriaCompleta = ticket.nombreSubcategoria
-        ? `${nombreCategoria} - ${ticket.nombreSubcategoria}`
-        : nombreCategoria;
-      const mensaje = [
-        '✅ *TICKET DE URGENCIA RESUELTO*',
-        `*Folio:* ${ticket.folio || 'Sin folio'}`,
-        `*Categoría:* ${categoriaCompleta}`,
-        `*Prioridad:* ${ticket.prioridad || 'Sin especificar'}`,
-      ].join('\n');
-
-      await this.whatsappService.enviarMensajeTexto(
-        environment.grupoWAGerencias,
-        mensaje
-      );
+      notificarPorCategoria =
+        categoria?.alertaWhatsapp === true || subcategoria?.alertaWhatsapp === true;
     } catch (error) {
-      console.error('Error al enviar el aviso de resolución por WhatsApp:', error);
-      this.showMessage(
-        'warn',
-        'Error al enviar WhatsApp',
-        'El ticket se finalizó, pero no fue posible enviar el aviso de resolución.'
-      );
+      console.error('Error al validar la notificación de resolución por categoría:', error);
+    }
+
+    if (!notificarPorCategoria && !grupoNotificacionArea) {
+      return;
+    }
+
+    const categoriaCompleta = ticket.nombreSubcategoria
+      ? `${ticket.nombreCategoria || 'Sin categoría'} - ${ticket.nombreSubcategoria}`
+      : ticket.nombreCategoria || 'Sin categoría';
+    let sucursal = String(ticket.idSucursal || 'Sin sucursal');
+    try {
+      const sucursales = await this.branchesService.getOnce();
+      sucursal = sucursales.find(
+        item => String(item.id) === String(ticket.idSucursal)
+      )?.nombre || sucursal;
+    } catch (error) {
+      console.error('Error al obtener la sucursal para el aviso de cierre por WhatsApp:', error);
+    }
+
+    const responsable = this.usersService.usuarios.find(
+      usuario => String(usuario.id) === String(ticket.idResponsable)
+    );
+    const nombreResponsable = responsable
+      ? `${responsable.nombre} ${responsable.apellidoP || ''} ${responsable.apellidoM || ''}`.trim()
+      : 'Sin asignar';
+    const descripcion = String(ticket.descripcion || '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/gi, ' ')
+      .trim();
+    const descripcionCorta = descripcion.length > 500
+      ? `${descripcion.slice(0, 497)}...`
+      : descripcion;
+    const tiempoAtencion = ticket.tiempoAtencion !== undefined
+      ? `${ticket.tiempoAtencion}${ticket.unidadAtencion || ''}`
+      : 'N/D';
+    const tiempoResolucion = ticket.tiempoResolucion !== undefined
+      ? `${ticket.tiempoResolucion}${ticket.unidadResolucion || ''}`
+      : 'N/D';
+    const mensaje = [
+      '======================',
+      '🟢 TICKET: TERMINADO',
+      '======================',
+      `Area: ${areaTicket?.nombre || ticket.idArea || 'Sin área'}`,
+      `Sucursal: ${sucursal}`,
+      `Ticket: ${ticket.folio || 'Sin folio'}`,
+      `Responsable: ${nombreResponsable}`,
+      `Prioridad: ${ticket.prioridad || 'Sin especificar'}`,
+      `TA: ${tiempoAtencion}`,
+      `TR: ${tiempoResolucion}`,
+      `Categoria: ${categoriaCompleta}`,
+      `Descripcion: ${descripcionCorta || 'Sin descripción'}`,
+      '======================'
+    ].join('\n');
+
+    if (notificarPorCategoria) {
+      try {
+        await this.whatsappService.enviarMensajeTexto(environment.grupoWAGerencias, mensaje);
+      } catch (error) {
+        console.error('Error al enviar el aviso de resolución por WhatsApp:', error);
+        this.showMessage(
+          'warn',
+          'Error al enviar WhatsApp',
+          'El ticket se finalizó, pero no fue posible enviar el aviso de resolución.'
+        );
+      }
+    }
+
+    if (grupoNotificacionArea) {
+      try {
+        await this.whatsappService.enviarMensajeTexto(grupoNotificacionArea, mensaje);
+      } catch (error) {
+        console.error('Error al enviar el aviso de cierre al grupo del área:', error);
+        this.showMessage(
+          'warn',
+          'Error al enviar WhatsApp',
+          'El ticket se finalizó, pero no fue posible notificar al grupo de WhatsApp del área.'
+        );
+      }
     }
   }
 
