@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { TabViewModule } from 'primeng/tabview';
-import { Area } from '../../interfaces/area.model';
-import { EscalationLevel } from '../../interfaces/escalation-level.interface';
+import { DropdownModule } from 'primeng/dropdown';
+import { Area, AreaNotificationSettings } from '../../interfaces/area.model';
+import { GrupoWhatsapp } from '../../interfaces/grupo-whatsapp.interface';
 import { AreaOrganigrama } from '../../../areas/interfaces/area-organigrama.model';
 import { AreasService } from '../../../areas/services/areas.service';
-import { EscalationManagerComponent } from '../../components/escalation-manager.component/escalation-manager.component';
+import { WhatsappService } from '../../services/whatsapp.service';
 import { OrganigramaEditorComponent } from '../../components/organigrama-editor/organigrama-editor.component';
 
 @Component({
   selector: 'app-modal-area-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule, TabViewModule, EscalationManagerComponent, OrganigramaEditorComponent],
+  imports: [CommonModule, FormsModule, DialogModule, TabViewModule, DropdownModule, OrganigramaEditorComponent],
   templateUrl: './modal-area-create.component.html',
   styleUrl: './modal-area-create.component.scss'
 })
@@ -26,8 +27,9 @@ export class ModalAreaCreateComponent {
   @Input() area: Area | any;
   @Input() esNuevaArea: boolean = true;
   idAreaEditar: string = '';
-  parentLevels = signal<EscalationLevel[]>([]);
-  grupoNuevosTickets = signal<string>('');
+  gruposWhatsapp: GrupoWhatsapp[] = [];
+  cargandoGruposWhatsapp = false;
+  errorGruposWhatsapp = '';
   organigrama: AreaOrganigrama = {
     areaId: '',
     raiz: {
@@ -45,7 +47,8 @@ export class ModalAreaCreateComponent {
   constructor(
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private areasService: AreasService
+    private areasService: AreasService,
+    private whatsappService: WhatsappService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -69,14 +72,15 @@ export class ModalAreaCreateComponent {
     if(!this.area.horarioGuardia) {
       this.area.horarioGuardia = this.crearHorarioPorDia();
     }
-    if(this.area.nivelesNotificacion){
-      this.parentLevels.set(this.area.nivelesNotificacion);
-    }
 
-    if(this.area.gruponotificacion){
-      this.grupoNuevosTickets.set(this.area.gruponotificacion);
-    }
-
+    this.area.notificacionesTicket = {
+      ticketCreado: false,
+      ticketCerrado: false,
+      superaTA: false,
+      superaTR: false,
+      ...(this.area.notificacionesTicket ?? {}),
+    } satisfies AreaNotificationSettings;
+    this.obtenerGruposWhatsapp();
   }
 
   diasSemana = [
@@ -111,6 +115,56 @@ export class ModalAreaCreateComponent {
 
   actualizarEstadoCargaOrganigrama(listo: boolean): void {
     this.organigramaListo = listo;
+  }
+
+  obtenerGruposWhatsapp(): void {
+    this.cargandoGruposWhatsapp = true;
+    this.errorGruposWhatsapp = '';
+    this.whatsappService.obtenergrupos().subscribe({
+      next: (respuesta: unknown) => {
+        try {
+          this.gruposWhatsapp = this.normalizarGruposWhatsapp(respuesta);
+        } catch (error) {
+          console.error('La API de WhatsApp devolvió una respuesta de grupos inválida:', error);
+          this.errorGruposWhatsapp = 'No fue posible interpretar la lista de grupos de WhatsApp.';
+        } finally {
+          this.cargandoGruposWhatsapp = false;
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener los grupos de WhatsApp:', error);
+        this.errorGruposWhatsapp = 'No fue posible cargar los grupos de WhatsApp.';
+        this.cargandoGruposWhatsapp = false;
+      }
+    });
+  }
+
+  private normalizarGruposWhatsapp(respuesta: unknown): GrupoWhatsapp[] {
+    let grupos: unknown = respuesta;
+
+    if (!Array.isArray(grupos) && typeof grupos === 'object' && grupos !== null) {
+      const resultado = grupos as Record<string, unknown>;
+      grupos = resultado['groups'] ?? resultado['data'] ?? resultado['results'];
+    }
+
+    if (!Array.isArray(grupos)) {
+      throw new TypeError('Se esperaba una lista de grupos de WhatsApp.');
+    }
+
+    return grupos.map((grupo: unknown, indice: number) => {
+      if (typeof grupo !== 'object' || grupo === null) {
+        throw new TypeError(`El grupo en la posición ${indice} no es válido.`);
+      }
+
+      const registro = grupo as Record<string, unknown>;
+      const id = registro['id'];
+      const name = registro['name'];
+      if (typeof id !== 'string' || typeof name !== 'string') {
+        throw new TypeError(`El grupo en la posición ${indice} no contiene id y name válidos.`);
+      }
+
+      return { id, name };
+    });
   }
 
   onHide() {
@@ -188,8 +242,7 @@ export class ModalAreaCreateComponent {
   private prepararAreaParaGuardar(): Area {
     const area: Area = {
       ...this.area,
-      nivelesNotificacion: this.parentLevels(),
-      gruponotificacion: this.grupoNuevosTickets(),
+      notificacionesTicket: { ...this.area.notificacionesTicket },
     };
     delete area.organigrama;
     return area;
