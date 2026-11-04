@@ -1,0 +1,166 @@
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header
+      subtitle="MANTENIMIENTOS PREVENTIVOS"
+      title="Mantenimientos en Sucursal">
+    </app-page-header>
+
+    <!-- Selector de Área / Tipo de Mantenimiento por Chips -->
+    <div class="areas-chips-track mb-4">
+      <button
+        *ngFor="let tab of tabsDisponibles"
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tipoActivo === tab.id"
+        (click)="cambiarTab(tab)">
+        <i [class]="tab.icono"></i>
+        <span class="area-name">{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <!-- Barra de acciones según pestaña seleccionada -->
+    <div class="actions-toolbar-row mt-3 mb-4">
+      <div class="actions-buttons-container justify-content-start flex-wrap gap-2">
+        @if (tipoActivo === 'TI') {
+          <p-button
+            label="HISTORIAL 8 X 8"
+            icon="pi pi-history"
+            styleClass="p-button-secondary action-btn-custom"
+            (click)="mostrarModalHistorialMantenimientos = true">
+          </p-button>
+
+          <p-button
+            *ngIf="mantenimientoActivo?.id"
+            label="CHECK SISTEMAS 8 X 8"
+            icon="pi pi-verified"
+            styleClass="p-button-danger action-btn-custom"
+            (click)="mostrarAlertaIT()">
+          </p-button>
+
+          <!-- <p-button
+            label="EVALUACIÓN GENERAL"
+            icon="pi pi-star"
+            styleClass="p-button-yellow action-btn-custom"
+            (click)="mostrarModalRating = true">
+          </p-button> -->
+        } @else if (tipoActivo === 'AV') {
+          <p-button
+            label="HISTORIAL 6 X 6 AV"
+            icon="pi pi-history"
+            styleClass="p-button-secondary action-btn-custom"
+            (click)="mostrarModalHistorialMantenimientosAV = true">
+          </p-button>
+
+          <p-button
+            *ngIf="mantenimientoAVActivo?.id"
+            label="CHECK AUDIO VIDEO 6 X 6"
+            icon="pi pi-verified"
+            styleClass="p-button-danger action-btn-custom"
+            (click)="mostrarAlertaAV()">
+          </p-button>
+        } @else if (tipoActivo === 'MTTO') {
+          <p-button
+            label="HISTORIAL 8 X 8"
+            icon="pi pi-history"
+            styleClass="p-button-secondary action-btn-custom"
+            (click)="mostrarModalHistorialMantenimientosMtto = true">
+          </p-button>
+
+          <p-button
+            *ngIf="mantenimientosActivos.length > 0"
+            label="CHECK MANTENIMIENTO 8 X 8"
+            icon="pi pi-wrench"
+            styleClass="p-button-danger action-btn-custom"
+            (click)="mostrarAlertaMtto()">
+          </p-button>
+        }
+      </div>
+    </div>
+
+    <!-- Tabla de últimos mantenimientos de la sucursal -->
+    <div class="bg-white rounded-3 p-3 shadow-sm">
+      @if (tipoActivo === 'TI') {
+        <app-tabla-mantenimientos-sistemas
+          [mantenimientos]="ultimosMantenimientosTI"
+          [usuariosHelp]="usuariosHelp"
+          [idSucursal]="sucursal?.id"
+          [mostrarChat]="true">
+        </app-tabla-mantenimientos-sistemas>
+      } @else if (tipoActivo === 'AV') {
+        <tabla-mantenimientos-audio-video
+          [mantenimientos]="ultimosMantenimientosAV"
+          [usuariosHelp]="usuariosHelp"
+          [idSucursal]="sucursal?.id"
+          [mostrarChat]="true">
+        </tabla-mantenimientos-audio-video>
+      } @else if (tipoActivo === 'MTTO') {
+        <app-tabla-mantenimientos-mantenimiento
+          [mantenimientos]="ultimosMantenimientosMtto"
+          [usuariosHelp]="usuariosHelp"
+          [mostrarChat]="true">
+        </app-tabla-mantenimientos-mantenimiento>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modales de Historial y Check -->
+<app-modal-ten-xten-maintenance-history
+  *ngIf="mostrarModalHistorialMantenimientos"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
+  (closeEvent)="mostrarModalHistorialMantenimientos = false">
+</app-modal-ten-xten-maintenance-history>
+
+<app-historial-mantenimiento-sys-av-dialog
+  *ngIf="mostrarModalHistorialMantenimientosAV"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientosAV"
+  (closeEvent)="mostrarModalHistorialMantenimientosAV = false">
+</app-historial-mantenimiento-sys-av-dialog>
+
+<app-modal-maintenance-mtto-history
+  *ngIf="mostrarModalHistorialMantenimientosMtto"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientosMtto"
+  (closeEvent)="mostrarModalHistorialMantenimientosMtto = false">
+</app-modal-maintenance-mtto-history>
+
+<app-modal-ten-xten-maintenance-check
+  *ngIf="mostrarModalMtooTI"
+  [mostrarModalMtooTI]="mostrarModalMtooTI"
+  (closeEvent)="mostrarModalMtooTI = false"
+  [mantenimientoActivo]="mantenimientoActivo">
+</app-modal-ten-xten-maintenance-check>
+
+<app-check-mantenimiento-sis-av-dialog
+  *ngIf="mostrarModalAV"
+  [mostrarModalAV]="mostrarModalAV"
+  (closeEvent)="mostrarModalAV = false"
+  [mantenimientoActivo]="mantenimientoAVActivo">
+</app-check-mantenimiento-sis-av-dialog>
+
+<app-modal-mateinance-mtto-check
+  *ngIf="mostrarModalManteinance"
+  [showModal]="mostrarModalManteinance"
+  (closeEvent)="mostrarModalManteinance = false"
+  [mantenimientosActivos]="mantenimientosActivos">
+</app-modal-mateinance-mtto-check>
+
+<app-modal-branch-rating
+  [mostrarModalRating]="mostrarModalRating"
+  (closeEvent)="mostrarModalRating = false">
+</app-modal-branch-rating>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>
+
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p [innerHTML]="message.message"></p>
+    </div>
+  </ng-template>
+</p-confirmDialog>

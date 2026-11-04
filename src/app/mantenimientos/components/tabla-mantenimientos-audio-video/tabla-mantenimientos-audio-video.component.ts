@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
 import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
@@ -22,6 +23,7 @@ import { MaintenanceAvService } from '../../services/maintenance-av.service';
   standalone: true,
   imports: [
     TableModule,
+    TooltipModule,
     CommonModule,
     ModalFinalCommentsComponent,
     ModalVisorVariasImagenesComponent,

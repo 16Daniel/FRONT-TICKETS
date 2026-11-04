@@ -124,6 +124,16 @@ export class AcordeonMantenimientosAudioVideoComponent {
     return dias;
   }
 
+  obtenerClaseEstado(value: number): string {
+    if (value <= 50) {
+      return 'status-critical';
+    }
+    if (value > 50 && value <= 80) {
+      return 'status-warning';
+    }
+    return 'status-success';
+  }
+
   obtenerColorDeFondoMantenimientoTI(value: number): string {
     let str = '';
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
 import { ModalMaintenanceMttoImguploaderComponent } from '../../dialogs/manteinance/modal-maintenance-mtto-imguploader/modal-maintenance-mtto-imguploader.component';
@@ -17,6 +18,7 @@ import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface
   standalone: true,
   imports: [
     TableModule,
+    TooltipModule,
     CommonModule,
     ModalMaintenanceMttoImguploaderComponent,
     ModalVisorVariasImagenesComponent,

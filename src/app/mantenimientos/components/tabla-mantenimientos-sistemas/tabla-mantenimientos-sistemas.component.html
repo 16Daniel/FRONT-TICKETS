@@ -1,96 +1,176 @@
-<p-table [value]="mantenimientos" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-    styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh" selectionMode="single"
-    [(selection)]="mantenimientoSeleccionado">
-    <ng-template pTemplate="header">
-        <tr class="text-center">
-            <th>NOMBRE</th>
-            <th>FECHA</th>
-            <th>CAJA</th>
-            <th>IMPRESORAS</th>
-            <th>RACK</th>
-            <th>TPV / TABLETAS</th>
-            <th>INTERNET</th>
-            <th>CCTV</th>
-            <th>NO BRAKES</th>
-            <th>TIEMPOS COCINA</th>
-            <th>% DE PROGRESO</th>
-            <th>ACCIONES</th>
-        </tr>
-    </ng-template>
+<p-table
+  [value]="mantenimientos"
+  [tableStyle]="{ 'min-width': '10rem' }"
+  styleClass="p-datatable-gridlines table-tk"
+  [scrollable]="true"
+  scrollHeight="62vh"
+  selectionMode="single"
+  [(selection)]="mantenimientoSeleccionado">
+  <ng-template pTemplate="header">
+    <tr class="text-center">
+      <th>ANALISTA</th>
+      <th>FECHA</th>
+      <th>CAJA</th>
+      <th>IMPRESORAS</th>
+      <th>RACK</th>
+      <th>TPV / TABLETAS</th>
+      <th>INTERNET</th>
+      <th>CCTV</th>
+      <th>NO BRAKES</th>
+      <th>TIEMPOS COCINA</th>
+      <th>PROGRESO</th>
+      <th style="width: 110px; text-align: center;">ACCIONES</th>
+    </tr>
+  </ng-template>
 
-    <ng-template pTemplate="body" let-mantenimiento>
-        <tr>
-            <td class="text-center"> {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) }}
-            </td>
-            <td class="text-center">{{ (dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a') ||
-                ('SIN CALIFICAR: ' + (dateHelpder.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a')) }}</td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CAJA')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoCaja, 'bg-danger': !mantenimiento.mantenimientoCaja}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoCaja ? 'Si' : 'No' }}</label>
-            </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'IMPRESORAS')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoImpresoras, 'bg-danger': !mantenimiento.mantenimientoImpresoras}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoImpresoras ? 'Si' : 'No' }}</label>
+  <ng-template pTemplate="body" let-mantenimiento>
+    <tr>
+      <td class="text-center fw-bold">
+        {{ obtenerNombreResponsable(mantenimiento!.idUsuarioSoporte) || 'SIN ASIGNAR' }}
+      </td>
 
-            </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'RACK')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoRack, 'bg-danger': !mantenimiento.mantenimientoRack}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoRack ? 'Si' : 'No' }}</label>
-            </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'TPV')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoPuntosVentaTabletas, 'bg-danger': !mantenimiento.mantenimientoPuntosVentaTabletas}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoPuntosVentaTabletas ? 'Si' : 'No'
-                    }}</label>
-            </td>
+      <td class="text-center">
+        @if (mantenimiento.fechaFin) {
+          <span class="date-text">{{ dateHelpder.getDate(mantenimiento.fechaFin) | date: 'dd/MM/yyyy hh:mm a' }}</span>
+        } @else {
+          <div class="d-flex flex-column align-items-center gap-1">
+            <span class="unrated-badge">SIN CALIFICAR</span>
+            <span class="date-subtext">{{ dateHelpder.getDate(mantenimiento.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</span>
+          </div>
+        }
+      </td>
 
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'INTERNET')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoInternet, 'bg-danger': !mantenimiento.mantenimientoInternet}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoInternet ? 'Si' : 'No' }}</label>
-            </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'CCTV')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoCCTV, 'bg-danger': !mantenimiento.mantenimientoCCTV}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoCCTV ? 'Si' : 'No' }}</label>
-            </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'NO BRAKES')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoNoBrakes, 'bg-danger': !mantenimiento.mantenimientoNoBrakes}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoNoBrakes ? 'Si' : 'No' }}</label>
-            </td>
-            <td class="text-center" (click)="abrirModalImagen(mantenimiento, 'TIEMPOS COCINA')"
-                [ngClass]="{'bg-success': mantenimiento.mantenimientoTiemposCocina, 'bg-danger': !mantenimiento.mantenimientoTiemposCocina}">
-                <label style="color: white;">{{ mantenimiento.mantenimientoTiemposCocina ? 'Si' : 'No' }}</label>
-            </td>
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoCaja ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'CAJA')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoCaja ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoCaja ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
 
-            <td class="text-center">{{ mantenimientosSistemasService.calcularPorcentaje(mantenimiento) }}%</td>
-            <td style="display: flex; gap: 10px">
-                <button class="btn btn-info" pTooltip="DETALLES" tooltipPosition="top"
-                    (click)="abrirModalDetalle(mantenimiento)">
-                    <i class='bx bx-show bx-sm'></i>
-                </button>
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoImpresoras ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'IMPRESORAS')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoImpresoras ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoImpresoras ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
 
-                <button class="btn btn-primary btn-notification" (click)="onClickChat(mantenimiento)"
-                    *ngIf="mostrarChat" style="margin: 2px"
-                    [ngClass]="{'has-notification': verificarChatNoLeido(mantenimiento)}">
-                    <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"
-                        tooltipPosition="top"></i>
-                </button>
-            </td>
-        </tr>
-    </ng-template>
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoRack ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'RACK')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoRack ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoRack ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
+
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoPuntosVentaTabletas ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'TPV')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoPuntosVentaTabletas ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoPuntosVentaTabletas ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
+
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoInternet ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'INTERNET')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoInternet ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoInternet ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
+
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoCCTV ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'CCTV')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoCCTV ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoCCTV ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
+
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoNoBrakes ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'NO BRAKES')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoNoBrakes ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoNoBrakes ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
+
+      <td class="text-center">
+        <button type="button" class="check-status-pill"
+          [ngClass]="mantenimiento.mantenimientoTiemposCocina ? 'status-yes' : 'status-no'"
+          (click)="abrirModalImagen(mantenimiento, 'TIEMPOS COCINA')">
+          <i class="bx" [ngClass]="mantenimiento.mantenimientoTiemposCocina ? 'bx-check-circle' : 'bx-x-circle'"></i>
+          <span>{{ mantenimiento.mantenimientoTiemposCocina ? 'SÍ' : 'NO' }}</span>
+        </button>
+      </td>
+
+      <td class="text-center">
+        @if (mantenimientosSistemasService.calcularPorcentaje(mantenimiento); as pct) {
+          <span class="progress-pill"
+            [ngClass]="pct <= 50 ? 'progress-critical' : (pct <= 80 ? 'progress-warning' : 'progress-success')">
+            {{ pct }}%
+          </span>
+        } @else {
+          <span class="progress-pill progress-critical">0%</span>
+        }
+      </td>
+
+      <td>
+        <div class="d-flex justify-content-center align-items-center gap-2">
+          <button
+            type="button"
+            class="btn-action-table btn-action-info"
+            pTooltip="DETALLES"
+            tooltipPosition="top"
+            (click)="abrirModalDetalle(mantenimiento)">
+            <i class="bx bx-show"></i>
+          </button>
+
+          <button
+            type="button"
+            class="btn-action-table btn-action-primary"
+            *ngIf="mostrarChat"
+            [ngClass]="{'has-notification': verificarChatNoLeido(mantenimiento)}"
+            pTooltip="CHAT"
+            tooltipPosition="top"
+            (click)="onClickChat(mantenimiento)">
+            <i class="bx bx-message-square-dots"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="12" class="text-center py-4 text-muted fw-semibold">
+        Sin registros de mantenimiento para esta sucursal.
+      </td>
+    </tr>
+  </ng-template>
 </p-table>
 
 <app-modal-final-comments *ngIf="mostrarModalComentarios" [mostrarModal]="mostrarModalComentarios"
-    [mantenimiento]="mantenimientoSeleccionado"
-    (closeEvent)="mostrarModalComentarios = false"></app-modal-final-comments>
+  [mantenimiento]="mantenimientoSeleccionado"
+  (closeEvent)="mostrarModalComentarios = false"></app-modal-final-comments>
 
 <app-modal-sys-mtto-imguploader *ngIf="mostrarModalSubirImagen" [mostrarModal]="mostrarModalSubirImagen"
-    (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
-    [mantenimiento]="mantenimientoSeleccionado"></app-modal-sys-mtto-imguploader>
+  (closeEvent)="mostrarModalSubirImagen = false" [titulo]="tituloEvidencia"
+  [mantenimiento]="mantenimientoSeleccionado"></app-modal-sys-mtto-imguploader>
 
 <app-modal-visor-varias-imagenes *ngIf="mostrarModalVisorImagen" [mostrarModal]="mostrarModalVisorImagen"
-    [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"
-    (imagenEliminadaEvent)="onEliminarImagen($event)"
-    [mostrarBotonEliminar]="usuario.idRol == '4' || usuario.idRol == '1' || usuario.idRol == '5'"></app-modal-visor-varias-imagenes>
+  [titulo]="tituloVisor!" (closeEvent)="mostrarModalVisorImagen = false" [imagenes]="imagenes"
+  (imagenEliminadaEvent)="onEliminarImagen($event)"
+  [mostrarBotonEliminar]="usuario.idRol == '4' || usuario.idRol == '1' || usuario.idRol == '5'"></app-modal-visor-varias-imagenes>
 
 <app-modal-maintenance-chat *ngIf="mostrarModalChat" [mostrarModal]="mostrarModalChat"
-    (closeEvent)="mostrarModalChat = false" [idMnatenimiento]="mantenimientoSeleccionado?.id"
-    [idArea]="'1'"></app-modal-maintenance-chat>
+  (closeEvent)="mostrarModalChat = false" [idMnatenimiento]="mantenimientoSeleccionado?.id"
+  [idArea]="'1'"></app-modal-maintenance-chat>

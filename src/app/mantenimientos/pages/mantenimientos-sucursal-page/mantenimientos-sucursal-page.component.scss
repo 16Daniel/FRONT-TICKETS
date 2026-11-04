@@ -1,0 +1,36 @@
+$rw-primary: #d3152a;
+
+.dashboard-page-wrapper {
+  background-color: #f4f6fa;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem 1.5rem;
+  width: 100%;
+}
+
+.dashboard-content-container {
+  max-width: 1650px;
+  margin: 0 auto;
+}
+
+.actions-toolbar-row {
+  width: 100%;
+}
+
+.actions-buttons-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+
+  ::ng-deep .action-btn-custom {
+    font-size: 0.825rem !important;
+    font-weight: 600 !important;
+    padding: 0.55rem 0.95rem !important;
+    border-radius: 10px !important;
+
+    .p-button-icon {
+      font-size: 0.875rem !important;
+    }
+  }
+}
