@@ -1,6 +1,6 @@
 <p-accordion class="custom-branches-accordion w-full">
   <p-accordionTab
-    *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales))">
+    *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales)); trackBy: trackBySucursalId">
     <ng-template pTemplate="header">
       <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(obtenerPorcentajedeUltimoMantenimiento(item.id))">
         <div class="branch-info-group">
@@ -19,8 +19,23 @@
       </div>
     </ng-template>
 
+    <!-- Sub-toggles inside accordion body -->
+    <div class="accordion-subtoggles-strip">
+      <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+        <input class="form-check-input custom-switch" type="checkbox" role="switch"
+          [(ngModel)]="mostrarRadiografiaMap[item.id]" />
+        <label class="form-check-label m-0">📊 MÁS INFORMACIÓN</label>
+      </div>
+    </div>
+
     <div class="accordion-tables-wrapper">
+      <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id]" [sucursal]="item"></app-tpvs-devices-table>
+
+      <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
+        [idArea]="'1'"></app-grafica-tickets-30-dias>
+
       <app-tabla-mantenimientos-sistemas
+        *ngIf="!mostrarRadiografiaMap[item.id]"
         [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"
         [usuariosHelp]="usuariosHelp"
         [idSucursal]="item.id"

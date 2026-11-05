@@ -43,72 +43,136 @@
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoCaja ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoCajaEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'CAJA')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoCaja ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoCaja ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoCajaEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoCajaEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoImpresoras ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoImpresorasEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'IMPRESORAS')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoImpresoras ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoImpresoras ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoImpresorasEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoImpresorasEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoRack ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoRackEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'RACK')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoRack ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoRack ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoRackEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoRackEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoPuntosVentaTabletas ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'TPV')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoPuntosVentaTabletas ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoPuntosVentaTabletas ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoInternet ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoInternetEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'INTERNET')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoInternet ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoInternet ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoInternetEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoInternetEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoCCTV ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoCCTVEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'CCTV')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoCCTV ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoCCTV ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoCCTVEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoCCTVEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoNoBrakes ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoNoBrakesEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'NO BRAKES')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoNoBrakes ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoNoBrakes ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoNoBrakesEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoNoBrakesEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 
       <td class="text-center">
         <button type="button" class="check-status-pill"
           [ngClass]="mantenimiento.mantenimientoTiemposCocina ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls)"
+          tooltipPosition="top"
           (click)="abrirModalImagen(mantenimiento, 'TIEMPOS COCINA')">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoTiemposCocina ? 'bx-check-circle' : 'bx-x-circle'"></i>
           <span>{{ mantenimiento.mantenimientoTiemposCocina ? 'SÍ' : 'NO' }}</span>
+          @if ((mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls?.length || 0) > 0) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls!.length }}</span>
+            </span>
+          }
         </button>
       </td>
 

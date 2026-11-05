@@ -1,0 +1,96 @@
+$rw-primary: #d3152a;
+$rw-soft-red: #fff1f2;
+
+.picklist-card-container {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+::ng-deep .rw-custom-picklist {
+  .p-picklist-list-wrapper {
+    background: #f8fafc;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+  }
+
+  .p-picklist-header {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 0.85rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.05em !important;
+    padding: 0.9rem 1.25rem !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+  }
+
+  .p-picklist-filter-container {
+    background: #ffffff !important;
+    padding: 0.75rem 1rem !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    .p-picklist-filter-input {
+      border-radius: 10px !important;
+      border: 1px solid #cbd5e1 !important;
+      font-size: 0.85rem !important;
+      padding: 0.5rem 2.2rem 0.5rem 0.85rem !important;
+
+      &:focus {
+        border-color: $rw-primary !important;
+        box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.1) !important;
+      }
+    }
+  }
+
+  .p-picklist-list {
+    background: #f8fafc !important;
+    border: none !important;
+    padding: 0.85rem !important;
+
+    .p-picklist-item {
+      padding: 0 !important;
+      margin-bottom: 0.65rem !important;
+      border-radius: 14px !important;
+      background: transparent !important;
+      border: none !important;
+      transition: transform 0.18s ease !important;
+
+      &.p-highlight {
+        outline: 2px solid $rw-primary !important;
+        outline-offset: 2px !important;
+      }
+    }
+  }
+
+  .p-picklist-buttons {
+    padding: 0 1rem !important;
+    gap: 0.5rem !important;
+
+    .p-button {
+      background: #ffffff !important;
+      color: #475569 !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 10px !important;
+      width: 40px !important;
+      height: 40px !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.18s ease !important;
+
+      &:hover:not(:disabled) {
+        background: $rw-soft-red !important;
+        color: $rw-primary !important;
+        border-color: rgba(211, 21, 42, 0.35) !important;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}

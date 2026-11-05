@@ -36,56 +36,110 @@
 
       <!-- PANTALLAS -->
       <td class="text-center">
-        <span class="check-status-pill" (click)="abrirModalImagen(mantenimiento, 'PANTALLAS')"
-          [ngClass]="mantenimiento.mantenimientoPantallasSoporte ? 'status-yes' : 'status-no'">
+        <button type="button" class="check-status-pill"
+          (click)="abrirModalImagen(mantenimiento, 'PANTALLAS')"
+          [ngClass]="mantenimiento.mantenimientoPantallasSoporte ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(obtenerCantidadEvidencias(mantenimiento, 'PANTALLAS'))"
+          tooltipPosition="top">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoPantallasSoporte ? 'bx-check-circle' : 'bx-x-circle'"></i>
-          {{ mantenimiento.mantenimientoPantallasSoporte ? 'Sí' : 'No' }}
-        </span>
+          <span>{{ mantenimiento.mantenimientoPantallasSoporte ? 'SÍ' : 'NO' }}</span>
+          @if (obtenerCantidadEvidencias(mantenimiento, 'PANTALLAS'); as cant) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ cant }}</span>
+            </span>
+          }
+        </button>
       </td>
 
       <!-- VIDEO -->
       <td class="text-center">
-        <span class="check-status-pill" (click)="abrirModalImagen(mantenimiento, 'VIDEO')"
-          [ngClass]="mantenimiento.mantenimientoSenalVideo ? 'status-yes' : 'status-no'">
+        <button type="button" class="check-status-pill"
+          (click)="abrirModalImagen(mantenimiento, 'VIDEO')"
+          [ngClass]="mantenimiento.mantenimientoSenalVideo ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(obtenerCantidadEvidencias(mantenimiento, 'VIDEO'))"
+          tooltipPosition="top">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoSenalVideo ? 'bx-check-circle' : 'bx-x-circle'"></i>
-          {{ mantenimiento.mantenimientoSenalVideo ? 'Sí' : 'No' }}
-        </span>
+          <span>{{ mantenimiento.mantenimientoSenalVideo ? 'SÍ' : 'NO' }}</span>
+          @if (obtenerCantidadEvidencias(mantenimiento, 'VIDEO'); as cant) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ cant }}</span>
+            </span>
+          }
+        </button>
       </td>
 
       <!-- NIVELES -->
       <td class="text-center">
-        <span class="check-status-pill" (click)="abrirModalImagen(mantenimiento, 'NIVELES')"
-          [ngClass]="mantenimiento.mantenimientoNiveles ? 'status-yes' : 'status-no'">
+        <button type="button" class="check-status-pill"
+          (click)="abrirModalImagen(mantenimiento, 'NIVELES')"
+          [ngClass]="mantenimiento.mantenimientoNiveles ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(obtenerCantidadEvidencias(mantenimiento, 'NIVELES'))"
+          tooltipPosition="top">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoNiveles ? 'bx-check-circle' : 'bx-x-circle'"></i>
-          {{ mantenimiento.mantenimientoNiveles ? 'Sí' : 'No' }}
-        </span>
+          <span>{{ mantenimiento.mantenimientoNiveles ? 'SÍ' : 'NO' }}</span>
+          @if (obtenerCantidadEvidencias(mantenimiento, 'NIVELES'); as cant) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ cant }}</span>
+            </span>
+          }
+        </button>
       </td>
 
       <!-- BOCINAS -->
       <td class="text-center">
-        <span class="check-status-pill" (click)="abrirModalImagen(mantenimiento, 'BOCINAS')"
-          [ngClass]="mantenimiento.mantenimientoFuncionalBocinas ? 'status-yes' : 'status-no'">
+        <button type="button" class="check-status-pill"
+          (click)="abrirModalImagen(mantenimiento, 'BOCINAS')"
+          [ngClass]="mantenimiento.mantenimientoFuncionalBocinas ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(obtenerCantidadEvidencias(mantenimiento, 'BOCINAS'))"
+          tooltipPosition="top">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoFuncionalBocinas ? 'bx-check-circle' : 'bx-x-circle'"></i>
-          {{ mantenimiento.mantenimientoFuncionalBocinas ? 'Sí' : 'No' }}
-        </span>
+          <span>{{ mantenimiento.mantenimientoFuncionalBocinas ? 'SÍ' : 'NO' }}</span>
+          @if (obtenerCantidadEvidencias(mantenimiento, 'BOCINAS'); as cant) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ cant }}</span>
+            </span>
+          }
+        </button>
       </td>
 
       <!-- AUDIO -->
       <td class="text-center">
-        <span class="check-status-pill" (click)="abrirModalImagen(mantenimiento, 'AUDIO')"
-          [ngClass]="mantenimiento.mantenimientoTransmisionAudio ? 'status-yes' : 'status-no'">
+        <button type="button" class="check-status-pill"
+          (click)="abrirModalImagen(mantenimiento, 'AUDIO')"
+          [ngClass]="mantenimiento.mantenimientoTransmisionAudio ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(obtenerCantidadEvidencias(mantenimiento, 'AUDIO'))"
+          tooltipPosition="top">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoTransmisionAudio ? 'bx-check-circle' : 'bx-x-circle'"></i>
-          {{ mantenimiento.mantenimientoTransmisionAudio ? 'Sí' : 'No' }}
-        </span>
+          <span>{{ mantenimiento.mantenimientoTransmisionAudio ? 'SÍ' : 'NO' }}</span>
+          @if (obtenerCantidadEvidencias(mantenimiento, 'AUDIO'); as cant) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ cant }}</span>
+            </span>
+          }
+        </button>
       </td>
 
       <!-- CABLEADO -->
       <td class="text-center">
-        <span class="check-status-pill" (click)="abrirModalImagen(mantenimiento, 'CABLEADO')"
-          [ngClass]="mantenimiento.mantenimientoOrdenamientoCableado ? 'status-yes' : 'status-no'">
+        <button type="button" class="check-status-pill"
+          (click)="abrirModalImagen(mantenimiento, 'CABLEADO')"
+          [ngClass]="mantenimiento.mantenimientoOrdenamientoCableado ? 'status-yes' : 'status-no'"
+          [pTooltip]="obtenerTooltipEvidencia(obtenerCantidadEvidencias(mantenimiento, 'CABLEADO'))"
+          tooltipPosition="top">
           <i class="bx" [ngClass]="mantenimiento.mantenimientoOrdenamientoCableado ? 'bx-check-circle' : 'bx-x-circle'"></i>
-          {{ mantenimiento.mantenimientoOrdenamientoCableado ? 'Sí' : 'No' }}
-        </span>
+          <span>{{ mantenimiento.mantenimientoOrdenamientoCableado ? 'SÍ' : 'NO' }}</span>
+          @if (obtenerCantidadEvidencias(mantenimiento, 'CABLEADO'); as cant) {
+            <span class="pill-evidence-tag">
+              <i class="bx bx-camera"></i>
+              <span>{{ cant }}</span>
+            </span>
+          }
+        </button>
       </td>
 
       <!-- PROGRESO -->

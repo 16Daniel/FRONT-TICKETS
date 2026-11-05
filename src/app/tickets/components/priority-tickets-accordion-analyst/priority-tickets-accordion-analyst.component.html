@@ -28,27 +28,8 @@
       </div>
     </ng-template>
 
-    <!-- Sub-toggles inside accordion body -->
-    <div class="accordion-subtoggles-strip">
-      <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
-        <input class="form-check-input custom-switch" type="checkbox" role="switch"
-          [(ngModel)]="mostrarRadiografiaMap[item.id]" />
-        <label class="form-check-label m-0">📊 MÁS INFORMACIÓN</label>
-      </div>
-    </div>
-
     <div class="accordion-tables-wrapper">
-      <!-- SECCION: NIVELES DE AUDIO -->
-      <app-niveles-audio [sucursal]="item" *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '1'"></app-niveles-audio>
-
-      <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '1'"
-        [sucursal]="item"></app-tpvs-devices-table>
-      <app-tabla-tvs-bocinas *ngIf="mostrarRadiografiaMap[item.id] && idArea() == '2'"
-        [sucursal]="item"></app-tabla-tvs-bocinas>
-
-      <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
-        [idArea]="usuario.idArea"></app-grafica-tickets-30-dias>
-      <app-requester-tickets-list *ngIf="!mostrarRadiografiaMap[item.id]" [tickets]="obtenerTicketsPorSucursal(item.id)" [esEspectadorActivo]="esEspectadorActivo"
+      <app-requester-tickets-list [tickets]="obtenerTicketsPorSucursal(item.id)" [esEspectadorActivo]="esEspectadorActivo"
         (clickEvent)="abrirModalDetalleTicket($event)"
         [mostrarEstrellas]="false"></app-requester-tickets-list>
     </div>

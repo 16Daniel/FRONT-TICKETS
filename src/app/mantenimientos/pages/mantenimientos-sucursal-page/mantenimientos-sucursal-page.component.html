@@ -30,11 +30,10 @@
           </p-button>
 
           <p-button
-            *ngIf="mantenimientoActivo?.id"
-            label="CHECK SISTEMAS 8 X 8"
-            icon="pi pi-verified"
+            label="MANTENIMIENTO IT (8X8)"
+            icon="bx bx-laptop"
             styleClass="p-button-danger action-btn-custom"
-            (click)="mostrarAlertaIT()">
+            (click)="verificarSiHayMantenimiento('1')">
           </p-button>
 
           <!-- <p-button
@@ -52,11 +51,10 @@
           </p-button>
 
           <p-button
-            *ngIf="mantenimientoAVActivo?.id"
-            label="CHECK AUDIO VIDEO 6 X 6"
-            icon="pi pi-verified"
+            label="MANTENIMIENTO AV (6X6)"
+            icon="bx bx-tv"
             styleClass="p-button-danger action-btn-custom"
-            (click)="mostrarAlertaAV()">
+            (click)="verificarSiHayMantenimiento('2')">
           </p-button>
         } @else if (tipoActivo === 'MTTO') {
           <p-button
@@ -67,11 +65,10 @@
           </p-button>
 
           <p-button
-            *ngIf="mantenimientosActivos.length > 0"
-            label="CHECK MANTENIMIENTO 8 X 8"
-            icon="pi pi-wrench"
+            label="MANTENIMIENTO 8X8"
+            icon="bx bx-wrench"
             styleClass="p-button-danger action-btn-custom"
-            (click)="mostrarAlertaMtto()">
+            (click)="verificarSiHayMantenimiento('4')">
           </p-button>
         }
       </div>
@@ -156,11 +153,10 @@
   [hideTransitionOptions]="'500ms'">
 </p-toast>
 
-<p-confirmDialog>
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '480px', maxWidth: '92vw' }">
   <ng-template pTemplate="message" let-message>
-    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
-      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
-      <p [innerHTML]="message.message"></p>
-    </div>
+    <div class="confirm-dialog-body" [innerHTML]="message.message"></div>
   </ng-template>
 </p-confirmDialog>

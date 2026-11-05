@@ -214,21 +214,76 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
     this.subs.push(subMtto);
   }
 
+  verificarSiHayMantenimiento(idArea: string): void {
+    if (idArea === '1') {
+      if (this.mantenimientoActivo?.id) {
+        this.mostrarAlertaIT();
+      } else {
+        this.mostrarAvisoSinMantenimiento();
+      }
+    } else if (idArea === '2') {
+      if (this.mantenimientoAVActivo?.id) {
+        this.mostrarAlertaAV();
+      } else {
+        this.mostrarAvisoSinMantenimiento();
+      }
+    } else if (idArea === '4') {
+      if (this.mantenimientosActivos.length > 0) {
+        this.mostrarAlertaMtto();
+      } else {
+        this.mostrarAvisoSinMantenimiento();
+      }
+    }
+  }
+
+  private mostrarAvisoSinMantenimiento(): void {
+    this.confirmationService.confirm({
+      header: 'Validación de Mantenimiento',
+      message: `
+        <div class="confirm-content-wrapper">
+          <div class="confirm-badge badge-info">
+            <i class="bx bx-info-circle"></i>
+            <span>Sin Mantenimiento Activo</span>
+          </div>
+          <h4 class="confirm-title">No hay mantenimiento pendiente</h4>
+          <p class="confirm-desc">
+            Actualmente no existe ningún mantenimiento activo por validar en tu sucursal.
+          </p>
+        </div>
+      `,
+      acceptLabel: 'Entendido',
+      acceptIcon: 'pi pi-check',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectVisible: false,
+      accept: () => {},
+    });
+  }
+
   mostrarAlertaIT(): void {
     this.confirmationService.confirm({
-      header: 'IMPORTANTE',
+      header: 'Validación de Mantenimiento IT',
       message: `
-      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
-      <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE SISTEMAS EN 8 PUNTOS
-      <br><br>
-      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
-      acceptLabel: 'Aceptar',
+        <div class="confirm-content-wrapper">
+          <div class="confirm-badge badge-ti">
+            <i class="bx bx-laptop"></i>
+            <span>SISTEMAS (8 PUNTOS)</span>
+          </div>
+          <h4 class="confirm-title">Validación de Entrega de Sucursal</h4>
+          <p class="confirm-desc">
+            Debes validar las condiciones finales en las que el analista te está entregando la sucursal.
+          </p>
+          <div class="confirm-callout">
+            <i class="bx bx-check-shield"></i>
+            <span>Cada check confirma que recibes la sucursal en óptimas condiciones y nos dará pauta para agendar el próximo mantenimiento.</span>
+          </div>
+        </div>
+      `,
+      acceptLabel: 'Comenzar Validación',
       rejectLabel: 'Cancelar',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      acceptIcon: 'pi pi-check',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
       accept: () => {
         this.mostrarModalMtooTI = true;
       },
@@ -238,19 +293,29 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
 
   mostrarAlertaAV(): void {
     this.confirmationService.confirm({
-      header: 'IMPORTANTE',
+      header: 'Validación de Audio y Video',
       message: `
-      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
-      <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO DE AUDIO Y VIDEO EN 6 PUNTOS
-      <br><br>
-      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
-      acceptLabel: 'Aceptar',
+        <div class="confirm-content-wrapper">
+          <div class="confirm-badge badge-av">
+            <i class="bx bx-tv"></i>
+            <span>AUDIO Y VIDEO (6 PUNTOS)</span>
+          </div>
+          <h4 class="confirm-title">Validación de Entrega de Sucursal</h4>
+          <p class="confirm-desc">
+            Debes validar las condiciones finales en las que el analista te está entregando la sucursal.
+          </p>
+          <div class="confirm-callout">
+            <i class="bx bx-check-shield"></i>
+            <span>Cada check confirma que recibes la sucursal en óptimas condiciones y nos dará pauta para agendar el próximo mantenimiento.</span>
+          </div>
+        </div>
+      `,
+      acceptLabel: 'Comenzar Validación',
       rejectLabel: 'Cancelar',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      acceptIcon: 'pi pi-check',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
       accept: () => {
         this.mostrarModalAV = true;
       },
@@ -260,19 +325,29 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
 
   mostrarAlertaMtto(): void {
     this.confirmationService.confirm({
-      header: 'IMPORTANTE',
+      header: 'Validación de Mantenimiento',
       message: `
-      TIENES QUE VALIDAR LAS CONDICIONES FINALES EN LAS QUE EL ANALISTA TE ESTÁ ENTREGANDO LA SUCURSAL
-      <br><br>
-      ES UNA EVALUACIÓN DE MANTENIMIENTO EN 8 PUNTOS
-      <br><br>
-      CADA UNO DE TUS CHECKS INDICAN QUE SE TE ESTÁ ENTREGANDO EN ÓPTIMAS CONDICIONES LA SUCURSAL, Y NOS DARA PAUTA PARA AGENDAR EL PRÓXIMO MANTENIMIENTO`,
-      acceptLabel: 'Aceptar',
+        <div class="confirm-content-wrapper">
+          <div class="confirm-badge badge-mtto">
+            <i class="bx bx-wrench"></i>
+            <span>MANTENIMIENTO GENERAL (8 PUNTOS)</span>
+          </div>
+          <h4 class="confirm-title">Validación de Entrega de Sucursal</h4>
+          <p class="confirm-desc">
+            Debes validar las condiciones finales en las que el analista te está entregando la sucursal.
+          </p>
+          <div class="confirm-callout">
+            <i class="bx bx-check-shield"></i>
+            <span>Cada check confirma que recibes la sucursal en óptimas condiciones y nos dará pauta para agendar el próximo mantenimiento.</span>
+          </div>
+        </div>
+      `,
+      acceptLabel: 'Comenzar Validación',
       rejectLabel: 'Cancelar',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      acceptIcon: 'pi pi-check',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
       accept: () => {
         this.mostrarModalManteinance = true;
       },

@@ -91,17 +91,30 @@ export class TablaMantenimientosSistemasComponent {
   abrirModalImagen(mantenimiento: any, campo: string) {
     this.mantenimientoSeleccionado = mantenimiento;
     this.tituloEvidencia = campo;
+    const urls = this.obtenerImagenesPorCampo(mantenimiento, campo);
 
-
-    if (this.usuario.idRol == '4') {
+    if (this.usuario?.idRol === '4') {
       Swal.fire({
-        title: "SELECCIONA LA ACCION?",
+        title: `EVIDENCIA: ${campo}`,
+        text: urls.length > 0 ? `Hay ${urls.length} foto(s) de evidencia.` : 'No hay fotos registradas aún.',
         showDenyButton: true,
         showCancelButton: true,
-        confirmButtonText: "VER IMÁGEN",
-        denyButtonText: `SUBIR IMAGEN`
+        confirmButtonText: 'VER IMÁGENES',
+        denyButtonText: 'SUBIR IMAGEN',
+        cancelButtonText: 'CANCELAR',
+        confirmButtonColor: '#d3152a',
+        denyButtonColor: '#0f172a',
       }).then((result) => {
         if (result.isConfirmed) {
+          if (urls.length === 0) {
+            Swal.fire({
+              icon: 'info',
+              title: 'Sin imágenes',
+              text: `No hay evidencias fotográficas registradas en ${campo}.`,
+              confirmButtonColor: '#d3152a',
+            });
+            return;
+          }
           this.abrirModalVisorImagen(mantenimiento, campo);
           this.cdr.detectChanges();
         } else if (result.isDenied) {
@@ -109,47 +122,59 @@ export class TablaMantenimientosSistemasComponent {
           this.cdr.detectChanges();
         }
       });
-
-
-    }
-    else if (this.usuario.idRol == '1' || this.usuario.idRol == '5') {
+    } else {
+      if (urls.length === 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Sin imágenes',
+          text: `No hay evidencias fotográficas registradas en ${campo}.`,
+          confirmButtonColor: '#d3152a',
+        });
+        return;
+      }
       this.abrirModalVisorImagen(mantenimiento, campo);
     }
   }
 
-  abrirModalVisorImagen(mantenimiento: MantenimientoSys, campo: string) {
-    this.imagenes = [];
-    this.tituloVisor = campo;
-
+  obtenerImagenesPorCampo(mantenimiento: MantenimientoSys, campo: string): string[] {
+    if (!mantenimiento) return [];
     switch (campo) {
       case 'CAJA':
-        this.imagenes = mantenimiento.mantenimientoCajaEvidenciaUrls || [];
-        break;
+        return mantenimiento.mantenimientoCajaEvidenciaUrls || [];
       case 'IMPRESORAS':
-        this.imagenes = mantenimiento.mantenimientoImpresorasEvidenciaUrls || [];
-        break;
+        return mantenimiento.mantenimientoImpresorasEvidenciaUrls || [];
       case 'RACK':
-        this.imagenes = mantenimiento.mantenimientoRackEvidenciaUrls || [];
-        break;
+        return mantenimiento.mantenimientoRackEvidenciaUrls || [];
       case 'TPV':
-        this.imagenes = mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls || [];
-        break;
-
+        return mantenimiento.mantenimientoPuntosVentaTabletasEvidenciaUrls || [];
       case 'INTERNET':
-        this.imagenes = mantenimiento.mantenimientoInternetEvidenciaUrls || [];
-        break;
+        return mantenimiento.mantenimientoInternetEvidenciaUrls || [];
       case 'CCTV':
-        this.imagenes = mantenimiento.mantenimientoCCTVEvidenciaUrls || [];
-        break;
+        return mantenimiento.mantenimientoCCTVEvidenciaUrls || [];
       case 'NO BRAKES':
-        this.imagenes = mantenimiento.mantenimientoNoBrakesEvidenciaUrls || [];
-        break;
+        return mantenimiento.mantenimientoNoBrakesEvidenciaUrls || [];
       case 'TIEMPOS COCINA':
-        this.imagenes = mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls || [];
-        break;
-
+        return mantenimiento.mantenimientoTiemposCocinaEvidenciaUrls || [];
+      default:
+        return [];
     }
+  }
 
+  obtenerTooltipEvidencia(urls?: string[]): string {
+    const total = urls ? urls.length : 0;
+    if (total === 1) {
+      return '1 foto de evidencia adjunta • Clic para ver';
+    } else if (total > 1) {
+      return `${total} fotos de evidencia adjuntas • Clic para ver`;
+    }
+    return this.usuario?.idRol === '4'
+      ? 'Sin fotos de evidencia • Clic para subir'
+      : 'Sin fotos de evidencia adjuntas';
+  }
+
+  abrirModalVisorImagen(mantenimiento: MantenimientoSys, campo: string) {
+    this.tituloVisor = campo;
+    this.imagenes = this.obtenerImagenesPorCampo(mantenimiento, campo);
     this.mostrarModalVisorImagen = true;
     this.cdr.detectChanges();
   }

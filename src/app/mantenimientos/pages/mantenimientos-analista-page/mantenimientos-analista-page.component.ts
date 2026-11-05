@@ -81,7 +81,7 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
     const todasLasTabs: OpcionTabMantenimiento[] = [
       { id: 'TI', idArea: '1', label: 'IT: 8X8 (SISTEMAS)', icono: 'bx bx-laptop' },
       { id: 'AV', idArea: '2', label: 'AV: 6X6 (AUDIO Y VIDEO)', icono: 'bx bx-tv' },
-      { id: 'MTTO', idArea: '4', label: 'MANTENIMIENTO (8X8)', icono: 'bx bx-wrench' },
+      // { id: 'MTTO', idArea: '4', label: 'MANTENIMIENTO (8X8)', icono: 'bx bx-wrench' },
     ];
 
     if (this.usuario?.idArea == '1' || this.usuario?.idArea == '2') {

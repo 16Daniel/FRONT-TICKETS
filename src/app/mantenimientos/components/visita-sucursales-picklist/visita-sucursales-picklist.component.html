@@ -1,0 +1,35 @@
+<div class="picklist-card-container">
+  <p-pickList
+    [source]="sucursalesOrdenadas"
+    [target]="sucursalesSeleccionadas"
+    sourceHeader="SUCURSALES DISPONIBLES"
+    targetHeader="SUCURSALES POR VISITAR"
+    [dragdrop]="true"
+    [responsive]="true"
+    [sourceStyle]="{ height: '32rem' }"
+    [targetStyle]="{ height: '32rem' }"
+    filterBy="nombre"
+    sourceFilterPlaceholder="Buscar sucursal disponible..."
+    targetFilterPlaceholder="Buscar sucursal programada..."
+    breakpoint="1200px"
+    styleClass="rw-custom-picklist"
+    (onMoveAllToSource)="onMovimientoPicklist()"
+    (onMoveAllToTarget)="onMovimientoPicklist()"
+    (onMoveToSource)="onMovimientoPicklist()"
+    (onMoveToTarget)="onMovimientoPicklist()">
+    <ng-template let-item pTemplate="item">
+      @if(item.id == '-999' || item.id == '-998') {
+        <app-visita-item-especial [item]="item"></app-visita-item-especial>
+      } @else {
+        <app-tarjeta-sucursal-por-visitar
+          [sucursal]="item"
+          [usuariosHelp]="usuariosHelp"
+          [fecha]="fecha"
+          [usuarioSeleccionado]="usuarioSeleccionado"
+          [tickets]="obtenerTicketsPorSucursal(item.id)"
+          [ultimosMantenimientos]="ultimosMantenimientos">
+        </app-tarjeta-sucursal-por-visitar>
+      }
+    </ng-template>
+  </p-pickList>
+</div>

@@ -75,9 +75,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  min-width: 60px;
-  padding: 0.3rem 0.6rem;
+  gap: 0.35rem;
+  min-width: 58px;
+  padding: 0.28rem 0.55rem;
   border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 800;
@@ -85,6 +85,7 @@
   cursor: pointer;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
+  position: relative;
 
   i {
     font-size: 0.95rem;
@@ -101,6 +102,12 @@
     background-color: #f0fdf4;
     color: #10b981;
     border-color: #a7f3d0;
+
+    .pill-evidence-tag {
+      background-color: #10b981;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
   }
 
   /* Pendiente / No: #EF4444 sobre #FFF1F2 */
@@ -108,6 +115,30 @@
     background-color: #fff1f2;
     color: #ef4444;
     border-color: #fecdd3;
+
+    .pill-evidence-tag {
+      background-color: #ef4444;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+  }
+
+  .pill-evidence-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.12rem 0.35rem;
+    border-radius: 6px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-left: 0.2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+    i {
+      font-size: 0.75rem;
+      line-height: 1;
+    }
   }
 }
 

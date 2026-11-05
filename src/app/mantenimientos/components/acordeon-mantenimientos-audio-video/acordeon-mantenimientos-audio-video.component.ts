@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
@@ -11,12 +12,24 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
+import { NivelesAudioComponent } from '../niveles-audio/niveles-audio.component';
+import { TablaTvsBocinasComponent } from '../tabla-tvs-bocinas/tabla-tvs-bocinas.component';
+import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 
 @Component({
   selector: 'app-acordeon-mantenimientos-audio-video',
   standalone: true,
-  imports: [BadgeModule, CommonModule, AccordionModule, TablaMantenimientosAudioVideoComponent],
+  imports: [
+    BadgeModule,
+    CommonModule,
+    FormsModule,
+    AccordionModule,
+    TablaMantenimientosAudioVideoComponent,
+    NivelesAudioComponent,
+    TablaTvsBocinasComponent,
+    GraficaTickets30DiasComponent
+  ],
   templateUrl: './acordeon-mantenimientos-audio-video.component.html',
   styleUrl: './acordeon-mantenimientos-audio-video.component.scss',
 })
@@ -31,6 +44,7 @@ export class AcordeonMantenimientosAudioVideoComponent {
   mantenimientosOrdenados: MantenimientoAudioVideo[] = [];
 
   usuariosHelp: Usuario[] = [];
+  mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 
   constructor(
     private usersService: UsersService,
@@ -59,9 +73,12 @@ export class AcordeonMantenimientosAudioVideoComponent {
     return new Date(timestamp); // Por si acaso es un número o string de fecha
   }
 
-  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+  trackBySucursalId(index: number, item: Sucursal): string {
+    return item.id;
+  }
 
-    return catsucursales.sort((a, b) => {
+  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+    return [...catsucursales].sort((a, b) => {
       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
 

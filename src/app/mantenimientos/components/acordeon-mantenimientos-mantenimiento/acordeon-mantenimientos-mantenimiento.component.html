@@ -1,6 +1,6 @@
 <p-accordion class="custom-branches-accordion w-full">
   <p-accordionTab
-    *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales))">
+    *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales)); trackBy: trackBySucursalId">
     <ng-template pTemplate="header">
       <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(obtenerPorcentajedeUltimoMantenimiento(item.id))">
         <div class="branch-info-group">
