@@ -1,155 +1,301 @@
-<div class="p-3" style="margin-top: 80px;">
-  <h4 class="text-center">PROGRAMAR VISITA {{ area?.nombre }} <span class="fw-bold" style="color: #8B5CF6;">{{ fecha |
-      date:'fullDate':'':'es' | uppercase }}</span></h4>
-  <div class="row mt-3">
-    <div class="col-md-4">
-      <p-dropdown [options]="usuariosHelpDropDown" [(ngModel)]="usuarioseleccionado" name="usuario" optionLabel="nombre"
-        [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR USUARIO" [style]="{width:'100%'}"
-        (onChange)="llenarInfoUsuario()">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-          <div class="flex align-items-center gap-2">
-            <div>{{ selectedOption.nombre + ' ' + selectedOption.apellidoP + ' ' + selectedOption.apellidoM }}</div>
-            <span style="font-size: 0.75rem; background:#8B5CF6; color:#fff; border-radius:4px; padding: 1px 7px; margin-left:-1px;">
-              {{ obtenerNombreArea(selectedOption.idArea) }}
-            </span>
-          </div>
-        </ng-template>
-        <ng-template let-usuario pTemplate="item">
-          <div class="flex align-items-center gap-2">
-            <div>{{ usuario.nombre + ' ' + usuario.apellidoP + ' ' + usuario.apellidoM }}</div>
-            <span style="font-size: 0.75rem; background:#8B5CF6; color:#fff; border-radius:4px; padding: 1px 7px; margin-left:-1px;">
-              {{ obtenerNombreArea(usuario.idArea) }}
-            </span>
-          </div>
-        </ng-template>
-      </p-dropdown>
-    </div>
-    <div class="col-md-4">
-      <p-calendar [(ngModel)]="fecha" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-        dateFormat="dd/mm/yy" [style]="{width:'100%'}" (onSelect)="llenarInfoUsuario()" />
-    </div>
-    <div class="col-md-2">
-      <div class="form-check form-switch d-flex align-items-center gap-3">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-          style="width: 3rem; height: 2rem;" [(ngModel)]="vercalendario">
-        <label class="form-check-label fs-4" for="flexSwitchCheckChecked">CALENDARIO</label>
+<div class="constructor-page-wrapper">
+  <div class="constructor-content-container">
+
+    <!-- Cabecera Principal con Fecha a la Derecha -->
+    <app-page-header
+      subtitle="PROGRAMACIÓN Y AGENDA OPERATIVA"
+      [title]="'Programar Visita' + (area?.nombre ? ' — ' + area.nombre : '')">
+      <div class="current-date-pill">
+        <i class="bx bx-calendar-event"></i>
+        <span>{{ fecha | date:'fullDate':'':'es' | uppercase }}</span>
       </div>
-    </div>
-    <div class="col-md-2">
-      <p-button label="Colores" icon="pi pi-cog" (onClick)="abrirmodalColores()" />
-    </div>
-  </div>
-  <div class="row" style="margin-top: 10px;" *ngIf="vercalendario && usuario.idRol == '1'">
-    <div class="col-md-4">
-      <p-dropdown [options]="areas" [(ngModel)]="idArea" [optionValue]="'id'" name="area" optionLabel="nombre"
-        [filter]="true" filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ÁREA" [style]="{width:'100%'}">
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-          <div class="flex align-items-center gap-2">
-            <div>{{ selectedOption.nombre }}</div>
-          </div>
-        </ng-template>
-        <ng-template let-dep pTemplate="item">
-          <div class="flex align-items-center gap-2">
-            <div>{{ dep.nombre }}</div>
-          </div>
-        </ng-template>
-      </p-dropdown>
-    </div>
-  </div>
+    </app-page-header>
 
-  <div class="row mt-3" *ngIf="usuarioseleccionado && !vercalendario">
-    <div class="col-md-12">
-      <p-button label="NUEVA ACTIVIDAD" icon="pi pi-plus" (onClick)="mostrarModalActividades = true" />
-    </div>
-  </div>
+    <!-- Barra de Controles y Filtros Flotante -->
+    <div class="scheduler-toolbar-card mb-4">
+      <div class="filters-grid">
+        <!-- Selector de Usuario / Responsable -->
+        <div class="filter-field field-user">
+          <label class="field-label">
+            <i class="bx bx-user"></i>
+            <span>Responsable / Analista</span>
+          </label>
+          <p-dropdown
+            [options]="usuariosHelpDropDown"
+            [(ngModel)]="usuarioseleccionado"
+            name="usuario"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre,apellidoP,apellidoM"
+            [showClear]="true"
+            placeholder="Seleccionar analista..."
+            styleClass="scheduler-select-custom w-100"
+            (onChange)="llenarInfoUsuario()">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="d-flex align-items-center justify-content-between gap-2 w-100" *ngIf="selectedOption">
+                <span class="user-option-name text-truncate">{{ selectedOption.nombre + ' ' + selectedOption.apellidoP + ' ' + (selectedOption.apellidoM || '') }}</span>
+                <span class="area-pill-badge">
+                  {{ obtenerNombreArea(selectedOption.idArea) }}
+                </span>
+              </div>
+            </ng-template>
+            <ng-template let-usuario pTemplate="item">
+              <div class="d-flex align-items-center justify-content-between gap-2 w-100">
+                <span class="user-option-name">{{ usuario.nombre + ' ' + usuario.apellidoP + ' ' + (usuario.apellidoM || '') }}</span>
+                <span class="area-pill-badge">
+                  {{ obtenerNombreArea(usuario.idArea) }}
+                </span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
 
-  <div class="d-flex justify-content-center" *ngIf="loading">
-    <div class="lds-ring">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
+        <!-- Selector de Fecha -->
+        <div class="filter-field field-date">
+          <label class="field-label">
+            <i class="bx bx-calendar"></i>
+            <span>Fecha de Visita</span>
+          </label>
+          <p-calendar
+            [(ngModel)]="fecha"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="icondisplay"
+            dateFormat="dd/mm/yy"
+            styleClass="scheduler-calendar-custom w-100"
+            (onSelect)="llenarInfoUsuario()" />
+        </div>
 
-  <div *ngIf="!vercalendario">
-    <div class="mt-3 bg-white shadow-sm p-3" *ngIf="loading == false">
-      <p-pickList [source]="sucursalesOrdenadas" [target]="sucursalesSeleccionadas" sourceHeader="SUCURSALES"
-        targetHeader="VISITAR" [dragdrop]="true" [responsive]="true" [sourceStyle]="{ height: '30rem' }"
-        [targetStyle]="{ height: '30rem' }" filterBy="nombre" sourceFilterPlaceholder="Buscar"
-        targetFilterPlaceholder="Buscar" breakpoint="1400px" (onMoveAllToSource)="actualizarListasComentarios()"
-        (onMoveAllToTarget)="actualizarListasComentarios()" (onMoveToSource)="actualizarListasComentarios()"
-        (onMoveToTarget)="actualizarListasComentarios()">
-        <ng-template let-item pTemplate="item">
-          @if(item.id == '-999')
-          {
-          <div class="card p-3 bg-opacity-25" style="background-color: #8B5CF6; color: white;">
-            <p class="m-1">{{item.nombre}}</p>
-          </div>
-          }
-          @else if(item.id == '-998')
-          {
-          <div class="card p-3 bg-opacity-25" style="background-color: #6076d5; color: white;">
-            <p class="m-1">{{item.nombre}}</p>
-          </div>
-          }
-          @else
-          {
-          <app-tarjeta-sucursal-por-visitar [sucursal]="item" [usuariosHelp]="usuariosHelp" [fecha]="fecha"
-            [usuarioSeleccionado]="usuarioseleccionado" [tickets]="obtenerTicketsPorSucursal(item.id)"
-            [ultimosMantenimientos]="arr_ultimosmantenimientos">
-          </app-tarjeta-sucursal-por-visitar>
-          }
-        </ng-template>
-      </p-pickList>
-    </div>
-
-    <div class="mt-3 bg-white p-3">
-      <p class="text-center fs-5 fw-bold" *ngIf="indicacionesVisitas.length>0">AGREGAR INDICACIONES / COMENTARIOS
-        PARA LA VISITA (OPCIONAL)</p>
-
-      <div class="mt-3" *ngFor="let item of indicacionesVisitas">
-        <p class="text-center fw-bold fs-5" style="color: #8B5CF6;">{{obtenerNombreSucursal(item.idSucursal)}}
-        </p>
-        <p-editor [(ngModel)]="item.comentario" name="descripcion" [style]="{ height: '320px' }" />
+        <!-- Selector de Área (solo en vista Calendario para Rol Admin) -->
+        <div class="filter-field field-area" *ngIf="vercalendario && usuario.idRol == '1'">
+          <label class="field-label">
+            <i class="bx bx-buildings"></i>
+            <span>Filtrar por Área</span>
+          </label>
+          <p-dropdown
+            [options]="areas"
+            [(ngModel)]="idArea"
+            [optionValue]="'id'"
+            name="area"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Seleccionar área..."
+            styleClass="scheduler-select-custom w-100">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="d-flex align-items-center gap-2" *ngIf="selectedOption">
+                <span class="user-option-name text-truncate">{{ selectedOption.nombre }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+              <div class="d-flex align-items-center gap-2">
+                <span class="user-option-name">{{ dep.nombre }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
       </div>
 
+      <!-- Acciones de Vista y Herramientas -->
+      <div class="toolbar-actions-right">
+        <!-- Switch de Modo: Programar vs Calendario -->
+        <div class="switches-toggle-group">
+          <span class="switches-title">
+            <i class="bx bx-layer"></i> Vista:
+          </span>
+
+          <label class="toggle-pill-item" [class.is-active]="!vercalendario" (click)="vercalendario = false; llenarInfoUsuario()">
+            <span class="toggle-pill-btn">
+              <i class="bx bx-list-check"></i>
+              <span>Programar</span>
+            </span>
+          </label>
+
+          <label class="toggle-pill-item" [class.is-active]="vercalendario" (click)="vercalendario = true">
+            <span class="toggle-pill-btn">
+              <i class="bx bx-calendar"></i>
+              <span>Calendario</span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Botón de Colores -->
+        <button type="button" class="btn-rw-secondary" (click)="abrirmodalColores()">
+          <i class="bx bx-palette"></i>
+          <span>COLORES</span>
+        </button>
+
+        <!-- Botón Nueva Actividad -->
+        <button
+          *ngIf="usuarioseleccionado && !vercalendario"
+          type="button"
+          class="btn-rw-cta"
+          (click)="mostrarModalActividades = true">
+          <i class="bx bx-plus"></i>
+          <span>NUEVA ACTIVIDAD</span>
+        </button>
+      </div>
     </div>
+
+    <!-- Indicador de Carga -->
+    <div class="d-flex justify-content-center my-5" *ngIf="loading">
+      <div class="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- MODO PROGRAMADOR DE VISITAS -->
+    <div *ngIf="!vercalendario && !loading" class="scheduler-workspace">
+
+      <!-- Contenedor PickList -->
+      <div class="picklist-card-container">
+        <p-pickList
+          [source]="sucursalesOrdenadas"
+          [target]="sucursalesSeleccionadas"
+          sourceHeader="SUCURSALES DISPONIBLES"
+          targetHeader="SUCURSALES POR VISITAR"
+          [dragdrop]="true"
+          [responsive]="true"
+          [sourceStyle]="{ height: '32rem' }"
+          [targetStyle]="{ height: '32rem' }"
+          filterBy="nombre"
+          sourceFilterPlaceholder="Buscar sucursal disponible..."
+          targetFilterPlaceholder="Buscar sucursal programada..."
+          breakpoint="1200px"
+          styleClass="rw-custom-picklist"
+          (onMoveAllToSource)="actualizarListasComentarios()"
+          (onMoveAllToTarget)="actualizarListasComentarios()"
+          (onMoveToSource)="actualizarListasComentarios()"
+          (onMoveToTarget)="actualizarListasComentarios()">
+          <ng-template let-item pTemplate="item">
+            @if(item.id == '-999') {
+              <div class="special-visit-card card-guardia">
+                <div class="special-card-icon">
+                  <i class="bx bx-shield-quarter"></i>
+                </div>
+                <div class="special-card-info">
+                  <span class="special-card-tag">ASIGNACIÓN ESPECIAL</span>
+                  <h6 class="special-card-title">{{ item.nombre }}</h6>
+                </div>
+              </div>
+            } @else if(item.id == '-998') {
+              <div class="special-visit-card card-actividad">
+                <div class="special-card-icon">
+                  <i class="bx bx-task"></i>
+                </div>
+                <div class="special-card-info">
+                  <span class="special-card-tag">TAREA PROGRAMADA</span>
+                  <h6 class="special-card-title">{{ item.nombre }}</h6>
+                </div>
+              </div>
+            } @else {
+              <app-tarjeta-sucursal-por-visitar
+                [sucursal]="item"
+                [usuariosHelp]="usuariosHelp"
+                [fecha]="fecha"
+                [usuarioSeleccionado]="usuarioseleccionado"
+                [tickets]="obtenerTicketsPorSucursal(item.id)"
+                [ultimosMantenimientos]="arr_ultimosmantenimientos">
+              </app-tarjeta-sucursal-por-visitar>
+            }
+          </ng-template>
+        </p-pickList>
+      </div>
+
+      <!-- Sección de Indicaciones / Comentarios para la Visita -->
+      <div class="comments-section-card mt-4" *ngIf="indicacionesVisitas.length > 0">
+        <div class="comments-section-header">
+          <div class="header-icon-box">
+            <i class="bx bx-message-square-edit"></i>
+          </div>
+          <div>
+            <h5 class="comments-title">Indicaciones y Comentarios para la Visita</h5>
+            <p class="comments-subtitle">Agrega instrucciones específicas por sucursal para el analista asignado (opcional)</p>
+          </div>
+        </div>
+
+        <div class="comments-list-grid mt-3">
+          <div class="branch-comment-card" *ngFor="let item of indicacionesVisitas">
+            <div class="branch-comment-header">
+              <span class="branch-comment-badge">
+                <i class="bx bx-store-alt"></i>
+                <span>{{ obtenerNombreSucursal(item.idSucursal) }}</span>
+              </span>
+            </div>
+            <p-editor
+              [(ngModel)]="item.comentario"
+              name="descripcion"
+              styleClass="rw-custom-editor"
+              [style]="{ height: '220px' }" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Acción Inferior (Guardar / Actualizar) -->
+      <div class="scheduler-footer-bar mt-4">
+        <button
+          *ngIf="registroDeVisita == undefined && registroDeGuardia == undefined"
+          type="button"
+          class="btn-rw-cta btn-rw-lg"
+          [disabled]="usuarioseleccionado == undefined && loading == false"
+          (click)="guardarVisita()">
+          <i class="bx bx-save"></i>
+          <span>GUARDAR VISITA</span>
+        </button>
+
+        <button
+          *ngIf="registroDeVisita != undefined || registroDeGuardia != undefined"
+          type="button"
+          class="btn-rw-cta btn-rw-lg"
+          [disabled]="usuarioseleccionado == undefined && loading == false"
+          (click)="actualizar()">
+          <i class="bx bx-refresh"></i>
+          <span>ACTUALIZAR VISITA</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MODO VISTA CALENDARIO -->
+    <div *ngIf="vercalendario" class="calendar-view-container mt-2">
+      <app-calendario
+        [usuariosHelp]="usuariosHelp"
+        [tickets]="tickets"
+        [idUsuarioFiltro]="usuarioseleccionado?.id"
+        [idArea]="idArea">
+      </app-calendario>
+    </div>
+
   </div>
-
-  <div *ngIf="vercalendario" class="mt-3">
-    <app-calendario [usuariosHelp]="usuariosHelp" [tickets]="tickets" [idUsuarioFiltro]="usuarioseleccionado?.id"
-      [idArea]="idArea"></app-calendario>
-  </div>
-
-
-  <div class="d-flex justify-content-end pt-3" *ngIf="!vercalendario">
-    <p-button label="GUARDAR" icon="pi pi-save" styleClass="p-button-primary" (onClick)="guardarVisita()"
-      [disabled]="usuarioseleccionado == undefined && loading == false"
-      *ngIf="registroDeVisita == undefined && registroDeGuardia == undefined">
-    </p-button>
-
-    <p-button label="ACTUALIZAR" icon="pi pi-save" styleClass="p-button-primary" (onClick)="actualizar()"
-      [disabled]="usuarioseleccionado == undefined && loading == false"
-      *ngIf="registroDeVisita != undefined || registroDeGuardia != undefined">
-    </p-button>
-
-
-  </div>
-
-
 </div>
 
-<app-modal-colors *ngIf="showModalColors" (closeEvent)="showModalColors = false" [showModalColors]="showModalColors"
-  [usuariosHelp]="usuariosHelp"></app-modal-colors>
+<app-modal-colors
+  *ngIf="showModalColors"
+  (closeEvent)="showModalColors = false"
+  [showModalColors]="showModalColors"
+  [usuariosHelp]="usuariosHelp">
+</app-modal-colors>
 
-<app-detalle-ticket-dialog *ngIf="showModalTicketDetail" [ticket]="itemtk" [showModalTicketDetail]="showModalTicketDetail"
-  (closeEvent)="showModalTicketDetail = false"></app-detalle-ticket-dialog>
+<app-detalle-ticket-dialog
+  *ngIf="showModalTicketDetail"
+  [ticket]="itemtk"
+  [showModalTicketDetail]="showModalTicketDetail"
+  (closeEvent)="showModalTicketDetail = false">
+</app-detalle-ticket-dialog>
 
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>
 
-<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
-  [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-  [showTransformOptions]="'translateX(100%)'"></p-toast>
-
-<app-modal-activity [mostrarModal]="mostrarModalActividades" *ngIf="mostrarModalActividades"
-  (closeEvent)="mostrarModalActividades = false" (activityEvent)="agregarActividad($event)"></app-modal-activity>
+<app-modal-activity
+  [mostrarModal]="mostrarModalActividades"
+  *ngIf="mostrarModalActividades"
+  (closeEvent)="mostrarModalActividades = false"
+  (activityEvent)="agregarActividad($event)">
+</app-modal-activity>

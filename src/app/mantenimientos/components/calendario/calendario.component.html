@@ -1,53 +1,83 @@
-<full-calendar #calendar [options]="calendarOptions">
-  <ng-template #eventContent let-arg>
-    <div class="calendar-event-wrapper">
-      @if(arg.event.title == 'GUARDIA')
-      {
-      <div class="evento-calendario">
-        <div class="evento-header">
-          <i class='bx bx-shield'></i> <span>{{ arg.event.title }}</span>
-        </div>
-        <p class="evento-user">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
+<div class="rw-calendar-card">
+  <full-calendar #calendar [options]="calendarOptions">
+    <ng-template #eventContent let-arg>
+      <div class="calendar-event-wrapper">
+        @if(arg.event.title == 'GUARDIA') {
+          <div class="evento-calendario evento-guardia">
+            <div class="evento-top-bar">
+              <span class="evento-type-badge">
+                <i class="bx bx-shield-quarter"></i>
+                <span>GUARDIA</span>
+              </span>
+            </div>
+            <div class="evento-user-row">
+              <i class="bx bx-user"></i>
+              <span>{{ obtenerNombreUsuario(arg.event.extendedProps.idUsuario) }}</span>
+            </div>
+          </div>
+        } @else if(arg.event.title.indexOf('ACTIVIDAD:') >= 0) {
+          <div class="evento-calendario evento-actividad">
+            <div class="evento-top-bar">
+              <span class="evento-type-badge">
+                <i class="bx bx-task"></i>
+                <span>ACTIVIDAD</span>
+              </span>
+            </div>
+            <div class="evento-title-text">{{ arg.event.title.replace('ACTIVIDAD:', '').trim() }}</div>
+            <div class="evento-user-row">
+              <i class="bx bx-user"></i>
+              <span>{{ obtenerNombreUsuario(arg.event.extendedProps.idUsuario) }}</span>
+            </div>
+          </div>
+        } @else {
+          <div class="evento-calendario evento-sucursal">
+            <div class="evento-header">
+              <i class="bx bx-store-alt"></i>
+              <span class="evento-branch-name">{{ arg.event.title }}</span>
+            </div>
+
+            <div class="evento-meta">
+              <div class="evento-user-row">
+                <i class="bx bx-user"></i>
+                <span>{{ obtenerNombreUsuario(arg.event.extendedProps.idUsuario) }}</span>
+              </div>
+              <span class="evento-area-pill" *ngIf="obtenerNombreArea(arg.event.extendedProps.idArea)">
+                {{ obtenerNombreArea(arg.event.extendedProps.idArea) }}
+              </span>
+            </div>
+
+            <div class="evento-stats">
+              <span class="stat-badge">
+                <i class="bx bx-receipt"></i>
+                <span>Tickets: <strong>{{ arg.event.extendedProps.ticketsCount }}</strong></span>
+                <span class="stat-divider">|</span>
+                <span class="stat-done">{{ arg.event.extendedProps.ticketsFinalizados }} ✓</span>
+              </span>
+
+              <span class="stat-badge" *ngIf="arg.event.extendedProps.idArea != '2'">
+                <i class="bx bx-wrench"></i>
+                <span>{{ textoMantenimiento(arg.event.extendedProps.idArea) }}: <strong>{{ calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0], arg.event.extendedProps.idArea) }}%</strong></span>
+              </span>
+
+              <span class="stat-badge" *ngIf="arg.event.extendedProps.idArea == '1'">
+                <i class="bx bx-tv"></i>
+                <span>AV 6X6: <strong>{{ calcularPorcentajeSysAv(arg.event.extendedProps.mantenimientosDelDiaSysAv[0]) }}%</strong></span>
+              </span>
+            </div>
+          </div>
+        }
       </div>
-      }
-      @else if(arg.event.title.indexOf('ACTIVIDAD:') >= 0)
-      {
-      <div class="evento-calendario">
-        <div class="evento-header">
-          <i class='bx bx-task'></i> <span>{{ arg.event.title }}</span>
-        </div>
-        <p class="evento-user">{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</p>
-      </div>
-      }
-      @else
-      {
-      <div class="evento-calendario">
-        <div class="evento-header">
-          <i class='bx bx-store'></i> <span>{{ arg.event.title }}</span>
-        </div>
-        <b>{{obtenerNombreUsuario(arg.event.extendedProps.idUsuario)}}</b>
-        <p class="evento-user">{{obtenerNombreArea(arg.event.extendedProps.idArea)}}</p>
+    </ng-template>
+  </full-calendar>
+</div>
 
-        <div class="evento-stats">
-          <span class="stat-badge">
-            <i class='bx bx-receipt'></i> Tickets: {{arg.event.extendedProps.ticketsCount}} | {{arg.event.extendedProps.ticketsFinalizados}} ✓
-          </span>
-
-          <span class="stat-badge" *ngIf="arg.event.extendedProps.idArea != '2'">
-            <i class='bx bx-wrench'></i> {{textoMantenimiento(arg.event.extendedProps.idArea)}}: {{calcularPorcentaje(arg.event.extendedProps.mantenimientosDelDia[0], arg.event.extendedProps.idArea)}}%
-          </span>
-
-          <span class="stat-badge" *ngIf="arg.event.extendedProps.idArea == '1'">
-            <i class='bx bx-slider-alt'></i> AV: 6X6 {{calcularPorcentajeSysAv(arg.event.extendedProps.mantenimientosDelDiaSysAv[0])}}%
-          </span>
-        </div>
-      </div>
-      }
-    </div>
-  </ng-template>
-</full-calendar>
-
-<app-modal-event-detail *ngIf="showModalEventeDetail" [showModalEventeDetail]="showModalEventeDetail"
-  (closeEvent)="showModalEventeDetail = false" [sucursal]="sucursalSeleccionada" [fecha]="FechaSeleccionada"
-  [comentario]="comentario" [usuariosHelp]="usuariosHelp" [usuarioSeleccionado]="usuarioSeleccionado">
+<app-modal-event-detail
+  *ngIf="showModalEventeDetail"
+  [showModalEventeDetail]="showModalEventeDetail"
+  (closeEvent)="showModalEventeDetail = false"
+  [sucursal]="sucursalSeleccionada"
+  [fecha]="FechaSeleccionada"
+  [comentario]="comentario"
+  [usuariosHelp]="usuariosHelp"
+  [usuarioSeleccionado]="usuarioSeleccionado">
 </app-modal-event-detail>

@@ -302,14 +302,12 @@ export class CalendarioComponent implements OnInit {
   }
 
   obtenerColor(idUsuario: string): string {
-    let color = '';
-    let temp = this.colores.filter(x => x.idUsuario == idUsuario);
-    color = temp.length > 0 ? temp[0].color : '';
-    return color;
+    const temp = this.colores.filter(x => x.idUsuario == idUsuario);
+    return temp.length > 0 && temp[0].color ? temp[0].color : '#334155';
   }
 
   getLuminance(hexColor: string): number {
-    if (hexColor == '') {
+    if (!hexColor || hexColor.length < 7) {
       return 0;
     } else {
       // Convertir el color hexadecimal a RGB

@@ -1,0 +1,268 @@
+$rw-primary: #d3152a;
+$rw-canvas: #f4f6fa;
+$rw-dark: #1e1e24;
+
+:host ::ng-deep .dialog-modern {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
+
+  .p-dialog-header {
+    background: #ffffff;
+    padding: 1.35rem 1.5rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+
+    .p-dialog-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: $rw-dark;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  .p-dialog-content {
+    padding: 1.35rem 1.5rem 1.5rem;
+    background: $rw-canvas;
+  }
+}
+
+/* ==========================================================================
+   Tarjeta Superior de Asignación de Color
+   ========================================================================== */
+.color-assign-card {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.assign-field-user {
+  flex: 1 1 240px;
+}
+
+.assign-field-picker {
+  flex: 0 0 auto;
+}
+
+.assign-field-action {
+  flex: 0 0 auto;
+}
+
+.rw-form-label {
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  i {
+    color: $rw-primary;
+    font-size: 0.95rem;
+  }
+}
+
+:host ::ng-deep .rw-dropdown {
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+
+  &.p-focus {
+    border-color: $rw-primary;
+    box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12);
+  }
+
+  .p-dropdown-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #1e293b;
+  }
+}
+
+.picker-pill-box,
+.picker-table-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 42px;
+  padding: 0 0.75rem;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+
+  ::ng-deep .p-colorpicker-preview {
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    cursor: pointer;
+  }
+}
+
+.picker-table-pill {
+  height: 34px;
+  padding: 0 0.65rem;
+  border-radius: 8px;
+}
+
+.hex-code-text {
+  font-family: monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  letter-spacing: 0.03em;
+}
+
+.user-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.btn-rw-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 42px;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  font-size: 0.825rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 0 1.2rem;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 4px 14px rgba(211, 21, 42, 0.25);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  i {
+    font-size: 1.1rem;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(211, 21, 42, 0.35);
+    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+  }
+
+  &:disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+/* ==========================================================================
+   Filas Flotantes de Tabla (DESIGN-SYSTEM.md)
+   ========================================================================== */
+:host ::ng-deep .table-tk {
+  background: transparent !important;
+
+  .p-datatable-table {
+    border-collapse: separate !important;
+    border-spacing: 0 0.5rem !important;
+    background: transparent !important;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: transparent !important;
+    color: #64748b !important;
+    font-size: 0.725rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.06em !important;
+    padding: 0.35rem 0.65rem !important;
+    border: none !important;
+    text-align: center !important;
+  }
+
+  .p-datatable-tbody > tr {
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+    > td {
+      padding: 0.55rem 0.65rem !important;
+      font-size: 0.85rem !important;
+      color: #1e293b !important;
+      border-top: 1px solid #e2e8f0 !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      border-left: none !important;
+      border-right: none !important;
+      vertical-align: middle !important;
+
+      &:first-child {
+        border-top-left-radius: 14px !important;
+        border-bottom-left-radius: 14px !important;
+        border-left: 1px solid #e2e8f0 !important;
+      }
+
+      &:last-child {
+        border-top-right-radius: 14px !important;
+        border-bottom-right-radius: 14px !important;
+        border-right: 1px solid #e2e8f0 !important;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07) !important;
+
+      > td {
+        border-color: #cbd5e1 !important;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   Botón de Acción en Tabla (.btn-action-table)
+   ========================================================================== */
+.btn-action-table {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #64748b;
+  font-size: 1.15rem;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  cursor: pointer;
+
+  i {
+    transition: transform 0.15s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    i {
+      transform: scale(1.1);
+    }
+  }
+
+  &.btn-action-danger {
+    background-color: #fef2f2;
+    color: #ef4444;
+    border-color: #fecaca;
+  }
+}

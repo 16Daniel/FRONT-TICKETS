@@ -144,14 +144,14 @@ export const GRUPOS_MENU_PERMISOS: GrupoMenuPermiso[] = [
       {
         idMenu: 'operaciones_constructor_visitas',
         titulo: 'Registrar visita',
-        ruta: '/main/calendar-builder',
+        ruta: '/main/registrar-visita',
         icono: 'bx bx-calendar-plus',
         permisoVista: 'visitas.constructor.ver',
       },
       {
         idMenu: 'operaciones_calendario_visitas',
         titulo: 'Calendario de visitas',
-        ruta: '/main/branch-visit-schedule',
+        ruta: '/main/calendario-visitas',
         icono: 'bx bx-calendar',
         permisoVista: 'visitas.calendario.ver',
       },

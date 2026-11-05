@@ -1,0 +1,74 @@
+$rw-primary: #d3152a;
+$rw-canvas: #f4f6fa;
+
+.schedule-page-wrapper {
+  background-color: $rw-canvas;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem 1.5rem 4rem;
+  width: 100%;
+}
+
+.schedule-content-container {
+  max-width: 1650px;
+  margin: 0 auto;
+}
+
+.schedule-filter-toolbar {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 1.15rem 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 360px;
+
+  .field-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    margin: 0;
+
+    i {
+      color: $rw-primary;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+::ng-deep .schedule-select-custom.p-dropdown {
+  border-radius: 10px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  min-height: 42px !important;
+  align-items: center !important;
+  transition: all 0.2s ease !important;
+
+  &:not(.p-disabled):hover {
+    border-color: #94a3b8 !important;
+  }
+
+  &:not(.p-disabled).p-focus {
+    border-color: $rw-primary !important;
+    box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12) !important;
+  }
+
+  .p-dropdown-label {
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    padding: 0.5rem 0.85rem !important;
+  }
+}

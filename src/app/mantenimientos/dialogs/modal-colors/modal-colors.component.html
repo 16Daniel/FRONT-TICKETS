@@ -1,55 +1,127 @@
+<p-dialog
+  header="COLORES DE ANALISTAS EN CALENDARIO"
+  [modal]="true"
+  [(visible)]="showModalColors"
+  [style]="{ width: '680px', 'max-width': '95vw' }"
+  [maximizable]="true"
+  (onHide)="onHide()"
+  styleClass="dialog-modern">
 
-<p-dialog header="COLORES DE LOS USUARIOS" [modal]="true" [(visible)]="showModalColors" [style]="{ width: '60vw'}"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+  <!-- Barra de Asignación de Color -->
+  <div class="color-assign-card mb-4">
+    <div class="assign-field-user">
+      <label class="rw-form-label">
+        <i class="bx bx-user"></i>
+        <span>Seleccionar Analista</span>
+      </label>
+      <p-dropdown
+        [options]="usuariosHelp"
+        [(ngModel)]="usuarioSeleccionado"
+        name="usuario"
+        optionLabel="nombre"
+        [filter]="true"
+        filterBy="nombre,apellidoP,apellidoM"
+        [showClear]="true"
+        placeholder="Seleccionar analista..."
+        styleClass="rw-dropdown w-100"
+        appendTo="body">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="d-flex align-items-center gap-2" *ngIf="selectedOption">
+            <span class="fw-bold text-dark">{{ selectedOption.nombre + ' ' + selectedOption.apellidoP + ' ' + (selectedOption.apellidoM || '') }}</span>
+          </div>
+        </ng-template>
+        <ng-template let-usuario pTemplate="item">
+          <div class="d-flex align-items-center gap-2">
+            <span class="fw-semibold text-dark">{{ usuario.nombre + ' ' + usuario.apellidoP + ' ' + (usuario.apellidoM || '') }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
 
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <p-dropdown [options]="usuariosHelp" [(ngModel)]="usuarioSeleccionado" 
-            name="usuario" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR ANALISTA"
-            [style]="{width:'100%'}"
-            >
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre + ' ' + selectedOption.apellidoP +' '+selectedOption.apellidoM}}</div>
-                </div>
-            </ng-template>
-            <ng-template let-usuario pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{usuario.nombre + ' ' + usuario.apellidoP +' '+usuario.apellidoM}}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
-        </div>
-        <div class="col-auto">
-            <p-colorPicker [(ngModel)]="formcolor" />
-        </div>
-        <div class="col-auto">
-            <p-button label="Agregar" icon="pi pi-save" (onClick)="agregarColor()" [disabled]="formcolor == '' || usuarioSeleccionado == undefined"/>
-        </div>
-        </div>
+    <div class="assign-field-picker">
+      <label class="rw-form-label">
+        <i class="bx bx-palette"></i>
+        <span>Color</span>
+      </label>
+      <div class="picker-pill-box">
+        <p-colorPicker [(ngModel)]="formcolor" appendTo="body" />
+        <span class="hex-code-text">{{ (formcolor || '#3B82F6') | uppercase }}</span>
+      </div>
+    </div>
 
-        <div class="mt-3" style="min-height: 300px;">
-            <p-table [value]="colores" [tableStyle]="{ 'min-width': '50rem', 'min-height': '20rem' }">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Color</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-color>
-                    <tr>
-                        <td>{{ obtenerNombreUsuario(color.idUsuario) }}</td>
-                        <td> <p-colorPicker [(ngModel)]="color.color"/> </td>
-                        <td> <p-button icon="pi pi-trash" severity="danger" (onClick)="EliminarColor(color.id)"/> </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-            
-        </div>
+    <div class="assign-field-action">
+      <button
+        type="button"
+        class="btn-rw-cta"
+        (click)="agregarColor()"
+        [disabled]="formcolor == '' || usuarioSeleccionado == undefined">
+        <i class="bx bx-plus"></i>
+        <span>ASIGNAR</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla de Colores Asignados -->
+  <div class="colors-table-wrapper">
+    <p-table
+      [value]="colores"
+      [tableStyle]="{ 'min-width': '100%' }"
+      styleClass="p-datatable-sm table-tk"
+      [scrollable]="true"
+      scrollHeight="48vh">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="text-align: left; padding-left: 1.25rem !important;">ANALISTA</th>
+          <th>COLOR ASIGNADO</th>
+          <th style="width: 110px;">ACCIONES</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-color>
+        <tr>
+          <td style="text-align: left; padding-left: 1.25rem !important;">
+            <div class="d-flex align-items-center gap-2">
+              <span class="user-color-dot" [style.backgroundColor]="color.color"></span>
+              <span class="fw-bold text-dark">{{ obtenerNombreUsuario(color.idUsuario) }}</span>
+            </div>
+          </td>
+
+          <td class="text-center">
+            <div class="d-inline-flex align-items-center gap-2 picker-table-pill">
+              <p-colorPicker [(ngModel)]="color.color" appendTo="body" />
+              <span class="hex-code-text">{{ color.color | uppercase }}</span>
+            </div>
+          </td>
+
+          <td class="text-center">
+            <div class="d-flex justify-content-center align-items-center">
+              <button
+                type="button"
+                class="btn-action-table btn-action-danger"
+                pTooltip="ELIMINAR"
+                tooltipPosition="top"
+                (click)="EliminarColor(color.id)">
+                <i class="bx bx-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="text-center py-4 text-muted fw-semibold">
+            No hay colores configurados para este departamento.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </p-dialog>
 
-<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
-[showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-[showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>

@@ -24,18 +24,18 @@ export const MANTENIMIENTOS_MAIN_ROUTES: Routes = [
       import('./pages/mantenimientos-analista-page/mantenimientos-analista-page.component'),
   },
   {
-    path: 'calendar-builder',
-    title: 'Constructor de calendarios',
+    path: 'registrar-visita',
+    title: 'Registrar visita',
     canActivate: [permissionGuard('visitas.constructor.ver')],
     loadComponent: () =>
       import('./pages/constructor-calendario-page/constructor-calendario-page.component'),
   },
   {
-    path: 'branch-visit-schedule',
-    title: 'Visitas programadas',
+    path: 'calendario-visitas',
+    title: 'Calendario de visitas',
     canActivate: [permissionGuard('visitas.calendario.ver')],
     loadComponent: () =>
-      import('./pages/branch-visit-schedule-page/branch-visit-schedule-page.component'),
+      import('./pages/calendario-visitas-page/calendario-visitas-page.component'),
   },
 ];
 

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { Timestamp } from '@angular/fire/firestore';
 import { MessageService } from 'primeng/api';
@@ -12,6 +11,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { EditorModule } from 'primeng/editor';
 import { Subscription } from 'rxjs';
 
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
@@ -52,6 +52,7 @@ import { DispositivosSucursalesService } from '../../../sucursales/services/disp
     ToastModule,
     CalendarModule,
     EditorModule,
+    PageHeaderComponent,
     DetalleTicketDialogComponent,
     CalendarioComponent,
     ModalColorsComponent,
@@ -60,6 +61,7 @@ import { DispositivosSucursalesService } from '../../../sucursales/services/disp
   ],
   providers: [MessageService],
   templateUrl: './constructor-calendario-page.component.html',
+  styleUrl: './constructor-calendario-page.component.scss',
 })
 
 export default class ContructorCalendarioPageComponent implements OnInit {
