@@ -1,67 +1,373 @@
-<p-dialog [header]="titulo" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '80vw', height: '80vh', maxWidth: '1000px' }" [maximizable]="true" (onHide)="onHide()" styleClass="modern-dialog">
-  <div class="visor-container">
-    <!-- Selector de dispositivo -->
-    <div class="dispositivos" *ngIf="dispositivos.length > 1">
-      <button *ngFor="let d of dispositivos; let i = index"
-              (click)="dispositivoIndex = i; imagenSeleccionadaIndex = 0"
-              [class.activo]="i === dispositivoIndex"
-              class="btn-dispositivo">
-        {{ d?.dispositivo?.nombre || ('Dispositivo ' + (i + 1)) }}
-      </button>
-    </div>
+<p-dialog
+  [modal]="true"
+  [(visible)]="mostrarModal"
+  [style]="{ width: '96vw', height: '94vh', maxWidth: '1600px' }"
+  [maximizable]="false"
+  (onHide)="onHide()"
+  [dismissableMask]="true"
+  styleClass="lightbox-modern-dialog"
+  [showHeader]="false">
 
-    <!-- Imagen principal -->
-    <div class="contenedor-imagen">
-      <button class="boton-eliminar-flotante" (click)="eliminarImagen()"
-              *ngIf="imagenes!.length > 0 && mostrarBotonEliminar" title="Eliminar imagen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 6h18"/>
-          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-          <line x1="10" x2="10" y1="11" y2="17"/>
-          <line x1="14" x2="14" y1="11" y2="17"/>
-        </svg>
-      </button>
-      <img [src]="imagenActual" alt="Imagen principal" class="imagen-principal"/>
-
-      <!-- Navegación -->
-      <button class="nav-button nav-prev" (click)="anterior()" [disabled]="imagenSeleccionadaIndex === 0" *ngIf="imagenes.length > 1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6"/>
-        </svg>
-      </button>
-      <button class="nav-button nav-next" (click)="siguiente()" [disabled]="imagenSeleccionadaIndex === imagenes.length - 1" *ngIf="imagenes.length > 1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m9 18 6-6-6-6"/>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Miniaturas -->
-    <div class="miniaturas-container" *ngIf="imagenes.length > 1">
-      <div class="contador-imagenes">
-        {{ imagenSeleccionadaIndex + 1 }} / {{ imagenes.length }}
+  <div class="lightbox-wrapper">
+    <!-- Top Glass Toolbar -->
+    <header class="lightbox-toolbar">
+      <!-- Izquierda: Insignia y Contador -->
+      <div class="toolbar-left">
+        <span class="toolbar-badge">
+          <i class="bx bx-tv" *ngIf="titulo === 'PANTALLAS'"></i>
+          <i class="bx bx-speaker" *ngIf="titulo === 'BOCINAS'"></i>
+          <i class="bx bx-camera" *ngIf="titulo !== 'PANTALLAS' && titulo !== 'BOCINAS'"></i>
+          <span class="badge-text">{{ titulo || 'AUDIO Y VIDEO' }}</span>
+        </span>
+        <span class="toolbar-counter" *ngIf="imagenes && imagenes.length > 0">
+          {{ imagenSeleccionadaIndex + 1 }} / {{ imagenes.length }}
+        </span>
       </div>
-      <div class="miniaturas">
-        <div *ngFor="let img of imagenes; let i = index"
-             class="miniatura"
-             [class.seleccionada]="i === imagenSeleccionadaIndex"
-             (click)="seleccionarImagen(i)">
-          <img [src]="img" alt="Miniatura {{i + 1}}"/>
+
+      <!-- Centro: Herramientas Secundarias Adaptables / Scrollables -->
+      <div class="toolbar-tools-scroll">
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="zoomIn()"
+          pTooltip="Acercar (+)"
+          tooltipPosition="bottom"
+          aria-label="Acercar imagen">
+          <i class="bx bx-zoom-in"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="zoomOut()"
+          pTooltip="Alejar (-)"
+          tooltipPosition="bottom"
+          [disabled]="zoom <= 0.5"
+          aria-label="Alejar imagen">
+          <i class="bx bx-zoom-out"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="rotar()"
+          pTooltip="Rotar 90° (R)"
+          tooltipPosition="bottom"
+          aria-label="Rotar imagen">
+          <i class="bx bx-rotate-right"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="resetTransform()"
+          *ngIf="zoom !== 1 || rotacion !== 0"
+          pTooltip="Reiniciar vista (0)"
+          tooltipPosition="bottom"
+          aria-label="Reiniciar vista">
+          <i class="bx bx-reset"></i>
+        </button>
+
+        <div class="tool-divider"></div>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="abrirEnNuevaPestana()"
+          pTooltip="Abrir en pestaña nueva"
+          tooltipPosition="bottom"
+          aria-label="Abrir en pestaña nueva">
+          <i class="bx bx-link-external"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="descargarImagen()"
+          pTooltip="Descargar"
+          tooltipPosition="bottom"
+          aria-label="Descargar imagen">
+          <i class="bx bx-download"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn tool-btn-danger"
+          *ngIf="imagenes && imagenes.length > 0 && mostrarBotonEliminar"
+          (click)="eliminarImagen()"
+          pTooltip="Eliminar imagen"
+          tooltipPosition="bottom"
+          aria-label="Eliminar imagen">
+          <i class="bx bx-trash"></i>
+        </button>
+      </div>
+
+      <!-- Derecha: Acciones Principales Fijas (NUNCA SE RECORTAN) -->
+      <div class="toolbar-right">
+        <button
+          type="button"
+          class="tool-btn tool-btn-info"
+          *ngIf="dispositivoActual"
+          [class.is-active]="mostrarDetalles"
+          (click)="toggleDetalles()"
+          [pTooltip]="mostrarDetalles ? 'Ocultar ficha técnica' : 'Ver ficha técnica'"
+          tooltipPosition="bottom"
+          aria-label="Ver ficha técnica">
+          <i class="bx bx-info-circle"></i>
+          <span class="btn-text-responsive">Ficha</span>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn tool-btn-close"
+          (click)="onHide()"
+          pTooltip="Cerrar (Esc)"
+          tooltipPosition="bottom"
+          aria-label="Cerrar visor">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sub-bar: Selector de Dispositivos (si hay más de 1) -->
+    <div class="lightbox-devices-bar" *ngIf="dispositivos && dispositivos.length > 1">
+      <div class="devices-chips-scroll">
+        <button
+          type="button"
+          *ngFor="let d of dispositivos; let i = index"
+          class="chip-device"
+          [class.is-active]="i === dispositivoIndex"
+          (click)="cambiarDispositivo(i)">
+          <i class="bx bx-tv" *ngIf="titulo === 'PANTALLAS'"></i>
+          <i class="bx bx-speaker" *ngIf="titulo === 'BOCINAS'"></i>
+          <i class="bx bx-devices" *ngIf="titulo !== 'PANTALLAS' && titulo !== 'BOCINAS'"></i>
+          <span>{{ d?.dispositivo?.nombre || d?.nombre || ((titulo === 'PANTALLAS' ? 'Pantalla ' : titulo === 'BOCINAS' ? 'Bocina ' : 'Dispositivo ') + (i + 1)) }}</span>
+          <span class="badge-count" *ngIf="(d?.evidenciaUrls?.length || d?.length)">
+            {{ d?.evidenciaUrls?.length || d?.length }}
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Viewport / Stage -->
+    <main class="lightbox-stage">
+      <!-- Navegación Izquierda -->
+      <button
+        type="button"
+        class="nav-chevron nav-prev"
+        (click)="anterior()"
+        [disabled]="imagenSeleccionadaIndex === 0"
+        *ngIf="imagenes && imagenes.length > 1"
+        aria-label="Anterior">
+        <i class="bx bx-chevron-left"></i>
+      </button>
+
+      <!-- Contenedor Imagen con soporte para gestos táctiles (Swipe) -->
+      <div
+        class="stage-canvas"
+        (touchstart)="onTouchStart($event)"
+        (touchend)="onTouchEnd($event)">
+        <ng-container *ngIf="imagenes && imagenes.length > 0; else sinImagenesTpl">
+          <img
+            [src]="imagenActual"
+            alt="Evidencia AV"
+            class="stage-image"
+            [style.transform]="'scale(' + zoom + ') rotate(' + rotacion + 'deg)'"
+            [class.is-zoomed]="zoom > 1" />
+        </ng-container>
+
+        <ng-template #sinImagenesTpl>
+          <div class="stage-empty">
+            <i class="bx bx-image-alt"></i>
+            <p>No hay imágenes disponibles para este dispositivo</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Navegación Derecha -->
+      <button
+        type="button"
+        class="nav-chevron nav-next"
+        (click)="siguiente()"
+        [disabled]="imagenSeleccionadaIndex === imagenes.length - 1"
+        *ngIf="imagenes && imagenes.length > 1"
+        aria-label="Siguiente">
+        <i class="bx bx-chevron-right"></i>
+      </button>
+
+      <!-- Panel de Ficha Técnica del Dispositivo (Diseño Ampliado y Adaptable) -->
+      <aside
+        class="device-details-overlay"
+        *ngIf="dispositivoActual"
+        [class.is-collapsed]="!mostrarDetalles">
+
+        <!-- Mobile Sheet Handle (Pill para arrastrar/tocar en móvil) -->
+        <div class="mobile-sheet-handle" (click)="toggleDetalles()" title="Desplegar ficha técnica"></div>
+
+        <!-- Encabezado de la Ficha Técnica -->
+        <div class="overlay-header" (click)="toggleDetalles()" [title]="mostrarDetalles ? 'Minimizar ficha técnica' : 'Expandir ficha técnica'">
+          <div class="header-main-info">
+            <div class="device-avatar-icon">
+              <i class="bx bx-tv" *ngIf="titulo === 'PANTALLAS'"></i>
+              <i class="bx bx-speaker" *ngIf="titulo === 'BOCINAS'"></i>
+              <i class="bx bx-devices" *ngIf="titulo !== 'PANTALLAS' && titulo !== 'BOCINAS'"></i>
+            </div>
+            <div class="header-titles">
+              <div class="header-top-row">
+                <span class="sheet-kicker">FICHA TÉCNICA</span>
+                <span class="device-index-pill" *ngIf="dispositivos && dispositivos.length > 0">
+                  #{{ dispositivoIndex + 1 }} de {{ dispositivos.length }}
+                </span>
+              </div>
+              <h5 class="sheet-title">
+                {{ dispositivoActual.nombre || ((titulo === 'PANTALLAS' ? 'Pantalla ' : titulo === 'BOCINAS' ? 'Bocina ' : 'Dispositivo ') + (dispositivoIndex + 1)) }}
+              </h5>
+            </div>
+          </div>
+
+          <div class="header-controls">
+            <button
+              type="button"
+              class="btn-toggle-overlay"
+              (click)="$event.stopPropagation(); toggleDetalles()"
+              [title]="mostrarDetalles ? 'Minimizar ficha técnica' : 'Expandir ficha técnica'"
+              [attr.aria-expanded]="mostrarDetalles">
+              <i class="bx" [ngClass]="mostrarDetalles ? 'bx-chevron-down' : 'bx-chevron-up'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Cuerpo Extendido de la Ficha Técnica -->
+        <div class="overlay-body" *ngIf="mostrarDetalles">
+          <!-- Hero Banner del Dispositivo -->
+          <div class="device-hero-card">
+            <div class="hero-label-row">
+              <span class="device-category-badge">
+                <i class="bx bx-check-shield"></i>
+                <span>{{ titulo === 'PANTALLAS' ? 'PANTALLA / TELEVISOR' : titulo === 'BOCINAS' ? 'SISTEMA DE AUDIO' : 'ACTIVO FIJO' }}</span>
+              </span>
+              <span class="device-status-badge" [class.is-active]="dispositivoActual.estatus !== '0'">
+                <span class="status-dot"></span>
+                <span>{{ dispositivoActual.estatus === '0' ? 'Inactivo' : 'Activo' }}</span>
+              </span>
+            </div>
+            <div class="hero-name-row">
+              <h4 class="device-name">
+                {{ dispositivoActual.nombre || ((titulo === 'PANTALLAS' ? 'Pantalla ' : titulo === 'BOCINAS' ? 'Bocina ' : 'Dispositivo ') + (dispositivoIndex + 1)) }}
+              </h4>
+            </div>
+          </div>
+
+          <!-- Grid de Especificaciones Técnicas (Cards 2 Columnas) -->
+          <div class="specs-grid">
+            <!-- Marca -->
+            <div class="spec-card">
+              <div class="spec-header">
+                <i class="bx bx-tag-alt"></i>
+                <span class="spec-lbl">Marca</span>
+              </div>
+              <div class="spec-val highlight">{{ dispositivoActual.marca || '—' }}</div>
+            </div>
+
+            <!-- Pulgadas / Tamaño (con limpieza de repetición de comillas) -->
+            <div class="spec-card" *ngIf="titulo === 'PANTALLAS' || dispositivoActual.pulgadas">
+              <div class="spec-header">
+                <i class="bx bx-expand-alt"></i>
+                <span class="spec-lbl">Tamaño</span>
+              </div>
+              <div class="spec-val">
+                <span class="badge-inches" *ngIf="dispositivoActual.pulgadas">
+                  {{ limpiarPulgadas(dispositivoActual.pulgadas) }}
+                </span>
+                <span *ngIf="!dispositivoActual.pulgadas">—</span>
+              </div>
+            </div>
+
+            <!-- Modelo -->
+            <div class="spec-card">
+              <div class="spec-header">
+                <i class="bx bx-barcode"></i>
+                <span class="spec-lbl">Modelo</span>
+              </div>
+              <div class="spec-val">{{ dispositivoActual.modelo || '—' }}</div>
+            </div>
+
+            <!-- No. Serie con Copiado Rápido -->
+            <div class="spec-card spec-card-wide">
+              <div class="spec-header">
+                <i class="bx bx-hash"></i>
+                <span class="spec-lbl">Número de Serie</span>
+              </div>
+              <div class="spec-sn-row">
+                <span class="spec-val font-mono">{{ dispositivoActual.numeroSerie || '—' }}</span>
+                <button
+                  type="button"
+                  class="btn-copy-sn"
+                  *ngIf="dispositivoActual.numeroSerie && dispositivoActual.numeroSerie !== '—'"
+                  (click)="copiarNoSerie(dispositivoActual.numeroSerie)"
+                  [title]="copiadoSerie ? '¡Copiado!' : 'Copiar número de serie'">
+                  <i class="bx" [ngClass]="copiadoSerie ? 'bx-check' : 'bx-copy'"></i>
+                  <span class="copy-text">{{ copiadoSerie ? 'Copiado' : 'Copiar' }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Observaciones / Comentarios -->
+          <div class="spec-notes-box">
+            <div class="notes-header">
+              <div class="notes-title">
+                <i class="bx bx-notepad"></i>
+                <span>Observaciones del Dispositivo</span>
+              </div>
+            </div>
+            <div class="notes-content">
+              <p>{{ dispositivoActual.comentarios || 'Sin observaciones registradas para este dispositivo.' }}</p>
+            </div>
+          </div>
+
+          <!-- Navegador Rápido de Dispositivos (si hay más de 1) -->
+          <div class="card-device-navigator" *ngIf="dispositivos && dispositivos.length > 1">
+            <button
+              type="button"
+              class="nav-dev-btn"
+              (click)="dispositivoAnterior()"
+              [disabled]="dispositivoIndex === 0"
+              title="Dispositivo anterior">
+              <i class="bx bx-chevron-left"></i>
+              <span>Anterior</span>
+            </button>
+
+            <span class="nav-dev-info">
+              Dispositivo {{ dispositivoIndex + 1 }} de {{ dispositivos.length }}
+            </span>
+
+            <button
+              type="button"
+              class="nav-dev-btn"
+              (click)="dispositivoSiguiente()"
+              [disabled]="dispositivoIndex === dispositivos.length - 1"
+              title="Dispositivo siguiente">
+              <span>Siguiente</span>
+              <i class="bx bx-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Bottom Filmstrip / Thumbnails -->
+    <footer class="lightbox-filmstrip" *ngIf="imagenes && imagenes.length > 1">
+      <div class="filmstrip-track">
+        <div
+          *ngFor="let img of imagenes; let i = index"
+          class="filmstrip-thumb"
+          [class.is-active]="i === imagenSeleccionadaIndex"
+          (click)="seleccionarImagen(i)">
+          <img [src]="img" alt="Miniatura {{ i + 1 }}" loading="lazy" />
+          <span class="thumb-index">{{ i + 1 }}</span>
         </div>
       </div>
-    </div>
-<!-- Detalles del dispositivo (solo TV o Bocina) -->
-<div class="detalles-dispositivo" *ngIf="usandoEvidencias && evidencias[dispositivoIndex]?.dispositivo">
-  <h4>Detalles del dispositivo</h4>
-  <p><strong>Marca:</strong> {{ evidencias[dispositivoIndex].dispositivo.marca }}</p>
-  <p><strong>Pulgadas:</strong> {{ evidencias[dispositivoIndex].dispositivo.pulgadas }}</p>
-  <p><strong>Modelo:</strong> {{ evidencias[dispositivoIndex].dispositivo.modelo }}</p>
-  <p><strong>Número de serie:</strong> {{ evidencias[dispositivoIndex].dispositivo.numeroSerie }}</p>
-  <p><strong>Comentarios:</strong> {{ evidencias[dispositivoIndex].dispositivo.comentarios }}</p>
-</div>
+    </footer>
   </div>
 </p-dialog>

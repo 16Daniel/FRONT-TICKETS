@@ -1,33 +1,74 @@
-<p-dialog [header]="'SUBIR EVIDENCIA PARA ' + titulo" [modal]="true" [(visible)]="mostrarModal"
-    [style]="{ width: '40vw', height: '65vh' }" [maximizable]="true" (onHide)="onHide()">
-    <!-- Área de subida -->
-    <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-        (drop)="onDrop($event)">
-        <input type="file" id="fileUpload" #fileInput hidden accept="image/*" multiple
-            (change)="onFileSelected($event)" />
+<p-dialog
+  [header]="'Subir Evidencia - ' + titulo"
+  [modal]="true"
+  [(visible)]="mostrarModal"
+  [style]="{ width: '44rem', maxWidth: '92vw' }"
+  [maximizable]="true"
+  (onHide)="onHide()"
+  styleClass="dialog-rw-modal">
 
-        <div class="upload-content">
-            <i class="pi pi-upload upload-icon"></i>
-            <p class="upload-text">Arrastra y suelta una imagen aquí</p>
-            <p class="upload-separator">o</p>
-            <button type="button" class="btn-upload" (click)="fileInput.click()">
-                Seleccionar imagen
-            </button>
+  <div class="uploader-modal-body">
+    <!-- Área de subida -->
+    <div
+      class="upload-dropzone"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)">
+      <input
+        type="file"
+        id="fileUpload"
+        #fileInput
+        hidden
+        accept="image/*"
+        multiple
+        (change)="onFileSelected($event)" />
+
+      <div class="upload-content">
+        <div class="upload-icon-circle">
+          <i class="bx bx-cloud-upload"></i>
         </div>
+        <p class="upload-title">Arrastra y suelta imágenes aquí</p>
+        <p class="upload-subtitle">Formatos soportados: JPG, PNG, WEBP</p>
+        <div class="upload-divider">
+          <span>o</span>
+        </div>
+        <button type="button" class="btn-select-files" (click)="fileInput.click()">
+          <i class="bx bx-image-add"></i>
+          <span>Seleccionar archivos</span>
+        </button>
+      </div>
     </div>
 
     <!-- Vista previa -->
-    <div *ngIf="imagenesBase64?.length" class="preview-container">
+    <div *ngIf="imagenesBase64?.length" class="preview-section">
+      <div class="preview-header">
+        <div class="preview-badge">
+          <i class="bx bx-images"></i>
+          <span>{{ imagenesBase64.length }} imagen(es) lista(s) para subir</span>
+        </div>
+      </div>
+      <div class="preview-container">
         <div *ngFor="let img of imagenesBase64" class="preview-item">
-            <img [src]="img" alt="Vista previa" />
+          <img [src]="img" alt="Vista previa" />
         </div>
+      </div>
     </div>
+  </div>
 
-    <ng-template pTemplate="footer">
-        <div class="footer-actions" *ngIf="imagenesBase64?.length">
-            <button type="button" class="btn-confirm" (click)="subirImagen()">
-                <i class="pi pi-check"></i> Subir
-            </button>
-        </div>
-    </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="footer-actions">
+      <button type="button" class="btn-rw-neutral" (click)="onHide()">
+        <i class="pi pi-times"></i>
+        <span>Cancelar</span>
+      </button>
+      <button
+        type="button"
+        class="btn-rw-primary"
+        *ngIf="imagenesBase64?.length"
+        (click)="subirImagen()">
+        <i class="pi pi-cloud-upload"></i>
+        <span>Subir Evidencia</span>
+      </button>
+    </div>
+  </ng-template>
 </p-dialog>
