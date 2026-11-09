@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/cor
 import { TooltipModule } from 'primeng/tooltip';
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
-import { clasificarCuadrante } from '../../../tickets/helpers/matriz-criticidad.helper';
+import { clasificarCuadrante, obtenerTiempoSla } from '../../../tickets/helpers/matriz-criticidad.helper';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { FormularioNodoCategoriaComponent } from '../formulario-nodo-categoria/formulario-nodo-categoria.component';
@@ -95,5 +95,32 @@ export class NodoArbolCategoriaComponent {
       return `${nodo.horasResolucion} h`;
     }
     return '';
+  }
+
+  obtenerLabelTiempoAtencion(nodo: Categoria | Subcategoria): string {
+    let imp = (nodo as any).impacto || nodo.criticidad;
+    if (!imp || imp > 3) {
+      if (nodo.score && nodo.urgencia) {
+        imp = Math.round(nodo.score / nodo.urgencia);
+      } else if (nodo.prioridad) {
+        const p = nodo.prioridad.toUpperCase();
+        imp = p.includes('CRÍT') || p.includes('CRIT') ? 3 : p.includes('ALT') ? 3 : p.includes('MED') ? 2 : 1;
+      } else {
+        imp = 2;
+      }
+    }
+    const impacto = Math.min(3, Math.max(1, imp || 2));
+    const urgencia = Math.min(3, Math.max(1, nodo.urgencia || 2));
+
+    if (this.matrizUrgencia && this.matrizUrgencia.celdas?.length) {
+      const celda = this.matrizUrgencia.celdas.find(
+        (c) => c.impacto === impacto && c.urgencia === urgencia
+      );
+      if (celda) {
+        return celda.label || `${celda.valor} ${celda.unidad}`;
+      }
+    }
+
+    return obtenerTiempoSla(impacto, urgencia).label;
   }
 }

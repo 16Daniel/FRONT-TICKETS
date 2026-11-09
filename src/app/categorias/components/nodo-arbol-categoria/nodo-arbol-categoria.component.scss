@@ -173,6 +173,19 @@ $rw-primary: #d3152a;
         }
       }
 
+      &.pildora-tiempo-atencion {
+        background: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+        font-weight: 700;
+        text-transform: none;
+
+        i {
+          color: #2563eb;
+          font-size: 0.8rem;
+        }
+      }
+
       &.pildora-evidencia {
         background: #fef2f2;
         color: #991b1b;
