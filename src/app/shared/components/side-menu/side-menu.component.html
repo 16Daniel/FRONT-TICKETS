@@ -41,8 +41,11 @@
   <!-- Drawer Header -->
   <div class="drawer-header">
     <div class="drawer-brand">
-      <i class="bx bx-layer brand-icon"></i>
-      <span class="drawer-title">REBEL UP</span>
+      <img 
+        [src]="logoUrl" 
+        (error)="onLogoError()" 
+        alt="REBEL UP" 
+        class="drawer-logo" />
     </div>
     <div class="drawer-actions">
       <button 
