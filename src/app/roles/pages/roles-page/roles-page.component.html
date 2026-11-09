@@ -2,151 +2,372 @@
   <div class="roles-content-container">
 
     <!-- Encabezado de Página Reutilizable -->
-    <app-page-header 
-      subtitle="Gestión de Roles" 
-      title="Catálogo de Roles de Usuario">
-    </app-page-header>
-
-    <!-- Barra de Herramientas y Filtros -->
-    <div class="roles-toolbar-bar mb-4">
-      <div class="toolbar-left">
-        <div class="search-input-wrapper">
-          <i class="bx bx-search search-icon"></i>
-          <input 
-            type="text" 
-            #filterInput
-            (input)="dt.filterGlobal(filterInput.value, 'contains')"
-            placeholder="Buscar rol..." 
-            class="roles-search-input" />
-        </div>
-      </div>
-
-      <div class="toolbar-right">
-        <!-- Botón Nuevo Rol -->
-        <button 
-          type="button" 
-          class="btn-rw-cta" 
-          (click)="showAgregar()">
-          <i class="bx bx-plus"></i>
-          <span>NUEVO ROL</span>
-        </button>
-      </div>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+      <app-page-header
+        subtitle="Control de Accesos a Menús"
+        title="Administración de Roles y Permisos">
+      </app-page-header>
     </div>
 
-    <!-- Contenedor Principal (Tabla) -->
-    <div class="roles-nodes-container">
-      <p-table #dt 
-        [value]="catroles" 
-        [loading]="loading"
-        [globalFilterFields]="['nombre', 'id']" 
-        [tableStyle]="{ 'min-width': '10rem' }"
-        styleClass="p-datatable-gridlines table-tk">
-        
-        <ng-template pTemplate="header">
-          <tr>
-            <th style="width: 140px; text-align: center;">ID</th>
-            <th>NOMBRE DEL ROL</th>
-            <th style="width: 140px; text-align: center;">ACCIONES</th>
-          </tr>
-        </ng-template>
+    <!-- Layout Maestro-Detalle -->
+    <div class="roles-master-detail-grid">
 
-        <ng-template pTemplate="body" let-rol>
-          <tr [pSelectableRow]="rol">
-            <td style="text-align: center;">
-              <span class="badge bg-light text-dark border px-2 py-1">
-                {{ rol.id }}
+      <!-- =====================================================================
+           PANEL IZQUIERDO: Catálogo de Roles
+           ===================================================================== -->
+      <aside class="roles-sidebar-panel">
+        <div class="sidebar-panel-header">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="panel-title m-0">ROLES REGISTRADOS</h6>
+              <span class="panel-subtitle">{{ catroles.length }} roles en catálogo</span>
+            </div>
+
+            <button
+              type="button"
+              class="btn-rw-cta btn-sm-cta"
+              (click)="iniciarNuevoRol()">
+              <i class="bx bx-plus"></i>
+              <span>NUEVO ROL</span>
+            </button>
+          </div>
+
+          <div class="search-input-wrapper w-100">
+            <i class="bx bx-search search-icon"></i>
+            <input
+              type="text"
+              [(ngModel)]="busquedaRol"
+              placeholder="Buscar rol por nombre o ID..."
+              class="roles-search-input w-100" />
+          </div>
+        </div>
+
+        <!-- Lista de Roles -->
+        <div class="roles-list-scroll" *ngIf="!loading; else loadingRolesTpl">
+
+          <!-- Tarjeta activa cuando está en Modo Creación -->
+          <div
+            *ngIf="modoCreacion"
+            class="role-card-item is-active is-creating">
+            <div class="role-card-top">
+              <span class="role-id-badge badge-new">NUEVO</span>
+              <span class="role-name">{{ formRol.nombre || 'NUEVO ROL SIN NOMBRE' }}</span>
+            </div>
+            <div class="role-card-meta">
+              <span class="meta-pill">
+                <i class="bx bx-menu"></i>
+                {{ totalMenusActivosFormulario }} / {{ totalMenusSistema }} menús
               </span>
-            </td>
-            <td>
-              <span class="fw-bold text-dark">{{ rol.nombre }}</span>
-            </td>
-            <td>
-              <div class="d-flex justify-content-center align-items-center gap-2">
-                <button class="btn-action-table btn-action-info" (click)="showEdit(rol)"
-                  pTooltip="EDITAR" tooltipPosition="top">
-                  <i class="bx bx-edit"></i>
-                </button>
-                <button class="btn-action-table btn-action-danger" (click)="confirm(rol.id)"
-                  pTooltip="ELIMINAR" tooltipPosition="top">
-                  <i class="bx bx-trash"></i>
+              <span class="meta-pill status-draft">En edición</span>
+            </div>
+          </div>
+
+          <!-- Tarjetas de Roles Existentes -->
+          <div
+            *ngFor="let rol of rolesFiltrados"
+            class="role-card-item"
+            [class.is-active]="!modoCreacion && rolSeleccionadoId === rol.id"
+            (click)="seleccionarRol(rol)">
+
+            <div class="role-card-top">
+              <div class="d-flex align-items-center gap-2 min-w-0">
+                <span class="role-id-badge">#{{ rol.id }}</span>
+                <span class="role-name text-truncate" [title]="rol.nombre">{{ rol.nombre }}</span>
+              </div>
+            </div>
+
+            <p class="role-card-desc" *ngIf="rol.descripcion">
+              {{ rol.descripcion }}
+            </p>
+
+            <div class="role-card-meta">
+              <span class="meta-pill" pTooltip="Opciones de menú guardadas en Firebase para este rol" tooltipPosition="top">
+                <i class="bx bx-menu"></i>
+                {{ contarMenusActivosDeRol(rol) }} / {{ totalMenusSistema }} menús
+              </span>
+            </div>
+          </div>
+
+          <div *ngIf="rolesFiltrados.length === 0" class="empty-roles-box">
+            <i class="bx bx-search-alt"></i>
+            <p class="m-0">No se encontraron roles con ese criterio.</p>
+          </div>
+        </div>
+
+        <ng-template #loadingRolesTpl>
+          <div class="empty-roles-box py-5">
+            <i class="bx bx-loader-alt bx-spin text-danger fs-2"></i>
+            <p class="mt-2 mb-0">Cargando catálogo de roles...</p>
+          </div>
+        </ng-template>
+      </aside>
+
+      <!-- =====================================================================
+           PANEL DERECHO: Configuración General y Accesos de Menú
+           ===================================================================== -->
+      <section class="roles-detail-panel" *ngIf="modoCreacion || rolSeleccionadoId; else emptySelectionTpl">
+
+        <!-- Barra Superior Fija del Editor -->
+        <div class="detail-sticky-header">
+          <div class="header-left-info">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="editor-mode-badge" [class.mode-create]="modoCreacion">
+                {{ modoCreacion ? 'CREANDO NUEVO ROL' : 'EDITANDO ROL #' + formRol.id }}
+              </span>
+              <h5 class="editor-role-title m-0">
+                {{ formRol.nombre || 'SIN NOMBRE DEFINIDO' }}
+              </h5>
+            </div>
+            <div class="editor-summary-counters mt-1">
+              <span>
+                <strong>{{ totalMenusActivosFormulario }}</strong> de {{ totalMenusSistema }} opciones de menú habilitadas
+              </span>
+            </div>
+          </div>
+
+          <div class="header-right-actions">
+            <!-- Eliminar Rol -->
+            <button
+              *ngIf="!modoCreacion && formRol.id"
+              type="button"
+              class="btn-danger-outline"
+              (click)="confirmarEliminarRol(formRol.id, formRol.nombre)"
+              pTooltip="Eliminar este rol de Firestore"
+              tooltipPosition="bottom">
+              <i class="bx bx-trash"></i>
+              <span>Eliminar</span>
+            </button>
+
+            <!-- Guardar Cambios -->
+            <button
+              type="button"
+              class="btn-rw-cta"
+              [disabled]="guardando || !formRol.nombre.trim()"
+              (click)="guardarRol()">
+              <i class="bx" [ngClass]="guardando ? 'bx-loader-alt bx-spin' : 'bx-save'"></i>
+              <span>{{ guardando ? 'GUARDANDO...' : (modoCreacion ? 'CREAR ROL' : 'GUARDAR CAMBIOS') }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bloque 1: Configuración General del Rol -->
+        <div class="config-card-section">
+          <div class="section-heading">
+            <i class="bx bx-slider-alt"></i>
+            <div>
+              <h6 class="m-0">1. Datos Generales del Rol</h6>
+              <small class="text-muted">Define el nombre, la descripción y la pantalla de inicio por defecto del rol.</small>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <!-- Nombre del Rol -->
+            <div class="col-12 col-md-4">
+              <label class="rw-form-label">NOMBRE DEL ROL *</label>
+              <input
+                type="text"
+                class="form-control rw-input text-uppercase"
+                placeholder="Ej: SUPERVISOR REGIONAL"
+                [(ngModel)]="formRol.nombre"
+                name="nombreRol"
+                required />
+            </div>
+
+            <!-- Ruta de Inicio -->
+            <div class="col-12 col-md-4">
+              <label class="rw-form-label">PANTALLA DE INICIO POR DEFECTO</label>
+              <p-dropdown
+                [options]="rutasInicioOpciones"
+                [(ngModel)]="formRol.rutaInicio"
+                optionLabel="label"
+                optionValue="value"
+                [style]="{ width: '100%' }"
+                styleClass="rw-dropdown"
+                appendTo="body">
+                <ng-template let-item pTemplate="item">
+                  <div class="d-flex flex-column">
+                    <span class="fw-bold" style="font-size: 0.85rem;">{{ item.label }}</span>
+                    <small class="text-muted" style="font-size: 0.75rem;">{{ item.descripcion }}</small>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-12 col-md-4">
+              <label class="rw-form-label">DESCRIPCIÓN DEL PERFIL</label>
+              <input
+                type="text"
+                class="form-control rw-input"
+                placeholder="Breve descripción de las responsabilidades..."
+                [(ngModel)]="formRol.descripcion"
+                name="descripcionRol" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloque 2: Acceso a Opciones del Menú por Grupo -->
+        <div class="config-card-section mt-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 pb-3 border-bottom">
+            <div class="section-heading">
+              <i class="bx bx-shield-quarter"></i>
+              <div>
+                <h6 class="m-0">2. Accesos a Opciones del Menú</h6>
+                <small class="text-muted">
+                  Habilita qué opciones del menú lateral podrá ver y abrir este rol.
+                </small>
+              </div>
+            </div>
+
+            <!-- Botones de selección rápida global -->
+            <div class="quick-matrix-actions">
+              <button
+                type="button"
+                class="btn-quick-matrix"
+                (click)="seleccionarTodosLosPermisos()">
+                <i class="bx bx-check-double"></i>
+                <span>Habilitar Todos</span>
+              </button>
+              <button
+                type="button"
+                class="btn-quick-matrix btn-clear"
+                (click)="limpiarTodosLosPermisos()">
+                <i class="bx bx-x"></i>
+                <span>Desmarcar Todos</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filtros de la Matriz (Búsqueda + Píldoras de Grupo) -->
+          <div class="matrix-filter-bar my-3">
+            <div class="search-input-wrapper">
+              <i class="bx bx-search search-icon"></i>
+              <input
+                type="text"
+                [(ngModel)]="busquedaPermiso"
+                placeholder="Filtrar opción de menú o ruta (ej. compras, usuarios, aceite)..."
+                class="roles-search-input" />
+            </div>
+
+            <div class="group-filter-pills">
+              <button
+                type="button"
+                class="group-pill"
+                [class.active]="grupoFiltroId === 'TODOS'"
+                (click)="grupoFiltroId = 'TODOS'">
+                Todos ({{ gruposCatalogo.length }})
+              </button>
+              <button
+                *ngFor="let g of gruposCatalogo"
+                type="button"
+                class="group-pill"
+                [class.active]="grupoFiltroId === g.idGrupo"
+                (click)="grupoFiltroId = g.idGrupo">
+                <i [class]="g.iconoGrupo"></i>
+                <span>{{ g.tituloGrupo }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Grupos de Menús -->
+          <div class="matrix-groups-list">
+            <div
+              *ngFor="let grupo of gruposFiltrados"
+              class="permission-group-card">
+
+              <!-- Encabezado del Grupo -->
+              <div class="group-card-header">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="group-icon-box">
+                    <i [class]="grupo.iconoGrupo"></i>
+                  </div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2">
+                      <h6 class="group-title m-0">{{ grupo.tituloGrupo }}</h6>
+                      <span class="group-count-badge">
+                        {{ contarMenusActivosEnGrupo(grupo) }} / {{ grupo.menus.length }} menús
+                      </span>
+                    </div>
+                    <small class="text-muted">{{ grupo.descripcionGrupo }}</small>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn-toggle-group"
+                  [class.all-active]="esGrupoCompletamenteActivo(grupo)"
+                  (click)="toggleGrupoCompleto(grupo)">
+                  <i class="bx" [ngClass]="esGrupoCompletamenteActivo(grupo) ? 'bx-check-square' : 'bx-square'"></i>
+                  <span>{{ esGrupoCompletamenteActivo(grupo) ? 'Desmarcar grupo' : 'Activar todo el grupo' }}</span>
                 </button>
               </div>
-            </td>
-          </tr>
-        </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="3" class="text-center py-4 text-muted">
-              No se encontraron roles registrados.
-            </td>
-          </tr>
-        </ng-template>
+              <!-- Lista de Menús dentro del Grupo -->
+              <div class="group-menus-grid">
+                <div
+                  *ngFor="let menu of grupo.menus"
+                  class="menu-permission-item"
+                  [class.menu-enabled]="tienePermiso(menu.permisoVista)">
 
-      </p-table>
+                  <!-- Cabecera del Menú (Switch de Acceso / Vista) -->
+                  <div class="menu-item-header" (click)="toggleMenuVista(menu)">
+                    <div class="menu-item-info">
+                      <i [class]="menu.icono + ' menu-item-icon'"></i>
+                      <div>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                          <span class="menu-item-title">{{ menu.titulo }}</span>
+                          <code class="menu-route-tag">{{ menu.ruta }}</code>
+                        </div>
+                        <small class="menu-key-hint">{{ menu.permisoVista }}</small>
+                      </div>
+                    </div>
+
+                    <div class="menu-item-switch" (click)="$event.stopPropagation()">
+                      <div class="form-check form-switch m-0 d-flex align-items-center gap-2">
+                        <input
+                          class="form-check-input menu-toggle-input"
+                          type="checkbox"
+                          role="switch"
+                          [id]="'switch_' + menu.idMenu"
+                          [checked]="tienePermiso(menu.permisoVista)"
+                          (change)="toggleMenuVista(menu, $event)" />
+                        <label
+                          class="form-check-label switch-status-label"
+                          [for]="'switch_' + menu.idMenu">
+                          {{ tienePermiso(menu.permisoVista) ? 'Permitido' : 'Sin acceso' }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <ng-template #emptySelectionTpl>
+        <section class="roles-detail-panel d-flex align-items-center justify-content-center p-5">
+          <div class="text-center text-muted">
+            <i class="bx bx-shield-quarter fs-1 mb-2"></i>
+            <h5>Selecciona un rol de la lista o crea uno nuevo</h5>
+            <p class="mb-0">Desde aquí podrás configurar su pantalla de inicio y sus permisos de acceso al menú.</p>
+          </div>
+        </section>
+      </ng-template>
+
     </div>
 
   </div>
 </div>
 
-<!-- Modal Crear / Actualizar Rol -->
-<p-dialog 
-  [header]="actualizar ? 'ACTUALIZAR ROL' : 'CREAR ROL'" 
-  [(visible)]="modalAgregar" 
-  [modal]="true" 
-  [style]="{ width: '42rem', maxWidth: '95vw' }" 
-  [draggable]="false" 
-  [resizable]="false"
-  (onHide)="cerrarModal()">
-  
-  <form #formRol="ngForm" (ngSubmit)="guardar()" class="mt-3">
-    <div class="row gy-3">
-      <div class="col-12" *ngIf="actualizar">
-        <label class="rw-form-label">ID DEL ROL</label>
-        <input 
-          class="form-control rw-input w-100" 
-          type="text" 
-          [disabled]="true" 
-          [value]="rolsel?.id">
-      </div>
-
-      <div class="col-12">
-        <label class="rw-form-label">NOMBRE DEL ROL</label>
-        <input 
-          class="form-control rw-input w-100" 
-          type="text" 
-          placeholder="Ej: SUPERVISOR DE OPERACIONES" 
-          [(ngModel)]="formdescripcion" 
-          name="nombreRol"
-          required 
-          #nombreCtrl="ngModel"
-          [ngClass]="{'is-invalid': nombreCtrl.invalid && nombreCtrl.touched}">
-        <small *ngIf="nombreCtrl.invalid && nombreCtrl.touched" class="text-danger d-block mt-1">
-          El nombre del rol es obligatorio.
-        </small>
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-end mt-4 pt-3 border-top gap-2">
-      <button type="button" class="btn btn-light px-3 py-2" (click)="cerrarModal()">
-        CANCELAR
-      </button>
-      <button type="submit" class="btn-rw-cta" [disabled]="formRol.invalid || guardando">
-        <i class="bx bx-save"></i>
-        <span>{{ actualizar ? 'ACTUALIZAR ROL' : 'GUARDAR ROL' }}</span>
-      </button>
-    </div>
-  </form>
-
-</p-dialog>
-
 <!-- Toast & Confirm Dialog -->
-<p-toast 
-  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" 
-  [showTransformOptions]="'translateY(100%)'" 
-  [showTransitionOptions]="'500ms'" 
-  [hideTransitionOptions]="'500ms'" 
-  [showTransformOptions]="'translateX(100%)'">
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }">
 </p-toast>
 
 <p-confirmDialog>

@@ -16,7 +16,7 @@ import {
   arrayUnion,
 } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoSys } from '../interfaces/mantenimiento-sys.interface';
 import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.interface';
@@ -219,7 +219,11 @@ export class MantenimientosSistemasService implements IMantenimientoService {
   }
 
   getMantenimientosPorSucursalYFecha(idsSucursales: string[], fecha: Date): Observable<any[]> {
-    const observables = idsSucursales.map(idSucursal => {
+    const validIds = (idsSucursales || []).filter(id => id !== undefined && id !== null && String(id).trim() !== '');
+    if (validIds.length === 0) {
+      return of([]);
+    }
+    const observables = validIds.map(idSucursal => {
       return new Observable<any[]>(observer => {
         const mantenimientosRef = collection(this.firestore, this.pathName);
 

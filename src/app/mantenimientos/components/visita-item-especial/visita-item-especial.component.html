@@ -1,0 +1,11 @@
+<div class="special-visit-card" [ngClass]="esGuardia ? 'card-guardia' : 'card-actividad'">
+  <div class="special-card-icon">
+    <i class="bx" [ngClass]="esGuardia ? 'bx-shield-quarter' : 'bx-task'"></i>
+  </div>
+  <div class="special-card-info">
+    <span class="special-card-tag">
+      {{ esGuardia ? 'ASIGNACIÓN ESPECIAL' : 'TAREA PROGRAMADA' }}
+    </span>
+    <h6 class="special-card-title">{{ item.nombre }}</h6>
+  </div>
+</div>

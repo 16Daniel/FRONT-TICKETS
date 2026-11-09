@@ -15,7 +15,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
 import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
-import { ProgressBar80Component } from "../../../components/progress-bar-80/progress-bar-80.component";
+import { ProgressBar80Component } from '../../../components/progress-bar-80/progress-bar-80.component';
 import { MaintenanceAvService } from '../../../services/maintenance-av.service';
 
 @Component({
@@ -34,43 +34,64 @@ import { MaintenanceAvService } from '../../../services/maintenance-av.service';
   styleUrl: './check-mantenimiento-sis-av-dialog.component.scss',
 })
 export class CheckMantenimientoSisAvComponent {
-  @Input() mostrarModalAV: boolean = false;
-  @Input() mantenimientoActivo: MantenimientoAudioVideo | null = null;
+  private _mostrarModalAV: boolean = false;
+  @Input() set mostrarModalAV(val: boolean) {
+    this._mostrarModalAV = val;
+    if (val) {
+      this.cargarDatos();
+    }
+  }
+  get mostrarModalAV(): boolean {
+    return this._mostrarModalAV;
+  }
+  @Output() mostrarModalAVChange = new EventEmitter<boolean>();
+
+  private _mantenimientoActivo: MantenimientoAudioVideo | null = null;
+  @Input() set mantenimientoActivo(val: MantenimientoAudioVideo | null) {
+    this._mantenimientoActivo = val;
+    if (this.mostrarModalAV) {
+      this.cargarDatos();
+    }
+  }
+  get mantenimientoActivo(): MantenimientoAudioVideo | null {
+    return this._mantenimientoActivo;
+  }
   @Output() closeEvent = new EventEmitter<boolean>();
 
   progreso: number = 0;
-  mantenimientos: MantenimientoAudioVideo[] = [];
+  guardando: boolean = false;
   formularioDeMantenimiento: FormGroup | any;
+
   opcionesDeMantenimiento = [
     {
       label: 'REVISIÓN PANTALLAS Y SOPORTE',
       controlName: 'mantenimientoPantallasSoporte',
-      tooltip: 'VERIFICACIÓN DEL ESTADO FÍSICO DE LAS TELEVISIONES: AUSENCIA DE PIXELES MUERTOS, GOLPES, LEDS VISIBLES, ENTRADAS DAÑADAS Y CORRECTA FIJACIÓN DE LOS SOPORTES A MURO O ESTRUCTURA.'
+      tooltip: 'Verificación física de televisores: sin pixeles muertos, golpes ni leds visibles, y soportes bien fijados.',
     },
     {
       label: 'REVISIÓN SEÑAL DE VIDEO',
       controlName: 'mantenimientoSenalVideo',
-      tooltip: 'COMPROBACIÓN DE QUE LA SEÑAL DE VIDEO LLEGUE CORRECTAMENTE A TODAS LAS PANTALLAS, SIN INTERMITENCIAS, CORTES O DEGRADACIÓN EN AMBOS CONTENIDOS DISTRIBUIDOS.',
+      tooltip: 'Comprobación de que la señal de video llegue correctamente a todas las pantallas, sin intermitencias.',
     },
     {
       label: 'REVISIÓN FÍSICA Y FUNCIONAL DE BOCINAS',
       controlName: 'mantenimientoFuncionalBocinas',
-      tooltip: 'INSPECCIÓN DEL ESTADO FÍSICO DE LAS BOCINAS, CORRECTA FIJACIÓN, CONEXIONES FIRMES Y AUSENCIA DE GOLPES O DAÑOS VISIBLES.',
+      tooltip: 'Inspección del estado físico de las bocinas, fijación firme y ausencia de golpes o daños.',
     },
     {
       label: 'REVISIÓN TRANSMISIÓN DE AUDIO',
       controlName: 'mantenimientoTransmisionAudio',
-      tooltip: 'NIVELES ÓPTIMOS, AUSENCIA DE INTERFERENCIAS, CORRECTA ECUALIZACIÓN Y VALIDACIÓN DEL ESTADO Y TEMPERATURA DEL AMPLIFICADOR.',
+      tooltip: 'Niveles óptimos, sin interferencias, correcta ecualización y temperatura del amplificador.',
     },
     {
       label: 'REVISIÓN Y ORDENAMIENTO DE CABLEADO',
       controlName: 'mantenimientoOrdenamientoCableado',
-      tooltip: 'INSPECCIÓN DEL CABLEADO DE AUDIO Y VIDEO: DETECCIÓN DE FALSOS CONTACTOS, FUNCIONAMIENTO CORRECTO DE SPLITTERS, CABLES NO COLGADOS NI TENSIONADOS Y PEINADO CUANDO SE REQUIERA.',
+      tooltip: 'Inspección de cableado: detección de falsos contactos, funcionamiento de splitters y peinado de cables.',
     },
     {
       label: 'REVISIÓN DE NIVELES',
       controlName: 'mantenimientoNiveles',
-      tooltip: 'VERIFICACIÓN DE LOS NIVELES ÓPTIMOS DE AUDIO Y TRANSMISIÓN EN LA SUCURSAL.',
+      tooltip: 'Verificación de los niveles óptimos de audio y transmisión en las diferentes zonas de la sucursal.',
     },
   ];
 
@@ -96,31 +117,73 @@ export class CheckMantenimientoSisAvComponent {
     });
   }
 
+  cargarDatos() {
+    if (!this.formularioDeMantenimiento) {
+      this.crearFormulario();
+    }
+    if (this.mantenimientoActivo) {
+      this.opcionesDeMantenimiento.forEach((opcion) => {
+        const val = (this.mantenimientoActivo as any)?.[opcion.controlName] ?? false;
+        this.formularioDeMantenimiento.get(opcion.controlName)?.setValue(!!val);
+      });
+      this.formularioDeMantenimiento.get('observaciones')?.setValue(this.mantenimientoActivo.observaciones || '');
+      this.onCheckboxChange();
+    } else {
+      this.formularioDeMantenimiento.reset();
+      this.progreso = 0;
+    }
+  }
+
+  toggleCheckbox(controlName: string) {
+    const ctrl = this.formularioDeMantenimiento.get(controlName);
+    if (ctrl) {
+      ctrl.setValue(!ctrl.value);
+      this.onCheckboxChange();
+    }
+  }
+
+  obtenerCompletadas(): number {
+    if (!this.formularioDeMantenimiento) return 0;
+    return this.opcionesDeMantenimiento.filter(
+      (opc) => this.formularioDeMantenimiento.get(opc.controlName)?.value
+    ).length;
+  }
+
   async enviar() {
     if (this.formularioDeMantenimiento.invalid) {
       this.formularioDeMantenimiento.markAllAsTouched();
-      this.showMessage('warn', 'Advertencia', 'Campos requeridos incompletos');
+      this.showMessage('warn', 'Advertencia', 'Por favor complete las observaciones requeridas.');
       return;
     }
 
-    const mantenimiento: MantenimientoAudioVideo = {
-      ...this.formularioDeMantenimiento.value,
-      id: this.mantenimientoActivo?.id,
-      participantesChat: this.mantenimientoActivo?.participantesChat,
-      idSucursal: this.mantenimientoActivo?.idSucursal,
-      idUsuarioSoporte: this.mantenimientoActivo?.idUsuarioSoporte,
-      fecha: this.mantenimientoActivo?.fecha,
-      fechaFin: new Date,
-      estatus: false,
-    };
+    this.guardando = true;
+    try {
+      const mantenimiento: MantenimientoAudioVideo = {
+        ...this.formularioDeMantenimiento.value,
+        id: this.mantenimientoActivo?.id,
+        participantesChat: this.mantenimientoActivo?.participantesChat,
+        idSucursal: this.mantenimientoActivo?.idSucursal,
+        idUsuarioSoporte: this.mantenimientoActivo?.idUsuarioSoporte,
+        fecha: this.mantenimientoActivo?.fecha,
+        fechaFin: new Date(),
+        estatus: false,
+      };
 
-    await this.maintenanceAvService.update(mantenimiento.id, mantenimiento);
-    // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-    this.closeEvent.emit(false); // Cerrar modal
+      await this.maintenanceAvService.update(mantenimiento.id, mantenimiento);
+      this.showMessage('success', 'Éxito', 'Registro de mantenimiento AV guardado correctamente');
+      this.closeEvent.emit(false);
+    } catch (error) {
+      console.error(error);
+      this.showMessage('error', 'Error', 'Ocurrió un error al guardar el registro.');
+    } finally {
+      this.guardando = false;
+    }
   }
 
   onHide() {
-    this.closeEvent.emit(); // Cerrar modal
+    this.mostrarModalAV = false;
+    this.mostrarModalAVChange.emit(false);
+    this.closeEvent.emit(false);
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -129,18 +192,19 @@ export class CheckMantenimientoSisAvComponent {
 
   getDate(tsmp: Timestamp | any): Date {
     try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
+      if (!tsmp) return new Date();
+      if (typeof tsmp.toDate === 'function') {
+        return tsmp.toDate();
+      }
+      return new Date(tsmp);
     } catch {
-      return tsmp;
+      return tsmp || new Date();
     }
   }
 
   onCheckboxChange(event?: any) {
     let completadas = 0;
-    this.opcionesDeMantenimiento.forEach(opcion => {
+    this.opcionesDeMantenimiento.forEach((opcion) => {
       if (this.formularioDeMantenimiento.get(opcion.controlName)?.value) {
         completadas++;
       }

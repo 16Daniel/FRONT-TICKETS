@@ -1,18 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
-import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { TablaTvsBocinasComponent } from "../../../mantenimientos/components/tabla-tvs-bocinas/tabla-tvs-bocinas.component";
-import { NivelesAudioComponent } from '../../../mantenimientos/components/niveles-audio/niveles-audio.component';
-import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-priority-tickets-accordion-analyst',
@@ -23,12 +18,7 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     AccordionModule,
     RequesterTicketsListComponent,
     TooltipModule,
-    FormsModule,
-    GraficaTickets30DiasComponent,
-    TpvsDevicesTableComponent,
-    TablaTvsBocinasComponent,
-    NivelesAudioComponent
-],
+  ],
   templateUrl: './priority-tickets-accordion-analyst.component.html',
   styleUrl: './priority-tickets-accordion-analyst.component.scss',
 })
@@ -43,7 +33,6 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
   itemtk: Ticket | undefined;
   showModalTicketDetail: boolean = false;
   usuario: Usuario | any;
-  mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 
   constructor() {}
 
@@ -113,6 +102,4 @@ export class PriorityTicketsAccordionAnalystComponent implements OnInit {
     let nuevosTickets = tickets.filter(x => x.idEstatusTicket == '1');
     return nuevosTickets.length > 0;
   }
-
-
 }

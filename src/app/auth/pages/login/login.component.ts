@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 
 import { AuthService } from '../../services/auth.service';
 import { UsersService } from '../../../usuarios/services/users.service';
+import { AccessControlService } from '../../../shared/services/access-control.service';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,8 @@ import { UsersService } from '../../../usuarios/services/users.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LoginComponent {
+  private accessControl = inject(AccessControlService);
+
   public email: string = '';
   public pass: string = '';
   public loading: boolean = false;
@@ -92,6 +95,7 @@ export default class LoginComponent {
         }
 
         localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
+        this.accessControl.inicializarEscuchaUsuario();
 
         // if (userd.idRol === '6') {
         //   this.router.navigate(['/cedis/recoleccion']);

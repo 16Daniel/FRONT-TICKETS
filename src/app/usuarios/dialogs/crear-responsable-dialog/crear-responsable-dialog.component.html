@@ -68,27 +68,6 @@
                     Campo requerido.
                 </small>
             </div>
-
-            <div class="col-12 col-md-6">
-                <div class="d-flex align-items-center p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0; height: 100%;">
-                    <div class="form-check form-switch m-0 d-flex align-items-center gap-3">
-                        <input class="form-check-input m-0" type="checkbox" role="switch" id="esGlobalSwitch"
-                            style="width: 3.5rem; height: 2rem; cursor: pointer;" name="esGlobal"
-                            [(ngModel)]="responsable.esGlobal">
-                        <label class="form-check-label rw-form-label m-0" for="esGlobalSwitch" style="cursor: pointer; margin-bottom: 0 !important; margin-top: 0;">¿ES GLOBAL?</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6">
-                <div class="d-flex align-items-center justify-content-between p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0; height: 100%;">
-                    <label class="rw-form-label m-0" style="margin-bottom: 0 !important;">COLOR DE IDENTIFICACIÓN</label>
-                    <div class="d-flex align-items-center gap-3">
-                        <ngx-avatars [name]="responsable.nombre || ' '" [size]="42" [bgColor]="responsable.color"></ngx-avatars>
-                        <input type="color" class="form-control form-control-color p-0 border-0" style="height: 42px; width: 42px; cursor: pointer; border-radius: 8px;" [(ngModel)]="responsable.color" name="color" required>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">

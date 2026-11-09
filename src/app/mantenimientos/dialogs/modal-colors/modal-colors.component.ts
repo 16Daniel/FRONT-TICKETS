@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -17,15 +18,26 @@ import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 @Component({
   selector: 'app-modal-colors',
   standalone: true,
-  imports: [CommonModule, ToastModule, ColorPickerModule, FormsModule, DialogModule, DropdownModule, ButtonModule, TableModule],
+  imports: [
+    CommonModule,
+    ToastModule,
+    ColorPickerModule,
+    FormsModule,
+    DialogModule,
+    DropdownModule,
+    ButtonModule,
+    TableModule,
+    TooltipModule
+  ],
   providers: [MessageService],
   templateUrl: './modal-colors.component.html',
+  styleUrl: './modal-colors.component.scss',
 })
 
 export class ModalColorsComponent implements OnInit {
   public colores: ColorUsuario[] = [];
   public coleccion: string = 'colores-usuarios';
-  public formcolor: string = '';
+  public formcolor: string = '#3b82f6';
   public usuarioSeleccionado: Usuario | undefined;
   usuario: Usuario;
   @Input() showModalColors: boolean = false;
@@ -60,6 +72,7 @@ export class ModalColorsComponent implements OnInit {
     }
 
     await this.calendarColorsService.create(color);
+    this.usuarioSeleccionado = undefined;
     Swal.fire({
       title: "OK",
       text: "CREADO CORRECTAMENTE",

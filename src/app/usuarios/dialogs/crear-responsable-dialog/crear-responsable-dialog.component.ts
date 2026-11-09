@@ -4,8 +4,6 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
-import { AvatarModule } from 'ngx-avatars';
-import { InputSwitchModule } from 'primeng/inputswitch';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -14,6 +12,7 @@ import { ResponsablesService } from '../../services/responsables.service';
 import { UsersService } from '../../services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { MailService, EnviarCorreoRequest } from '../../../shared/services/mail.service';
+import { ColorRandomService } from '../../../mantenimientos/services/color-random.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Usuario } from '../../interfaces/usuario.model';
 
@@ -24,9 +23,7 @@ import { Usuario } from '../../interfaces/usuario.model';
     CommonModule, 
     FormsModule, 
     DialogModule, 
-    DropdownModule, 
-    AvatarModule, 
-    InputSwitchModule
+    DropdownModule
   ],
   templateUrl: './crear-responsable-dialog.component.html',
   styleUrl: './crear-responsable-dialog.component.scss'
@@ -42,6 +39,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
   branchesService = inject(BranchesService);
   messageService = inject(MessageService);
   mailService = inject(MailService);
+  colorRandomService = inject(ColorRandomService);
   cdr = inject(ChangeDetectorRef);
 
   sucursales: Sucursal[] = [];
@@ -56,11 +54,14 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     
     // Solo asignamos si es nuevo (aunque desde el padre ya se puede enviar seteado)
-    if (this.esNuevo && this.usuario.sucursales?.length > 0) {
-      if (!this.responsable.idSucursal || this.responsable.idSucursal === 'todos') {
+    if (this.esNuevo) {
+      if (this.usuario.sucursales?.length > 0 && (!this.responsable.idSucursal || this.responsable.idSucursal === 'todos')) {
         this.responsable.idSucursal = this.usuario.sucursales[0].id;
       }
-      this.responsable.color = '#1e1e24';
+      this.responsable.esGlobal = false;
+      this.responsable.color = this.colorRandomService.generarColor();
+    } else if (!this.responsable.color || this.responsable.color === '#000000') {
+      this.responsable.color = this.colorRandomService.generarColor();
     }
 
     this.subs.add(
@@ -125,6 +126,10 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
 
     this.cargando = true;
     try {
+      if (!this.responsable.color || this.responsable.color === '#000000') {
+        this.responsable.color = this.colorRandomService.generarColor();
+      }
+
       if (this.esNuevo) {
         // Verificar correo duplicado sólo al crear, o validarlo globalmente
         const existe = await this.responsablesService.correoExiste(this.responsable.correo);

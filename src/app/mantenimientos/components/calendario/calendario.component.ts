@@ -81,10 +81,10 @@ export class CalendarioComponent implements OnInit {
     private areasService: AreasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.obtenerAreas();
   }
 
   ngOnInit(): void {
+    this.obtenerAreas();
     this.obtenerColores();
     this.obtenerSucursales();
   }
@@ -102,9 +102,8 @@ export class CalendarioComponent implements OnInit {
   obtenerAreas() {
     this.areasService.areas$.subscribe({
       next: (data) => {
-        this.areas
         this.areas = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -113,7 +112,7 @@ export class CalendarioComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.log(error);
@@ -244,7 +243,7 @@ export class CalendarioComponent implements OnInit {
     }
 
     Swal.close();
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   convertTimestampToDate(timestamp: any): Date | null {
@@ -274,19 +273,25 @@ export class CalendarioComponent implements OnInit {
   async handleEventClick(clickInfo: EventClickArg) {
 
     if (clickInfo.event.title != 'GUARDIA' && clickInfo.event.title.indexOf('ACTIVIDAD:') == -1) {
-      let sucursal = this.sucursales.filter(x => x.nombre == clickInfo.event._def.title);
+      const idSucursal = clickInfo.event.extendedProps?.['idSucursal'];
+      const tituloEvento = clickInfo.event.title || clickInfo.event._def?.title || '';
+      const sucursalEncontrada = this.sucursales.find(x => String(x.id) === String(idSucursal))
+        || this.sucursales.find(x => x.nombre?.trim().toLowerCase() === tituloEvento.trim().toLowerCase());
+
       this.FechaSeleccionada = clickInfo.event.start!;
-      this.comentario = clickInfo.event.extendedProps['comentario'];
-      this.usuarioSeleccionado = { ...this.obtenerUsuario(clickInfo.event.extendedProps['idUsuario']) };
+      this.comentario = clickInfo.event.extendedProps?.['comentario'] || '';
+      this.usuarioSeleccionado = { ...this.obtenerUsuario(clickInfo.event.extendedProps?.['idUsuario']) };
       this.sucursalSeleccionada = {
-        ...sucursal[0],
-        idsTickets: clickInfo.event.extendedProps['idsTickets'],
-        ticketsFinalizados: clickInfo.event.extendedProps['ticketsFinalizados'],
-        fechaVisita: clickInfo.event.extendedProps['fechaVisita'],
-        mantenimientosDelDia: clickInfo.event.extendedProps['mantenimientosDelDia'],
+        ...(sucursalEncontrada || {}),
+        id: idSucursal || sucursalEncontrada?.id,
+        nombre: sucursalEncontrada?.nombre || tituloEvento,
+        idsTickets: clickInfo.event.extendedProps?.['idsTickets'] || [],
+        ticketsFinalizados: clickInfo.event.extendedProps?.['ticketsFinalizados'] || 0,
+        fechaVisita: clickInfo.event.extendedProps?.['fechaVisita'],
+        mantenimientosDelDia: clickInfo.event.extendedProps?.['mantenimientosDelDia'] || [],
       };
       this.showModalEventeDetail = true;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }
   }
 
@@ -294,7 +299,7 @@ export class CalendarioComponent implements OnInit {
     this.documentService.get('colores-usuarios').subscribe({
       next: (data) => {
         this.colores = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error) => {
       },
@@ -302,14 +307,12 @@ export class CalendarioComponent implements OnInit {
   }
 
   obtenerColor(idUsuario: string): string {
-    let color = '';
-    let temp = this.colores.filter(x => x.idUsuario == idUsuario);
-    color = temp.length > 0 ? temp[0].color : '';
-    return color;
+    const temp = this.colores.filter(x => x.idUsuario == idUsuario);
+    return temp.length > 0 && temp[0].color ? temp[0].color : '#334155';
   }
 
   getLuminance(hexColor: string): number {
-    if (hexColor == '') {
+    if (!hexColor || hexColor.length < 7) {
       return 0;
     } else {
       // Convertir el color hexadecimal a RGB

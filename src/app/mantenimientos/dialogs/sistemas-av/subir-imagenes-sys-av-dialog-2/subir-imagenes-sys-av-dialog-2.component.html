@@ -1,114 +1,136 @@
-<p-dialog [header]="'SUBIR EVIDENCIA PARA ' + titulo" [modal]="true" [(visible)]="mostrarModal"
-  [style]="{ width: '40vw', height: '65vh' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog
+  [header]="'Subir Evidencia - ' + titulo"
+  [modal]="true"
+  [(visible)]="mostrarModal"
+  [style]="{ width: '46rem', maxWidth: '92vw' }"
+  [maximizable]="true"
+  (onHide)="onHide()"
+  styleClass="dialog-rw-modal">
 
-  <!-- =========================
-       PANTALLAS
-  ========================== -->
-  <div *ngIf="titulo === 'PANTALLAS'">
-
-    <div *ngFor="let tv of mantenimiento?.tvs; let i = index" class="mb-4">
-
-      <h5 class="mb-2">
-        {{ tv.dispositivo.nombre }}
-      </h5>
-
-      <!-- Área de subida -->
-      <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-        (drop)="onDrop($event, i)">
-
-        <input type="file" hidden accept="image/*" multiple (change)="onFileSelected($event, i)" #fileInputPantalla />
-
-        <div class="upload-content">
-
-          <i class="pi pi-upload upload-icon"></i>
-
-          <p class="upload-text">
-            Arrastra y suelta una imagen aquí
-          </p>
-
-          <p class="upload-separator">o</p>
-
-          <button type="button" class="btn-upload" (click)="fileInputPantalla.click()">
-            Seleccionar imagen
-          </button>
-
+  <div class="uploader-modal-body">
+    <!-- PANTALLAS -->
+    <div *ngIf="titulo === 'PANTALLAS'">
+      <div *ngFor="let tv of mantenimiento?.tvs; let i = index" class="device-upload-card mb-4">
+        <div class="device-card-header">
+          <div class="device-name-badge">
+            <i class="bx bx-tv"></i>
+            <span>{{ tv.dispositivo.nombre }}</span>
+          </div>
         </div>
 
-      </div>
+        <!-- Área de subida -->
+        <div
+          class="upload-dropzone"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event, i)">
+          <input
+            type="file"
+            hidden
+            accept="image/*"
+            multiple
+            (change)="onFileSelected($event, i)"
+            #fileInputPantalla />
 
-      <!-- PREVIEW POR PANTALLA -->
-      <div *ngIf="imagenesBase64PorDispositivo[i]?.length" class="preview-container">
-
-        <div *ngFor="let img of imagenesBase64PorDispositivo[i]" class="preview-item">
-          <img [src]="img" alt="Vista previa" />
+          <div class="upload-content">
+            <div class="upload-icon-circle">
+              <i class="bx bx-cloud-upload"></i>
+            </div>
+            <p class="upload-title">Arrastra y suelta imágenes de esta pantalla</p>
+            <div class="upload-divider">
+              <span>o</span>
+            </div>
+            <button type="button" class="btn-select-files" (click)="fileInputPantalla.click()">
+              <i class="bx bx-image-add"></i>
+              <span>Seleccionar imágenes</span>
+            </button>
+          </div>
         </div>
 
+        <!-- Preview -->
+        <div *ngIf="imagenesBase64PorDispositivo[i]?.length" class="preview-section mt-3">
+          <div class="preview-header">
+            <span class="preview-count-badge">
+              <i class="bx bx-images"></i>
+              <span>{{ imagenesBase64PorDispositivo[i].length }} imagen(es) seleccionada(s)</span>
+            </span>
+          </div>
+          <div class="preview-container">
+            <div *ngFor="let img of imagenesBase64PorDispositivo[i]" class="preview-item">
+              <img [src]="img" alt="Vista previa" />
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
 
-  </div>
-
-
-  <!-- =========================
-       BOCINAS
-  ========================== -->
-  <div *ngIf="titulo === 'BOCINAS'">
-
-    <div *ngFor="let bocina of mantenimiento?.bocinas; let i = index" class="mb-4">
-
-      <h5 class="mb-2">
-        {{ bocina.dispositivo.nombre }}
-      </h5>
-
-      <!-- Área de subida -->
-      <div class="upload-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-        (drop)="onDrop($event, i)">
-
-        <input type="file" hidden accept="image/*" multiple (change)="onFileSelected($event, i)" #fileInputBocina />
-
-        <div class="upload-content">
-
-          <i class="pi pi-upload upload-icon"></i>
-
-          <p class="upload-text">
-            Arrastra y suelta una imagen aquí
-          </p>
-
-          <p class="upload-separator">o</p>
-
-          <button type="button" class="btn-upload" (click)="fileInputBocina.click()">
-            Seleccionar imagen
-          </button>
-
+    <!-- BOCINAS -->
+    <div *ngIf="titulo === 'BOCINAS'">
+      <div *ngFor="let bocina of mantenimiento?.bocinas; let i = index" class="device-upload-card mb-4">
+        <div class="device-card-header">
+          <div class="device-name-badge">
+            <i class="bx bx-speaker"></i>
+            <span>{{ bocina.dispositivo.nombre }}</span>
+          </div>
         </div>
 
-      </div>
+        <!-- Área de subida -->
+        <div
+          class="upload-dropzone"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event, i)">
+          <input
+            type="file"
+            hidden
+            accept="image/*"
+            multiple
+            (change)="onFileSelected($event, i)"
+            #fileInputBocina />
 
-      <!-- PREVIEW POR BOCINA -->
-      <div *ngIf="imagenesBase64PorDispositivo[i]?.length" class="preview-container">
-
-        <div *ngFor="let img of imagenesBase64PorDispositivo[i]" class="preview-item">
-          <img [src]="img" alt="Vista previa" />
+          <div class="upload-content">
+            <div class="upload-icon-circle">
+              <i class="bx bx-cloud-upload"></i>
+            </div>
+            <p class="upload-title">Arrastra y suelta imágenes de esta bocina</p>
+            <div class="upload-divider">
+              <span>o</span>
+            </div>
+            <button type="button" class="btn-select-files" (click)="fileInputBocina.click()">
+              <i class="bx bx-image-add"></i>
+              <span>Seleccionar imágenes</span>
+            </button>
+          </div>
         </div>
 
+        <!-- Preview -->
+        <div *ngIf="imagenesBase64PorDispositivo[i]?.length" class="preview-section mt-3">
+          <div class="preview-header">
+            <span class="preview-count-badge">
+              <i class="bx bx-images"></i>
+              <span>{{ imagenesBase64PorDispositivo[i].length }} imagen(es) seleccionada(s)</span>
+            </span>
+          </div>
+          <div class="preview-container">
+            <div *ngFor="let img of imagenesBase64PorDispositivo[i]" class="preview-item">
+              <img [src]="img" alt="Vista previa" />
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
-
   </div>
-
 
   <ng-template pTemplate="footer">
-
     <div class="footer-actions">
-
-      <button type="button" class="btn-confirm" (click)="subirImagen()">
-        <i class="pi pi-check"></i> Subir
+      <button type="button" class="btn-rw-neutral" (click)="onHide()">
+        <i class="pi pi-times"></i>
+        <span>Cancelar</span>
       </button>
-
+      <button type="button" class="btn-rw-primary" (click)="subirImagen()">
+        <i class="pi pi-cloud-upload"></i>
+        <span>Subir Evidencias</span>
+      </button>
     </div>
-
   </ng-template>
-
 </p-dialog>

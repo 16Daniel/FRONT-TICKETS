@@ -1,9 +1,40 @@
-<p-dialog header="COMENTARIOS DEL MANTENIMIENTO" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '50rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog
+  header="Comentarios del Mantenimiento"
+  [modal]="true"
+  [(visible)]="mostrarModal"
+  [style]="{ width: '48rem', maxWidth: '92vw' }"
+  [maximizable]="true"
+  (onHide)="onHide()"
+  styleClass="dialog-rw-modal">
 
-    <p-accordion *ngIf="mantenimiento">
-        <p-accordionTab header="COMENTARIOS FINALES" [selected]="true">
-            <p [innerHTML]="mantenimiento.observaciones"></p>
-        </p-accordionTab>
-    </p-accordion>
+  <div class="comments-modal-body" *ngIf="mantenimiento">
+    <div class="comments-card">
+      <div class="comments-card-header">
+        <div class="comments-badge">
+          <i class="bx bx-comment-detail"></i>
+          <span>Observaciones del Analista</span>
+        </div>
+      </div>
+
+      <div class="comments-card-content">
+        @if (mantenimiento.observaciones && mantenimiento.observaciones.trim().length > 0) {
+          <div class="comments-text" [innerHTML]="mantenimiento.observaciones"></div>
+        } @else {
+          <div class="comments-empty-state">
+            <i class="bx bx-message-rounded-x"></i>
+            <p>Sin observaciones ni comentarios registrados para este mantenimiento.</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="footer-actions">
+      <button type="button" class="btn-rw-neutral" (click)="onHide()">
+        <i class="pi pi-times"></i>
+        <span>Cerrar</span>
+      </button>
+    </div>
+  </ng-template>
 </p-dialog>

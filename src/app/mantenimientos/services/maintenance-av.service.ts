@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from '@angular/fire/firestore';
-import { combineLatest, forkJoin, from, map, Observable } from 'rxjs';
+import { combineLatest, forkJoin, from, map, Observable, of } from 'rxjs';
 import { IMantenimientoService } from '../interfaces/manteinance.interface';
 import { MantenimientoAudioVideo } from '../interfaces/mantenimiento-audio-video.interface';
 import { CreateMantenimientoDto } from '../interfaces/create-mantenimeinto.interface';
@@ -272,7 +272,11 @@ export class MaintenanceAvService implements IMantenimientoService {
   }
 
   getMantenimientosPorSucursalYFecha(idsSucursales: string[], fecha: Date): Observable<any[]> {
-    const observables = idsSucursales.map(idSucursal => {
+    const validIds = (idsSucursales || []).filter(id => id !== undefined && id !== null && String(id).trim() !== '');
+    if (validIds.length === 0) {
+      return of([]);
+    }
+    const observables = validIds.map(idSucursal => {
       return new Observable<any[]>(observer => {
         const mantenimientosRef = collection(this.firestore, this.pathName);
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
@@ -57,9 +57,12 @@ export class AcordeonMantenimientosMantenimientoComponent {
     return new Date(timestamp); // Por si acaso es un número o string de fecha
   }
 
-  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+  trackBySucursalId(index: number, item: Sucursal): string {
+    return item.id;
+  }
 
-    return catsucursales.sort((a, b) => {
+  ordenarSucursalesUser(catsucursales: Sucursal[]): Sucursal[] {
+    return [...catsucursales].sort((a, b) => {
       const mantenimientoA = this.obtenerPorcentajedeUltimoMantenimiento(a.id);
       const mantenimientoB = this.obtenerPorcentajedeUltimoMantenimiento(b.id);
 
@@ -120,6 +123,16 @@ export class AcordeonMantenimientosMantenimientoComponent {
 
     }
     return dias;
+  }
+
+  obtenerClaseEstado(value: number): string {
+    if (value <= 50) {
+      return 'status-critical';
+    }
+    if (value > 50 && value <= 80) {
+      return 'status-warning';
+    }
+    return 'status-success';
   }
 
   obtenerColorDeFondoSucursal(value: number): string {

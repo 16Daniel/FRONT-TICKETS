@@ -509,18 +509,45 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   }
 
   private async enviarAlertaWhatsappSiCorresponde(ticketId: string): Promise<void> {
-    if (!this.alertaWhatsappSeleccionada) {
+    const areaTicket = this.areas.find(
+      area => String(area.id) === String(this.ticket.idArea)
+    );
+    const grupoNotificacionArea = areaTicket?.notificacionesTicket?.ticketCreado === true
+      ? areaTicket.gruponotificacion?.trim()
+      : '';
+
+    if (!this.alertaWhatsappSeleccionada && !grupoNotificacionArea) {
       return;
     }
 
-    try {
-      await this.whatsappService.enviarMensajeTexto(
-        environment.grupoWAGerencias,
-        this.construirMensajeAlertaWhatsapp()
-      );
-    } catch (error) {
-      console.error('Error al enviar la alerta del ticket por WhatsApp:', error);
-      this.showMessage('warn', 'Error al enviar WhatsApp', 'El ticket se creó, pero no fue posible enviar la alerta.');
+    let alertaCategoriaEnviada = false;
+
+    if (this.alertaWhatsappSeleccionada) {
+      try {
+        const mensaje = this.construirMensajeAlertaWhatsapp(true);
+        await this.whatsappService.enviarMensajeTexto(environment.grupoWAGerencias, mensaje);
+        alertaCategoriaEnviada = true;
+      } catch (error) {
+        console.error('Error al enviar la alerta del ticket por WhatsApp:', error);
+        this.showMessage('warn', 'Error al enviar WhatsApp', 'El ticket se creó, pero no fue posible enviar la alerta.');
+      }
+    }
+
+    if (grupoNotificacionArea) {
+      try {
+        const mensaje = this.construirMensajeAlertaWhatsapp(false);
+        await this.whatsappService.enviarMensajeTexto(grupoNotificacionArea, mensaje);
+      } catch (error) {
+        console.error('Error al enviar la notificación de creación al grupo del área:', error);
+        this.showMessage(
+          'warn',
+          'Error al enviar WhatsApp',
+          'El ticket se creó, pero no fue posible notificar al grupo de WhatsApp del área.'
+        );
+      }
+    }
+
+    if (!alertaCategoriaEnviada) {
       return;
     }
 
@@ -541,13 +568,19 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  private construirMensajeAlertaWhatsapp(): string {
+  private construirMensajeAlertaWhatsapp(esCritico: boolean): string {
     const sucursal = this.sucursales.find(
       item => String(item.id) === String(this.ticket.idSucursal)
     )?.nombre || String(this.ticket.idSucursal);
     const area = this.areas.find(
       item => String(item.id) === String(this.ticket.idArea)
     )?.nombre || String(this.ticket.idArea);
+    const responsable = this.catUsuariosHelp.find(
+      usuario => String(usuario.id) === String(this.ticket.idResponsable)
+    );
+    const nombreResponsable = responsable
+      ? `${responsable.nombre} ${responsable.apellidoP || ''} ${responsable.apellidoM || ''}`.trim()
+      : 'Sin asignar';
     const descripcion = this.ticket.descripcion
       .replace(/<br\s*\/?>/gi, '\n')
       .replace(/<\/p>/gi, '\n')
@@ -557,16 +590,28 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     const descripcionCorta = descripcion.length > 500
       ? `${descripcion.slice(0, 497)}...`
       : descripcion;
+    const categoria = this.ticket.nombreSubcategoria
+      ? `${this.ticket.nombreCategoria || 'Sin categoría'} - ${this.ticket.nombreSubcategoria}`
+      : this.ticket.nombreCategoria || 'Sin categoría';
+    const tiempoAtencion = this.ticket.tiempoAtencion !== undefined
+      ? `${this.ticket.tiempoAtencion}${this.ticket.unidadAtencion || ''}`
+      : 'N/D';
+    const tiempoResolucion = this.ticket.tiempoResolucion !== undefined
+      ? `${this.ticket.tiempoResolucion}${this.ticket.unidadResolucion || ''}`
+      : 'N/D';
 
     return [
-      '*🚨TICKET DE ALTA PRIORIDAD:*',
-      `*Área:* ${area}`,
-      `*Sucursal:* ${sucursal}`,
-      `*Categoría:* ${this.ticket.nombreCategoria || 'Sin categoría'}${this.ticket.nombreSubcategoria ? ` - ${this.ticket.nombreSubcategoria}` : ''}`,
-      `*Folio:* ${this.ticket.folio}`,
-      `*Prioridad:* ${this.ticket.prioridad || 'Sin prioridad'} (score ${this.ticket.score ?? 'N/D'})`,
-      `*Solicitante:* ${this.ticket.solicitante || 'Sin especificar'}`,
-      `*Descripción:* ${descripcionCorta || 'Sin descripción'}`
+      esCritico ? '======================\n🔥 TICKET: CRITICO\n======================' : '=================\n🟡 TICKET: NUEVO\n=================',
+      `Area: ${area}`,
+      `Sucursal: ${sucursal}`,
+      `Ticket: ${this.ticket.folio || 'Sin folio'}`,
+      `Responsable: ${nombreResponsable}`,
+      `Prioridad: ${this.ticket.prioridad || 'Sin prioridad'}`,
+      `TA: ${tiempoAtencion}`,
+      `TR: ${tiempoResolucion}`,
+      `Categoria: ${categoria}`,
+      `Descripcion: ${descripcionCorta || 'Sin descripción'}`,
+      esCritico ? '======================' : '================='
     ].join('\n');
   }
 
