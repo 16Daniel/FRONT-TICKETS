@@ -1,0 +1,162 @@
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header
+      subtitle="MANTENIMIENTOS PREVENTIVOS"
+      title="Mantenimientos en Sucursal">
+    </app-page-header>
+
+    <!-- Selector de Área / Tipo de Mantenimiento por Chips -->
+    <div class="areas-chips-track mb-4">
+      <button
+        *ngFor="let tab of tabsDisponibles"
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tipoActivo === tab.id"
+        (click)="cambiarTab(tab)">
+        <i [class]="tab.icono"></i>
+        <span class="area-name">{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <!-- Barra de acciones según pestaña seleccionada -->
+    <div class="actions-toolbar-row mt-3 mb-4">
+      <div class="actions-buttons-container justify-content-start flex-wrap gap-2">
+        @if (tipoActivo === 'TI') {
+          <p-button
+            label="HISTORIAL 8 X 8"
+            icon="pi pi-history"
+            styleClass="p-button-secondary action-btn-custom"
+            (click)="mostrarModalHistorialMantenimientos = true">
+          </p-button>
+
+          <p-button
+            label="MANTENIMIENTO IT (8X8)"
+            icon="bx bx-laptop"
+            styleClass="p-button-danger action-btn-custom"
+            (click)="verificarSiHayMantenimiento('1')">
+          </p-button>
+
+          <!-- <p-button
+            label="EVALUACIÓN GENERAL"
+            icon="pi pi-star"
+            styleClass="p-button-yellow action-btn-custom"
+            (click)="mostrarModalRating = true">
+          </p-button> -->
+        } @else if (tipoActivo === 'AV') {
+          <p-button
+            label="HISTORIAL 6 X 6 AV"
+            icon="pi pi-history"
+            styleClass="p-button-secondary action-btn-custom"
+            (click)="mostrarModalHistorialMantenimientosAV = true">
+          </p-button>
+
+          <p-button
+            label="MANTENIMIENTO AV (6X6)"
+            icon="bx bx-tv"
+            styleClass="p-button-danger action-btn-custom"
+            (click)="verificarSiHayMantenimiento('2')">
+          </p-button>
+        } @else if (tipoActivo === 'MTTO') {
+          <p-button
+            label="HISTORIAL 8 X 8"
+            icon="pi pi-history"
+            styleClass="p-button-secondary action-btn-custom"
+            (click)="mostrarModalHistorialMantenimientosMtto = true">
+          </p-button>
+
+          <p-button
+            label="MANTENIMIENTO 8X8"
+            icon="bx bx-wrench"
+            styleClass="p-button-danger action-btn-custom"
+            (click)="verificarSiHayMantenimiento('4')">
+          </p-button>
+        }
+      </div>
+    </div>
+
+    <!-- Tabla de últimos mantenimientos de la sucursal -->
+    <div class="bg-white rounded-3 p-3 shadow-sm">
+      @if (tipoActivo === 'TI') {
+        <app-tabla-mantenimientos-sistemas
+          [mantenimientos]="ultimosMantenimientosTI"
+          [usuariosHelp]="usuariosHelp"
+          [idSucursal]="sucursal?.id"
+          [mostrarChat]="true">
+        </app-tabla-mantenimientos-sistemas>
+      } @else if (tipoActivo === 'AV') {
+        <tabla-mantenimientos-audio-video
+          [mantenimientos]="ultimosMantenimientosAV"
+          [usuariosHelp]="usuariosHelp"
+          [idSucursal]="sucursal?.id"
+          [mostrarChat]="true">
+        </tabla-mantenimientos-audio-video>
+      } @else if (tipoActivo === 'MTTO') {
+        <app-tabla-mantenimientos-mantenimiento
+          [mantenimientos]="ultimosMantenimientosMtto"
+          [usuariosHelp]="usuariosHelp"
+          [mostrarChat]="true">
+        </app-tabla-mantenimientos-mantenimiento>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modales de Historial y Check -->
+<app-modal-ten-xten-maintenance-history
+  *ngIf="mostrarModalHistorialMantenimientos"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
+  (closeEvent)="mostrarModalHistorialMantenimientos = false">
+</app-modal-ten-xten-maintenance-history>
+
+<app-historial-mantenimiento-sys-av-dialog
+  *ngIf="mostrarModalHistorialMantenimientosAV"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientosAV"
+  (closeEvent)="mostrarModalHistorialMantenimientosAV = false">
+</app-historial-mantenimiento-sys-av-dialog>
+
+<app-modal-maintenance-mtto-history
+  *ngIf="mostrarModalHistorialMantenimientosMtto"
+  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientosMtto"
+  (closeEvent)="mostrarModalHistorialMantenimientosMtto = false">
+</app-modal-maintenance-mtto-history>
+
+<app-modal-ten-xten-maintenance-check
+  *ngIf="mostrarModalMtooTI"
+  [mostrarModalMtooTI]="mostrarModalMtooTI"
+  (closeEvent)="mostrarModalMtooTI = false"
+  [mantenimientoActivo]="mantenimientoActivo">
+</app-modal-ten-xten-maintenance-check>
+
+<app-check-mantenimiento-sis-av-dialog
+  *ngIf="mostrarModalAV"
+  [mostrarModalAV]="mostrarModalAV"
+  (closeEvent)="mostrarModalAV = false"
+  [mantenimientoActivo]="mantenimientoAVActivo">
+</app-check-mantenimiento-sis-av-dialog>
+
+<app-modal-mateinance-mtto-check
+  *ngIf="mostrarModalManteinance"
+  [showModal]="mostrarModalManteinance"
+  (closeEvent)="mostrarModalManteinance = false"
+  [mantenimientosActivos]="mantenimientosActivos">
+</app-modal-mateinance-mtto-check>
+
+<app-modal-branch-rating
+  [mostrarModalRating]="mostrarModalRating"
+  (closeEvent)="mostrarModalRating = false">
+</app-modal-branch-rating>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>
+
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '480px', maxWidth: '92vw' }">
+  <ng-template pTemplate="message" let-message>
+    <div class="confirm-dialog-body" [innerHTML]="message.message"></div>
+  </ng-template>
+</p-confirmDialog>

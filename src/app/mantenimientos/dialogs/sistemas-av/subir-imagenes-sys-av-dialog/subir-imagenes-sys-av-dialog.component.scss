@@ -1,96 +1,279 @@
-/* Contenedor principal */
-.upload-container {
-    border: 2px dashed #aaa;
-    border-radius: 10px;
-    text-align: center;
-    padding: 2rem;
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
-    background-color: #fafafa;
-    margin-bottom: 1.5rem;
-}
+/* ==========================================================================
+   Subir Imágenes Sys AV - Rebel Wings Design System
+   ========================================================================== */
+::ng-deep .dialog-rw-modal {
+  border-radius: 20px !important;
+  overflow: hidden;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16) !important;
 
-.upload-container:hover,
-.upload-container.dragover {
-    border-color: #007ad9;
-    background-color: #eef6ff;
-}
+  .p-dialog-header {
+    background: #ffffff;
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
 
-.upload-icon {
-    font-size: 2.8rem;
-    color: #007ad9;
-    margin-bottom: 1rem;
-}
+    .p-dialog-title {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #1e1e24;
+      letter-spacing: -0.01em;
+    }
 
-.upload-text {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #333;
-}
+    .p-dialog-header-icons {
+      .p-dialog-header-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        color: #64748b;
+        transition: all 0.15s ease;
 
-.upload-separator {
-    margin: 0.3rem 0;
-    color: #666;
-}
+        &:hover {
+          background-color: #f1f5f9;
+          color: #0f172a;
+        }
+      }
+    }
+  }
 
-/* Botón principal */
-.btn-upload {
-    background-color: #007ad9;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.25s ease-in-out;
-}
+  .p-dialog-content {
+    padding: 1.25rem 1.5rem;
+    background: #f4f6fa;
+  }
 
-.btn-upload:hover {
-    background-color: #005fa3;
-}
-
-/* Vista previa de imágenes */
-.preview-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    justify-content: center;
-    max-height: 28vh;
-    overflow-y: auto;
-}
-
-.preview-item img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    transition: transform 0.3s ease-in-out;
-}
-
-.preview-item img:hover {
-    transform: scale(1.05);
-    border-color: #007ad9;
-}
-
-/* Footer */
-.footer-actions {
-    width: 100%;
+  .p-dialog-footer {
+    background: #ffffff;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f1f5f9;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+
+    .footer-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+  }
 }
 
-.btn-confirm {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
+.uploader-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+/* Zona Drag & Drop */
+.upload-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  background-color: #ffffff;
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+
+  &:hover,
+  &.dragover {
+    border-color: #d3152a;
+    background-color: #fff1f2;
+    transform: translateY(-1px);
+
+    .upload-icon-circle {
+      background-color: #d3152a;
+      color: #ffffff;
+      transform: scale(1.05);
+    }
+  }
+
+  .upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .upload-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #fff1f2;
+    color: #d3152a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 0.85rem;
+    transition: all 0.2s ease;
+  }
+
+  .upload-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e1e24;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .upload-subtitle {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .upload-divider {
+    display: flex;
+    align-items: center;
+    width: 120px;
+    margin: 0.25rem 0 0.75rem 0;
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    span {
+      padding: 0 0.5rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  }
+
+  .btn-select-files {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #ffffff;
+    color: #1e1e24;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.25s ease-in-out;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+
+    i {
+      font-size: 1.1rem;
+      color: #d3152a;
+    }
+
+    &:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+  }
 }
 
-.btn-confirm:hover {
-    background-color: #1e7e34;
+/* Sección de Vista Previa */
+.preview-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+
+  .preview-header {
+    margin-bottom: 0.85rem;
+
+    .preview-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background-color: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #dbeafe;
+
+      i {
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  .preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 0.25rem;
+
+    .preview-item {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      transition: transform 0.15s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: #d3152a;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+/* Botones Footer */
+.btn-rw-neutral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #94a3b8;
+  }
+}
+
+.btn-rw-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.6rem 1.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38);
+    background: linear-gradient(135deg, #e01930 0%, #c41326 100%);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }

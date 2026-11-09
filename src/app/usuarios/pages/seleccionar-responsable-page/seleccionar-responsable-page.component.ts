@@ -8,6 +8,7 @@ import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { AccessControlService } from '../../../shared/services/access-control.service';
 
 @Component({
   selector: 'app-seleccionar-responsable-page',
@@ -18,6 +19,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export default class SeleccionarResponsablePageComponent implements OnInit {
   responsablesService = inject(ResponsablesService);
+  accessControl = inject(AccessControlService);
 
   responsableActivoSeleccionado?: Responsable | any;
   resposablesDeSucursal: Responsable[] = [];
@@ -34,9 +36,10 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
 
   ngOnInit(): void {
     localStorage.removeItem('responsable-tareas');
+    this.accessControl.inicializarEscuchaUsuario();
 
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk') || '{}');
+    this.idSucursalSeleccionada = this.usuario?.sucursales?.[0]?.id || '';
 
     this.responsablesService.responsables$.subscribe(() => {
       this.resposablesDeSucursal = this.responsablesService.filtrarPorSucursal(this.idSucursalSeleccionada, false);
@@ -60,7 +63,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
     }
   }
 
-  validarPin() {
+  async validarPin() {
     if (this.pinIngresado.length !== 4) return;
 
     const responsable = this.responsablesService.buscarPorPin(this.pinIngresado);
@@ -79,7 +82,9 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
       JSON.stringify(responsable)
     );
 
-    this.router.navigate(['/home']);
+    await this.accessControl.ensureLoaded();
+    const rutaDestino = this.accessControl.getPrimeraRutaPermitida() || '/main/sin-acceso';
+    this.router.navigate([rutaDestino]);
   }
 
   cancelar() {

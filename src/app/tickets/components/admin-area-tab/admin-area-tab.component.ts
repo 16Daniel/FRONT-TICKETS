@@ -18,26 +18,16 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
-import { AcordeonMantenimientosSistemasComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-sistemas/acordeon-mantenimientos-sistemas.component';
-import { AcordeonMantenimientosAudioVideoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
-import { AcordeonMantenimientosMantenimientoComponent } from '../../../mantenimientos/components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
-
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';
-import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
-import { MantenimientoMtto } from '../../../mantenimientos/interfaces/mantenimiento-mtto.interface';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
-import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
-import { MaintenanceMtooService } from '../../../mantenimientos/services/maintenance-mtto.service';
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
 import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
@@ -60,9 +50,6 @@ import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.i
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
     SolicitarCompraDialogComponent,
-    AcordeonMantenimientosSistemasComponent,
-    AcordeonMantenimientosAudioVideoComponent,
-    AcordeonMantenimientosMantenimientoComponent,
     TarjetaRendimientoSlaComponent
   ],
   providers: [MessageService, ConfirmationService],
@@ -80,10 +67,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   sucursales: Sucursal[] = [];
   usuariosHelp: Usuario[] = [];
   compras: Compra[] = [];
-  
-  mantenimientosTI: MantenimientoSys[] = [];
-  mantenimientosAV: MantenimientoAudioVideo[] = [];
-  mantenimientosMtto: MantenimientoMtto[] = [];
 
   mostrarModalGenerateTicket: boolean = false;
   mostrarModalFilterTickets: boolean = false;
@@ -92,13 +75,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   mostrarModalTicketDetail: boolean = false;
   mostrarModalCompras: boolean = false;
   mostrarModalSolicitarCompra: boolean = false;
-
-  mostrarMantenimientosTI = false;
-  mostrarMantenimientosAV = false;
-  mostrarMantenimientosMtto = false;
-  
-  auxMostrarMantenimientos = true;
-  ordenarMantenimientosFecha: boolean = false;
 
   usuario: Usuario;
   sucursal: Sucursal | undefined;
@@ -131,9 +107,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     private branchesService: BranchesService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
-    private maintenanceSysService: MantenimientosSistemasService,
-    private maintenanceAvService: MaintenanceAvService,
-    private maintenanceMttoService: MaintenanceMtooService,
     private kpisTicketsService: KpisTicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private kpiRadarService: KpiRadarService
@@ -149,16 +122,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     this.obtenerSucursales();
     this.obtenerCompras();
     this.cargarDatosSlaMes();
-  }
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      // Trigger animations / re-renders if needed
-      this.auxMostrarMantenimientos = false;
-      this.cdr.detectChanges();
-      this.auxMostrarMantenimientos = true;
-      this.cdr.detectChanges();
-    }, 1500);
   }
 
   ngOnDestroy() {
@@ -335,44 +298,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-
-        if (this.idArea === '1' || this.idArea === '2') {
-          // TI
-          this.maintenanceSysService.getUltimosMantenimientos(this.sucursales.map(s => s.id)).subscribe((result) => {
-            let filtered = result.filter(e => e.length > 0);
-            this.mantenimientosTI = [];
-            for (let itemdata of filtered) {
-              for (let item of itemdata) this.mantenimientosTI.push(item);
-            }
-            this.mantenimientosTI = this.mantenimientosTI.map(x => { x.fecha = this.datesHelper.getDate(x.fecha); return x; });
-            this.cdr.detectChanges();
-          });
-
-          // AV
-          this.maintenanceAvService.getUltimosMantenimientos(this.sucursales.map(s => s.id)).subscribe((result) => {
-            let filtered = result.filter(e => e.length > 0);
-            this.mantenimientosAV = [];
-            for (let itemdata of filtered) {
-              for (let item of itemdata) this.mantenimientosAV.push(item);
-            }
-            this.mantenimientosAV = this.mantenimientosAV.map(x => { x.fecha = this.datesHelper.getDate(x.fecha); return x; });
-            this.cdr.detectChanges();
-          });
-        }
-
-        if (this.idArea === '4') {
-          // Mtto
-          this.maintenanceMttoService.getUltimosMantenimientos(this.sucursales.map(s => s.id)).subscribe((result) => {
-            let filtered = result.filter(e => e.length > 0);
-            this.mantenimientosMtto = [];
-            for (let itemdata of filtered) {
-              for (let item of itemdata) this.mantenimientosMtto.push(item);
-            }
-            this.mantenimientosMtto = this.mantenimientosMtto.map(x => { x.fecha = this.datesHelper.getDate(x.fecha); return x; });
-            this.cdr.detectChanges();
-          });
-        }
-
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -483,21 +408,5 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   abrirModalDetalleTicket(itemticket: Ticket | any) {
     this.mostrarModalTicketDetail = true;
     this.ticket = itemticket;
-  }
-
-  sucursalesMantenimeintosActivos(areaIdToCheck: string) {
-    if (this.usergroup !== undefined) {
-      const idsSucursalesUsuario = this.usergroup?.sucursales.map(s => String(s.id));
-      return this.sucursales.filter(sucursal =>
-        idsSucursalesUsuario?.includes(String(sucursal.id)) &&
-        Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes(areaIdToCheck)
-      );
-    } else {
-      return this.sucursales.filter(sucursal =>
-        Array.isArray(sucursal.activoMantenimientos) &&
-        sucursal.activoMantenimientos.includes(areaIdToCheck)
-      );
-    }
   }
 }

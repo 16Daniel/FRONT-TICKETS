@@ -99,7 +99,10 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     private ticketsPriorityService: TicketsPriorityService,
     private statusTicketService: StatusTicketService,
     public datesHelper: DatesHelperService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.initAreas();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
@@ -130,19 +133,15 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     this.areas = this.areasService.areas;
     this.areasSub = this.areasService.areas$.subscribe((areas) => {
       this.areas = areas;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     });
-  }
-
-  ngOnInit(): void {
-    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
   obtenerSucursales() {
     this.branchesSub = this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.log(error);
@@ -155,7 +154,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     this.supportTypesSub = this.supportTypesService.get().subscribe({
       next: (data) => {
         this.tiposSoporte = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.log(error);
@@ -168,7 +167,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     this.statusTicketSub = this.statusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTicket = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.log(error);
@@ -186,7 +185,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     this.ticketsPrioritySub = this.ticketsPriorityService.get().subscribe({
       next: (data) => {
         this.prioridadesTicket = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.log(error);
@@ -206,7 +205,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
         if (this.idArea && this.idArea.trim() !== '') {
           this.categorias = this.categorias.filter(x => String(x.idArea) === String(this.idArea));
         }
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.log(error);
@@ -235,7 +234,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     this.usuariosHelp = this.usersService.usuarios;
     this.usersSub = this.usersService.usuarios$.subscribe((users) => {
       this.usuariosHelp = users;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     });
   }
 

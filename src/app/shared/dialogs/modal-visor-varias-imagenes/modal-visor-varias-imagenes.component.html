@@ -1,45 +1,178 @@
 <p-dialog
-  [header]="titulo"
   [modal]="true"
   [(visible)]="mostrarModal"
-  [style]="{ width: '80vw', height: '80vh', maxWidth: '1000px' }"
-  [maximizable]="true"
+  [style]="{ width: '92vw', height: '92vh', maxWidth: '1400px' }"
+  [maximizable]="false"
   (onHide)="onHide()"
-  styleClass="modern-dialog"
->
-  <div class="visor-container">
-    <div class="contenedor-imagen">
-      <button class="boton-eliminar-flotante" (click)="eliminarImagen()" *ngIf="imagenes!.length > 0 && mostrarBotonEliminar" title="Eliminar imagen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-      </button>
+  [dismissableMask]="true"
+  styleClass="lightbox-modern-dialog"
+  [showHeader]="false">
 
-      <img [src]="imagenActual" alt="Imagen principal" class="imagen-principal" />
-      
-      <!-- Navegación integrada en la imagen -->
-      <button class="nav-button nav-prev" (click)="anterior()" [disabled]="imagenSeleccionadaIndex === 0" *ngIf="imagenes.length > 1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
-      
-      <button class="nav-button nav-next" (click)="siguiente()" [disabled]="imagenSeleccionadaIndex === imagenes.length - 1" *ngIf="imagenes.length > 1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </button>
-    </div>
-
-    <!-- Miniaturas -->
-    <div class="miniaturas-container" *ngIf="imagenes.length > 1">
-      <div class="contador-imagenes">
-        {{ imagenSeleccionadaIndex + 1 }} / {{ imagenes.length }}
+  <div class="lightbox-wrapper">
+    <!-- Top Glass Toolbar -->
+    <header class="lightbox-toolbar">
+      <!-- Izquierda: Insignia y Contador -->
+      <div class="toolbar-left">
+        <span class="toolbar-badge">
+          <i class="bx bx-camera"></i>
+          <span class="badge-text">{{ titulo || 'EVIDENCIA' }}</span>
+        </span>
+        <span class="toolbar-counter" *ngIf="imagenes && imagenes.length > 0">
+          {{ imagenSeleccionadaIndex + 1 }} / {{ imagenes.length }}
+        </span>
       </div>
-      <div class="miniaturas">
+
+      <!-- Centro: Herramientas Secundarias Adaptables / Scrollables -->
+      <div class="toolbar-tools-scroll">
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="zoomIn()"
+          pTooltip="Acercar (+)"
+          tooltipPosition="bottom"
+          aria-label="Acercar imagen">
+          <i class="bx bx-zoom-in"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="zoomOut()"
+          pTooltip="Alejar (-)"
+          tooltipPosition="bottom"
+          [disabled]="zoom <= 0.5"
+          aria-label="Alejar imagen">
+          <i class="bx bx-zoom-out"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="rotar()"
+          pTooltip="Rotar 90° (R)"
+          tooltipPosition="bottom"
+          aria-label="Rotar imagen">
+          <i class="bx bx-rotate-right"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="resetTransform()"
+          *ngIf="zoom !== 1 || rotacion !== 0"
+          pTooltip="Reiniciar vista (0)"
+          tooltipPosition="bottom"
+          aria-label="Reiniciar vista">
+          <i class="bx bx-reset"></i>
+        </button>
+
+        <div class="tool-divider"></div>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="abrirEnNuevaPestana()"
+          pTooltip="Abrir en pestaña nueva"
+          tooltipPosition="bottom"
+          aria-label="Abrir en pestaña nueva">
+          <i class="bx bx-link-external"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn"
+          (click)="descargarImagen()"
+          pTooltip="Descargar"
+          tooltipPosition="bottom"
+          aria-label="Descargar imagen">
+          <i class="bx bx-download"></i>
+        </button>
+
+        <button
+          type="button"
+          class="tool-btn tool-btn-danger"
+          *ngIf="imagenes && imagenes.length > 0 && mostrarBotonEliminar"
+          (click)="eliminarImagen()"
+          pTooltip="Eliminar imagen"
+          tooltipPosition="bottom"
+          aria-label="Eliminar imagen">
+          <i class="bx bx-trash"></i>
+        </button>
+      </div>
+
+      <!-- Derecha: Acciones Principales Fijas (NUNCA SE RECORTAN) -->
+      <div class="toolbar-right">
+        <button
+          type="button"
+          class="tool-btn tool-btn-close"
+          (click)="onHide()"
+          pTooltip="Cerrar (Esc)"
+          tooltipPosition="bottom"
+          aria-label="Cerrar visor">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Viewport / Stage -->
+    <main class="lightbox-stage">
+      <!-- Navegación Izquierda -->
+      <button
+        type="button"
+        class="nav-chevron nav-prev"
+        (click)="anterior()"
+        [disabled]="imagenSeleccionadaIndex === 0"
+        *ngIf="imagenes && imagenes.length > 1"
+        aria-label="Anterior">
+        <i class="bx bx-chevron-left"></i>
+      </button>
+
+      <!-- Contenedor Imagen con soporte para gestos táctiles (Swipe) -->
+      <div
+        class="stage-canvas"
+        (touchstart)="onTouchStart($event)"
+        (touchend)="onTouchEnd($event)">
+        <ng-container *ngIf="imagenes && imagenes.length > 0; else sinImagenesTpl">
+          <img
+            [src]="imagenActual"
+            alt="Evidencia fotográfica"
+            class="stage-image"
+            [style.transform]="'scale(' + zoom + ') rotate(' + rotacion + 'deg)'"
+            [class.is-zoomed]="zoom > 1" />
+        </ng-container>
+
+        <ng-template #sinImagenesTpl>
+          <div class="stage-empty">
+            <i class="bx bx-image-alt"></i>
+            <p>No hay imágenes disponibles para visualizar</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Navegación Derecha -->
+      <button
+        type="button"
+        class="nav-chevron nav-next"
+        (click)="siguiente()"
+        [disabled]="imagenSeleccionadaIndex === imagenes.length - 1"
+        *ngIf="imagenes && imagenes.length > 1"
+        aria-label="Siguiente">
+        <i class="bx bx-chevron-right"></i>
+      </button>
+    </main>
+
+    <!-- Bottom Filmstrip / Thumbnails -->
+    <footer class="lightbox-filmstrip" *ngIf="imagenes && imagenes.length > 1">
+      <div class="filmstrip-track">
         <div
           *ngFor="let img of imagenes; let i = index"
-          class="miniatura"
-          [class.seleccionada]="i === imagenSeleccionadaIndex"
-          (click)="seleccionarImagen(i)"
-        >
-          <img [src]="img" alt="Miniatura {{i + 1}}" />
+          class="filmstrip-thumb"
+          [class.is-active]="i === imagenSeleccionadaIndex"
+          (click)="seleccionarImagen(i)">
+          <img [src]="img" alt="Miniatura {{ i + 1 }}" loading="lazy" />
+          <span class="thumb-index">{{ i + 1 }}</span>
         </div>
       </div>
-    </div>
+    </footer>
   </div>
 </p-dialog>

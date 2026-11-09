@@ -26,11 +26,10 @@ export class FcmService {
   private async getFcmToken(): Promise<string | null> {
     try {
       let registration: ServiceWorkerRegistration | undefined;
-      if (environment.production) {
-        registration = await navigator.serviceWorker.register('/front/ticketstest/firebase-messaging-sw.js');
-      } else {
-        registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-      }
+      const swPath = typeof window !== 'undefined' && window.location.pathname.includes('/front/ticketstest/')
+        ? '/front/ticketstest/firebase-messaging-sw.js'
+        : '/firebase-messaging-sw.js';
+      registration = await navigator.serviceWorker.register(swPath);
 
       await navigator.serviceWorker.ready;
 
@@ -40,7 +39,7 @@ export class FcmService {
       });
 
       if (token) {
-        console.log('FCM Token obtenido con éxito:', token);
+        // console.log('FCM Token obtenido con éxito:', token);
         this.fcmToken.set(token);
         try {
           await this.saveTokenForCurrentUser(token);

@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AvatarModule } from 'ngx-avatars';
 
 import { DocumentsService } from '../../services/documents.service';
 import { VersionControlService } from '../../../versiones/services/version-control.service';
+import { AccessControlService } from '../../services/access-control.service';
+import { GrupoMenuPermiso, MenuPermisoItem } from '../../../roles/interfaces/ruta.model';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -44,13 +46,15 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   isCheckingValidadorCupones: boolean = false;
 
   versionActual: any;
+  public gruposMenuVisibles$: Observable<GrupoMenuPermiso[]> = this.accessControl.gruposMenuVisibles$;
   private routerSub?: Subscription;
 
   constructor(
     public cdr: ChangeDetectorRef,
     private router: Router,
     public documentsService: DocumentsService,
-    private versionControlService: VersionControlService
+    private versionControlService: VersionControlService,
+    public accessControl: AccessControlService
   ) {
     this.cargarUsuarios();
   }
@@ -73,6 +77,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       this.tituloBanner = '';
     }
 
+    this.accessControl.inicializarEscuchaUsuario();
     this.cdr.markForCheck();
   }
 
@@ -222,6 +227,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     if (typeof document !== 'undefined') {
       document.body.classList.remove('sidebar-pinned');
     }
+    this.accessControl.limpiarPermisos();
     localStorage.removeItem('rwuserdatatk');
     localStorage.removeItem('catRutastk');
     localStorage.removeItem('responsable-tareas');

@@ -1,0 +1,56 @@
+<div class="schedule-page-wrapper">
+  <div class="schedule-content-container">
+
+    <app-page-header
+      subtitle="PROGRAMACIÓN Y AGENDA OPERATIVA"
+      title="Calendario de Visitas">
+    </app-page-header>
+
+    <div class="schedule-filter-toolbar mb-4" *ngIf="usuario.idRol == '1'">
+      <div class="filter-field">
+        <label class="field-label">
+          <i class="bx bx-buildings"></i>
+          <span>Filtrar por Área</span>
+        </label>
+        <p-dropdown
+          [options]="areas"
+          [(ngModel)]="idArea"
+          [optionValue]="'id'"
+          name="area"
+          optionLabel="nombre"
+          [filter]="true"
+          filterBy="nombre"
+          [showClear]="true"
+          placeholder="Seleccionar un área..."
+          styleClass="schedule-select-custom w-100"
+          (onChange)="onChangeArea()">
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="d-flex align-items-center gap-2" *ngIf="selectedOption">
+              <span class="fw-bold text-dark">{{ selectedOption.nombre }}</span>
+            </div>
+          </ng-template>
+          <ng-template let-dep pTemplate="item">
+            <div class="d-flex align-items-center gap-2">
+              <span class="fw-bold text-dark">{{ dep.nombre }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+
+    <app-calendario
+      [usuariosHelp]="usuariosHelp"
+      [tickets]="tickets"
+      [idArea]="idArea">
+    </app-calendario>
+
+  </div>
+</div>
+
+<app-modal-event-detail
+  *ngIf="showModalEventeDetail"
+  [showModalEventeDetail]="showModalEventeDetail"
+  (closeEvent)="showModalEventeDetail = false"
+  [sucursal]="sucursalSeleccionada"
+  [fecha]="FechaSeleccionada">
+</app-modal-event-detail>

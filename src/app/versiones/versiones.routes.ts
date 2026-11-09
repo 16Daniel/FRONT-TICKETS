@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AdminGuard } from '../shared/guards/admin.guard';
+import { permissionGuard } from '../shared/guards/permission.guard';
 
 export const VERSIONES_ROUTES: Routes = [
   {
@@ -7,13 +7,14 @@ export const VERSIONES_ROUTES: Routes = [
     title: 'Control de versiones',
     loadComponent: () =>
       import('./pages/version-control-page/version-control-page.component'),
-    canActivate: [AdminGuard],
+    canActivate: [permissionGuard('versiones.control.ver')],
   },
   {
     path: 'version-history',
     title: 'Historial de versiones',
     loadComponent: () =>
       import('./pages/versions-history-page/versions-history.component'),
+    canActivate: [permissionGuard('versiones.control.ver')],
   },
 ];
 

@@ -1,0 +1,72 @@
+<div class="sin-acceso-wrapper">
+  <div class="sin-acceso-card">
+    
+    <!-- Ícono Ilustrativo -->
+    <div class="icon-bubble">
+      <i class="bx bx-shield-x"></i>
+    </div>
+
+    <h2 class="title">Acceso Restringido</h2>
+    <p class="subtitle">
+      Tu cuenta de usuario no cuenta con permisos asignados para acceder a este módulo
+      o tu rol actualmente no tiene páginas habilitadas en el sistema.
+    </p>
+
+    <!-- Ficha informativa de la sesión -->
+    <div class="user-details-box" *ngIf="usuario">
+      <div class="detail-row">
+        <span class="detail-label">Usuario:</span>
+        <span class="detail-value">{{ usuario.nombre }} {{ usuario.apellidoP }}</span>
+      </div>
+      <div class="detail-row" *ngIf="usuario.email">
+        <span class="detail-label">Correo:</span>
+        <span class="detail-value text-break">{{ usuario.email }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Rol Asignado:</span>
+        <span class="detail-value badge-rol">ID #{{ usuario.idRol || 'Sin rol' }}</span>
+      </div>
+      <div class="detail-row" *ngIf="responsable">
+        <span class="detail-label">Responsable en Turno:</span>
+        <span class="detail-value">{{ responsable.nombre }} ({{ responsable.posicion || 'PIN activo' }})</span>
+      </div>
+    </div>
+
+    <!-- Mensaje de instrucción -->
+    <div class="help-notice">
+      <i class="bx bx-info-circle"></i>
+      <span>
+        Si requieres acceso a este u otros módulos, por favor contacta a un administrador para que active las opciones correspondientes a tu rol desde el catálogo de Roles.
+      </span>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="actions-group">
+      <button 
+        type="button" 
+        class="btn-rw-cta" 
+        [disabled]="verificando"
+        (click)="reintentarAcceso()">
+        <i class="bx" [ngClass]="verificando ? 'bx-loader-alt bx-spin' : 'bx-refresh'"></i>
+        <span>{{ verificando ? 'Verificando...' : 'Reintentar Acceso' }}</span>
+      </button>
+
+      <button 
+        type="button" 
+        class="btn-secondary-outline"
+        (click)="cambiarUsuarioPin()">
+        <i class="bx bx-user-pin"></i>
+        <span>Cambiar Usuario PIN</span>
+      </button>
+
+      <button 
+        type="button" 
+        class="btn-danger-outline"
+        (click)="logout()">
+        <i class="bx bx-log-out"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+
+  </div>
+</div>

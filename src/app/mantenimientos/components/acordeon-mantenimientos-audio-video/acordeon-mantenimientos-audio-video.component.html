@@ -1,30 +1,49 @@
-<p-accordion class="w-full">
-    <p-accordionTab
-        *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales))">
-        <ng-template pTemplate="header">
-            <div class="ms-3 d-flex gap-3 p-3 rounded-3 w-100 align-items-center justify-content-between" [style]="{
-            'background-color': obtenerColorDeFondoMantenimientoTI(obtenerPorcentajedeUltimoMantenimiento(item.id))
-          }">
-                <div class=" d-flex gap-3 align-items-center">
-                    <p-badge [value]="obtenerPorcentajedeUltimoMantenimiento(item.id)+'%'" class="ml-auto mr-2"
-                        [size]="'large'" [style]="{ 'background-color': 'white', color: 'black' }" />
-                    <span class="fw-bold"
-                        [style]="{ color: obtenerColorDeTextoMantenimientoTI(obtenerPorcentajedeUltimoMantenimiento(item.id)) }">
-                        {{item.nombre }}
-                    </span>
+<p-accordion class="custom-branches-accordion w-full">
+  <p-accordionTab
+    *ngFor="let item of (this.ordenarMantenimientosFecha ? ordenarSucursalesUserFecha(sucursales) : ordenarSucursalesUser(sucursales)); trackBy: trackBySucursalId">
+    <ng-template pTemplate="header">
+      <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(obtenerPorcentajedeUltimoMantenimiento(item.id))">
+        <div class="branch-info-group">
+          <div class="branch-count-badge">
+            {{ obtenerPorcentajedeUltimoMantenimiento(item.id) }}%
+          </div>
+          <span class="branch-title">{{ item.nombre }}</span>
+        </div>
 
-                </div>
+        <div class="branch-actions-indicators">
+          <span class="days-elapsed-badge" [class.days-expired]="obtenerDiasPasados(item.id.toString()) > 30">
+            <i class="bx bx-time-five"></i>
+            <span>{{ obtenerDiasPasados(item.id.toString()) }} DÍAS</span>
+          </span>
+        </div>
+      </div>
+    </ng-template>
 
-                <p-badge [value]="obtenerDiasPasados(item.id.toString())+' DÍAS'" class="ml-auto mr-2" [size]="'large'"
-                    [style]="{ 'background-color': 'white', color: 'black' }" />
+    <!-- Sub-toggles inside accordion body -->
+    <div class="accordion-subtoggles-strip">
+      <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+        <input class="form-check-input custom-switch" type="checkbox" role="switch"
+          [(ngModel)]="mostrarRadiografiaMap[item.id]" />
+        <label class="form-check-label m-0">📊 MÁS INFORMACIÓN</label>
+      </div>
+    </div>
 
-            </div>
+    <div class="accordion-tables-wrapper">
+      <!-- SECCION: NIVELES DE AUDIO -->
+      <app-niveles-audio [sucursal]="item" *ngIf="mostrarRadiografiaMap[item.id]"></app-niveles-audio>
 
+      <app-tabla-tvs-bocinas *ngIf="mostrarRadiografiaMap[item.id]" [sucursal]="item"></app-tabla-tvs-bocinas>
 
-        </ng-template>
+      <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
+        [idArea]="'2'"></app-grafica-tickets-30-dias>
 
-        <tabla-mantenimientos-audio-video [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"
-            [usuariosHelp]="usuariosHelp" [idSucursal]="item.id" [mostrarChat]="mostrarChat"></tabla-mantenimientos-audio-video>
-
-    </p-accordionTab>
+      <tabla-mantenimientos-audio-video
+        *ngIf="!mostrarRadiografiaMap[item.id]"
+        [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"
+        [usuariosHelp]="usuariosHelp"
+        [idSucursal]="item.id"
+        [mostrarChat]="mostrarChat">
+      </tabla-mantenimientos-audio-video>
+    </div>
+  </p-accordionTab>
 </p-accordion>

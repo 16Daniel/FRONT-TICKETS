@@ -1,0 +1,80 @@
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header
+      subtitle="MANTENIMIENTOS PREVENTIVOS"
+      title="Panel de Mantenimientos (Analista)">
+    </app-page-header>
+
+    <!-- Selector de Tipo de Mantenimiento por Chips -->
+    <div class="areas-chips-track mb-4" *ngIf="tabsDisponibles.length > 0">
+      <button
+        *ngFor="let tab of tabsDisponibles"
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tipoActivo === tab.id"
+        (click)="cambiarTab(tab)">
+        <i [class]="tab.icono"></i>
+        <span class="area-name">{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <!-- Barra de ordenamiento -->
+    <div class="mantenimientos-toolbar mb-4">
+      <div class="switches-toggle-group ms-auto">
+        <span class="switches-title">
+          <i class="bx bx-sort-alt-2"></i> Orden:
+        </span>
+
+        <label class="toggle-pill-item" [class.is-active]="!ordenarMantenimientosFecha" (click)="ordenarMantenimientosFecha = false">
+          <span class="toggle-pill-btn">
+            <i class="bx bx-bar-chart-alt-2"></i>
+            <span>Por Avance (%)</span>
+          </span>
+        </label>
+
+        <label class="toggle-pill-item" [class.is-active]="ordenarMantenimientosFecha" (click)="ordenarMantenimientosFecha = true">
+          <span class="toggle-pill-btn">
+            <i class="bx bx-calendar"></i>
+            <span>Por Fecha</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Acordeones de Mantenimientos -->
+    <div class="p-1 mt-2">
+      @if (tipoActivo === 'TI') {
+        <app-acordeon-mantenimientos-sistemas
+          *ngIf="auxMostrarMantenimientos"
+          [mantenimientos]="ultimosmantenimientosSistemas"
+          [sucursales]="sucursalesMantenimeintosActivos('1')"
+          [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+          [mostrarChat]="true">
+        </app-acordeon-mantenimientos-sistemas>
+      } @else if (tipoActivo === 'AV') {
+        <app-acordeon-mantenimientos-audio-video
+          *ngIf="auxMostrarMantenimientos"
+          [mantenimientos]="ultimosmantenimientosAV"
+          [sucursales]="sucursalesMantenimeintosActivos('2')"
+          [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+          [mostrarChat]="true">
+        </app-acordeon-mantenimientos-audio-video>
+      } @else if (tipoActivo === 'MTTO') {
+        <app-acordeon-mantenimientos-mantenimiento
+          *ngIf="auxMostrarMantenimientos"
+          [mantenimientos]="ultimosmantenimientosMtto"
+          [sucursales]="sucursalesMantenimeintosActivos('4')"
+          [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+          [mostrarChat]="true">
+        </app-acordeon-mantenimientos-mantenimiento>
+      }
+    </div>
+  </div>
+</div>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>

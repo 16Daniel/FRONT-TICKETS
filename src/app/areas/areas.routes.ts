@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { AdminGuard } from '../shared/guards/admin.guard';
+import { permissionGuard } from '../shared/guards/permission.guard';
 
 export const AREAS_MAIN_ROUTES: Routes = [
   {
     path: 'areas',
     title: 'Areas',
-    canActivate: [AdminGuard],
+    canActivate: [permissionGuard('areas.ver')],
     loadComponent: () =>
       import('./pages/areas-page/areas-page.component'),
   },

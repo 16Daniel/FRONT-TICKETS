@@ -1,62 +1,17 @@
-$color-bg: #F7F8FA;
-$color-white: #FFFFFF;
-$color-text: #111827;
-$color-text-secondary: #6B7280;
-$border-radius: 12px;
+/* Rebel Wings Brand & Design System Tokens (DESIGN-SYSTEM.md) */
+$rw-primary: #d3152a;
+$rw-soft-red: #fff1f2;
+$rw-dark: #0f172a;
+$rw-slate: #475569;
+$rw-muted: #64748b;
+$rw-border: #e2e8f0;
 
-.evento-calendario {
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  font-family: 'Inter', sans-serif;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  .evento-header {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-weight: 600;
-    font-size: 0.85rem;
-    
-    i {
-      font-size: 1rem;
-    }
-  }
-
-  .evento-user {
-    margin: 0;
-    font-size: 0.75rem;
-    opacity: 0.9;
-    font-weight: 500;
-  }
-
-  .evento-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    margin-top: 0.25rem;
-
-    .stat-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: $color-text;
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-
-      i {
-        font-size: 0.8rem;
-        color: $color-text-secondary;
-      }
-    }
-  }
+.rw-calendar-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid $rw-border;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 .calendar-event-wrapper {
@@ -64,60 +19,298 @@ $border-radius: 12px;
   height: 100%;
 }
 
+/* ==========================================================================
+   Tarjetas de Evento dentro del Calendario
+   ========================================================================== */
+.evento-calendario {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 0.6rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border-radius: 10px;
+
+  .evento-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .evento-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.92);
+    color: $rw-dark;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+
+    i {
+      font-size: 0.85rem;
+      color: $rw-primary;
+    }
+  }
+
+  .evento-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.35rem;
+    font-weight: 800;
+    font-size: 0.825rem;
+    line-height: 1.25;
+
+    i {
+      font-size: 1rem;
+      margin-top: 0.05rem;
+      flex-shrink: 0;
+    }
+
+    .evento-branch-name {
+      letter-spacing: -0.01em;
+    }
+  }
+
+  .evento-title-text {
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .evento-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .evento-user-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.725rem;
+    font-weight: 700;
+    opacity: 0.95;
+
+    i {
+      font-size: 0.85rem;
+    }
+  }
+
+  .evento-area-pill {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.625rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  .evento-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.15rem;
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      background-color: rgba(255, 255, 255, 0.94);
+      color: #1e293b;
+      padding: 0.22rem 0.45rem;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+      i {
+        font-size: 0.82rem;
+        color: #64748b;
+      }
+
+      strong {
+        font-weight: 800;
+        color: #0f172a;
+      }
+
+      .stat-divider {
+        color: #cbd5e1;
+      }
+
+      .stat-done {
+        color: #10b981;
+        font-weight: 800;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   Personalización FullCalendar según DESIGN-SYSTEM.md
+   ========================================================================== */
 ::ng-deep {
   .fc {
-    font-family: 'Inter', sans-serif;
-    
+    .fc-header-toolbar {
+      margin-bottom: 1.25rem !important;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
     .fc-toolbar-title {
-      font-weight: 600;
-      font-size: 1.25rem;
-      color: $color-text;
+      font-weight: 800 !important;
+      font-size: 1.15rem !important;
+      color: $rw-dark !important;
+      text-transform: uppercase !important;
+      letter-spacing: -0.01em !important;
     }
-    
-    .fc-button-primary {
-      background-color: #0F62FE;
-      border-color: #0F62FE;
-      border-radius: 8px;
-      text-transform: capitalize;
-      
-      &:hover {
-        background-color: darken(#0F62FE, 5%);
-        border-color: darken(#0F62FE, 5%);
-      }
-      
-      &:disabled {
-        background-color: lighten(#0F62FE, 20%);
-        border-color: lighten(#0F62FE, 20%);
+
+    .fc-button-group {
+      gap: 0.35rem;
+
+      .fc-button {
+        border-radius: 10px !important;
+        margin: 0 !important;
       }
     }
 
-    .fc-event {
-      border: none;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin: 1px 0;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      cursor: pointer;
+    .fc-prev-button,
+    .fc-next-button {
+      background-color: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #334155 !important;
+      width: 38px !important;
+      height: 38px !important;
+      padding: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+      transition: all 0.18s ease !important;
 
-      &:hover {
+      &:hover:not(:disabled) {
+        background-color: $rw-soft-red !important;
+        border-color: rgba(211, 21, 42, 0.35) !important;
+        color: $rw-primary !important;
         transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       }
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.12) !important;
+      }
+    }
+
+    .fc-today-button {
+      background: linear-gradient(135deg, #d3152a 0%, #b91022 100%) !important;
+      border: none !important;
+      color: #ffffff !important;
+      border-radius: 10px !important;
+      height: 38px !important;
+      padding: 0 1rem !important;
+      font-size: 0.775rem !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.04em !important;
+      box-shadow: 0 4px 12px rgba(211, 21, 42, 0.22) !important;
+      transition: all 0.18s ease !important;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(211, 21, 42, 0.32) !important;
+      }
+
+      &:disabled {
+        background: #f1f5f9 !important;
+        color: #94a3b8 !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
+      }
+    }
+
+    .fc-scrollgrid {
+      border-radius: 14px !important;
+      overflow: hidden !important;
+      border: 1px solid $rw-border !important;
+    }
+
+    .fc-col-header-cell {
+      background-color: #f8fafc !important;
+      padding: 0.65rem 0.25rem !important;
+      border-color: $rw-border !important;
+
+      .fc-col-header-cell-cushion {
+        font-size: 0.75rem !important;
+        font-weight: 800 !important;
+        color: $rw-muted !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        text-decoration: none !important;
+      }
+    }
+
+    .fc-daygrid-day {
+      border-color: $rw-border !important;
+      transition: background-color 0.15s ease;
+
+      &.fc-day-today {
+        background-color: rgba(255, 241, 242, 0.45) !important;
+
+        .fc-daygrid-day-number {
+          background-color: $rw-primary;
+          color: #ffffff !important;
+          border-radius: 50px;
+          padding: 0.15rem 0.55rem;
+          font-weight: 800;
+        }
+      }
+    }
+
+    .fc-daygrid-day-top {
+      padding: 0.4rem 0.5rem 0.15rem !important;
     }
 
     .fc-daygrid-day-number {
-      font-weight: 500;
-      color: $color-text;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      color: $rw-slate !important;
+      text-decoration: none !important;
     }
 
-    .fc-col-header-cell-cushion {
-      font-weight: 600;
-      color: $color-text-secondary;
-      text-transform: capitalize;
+    .fc-daygrid-day-events {
+      padding: 0.25rem 0.35rem !important;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
     }
-    
-    .fc-theme-standard td, .fc-theme-standard th {
-      border-color: #E5E7EB;
+
+    .fc-daygrid-event-harness {
+      margin-top: 0 !important;
+    }
+
+    .fc-event {
+      border: 1px solid rgba(0, 0, 0, 0.08) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden;
+      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease !important;
+      cursor: pointer;
+
+      &:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14) !important;
+        z-index: 5 !important;
+      }
     }
   }
 }
