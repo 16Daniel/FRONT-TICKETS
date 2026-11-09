@@ -39,7 +39,7 @@ export class FcmService {
       });
 
       if (token) {
-        console.log('FCM Token obtenido con éxito:', token);
+        // console.log('FCM Token obtenido con éxito:', token);
         this.fcmToken.set(token);
         try {
           await this.saveTokenForCurrentUser(token);
