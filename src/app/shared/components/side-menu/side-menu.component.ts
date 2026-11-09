@@ -44,6 +44,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   isPinned: boolean = true;
   isCheckingValidadorConsumos: boolean = false;
   isCheckingValidadorCupones: boolean = false;
+  logoUrl: string = 'assets/images/Logo_rebel_UP_Horizontal_1600x600.PNG';
 
   versionActual: any;
   public gruposMenuVisibles$: Observable<GrupoMenuPermiso[]> = this.accessControl.gruposMenuVisibles$;
@@ -57,6 +58,13 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     public accessControl: AccessControlService
   ) {
     this.cargarUsuarios();
+  }
+
+  onLogoError(): void {
+    if (this.logoUrl !== '/front/tickets/assets/images/Logo_rebel_UP_Horizontal_1600x600.PNG') {
+      this.logoUrl = '/front/tickets/assets/images/Logo_rebel_UP_Horizontal_1600x600.PNG';
+      this.cdr.markForCheck();
+    }
   }
 
   cargarUsuarios(): void {

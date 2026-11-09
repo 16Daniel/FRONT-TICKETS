@@ -183,6 +183,14 @@
   gap: 10px;
 }
 
+.drawer-logo {
+  height: 44px;
+  width: auto;
+  max-width: 175px;
+  object-fit: contain;
+  display: block;
+}
+
 .brand-icon {
   font-size: 22px;
   color: var(--erp-color-primary);

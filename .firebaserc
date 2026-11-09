@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "rw-rebelup"
+  },
+  "targets": {
+    "rw-rebelup": {
+      "hosting": {
+        "prod": [
+          "rw-rebelup"
+        ],
+        "dev": [
+          "rw-rebelup-desarrollo"
+        ]
+      }
+    }
   }
 }
