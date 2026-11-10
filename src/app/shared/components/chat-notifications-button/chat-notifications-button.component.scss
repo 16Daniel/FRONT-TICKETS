@@ -210,12 +210,31 @@
   color: #9ca3af;
 }
 
-// @media (max-width: 768px) {
-//   .trigger-label {
-//     display: none;
-//   }
-//   .notification-trigger-btn {
-//     padding: 0 8px;
-//     height: 32px;
-//   }
-// }
+@media (max-width: 768px) {
+  .trigger-label {
+    display: none;
+  }
+
+  .notification-trigger-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .notification-badge {
+    top: -5px;
+    right: -6px;
+  }
+
+  .notification-dropdown {
+    position: fixed;
+    top: 68px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-width: 340px;
+    margin-left: auto;
+  }
+}
