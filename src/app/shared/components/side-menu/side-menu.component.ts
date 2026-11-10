@@ -16,6 +16,7 @@ import { ChatNotificationsButtonComponent } from '../chat-notifications-button/c
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { environment } from '../../../../environments/environments';
 
 @Component({
   selector: 'app-side-menu',
@@ -45,6 +46,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   isCheckingValidadorConsumos: boolean = false;
   isCheckingValidadorCupones: boolean = false;
   logoUrl: string = 'assets/images/Logo_rebel_UP_Horizontal_1600x600.PNG';
+  readonly appVersion: string = environment.version;
 
   versionActual: any;
   public gruposMenuVisibles$: Observable<GrupoMenuPermiso[]> = this.accessControl.gruposMenuVisibles$;

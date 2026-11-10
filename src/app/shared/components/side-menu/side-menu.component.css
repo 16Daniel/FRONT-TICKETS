@@ -371,6 +371,16 @@
   flex-shrink: 0;
 }
 
+.drawer-version {
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--erp-text-muted);
+  padding: 0 10px 8px;
+}
+
 .compact-user-bar {
   display: flex;
   align-items: center;
