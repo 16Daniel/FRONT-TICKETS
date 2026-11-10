@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 
 import { SideMenuComponent } from '../../components/side-menu/side-menu.component';
-import { UpdateBannerComponent } from '../../components/update-banner/update-banner.component';
 import { UsuarioLogin } from '../../../auth/interfaces/usuario-login.model';
 
 @Component({
@@ -12,8 +11,7 @@ import { UsuarioLogin } from '../../../auth/interfaces/usuario-login.model';
   imports: [
     CommonModule,
     RouterOutlet,
-    SideMenuComponent,
-    UpdateBannerComponent
+    SideMenuComponent
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css',
