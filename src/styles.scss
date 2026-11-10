@@ -741,3 +741,224 @@ html, body {
     color: #7c3aed;
   }
 }
+
+/* ==========================================================================
+   Confirm Dialog - Rebel Wings Design System
+   ========================================================================== */
+.dialog-confirm-rw {
+  border-radius: 20px !important;
+  overflow: hidden;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16) !important;
+
+  .p-confirm-dialog-icon {
+    display: none !important;
+  }
+
+  .p-dialog-header {
+    background: #ffffff;
+    padding: 1.25rem 1.5rem 0.5rem;
+    border-bottom: none;
+
+    .p-dialog-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #1e1e24;
+      letter-spacing: -0.01em;
+    }
+
+    .p-dialog-header-icons {
+      .p-dialog-header-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        color: #64748b;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background-color: #f1f5f9;
+          color: #0f172a;
+        }
+      }
+    }
+  }
+
+  .p-dialog-content {
+    padding: 0.75rem 1.5rem 1.25rem;
+    background: #ffffff;
+    display: block !important;
+  }
+
+  .p-confirm-dialog-message {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .p-dialog-footer {
+    background: #f8fafc;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+
+    button {
+      margin: 0 !important;
+    }
+  }
+
+  .btn-confirm-accept {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(135deg, #d3152a 0%, #b91022 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.6rem 1.35rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28) !important;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+    .p-button-icon {
+      margin-right: 0.5rem !important;
+      font-size: 0.85rem !important;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38) !important;
+      background: linear-gradient(135deg, #e01930 0%, #c41326 100%) !important;
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(211, 21, 42, 0.2) !important;
+    }
+  }
+
+  .btn-confirm-reject {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #ffffff !important;
+    color: #475569 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 0.6rem 1.25rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.15s ease !important;
+
+    .p-button-icon {
+      margin-right: 0.5rem !important;
+      font-size: 0.85rem !important;
+    }
+
+    &:hover {
+      background: #f1f5f9 !important;
+      color: #0f172a !important;
+      border-color: #94a3b8 !important;
+    }
+  }
+
+  .confirm-dialog-body {
+    width: 100%;
+  }
+
+  .confirm-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+
+    .confirm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      align-self: flex-start;
+      padding: 0.3rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.725rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+
+      i {
+        font-size: 0.95rem;
+      }
+
+      &.badge-ti {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #dbeafe;
+      }
+
+      &.badge-av {
+        background-color: #fffbeb;
+        color: #b45309;
+        border: 1px solid #fef3c7;
+      }
+
+      &.badge-mtto {
+        background-color: #f0fdf4;
+        color: #047857;
+        border: 1px solid #d1fae5;
+      }
+
+      &.badge-danger {
+        background-color: #fff1f2;
+        color: #ef4444;
+        border: 1px solid #fecdd3;
+      }
+
+      &.badge-info {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+      }
+    }
+
+    .confirm-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #1e1e24;
+      margin: 0.2rem 0 0 0;
+      line-height: 1.3;
+    }
+
+    .confirm-desc {
+      font-size: 0.875rem;
+      color: #475569;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .confirm-callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0.75rem 0.95rem;
+      margin-top: 0.35rem;
+      font-size: 0.825rem;
+      color: #64748b;
+      line-height: 1.45;
+
+      i {
+        font-size: 1.15rem;
+        color: #d3152a;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+    }
+  }
+}

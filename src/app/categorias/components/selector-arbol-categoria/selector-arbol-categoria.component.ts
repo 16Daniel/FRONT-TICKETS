@@ -17,6 +17,7 @@ import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
 import { CategoriesService } from '../../services/categories.service';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
+import { esNodoRama, obtenerHijosOrdenadosRama } from '../../helpers/arbol-categorias.helper';
 
 @Component({
   selector: 'app-selector-arbol-categoria',
@@ -161,14 +162,13 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
     for (const id of this.rutaNavegacionIds) {
       actual = lista.find((n) => String(n.id) === id) || null;
       if (!actual) return [];
-      lista = (actual.subcategorias || []).filter((s) => !s.eliminado);
+      lista = obtenerHijosOrdenadosRama(actual);
     }
     return lista;
   }
 
   esRama(nodo: Categoria | Subcategoria): boolean {
-    const tieneHijos = !!(nodo.subcategorias && nodo.subcategorias.some((s) => !s.eliminado));
-    return nodo.tipo === 'rama' || tieneHijos || (nodo as any).activarSubcategorias;
+    return esNodoRama(nodo);
   }
 
   profundizarRama(nodo: Categoria | Subcategoria): void {
@@ -202,7 +202,7 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
         if (n.eliminado) continue;
         const nuevosNombres = [...nombresTrail, n.nombre];
         const nuevosIds = [...idsTrail, String(n.id)];
-        const hijosActivos = (n.subcategorias || []).filter((s) => !s.eliminado);
+        const hijosActivos = obtenerHijosOrdenadosRama(n);
 
         if (this.esRama(n) && hijosActivos.length > 0) {
           recorrer(hijosActivos, raiz, nuevosNombres, nuevosIds);
@@ -223,7 +223,7 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
 
     for (const raiz of this.categoriasArea) {
       if (raiz.eliminado) continue;
-      const hijosRaiz = (raiz.subcategorias || []).filter((s) => !s.eliminado);
+      const hijosRaiz = obtenerHijosOrdenadosRama(raiz);
       if (this.esRama(raiz) && hijosRaiz.length > 0) {
         recorrer(hijosRaiz, raiz, [raiz.nombre], [String(raiz.id)]);
       } else {

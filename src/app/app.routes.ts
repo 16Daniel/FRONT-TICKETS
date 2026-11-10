@@ -4,7 +4,7 @@ import { AuthGuard } from './shared/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/main/home-a',
+    redirectTo: '/main/home-admin',
     pathMatch: 'full',
   },
   {
@@ -79,7 +79,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/main/home-a',
+        redirectTo: '/main/home-admin',
         pathMatch: 'full',
       },
     ],
@@ -120,6 +120,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/main/home-a',
+    redirectTo: '/main/home-admin',
   },
 ];

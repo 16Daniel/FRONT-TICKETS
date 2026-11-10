@@ -200,5 +200,20 @@
   [hideTransitionOptions]="'300ms'">
 </p-toast>
 
-<p-confirmDialog [style]="{ width: '450px' }">
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '460px', maxWidth: '92vw' }">
+  <ng-template pTemplate="message" let-message>
+    <div class="confirm-content-wrapper">
+      <div class="confirm-badge badge-danger">
+        <i class="bx bx-trash"></i>
+        <span>ELIMINAR CATEGORÍA</span>
+      </div>
+      <p class="confirm-desc">{{ message.message }}</p>
+      <div class="confirm-callout">
+        <i class="bx bx-info-circle"></i>
+        <span>Esta acción eliminará la categoría del árbol operativo de esta área.</span>
+      </div>
+    </div>
+  </ng-template>
 </p-confirmDialog>

@@ -5,23 +5,41 @@ import {
   OpcionRutaInicio,
 } from '../interfaces/ruta.model';
 
+export const RUTA_INICIO_DEFECTO = '/main/home-sucursal';
+
+const ALIAS_RUTAS_INICIO: Record<string, string> = {
+  '/main/home': '/main/home-sucursal',
+  '/main/home-s': '/main/home-analista',
+  '/main/home-a': '/main/home-admin',
+};
+
+/**
+ * Normaliza rutas de inicio heredadas (ej. /main/home, /main/home-s, /main/home-a)
+ * hacia sus rutas descriptivas actuales.
+ */
+export function normalizarRutaInicio(ruta?: string | null): string {
+  const limpia = (ruta || '').trim();
+  if (!limpia) return RUTA_INICIO_DEFECTO;
+  return ALIAS_RUTAS_INICIO[limpia] || limpia;
+}
+
 /**
  * Opciones de pantallas de inicio configurables por Rol
  */
 export const RUTAS_INICIO_DISPONIBLES: OpcionRutaInicio[] = [
   {
-    label: 'Inicio Administrador / Jefatura (/main/home-a)',
-    value: '/main/home-a',
+    label: 'Inicio Administrador / Jefatura (/main/home-admin)',
+    value: '/main/home-admin',
     descripcion: 'Tablero de gestión global o por jefatura de área',
   },
   {
-    label: 'Inicio Sucursal / Corporativo (/main/home)',
-    value: '/main/home',
+    label: 'Inicio Sucursal / Corporativo (/main/home-sucursal)',
+    value: '/main/home-sucursal',
     descripcion: 'Tablero operativo de tickets para sucursales y corporativo',
   },
   {
-    label: 'Inicio Analista de Soporte (/main/home-s)',
-    value: '/main/home-s',
+    label: 'Inicio Analista de Soporte (/main/home-analista)',
+    value: '/main/home-analista',
     descripcion: 'Tablero de atención de tickets asignados a soporte',
   },
   {
@@ -59,21 +77,21 @@ export const GRUPOS_MENU_PERMISOS: GrupoMenuPermiso[] = [
       {
         idMenu: 'tickets_inicio_admin',
         titulo: 'Inicio (Administrador)',
-        ruta: '/main/home-a',
+        ruta: '/main/home-admin',
         icono: 'bx bxs-dashboard',
         permisoVista: 'tickets.inicio_admin.ver',
       },
       {
         idMenu: 'tickets_inicio_sucursal',
         titulo: 'Inicio (Sucursal)',
-        ruta: '/main/home',
+        ruta: '/main/home-sucursal',
         icono: 'bx bxs-dashboard',
         permisoVista: 'tickets.inicio_sucursal.ver',
       },
       {
         idMenu: 'tickets_inicio_analista',
         titulo: 'Inicio (Analista)',
-        ruta: '/main/home-s',
+        ruta: '/main/home-analista',
         icono: 'bx bxs-dashboard',
         permisoVista: 'tickets.inicio_analista.ver',
       },
@@ -414,7 +432,7 @@ export function normalizarRolFirestore(rol: Rol): Rol {
     id: idStr,
     nombre: (rol.nombre || '').trim().toUpperCase(),
     descripcion: (rol.descripcion || '').trim(),
-    rutaInicio: rol.rutaInicio || '/main/home',
+    rutaInicio: normalizarRutaInicio(rol.rutaInicio),
     permisos: [...new Set(permisosBd.filter((p) => menusValidos.has(p)))],
   };
 }

@@ -3,21 +3,21 @@ import { permissionGuard } from '../shared/guards/permission.guard';
 
 export const TICKETS_ROUTES: Routes = [
   {
-    path: 'home',
+    path: 'home-sucursal',
     title: 'Inicio',
     loadComponent: () =>
       import('./pages/sucursal-home-page/sucursal-home-page'),
     canActivate: [permissionGuard('tickets.inicio_sucursal.ver')],
   },
   {
-    path: 'home-s',
+    path: 'home-analista',
     title: 'Inicio',
     loadComponent: () =>
       import('./pages/analista-home-page/analista-home-page'),
     canActivate: [permissionGuard('tickets.inicio_analista.ver')],
   },
   {
-    path: 'home-a',
+    path: 'home-admin',
     title: 'Inicio',
     loadComponent: () =>
       import('./pages/admin-home-page/admin-home-page'),

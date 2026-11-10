@@ -10,6 +10,7 @@ import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../../../ti
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { KpiRadarService } from '../../../tickets/services/kpi-radar.service';
+import { esNodoRama, obtenerHijosOrdenadosRama } from '../../helpers/arbol-categorias.helper';
 
 export interface ItemBusquedaUmbral {
   nodo: Categoria | Subcategoria;
@@ -131,8 +132,7 @@ export class UmbralArbolComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   esRama(nodo: Categoria | Subcategoria): boolean {
-    const hijos = (nodo.subcategorias || []).filter(s => !s.eliminado);
-    return nodo.tipo === 'rama' || hijos.length > 0 || !!(nodo as any).activarSubcategorias;
+    return esNodoRama(nodo);
   }
 
   contarTickets(id: string | number, esRama: boolean, nodoRef?: Categoria | Subcategoria): number {
@@ -254,7 +254,7 @@ export class UmbralArbolComponent implements OnInit, OnChanges, OnDestroy {
     for (const id of this.rutaNavegacionIds) {
       const actual = lista.find(n => String(n.id) === id);
       if (!actual) return [];
-      lista = (actual.subcategorias || []).filter(s => !s.eliminado);
+      lista = obtenerHijosOrdenadosRama(actual);
     }
     return lista;
   }
