@@ -4,10 +4,12 @@
     <button 
       type="button" 
       class="nav-toggle-btn" 
+      [class.has-sw-update]="hayNuevaVersion && !showmenu"
       (click)="toggleMenu()" 
       [attr.aria-expanded]="showmenu" 
       aria-label="Abrir menú de navegación">
       <i class="bx" [ngClass]="showmenu ? 'bx-x' : 'bx-menu'"></i>
+      <span class="nav-toggle-update-dot" *ngIf="hayNuevaVersion && !showmenu"></span>
     </button>
   </div>
 
@@ -188,6 +190,33 @@
     </div>
   </div>
 
-  <!-- Versión de la aplicación -->
-  <div class="drawer-version">v{{ appVersion }}</div>
+  <!-- Acción de actualizar aplicación y versión -->
+  <div class="drawer-update-bar" [class.update-bar-highlighted]="hayNuevaVersion">
+    <button
+      type="button"
+      class="btn-update-app"
+      [class.has-new-version]="hayNuevaVersion"
+      [disabled]="isUpdatingApp"
+      (click)="actualizarApp()"
+      [pTooltip]="hayNuevaVersion ? '¡Hay una versión más reciente lista para instalar!' : 'Buscar actualizaciones y recargar la aplicación'"
+      tooltipPosition="top">
+      <span class="new-version-pill" *ngIf="hayNuevaVersion && !isUpdatingApp">¡NUEVA VERSIÓN!</span>
+      <div class="btn-update-main">
+        <i
+          class="bx"
+          [ngClass]="isUpdatingApp ? 'bx-loader-alt bx-spin' : (hayNuevaVersion ? 'bx-cloud-download bx-tada' : 'bx-refresh')">
+        </i>
+        <div class="btn-update-texts">
+          <span class="btn-update-title">
+            {{ isUpdatingApp ? 'Actualizando app...' : (hayNuevaVersion ? '¡Actualizar ahora!' : 'Actualizar app') }}
+          </span>
+          <span class="btn-update-subtitle" *ngIf="hayNuevaVersion && !isUpdatingApp">
+            Versión más reciente disponible
+          </span>
+        </div>
+        <span class="update-badge-dot" *ngIf="hayNuevaVersion && !isUpdatingApp"></span>
+      </div>
+    </button>
+    <div class="drawer-version">v{{ appVersion }}</div>
+  </div>
 </aside>

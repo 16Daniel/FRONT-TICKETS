@@ -9,9 +9,9 @@ import { filter } from 'rxjs/operators';
 import { AvatarModule } from 'ngx-avatars';
 
 import { DocumentsService } from '../../services/documents.service';
-import { VersionControlService } from '../../../versiones/services/version-control.service';
 import { AccessControlService } from '../../services/access-control.service';
-import { GrupoMenuPermiso, MenuPermisoItem } from '../../../roles/interfaces/ruta.model';
+import { PwaService } from '../../services/pwa.service';
+import { GrupoMenuPermiso } from '../../../roles/interfaces/ruta.model';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
@@ -45,21 +45,27 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   isPinned: boolean = true;
   isCheckingValidadorConsumos: boolean = false;
   isCheckingValidadorCupones: boolean = false;
+  isUpdatingApp: boolean = false;
+  swUpdateAvailable: boolean = false;
   logoUrl: string = 'assets/images/Logo_rebel_UP_Horizontal_1600x600.PNG';
   readonly appVersion: string = environment.version;
 
-  versionActual: any;
   public gruposMenuVisibles$: Observable<GrupoMenuPermiso[]> = this.accessControl.gruposMenuVisibles$;
   private routerSub?: Subscription;
+  private pwaUpdateSub?: Subscription;
 
   constructor(
     public cdr: ChangeDetectorRef,
     private router: Router,
     public documentsService: DocumentsService,
-    private versionControlService: VersionControlService,
-    public accessControl: AccessControlService
+    public accessControl: AccessControlService,
+    public pwaService: PwaService
   ) {
     this.cargarUsuarios();
+  }
+
+  get hayNuevaVersion(): boolean {
+    return this.swUpdateAvailable;
   }
 
   onLogoError(): void {
@@ -100,10 +106,12 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.versionControlService.getLastVersion().subscribe((result) => {
-      if (result.length > 0) this.versionActual = result[0];
+    this.pwaUpdateSub = this.pwaService.updateAvailable$.subscribe((available) => {
+      this.swUpdateAvailable = available;
       this.cdr.markForCheck();
     });
+
+    this.pwaService.verificarActualizacionEnSw();
 
     this.routerSub = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -137,6 +145,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       document.body.classList.remove('sidebar-pinned');
     }
     this.routerSub?.unsubscribe();
+    this.pwaUpdateSub?.unsubscribe();
   }
 
   togglePin(): void {
@@ -153,6 +162,9 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   toggleMenu(): void {
     this.showmenu = !this.showmenu;
+    if (this.showmenu) {
+      this.pwaService.verificarActualizacionEnSw();
+    }
     this.updateBodyPinClass();
     this.cdr.markForCheck();
   }
@@ -231,6 +243,14 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   abrirValidadorCupones(event?: Event): void {
     this.abrirValidador('cupones', event);
+  }
+
+  async actualizarApp(): Promise<void> {
+    if (this.isUpdatingApp) return;
+    this.isUpdatingApp = true;
+    this.cdr.markForCheck();
+
+    await this.pwaService.actualizarApp();
   }
 
   logout(): void {
