@@ -7,7 +7,9 @@ import { Rol } from '../../roles/interfaces/rol.model';
 import { GrupoMenuPermiso } from '../../roles/interfaces/ruta.model';
 import {
   GRUPOS_MENU_PERMISOS,
+  normalizarRutaInicio,
   obtenerTodosLosMenusCatalogo,
+  RUTA_INICIO_DEFECTO,
 } from '../../roles/constants/catalogo-permisos.constants';
 
 @Injectable({
@@ -77,8 +79,8 @@ export class AccessControlService implements OnDestroy {
   }
 
   private cargarRutaInicioInicial(): string {
-    if (typeof window === 'undefined') return '/main/home';
-    return localStorage.getItem(this.storageRutaInicioKey) || '/main/home';
+    if (typeof window === 'undefined') return RUTA_INICIO_DEFECTO;
+    return normalizarRutaInicio(localStorage.getItem(this.storageRutaInicioKey));
   }
 
   /**
@@ -134,12 +136,12 @@ export class AccessControlService implements OnDestroy {
           if (snap.exists()) {
             const data = snap.data() as Rol;
             const permisosArr = Array.isArray(data.permisos) ? data.permisos : [];
-            const rutaInicio = data.rutaInicio || '/main/home';
+            const rutaInicio = normalizarRutaInicio(data.rutaInicio);
 
             this.actualizarPermisos(permisosArr, rutaInicio);
           } else {
             // El rol no existe o no tiene datos aún
-            this.actualizarPermisos([], '/main/home');
+            this.actualizarPermisos([], RUTA_INICIO_DEFECTO);
           }
 
           this._isLoaded = true;
@@ -187,7 +189,7 @@ export class AccessControlService implements OnDestroy {
     this.currentRolId = null;
     this._isLoaded = false;
     this._permisosSubject.next(new Set<string>());
-    this._rutaInicioSubject.next('/main/home');
+    this._rutaInicioSubject.next(RUTA_INICIO_DEFECTO);
 
     if (typeof window !== 'undefined') {
       localStorage.removeItem(this.storagePermisosKey);

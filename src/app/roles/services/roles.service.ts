@@ -11,7 +11,7 @@ import {
   setDoc,
 } from '@angular/fire/firestore';
 import { Rol } from '../interfaces/rol.model';
-import { normalizarRolFirestore } from '../constants/catalogo-permisos.constants';
+import { normalizarRolFirestore, normalizarRutaInicio } from '../constants/catalogo-permisos.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -84,7 +84,7 @@ export class RolesService {
       id,
       nombre: (rol.nombre || '').trim().toUpperCase(),
       descripcion: (rol.descripcion || '').trim(),
-      rutaInicio: rol.rutaInicio || '/main/home',
+      rutaInicio: normalizarRutaInicio(rol.rutaInicio),
       permisos: Array.isArray(rol.permisos) ? [...new Set(rol.permisos)] : [],
     };
   }

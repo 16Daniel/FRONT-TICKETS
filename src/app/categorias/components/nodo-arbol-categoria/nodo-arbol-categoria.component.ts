@@ -7,6 +7,7 @@ import { clasificarCuadrante, obtenerTiempoSla } from '../../../tickets/helpers/
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { FormularioNodoCategoriaComponent } from '../formulario-nodo-categoria/formulario-nodo-categoria.component';
+import { esNodoRama, obtenerHijosOrdenadosRama } from '../../helpers/arbol-categorias.helper';
 
 @Component({
   selector: 'app-nodo-arbol-categoria',
@@ -43,17 +44,11 @@ export class NodoArbolCategoriaComponent {
   readonly clasificarCuadrante = clasificarCuadrante;
 
   esRama(nodo: Categoria | Subcategoria): boolean {
-    if (!nodo) return false;
-    if (nodo.tipo === 'rama') return true;
-    return Boolean(
-      (nodo.subcategorias && nodo.subcategorias.some((s) => !s.eliminado)) ||
-      nodo.activarSubcategorias
-    );
+    return esNodoRama(nodo);
   }
 
   obtenerHijosActivos(nodo: Categoria | Subcategoria): Subcategoria[] {
-    if (!nodo || !nodo.subcategorias) return [];
-    return nodo.subcategorias.filter((s) => !s.eliminado);
+    return obtenerHijosOrdenadosRama(nodo);
   }
 
   hijoEstaExpandido(idHijo: string | any): boolean {

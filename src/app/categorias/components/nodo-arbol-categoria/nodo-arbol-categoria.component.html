@@ -100,8 +100,9 @@
       <div class="grupo-derecho-nodo">
         <!-- Barra de Acciones -->
         <div class="barra-acciones-nodo">
-          <!-- Botón Agregar Subcategoría -->
+          <!-- Botón Agregar Subcategoría (solo para ramas) -->
           <button 
+            *ngIf="esRama(nodo)"
             type="button" 
             class="btn-accion-arbol btn-agregar-hijo"
             (click)="abrirCrearHijo.emit(nodo)"
@@ -122,8 +123,9 @@
             <span>Editar</span>
           </button>
 
-          <!-- Botón Eliminar -->
+          <!-- Botón Eliminar (oculto si tiene subcategorías activas dentro) -->
           <button 
+            *ngIf="obtenerHijosActivos(nodo).length === 0"
             type="button" 
             class="btn-accion-arbol btn-eliminar-nodo"
             (click)="eliminar.emit(nodo)"

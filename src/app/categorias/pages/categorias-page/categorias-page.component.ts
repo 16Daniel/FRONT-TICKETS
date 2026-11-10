@@ -381,6 +381,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
         const urgenciaUrg = datos.urgencia || 2;
         const scoreUrg = datos.score || (criticidadUrg * urgenciaUrg);
 
+        objetivo.activarSubcategorias = false;
         objetivo.urgencia = urgenciaUrg;
         objetivo.score = scoreUrg;
         objetivo.criticidad = criticidadUrg;
@@ -412,29 +413,36 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* Eliminación Recursiva */
+  /* Eliminación de Nodos (solo si no tiene subcategorías activas dentro) */
   eliminarNodo(nodo: Categoria | Subcategoria): void {
     const info = this.buscarInfoNodo(String(nodo.id));
     if (!info) return;
 
-    const tieneHijos = info.nodo.subcategorias && info.nodo.subcategorias.some((s) => !s.eliminado);
-    const mensajeConfirmacion = tieneHijos
-      ? `¿Estás seguro de eliminar "${nodo.nombre}"? También se eliminarán sus subcategorías descendientes.`
-      : `¿Estás seguro de eliminar "${nodo.nombre}"?`;
+    const tieneHijos = Boolean(
+      info.nodo.subcategorias && info.nodo.subcategorias.some((s) => !s.eliminado)
+    );
+    if (tieneHijos) {
+      this.mostrarMensaje(
+        'warn',
+        'No se puede eliminar',
+        `La rama "${nodo.nombre}" tiene subcategorías dentro. Elimina o vacía su contenido primero.`
+      );
+      return;
+    }
 
     this.confirmationService.confirm({
       header: '¿Eliminar categoría?',
-      message: mensajeConfirmacion,
+      message: `¿Estás seguro de eliminar "${nodo.nombre}"?`,
       icon: 'pi pi-trash',
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
+      acceptIcon: 'pi pi-trash',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
       accept: async () => {
         try {
-          const marcarEliminado = (n: Categoria | Subcategoria): void => {
-            n.eliminado = true;
-            n.subcategorias?.forEach(marcarEliminado);
-          };
-          marcarEliminado(info.nodo);
+          info.nodo.eliminado = true;
 
           if (!info.padre) {
             await this.categoriesService.delete(String(info.categoriaRaiz.id));
