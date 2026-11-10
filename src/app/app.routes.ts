@@ -18,10 +18,6 @@ export const routes: Routes = [
       },
       {
         path: '',
-        loadChildren: () => import('./versiones/versiones.routes')
-      },
-      {
-        path: '',
         loadChildren: () => import('./activos-fijos/activos-fijos.routes').then(m => m.ACTIVOS_FIJOS_MAIN_ROUTES),
       },
       {

@@ -1,0 +1,44 @@
+<div
+  class="pwa-install-banner"
+  *ngIf="pwaService.showInstallBanner$ | async"
+  role="region"
+  aria-label="Recomendación de instalación de aplicación">
+  <div class="pwa-banner-content">
+    <div class="pwa-banner-icon-wrap">
+      <img
+        [src]="logoUrl"
+        (error)="onLogoError()"
+        alt="REBEL UP"
+        class="pwa-banner-logo" />
+    </div>
+
+    <div class="pwa-banner-info">
+      <div class="pwa-banner-header">
+        <span class="pwa-badge">APP REBEL WINGS</span>
+        <h4 class="pwa-title">Instala REBEL UP</h4>
+      </div>
+      <p class="pwa-subtitle">
+        Agrega la app a tu dispositivo para ingresar más rápido desde tu pantalla de inicio.
+      </p>
+    </div>
+
+    <div class="pwa-banner-actions">
+      <button
+        type="button"
+        class="pwa-btn-install"
+        (click)="instalar()">
+        <i class="bx bx-download"></i>
+        <span>Instalar app</span>
+      </button>
+
+      <button
+        type="button"
+        class="pwa-btn-dismiss"
+        (click)="cerrar()"
+        title="Cerrar recomendación"
+        aria-label="Cerrar recomendación">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+  </div>
+</div>

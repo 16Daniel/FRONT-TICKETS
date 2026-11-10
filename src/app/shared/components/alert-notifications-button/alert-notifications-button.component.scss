@@ -283,3 +283,32 @@
   color: #b91c1c;
   font-size: 11px;
 }
+
+@media (max-width: 768px) {
+  .trigger-label {
+    display: none;
+  }
+
+  .notification-trigger-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .notification-badge {
+    top: -5px;
+    right: -6px;
+  }
+
+  .alert-dropdown {
+    position: fixed;
+    top: 68px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-width: 380px;
+    margin-left: auto;
+  }
+}
