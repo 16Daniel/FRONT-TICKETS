@@ -176,21 +176,6 @@ export const GRUPOS_MENU_PERMISOS: GrupoMenuPermiso[] = [
     ],
   },
   {
-    idGrupo: 'versiones',
-    tituloGrupo: 'Control de versiones',
-    iconoGrupo: 'bx bx-git-repo-forked',
-    descripcionGrupo: 'Publicación y bitácora de actualizaciones de la plataforma',
-    menus: [
-      {
-        idMenu: 'versiones_control',
-        titulo: 'Control de versiones',
-        ruta: '/main/version-control',
-        icono: 'bx bx-git-repo-forked',
-        permisoVista: 'versiones.control.ver',
-      },
-    ],
-  },
-  {
     idGrupo: 'administracion',
     tituloGrupo: 'Gestión y Admin',
     iconoGrupo: 'bx bx-shield-quarter',
