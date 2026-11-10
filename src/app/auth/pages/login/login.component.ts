@@ -29,7 +29,7 @@ export default class LoginComponent {
   public showpass: boolean = false;
   public typei: string = 'password';
 
-  public logoUrl: string = 'assets/img/RW_LogoWEB.png';
+  public logoUrl: string = 'assets/images/Logo_REBEL_Vertical_1024x1024.PNG';
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -40,8 +40,8 @@ export default class LoginComponent {
   ) { }
 
   onLogoError(event: any) {
-    if (this.logoUrl !== '/front/tickets/assets/img/RW_LogoWEB.png') {
-      this.logoUrl = '/front/tickets/assets/img/RW_LogoWEB.png';
+    if (this.logoUrl !== '/front/tickets/assets/images/Logo_REBEL_Vertical_1024x1024.PNG') {
+      this.logoUrl = '/front/tickets/assets/images/Logo_REBEL_Vertical_1024x1024.PNG';
       this.cdr.markForCheck();
     }
   }
