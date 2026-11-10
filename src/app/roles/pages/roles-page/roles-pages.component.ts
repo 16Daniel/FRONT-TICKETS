@@ -20,8 +20,10 @@ import {
 } from '../../interfaces/ruta.model';
 import {
   GRUPOS_MENU_PERMISOS,
+  normalizarRutaInicio,
   obtenerTodosLosMenusCatalogo,
   obtenerTodosLosPermisosCatalogo,
+  RUTA_INICIO_DEFECTO,
   RUTAS_INICIO_DISPONIBLES,
 } from '../../constants/catalogo-permisos.constants';
 
@@ -95,7 +97,7 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
       id: '',
       nombre: '',
       descripcion: '',
-      rutaInicio: '/main/home',
+      rutaInicio: RUTA_INICIO_DEFECTO,
     };
   }
 
@@ -195,7 +197,7 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
       id: rol.id,
       nombre: rol.nombre || '',
       descripcion: rol.descripcion || '',
-      rutaInicio: rol.rutaInicio || '/main/home',
+      rutaInicio: normalizarRutaInicio(rol.rutaInicio),
     };
     this.permisosSeleccionados = new Set<string>(rol.permisos || []);
   }

@@ -105,6 +105,6 @@ export default class ValidadorApiLocalComponent implements OnInit {
   }
 
   irAlInicio(): void {
-    this.router.navigate(['/main/home']);
+    this.router.navigate(['/main/home-sucursal']);
   }
 }
