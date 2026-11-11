@@ -1,7 +1,7 @@
-import { Injectable, NgZone, Optional } from '@angular/core';
-import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { BehaviorSubject, filter } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
+import { buildFirebaseSwUrl } from '../../alertas/service/fcm.service';
 
 declare global {
   interface Window {
@@ -30,22 +30,14 @@ export class PwaService {
   private readonly isUpdatingSubject = new BehaviorSubject<boolean>(false);
   public readonly isUpdating$ = this.isUpdatingSubject.asObservable();
 
-  constructor(
-    private ngZone: NgZone,
-    @Optional() private swUpdate?: SwUpdate
-  ) {
+  constructor(private ngZone: NgZone) {
     this.ensureServiceWorkerRegistered();
     this.initInstallListeners();
     this.initServiceWorkerUpdates();
   }
 
   private getSwPath(): string {
-    if (typeof window === 'undefined') return '/firebase-messaging-sw.js';
-    return window.location.pathname.includes('/front/ticketstest/')
-      ? '/front/ticketstest/firebase-messaging-sw.js'
-      : window.location.pathname.includes('/front/tickets/')
-        ? '/front/tickets/firebase-messaging-sw.js'
-        : '/firebase-messaging-sw.js';
+    return buildFirebaseSwUrl();
   }
 
   private ensureServiceWorkerRegistered(): void {
@@ -57,7 +49,6 @@ export class PwaService {
       .register(this.getSwPath())
       .then((reg) => {
         this.monitorRegistrationForUpdates(reg);
-        reg.update().catch(() => {});
       })
       .catch(() => {});
   }
@@ -127,7 +118,6 @@ export class PwaService {
   private initServiceWorkerUpdates(): void {
     if (typeof window === 'undefined' || typeof navigator === 'undefined') return;
 
-    // 1. Escuchar mensajes directos desde el Service Worker (SW_UPDATE_AVAILABLE)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event: MessageEvent) => {
         if (event.data && event.data.type === 'SW_UPDATE_AVAILABLE') {
@@ -137,7 +127,6 @@ export class PwaService {
         }
       });
 
-      // Solicitar verificación cuando la pestaña vuelve a estar visible
       if (typeof document !== 'undefined') {
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'visible') {
@@ -146,23 +135,11 @@ export class PwaService {
         });
       }
 
-      // Verificación periódica en segundo plano desde el Service Worker
       this.ngZone.runOutsideAngular(() => {
         setInterval(() => {
           this.verificarActualizacionEnSw();
         }, UPDATE_CHECK_INTERVAL_MS);
       });
-    }
-
-    // 2. Escuchar eventos de SwUpdate de Angular (si ngsw está activo)
-    if (this.swUpdate && this.swUpdate.isEnabled) {
-      this.swUpdate.versionUpdates
-        .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
-        .subscribe(() => {
-          this.ngZone.run(() => {
-            this.updateAvailableSubject.next(true);
-          });
-        });
     }
   }
 
@@ -173,7 +150,6 @@ export class PwaService {
       const registrations = await navigator.serviceWorker.getRegistrations();
       for (const reg of registrations) {
         this.monitorRegistrationForUpdates(reg);
-        await reg.update();
         if (reg.waiting) {
           this.ngZone.run(() => {
             this.updateAvailableSubject.next(true);
@@ -185,19 +161,6 @@ export class PwaService {
       }
     } catch {
       // Ignorar errores de red al consultar actualizaciones
-    }
-
-    if (this.swUpdate && this.swUpdate.isEnabled) {
-      try {
-        const found = await this.swUpdate.checkForUpdate();
-        if (found) {
-          this.ngZone.run(() => {
-            this.updateAvailableSubject.next(true);
-          });
-        }
-      } catch {
-        // Ignorar errores de SwUpdate
-      }
     }
   }
 
@@ -304,17 +267,6 @@ export class PwaService {
     this.isUpdatingSubject.next(true);
 
     try {
-      if (this.swUpdate && this.swUpdate.isEnabled) {
-        try {
-          const hasUpdate = await this.swUpdate.checkForUpdate();
-          if (hasUpdate) {
-            await this.swUpdate.activateUpdate();
-          }
-        } catch {
-          // Continuar con actualización manual de SW y caché
-        }
-      }
-
       if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
         try {
           const registrations = await navigator.serviceWorker.getRegistrations();

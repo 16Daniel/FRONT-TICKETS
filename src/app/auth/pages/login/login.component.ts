@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AccessControlService } from '../../../shared/services/access-control.service';
+import { FcmService } from '../../../alertas/service/fcm.service';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ import { AccessControlService } from '../../../shared/services/access-control.se
 })
 export default class LoginComponent {
   private accessControl = inject(AccessControlService);
+  private fcmService = inject(FcmService);
 
   public email: string = '';
   public pass: string = '';
@@ -96,6 +98,7 @@ export default class LoginComponent {
 
         localStorage.setItem('rwuserdatatk', JSON.stringify(userd));
         this.accessControl.inicializarEscuchaUsuario();
+        this.fcmService.requestPermission();
 
         // if (userd.idRol === '6') {
         //   this.router.navigate(['/cedis/recoleccion']);

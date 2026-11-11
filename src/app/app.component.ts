@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FcmService } from './alertas/service/fcm.service';
 import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -18,14 +17,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.requestPermission();
-    this.fcmService.listenMessages().subscribe((message) => {
-      Swal.fire({
-        title: message.notification?.title || 'Notificación',
-        text: message.notification?.body || '',
-        icon: 'info',
-        confirmButtonColor: '#D3152A',
-      });
-    });
+    this.fcmService.listenMessages().subscribe();
   }
 
   requestPermission() {
