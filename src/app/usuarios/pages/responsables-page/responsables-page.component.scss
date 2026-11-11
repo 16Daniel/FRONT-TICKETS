@@ -219,6 +219,54 @@ $rw-canvas: #f4f6fa;
   flex-wrap: wrap;
 }
 
+@media (max-width: 768px) {
+  .toolbar-left {
+    width: 100%;
+
+    > div {
+      width: 100%;
+    }
+
+    .search-input-wrapper,
+    .users-search-input {
+      width: 100% !important;
+    }
+
+    ::ng-deep p-dropdown,
+    ::ng-deep .p-dropdown-custom {
+      width: 100% !important;
+    }
+  }
+
+  .toolbar-right {
+    width: 100%;
+    flex-wrap: nowrap;
+
+    .btn-ver-todos {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      padding: 0 !important;
+      gap: 0;
+      justify-content: center;
+
+      i {
+        margin: 0 !important;
+      }
+
+      span {
+        display: none !important;
+      }
+    }
+
+    .btn-rw-cta {
+      flex: 1 1 auto;
+      height: 42px;
+      justify-content: center;
+    }
+  }
+}
+
 .form-switch .form-check-input:checked {
     background-color: $rw-primary;
     border-color: $rw-primary;

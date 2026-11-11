@@ -114,3 +114,52 @@ $rw-primary: #d3152a;
     box-shadow: 0 2px 6px rgba(211, 21, 42, 0.12);
   }
 }
+
+@media (max-width: 768px) {
+  .mantenimientos-toolbar {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+
+  .toolbar-left {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+
+    ::ng-deep p-button {
+      flex: 1 1 auto;
+      display: flex;
+    }
+
+    ::ng-deep .action-btn-custom {
+      width: 100% !important;
+      height: 42px !important;
+      justify-content: center !important;
+    }
+  }
+
+  .switches-toggle-group {
+    flex: 0 0 auto;
+    padding: 4px;
+    gap: 0.25rem;
+
+    .switches-title {
+      display: none;
+    }
+  }
+
+  .toggle-pill-item .toggle-pill-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    justify-content: center;
+
+    span {
+      display: none;
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+}

@@ -1,33 +1,4 @@
 <div class="tickets-tab-container">
-  
-  <!-- Top Bar: Context Badges & Switches -->
-  <div class="tickets-top-bar">
-    <div class="header-title-group">
-      <span class="active-view-badge bg-warning text-dark border-warning" *ngIf="usuario.esGuardia">
-        <i class="bx bx-shield-quarter"></i>
-        <span>GUARDIA ACTIVA</span>
-      </span>
-    </div>
-
-    <!-- Toggles for Guardia -->
-    <div class="switches-toggle-group">
-      <span class="switches-title">
-        <i class="bx bx-wrench"></i> Vistas:
-      </span>
-
-      <label class="toggle-pill-item" [class.is-active]="usuario.esGuardia">
-        <input 
-          type="checkbox" 
-          class="toggle-checkbox"
-          [(ngModel)]="usuario.esGuardia" 
-          (change)="onToggleGuardia(usuario)">
-        <span class="toggle-pill-btn">
-          <i class="bx bx-shield"></i>
-          <span>Guardia</span>
-        </span>
-      </label>
-    </div>
-  </div>
 
   <!-- Dashboard KPI Cards Row: Split Layout (Operación Diaria + Rendimiento Mensual) -->
   <div class="dashboard-unified-kpi-row mb-3" *ngIf="totalesSla">
@@ -59,11 +30,36 @@
   <div class="actions-toolbar-row mb-4">
     <div class="actions-buttons-container">
       <p-button 
+        class="btn-crear-wrap"
         label="CREAR TICKET" 
         icon="pi pi-plus" 
         styleClass="p-button-primary action-btn-custom"
         (click)="mostrarModalGenerateTicket = true">
       </p-button>
+
+      <!-- Toggles for Guardia -->
+      <div class="switches-toggle-group">
+        <span class="switches-title">
+          <i class="bx bx-wrench"></i> Vistas:
+        </span>
+
+        <label class="toggle-pill-item" [class.is-active]="usuario.esGuardia">
+          <input 
+            type="checkbox" 
+            class="toggle-checkbox"
+            [(ngModel)]="usuario.esGuardia" 
+            (change)="onToggleGuardia(usuario)">
+          <span class="toggle-pill-btn">
+            <i class="bx bx-shield"></i>
+            <span>Guardia</span>
+          </span>
+        </label>
+      </div>
+
+      <span class="active-view-badge bg-warning text-dark border-warning" *ngIf="usuario.esGuardia">
+        <i class="bx bx-shield-quarter"></i>
+        <span>GUARDIA ACTIVA</span>
+      </span>
 
       <!-- <p-button 
         label="HISTORIAL TICKETS" 

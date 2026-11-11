@@ -131,7 +131,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   private cargarAreas(): void {
     this.subscripcionAreas = this.areasService.areas$.subscribe((areas: Area[]) => {
-      this.areas = areas.filter((a: Area) => !a.eliminado);
+      this.areas = areas.filter((a: Area) => !a.eliminado && a.activarTickets === true);
       if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
         this.areaSeleccionadaId = String(this.areas[0].id);
       }
