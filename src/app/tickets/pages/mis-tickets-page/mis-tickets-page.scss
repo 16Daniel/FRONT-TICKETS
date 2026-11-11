@@ -120,9 +120,16 @@ $status-info-bg: #eff6ff;
   .actions-buttons-container {
     width: 100%;
 
-    ::ng-deep .action-btn-custom {
+    ::ng-deep p-button {
+      flex: 1 1 auto;
+      display: flex;
       width: 100%;
-      justify-content: center;
+    }
+
+    ::ng-deep .action-btn-custom {
+      width: 100% !important;
+      height: 42px !important;
+      justify-content: center !important;
     }
   }
 

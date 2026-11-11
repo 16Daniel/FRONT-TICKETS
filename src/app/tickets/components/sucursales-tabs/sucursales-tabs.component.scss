@@ -69,4 +69,25 @@ $rw-primary: #d3152a;
   }
 }
 
+@media (max-width: 768px) {
+  .switches-toggle-group {
+    padding: 4px;
+
+    .switches-title {
+      display: none;
+    }
+  }
+
+  .toggle-pill-item .toggle-pill-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    justify-content: center;
+
+    span {
+      display: none;
+    }
+  }
+}
+
 

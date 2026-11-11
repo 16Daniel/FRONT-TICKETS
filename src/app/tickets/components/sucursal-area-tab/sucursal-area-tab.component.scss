@@ -92,12 +92,24 @@ $rw-canvas: #f4f6fa;
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .dashboard-unified-kpi-row {
+    display: none !important;
+  }
+
   .actions-buttons-container {
     width: 100%;
-    
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+
+    ::ng-deep p-button {
+      flex: 1 1 auto;
+      display: flex;
+    }
+
     ::ng-deep .action-btn-custom {
-      flex: 1 1 calc(50% - 0.6rem);
-      justify-content: center;
+      width: 100% !important;
+      height: 42px !important;
+      justify-content: center !important;
     }
   }
 }

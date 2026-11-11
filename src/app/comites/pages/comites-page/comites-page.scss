@@ -151,6 +151,27 @@ $rw-canvas: #f4f6fa;
   }
 }
 
+@media (max-width: 768px) {
+  .toolbar-left {
+    width: 100%;
+
+    .search-input-wrapper,
+    .areas-search-input {
+      width: 100% !important;
+    }
+  }
+
+  .toolbar-right {
+    width: 100%;
+  }
+
+  .btn-rw-cta {
+    width: 100%;
+    height: 42px;
+    justify-content: center;
+  }
+}
+
 /* ==========================================================================
    Areas Nodes Container (Tabla)
    ========================================================================== */

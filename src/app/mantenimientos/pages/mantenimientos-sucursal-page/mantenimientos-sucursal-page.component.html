@@ -23,13 +23,15 @@
       <div class="actions-buttons-container justify-content-start flex-wrap gap-2">
         @if (tipoActivo === 'TI') {
           <p-button
+            class="btn-tool-wrap"
             label="HISTORIAL 8 X 8"
             icon="pi pi-history"
-            styleClass="p-button-secondary action-btn-custom"
+            styleClass="p-button-secondary action-btn-custom btn-icon-mobile"
             (click)="mostrarModalHistorialMantenimientos = true">
           </p-button>
 
           <p-button
+            class="btn-crear-wrap"
             label="MANTENIMIENTO IT (8X8)"
             icon="bx bx-laptop"
             styleClass="p-button-danger action-btn-custom"
@@ -44,13 +46,15 @@
           </p-button> -->
         } @else if (tipoActivo === 'AV') {
           <p-button
+            class="btn-tool-wrap"
             label="HISTORIAL 6 X 6 AV"
             icon="pi pi-history"
-            styleClass="p-button-secondary action-btn-custom"
+            styleClass="p-button-secondary action-btn-custom btn-icon-mobile"
             (click)="mostrarModalHistorialMantenimientosAV = true">
           </p-button>
 
           <p-button
+            class="btn-crear-wrap"
             label="MANTENIMIENTO AV (6X6)"
             icon="bx bx-tv"
             styleClass="p-button-danger action-btn-custom"
@@ -58,13 +62,15 @@
           </p-button>
         } @else if (tipoActivo === 'MTTO') {
           <p-button
+            class="btn-tool-wrap"
             label="HISTORIAL 8 X 8"
             icon="pi pi-history"
-            styleClass="p-button-secondary action-btn-custom"
+            styleClass="p-button-secondary action-btn-custom btn-icon-mobile"
             (click)="mostrarModalHistorialMantenimientosMtto = true">
           </p-button>
 
           <p-button
+            class="btn-crear-wrap"
             label="MANTENIMIENTO 8X8"
             icon="bx bx-wrench"
             styleClass="p-button-danger action-btn-custom"
