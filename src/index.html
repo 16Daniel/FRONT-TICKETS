@@ -19,25 +19,6 @@
       e.preventDefault();
       window.__deferredPwaPrompt = e;
     });
-
-    if ('serviceWorker' in navigator) {
-      var swPath = window.location.pathname.includes('/front/ticketstest/')
-        ? '/front/ticketstest/firebase-messaging-sw.js'
-        : window.location.pathname.includes('/front/tickets/')
-          ? '/front/tickets/firebase-messaging-sw.js'
-          : '/firebase-messaging-sw.js';
-
-      navigator.serviceWorker.addEventListener('controllerchange', function () {
-        if (!sessionStorage.getItem('rw_sw_ctrl_reloaded')) {
-          sessionStorage.setItem('rw_sw_ctrl_reloaded', 'true');
-          window.location.reload();
-        }
-      });
-
-      navigator.serviceWorker.register(swPath).then(function (reg) {
-        reg.update();
-      }).catch(function () {});
-    }
   </script>
 </head>
 <body>

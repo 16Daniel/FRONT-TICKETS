@@ -1,4 +1,60 @@
-// Service Worker principal para PWA (instalación nativa, detección de nuevas versiones y Firebase Messaging)
+importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js');
+
+const swParams = new URLSearchParams(self.location.search);
+const firebaseConfig = {
+  apiKey: swParams.get('apiKey') || "AIzaSyCyE9Q6lYPOCKgVMAcS4E65h8QsxSihAGU",
+  authDomain: swParams.get('authDomain') || "rw-rebelup.firebaseapp.com",
+  projectId: swParams.get('projectId') || "rw-rebelup",
+  storageBucket: swParams.get('storageBucket') || "rw-rebelup.firebasestorage.app",
+  messagingSenderId: swParams.get('messagingSenderId') || "710176816572",
+  appId: swParams.get('appId') || "1:710176816572:web:01b6d611c62f47ce917fb9",
+  measurementId: swParams.get('measurementId') || "G-D7NZGL0TT6",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload) => {
+  console.log('[firebase-messaging-sw.js] Notificación recibida en background: ', payload);
+
+  // Si el payload viene como data-only (sin bloque notification), mostramos la notificación nativa manualmente
+  if (!payload.notification && (payload.data?.title || payload.data?.body)) {
+    const scopeUrl = self.registration && self.registration.scope ? self.registration.scope : '/';
+    const iconUrl = new URL('assets/icons/icon-192x192.png', scopeUrl).toString();
+    self.registration.showNotification(payload.data.title || 'Rebel Wings', {
+      body: payload.data.body || '',
+      icon: iconUrl,
+      badge: iconUrl,
+      data: payload.data,
+    });
+  }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  if (event.notification?.data?.FCM_MSG) {
+    // Dejar que el handler interno de Firebase procese las notificaciones con FCM_MSG
+    return;
+  }
+  event.notification.close();
+  event.waitUntil(
+    (async () => {
+      const clientList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      for (const client of clientList) {
+        if ('focus' in client) {
+          return client.focus();
+        }
+      }
+      if (self.clients.openWindow) {
+        const scopeUrl = self.registration && self.registration.scope ? self.registration.scope : '/';
+        return self.clients.openWindow(scopeUrl);
+      }
+    })()
+  );
+});
+
+// --- Soporte PWA (instalación nativa y detección de nueva versión desplegada) ---
 let initialIndexSignature = null;
 
 async function notifyAllClientsUpdateAvailable() {
@@ -30,14 +86,8 @@ async function checkServerIndexSignature() {
   }
 }
 
-self.addEventListener('install', (event) => {
-  if (!self.registration || !self.registration.active) {
-    // Primera instalación: tomar control de inmediato para habilitar beforeinstallprompt
-    self.skipWaiting();
-  } else {
-    // Actualización del Service Worker detectada: avisar a la aplicación
-    event.waitUntil(notifyAllClientsUpdateAvailable());
-  }
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -50,7 +100,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', () => {
-  // Listener fetch requerido por Chrome/Edge/Android para instalación nativa PWA
+  // Listener requerido por Chrome/Edge/Android para habilitar beforeinstallprompt
 });
 
 self.addEventListener('message', (event) => {
@@ -62,26 +112,3 @@ self.addEventListener('message', (event) => {
     event.waitUntil(checkServerIndexSignature());
   }
 });
-
-try {
-  importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js');
-  importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js');
-
-  firebase.initializeApp({
-    apiKey: "AIzaSyCyE9Q6lYPOCKgVMAcS4E65h8QsxSihAGU",
-    authDomain: "rw-rebelup.firebaseapp.com",
-    projectId: "rw-rebelup",
-    storageBucket: "rw-rebelup.firebasestorage.app",
-    messagingSenderId: "710176816572",
-    appId: "1:710176816572:web:01b6d611c62f47ce917fb9",
-    measurementId: "G-D7NZGL0TT6"
-  });
-
-  const messaging = firebase.messaging();
-
-  messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Notificación recibida en background: ', payload);
-  });
-} catch (error) {
-  console.warn('[firebase-messaging-sw.js] No se pudo inicializar Firebase Messaging en SW:', error);
-}

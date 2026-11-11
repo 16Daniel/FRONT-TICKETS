@@ -1,8 +1,7 @@
-import { ApplicationConfig, isDevMode } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
-import { provideServiceWorker } from '@angular/service-worker';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -17,10 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withHashLocation()),
     provideAnimations(),
     provideHttpClient(),
-    provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000',
-    }),
 
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), // Usa el environment
     provideAuth(() => getAuth()),
