@@ -1,0 +1,165 @@
+$rw-primary: #d3152a;
+
+.dashboard-page-wrapper {
+  background-color: #f4f6fa;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem 1.5rem;
+  width: 100%;
+}
+
+.dashboard-content-container {
+  max-width: 1650px;
+  margin: 0 auto;
+}
+
+.mantenimientos-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  ::ng-deep .action-btn-custom {
+    font-size: 0.825rem !important;
+    font-weight: 600 !important;
+    padding: 0.55rem 0.95rem !important;
+    border-radius: 10px !important;
+  }
+}
+
+.user-group-badge {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  .clear-user-btn {
+    border: none;
+    background: transparent;
+    color: #1d4ed8;
+    padding: 0;
+    margin-left: 0.2rem;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+
+    &:hover {
+      color: $rw-primary;
+    }
+  }
+}
+
+.switches-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #ffffff;
+  padding: 5px 8px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+
+  .switches-title {
+    font-size: 0.775rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+
+    i {
+      color: $rw-primary;
+    }
+  }
+}
+
+.toggle-pill-item {
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+
+  .toggle-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  &.is-active .toggle-pill-btn {
+    background-color: #fff1f2;
+    color: $rw-primary;
+    box-shadow: 0 2px 6px rgba(211, 21, 42, 0.12);
+  }
+}
+
+@media (max-width: 768px) {
+  .mantenimientos-toolbar {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+
+  .toolbar-left {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+
+    ::ng-deep p-button {
+      flex: 1 1 auto;
+      display: flex;
+    }
+
+    ::ng-deep .action-btn-custom {
+      width: 100% !important;
+      height: 42px !important;
+      justify-content: center !important;
+    }
+  }
+
+  .switches-toggle-group {
+    flex: 0 0 auto;
+    padding: 4px;
+    gap: 0.25rem;
+
+    .switches-title {
+      display: none;
+    }
+  }
+
+  .toggle-pill-item .toggle-pill-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    justify-content: center;
+
+    span {
+      display: none;
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+}

@@ -1,72 +1,4 @@
 <div class="tickets-tab-container">
-  
-  <!-- Top Bar: Context Badges & Maintenance Switches -->
-  <div class="tickets-top-bar">
-    <div class="header-title-group">
-      <span class="active-view-badge bg-warning text-dark border-warning" *ngIf="usuario.esGuardia">
-        <i class="bx bx-shield-quarter"></i>
-        <span>GUARDIA ACTIVA</span>
-      </span>
-<!-- 
-      <span class="active-view-badge" *ngIf="mostrarMantenimientosSistemas">
-        <i class="bx bx-laptop"></i>
-        <span>Mantenimiento IT (8X8)</span>
-      </span>
-
-      <span class="active-view-badge" *ngIf="mostrarMantenimientosAV">
-        <i class="bx bx-tv"></i>
-        <span>Mantenimiento AV (6X6)</span>
-      </span> -->
-
-      <!-- <span class="user-group-badge" *ngIf="usuario">
-        <i class="bx bxs-user"></i>
-        <span>{{ usuario.nombre }} {{ usuario.apellidoP }}</span>
-      </span> -->
-    </div>
-
-    <!-- Toggles for IT: 8X8, AV: 6X6, and Guardia -->
-    <div class="switches-toggle-group">
-      <span class="switches-title">
-        <i class="bx bx-wrench"></i> Vistas:
-      </span>
-
-      <!-- <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosSistemas" *ngIf="usuario.idArea == '2' || usuario.idArea == '1'">
-        <input 
-          type="checkbox" 
-          class="toggle-checkbox"
-          [(ngModel)]="mostrarMantenimientosSistemas" 
-          (ngModelChange)="mostrarMantenimientosAV = false">
-        <span class="toggle-pill-btn">
-          <i class="bx bx-laptop"></i>
-          <span>IT: 8X8</span>
-        </span>
-      </label> -->
-
-      <!-- <label class="toggle-pill-item" [class.is-active]="mostrarMantenimientosAV" *ngIf="usuario.idArea == '1' || usuario.idArea == '2'">
-        <input 
-          type="checkbox" 
-          class="toggle-checkbox"
-          [(ngModel)]="mostrarMantenimientosAV" 
-          (ngModelChange)="mostrarMantenimientosSistemas = false">
-        <span class="toggle-pill-btn">
-          <i class="bx bx-tv"></i>
-          <span>AV: 6X6</span>
-        </span>
-      </label> -->
-
-      <label class="toggle-pill-item" [class.is-active]="usuario.esGuardia">
-        <input 
-          type="checkbox" 
-          class="toggle-checkbox"
-          [(ngModel)]="usuario.esGuardia" 
-          (change)="onToggleGuardia(usuario)">
-        <span class="toggle-pill-btn">
-          <i class="bx bx-shield"></i>
-          <span>Guardia</span>
-        </span>
-      </label>
-    </div>
-  </div>
 
   <!-- Dashboard KPI Cards Row: Split Layout (Operación Diaria + Rendimiento Mensual) -->
   <div class="dashboard-unified-kpi-row mb-3" *ngIf="totalesSla">
@@ -98,11 +30,36 @@
   <div class="actions-toolbar-row mb-4">
     <div class="actions-buttons-container">
       <p-button 
+        class="btn-crear-wrap"
         label="CREAR TICKET" 
         icon="pi pi-plus" 
         styleClass="p-button-primary action-btn-custom"
         (click)="mostrarModalGenerateTicket = true">
       </p-button>
+
+      <!-- Toggles for Guardia -->
+      <div class="switches-toggle-group">
+        <span class="switches-title">
+          <i class="bx bx-wrench"></i> Vistas:
+        </span>
+
+        <label class="toggle-pill-item" [class.is-active]="usuario.esGuardia">
+          <input 
+            type="checkbox" 
+            class="toggle-checkbox"
+            [(ngModel)]="usuario.esGuardia" 
+            (change)="onToggleGuardia(usuario)">
+          <span class="toggle-pill-btn">
+            <i class="bx bx-shield"></i>
+            <span>Guardia</span>
+          </span>
+        </label>
+      </div>
+
+      <span class="active-view-badge bg-warning text-dark border-warning" *ngIf="usuario.esGuardia">
+        <i class="bx bx-shield-quarter"></i>
+        <span>GUARDIA ACTIVA</span>
+      </span>
 
       <!-- <p-button 
         label="HISTORIAL TICKETS" 
@@ -137,39 +94,10 @@
     }
   </div>
 
-  <div *ngIf="tickets.length > 0 && !mostrarMantenimientosAV && !mostrarMantenimientosSistemas" class="p-1 mt-4">
+  <div *ngIf="tickets.length > 0" class="p-1 mt-4">
     <app-priority-tickets-accordion-analyst [tickets]="tickets" [sucursales]="sucursales"
       (clickEvent)="abrirModalDetalleTicket($event)" [idArea]="usuario.idArea"></app-priority-tickets-accordion-analyst>
   </div>
-
-  <div class="p-1 mt-4" *ngIf="mostrarMantenimientosAV || mostrarMantenimientosSistemas">
-
-    <app-acordeon-mantenimientos-sistemas
-      *ngIf="(usuario.idArea == '1' || usuario.idArea == '2') && auxMostrarMantenimientos && mostrarMantenimientosSistemas"
-      [mantenimientos]="ultimosmantenimientosSistemas" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
-    </app-acordeon-mantenimientos-sistemas>
-
-    <app-acordeon-mantenimientos-mantenimiento *ngIf="usuario.idArea == '4' && auxMostrarMantenimientos"
-      [mantenimientos]="ultimosmantenimientos" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
-    </app-acordeon-mantenimientos-mantenimiento>
-
-    <app-acordeon-mantenimientos-audio-video
-      *ngIf="(usuario.idArea == '1' || usuario.idArea == '2') && auxMostrarMantenimientos && mostrarMantenimientosAV"
-      [mantenimientos]="ultimosmantenimientosAV" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
-    </app-acordeon-mantenimientos-audio-video>
-
-  </div>
-  <!--
-  <div class="p-1 mt-4" *ngIf="mostrarMantenimientosAV && usuario.idArea == '1' || usuario.idArea == '2'">
-
-    <app-acordeon-mantenimientos-audio-video *ngIf="(usuario.idArea == '1' || usuario.idArea == '2') && auxMostrarMantenimientos"
-      [mantenimientos]="ultimosmantenimientosAV" [sucursales]="sucursalesMantenimeintosActivos()"
-      [ordenarMantenimientosFecha]="ordenarMantenimientosFecha" [mostrarChat]="true">
-    </app-acordeon-mantenimientos-audio-video>
-  </div> -->
 
 </div>
 
@@ -186,17 +114,6 @@
 
 <app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
   (closeEvent)="mostrarModalHistorial = false" [idArea]="usuario.idArea"></app-historial-tickets-dialog>
-
-<app-modal-ten-xten-maintenance-history *ngIf="mostrarModalHistorialMantenimientos"
-  [showModalHistorialMantenimientos]="mostrarModalHistorialMantenimientos"
-  (closeEvent)="mostrarModalHistorialMantenimientos = false"></app-modal-ten-xten-maintenance-history>
-
-<app-modal-ten-xten-maintenance-check *ngIf="mostrarModalMtooTI" [mostrarModalMtooTI]="mostrarModalMtooTI"
-  (closeEvent)="mostrarModalMtooTI = false"
-  [mantenimientoActivo]="mantenimientoActivo"></app-modal-ten-xten-maintenance-check>
-
-<app-modal-ten-xten-maintenance-new *ngIf="mostrarModalMtooTINuevo" [mostrarModalMtooTINew]="mostrarModalMtooTINuevo"
-  (closeEvent)="mostrarModalMtooTINuevo = false"></app-modal-ten-xten-maintenance-new>
 
 <p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
   [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"

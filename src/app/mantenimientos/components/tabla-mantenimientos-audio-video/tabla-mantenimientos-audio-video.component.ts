@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
 import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
@@ -22,6 +23,7 @@ import { MaintenanceAvService } from '../../services/maintenance-av.service';
   standalone: true,
   imports: [
     TableModule,
+    TooltipModule,
     CommonModule,
     ModalFinalCommentsComponent,
     ModalVisorVariasImagenesComponent,
@@ -98,39 +100,84 @@ export class TablaMantenimientosAudioVideoComponent {
   abrirModalImagen(mantenimiento: any, campo: string) {
     this.mantenimientoSeleccionado = mantenimiento;
     this.tituloEvidencia = campo;
+    const cantidad = this.obtenerCantidadEvidencias(mantenimiento, campo);
 
-
-    // Solo analistas
-    if (this.usuario.idRol == '4') {
+    if (this.usuario?.idRol === '4') {
       Swal.fire({
-        title: "SELECCIONA LA ACCION?",
+        title: `EVIDENCIA: ${campo}`,
+        text: cantidad > 0 ? `Hay ${cantidad} foto(s) de evidencia.` : 'No hay fotos registradas aún.',
         showDenyButton: true,
         showCancelButton: true,
-        confirmButtonText: "VER IMÁGEN",
-        denyButtonText: `SUBIR IMAGEN`
+        confirmButtonText: 'VER IMÁGENES',
+        denyButtonText: 'SUBIR IMAGEN',
+        cancelButtonText: 'CANCELAR',
+        confirmButtonColor: '#d3152a',
+        denyButtonColor: '#0f172a',
       }).then((result) => {
-
         if (result.isConfirmed) {
-
+          if (cantidad === 0) {
+            Swal.fire({
+              icon: 'info',
+              title: 'Sin imágenes',
+              text: `No hay evidencias fotográficas registradas en ${campo}.`,
+              confirmButtonColor: '#d3152a',
+            });
+            return;
+          }
           this.abrirModalVisorImagen(mantenimiento, campo);
           this.cdr.detectChanges();
-
-        }
-        else if (result.isDenied) {
-          if (this.tituloEvidencia == 'PANTALLAS' || this.tituloEvidencia == 'BOCINAS')
+        } else if (result.isDenied) {
+          if (this.tituloEvidencia === 'PANTALLAS' || this.tituloEvidencia === 'BOCINAS') {
             this.mostrarModalSubirImagen2 = true;
-          else
+          } else {
             this.mostrarModalSubirImagen = true;
+          }
           this.cdr.detectChanges();
         }
       });
-
-
-    }
-    // Solo administradores
-    else if (this.usuario.idRol == '1' || this.usuario.idRol == '5') {
+    } else {
+      if (cantidad === 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Sin imágenes',
+          text: `No hay evidencias fotográficas registradas en ${campo}.`,
+          confirmButtonColor: '#d3152a',
+        });
+        return;
+      }
       this.abrirModalVisorImagen(mantenimiento, campo);
     }
+  }
+
+  obtenerCantidadEvidencias(mantenimiento: MantenimientoAudioVideo, campo: string): number {
+    if (!mantenimiento) return 0;
+    switch (campo) {
+      case 'PANTALLAS':
+        return (mantenimiento.tvs || []).reduce((acc, tv) => acc + (tv.evidenciaUrls?.length || 0), 0);
+      case 'VIDEO':
+        return mantenimiento.mantenimientoSenalVideoEvidenciaUrls?.length || 0;
+      case 'NIVELES':
+        return mantenimiento.mantenimientoNivelesEvidenciaUrls?.length || 0;
+      case 'BOCINAS':
+        return (mantenimiento.bocinas || []).reduce((acc, b) => acc + (b.evidenciaUrls?.length || 0), 0);
+      case 'AUDIO':
+        return mantenimiento.mantenimientoTransmisionAudioEvidenciaUrls?.length || 0;
+      case 'CABLEADO':
+        return mantenimiento.mantenimientoOrdenamientoCableadoEvidenciaUrls?.length || 0;
+      default:
+        return 0;
+    }
+  }
+
+  obtenerTooltipEvidencia(cantidad: number): string {
+    if (cantidad === 1) {
+      return '1 foto de evidencia adjunta • Clic para ver';
+    } else if (cantidad > 1) {
+      return `${cantidad} fotos de evidencia adjuntas • Clic para ver`;
+    }
+    return this.usuario?.idRol === '4'
+      ? 'Sin fotos de evidencia • Clic para subir'
+      : 'Sin fotos de evidencia adjuntas';
   }
 
   abrirModalVisorImagen(mantenimiento: MantenimientoAudioVideo, campo: string) {

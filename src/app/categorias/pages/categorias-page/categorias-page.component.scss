@@ -133,6 +133,42 @@ $rw-canvas: #f4f6fa;
   }
 }
 
+@media (max-width: 768px) {
+  .toolbar-left {
+    width: 100%;
+
+    .search-input-wrapper,
+    .tree-search-input {
+      width: 100% !important;
+    }
+  }
+
+  .toolbar-right {
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+
+    .btn-tool-outline {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      padding: 0;
+      gap: 0;
+      justify-content: center;
+
+      span {
+        display: none !important;
+      }
+    }
+
+    .btn-rw-cta {
+      flex: 1 1 auto;
+      height: 42px;
+      justify-content: center;
+    }
+  }
+}
+
 /* Botón btn-rw-cta movido a styles.scss */
 /* ==========================================================================
    Tree Nodes Container & Empty State

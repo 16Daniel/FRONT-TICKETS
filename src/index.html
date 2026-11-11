@@ -1,14 +1,44 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <title>REBEL TICKETS</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="assets/favico-rebel.ico">
+  <link rel="apple-touch-icon" href="assets/images/Logo_REBEL_Vertical_1024x1024.PNG">
+  <link rel="manifest" href="assets/manifest.json">
+  <meta name="theme-color" content="#D3152A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="REBEL TICKETS">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <meta name="theme-color" content="#1976d2">
+  <script>
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      window.__deferredPwaPrompt = e;
+    });
+
+    if ('serviceWorker' in navigator) {
+      var swPath = window.location.pathname.includes('/front/ticketstest/')
+        ? '/front/ticketstest/firebase-messaging-sw.js'
+        : window.location.pathname.includes('/front/tickets/')
+          ? '/front/tickets/firebase-messaging-sw.js'
+          : '/firebase-messaging-sw.js';
+
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (!sessionStorage.getItem('rw_sw_ctrl_reloaded')) {
+          sessionStorage.setItem('rw_sw_ctrl_reloaded', 'true');
+          window.location.reload();
+        }
+      });
+
+      navigator.serviceWorker.register(swPath).then(function (reg) {
+        reg.update();
+      }).catch(function () {});
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>

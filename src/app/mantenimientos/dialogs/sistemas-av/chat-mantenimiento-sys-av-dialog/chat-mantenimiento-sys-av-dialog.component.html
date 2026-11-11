@@ -1,37 +1,59 @@
-<p-dialog header="CHAT av" [modal]="true" [(visible)]="mostrarModal" [style]="{ width: '50rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true" (onHide)="onHide()">
+<p-dialog
+  header="Chat de Audio y Video"
+  [modal]="true"
+  [(visible)]="mostrarModal"
+  [style]="{ width: '46rem', maxWidth: '92vw' }"
+  [maximizable]="true"
+  (onHide)="onHide()"
+  styleClass="dialog-rw-chat">
 
-    <div *ngIf="mantenimiento != undefined" #chatContainer
-        style="overflow: auto; max-height: 500px; padding-right: 10px;">
-        <div class="d-flex w-100" *ngFor="let item of mantenimiento!.comentarios" [ngClass]="{
-            'justify-content-start': esmiId(item.idUsuario) == false,
-            'justify-content-end': esmiId(item.idUsuario)
-        }">
-            <div class="p-1 rounded-3 mt-3" style="max-width: 80%; background-color: rgb(163 180 201)"
-                *ngIf="esmiId(item.idUsuario) == false">
-                <p class="p-1" style="color: black">{{ item.nombre }}</p>
-                <label [innerHTML]="item.comentario"></label>
-                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM
-                        HH:mm' }}</label></p>
-            </div>
-
-            <div *ngIf="esmiId(item.idUsuario)" class="p-1 rounded-3 mt-3"
-                style="max-width: 80%; background-color: #F3F3F3">
-                <p class="p-1" style="color: rgb(0, 0, 0)">{{ item.nombre }}</p>
-                <label [innerHTML]="item.comentario"></label>
-                <p class="align-right"><label style="font-size: 10px;">{{ datesHelper.getDate(item.fecha) | date:'dd/MM
-                        HH:mm' }}</label></p>
-            </div>
-        </div>
+  <div class="chat-viewport" *ngIf="mantenimiento != undefined" #chatContainer>
+    <div *ngIf="!mantenimiento.comentarios || mantenimiento.comentarios.length === 0" class="chat-empty-state">
+      <div class="empty-icon-circle">
+        <i class="bx bx-conversation"></i>
+      </div>
+      <p class="empty-title">Sin mensajes aún</p>
+      <p class="empty-subtitle">Inicia la conversación sobre este mantenimiento de Audio y Video con tu equipo.</p>
     </div>
 
-    <p-footer>
-        <div class="input-container" style="display: flex; width: 100%; margin-top: 10px">
-            <input pInputText placeholder="Escribe algo..." style="flex-grow: 1; margin-right: 10px;"
-                [(ngModel)]="comentario" (keyup.enter)="enviarComentarioChat()" />
-            <button class="btn btn-dark" style="flex-shrink: 0; padding: 10px;" (click)="enviarComentarioChat()">
-                <i class="bx bxs-send bx-sm" style="color: rgb(255, 255, 255)"></i>
-            </button>
+    <div class="chat-messages-list" *ngIf="mantenimiento.comentarios?.length">
+      <div
+        class="message-row"
+        *ngFor="let item of mantenimiento.comentarios"
+        [ngClass]="esmiId(item.idUsuario) ? 'row-me' : 'row-other'">
+
+        <div class="chat-bubble" [ngClass]="esmiId(item.idUsuario) ? 'bubble-me' : 'bubble-other'">
+          <span class="sender-name" *ngIf="!esmiId(item.idUsuario)">
+            {{ item.nombre }}
+          </span>
+
+          <div class="message-content" [innerHTML]="item.comentario"></div>
+
+          <span class="message-time">
+            {{ datesHelper.getDate(item.fecha) | date: 'dd/MM hh:mm a' }}
+          </span>
         </div>
-    </p-footer>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="chat-input-bar">
+      <input
+        type="text"
+        class="chat-text-input"
+        placeholder="Escribe un mensaje..."
+        [(ngModel)]="comentario"
+        (keyup.enter)="enviarComentarioChat()" />
+
+      <button
+        type="button"
+        class="btn-send-message"
+        (click)="enviarComentarioChat()"
+        [disabled]="!comentario || !comentario.trim()"
+        title="Enviar mensaje">
+        <i class="bx bxs-send"></i>
+      </button>
+    </div>
+  </ng-template>
 </p-dialog>

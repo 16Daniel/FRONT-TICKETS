@@ -1,19 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FcmService } from './alertas/service/fcm.service';
+import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, PwaInstallBannerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 
 export class AppComponent {
   title = 'WEB-PLANEACION';
-private fcmService = inject(FcmService);
+  private fcmService = inject(FcmService);
 
   ngOnInit() {
     this.requestPermission();
@@ -30,6 +31,4 @@ private fcmService = inject(FcmService);
   requestPermission() {
     this.fcmService.requestPermission();
   }
-
-
 }

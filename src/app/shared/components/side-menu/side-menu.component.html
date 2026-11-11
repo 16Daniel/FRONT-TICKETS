@@ -4,10 +4,12 @@
     <button 
       type="button" 
       class="nav-toggle-btn" 
+      [class.has-sw-update]="hayNuevaVersion && !showmenu"
       (click)="toggleMenu()" 
       [attr.aria-expanded]="showmenu" 
       aria-label="Abrir menú de navegación">
       <i class="bx" [ngClass]="showmenu ? 'bx-x' : 'bx-menu'"></i>
+      <span class="nav-toggle-update-dot" *ngIf="hayNuevaVersion && !showmenu"></span>
     </button>
   </div>
 
@@ -41,8 +43,11 @@
   <!-- Drawer Header -->
   <div class="drawer-header">
     <div class="drawer-brand">
-      <i class="bx bx-layer brand-icon"></i>
-      <span class="drawer-title">ERP REBEL TICKETS</span>
+      <img 
+        [src]="logoUrl" 
+        (error)="onLogoError()" 
+        alt="REBEL UP" 
+        class="drawer-logo" />
     </div>
     <div class="drawer-actions">
       <button 
@@ -64,367 +69,47 @@
     </div>
   </div>
 
-  <!-- Scrollable Menu Content -->
+  <!-- Scrollable Menu Content: Dinámico según los Permisos de Firebase -->
   <div class="drawer-content">
     
-    <!-- Grupo: Tickets -->
-    <div class="nav-group">
-      <span class="nav-group-title">Tickets</span>
+    <div class="nav-group" *ngFor="let grupo of (gruposMenuVisibles$ | async)">
+      <span class="nav-group-title">{{ grupo.tituloGrupo }}</span>
 
-      <a 
-        [routerLink]="'/main/home'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol != '6'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bxs-dashboard nav-icon"></i>
-        <span class="nav-label">Inicio</span>
-      </a>
+      <ng-container *ngFor="let menu of grupo.menus">
+        <!-- Rutas estándar de Angular Router -->
+        <a 
+          *ngIf="!menu.esAccionExterna"
+          [routerLink]="menu.ruta" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: menu.exactMatch || false }"
+          (click)="closemenu()" 
+          class="nav-item">
+          <i [class]="menu.icono + ' nav-icon'"></i>
+          <span class="nav-label">{{ menu.titulo }}</span>
+        </a>
 
-      <a 
-        [routerLink]="'/main/mis-tickets'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol != '6'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-receipt nav-icon"></i>
-        <span class="nav-label">Mis tickets</span>
-      </a>
+        <!-- Enlace especial: Validador de cupones -->
+        <a 
+          *ngIf="menu.esAccionExterna && menu.tipoAccionExterna === 'cupones'"
+          href="javascript:void(0)" 
+          (click)="abrirValidadorCupones($event)" 
+          class="nav-item">
+          <i class="bx nav-icon" [ngClass]="isCheckingValidadorCupones ? 'bx-loader-alt bx-spin' : 'bx-check-shield'"></i>
+          <span class="nav-label">{{ menu.titulo }}</span>
+          <i class="bx bx-link-external external-icon" *ngIf="!isCheckingValidadorCupones"></i>
+        </a>
 
-       <a 
-        [routerLink]="'/main/comites/tickets'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol != '6'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bxs-group nav-icon"></i>
-        <span class="nav-label">Tickets comités</span>
-      </a>
-
-
-      <a 
-        [routerLink]="'/main/kpis'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-line-chart nav-icon"></i>
-        <span class="nav-label">KPIs</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/categorias/umbral-recurrencias'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-slider nav-icon"></i>
-        <span class="nav-label">Umbral de Recurrencias</span>
-      </a>
-      
-      <a 
-        [routerLink]="'/main/comites/admin'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-group nav-icon"></i>
-        <span class="nav-label">Comités</span>
-      </a>
-
-    </div>
-
-    <!-- Grupo: Control de versiones -->
-    <div class="nav-group">
-      <span class="nav-group-title">Control de versiones</span>
-
-      <a 
-        [routerLink]="'/main/version-control'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-git-repo-forked nav-icon"></i>
-        <span class="nav-label">Control de versiones</span>
-      </a>
-    </div>
-
-    <!-- Grupo: Gestión y Administración -->
-    <div class="nav-group" *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.idRol == '4'">
-      <span class="nav-group-title">Gestión y Admin</span>
-
-      <a 
-        [routerLink]="'/main/users'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-user nav-icon"></i>
-        <span class="nav-label">Usuarios</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/responsables'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-key nav-icon"></i>
-        <span class="nav-label">Responsables PIN</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/roles'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-shield-quarter nav-icon"></i>
-        <span class="nav-label">Roles</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/branches'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-store-alt nav-icon"></i>
-        <span class="nav-label">Sucursales</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/areas'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-sitemap nav-icon"></i>
-        <span class="nav-label">Áreas</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/categorias'" 
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: true}"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-grid-alt nav-icon"></i>
-        <span class="nav-label">Categorías</span>
-      </a>
-
-    </div>
-
-    <!-- Grupo: Operaciones y Visitas -->
-    <div class="nav-group">
-      <span class="nav-group-title">Operaciones</span>
-
-      <a 
-        [routerLink]="'/main/tareas'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-check-square nav-icon"></i>
-        <span class="nav-label">Tareas</span>
-      </a>
-      
-      <a 
-        [routerLink]="'/main/fixed-assets'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5' || usuario.id == 'pclOBh7sMdziimACOc1w' || usuario.id =='WO0CbRub7FecMua3n7BV'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-package nav-icon"></i>
-        <span class="nav-label">Activos fijos</span>
-      </a>
-
-      <a 
-        [routerLink]="'/administracion/compras'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-shopping-bag nav-icon"></i>
-        <span class="nav-label">Requisición de compra</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/comensales'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-group nav-icon"></i>
-        <span class="nav-label">Comensales</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/calendar-builder'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-calendar-plus nav-icon"></i>
-        <span class="nav-label">Registrar visita</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/branch-visit-schedule'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '4' || usuario.idRol == '2' || usuario.idRol == '7' || usuario.idRol == '5' || usuario.idRol == '1'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-calendar nav-icon"></i>
-        <span class="nav-label">Calendario de visitas</span>
-      </a>
-
-      <a 
-        [routerLink]="'/inventario/captura'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '2'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-clipboard nav-icon"></i>
-        <span class="nav-label">Inventario</span>
-      </a>
-
-      <a 
-        [routerLink]="'/cedis/recoleccion'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '6'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bxs-droplet nav-icon"></i>
-        <span class="nav-label">Recolección de aceite</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/control-aceite'" 
-        routerLinkActive="active"
-        *ngIf="usuario.controlDeAceite == true || usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-droplet nav-icon"></i>
-        <span class="nav-label">Control de aceite</span>
-      </a>
-    </div>
-
-    <!-- Grupo: Personal y Nómina -->
-    <div class="nav-group">
-      <span class="nav-group-title">Personal y Nómina</span>
-
-
-      <a 
-        [routerLink]="'/nomina/control-de-personal'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-group nav-icon"></i>
-        <span class="nav-label">Personal en sucursal</span>
-      </a>
-
-      <a 
-        [routerLink]="'/nomina/historial-del-personal'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-history nav-icon"></i>
-        <span class="nav-label">Historial del Personal</span>
-      </a>
-
-      <a 
-        [routerLink]="'/nomina/checadas'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-fingerprint nav-icon"></i>
-        <span class="nav-label">Checadas del personal</span>
-      </a>
-
-      <a 
-        [routerLink]="'/nomina/reportes'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-bar-chart-alt-2 nav-icon"></i>
-        <span class="nav-label">Reportes nómina</span>
-      </a>
-    </div>
-
-    <!-- Grupo: Planeación y Catálogos -->
-    <div class="nav-group">
-      <span class="nav-group-title">Planeación</span>
-
-      <a 
-        [routerLink]="'/planeacion/diccionario'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-book-open nav-icon"></i>
-        <span class="nav-label">Diccionario</span>
-      </a>
-
-      <a 
-        [routerLink]="'/planeacion/mermas'" 
-        routerLinkActive="active"
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-trash nav-icon"></i>
-        <span class="nav-label">Mermas</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/precios-ayc'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idArea == '1'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-dollar-circle nav-icon"></i>
-        <span class="nav-label">Precios AYC</span>
-      </a>
-
-      <a 
-        [routerLink]="'/main/diccionario-delivery'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idArea == '1'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-book-bookmark nav-icon"></i>
-        <span class="nav-label">Diccionario delivery</span>
-      </a>
-    </div>
-
-    <!-- Grupo: Cupones y Herramientas -->
-    <div class="nav-group">
-      <span class="nav-group-title">Cupones y Consumos</span>
-
-      <a 
-        [routerLink]="'/main/cupones'" 
-        routerLinkActive="active"
-        *ngIf="usuario.idRol == '1' || usuario.idRol == '5'" 
-        (click)="closemenu()" 
-        class="nav-item">
-        <i class="bx bx-purchase-tag-alt nav-icon"></i>
-        <span class="nav-label">Cupones</span>
-      </a>
-
-      <a 
-        href="javascript:void(0)" 
-        (click)="abrirValidadorCupones($event)" 
-        class="nav-item">
-        <i class="bx nav-icon" [ngClass]="isCheckingValidadorCupones ? 'bx-loader-alt bx-spin' : 'bx-check-shield'"></i>
-        <span class="nav-label">Validador cupones</span>
-        <i class="bx bx-link-external external-icon" *ngIf="!isCheckingValidadorCupones"></i>
-      </a>
-
-      <a 
-        href="javascript:void(0)" 
-        (click)="abrirValidadorConsumos($event)" 
-        class="nav-item">
-        <i class="bx nav-icon" [ngClass]="isCheckingValidadorConsumos ? 'bx-loader-alt bx-spin' : 'bx-receipt'"></i>
-        <span class="nav-label">Validador consumos</span>
-        <i class="bx bx-link-external external-icon" *ngIf="!isCheckingValidadorConsumos"></i>
-      </a>
+        <!-- Enlace especial: Validador de consumos -->
+        <a 
+          *ngIf="menu.esAccionExterna && menu.tipoAccionExterna === 'consumos'"
+          href="javascript:void(0)" 
+          (click)="abrirValidadorConsumos($event)" 
+          class="nav-item">
+          <i class="bx nav-icon" [ngClass]="isCheckingValidadorConsumos ? 'bx-loader-alt bx-spin' : 'bx-receipt'"></i>
+          <span class="nav-label">{{ menu.titulo }}</span>
+          <i class="bx bx-link-external external-icon" *ngIf="!isCheckingValidadorConsumos"></i>
+        </a>
+      </ng-container>
     </div>
 
   </div>
@@ -471,7 +156,7 @@
     </div>
 
     <!-- Si no hay usuario PIN -->
-    <div class="compact-user-bar unassigned-bar" *ngIf="!responsable && usuario.idRol !== '6'">
+    <div class="compact-user-bar unassigned-bar" *ngIf="!responsable">
       <div class="user-avatar-compact empty-avatar-compact" (click)="cambiarUsuarioPin()">
         <i class="bx bx-user-pin"></i>
       </div>
@@ -503,33 +188,35 @@
         </button>
       </div>
     </div>
+  </div>
 
-    <!-- Rol 6 o fallback de solo usuario -->
-    <div class="compact-user-bar" *ngIf="!responsable && usuario.idRol === '6'">
-      <div class="user-avatar-compact">
-        <ngx-avatars 
-          [name]="nombreCuenta" 
-          [size]="34" 
-          [bgColor]="'#0F62FE'">
-        </ngx-avatars>
+  <!-- Acción de actualizar aplicación y versión -->
+  <div class="drawer-update-bar" [class.update-bar-highlighted]="hayNuevaVersion">
+    <button
+      type="button"
+      class="btn-update-app"
+      [class.has-new-version]="hayNuevaVersion"
+      [disabled]="isUpdatingApp"
+      (click)="actualizarApp()"
+      [pTooltip]="hayNuevaVersion ? '¡Hay una versión más reciente lista para instalar!' : 'Buscar actualizaciones y recargar la aplicación'"
+      tooltipPosition="top">
+      <span class="new-version-pill" *ngIf="hayNuevaVersion && !isUpdatingApp">¡NUEVA VERSIÓN!</span>
+      <div class="btn-update-main">
+        <i
+          class="bx"
+          [ngClass]="isUpdatingApp ? 'bx-loader-alt bx-spin' : (hayNuevaVersion ? 'bx-cloud-download bx-tada' : 'bx-refresh')">
+        </i>
+        <div class="btn-update-texts">
+          <span class="btn-update-title">
+            {{ isUpdatingApp ? 'Actualizando app...' : (hayNuevaVersion ? '¡Actualizar ahora!' : 'Actualizar app') }}
+          </span>
+          <span class="btn-update-subtitle" *ngIf="hayNuevaVersion && !isUpdatingApp">
+            Versión más reciente disponible
+          </span>
+        </div>
+        <span class="update-badge-dot" *ngIf="hayNuevaVersion && !isUpdatingApp"></span>
       </div>
-
-      <div class="compact-user-info" [title]="nombreCuenta">
-        <div class="compact-user-name">{{ nombreCuenta }}</div>
-        <div class="compact-user-role">Cuenta CEDIS</div>
-      </div>
-
-      <div class="compact-actions">
-        <button 
-          type="button" 
-          class="compact-action-btn btn-logout" 
-          (click)="logout()" 
-          pTooltip="Cerrar sesión" 
-          tooltipPosition="top"
-          aria-label="Cerrar sesión">
-          <i class="bx bx-log-out"></i>
-        </button>
-      </div>
-    </div>
+    </button>
+    <div class="drawer-version">v{{ appVersion }}</div>
   </div>
 </aside>

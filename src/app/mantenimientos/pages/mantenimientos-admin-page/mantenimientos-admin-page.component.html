@@ -1,0 +1,114 @@
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header
+      subtitle="MANTENIMIENTOS PREVENTIVOS"
+      title="Gestión de Mantenimientos (Administrador)">
+    </app-page-header>
+
+    <!-- Selector de Área / Tipo de Mantenimiento por Chips -->
+    <div class="areas-chips-track mb-4" *ngIf="tabsDisponibles.length > 0">
+      <button
+        *ngFor="let tab of tabsDisponibles"
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tipoActivo === tab.id"
+        (click)="cambiarTab(tab)">
+        <i [class]="tab.icono"></i>
+        <span class="area-name">{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <!-- Barra de acciones y filtros -->
+    <div class="mantenimientos-toolbar mb-4">
+      <div class="toolbar-left">
+        <p-button
+          (onClick)="opg.toggle($event)"
+          icon="pi pi-users"
+          label="AGRUPAR POR ANALISTA"
+          styleClass="p-button-danger action-btn-custom">
+        </p-button>
+
+        <span class="user-group-badge" *ngIf="usergroup">
+          <i class="bx bxs-user"></i>
+          <span>{{ usergroup.nombre }} {{ usergroup.apellidoP | uppercase }}</span>
+          <button type="button" class="clear-user-btn" (click)="agruparPorSucursal()" title="Ver todas las sucursales">
+            <i class="bx bx-x"></i>
+          </button>
+        </span>
+      </div>
+
+      <div class="switches-toggle-group">
+        <span class="switches-title">
+          <i class="bx bx-sort-alt-2"></i> Orden:
+        </span>
+
+        <label class="toggle-pill-item" [class.is-active]="!ordenarMantenimientosFecha" (click)="ordenarMantenimientosFecha = false">
+          <span class="toggle-pill-btn">
+            <i class="bx bx-bar-chart-alt-2"></i>
+            <span>Por Avance (%)</span>
+          </span>
+        </label>
+
+        <label class="toggle-pill-item" [class.is-active]="ordenarMantenimientosFecha" (click)="ordenarMantenimientosFecha = true">
+          <span class="toggle-pill-btn">
+            <i class="bx bx-calendar"></i>
+            <span>Por Fecha</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Overlay Panel para Agrupar por Analista -->
+    <p-overlayPanel #opg>
+      <div class="d-flex flex-column justify-content-center p-3 gap-2">
+        <button class="btn p-2 btn-light text-start" (click)="agruparPorSucursal(); opg.hide()">
+          <i class="bx bx-buildings"></i>&nbsp;VER TODAS LAS SUCURSALES
+        </button>
+
+        <button *ngFor="let item of usuariosHelp" class="btn p-2 btn-light text-start" (click)="agrupar(item); opg.hide()">
+          <i class="bx bxs-user"></i>&nbsp;{{ item.nombre + ' ' + item.apellidoP | uppercase }}
+        </button>
+      </div>
+    </p-overlayPanel>
+
+    <!-- Acordeones por Tipo de Mantenimiento -->
+    @if (tipoActivo === 'TI') {
+      <div class="mt-2">
+        <app-acordeon-mantenimientos-sistemas
+          *ngIf="auxMostrarMantenimientos"
+          [mantenimientos]="mantenimientosTI"
+          [sucursales]="sucursalesMantenimeintosActivos('1')"
+          [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+          [mostrarChat]="true">
+        </app-acordeon-mantenimientos-sistemas>
+      </div>
+    } @else if (tipoActivo === 'AV') {
+      <div class="mt-2">
+        <app-acordeon-mantenimientos-audio-video
+          *ngIf="auxMostrarMantenimientos"
+          [mantenimientos]="mantenimientosAV"
+          [sucursales]="sucursalesMantenimeintosActivos('2')"
+          [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+          [mostrarChat]="true">
+        </app-acordeon-mantenimientos-audio-video>
+      </div>
+    } @else if (tipoActivo === 'MTTO') {
+      <div class="mt-2">
+        <app-acordeon-mantenimientos-mantenimiento
+          *ngIf="auxMostrarMantenimientos"
+          [mantenimientos]="mantenimientosMtto"
+          [sucursales]="sucursalesMantenimeintosActivos('4')"
+          [ordenarMantenimientosFecha]="ordenarMantenimientosFecha"
+          [mostrarChat]="true">
+        </app-acordeon-mantenimientos-mantenimiento>
+      </div>
+    }
+  </div>
+</div>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>

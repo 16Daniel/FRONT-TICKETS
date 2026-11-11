@@ -1,10 +1,37 @@
-<div class="card p-3 bg-opacity-25" (click)="detalles(sucursal)"
-  [ngClass]="{'bg-success':asignadaAlUsuario(sucursal.id),'bg-danger':!asignadaAlUsuario(sucursal.id)}">
-  <p class="m-1">{{sucursal.nombre}}</p>
-  <p class="m-1">Tickets: {{tickets.length}}&nbsp;&nbsp; {{textoMantenimiento}}:
-    {{ porcentaje$ | async }}% <span *ngIf="usuario.idArea == '1'"> - 8X8 SYS AV: {{ porcentaje$ | async }}%</span>
-  </p>
-  <p>{{usuarioSeleccionado?.nombre}} {{usuarioSeleccionado?.apellidoP}} {{usuarioSeleccionado?.apellidoM}}</p>
+<div class="branch-visit-card" (click)="detalles(sucursal)"
+  [ngClass]="asignadaAlUsuario(sucursal.id) ? 'branch-assigned' : 'branch-unassigned'">
+  <div class="branch-card-top">
+    <div class="d-flex align-items-center gap-2">
+      <span class="branch-status-dot"></span>
+      <h6 class="branch-card-name">{{ sucursal.nombre }}</h6>
+    </div>
+
+    <span class="assignment-tag">
+      {{ asignadaAlUsuario(sucursal.id) ? 'Asignada' : 'Externa' }}
+    </span>
+  </div>
+
+  <div class="branch-card-metrics">
+    <span class="metric-pill" [class.has-tickets]="tickets.length > 0">
+      <i class="bx bx-receipt"></i>
+      <span>Tickets: <strong>{{ tickets.length }}</strong></span>
+    </span>
+
+    <span class="metric-pill">
+      <i class="bx bx-wrench"></i>
+      <span>{{ textoMantenimiento }}: <strong>{{ porcentaje$ | async }}%</strong></span>
+    </span>
+
+    <span class="metric-pill" *ngIf="usuario.idArea == '1'">
+      <i class="bx bx-tv"></i>
+      <span>8X8 AV: <strong>{{ porcentaje$ | async }}%</strong></span>
+    </span>
+  </div>
+
+  <div class="branch-card-footer" *ngIf="usuarioSeleccionado">
+    <i class="bx bx-user-check"></i>
+    <span>{{ usuarioSeleccionado.nombre }} {{ usuarioSeleccionado.apellidoP }} {{ usuarioSeleccionado.apellidoM }}</span>
+  </div>
 </div>
 
 <app-modal-event-detail *ngIf="showModalBranchDetail" [showModalEventeDetail]="showModalBranchDetail"

@@ -1,0 +1,154 @@
+.branch-visit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Sucursal Asignada al Analista (#10B981 / #F0FDF4) */
+  &.branch-assigned {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    border-color: rgba(16, 185, 129, 0.28);
+
+    &::before {
+      background-color: #10b981;
+    }
+
+    .branch-status-dot {
+      background-color: #10b981;
+    }
+
+    .assignment-tag {
+      background-color: #f0fdf4;
+      color: #10b981;
+      border: 1px solid #a7f3d0;
+    }
+  }
+
+  /* Sucursal Externa / No Asignada (#EF4444 / #FFF1F2) */
+  &.branch-unassigned {
+    background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+    border-color: rgba(239, 68, 68, 0.28);
+
+    &::before {
+      background-color: #ef4444;
+    }
+
+    .branch-status-dot {
+      background-color: #ef4444;
+    }
+
+    .assignment-tag {
+      background-color: #fff1f2;
+      color: #ef4444;
+      border: 1px solid #fecdd3;
+    }
+  }
+}
+
+.branch-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.branch-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.branch-card-name {
+  margin: 0;
+  font-size: 0.925rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.assignment-tag {
+  font-size: 0.675rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+}
+
+.branch-card-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  i {
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+
+  strong {
+    color: #0f172a;
+    font-weight: 800;
+  }
+
+  &.has-tickets {
+    background-color: #fffbeb;
+    border-color: #fde68a;
+    color: #b45309;
+
+    i, strong {
+      color: #d97706;
+    }
+  }
+}
+
+.branch-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  padding-top: 0.2rem;
+  border-top: 1px dashed rgba(148, 163, 184, 0.35);
+
+  i {
+    font-size: 0.95rem;
+    color: #475569;
+  }
+}

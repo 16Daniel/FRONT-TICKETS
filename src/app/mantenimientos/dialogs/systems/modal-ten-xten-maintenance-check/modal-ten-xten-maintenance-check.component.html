@@ -1,40 +1,150 @@
-<p-dialog header="REGISTRO DE MANTENIMIENTO 10 DE 10" [(visible)]="mostrarModalMtooTI" [modal]="true" [maximizable]="true"
-    (onHide)="onHide()" [style]="{ width: '40vw' }" class="custom-dialog">
+<p-dialog
+  [modal]="true"
+  [(visible)]="mostrarModalMtooTI"
+  [style]="{ width: '56rem', maxWidth: '95vw' }"
+  [maximizable]="true"
+  (onHide)="onHide()"
+  [dismissableMask]="true"
+  styleClass="dialog-rw-modal check-maintenance-dialog"
+  [showHeader]="false">
 
-    <div class="sticky-header">
-        <h2>{{ getDate(mantenimientoActivo?.fecha) | date }}</h2>
+  <!-- Header Personalizado Rebel Wings Design System -->
+  <div class="dialog-header-custom">
+    <div class="header-title-box">
+      <div class="header-badge">
+        <i class="bx bx-server"></i>
+        <span>SISTEMAS TI</span>
+      </div>
+      <h3 class="header-main-title">Registro de Mantenimiento 10 de 10</h3>
+    </div>
+    <button
+      type="button"
+      class="btn-close-custom"
+      (click)="onHide()"
+      pTooltip="Cerrar (Esc)"
+      tooltipPosition="bottom"
+      aria-label="Cerrar modal">
+      <i class="bx bx-x"></i>
+    </button>
+  </div>
+
+  <div class="dialog-content-body">
+    <!-- Meta Banner: Fecha & Progreso -->
+    <div class="meta-banner-card">
+      <div class="banner-top-row">
+        <div class="date-info">
+          <i class="bx bx-calendar-event"></i>
+          <span class="date-label">Fecha de Mantenimiento:</span>
+          <strong class="date-value">{{ getDate(mantenimientoActivo?.fecha) | date:'fullDate' | titlecase }}</strong>
+        </div>
+
+        <div class="progress-pill-badge" [ngClass]="{
+          'status-complete': progreso === 100,
+          'status-in-progress': progreso > 0 && progreso < 100,
+          'status-empty': progreso === 0
+        }">
+          <i class="bx" [ngClass]="progreso === 100 ? 'bx-check-double' : 'bx-loader-circle'"></i>
+          <span>{{ progreso }}% Completado</span>
+        </div>
+      </div>
+
+      <div class="progress-wrapper">
         <app-progress-bar [progreso]="progreso"></app-progress-bar>
+      </div>
     </div>
 
-    <form [formGroup]="formularioDeMantenimiento" class="p-fluid">
-        <div class="p-grid p-ai-center">
-            <div *ngFor="let opcion of opcionesDeMantenimiento; let i = index" class="p-col-12 p-md-6 p-lg-2">
-                <div class="p-field-checkbox flex align-items-center">
-                    <p-checkbox [binary]="true" [formControlName]="opcion.controlName"
-                        (onChange)="onCheckboxChange($event)">
-                        ></p-checkbox>
-                    <label class="check-text ml-2" [pTooltip]="opcion.tooltip" tooltipPosition="top">{{ i + 1 }}.- {{ opcion.label }}</label>
-                </div>
+    <!-- Formulario Checklist -->
+    <form [formGroup]="formularioDeMantenimiento" class="maintenance-checklist-form">
+      <div class="section-kicker-row">
+        <span class="section-kicker">
+          <i class="bx bx-list-check"></i>
+          Puntos de Inspección Requeridos
+        </span>
+        <span class="section-counter-tag">
+          {{ obtenerCompletadas() }} de {{ opcionesDeMantenimiento.length }} revisados
+        </span>
+      </div>
+
+      <!-- Grid de Tarjetas Interactivas de Check -->
+      <div class="checklist-grid">
+        <div
+          *ngFor="let opcion of opcionesDeMantenimiento; let i = index"
+          class="check-item-card"
+          [class.is-checked]="formularioDeMantenimiento.get(opcion.controlName)?.value"
+          (click)="toggleCheckbox(opcion.controlName)">
+
+          <div class="check-item-leading">
+            <span class="item-index-badge">#{{ i + 1 }}</span>
+            <div class="checkbox-container" (click)="$event.stopPropagation()">
+              <p-checkbox
+                [binary]="true"
+                [formControlName]="opcion.controlName"
+                (onChange)="onCheckboxChange($event)">
+              </p-checkbox>
             </div>
+          </div>
+
+          <div class="check-item-content">
+            <span class="check-item-title">{{ opcion.label }}</span>
+            <span class="check-item-tooltip" *ngIf="opcion.tooltip">
+              <i class="bx bx-info-circle"></i>
+              {{ opcion.tooltip }}
+            </span>
+          </div>
+
+          <div class="check-item-trailing">
+            <span class="status-indicator">
+              <i class="bx" [ngClass]="formularioDeMantenimiento.get(opcion.controlName)?.value ? 'bx-check-circle' : 'bx-circle'"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Observaciones -->
+      <div class="observations-card mt-3">
+        <div class="obs-card-header">
+          <i class="bx bx-edit-alt"></i>
+          <label for="observaciones-ti" class="obs-title">Observaciones y Notas del Mantenimiento</label>
+          <span class="required-indicator">* Obligatorio</span>
         </div>
 
-        <div class="p-field p-col-12 mt-3">
-            <label for="observaciones" class="block mb-2">Observaciones</label>
-            <textarea id="observaciones" formControlName="observaciones" pInputTextarea rows="5" class="w-full"
-                [ngClass]="{'p-invalid': formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched}"></textarea>
-            <small
-                *ngIf="formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched"
-                class="p-error">
-                Campo requerido.
-            </small>
+        <textarea
+          id="observaciones-ti"
+          formControlName="observaciones"
+          rows="4"
+          class="rw-textarea"
+          placeholder="Describa el estado general, incidencias encontradas o notas relevantes..."
+          [class.is-invalid]="formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched">
+        </textarea>
+
+        <div
+          *ngIf="formularioDeMantenimiento.get('observaciones')?.invalid && formularioDeMantenimiento.get('observaciones')?.touched"
+          class="obs-error-message">
+          <i class="bx bx-error-circle"></i>
+          <span>Las observaciones son requeridas para finalizar el registro.</span>
         </div>
+      </div>
     </form>
+  </div>
 
+  <!-- Footer con Botones Homologados Design System -->
+  <div class="dialog-footer-custom">
+    <button
+      type="button"
+      class="btn-rw-neutral"
+      (click)="onHide()"
+      [disabled]="guardando">
+      <i class="bx bx-x"></i>
+      <span>Cancelar</span>
+    </button>
 
-    <p-footer class="footer-buttons">
-        <div class="d-flex justify-content-end mt-3">
-            <button class="btn bg-p-b p-3" (click)="enviar()"><i class='bx bx-send'></i> ENVIAR</button>
-        </div>
-    </p-footer>
-
+    <button
+      type="button"
+      class="btn-rw-primary"
+      (click)="enviar()"
+      [disabled]="guardando">
+      <i class="bx" [ngClass]="guardando ? 'bx-loader-alt bx-spin' : 'bx-send'"></i>
+      <span>{{ guardando ? 'Guardando...' : 'Finalizar y Guardar' }}</span>
+    </button>
+  </div>
 </p-dialog>

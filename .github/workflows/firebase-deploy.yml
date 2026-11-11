@@ -1,0 +1,54 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+      - feature/dev
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    name: Build & Deploy to Firebase Hosting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm install --legacy-peer-deps
+
+      - name: Compilar aplicación Angular para Producción (main)
+        if: github.ref == 'refs/heads/main'
+        run: npm run build -- --configuration production
+
+      - name: Compilar aplicación Angular para Desarrollo (feature/dev)
+        if: github.ref == 'refs/heads/feature/dev'
+        run: npm run build -- --configuration development
+
+      - name: Desplegar en Producción (rw-rebelup)
+        if: github.ref == 'refs/heads/main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RW_REBELUP }}
+          channelId: live
+          projectId: rw-rebelup
+          target: prod
+
+      - name: Desplegar en Desarrollo (rw-rebelup-desarrollo)
+        if: github.ref == 'refs/heads/feature/dev'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RW_REBELUP }}
+          channelId: live
+          projectId: rw-rebelup
+          target: dev

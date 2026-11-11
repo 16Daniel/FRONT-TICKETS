@@ -122,7 +122,7 @@ export class SucursalesTabsComponent implements OnDestroy, OnInit {
       .getByBranchId(idSucursal)
       .subscribe({
         next: (data) => {
-          console.log(data)
+          // console.log(data)
           this.tickets = this.ordenarTickets(data);
           this.todosLosTickets = [...this.tickets];
 

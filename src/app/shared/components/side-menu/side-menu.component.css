@@ -57,6 +57,7 @@
 }
 
 .nav-toggle-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -69,6 +70,24 @@
   font-size: 24px;
   cursor: pointer;
   transition: var(--erp-transition);
+}
+
+.nav-toggle-btn.has-sw-update {
+  border-color: rgba(211, 21, 42, 0.45);
+  background-color: var(--erp-color-primary-light);
+  color: var(--erp-color-primary);
+}
+
+.nav-toggle-update-dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #d3152a;
+  border: 2px solid #ffffff;
+  animation: pulseUpdateGlow 1.6s infinite;
 }
 
 .nav-toggle-btn:hover {
@@ -181,6 +200,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.drawer-logo {
+  height: 44px;
+  width: auto;
+  max-width: 175px;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-icon {
@@ -363,6 +390,174 @@
   flex-shrink: 0;
 }
 
+.drawer-update-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px 10px;
+  background-color: var(--erp-bg-card);
+}
+
+.drawer-update-bar.update-bar-highlighted {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 12px 10px 10px;
+}
+
+.btn-update-app {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  color: var(--erp-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--erp-transition);
+}
+
+.btn-update-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-update-texts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.btn-update-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btn-update-subtitle {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.btn-update-app i {
+  font-size: 16px;
+  color: var(--erp-color-primary);
+  flex-shrink: 0;
+}
+
+.btn-update-app:hover:not(:disabled) {
+  background-color: var(--erp-color-primary-light);
+  border-color: rgba(211, 21, 42, 0.28);
+  color: var(--erp-color-primary);
+}
+
+.btn-update-app.has-new-version {
+  padding: 12px 12px 10px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #d3152a 0%, #b91c1c 100%);
+  border: 1.5px solid #fdb813;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(211, 21, 42, 0.35);
+  animation: pulseUpdateButton 1.8s infinite ease-in-out;
+}
+
+.btn-update-app.has-new-version:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  border-color: #fdb813;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-update-app.has-new-version i {
+  font-size: 22px;
+  color: #fdb813;
+}
+
+.btn-update-app.has-new-version .btn-update-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+
+.btn-update-app.has-new-version .btn-update-main {
+  justify-content: flex-start;
+}
+
+.new-version-pill {
+  position: absolute;
+  top: -9px;
+  right: 10px;
+  background-color: #fdb813;
+  color: #1e1e24;
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  text-transform: uppercase;
+}
+
+.btn-update-app:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.update-badge-dot {
+  margin-left: auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #fdb813;
+  box-shadow: 0 0 0 4px rgba(253, 184, 19, 0.28);
+  flex-shrink: 0;
+}
+
+@keyframes pulseUpdateButton {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(211, 21, 42, 0.32), 0 0 0 0 rgba(211, 21, 42, 0.45);
+  }
+  50% {
+    box-shadow: 0 8px 22px rgba(211, 21, 42, 0.48), 0 0 0 5px rgba(211, 21, 42, 0);
+  }
+}
+
+@keyframes pulseUpdateGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(211, 21, 42, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(211, 21, 42, 0);
+  }
+}
+
+.drawer-version {
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--erp-text-muted);
+  padding: 0 2px;
+}
+
+.drawer-update-bar.update-bar-highlighted .drawer-version {
+  text-align: center;
+}
+
 .compact-user-bar {
   display: flex;
   align-items: center;
@@ -499,12 +694,35 @@
 /* ==========================================================================
    Responsive Adjustments
    ========================================================================== */
+@media (max-width: 900px) {
+  .navbar-center {
+    position: static;
+    left: auto;
+    transform: none;
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    pointer-events: auto;
+  }
+
+  .brand-container {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .branch-badge {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .erp-navbar {
     padding: 0 10px;
+    gap: 8px;
   }
   
   .navbar-left {
+    flex-shrink: 0;
     gap: 8px;
   }
   
@@ -521,16 +739,13 @@
   }
   
   .branch-badge {
-    font-size: 13px;
+    font-size: 12.5px;
     padding: 4px 12px;
     max-width: 100%;
   }
   
-  .navbar-center {
-    max-width: 55%;
-  }
-  
   .navbar-right {
-    gap: 8px;
+    flex-shrink: 0;
+    gap: 6px;
   }
 }

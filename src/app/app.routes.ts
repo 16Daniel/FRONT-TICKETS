@@ -1,25 +1,20 @@
 import { Routes } from '@angular/router';
-import { ResponsableGuard } from './shared/guards/responsable.guard';
 import { AuthGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/main/home-a',
+    redirectTo: '/main/home-admin',
     pathMatch: 'full',
   },
   {
     path: 'main',
     loadComponent: () => import('./shared/layout/main/main.component'),
-    canActivate: [ResponsableGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
         loadChildren: () => import('./tickets/tickets.routes')
-      },
-      {
-        path: '',
-        loadChildren: () => import('./versiones/versiones.routes')
       },
       {
         path: '',
@@ -53,7 +48,7 @@ export const routes: Routes = [
         path: '',
         loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_MAIN_ROUTES),
       },
-       {
+      {
         path: '',
         loadChildren: () => import('./delivery/delivery.routes')
       },
@@ -74,30 +69,35 @@ export const routes: Routes = [
         loadChildren: () => import('./comites/comites.routes'),
       },
       {
+        path: 'sin-acceso',
+        title: 'Acceso Restringido',
+        loadComponent: () => import('./shared/pages/sin-acceso-page/sin-acceso-page.component'),
+      },
+      {
         path: '',
-        redirectTo: '/main/home-a',
+        redirectTo: '/main/home-admin',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    canActivate: [AuthGuard, ResponsableGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./nomina/nomina.routes')
   },
   {
     path: '',
-    canActivate: [AuthGuard, ResponsableGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./activos-fijos/activos-fijos.routes').then(m => m.ACTIVOS_FIJOS_ROOT_ROUTES),
   },
   {
     path: '',
-    canActivate: [AuthGuard, ResponsableGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_ROOT_ROUTES),
   },
   {
     path: '',
-    canActivate: [AuthGuard, ResponsableGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./pagos/pagos.routes')
   },
   {
@@ -116,6 +116,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/main/home-a',
+    redirectTo: '/main/home-admin',
   },
 ];

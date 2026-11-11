@@ -75,40 +75,47 @@ export default class ModalEventDetailComponent implements OnInit {
   async ngOnInit() {
     this.obtenerTickets();
 
-    const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
-    await servicio.getMantenimientosPorSucursalYFecha([this.sucursal.id], this.fecha).subscribe((result: any) => {
-      let data = result.filter((element: any) => element.length > 0);
-      this.mantenimientosDelDia = [];
-      for (let itemdata of data) {
-        for (let item of itemdata) {
-          this.mantenimientosDelDia.push(item);
+    const idSucursal = this.sucursal?.id ? String(this.sucursal.id) : null;
+    if (idSucursal && this.fecha) {
+      if (this.usuarioSeleccionado?.idArea) {
+        const servicio = this.mantenimientoFactory.getService(this.usuarioSeleccionado.idArea);
+        if (servicio) {
+          servicio.getMantenimientosPorSucursalYFecha([idSucursal], this.fecha).subscribe((result: any) => {
+            let data = (result || []).filter((element: any) => element && element.length > 0);
+            this.mantenimientosDelDia = [];
+            for (let itemdata of data) {
+              for (let item of itemdata) {
+                this.mantenimientosDelDia.push(item);
+              }
+            }
+
+            this.mantenimientosDelDia = this.mantenimientosDelDia.map(x => {
+              x.fecha = this.datesHelper.getDate(x.fecha);
+              return x;
+            });
+
+            this.cdr.markForCheck();
+          });
         }
       }
 
-      this.mantenimientosDelDia = this.mantenimientosDelDia.map(x => {
-        x.fecha = this.datesHelper.getDate(x.fecha);
-        return x;
-      });
-
-      this.cdr.detectChanges();
-    });
-
-    await this.maintenanceAvService.getMantenimientosPorSucursalYFecha([this.sucursal.id], this.fecha).subscribe((result: any) => {
-      let data = result.filter((element: any) => element.length > 0);
-      this.mantenimientosDelDiaAV = [];
-      for (let itemdata of data) {
-        for (let item of itemdata) {
-          this.mantenimientosDelDiaAV.push(item);
+      this.maintenanceAvService.getMantenimientosPorSucursalYFecha([idSucursal], this.fecha).subscribe((result: any) => {
+        let data = (result || []).filter((element: any) => element && element.length > 0);
+        this.mantenimientosDelDiaAV = [];
+        for (let itemdata of data) {
+          for (let item of itemdata) {
+            this.mantenimientosDelDiaAV.push(item);
+          }
         }
-      }
 
-      this.mantenimientosDelDiaAV = this.mantenimientosDelDiaAV.map(x => {
-        x.fecha = this.datesHelper.getDate(x.fecha);
-        return x;
+        this.mantenimientosDelDiaAV = this.mantenimientosDelDiaAV.map(x => {
+          x.fecha = this.datesHelper.getDate(x.fecha);
+          return x;
+        });
+
+        this.cdr.markForCheck();
       });
-
-      this.cdr.detectChanges();
-    });
+    }
   }
 
   onHide = () => this.closeEvent.emit();
@@ -128,13 +135,17 @@ export default class ModalEventDetailComponent implements OnInit {
     this.loading = true;
 
     try {
-      const ticketsAsignados = await this.ticketsService.getByIds(this.sucursal.idsTickets);
+      const idsTickets = this.sucursal?.idsTickets || [];
+      const ticketsAsignados = idsTickets.length > 0 ? await this.ticketsService.getByIds(idsTickets) : [];
 
-      const ticketsExtrasFinzalizadosHoy = await this.ticketsService.getFinalizedTicketsByEndDate(
-        this.fecha,
-        this.usuarioSeleccionado.idArea,
-        this.sucursal.id
-      );
+      let ticketsExtrasFinzalizadosHoy: Ticket[] = [];
+      if (this.fecha && this.usuarioSeleccionado?.idArea && this.sucursal?.id) {
+        ticketsExtrasFinzalizadosHoy = await this.ticketsService.getFinalizedTicketsByEndDate(
+          this.fecha,
+          this.usuarioSeleccionado.idArea,
+          this.sucursal.id
+        );
+      }
 
       const idsExistentes = new Set(ticketsAsignados.map(t => t.id));
 
@@ -150,7 +161,7 @@ export default class ModalEventDetailComponent implements OnInit {
       console.error('Error al obtener tickets:', error);
     } finally {
       this.loading = false;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }
   }
 

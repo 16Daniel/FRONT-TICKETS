@@ -33,49 +33,74 @@ import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interfac
   styleUrl: './modal-ten-xten-maintenance-check.component.scss',
 })
 export class ModalTenXtenMaintenanceCheckComponent {
-  @Input() mostrarModalMtooTI: boolean = false;
-  @Input() mantenimientoActivo: MantenimientoSys | null = null;
+  private _mostrarModalMtooTI: boolean = false;
+  @Input() set mostrarModalMtooTI(val: boolean) {
+    this._mostrarModalMtooTI = val;
+    if (val) {
+      this.cargarDatos();
+    }
+  }
+  get mostrarModalMtooTI(): boolean {
+    return this._mostrarModalMtooTI;
+  }
+  @Output() mostrarModalMtooTIChange = new EventEmitter<boolean>();
+
+  private _mantenimientoActivo: MantenimientoSys | null = null;
+  @Input() set mantenimientoActivo(val: MantenimientoSys | null) {
+    this._mantenimientoActivo = val;
+    if (this.mostrarModalMtooTI) {
+      this.cargarDatos();
+    }
+  }
+  get mantenimientoActivo(): MantenimientoSys | null {
+    return this._mantenimientoActivo;
+  }
   @Output() closeEvent = new EventEmitter<boolean>();
 
   progreso: number = 0;
-  mantenimientos: MantenimientoSys[] = [];
+  guardando: boolean = false;
   formularioDeMantenimiento: FormGroup | any;
+
   opcionesDeMantenimiento = [
-    { label: 'MANTENIMIENTO CAJA', controlName: 'mantenimientoCaja', tooltip: 'AREA Y CABLEADO DE CAJA ACOMODADOS Y MTTO DE PC' },
+    {
+      label: 'MANTENIMIENTO CAJA',
+      controlName: 'mantenimientoCaja',
+      tooltip: 'Área y cableado de caja acomodados y mantenimiento de PC'
+    },
     {
       label: 'MANTENIMIENTO DE IMPRESORAS',
       controlName: 'mantenimientoImpresoras',
-      tooltip: 'IMPRESORAS FUNCIONANDO CORRECTAMENTE Y EN BUEN ESTADO',
+      tooltip: 'Impresoras funcionando correctamente y en buen estado',
     },
     {
       label: 'MANTENIMIENTO DE RACK',
       controlName: 'mantenimientoRack',
-      tooltip: 'AREA Y CABLEADO DE SISTEMAS EN RACK ACOMODADOS',
+      tooltip: 'Área y cableado de sistemas en rack acomodados',
     },
     {
-      label: 'MANTENIMIENTO DE PUNTOS DE VENTA / TABLETAS',
+      label: 'MANTENIMIENTO DE PDV / TABLETAS',
       controlName: 'mantenimientoPuntosVentaTabletas',
-      tooltip: 'AREA Y CABLEADO DE PDV ACOMODADOS  / NUMERO DE TABLETAS COMPLETAS Y EN BUEN ESTADO',
+      tooltip: 'Área y cableado de PDV acomodados / tabletas completas y en buen estado',
     },
     {
       label: 'MANTENIMIENTO DE INTERNET',
       controlName: 'mantenimientoInternet',
-      tooltip: 'GARANTIZAR 2 INTERNET ESTABLES Y NOMBRES DE RED CORRECTOS',
+      tooltip: 'Garantizar 2 enlaces estables y nombres de red correctos',
     },
     {
       label: 'MANTENIMIENTO DE CCTV',
       controlName: 'mantenimientoCCTV',
-      tooltip: 'AREA Y CABLEADO DE CCTV ACOMODADOS CON CAMARAS EN LINEA',
+      tooltip: 'Área y cableado de CCTV acomodados con cámaras en línea',
     },
     {
-      label: 'MANTENIMIENTO DE NO BRAKES',
+      label: 'MANTENIMIENTO DE NO-BREAKS',
       controlName: 'mantenimientoNoBrakes',
-      tooltip: 'GARANTIZAR QUE LOS EQUIPOS TENGAN NO BREAK Y ESTEN FUNCIONANDO',
+      tooltip: 'Garantizar que los equipos cuenten con No-Break y estén funcionando',
     },
     {
       label: 'MANTENIMIENTO TIEMPOS EN COCINA',
       controlName: 'mantenimientoTiemposCocina',
-      tooltip: 'AREA Y CABLEADO DE TIEMPOS EN COCINA ACOMODADOS Y GARANTIZAR FUNCIONAMIENTO',
+      tooltip: 'Área y cableado de tiempos en cocina acomodados y funcionamiento verificado',
     },
   ];
 
@@ -100,31 +125,73 @@ export class ModalTenXtenMaintenanceCheckComponent {
     });
   }
 
+  cargarDatos() {
+    if (!this.formularioDeMantenimiento) {
+      this.crearFormulario();
+    }
+    if (this.mantenimientoActivo) {
+      this.opcionesDeMantenimiento.forEach((opcion) => {
+        const val = (this.mantenimientoActivo as any)?.[opcion.controlName] ?? false;
+        this.formularioDeMantenimiento.get(opcion.controlName)?.setValue(!!val);
+      });
+      this.formularioDeMantenimiento.get('observaciones')?.setValue(this.mantenimientoActivo.observaciones || '');
+      this.onCheckboxChange();
+    } else {
+      this.formularioDeMantenimiento.reset();
+      this.progreso = 0;
+    }
+  }
+
+  toggleCheckbox(controlName: string) {
+    const ctrl = this.formularioDeMantenimiento.get(controlName);
+    if (ctrl) {
+      ctrl.setValue(!ctrl.value);
+      this.onCheckboxChange();
+    }
+  }
+
+  obtenerCompletadas(): number {
+    if (!this.formularioDeMantenimiento) return 0;
+    return this.opcionesDeMantenimiento.filter(
+      (opc) => this.formularioDeMantenimiento.get(opc.controlName)?.value
+    ).length;
+  }
+
   async enviar() {
     if (this.formularioDeMantenimiento.invalid) {
       this.formularioDeMantenimiento.markAllAsTouched();
-      this.showMessage('warn', 'Advertencia', 'Campos requeridos incompletos');
+      this.showMessage('warn', 'Advertencia', 'Por favor complete las observaciones requeridas.');
       return;
     }
 
-    const mantenimiento: MantenimientoSys = {
-      ...this.formularioDeMantenimiento.value,
-      id: this.mantenimientoActivo?.id,
-      participantesChat: this.mantenimientoActivo?.participantesChat,
-      idSucursal: this.mantenimientoActivo?.idSucursal,
-      idUsuarioSoporte: this.mantenimientoActivo?.idUsuarioSoporte,
-      fecha: this.mantenimientoActivo?.fecha,
-      fechaFin: new Date,
-      estatus: false,
-    };
+    this.guardando = true;
+    try {
+      const mantenimiento: MantenimientoSys = {
+        ...this.formularioDeMantenimiento.value,
+        id: this.mantenimientoActivo?.id,
+        participantesChat: this.mantenimientoActivo?.participantesChat,
+        idSucursal: this.mantenimientoActivo?.idSucursal,
+        idUsuarioSoporte: this.mantenimientoActivo?.idUsuarioSoporte,
+        fecha: this.mantenimientoActivo?.fecha,
+        fechaFin: new Date(),
+        estatus: false,
+      };
 
-    await this.mantenimientosSistemasService.update(mantenimiento.id, mantenimiento);
-    // this.showMessage('success', 'Success', 'ENVIADO CORRECTAMENTE');
-    this.closeEvent.emit(false); // Cerrar modal
+      await this.mantenimientosSistemasService.update(mantenimiento.id, mantenimiento);
+      this.showMessage('success', 'Éxito', 'Registro de mantenimiento guardado correctamente');
+      this.closeEvent.emit(false);
+    } catch (error) {
+      console.error(error);
+      this.showMessage('error', 'Error', 'Ocurrió un error al guardar el registro.');
+    } finally {
+      this.guardando = false;
+    }
   }
 
   onHide() {
-    this.closeEvent.emit(); // Cerrar modal
+    this.mostrarModalMtooTI = false;
+    this.mostrarModalMtooTIChange.emit(false);
+    this.closeEvent.emit(false);
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -133,18 +200,19 @@ export class ModalTenXtenMaintenanceCheckComponent {
 
   getDate(tsmp: Timestamp | any): Date {
     try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
+      if (!tsmp) return new Date();
+      if (typeof tsmp.toDate === 'function') {
+        return tsmp.toDate();
+      }
+      return new Date(tsmp);
     } catch {
-      return tsmp;
+      return tsmp || new Date();
     }
   }
 
   onCheckboxChange(event?: any) {
     let completadas = 0;
-    this.opcionesDeMantenimiento.forEach(opcion => {
+    this.opcionesDeMantenimiento.forEach((opcion) => {
       if (this.formularioDeMantenimiento.get(opcion.controlName)?.value) {
         completadas++;
       }

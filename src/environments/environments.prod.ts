@@ -1,17 +1,20 @@
+import { APP_VERSION } from './version';
+
 export const environment = {
     production: true,
+    version: APP_VERSION,
     whatsappApiConfig: {
     instancia: 'instance193874',
     token: 'mc4aconssqvu8m89'
   },
     firebaseConfig: {
-        apiKey: 'AIzaSyCavGJWR7uF85WbuaeA4iOB_Ecb0zL45P4',
-        authDomain: 'tickets-23dc4.firebaseapp.com',
-        projectId: 'tickets-23dc4',
-        storageBucket: 'tickets-23dc4.firebasestorage.app',
-        messagingSenderId: '40556074271',
-        appId: '1:40556074271:web:6974d3841f643262fa4c2a',
-        measurementId: 'G-5VSPY22GN7',
+        apiKey: "AIzaSyCyE9Q6lYPOCKgVMAcS4E65h8QsxSihAGU",
+        authDomain: "rw-rebelup.firebaseapp.com",
+        projectId: "rw-rebelup",
+        storageBucket: "rw-rebelup.firebasestorage.app",
+        messagingSenderId: "710176816572",
+        appId: "1:710176816572:web:01b6d611c62f47ce917fb9",
+        measurementId: "G-D7NZGL0TT6"
     },
     ticketsApiConfig: {
         url: "https://operamx.no-ip.net/back/api_tickets/api/",

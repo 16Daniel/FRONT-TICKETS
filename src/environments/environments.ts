@@ -1,5 +1,8 @@
+import { APP_VERSION } from './version';
+
 export const environment = {
   production: false,
+  version: APP_VERSION,
   whatsappApiConfig: {
     instancia: 'instance193874',
     token: 'mc4aconssqvu8m89'
