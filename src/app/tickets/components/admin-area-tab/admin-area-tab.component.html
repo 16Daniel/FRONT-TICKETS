@@ -23,6 +23,7 @@
   <div class="actions-toolbar-row mb-4">
     <div class="actions-buttons-container">
       <p-button 
+        class="btn-crear-wrap"
         label="CREAR TICKET" 
         icon="pi pi-plus" 
         styleClass="p-button-primary action-btn-custom"
@@ -30,17 +31,19 @@
       </p-button>
 
       <p-button 
+        class="btn-tool-wrap"
         (onClick)="opg.toggle($event)" 
         icon="pi pi-users" 
         label="AGRUPAR" 
-        styleClass="p-button-danger action-btn-custom">
+        styleClass="p-button-danger action-btn-custom btn-icon-mobile">
       </p-button>
 
       <p-button 
+        class="btn-tool-wrap"
         (onClick)="opf.toggle($event)" 
         icon="pi pi-filter" 
         label="FILTROS" 
-        styleClass="p-button-danger action-btn-custom">
+        styleClass="p-button-danger action-btn-custom btn-icon-mobile">
       </p-button>
 
       <!-- <p-button 

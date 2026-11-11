@@ -247,12 +247,43 @@ $rw-canvas: #f4f6fa;
     flex-direction: column;
     align-items: flex-start;
   }
+
   .actions-buttons-container {
     width: 100%;
-    
-    ::ng-deep .action-btn-custom {
-      flex: 1 1 calc(50% - 0.6rem);
-      justify-content: center;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+
+    .btn-crear-wrap {
+      flex: 1 1 auto;
+      display: flex;
+
+      ::ng-deep .action-btn-custom {
+        width: 100%;
+        height: 42px !important;
+        justify-content: center;
+      }
+    }
+
+    .btn-tool-wrap {
+      flex: 0 0 auto;
+      display: flex;
+    }
+
+    ::ng-deep .btn-icon-mobile {
+      width: 42px !important;
+      height: 42px !important;
+      padding: 0 !important;
+      justify-content: center !important;
+
+      .p-button-label {
+        display: none !important;
+      }
+
+      .p-button-icon,
+      .p-button-icon-left {
+        margin: 0 !important;
+        font-size: 1rem !important;
+      }
     }
   }
 }
