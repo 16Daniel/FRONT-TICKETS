@@ -33,6 +33,6 @@ export const environment = {
   idAdministracion: "QvSLmxLZjJnaGPPsA7zi",
   idServicio: "hHqyRWm306Zmb5XADbbR",
   idDireccion: "Mcaolq7LySn81CSX4n5L",
-  vapidKey: "BFr9h9mfjYS4KTqa892pFQequh5gGW194V29ghqnrmYedcPBodchZbdtUJbCGnna4SDbZ0p9g2eLlxQfTl67rLA",
+  vapidKey: "BDobr0ojWqv1qxuIqgdCj9fDwNu-ysE-WSEuebRn1o7wR-GMscpxrQxTntAOeueyGELpwdFU7GC7pDEbLN_wMdA",
   grupoWAGerencias: "120363412785054674@g.us"
 };
