@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
@@ -19,6 +20,7 @@ import { ModalBranchRatingComponent } from '../../../tickets/components/modal-br
 import { TablaMantenimientosSistemasComponent } from '../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 import { TablaMantenimientosMantenimientoComponent } from '../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
+import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -30,6 +32,7 @@ import { MantenimientosSistemasService } from '../../services/mantenimientos-sis
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { UsersService } from '../../../usuarios/services/users.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { OpcionTabMantenimiento, TipoMantenimientoTab } from '../mantenimientos-admin-page/mantenimientos-admin-page.component';
 
@@ -42,6 +45,7 @@ import { OpcionTabMantenimiento, TipoMantenimientoTab } from '../mantenimientos-
     ButtonModule,
     ConfirmDialogModule,
     ToastModule,
+    TooltipModule,
     PageHeaderComponent,
     ModalTenXtenMaintenanceCheckComponent,
     ModalTenXtenMaintenanceHistoryComponent,
@@ -53,6 +57,7 @@ import { OpcionTabMantenimiento, TipoMantenimientoTab } from '../mantenimientos-
     TablaMantenimientosSistemasComponent,
     TablaMantenimientosAudioVideoComponent,
     TablaMantenimientosMantenimientoComponent,
+    TpvsDevicesTableComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './mantenimientos-sucursal-page.component.html',
@@ -88,6 +93,7 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
   mostrarModalHistorialMantenimientosAV = false;
   mostrarModalHistorialMantenimientosMtto = false;
   mostrarModalRating = false;
+  mostrarTPVs = false;
 
   private unsubscribeIT?: () => void;
   private unsubscribeAV?: () => void;
@@ -100,6 +106,7 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
     private maintenanceAvService: MaintenanceAvService,
     private maintenanceMtooService: MaintenanceMtooService,
     private usersService: UsersService,
+    private branchesService: BranchesService,
     private datesHelper: DatesHelperService,
     private confirmationService: ConfirmationService
   ) {
@@ -108,9 +115,21 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
   }
 
   ngOnInit(): void {
+    this.cargarSucursalActualizada();
     this.obtenerUsuariosHelp();
     this.obtenerMantenimientosActivos();
     this.obtenerUltimosMantenimientosSucursal();
+  }
+
+  private cargarSucursalActualizada(): void {
+    if (!this.sucursal?.id) return;
+    const sub = this.branchesService.getById(this.sucursal.id).subscribe((sucursal) => {
+      if (sucursal) {
+        this.sucursal = sucursal;
+        this.cdr.detectChanges();
+      }
+    });
+    this.subs.push(sub);
   }
 
   ngOnDestroy(): void {

@@ -33,9 +33,9 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
-import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
-import { Categoria } from '../../../categorias/models/categoria.model';
-import { CategoriesService } from '../../../categorias/services/categories.service';
+import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { Categoria } from '../../models/categoria.model';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-requester-tickets-list',

@@ -1,7 +1,7 @@
-<div class="ticket-card p-4 m-0 h-100" style="overflow-y: auto;" *ngIf="ticket">
-  <div class="d-flex justify-content-between align-items-start mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+<div class="ticket-card p-3 p-md-4 m-0 h-100" style="overflow-y: auto;" *ngIf="ticket">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3 mb-md-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
     <div>
-      <h3 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 mb-1" style="font-size: 1.5rem;">
+      <h3 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 mb-1 folio-title">
         <i class="bx bx-hash text-muted"></i>{{ ticket.folio }}
       </h3>
       <span class="text-muted" style="font-size: 0.85rem;">Detalles generales de la solicitud</span>

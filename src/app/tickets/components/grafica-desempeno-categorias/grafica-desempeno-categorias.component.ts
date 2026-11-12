@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { UmbralRadarChartComponent } from '../umbral-radar-chart/umbral-radar-chart.component';
 import { Ticket } from '../../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { KpiFiltro, KpiRadarService, KPI_FILTRO_TITULOS } from '../../services/kpi-radar.service';
 import { TarjetasMedidoresKpisComponent } from '../tarjetas-medidores-kpis/tarjetas-medidores-kpis.component';
 import { ListaTicketsKpisComponent } from '../lista-tickets-kpis/lista-tickets-kpis.component';

@@ -30,8 +30,8 @@ import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
-import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
-import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 
 @Component({
   selector: 'app-admin-area-tab',

@@ -10,14 +10,10 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { NivelesAudioComponent } from '../../../mantenimientos/components/niveles-audio/niveles-audio.component';
-import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { TablaTvsBocinasComponent } from "../../../mantenimientos/components/tabla-tvs-bocinas/tabla-tvs-bocinas.component";
-import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-acordeon-tickets-por-sucursal',
@@ -30,11 +26,7 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     BadgeModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TooltipModule,
-    TpvsDevicesTableComponent,
-    GraficaTickets30DiasComponent,
-    TablaTvsBocinasComponent,
-    NivelesAudioComponent
+    TooltipModule
   ],
   templateUrl: './acordeon-tickets-por-sucursal.component.html',
   styleUrl: './acordeon-tickets-por-sucursal.component.scss',
@@ -50,9 +42,6 @@ export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
   usuariosHelp: Usuario[] = [];
   usuario: Usuario | any;
   ticketSeleccionado: Ticket | undefined;
-  mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
-  mostrarSistemasMap: { [idSucursal: string]: boolean } = {};
-  mostrarAudioVideoMap: { [idSucursal: string]: boolean } = {};
 
   constructor(
     private firebaseStorage: FirebaseStorageService,
@@ -61,11 +50,6 @@ export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursales.forEach(s => {
-      this.mostrarRadiografiaMap[s.id] = false;
-      this.mostrarSistemasMap[s.id] = false;
-      this.mostrarAudioVideoMap[s.id] = false;
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -102,12 +86,6 @@ export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
     }
 
     return idr;
-  }
-
-  get mostrarTickets() {
-    return (id: string): boolean => {
-      return !this.mostrarRadiografiaMap[id];
-    };
   }
 
   obtenerColorTexto(value: number): string {

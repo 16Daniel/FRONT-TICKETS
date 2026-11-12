@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { collection, Firestore, getDocs, query, where, Timestamp } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Ticket } from '../../tickets/interfaces/ticket.model';
+import { Ticket } from '../interfaces/ticket.model';
 
 export interface UmbralFiltros {
   fechaInicio?: Date | null;

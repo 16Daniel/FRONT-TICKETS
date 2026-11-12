@@ -5,9 +5,9 @@ import { TicketsTabComponent } from '../../components/tickets-tab/tickets-tab.co
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { TotalesSlaDashboard } from '../../components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
-import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
-import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 

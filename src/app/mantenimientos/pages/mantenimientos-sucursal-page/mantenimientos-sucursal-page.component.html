@@ -38,6 +38,24 @@
             (click)="verificarSiHayMantenimiento('1')">
           </p-button>
 
+          <!-- Vistas: TPVs -->
+          <div class="switches-toggle-group ms-md-auto">
+            <span class="switches-title">
+              <i class="bx bx-wrench"></i> Vistas:
+            </span>
+
+            <label class="toggle-pill-item" [class.is-active]="mostrarTPVs" pTooltip="Mostrar TPVs y Tabletas" tooltipPosition="top">
+              <input
+                type="checkbox"
+                class="toggle-checkbox"
+                [(ngModel)]="mostrarTPVs">
+              <span class="toggle-pill-btn">
+                <i class="bx bx-devices"></i>
+                <span>TPVs</span>
+              </span>
+            </label>
+          </div>
+
           <!-- <p-button
             label="EVALUACIÓN GENERAL"
             icon="pi pi-star"
@@ -80,15 +98,21 @@
       </div>
     </div>
 
-    <!-- Tabla de últimos mantenimientos de la sucursal -->
-    <div class="bg-white rounded-3 p-3 shadow-sm">
+    <!-- Tabla de últimos mantenimientos / TPVs de la sucursal -->
+    <div class="maintenance-content-card p-3 p-md-4">
       @if (tipoActivo === 'TI') {
-        <app-tabla-mantenimientos-sistemas
-          [mantenimientos]="ultimosMantenimientosTI"
-          [usuariosHelp]="usuariosHelp"
-          [idSucursal]="sucursal?.id"
-          [mostrarChat]="true">
-        </app-tabla-mantenimientos-sistemas>
+        @if (mostrarTPVs && sucursal) {
+          <div class="tpvs-table-scroll">
+            <app-tpvs-devices-table [sucursal]="sucursal"></app-tpvs-devices-table>
+          </div>
+        } @else {
+          <app-tabla-mantenimientos-sistemas
+            [mantenimientos]="ultimosMantenimientosTI"
+            [usuariosHelp]="usuariosHelp"
+            [idSucursal]="sucursal?.id"
+            [mostrarChat]="true">
+          </app-tabla-mantenimientos-sistemas>
+        }
       } @else if (tipoActivo === 'AV') {
         <tabla-mantenimientos-audio-video
           [mantenimientos]="ultimosMantenimientosAV"

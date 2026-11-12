@@ -13,7 +13,7 @@ import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { UmbralTicketsService, UmbralFiltros } from '../../services/umbral-tickets.service';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../interfaces/ticket.model';
 import { UmbralKpisComponent } from '../../components/umbral-kpis/umbral-kpis.component';
 import { UmbralFiltrosComponent } from '../../components/umbral-filtros/umbral-filtros.component';
 import { UmbralArbolComponent } from '../../components/umbral-arbol/umbral-arbol.component';
