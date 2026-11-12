@@ -124,7 +124,7 @@ export class FcmService {
     try {
       const existingSub = await registration.pushManager.getSubscription();
       if (existingSub && this.hasVapidKeyMismatch(existingSub, environment.vapidKey)) {
-        console.log('[FCM] Suscripción previa con otra VAPID Key detectada. Renovando suscripción para el certificado actual...');
+        // console.log('[FCM] Suscripción previa con otra VAPID Key detectada. Renovando suscripción para el certificado actual...');
         await existingSub.unsubscribe();
         await this.clearIndexedDbStore('firebase-messaging-database', 'firebase-messaging-store');
       }
@@ -187,7 +187,7 @@ export class FcmService {
       const token = await this.obtainTokenWithFallback(registration);
 
       if (token) {
-        console.log('FCM Token obtenido con éxito:', token);
+        // console.log('FCM Token obtenido con éxito:', token);
         this.fcmToken.set(token);
         try {
           await this.saveTokenForCurrentUser(token);
@@ -276,7 +276,7 @@ export class FcmService {
   listenMessages(): Observable<any> {
     return new Observable((sub) => {
       onMessage(this.messaging, (payload) => {
-        console.log('[FCM Foreground] Notificación recibida:', payload);
+        // console.log('[FCM Foreground] Notificación recibida:', payload);
         this.showNativeNotification(payload);
         this.ngZone.run(() => sub.next(payload));
       });

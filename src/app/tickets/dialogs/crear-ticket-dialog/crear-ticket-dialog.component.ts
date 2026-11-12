@@ -53,7 +53,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { WhatsappService } from '../../../areas/services/whatsapp.service';
 import {
   HistorialAlertasService
-} from '../../../alertas/service/historial-alertas.service';
+} from '../../../shared/services/historial-alertas.service';
 
 Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
 Quill.register('modules/magicUrl', MagicUrl);

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { FcmService } from './alertas/service/fcm.service';
+import { FcmService } from './shared/services/fcm.service';
 import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
 
 @Component({

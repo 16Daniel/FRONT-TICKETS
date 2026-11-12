@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { AccessControlService } from '../../../shared/services/access-control.service';
-import { FcmService } from '../../../alertas/service/fcm.service';
+import { FcmService } from '../../../shared/services/fcm.service';
 
 @Component({
   selector: 'app-login',

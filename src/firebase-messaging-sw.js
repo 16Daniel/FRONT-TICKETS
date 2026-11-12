@@ -17,7 +17,7 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Notificación recibida en background: ', payload);
+  // console.log('[firebase-messaging-sw.js] Notificación recibida en background: ', payload);
 
   // Si el payload viene como data-only (sin bloque notification), mostramos la notificación nativa manualmente
   if (!payload.notification && (payload.data?.title || payload.data?.body)) {

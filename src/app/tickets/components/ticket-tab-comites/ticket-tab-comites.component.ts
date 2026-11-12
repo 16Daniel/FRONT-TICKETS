@@ -11,7 +11,7 @@ import { ResponsablesService } from '../../../usuarios/services/responsables.ser
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { ComitesService } from '../../../comites/services/comites.service';
 import { Comite } from '../../../comites/interfaces/comite';
-import { HistorialAlertasService } from '../../../alertas/service/historial-alertas.service';
+import { HistorialAlertasService } from '../../../shared/services/historial-alertas.service';
 import { TicketDetailHelperService } from '../../services/ticket-detail-helper.service';
 
 @Component({
