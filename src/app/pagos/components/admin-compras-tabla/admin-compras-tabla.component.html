@@ -1,5 +1,5 @@
- <p-table [value]="data" [tableStyle]="{'min-width': '60rem', 'padding':'10px'}" [scrollable]="true" scrollHeight="700px"
-        styleClass="p-datatable-gridlines" 
+ <p-table [value]="data" [tableStyle]="{'min-width': '60rem'}" [scrollable]="true" scrollHeight="700px"
+        styleClass="table-compras-rw" 
         [paginator]="true"
         [rows]="100">
     <ng-template pTemplate="header">
@@ -7,80 +7,99 @@
             <th>SOLICITANTE</th>
             <th *ngIf="usuario.idRol == '2'">SUCURSAL</th>
             <th>FECHA</th>
-            <th>RAZON SOCIAL</th>
+            <th>RAZÓN SOCIAL</th>
             <th>TIPO</th>
             <th>PROVEEDOR INTERNO</th>
             <th>PROVEEDOR EXTERNO</th>
             <th>MÉTODO PAGO</th>
             <th>ESTATUS</th>
-            <th>ESTATUS PAGO</th>
+            <th class="text-center">ESTATUS PAGO</th>
             <th>FECHA DE PAGO</th>
             <th>FECHA ENTREGA</th>
             <th>PALABRA CLAVE</th>
             <th>TOTAL</th>
-            <th>VALIDACIÓN GERENCIA</th>
+            <th class="text-center">VALIDACIÓN GERENCIA</th>
             @if(autorizado == true)
             {
-             <th>FACTURA</th>
-             <th>COMPROBANTE PAGO</th>
+             <th class="text-center">FACTURA</th>
+             <th class="text-center">COMPROBANTE PAGO</th>
             }
-            <th></th>
-            <th></th>
-            @if(autorizacion == true){ <th>AUTORIZACIÓN</th>}
+            <th class="text-center">CHAT</th>
+            <th class="text-center">DETALLES</th>
+            @if(autorizacion == true){ <th class="text-center">AUTORIZACIÓN</th>}
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-        <tr class="bg-opacity-25" [ngClass]="{'bg-warning':(item.statuscompra == 0 || item.statuspago == 1), 'bg-success': item.statuspago == 2, 'bg-danger': item.statuscompra == 0}">
-            <td>{{item.solicitante}}</td>
+        <tr class="rw-card-row" [ngClass]="{
+          'status-danger': item.statuscompra == 0,
+          'status-success': item.statuscompra != 0 && item.statuspago == 2,
+          'status-warning': item.statuscompra != 0 && item.statuspago == 1
+        }">
+            <td class="fw-bold text-dark">{{item.solicitante}}</td>
             <td *ngIf="usuario.idRol == '2'">{{obtenerNombreSucursal(item.idSucursalSolicitante)}}</td>
-            <td>{{  obtenerFecha(item.fecha) | date}}</td>
+            <td class="text-nowrap">{{  obtenerFecha(item.fecha) | date}}</td>
             <td>{{ item.razonsocial }}</td>
             <td>{{ item.articulos[0].tipo}}</td>
             <td>{{ obtenerNombreArea(item.idArea) }}</td>
             <td>{{ item.articulos[0].nomprov }}</td>
             <td>{{obtenerNombreMetodoPago(item.metodoPago)}}</td>
-            <td>{{ obtenerNombreEstatus(item.statuscompra) }}</td>
             <td>
-                <i class='bx bx-x-circle bx-sm text-danger' *ngIf="item.statuspago == 1"></i>
-                <i class='bx bx-check-circle bx-sm text-success' *ngIf="item.statuspago == 2"></i>
-                </td>
-            <td><span *ngIf="item.fechadepago != null">{{obtenerFecha(item.fechadepago) | date }}</span></td>
-            <td><span *ngIf="item.fechaEntrega != null"> {{ obtenerFecha(item.fechaEntrega) | date}} </span></td>
+              <span class="rw-status-pill" [ngClass]="{
+                'pill-danger': item.statuscompra == 0,
+                'pill-success': item.statuscompra != 0 && item.statuspago == 2,
+                'pill-warning': item.statuscompra != 0 && item.statuspago != 2
+              }">
+                {{ obtenerNombreEstatus(item.statuscompra) }}
+              </span>
+            </td>
+            <td class="text-center">
+                <i class='bx bx-x-circle bx-sm text-danger' *ngIf="item.statuspago == 1" pTooltip="Por pagar" tooltipPosition="top"></i>
+                <i class='bx bx-check-circle bx-sm text-success' *ngIf="item.statuspago == 2" pTooltip="Pagado" tooltipPosition="top"></i>
+            </td>
+            <td class="text-nowrap"><span *ngIf="item.fechadepago != null">{{obtenerFecha(item.fechadepago) | date }}</span></td>
+            <td class="text-nowrap"><span *ngIf="item.fechaEntrega != null"> {{ obtenerFecha(item.fechaEntrega) | date}} </span></td>
             <td>{{ item.palabraclave }}</td>
-            <td>${{obtenerTotalCompras(item.articulos)| number:'1.0-2'}}</td>
-            <td>
+            <td class="fw-bold text-dark text-nowrap">${{obtenerTotalCompras(item.articulos)| number:'1.0-2'}}</td>
+            <td class="text-center">
                 <i class='bx bx-x-circle bx-sm text-danger' *ngIf="(!item.validacionGerente || item.validacionGerente == false) && usuario.idRol != '1'"></i>
                 <i class='bx bx-check-circle bx-sm text-success' *ngIf="item.validacionGerente == true && usuario.idRol != '1'" ></i>
-                <button class="btn btn-danger" pTooltip="RECHAZAR"  (click)="actualizarValidacionGerente(false,item)" *ngIf="usuario.idRol == '1' && item.validacionGerente == true"><i class='bx bx-x-circle bx-sm'></i></button>
-                <button class="btn btn-success" pTooltip="AUTORIZAR"  (click)="actualizarValidacionGerente(true,item)" *ngIf="(!item.validacionGerente || item.validacionGerente == false) && usuario.idRol == '1'"><i class='bx bx-check-circle bx-sm'></i></button>
-                </td>
+                <button type="button" class="btn-action-table btn-action-danger" pTooltip="RECHAZAR" tooltipPosition="top" (click)="actualizarValidacionGerente(false,item)" *ngIf="usuario.idRol == '1' && item.validacionGerente == true"><i class='bx bx-x-circle'></i></button>
+                <button type="button" class="btn-action-table btn-action-success" pTooltip="AUTORIZAR" tooltipPosition="top" (click)="actualizarValidacionGerente(true,item)" *ngIf="(!item.validacionGerente || item.validacionGerente == false) && usuario.idRol == '1'"><i class='bx bx-check-circle'></i></button>
+            </td>
             @if(autorizado == true)
             {
-                <td>
+            <td>
                 <div class="d-flex gap-1 justify-content-center">
-                    <button class="btn btn-warning" [disabled]="item.metodoPago == '1'" (click)="abrirModalDocumento(item,1)" *ngIf="item.statuspago != 2 && item.statuscompra > 0 || item.factura ==''"><i class='bx bx-cloud-upload bx-sm' ></i></button>&nbsp; 
-                  <button class="btn btn-secondary" *ngIf="item.factura != ''" (click)="abrirModalArchivos(item,item.factura,1)"><i class='bx bx-file-blank bx-sm'></i></button>
+                  <button type="button" class="btn-action-table btn-action-warning" [disabled]="item.metodoPago == '1'" (click)="abrirModalDocumento(item,1)" *ngIf="item.statuspago != 2 && item.statuscompra > 0 || item.factura ==''" pTooltip="Subir factura" tooltipPosition="top"><i class='bx bx-cloud-upload'></i></button>
+                  <button type="button" class="btn-action-table btn-action-neutral" *ngIf="item.factura != ''" (click)="abrirModalArchivos(item,item.factura,1)" pTooltip="Ver factura" tooltipPosition="top"><i class='bx bx-file-blank'></i></button>
                 </div>
             </td> 
             <td>
                 <div class="d-flex gap-1 justify-content-center">
-                    <button class="btn btn-warning" (click)="abrirModalDocumento(item,2)" *ngIf="item.statuspago == 2 && usuario.id == idAdmin"><i class='bx bx-cloud-upload bx-sm' ></i></button>&nbsp; 
-                  <button class="btn btn-secondary" *ngIf="item.comprobantePago != ''" (click)="abrirModalArchivos(item,item.comprobantePago,2)"><i class='bx bx-file-blank bx-sm'></i></button>
+                  <button type="button" class="btn-action-table btn-action-warning" (click)="abrirModalDocumento(item,2)" *ngIf="item.statuspago == 2 && usuario.id == idAdmin" pTooltip="Subir comprobante" tooltipPosition="top"><i class='bx bx-cloud-upload'></i></button>
+                  <button type="button" class="btn-action-table btn-action-neutral" *ngIf="item.comprobantePago != ''" (click)="abrirModalArchivos(item,item.comprobantePago,2)" pTooltip="Ver comprobante" tooltipPosition="top"><i class='bx bx-file-blank'></i></button>
                 </div>
             </td>
             }
-            <td><button class="btn btn-primary btn-notification" style="margin: 2px" >
-          <i class="bx bx-message-square-dots bx-sm" style="color: rgb(255, 255, 255)" pTooltip="CHAT"  [ngClass]="{'has-notification': verificarChatNoLeido(item)}"
-            tooltipPosition="top" (click)="abrirModalChat(item)"></i>
-        </button></td>
-            <td><button class="btn bg-p-b" pTooltip="DETALLES"  (click)="abrirModalDetalles(item)"><i class='bx bx-show bx-sm' ></i></button></td>
+            <td class="text-center">
+              <button type="button" class="btn-action-table btn-action-primary btn-notification" (click)="abrirModalChat(item)" pTooltip="CHAT" tooltipPosition="top">
+                <i class="bx bx-message-square-dots" [ngClass]="{'has-notification': verificarChatNoLeido(item)}"></i>
+              </button>
+            </td>
+            <td class="text-center">
+              <button type="button" class="btn-action-table btn-action-info" pTooltip="DETALLES" tooltipPosition="top" (click)="abrirModalDetalles(item)">
+                <i class='bx bx-show'></i>
+              </button>
+            </td>
          
         @if(autorizacion == true)
         {
             <td>
-             <button class="btn btn-success" (click)="confirmarActualizacion(item,1)"><i class='bx bx-check-circle bx-sm'></i></button>&nbsp;
-            <button class="btn btn-danger" (click)="confirmarActualizacion(item,2)"><i class='bx bx-x-circle bx-sm' ></i></button>
-        </td>
+              <div class="d-flex gap-1 justify-content-center">
+                <button type="button" class="btn-action-table btn-action-success" (click)="confirmarActualizacion(item,1)" pTooltip="Autorizar" tooltipPosition="top"><i class='bx bx-check-circle'></i></button>
+                <button type="button" class="btn-action-table btn-action-danger" (click)="confirmarActualizacion(item,2)" pTooltip="Rechazar" tooltipPosition="top"><i class='bx bx-x-circle'></i></button>
+              </div>
+            </td>
         }
             
         </tr>
@@ -88,15 +107,15 @@
 </p-table>
 
 
-<app-subir-documento *ngIf="modalFactura" [visible]="modalFactura" (closeEvent)="modalFactura = false"
- [Reg]="itemReg" [tipoDoc]="tipoDoc"></app-subir-documento>
+<app-subir-factura-compra-dialog *ngIf="modalFactura" [visible]="modalFactura" (closeEvent)="modalFactura = false"
+ [Reg]="itemReg" [tipoDoc]="tipoDoc"></app-subir-factura-compra-dialog>
 
-<app-archivos *ngIf="modalArchivos && docs !=''" [visible]="modalArchivos" [itemReg]="itemReg"
-(closeEvent)="modalArchivos = false" [docs]="docs" [tipoDoc]="tipoDoc"></app-archivos>
+<app-archivos-pagos-dialog *ngIf="modalArchivos && docs !=''" [visible]="modalArchivos" [itemReg]="itemReg"
+(closeEvent)="modalArchivos = false" [docs]="docs" [tipoDoc]="tipoDoc"></app-archivos-pagos-dialog>
 
-<app-detalles *ngIf="modalDetalles" [visible]="modalDetalles" [itemReg]="itemReg" [catStatus]="catStatusCompra" [catStatusPago]="catStatusPago"
-(closeEvent)="modalDetalles = false" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago" [sucursales]="sucursales" [catProveedores]="catProveedores"></app-detalles>
+<app-detalle-compra-dialog *ngIf="modalDetalles" [visible]="modalDetalles" [itemReg]="itemReg" [catStatus]="catStatusCompra" [catStatusPago]="catStatusPago"
+(closeEvent)="modalDetalles = false" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago" [sucursales]="sucursales" [catProveedores]="catProveedores"></app-detalle-compra-dialog>
 
-<app-admin-compras-chat *ngIf="modalChat" [showModalChatCompra]="modalChat" [ticket]="itemReg"
-  (closeEvent)="modalChat = false"></app-admin-compras-chat>
+<app-admin-compras-chat-dialog *ngIf="modalChat" [showModalChatCompra]="modalChat" [ticket]="itemReg"
+  (closeEvent)="modalChat = false"></app-admin-compras-chat-dialog>
 

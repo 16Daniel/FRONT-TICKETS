@@ -1,0 +1,31 @@
+$rw-canvas: #f4f6fa;
+
+:host {
+  display: block;
+  background-color: $rw-canvas;
+  min-height: 100vh;
+}
+
+.dashboard-page-wrapper {
+  background-color: $rw-canvas;
+  min-height: 100vh;
+  padding: 5.5rem 1.5rem 2.5rem;
+  width: 100%;
+}
+
+.dashboard-content-container {
+  max-width: 1650px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .dashboard-page-wrapper {
+    padding: 5rem 0.75rem 1.5rem;
+  }
+
+  :host ::ng-deep .btn-rw-cta {
+    width: 100%;
+    height: 42px;
+    justify-content: center;
+  }
+}

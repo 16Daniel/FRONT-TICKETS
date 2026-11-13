@@ -1,0 +1,233 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '80rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '95vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="agregar-compra-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-cart-add text-danger"></i> Agregar Compra
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="agregar-compra-body">
+    <!-- Card 1: Agregar Artículo(s) -->
+    <div class="rw-form-card" *ngIf="!tieneArticuloOnline()">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-package"></i>
+          <span>AGREGAR ARTÍCULO(S)</span>
+        </div>
+      </div>
+
+      <div class="rw-form-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label">ARTÍCULO</label>
+          <input type="text" class="form-control h-42" placeholder="Nombre del artículo" [(ngModel)]="formArtArticulo">
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">UDS</label>
+          <input type="number" class="form-control h-42" placeholder="0" [(ngModel)]="formArtUds">
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">PRECIO X UNIDAD</label>
+          <input type="number" class="form-control h-42" placeholder="0.00" [(ngModel)]="formArtPrecio">
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">TIPO</label>
+          <select class="form-select h-42" [(ngModel)]="formArtTipo" (change)="cambiartipo()" [disabled]="userdata.idRol == '2' && userdata.id != idServicio">
+            <option *ngFor="let item of catTipoCompra" [value]="item.id">{{ item.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">LINK DE COMPRA</label>
+          <input type="text" class="form-control h-42" placeholder="https://..." [(ngModel)]="formArtLink" [disabled]="formArtTipo != '1'">
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">PROVEEDOR</label>
+          <p-dropdown
+            [options]="catProveedores"
+            [(ngModel)]="formArtProveedor"
+            optionValue="id"
+            filterBy="razonSocial"
+            [filter]="true"
+            optionLabel="razonSocial"
+            placeholder="SELECCIONAR PROVEEDOR"
+            [style]="{ width: '100%' }"
+            [disabled]="formArtTipo == '1'" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">REGIÓN</label>
+          <select class="form-select h-42" [(ngModel)]="formRegion">
+            <option value="CDMX">CDMX</option>
+            <option value="QRO">QRO</option>
+          </select>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">SUCURSAL / ÁREA</label>
+          <p-dropdown
+            [options]="sucursales"
+            [(ngModel)]="FormSucursal"
+            name="sucursal"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="SELECCIONAR SUCURSAL"
+            [style]="{ width: '100%' }"
+            [disabled]="this.userdata.idRol == '2' && this.userdata.id != this.idServicio">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center gap-2">
+                <div>{{ selectedOption.nombre }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-dep pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ dep.nombre }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">DIRECCIÓN DE ENTREGA</label>
+          <input type="text" class="form-control h-42" placeholder="Dirección completa" [(ngModel)]="formDireccion">
+        </div>
+
+        <div class="rw-field-item rw-field-full">
+          <label class="rw-field-label">JUSTIFICACIÓN</label>
+          <input type="text" class="form-control h-42" placeholder="Motivo o justificación de la compra" [(ngModel)]="formArtJustificacion">
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+        <button
+          type="button"
+          class="btn-rw-cta rw-btn-mobile-full"
+          (click)="agregarArticulo()"
+          [disabled]="formArtTipo == '' || formArtArticulo == '' || formArtJustificacion == '' || formArtPrecio == undefined ||
+            formArtUds == undefined || FormSucursal == undefined || formRegion == '' || formDireccion == ''">
+          <i class="bx bx-plus-circle"></i>
+          <span>AGREGAR ARTÍCULO</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 2: Datos Generales de la Compra -->
+    <div class="rw-form-card" *ngIf="formarticulos.length > 0">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-file"></i>
+          <span>DATOS DE LA SOLICITUD</span>
+        </div>
+      </div>
+
+      <div class="rw-form-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label">RAZÓN SOCIAL</label>
+          <select class="form-select h-42" [(ngModel)]="formRazonSocial">
+            <option value="REBEL W1">REBEL W1</option>
+            <option value="REBEL W2">REBEL W2</option>
+            <option value="REBEL W3">REBEL W3</option>
+            <option value="RW CENTRO">RW CENTRO</option>
+          </select>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">MÉTODO DE PAGO</label>
+          <select class="form-select h-42" [(ngModel)]="formMetodoPago">
+            <option *ngFor="let item of catMetodosPago" [value]="item.id">{{ item.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">SOLICITANTE</label>
+          <input type="text" class="form-control h-42" placeholder="Nombre del solicitante" [(ngModel)]="formSolicitante">
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Tabla de Artículos Agregados -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-list-ul"></i>
+          <span>RESUMEN DE ARTÍCULOS ({{ formarticulos.length }})</span>
+        </div>
+      </div>
+
+      <p-table [value]="formarticulos" [tableStyle]="{ 'min-width': '52rem' }" styleClass="table-compra-detail">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Artículo</th>
+            <th>Uds</th>
+            <th>Precio x unidad</th>
+            <th>Tipo</th>
+            <th>Link de compra</th>
+            <th>Proveedor</th>
+            <th>Justificación</th>
+            <th>Región</th>
+            <th>Sucursal / Área</th>
+            <th>Dirección</th>
+            <th class="text-center">Quitar</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-i="rowIndex">
+          <tr>
+            <td class="fw-bold text-dark">{{ product.art }}</td>
+            <td>{{ product.uds }}</td>
+            <td class="fw-bold text-dark">${{ product.precio | number:'1.0-2' }}</td>
+            <td>{{ product.tipo }}</td>
+            <td>{{ product.link }}</td>
+            <td>{{ product.nomprov }}</td>
+            <td>{{ product.justificacion }}</td>
+            <td>{{ product.region }}</td>
+            <td>{{ obtenerNombreSucursal(product.idsucursal) }}</td>
+            <td>{{ product.direccionentrega }}</td>
+            <td class="text-center">
+              <button type="button" class="btn-action-table btn-action-danger" (click)="borrarArt(i)" pTooltip="Eliminar" tooltipPosition="top">
+                <i class="bx bx-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="11" class="text-center text-muted py-4">
+              Aún no hay artículos agregados a esta solicitud.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Barra de Acción Final -->
+    <div class="d-flex justify-content-end" *ngIf="formarticulos.length > 0">
+      <button
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="formarticulos.length == 0 || formRazonSocial == '' || formMetodoPago == '' || formSolicitante == ''"
+        (click)="guardar()">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR COMPRA</span>
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>

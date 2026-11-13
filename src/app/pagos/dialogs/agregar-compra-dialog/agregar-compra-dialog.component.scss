@@ -1,0 +1,180 @@
+:host ::ng-deep .agregar-compra-dialog {
+  .p-dialog-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.15rem 1.5rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+
+  .p-dialog-content {
+    background: #f4f6fa;
+    padding: 1.25rem 1.5rem;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+}
+
+.modal-custom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 1.5rem;
+}
+
+.agregar-compra-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.rw-form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.rw-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rw-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1e1e24;
+
+  i {
+    font-size: 1.15rem;
+    color: #d3152a;
+  }
+}
+
+.rw-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.95rem 1.15rem;
+}
+
+.rw-field-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  &.rw-field-full {
+    grid-column: 1 / -1;
+  }
+
+  .rw-field-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  ::ng-deep .p-dropdown {
+    width: 100%;
+  }
+}
+
+:host ::ng-deep .table-compra-detail {
+  .p-datatable-thead > tr > th {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.65rem 0.75rem !important;
+    white-space: nowrap;
+  }
+
+  .p-datatable-tbody > tr > td {
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 0.65rem 0.75rem !important;
+    font-size: 0.82rem;
+    color: #334155;
+    vertical-align: middle;
+  }
+}
+
+.btn-action-table {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  color: #ef4444;
+  font-size: 1.1rem;
+  transition: all 0.15s ease;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15);
+  }
+}
+
+@media (max-width: 991.98px) {
+  .rw-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  :host ::ng-deep .agregar-compra-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+
+    .p-dialog-header {
+      padding: 0.85rem 1rem;
+      border-radius: 0;
+    }
+
+    .p-dialog-content {
+      padding: 0.85rem !important;
+      border-radius: 0;
+    }
+  }
+
+  .rw-form-card {
+    padding: 0.9rem;
+    border-radius: 14px;
+  }
+
+  .rw-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .rw-btn-mobile-full {
+    width: 100%;
+    height: 42px;
+    justify-content: center;
+  }
+}

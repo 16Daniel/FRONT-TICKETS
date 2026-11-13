@@ -1,22 +1,27 @@
 
-<div >
-<div class="ps-3 d-flex justify-content-start gap-3 align-items-center">
-    <div *ngIf="facturasPendientes.length == 0"> <button class="btn bg-p-b p-2" (click)="abrirModal()">
-    <i class='bx bx-plus-circle bx-sm'></i>&nbsp;AGREGAR
-</button>
-</div>
-    <div *ngIf="usuario.idRol != '2' || usuario.id == idServicio"><button class="btn bg-p-b p-2" (click)="abrirModalProveedores()">
-    <i class='bx bx-cog bx-sm'></i>&nbsp;PROVEEDORES
-</button></div>
-<div *ngIf="usuario.id == idDireccion">
-    <div>VISTA DE SERVICIO</div>
-<p-inputSwitch [(ngModel)]="verServicio" (ngModelChange)="cambiarSwitch()"/>
-</div>
-</div>
+<div>
+  <div class="rw-actions-bar d-flex flex-wrap justify-content-start gap-2 align-items-center mb-4">
+    <div *ngIf="facturasPendientes.length == 0" class="rw-cta-wrap">
+      <button type="button" class="btn-rw-cta" (click)="abrirModal()">
+        <i class="bx bx-plus"></i>
+        <span>AGREGAR</span>
+      </button>
+    </div>
+    <div *ngIf="usuario.idRol != '2' || usuario.id == idServicio">
+      <button type="button" class="btn-rw-secondary" (click)="abrirModalProveedores()">
+        <i class="bx bx-cog"></i>
+        <span>PROVEEDORES</span>
+      </button>
+    </div>
+    <div *ngIf="usuario.id == idDireccion" class="d-flex align-items-center gap-2 ms-md-auto bg-white px-3 py-2 rounded-3 border">
+      <span class="fw-bold text-muted" style="font-size: 0.75rem;">VISTA DE SERVICIO</span>
+      <p-inputSwitch [(ngModel)]="verServicio" (ngModelChange)="cambiarSwitch()"/>
+    </div>
+  </div>
 
-<div class="row m-3 gap-2 p-3" style="background-color: rgb(211, 218, 223);">
+  <div class="rw-filter-card mb-4">
 
-<div class="col-auto">
+<div class="rw-filter-item rw-filter-full-mobile">
     <p>FECHA INICIO</p>
     <p-calendar 
     [(ngModel)]="filtroFechaIni" 
@@ -28,7 +33,7 @@
       [showButtonBar]="true"
         [touchUI]="true" />
 </div>
-<div class="col-auto">
+<div class="rw-filter-item rw-filter-full-mobile">
     <p>FECHA FIN</p>
     <p-calendar 
     [(ngModel)]="filtroFechaFin" 
@@ -41,27 +46,27 @@
         [touchUI]="true" />
 </div>
 
-<div class="col-auto">
+<div class="rw-filter-item">
     <p>ESTATUS</p>
       <select class="form-select h-42" [(ngModel)]="filtroStatus">
           <option [value]="item.id" *ngFor="let item of filtrocatStatusCompra">{{item.nombre}}</option>
         </select>
 </div>
-<div class="col-auto">
+<div class="rw-filter-item">
     <p>ESTATUS PAGO</p>
        <select class="form-select h-42" [(ngModel)]="filtroStatusPago">
           <option [value]="item.id" *ngFor="let item of filtrocatStatusPago">{{item.nombre}}</option>
         </select>
 </div>
 
-<div class="col-auto">
+<div class="rw-filter-item">
     <p>TIPO COMPRA</p>
     <select class="form-select h-42" [(ngModel)]="filtroTipo">
     <option *ngFor="let item of filtrocatTipoCompra" [value]="item.id">{{item.nombre}}</option>
     </select>
  </div>
 
- <div class="col-auto" *ngIf="usuario.id == idAdmin">
+ <div class="rw-filter-item" *ngIf="usuario.id == idAdmin">
     <p>REGIÓN</p>
     <select class="form-select h-42" [(ngModel)]="filtroRegion">
        <option value="-1">TODO</option>
@@ -69,7 +74,7 @@
        <option value="QRO">QRO</option>
      </select>
                             </div> 
- <div class="col-auto" *ngIf="usuario.id == idAdmin">
+ <div class="rw-filter-item rw-filter-full-mobile" *ngIf="usuario.id == idAdmin">
                                 <p>CLIENTE</p>
                                 <p-dropdown [options]="sucursales" [(ngModel)]="filtroSucursal" name="sucursal" optionLabel="nombre" [filter]="true"
                                 filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR"
@@ -86,7 +91,7 @@
                                 </ng-template>
                                 </p-dropdown>
 </div>
- <div class="col-auto" *ngIf="usuario.id == idAdmin || usuario.idRol == '1'">
+ <div class="rw-filter-item rw-filter-full-mobile" *ngIf="usuario.id == idAdmin || usuario.idRol == '1'">
                                 <p>PROVEEDOR INTERNO</p>
                                 <p-dropdown [options]="catareas" [(ngModel)]="filtroArea" name="proveedor" optionLabel="nombre" [filter]="true"
                                 filterBy="nombre" [showClear]="true" placeholder="SELECCIONAR"
@@ -104,14 +109,14 @@
                                 </p-dropdown>
 </div>
 
-<div class="col-auto">
+<div class="rw-filter-item">
          <p>RAZÓN SOCIAL</p>
          <select class="form-select h-42" [(ngModel)]="filtroRazonSocial">
          <option *ngFor="let item of filtroCatRazonSocial" [value]="item.id">{{item.nombre}}</option>
            </select>
 </div>
 
-<div class="col-auto" *ngIf="usuario.id == idServicio">
+<div class="rw-filter-item rw-filter-full-mobile" *ngIf="usuario.id == idServicio">
 <p>SUCURSALES</p>
 <p-multiSelect 
     [options]="sucursales" 
@@ -123,7 +128,7 @@
     />
 </div>
 
-<div class="col-auto">
+<div class="rw-filter-item rw-filter-full-mobile">
          <p>MÉTODO DE PAGO</p>
          <select class="form-select h-42" [(ngModel)]="filtroMetodoPago">
             <option value="">TODO</option>
@@ -131,21 +136,22 @@
            </select>
 </div>
 
-
- <div class="col-auto"> <p>&nbsp;</p> <button class="btn btn-warning p-2" (click)="obtenerComprasFiltro()">
-    <i class='bx bx-search bx-sm'></i>&nbsp;BUSCAR
-</button>
-</div>
-
- <div class="col-auto"><p>&nbsp;</p>
-        <button class="btn btn-success" [disabled]="regcompras.length == 0" (click)="exportToExcel(regcompras)"><img width="26" height="26" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="microsoft-excel-2019"/>&nbsp;EXCEL</button>
-</div>
-
-<div class="col-auto">
+<div class="rw-filter-item rw-filter-full-mobile">
          <p>SOLICITANTE</p>
-         <input type="text" class="form-control h-42" [(ngModel)]="filtroSolicitante" (ngModelChange)="filtrarSolicitante()">
+         <input type="text" class="form-control h-42" placeholder="Buscar solicitante..." [(ngModel)]="filtroSolicitante" (ngModelChange)="filtrarSolicitante()">
 </div>
 
+ <div class="rw-filter-btn-wrap">
+    <button class="btn btn-warning rw-filter-btn" (click)="obtenerComprasFiltro()">
+      <i class='bx bx-search'></i><span>BUSCAR</span>
+    </button>
+</div>
+
+ <div class="rw-filter-btn-wrap">
+    <button class="btn btn-success rw-filter-btn" [disabled]="regcompras.length == 0" (click)="exportToExcel(regcompras)">
+      <img width="20" height="20" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png" alt="excel"/><span>EXCEL</span>
+    </button>
+</div>
 
 </div>
 
@@ -166,38 +172,30 @@
 
 @if(usuario.idRol != "2" && usuario.id != idServicio && verServicio == false)
 {
-    <div class="p-3 shadow m-3 bg-white">
-    
-    <div class="d-flex justify-content-center p-3" *ngIf="verGrafica">
-        <div class="w-100"><app-grafica-admin-compras *ngIf="verGrafica" [sucursales]="sucursales" [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin"></app-grafica-admin-compras></div>
-    </div>
+  <div *ngIf="verGrafica">
+    <app-grafica-admin-compras *ngIf="verGrafica" [sucursales]="sucursales" [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin"></app-grafica-admin-compras>
+  </div>
 
-<app-admin-compras-tabla 
-[data]="obtenerSolicitudes(1)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" [sucursales]="sucursales" [autorizado]="true"
-></app-admin-compras-tabla>
-</div>
+  <app-admin-compras-tabla 
+    [data]="obtenerSolicitudes(1)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
+    [catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" [sucursales]="sucursales" [autorizado]="true">
+  </app-admin-compras-tabla>
 }
 
 @if(usuario.idRol == "2" || usuario.id == idServicio || verServicio)
 {
     <p-tabView>
     <p-tabPanel header="AUTORIZADO">
-        <div class="p-3">
+      <div *ngIf="obtenerSolicitudes(1).length>0">
+        <app-grafica-admin-compras *ngIf="obtenerSolicitudes(1).length>0" [sucursales]="sucursales"
+          [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin">
+        </app-grafica-admin-compras>
+      </div>
 
-    <div class="d-flex justify-content-center p-3" *ngIf="obtenerSolicitudes(1).length>0">
-        <div class="w-100">
-            <app-grafica-admin-compras  *ngIf="obtenerSolicitudes(1).length>0" [sucursales]="sucursales"
-                 [registros]="obtenerSolicitudes(1)" [catAreas]="catareas" [idAdmin]="idAdmin">
-                </app-grafica-admin-compras></div>
-    </div>
-
-<app-admin-compras-tabla 
-[data]="obtenerSolicitudes(1)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
-[catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" [autorizado]="true" [sucursales]="sucursales"
-></app-admin-compras-tabla>
-
-</div>
+      <app-admin-compras-tabla 
+        [data]="obtenerSolicitudes(1)" [catareas]="catareas" [catMetodosPago]="catMetodosPago" [catProveedores]="catProveedores" [catStatusCompra]="catStatusCompra" 
+        [catStatusPago]="catStatusPago" [catTipoCompra]="catTipoCompra" [idAdmin]="idAdmin" [autorizacion]="false" [autorizado]="true" [sucursales]="sucursales">
+      </app-admin-compras-tabla>
     </p-tabPanel>
 
  <p-tabPanel header="POR VALIDAR">
@@ -222,9 +220,9 @@
 
 </div>
 
-<app-agregar-compra *ngIf="visible" (closeEvent)="visible = false" [visible]="visible" [catTipoCompra]="catTipoCompra" 
+<app-agregar-compra-dialog *ngIf="visible" (closeEvent)="visible = false" [visible]="visible" [catTipoCompra]="catTipoCompra" 
 [catProveedores]="catProveedores" [sucursales]="sucursales" [idAdmin]="idAdmin" [catMetodosPago]="catMetodosPago"
- [idServicio]="idServicio"></app-agregar-compra>
+ [idServicio]="idServicio"></app-agregar-compra-dialog>
 
-<app-proveedores *ngIf="modalProveedores" [visible]="modalProveedores" (closeEvent)="modalProveedores = false"></app-proveedores>
+<app-proveedores-compras-dialog *ngIf="modalProveedores" [visible]="modalProveedores" (closeEvent)="modalProveedores = false"></app-proveedores-compras-dialog>
 

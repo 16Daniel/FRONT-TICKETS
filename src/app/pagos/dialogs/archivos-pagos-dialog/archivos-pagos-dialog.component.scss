@@ -1,0 +1,269 @@
+/* ==========================================================================
+   Archivos Pagos Dialog - Rebel Wings Design System
+   ========================================================================== */
+:host ::ng-deep .archivos-pagos-dialog {
+  .p-dialog-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.15rem 1.5rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+
+    .p-dialog-header-icons .p-dialog-header-icon {
+      color: #64748b;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background-color: #fee2e2;
+        color: #ef4444;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: #f4f6fa;
+    padding: 1.25rem 1.5rem;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+}
+
+.modal-custom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 1.5rem;
+
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1e1e24;
+
+    i {
+      font-size: 1.35rem;
+    }
+  }
+}
+
+.archivos-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rw-form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.rw-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rw-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1e1e24;
+
+  i {
+    font-size: 1.15rem;
+    color: #d3152a;
+  }
+}
+
+/* Estado Vacío */
+.rw-empty-files {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.25rem 1rem;
+
+  i {
+    font-size: 2.75rem;
+    color: #cbd5e1;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e1e24;
+  }
+}
+
+/* Lista de Archivos */
+.rw-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.rw-file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.rw-file-leading {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.rw-file-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+  flex-shrink: 0;
+
+  &.badge-pdf {
+    background: #fff1f2;
+    color: #ef4444;
+  }
+
+  &.badge-excel {
+    background: #f0fdf4;
+    color: #10b981;
+  }
+
+  &.badge-img {
+    background: #eff6ff;
+    color: #3b82f6;
+  }
+}
+
+.rw-file-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  .rw-file-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e1e24;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 320px;
+  }
+
+  .rw-file-type {
+    font-size: 0.725rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+}
+
+.rw-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-action-table {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  transition: all 0.15s ease;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid transparent;
+
+  &.btn-action-download {
+    background-color: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+
+    &:hover {
+      background-color: #dbeafe;
+      color: #1e40af;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.15);
+    }
+  }
+
+  &.btn-action-danger {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #ef4444;
+
+    &:hover {
+      background-color: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.18);
+    }
+  }
+}
+
+/* Responsividad Móvil */
+@media (max-width: 575.98px) {
+  :host ::ng-deep .archivos-pagos-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+
+    .p-dialog-header {
+      padding: 0.85rem 1rem;
+      border-radius: 0;
+    }
+
+    .p-dialog-content {
+      padding: 0.85rem !important;
+      border-radius: 0;
+    }
+  }
+
+  .rw-form-card {
+    padding: 0.95rem;
+    border-radius: 14px;
+  }
+
+  .rw-file-text .rw-file-name {
+    max-width: 150px;
+  }
+}

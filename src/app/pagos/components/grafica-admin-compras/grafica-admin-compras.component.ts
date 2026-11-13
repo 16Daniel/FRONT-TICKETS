@@ -11,7 +11,7 @@ import { Usuario } from '../../../usuarios/interfaces/usuario.model';
   standalone: true,
   imports: [NgxChartsModule],
   templateUrl: './grafica-admin-compras.component.html',
-  styleUrl: './grafica-admin-compras.component.css',
+  styleUrl: './grafica-admin-compras.component.scss',
 })
 export class GraficaAdminComprasComponent implements OnInit {
   @Input() sucursales: Sucursal[] = [];

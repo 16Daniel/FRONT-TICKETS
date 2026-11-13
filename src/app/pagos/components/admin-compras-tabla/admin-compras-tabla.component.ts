@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore'
 import Swal from 'sweetalert2';
 
-import { SubirdocumentoComponent } from "../../dialogs/Subir-doumento/Subir-documento.component";
-import { ArchivosComponent } from "../../dialogs/Archivos/Archivos.component";
-import { DetallesComponent } from "../../dialogs/Detalles/Detalles.component";
-import { AdminComprasChatComponent } from "../../dialogs/admin-compras-chat/admin-compras-chat.component";
+import { SubirFacturaCompraDialogComponent } from "../../dialogs/subir-factura-compra-dialog/subir-factura-compra-dialog.component";
+import { ArchivosPagosDialogComponent } from "../../dialogs/archivos-pagos-dialog/archivos-pagos-dialog.component";
+import { DetalleCompraDialogComponent } from "../../dialogs/detalle-compra-dialog/detalle-compra-dialog.component";
+import { AdminComprasChatDialogComponent } from "../../dialogs/admin-compras-chat-dialog/admin-compras-chat-dialog.component";
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Area } from '../../../areas/interfaces/area.model';
@@ -18,7 +18,7 @@ import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-admin-compras-tabla',
   standalone: true,
-  imports: [CommonModule, TableModule, SubirdocumentoComponent, ArchivosComponent, DetallesComponent, AdminComprasChatComponent,TooltipModule],
+  imports: [CommonModule, TableModule, SubirFacturaCompraDialogComponent, ArchivosPagosDialogComponent, DetalleCompraDialogComponent, AdminComprasChatDialogComponent,TooltipModule],
   templateUrl: './admin-compras-tabla.component.html',
   styleUrl: './admin-compras-tabla.component.scss',
 })

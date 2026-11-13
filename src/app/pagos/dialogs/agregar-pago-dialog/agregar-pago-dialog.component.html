@@ -1,0 +1,78 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '48rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '90vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="agregar-pago-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-wallet text-danger"></i> Agregar {{ nombretab | titlecase }}
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="agregar-pago-body">
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-receipt"></i>
+          <span>DATOS DE LA SOLICITUD</span>
+        </div>
+      </div>
+
+      <div class="rw-form-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label">SOLICITANTE</label>
+          <input
+            type="text"
+            class="form-control h-42"
+            placeholder="Nombre del solicitante"
+            [(ngModel)]="formSolicitante" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">BENEFICIARIO</label>
+          <input
+            type="text"
+            class="form-control h-42"
+            placeholder="Nombre del beneficiario"
+            [(ngModel)]="formBeneficiario" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">MONTO</label>
+          <input
+            type="number"
+            class="form-control h-42"
+            placeholder="0.00"
+            [(ngModel)]="formMonto" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">JUSTIFICACIÓN</label>
+          <input
+            type="text"
+            class="form-control h-42"
+            placeholder="Motivo o descripción"
+            [(ngModel)]="formJustificacion" />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="formSolicitante == '' || formBeneficiario == '' || formMonto <= 0 || formJustificacion == ''"
+        (click)="guardar()">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR {{ nombretab }}</span>
+      </button>
+    </div>
+  </div>
+</p-dialog>
