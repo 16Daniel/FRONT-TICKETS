@@ -472,23 +472,52 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     }
 
     this.ticket.archivos = archivosSubidos;
-    const ticketId = await this.ticketsService.create({ ...this.ticket });
-    if (alertaTicketRepetido) {
-      await this.registrarAlertaTicketRepetido(ticketId);
-    }
-    await this.enviarAlertaWhatsappSiCorresponde(ticketId);
-    await this.registrarBitacoraSistema(ticketId, folio);
-    await this.crearAlertasMenciones(ticketId);
-    await this.ticketsService.incrementarContadorTickets();
+    this.ticket.fecha = Timestamp.now();
+    const ticketSnapshot: Ticket = {
+      ...this.ticket,
+      idInvolucrados: [...(this.ticket.idInvolucrados || [])],
+    };
+    const ticketId = await this.ticketsService.create(ticketSnapshot);
+    await Promise.all([
+      this.registrarBitacoraSistema(ticketId, folio),
+      this.crearAlertasMenciones(ticketId),
+      this.ticketsService.incrementarContadorTickets(),
+    ]);
+
+    this.ejecutarAlertasPostCreacion(
+      ticketId,
+      alertaTicketRepetido,
+      ticketSnapshot,
+      this.alertaWhatsappSeleccionada
+    );
+
     Swal.close();
     Swal.fire({ title: 'OK', text: 'TICKET CREADO!', icon: 'success', confirmButtonColor: '#D3152A' });
     this.closeEvent.emit();
   }
 
-  private async registrarAlertaTicketRepetido(ticketId: string): Promise<void> {
-    const usuarios = new Set<string>(this.ticket.idInvolucrados || []);
-    if (this.ticket.idResponsable) {
-      usuarios.add(String(this.ticket.idResponsable));
+  /** Despacha alertas y notificaciones de WhatsApp en segundo plano sin bloquear el cierre del modal. */
+  private ejecutarAlertasPostCreacion(
+    ticketId: string,
+    alertaTicketRepetido: boolean,
+    ticketSnapshot: Ticket,
+    alertaWhatsappSeleccionada: boolean
+  ): void {
+    const tareas: Promise<void>[] = [
+      this.enviarAlertaWhatsappSiCorresponde(ticketId, ticketSnapshot, alertaWhatsappSeleccionada),
+    ];
+    if (alertaTicketRepetido) {
+      tareas.push(this.registrarAlertaTicketRepetido(ticketId, ticketSnapshot));
+    }
+    void Promise.allSettled(tareas).catch((error) => {
+      console.error('Error inesperado en alertas post-creación:', error);
+    });
+  }
+
+  private async registrarAlertaTicketRepetido(ticketId: string, ticketSnapshot: Ticket): Promise<void> {
+    const usuarios = new Set<string>(ticketSnapshot.idInvolucrados || []);
+    if (ticketSnapshot.idResponsable) {
+      usuarios.add(String(ticketSnapshot.idResponsable));
     }
 
     try {
@@ -508,23 +537,27 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async enviarAlertaWhatsappSiCorresponde(ticketId: string): Promise<void> {
+  private async enviarAlertaWhatsappSiCorresponde(
+    ticketId: string,
+    ticketSnapshot: Ticket,
+    alertaWhatsappSeleccionada: boolean
+  ): Promise<void> {
     const areaTicket = this.areas.find(
-      area => String(area.id) === String(this.ticket.idArea)
+      area => String(area.id) === String(ticketSnapshot.idArea)
     );
     const grupoNotificacionArea = areaTicket?.notificacionesTicket?.ticketCreado === true
       ? areaTicket.gruponotificacion?.trim()
       : '';
 
-    if (!this.alertaWhatsappSeleccionada && !grupoNotificacionArea) {
+    if (!alertaWhatsappSeleccionada && !grupoNotificacionArea) {
       return;
     }
 
     let alertaCategoriaEnviada = false;
 
-    if (this.alertaWhatsappSeleccionada) {
+    if (alertaWhatsappSeleccionada) {
       try {
-        const mensaje = this.construirMensajeAlertaWhatsapp(true);
+        const mensaje = this.construirMensajeAlertaWhatsapp(true, ticketSnapshot);
         await this.whatsappService.enviarMensajeTexto(environment.grupoWAGerencias, mensaje);
         alertaCategoriaEnviada = true;
       } catch (error) {
@@ -535,7 +568,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
 
     if (grupoNotificacionArea) {
       try {
-        const mensaje = this.construirMensajeAlertaWhatsapp(false);
+        const mensaje = this.construirMensajeAlertaWhatsapp(false, ticketSnapshot);
         await this.whatsappService.enviarMensajeTexto(grupoNotificacionArea, mensaje);
       } catch (error) {
         console.error('Error al enviar la notificación de creación al grupo del área:', error);
@@ -552,9 +585,9 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     }
 
     try {
-      let involucrados = this.ticket.idInvolucrados || [];
-      if(this.ticket.idResponsable !== '') {
-        involucrados = [...involucrados, this.ticket.idResponsable];
+      let involucrados = ticketSnapshot.idInvolucrados || [];
+      if (ticketSnapshot.idResponsable !== '') {
+        involucrados = [...involucrados, ticketSnapshot.idResponsable];
       }
       await this.historialAlertasService.registrarAlerta({
         ticketId,
@@ -568,20 +601,20 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  private construirMensajeAlertaWhatsapp(esCritico: boolean): string {
+  private construirMensajeAlertaWhatsapp(esCritico: boolean, ticketSnapshot: Ticket): string {
     const sucursal = this.sucursales.find(
-      item => String(item.id) === String(this.ticket.idSucursal)
-    )?.nombre || String(this.ticket.idSucursal);
+      item => String(item.id) === String(ticketSnapshot.idSucursal)
+    )?.nombre || String(ticketSnapshot.idSucursal);
     const area = this.areas.find(
-      item => String(item.id) === String(this.ticket.idArea)
-    )?.nombre || String(this.ticket.idArea);
+      item => String(item.id) === String(ticketSnapshot.idArea)
+    )?.nombre || String(ticketSnapshot.idArea);
     const responsable = this.catUsuariosHelp.find(
-      usuario => String(usuario.id) === String(this.ticket.idResponsable)
+      usuario => String(usuario.id) === String(ticketSnapshot.idResponsable)
     );
     const nombreResponsable = responsable
       ? `${responsable.nombre} ${responsable.apellidoP || ''} ${responsable.apellidoM || ''}`.trim()
       : 'Sin asignar';
-    const descripcion = this.ticket.descripcion
+    const descripcion = ticketSnapshot.descripcion
       .replace(/<br\s*\/?>/gi, '\n')
       .replace(/<\/p>/gi, '\n')
       .replace(/<[^>]*>/g, '')
@@ -590,23 +623,23 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     const descripcionCorta = descripcion.length > 500
       ? `${descripcion.slice(0, 497)}...`
       : descripcion;
-    const categoria = this.ticket.nombreSubcategoria
-      ? `${this.ticket.nombreCategoria || 'Sin categoría'} - ${this.ticket.nombreSubcategoria}`
-      : this.ticket.nombreCategoria || 'Sin categoría';
-    const tiempoAtencion = this.ticket.tiempoAtencion !== undefined
-      ? `${this.ticket.tiempoAtencion}${this.ticket.unidadAtencion || ''}`
+    const categoria = ticketSnapshot.nombreSubcategoria
+      ? `${ticketSnapshot.nombreCategoria || 'Sin categoría'} - ${ticketSnapshot.nombreSubcategoria}`
+      : ticketSnapshot.nombreCategoria || 'Sin categoría';
+    const tiempoAtencion = ticketSnapshot.tiempoAtencion !== undefined
+      ? `${ticketSnapshot.tiempoAtencion}${ticketSnapshot.unidadAtencion || ''}`
       : 'N/D';
-    const tiempoResolucion = this.ticket.tiempoResolucion !== undefined
-      ? `${this.ticket.tiempoResolucion}${this.ticket.unidadResolucion || ''}`
+    const tiempoResolucion = ticketSnapshot.tiempoResolucion !== undefined
+      ? `${ticketSnapshot.tiempoResolucion}${ticketSnapshot.unidadResolucion || ''}`
       : 'N/D';
 
     return [
       esCritico ? '======================\n🔥 TICKET: CRITICO\n======================' : '=================\n🟡 TICKET: NUEVO\n=================',
       `Area: ${area}`,
       `Sucursal: ${sucursal}`,
-      `Ticket: ${this.ticket.folio || 'Sin folio'}`,
+      `Ticket: ${ticketSnapshot.folio || 'Sin folio'}`,
       `Responsable: ${nombreResponsable}`,
-      `Prioridad: ${this.ticket.prioridad || 'Sin prioridad'}`,
+      `Prioridad: ${ticketSnapshot.prioridad || 'Sin prioridad'}`,
       `TA: ${tiempoAtencion}`,
       `TR: ${tiempoResolucion}`,
       `Categoria: ${categoria}`,

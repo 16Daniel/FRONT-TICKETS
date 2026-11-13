@@ -25,7 +25,7 @@ export class Ticket {
   tiempoAtencion?: number;
   unidadAtencion?: 'm' | 'h' | 'd';
 
-  fecha: Timestamp | any = new Date();
+  fecha: Timestamp | any = null;
   fechaAtencion?: Timestamp | any;
   fechaFin: Timestamp | null = null;
   solicitante: string = '';
