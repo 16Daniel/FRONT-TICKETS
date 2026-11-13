@@ -1,0 +1,36 @@
+<app-side-menu />
+
+<div class="dashboard-page-wrapper">
+  <div class="dashboard-content-container">
+    <app-page-header
+      subtitle="OPERACIONES & FINANZAS"
+      title="Requisición de Compras">
+    </app-page-header>
+
+    <!-- Selector de Sección por Chips -->
+    <div class="areas-chips-track mb-4">
+      <button
+        *ngFor="let tab of tabsDisponibles"
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tabActivo === tab.id"
+        (click)="cambiarTab(tab.id)">
+        <i [class]="tab.icono"></i>
+        <span class="area-name">{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <!-- Contenido de la Pestaña Activa -->
+    @if (tabActivo === 'COMPRAS') {
+      <app-shopping-admin-page></app-shopping-admin-page>
+    } @else if (tabActivo === 'VIATICO') {
+      <app-viaticos-tab></app-viaticos-tab>
+    } @else if (tabActivo === 'BONO') {
+      <app-bonos-tab></app-bonos-tab>
+    } @else if (tabActivo === 'FONDEO') {
+      <app-fondeo-tarjeta-tab></app-fondeo-tarjeta-tab>
+    } @else if (tabActivo === 'GASOLINA') {
+      <app-gasolina-tab></app-gasolina-tab>
+    }
+  </div>
+</div>

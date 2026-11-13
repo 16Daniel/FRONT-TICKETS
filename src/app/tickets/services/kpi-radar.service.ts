@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Ticket } from '../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../categorias/interfaces/matriz-urgencia.interface';
-import { RadarStats } from '../../categorias/interfaces/radar-stats.interface';
-import { MatrizUrgenciaService } from '../../categorias/services/matriz-urgencia.service';
+import { MatrizUrgencia } from '../interfaces/matriz-urgencia.interface';
+import { RadarStats } from '../interfaces/radar-stats.interface';
+import { MatrizUrgenciaService } from './matriz-urgencia.service';
 import { DatesHelperService } from '../../shared/helpers/dates-helper.service';
 
 export type KpiFiltro = 'totales' | 'terminados' | 'slaAtencion' | 'slaResolucion' | 'mitigacion';

@@ -1,0 +1,185 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '74rem', maxWidth: '96vw' }"
+  [breakpoints]="{ '1199px': '85vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="proveedores-compras-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-store-alt text-danger"></i> Proveedores de Compras
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="proveedores-dialog-body">
+    <p-toast></p-toast>
+
+    <!-- Card 1: Formulario Agregar / Editar Proveedor -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx" [ngClass]="nuevoProveedor.id != undefined ? 'bx-edit' : 'bx-plus-circle'"></i>
+          <span>{{ nuevoProveedor.id != undefined ? 'EDITAR PROVEEDOR' : 'AGREGAR NUEVO PROVEEDOR' }}</span>
+        </div>
+      </div>
+
+      <form (submit)="agregarProveedor()">
+        <div class="rw-form-grid">
+          <div class="rw-field-item">
+            <label class="rw-field-label">RAZÓN SOCIAL</label>
+            <input
+              class="form-control h-42"
+              placeholder="Nombre fiscal / Razón social"
+              [(ngModel)]="nuevoProveedor.razonSocial"
+              name="razonSocial"
+              required />
+          </div>
+
+          <div class="rw-field-item">
+            <label class="rw-field-label">RFC</label>
+            <input
+              class="form-control h-42 text-uppercase"
+              placeholder="RFC del proveedor"
+              [(ngModel)]="nuevoProveedor.rfc"
+              name="rfc"
+              required />
+          </div>
+
+          <div class="rw-field-item">
+            <label class="rw-field-label">BANCO</label>
+            <input
+              class="form-control h-42"
+              placeholder="Institución bancaria"
+              [(ngModel)]="nuevoProveedor.banco"
+              name="banco"
+              required />
+          </div>
+
+          <div class="rw-field-item">
+            <label class="rw-field-label">CUENTA</label>
+            <input
+              class="form-control h-42"
+              placeholder="Número de cuenta"
+              [(ngModel)]="nuevoProveedor.cuenta"
+              name="cuenta"
+              type="text"
+              required />
+          </div>
+
+          <div class="rw-field-item rw-field-span-2">
+            <label class="rw-field-label">CUENTA INTERBANCARIA (CLABE)</label>
+            <input
+              class="form-control h-42"
+              placeholder="CLABE 18 dígitos"
+              [(ngModel)]="nuevoProveedor.cuentaInterbancaria"
+              type="text"
+              name="cuentaInterbancaria"
+              required />
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-3 flex-wrap">
+          <button
+            type="button"
+            class="btn-rw-cancel rw-btn-mobile-full"
+            *ngIf="nuevoProveedor.id != undefined"
+            (click)="cancelar()">
+            <i class="bx bx-x"></i>
+            <span>CANCELAR</span>
+          </button>
+
+          <button
+            type="submit"
+            class="btn-rw-cta rw-btn-mobile-full"
+            [disabled]="!nuevoProveedor.razonSocial || !nuevoProveedor.rfc">
+            <i class="bx" [ngClass]="nuevoProveedor.id != undefined ? 'bx-save' : 'bx-plus'"></i>
+            <span>{{ nuevoProveedor.id != undefined ? 'ACTUALIZAR PROVEEDOR' : 'AGREGAR PROVEEDOR' }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Card 2: Tabla de Proveedores Registrados -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-list-ul"></i>
+          <span>PROVEEDORES REGISTRADOS ({{ proveedores.length }})</span>
+        </div>
+      </div>
+
+      <p-table
+        [value]="proveedores"
+        styleClass="table-proveedores-custom"
+        [responsiveLayout]="'scroll'">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>RAZÓN SOCIAL</th>
+            <th>RFC</th>
+            <th>BANCO</th>
+            <th>CUENTA</th>
+            <th>CUENTA CLABE</th>
+            <th class="text-center" style="width: 100px;">ACCIONES</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-prov>
+          <tr>
+            <td class="fw-bold text-dark">{{ prov.razonSocial }}</td>
+            <td><span class="badge-rfc">{{ prov.rfc }}</span></td>
+            <td>{{ prov.banco }}</td>
+            <td>{{ prov.cuenta }}</td>
+            <td>{{ prov.cuentaInterbancaria }}</td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-2">
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-edit"
+                  (click)="editar(prov)"
+                  title="Editar proveedor">
+                  <i class="bx bx-edit"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-danger"
+                  (click)="confirmarEliminar(prov.id)"
+                  title="Eliminar proveedor">
+                  <i class="bx bx-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              No hay proveedores registrados aún.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '460px', maxWidth: '92vw' }">
+  <ng-template pTemplate="message" let-message>
+    <div class="confirm-content-wrapper">
+      <div class="confirm-badge badge-danger">
+        <i class="bx bx-trash"></i>
+        <span>ELIMINAR PROVEEDOR</span>
+      </div>
+      <p class="confirm-desc">{{ message.message }}</p>
+      <div class="confirm-callout">
+        <i class="bx bx-info-circle"></i>
+        <span>Esta acción eliminará el proveedor del catálogo de compras.</span>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

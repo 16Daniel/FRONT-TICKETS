@@ -50,6 +50,47 @@ export const TICKETS_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/mis-tickets-page/mis-tickets-page'),
     canActivate: [permissionGuard('tickets.mis_tickets.ver')],
+  },
+  {
+    path: 'categorias',
+    title: 'Categorias',
+    canActivate: [permissionGuard('categorias.ver')],
+    loadComponent: () =>
+      import('./pages/categorias-page/categorias-page.component'),
+  },
+  {
+    path: 'categorias/umbral-recurrencias',
+    title: 'Umbral de Recurrencias',
+    canActivate: [permissionGuard('categorias.umbral.ver')],
+    loadComponent: () =>
+      import('./pages/umbral-recurrencias-page/umbral-recurrencias-page.component').then(m => m.UmbralRecurrenciasPageComponent),
+  },
+  {
+    path: 'comites',
+    canActivate: [permissionGuard(['comites.admin.ver', 'tickets.comites.ver'])],
+    children: [
+      {
+        path: '',
+        redirectTo: 'admin',
+        pathMatch: 'full',
+      },
+      {
+        path: 'admin',
+        title: 'Comites',
+        canActivate: [permissionGuard('comites.admin.ver')],
+        loadComponent: () =>
+          import('./pages/comites-page/comites-page').then((m) => m.ComitesPage),
+      },
+      {
+        path: 'tickets',
+        title: 'Tickets por comité',
+        canActivate: [permissionGuard('tickets.comites.ver')],
+        loadComponent: () =>
+          import('./pages/tickets-comites-page/tickets-comites-page').then(
+            (m) => m.TicketsComitesPage,
+          ),
+      },
+    ],
   }
 ];
 

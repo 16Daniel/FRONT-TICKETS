@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 import { BitacoraService } from '../../shared/services/bitacora.service';
-import { ComitesService } from '../../comites/services/comites.service';
-import { Comite } from '../../comites/interfaces/comite';
+import { ComitesService } from './comites.service';
+import { Comite } from '../interfaces/comite';
 
 @Injectable({
   providedIn: 'root',

@@ -61,6 +61,6 @@
   (closeEvent)="cerrarChatMantenimiento()">
 </app-chat-mantenimiento-sys-av-dialog>
 
-<app-admin-compras-chat *ngIf="mostrarModalChatCompra" [showModalChatCompra]="mostrarModalChatCompra" [ticket]="compra"
+<app-admin-compras-chat-dialog *ngIf="mostrarModalChatCompra" [showModalChatCompra]="mostrarModalChatCompra" [ticket]="compra"
   (closeEvent)="cerrarChatCompras()">
-</app-admin-compras-chat>
+</app-admin-compras-chat-dialog>

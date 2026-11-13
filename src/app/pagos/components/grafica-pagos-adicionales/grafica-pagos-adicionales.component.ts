@@ -31,7 +31,6 @@ export class GraficaPagosAdicionalesComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    debugger
     let solicitantes = new Set(this.registros.map(x => x.solicitante));
     for (let item of solicitantes) {
       let total = this.registros.filter(x => x.solicitante == item && x.status != "0").reduce((acc: any, item: PagoAdicional) => acc + item.monto, 0);

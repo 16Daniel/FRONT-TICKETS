@@ -1,0 +1,237 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '80rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '95vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="detalle-compra-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-receipt text-danger"></i> Detalle de Compra
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="detalle-compra-body">
+    <div class="d-flex justify-content-center p-3" *ngIf="loading">
+      <i class="bx bx-loader bx-lg bx-spin" style="color: #d3152a"></i>
+    </div>
+
+    <!-- Sección Artículos -->
+    <div class="rw-detail-card" *ngIf="itemReg != undefined">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-package"></i>
+          <span>ARTÍCULO(S)</span>
+        </div>
+        <span class="rw-total-pill">
+          Total: ${{ obtenerTotalCompras(itemReg.articulos) | number:'1.0-2' }}
+        </span>
+      </div>
+
+      <p-table [value]="itemReg.articulos" [tableStyle]="{ 'min-width': '52rem' }" styleClass="table-compra-detail">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Artículo</th>
+            <th>Uds</th>
+            <th>Precio x unidad</th>
+            <th>Tipo</th>
+            <th>Link de compra</th>
+            <th>Proveedor</th>
+            <th>Justificación</th>
+            <th>Región</th>
+            <th>Sucursal / Área</th>
+            <th>Dirección</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td class="fw-bold text-dark">{{ product.art }}</td>
+            <td>
+              <input type="number" class="form-control form-control-sm" style="min-width: 70px;" [(ngModel)]="product.uds" [disabled]="usuario.id != idAdmin">
+            </td>
+            <td>
+              <input type="number" class="form-control form-control-sm" style="min-width: 90px;" [(ngModel)]="product.precio" [disabled]="usuario.id != idAdmin">
+            </td>
+            <td>{{ product.tipo }}</td>
+            <td>
+              <button type="button" class="rw-link-pill" (click)="abrirLink(product.link)" *ngIf="product.link != ''">
+                <i class="bx bx-link-external"></i> Abrir link
+              </button>
+            </td>
+            <td>{{ product.nomprov }}</td>
+            <td>{{ product.justificacion }}</td>
+            <td>{{ product.region }}</td>
+            <td>{{ obtenerNombreSucursal(product.idsucursal) }}</td>
+            <td>{{ product.direccionentrega }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Sección Proveedor -->
+    <div class="rw-detail-card" *ngIf="itemReg != undefined">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-store-alt"></i>
+          <span>PROVEEDOR</span>
+        </div>
+      </div>
+
+      <p-table [value]="obtenerProveedor(itemReg!.articulos[0].idprov)" [tableStyle]="{ 'min-width': '45rem' }" styleClass="table-compra-detail">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>RAZÓN SOCIAL</th>
+            <th>CUENTA</th>
+            <th>CUENTA INTERBANCARIA</th>
+            <th>BANCO</th>
+            <th>RFC</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-prov>
+          <tr>
+            <td class="fw-bold text-dark">{{ prov.razonSocial }}</td>
+            <td>{{ prov.cuenta }}</td>
+            <td>{{ prov.cuentaInterbancaria }}</td>
+            <td>{{ prov.banco }}</td>
+            <td>{{ prov.rfc }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Sección Gestión Administrativa -->
+    <div class="rw-detail-card" *ngIf="usuario.id == idAdmin">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-slider-alt"></i>
+          <span>GESTIÓN DE COMPRA</span>
+        </div>
+      </div>
+
+      <div class="rw-admin-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label">ESTATUS</label>
+          <select class="form-select h-42" [(ngModel)]="formStatus">
+            <option [value]="item.id" *ngFor="let item of catStatus">{{ item.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">ESTATUS PAGO</label>
+          <select class="form-select h-42" [(ngModel)]="formStatusPago">
+            <option [value]="item.id" *ngFor="let item of catStatusPago">{{ item.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">MÉTODO DE PAGO</label>
+          <select class="form-select h-42" [(ngModel)]="formMetodoPago">
+            <option *ngFor="let item of catMetodosPago" [value]="item.id">{{ item.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">FECHA DE PAGO</label>
+          <p-calendar
+            [(ngModel)]="fechaPago"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="fechaPagoInput"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+            [showButtonBar]="true"
+            [touchUI]="true" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">FECHA DE ENTREGA</label>
+          <p-calendar
+            [(ngModel)]="fechaentrega"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="fechaEntregaInput"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+            [showButtonBar]="true"
+            [touchUI]="true" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">PALABRA CLAVE</label>
+          <input type="text" class="form-control h-42" [(ngModel)]="formPalabraClave">
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Acciones -->
+    <div class="rw-modal-actions" *ngIf="itemReg != undefined">
+      <button
+        type="button"
+        class="btn btn-warning rw-action-btn"
+        (click)="abrirModalDocumento(itemReg, 2)"
+        *ngIf="itemReg.statuspago == '2' && usuario.id == idAdmin">
+        <i class="bx bx-cloud-upload"></i>
+        <span>COMPROBANTE DE PAGO</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-danger rw-action-btn"
+        [disabled]="itemReg == undefined"
+        (click)="solicitarCancelacion()"
+        *ngIf="itemReg!.statuscompra == '1' && itemReg!.solicitudCancelacion == false && idAdmin != usuario.id">
+        <i class="bx bx-x-circle"></i>
+        <span>CANCELAR COMPRA</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-danger rw-action-btn"
+        [disabled]="itemReg == undefined"
+        *ngIf="itemReg!.solicitudCancelacion && itemReg!.statuscompra != '0' && usuario.id == idAdmin"
+        (click)="confirmarCancelacion()">
+        <i class="bx bx-check"></i>
+        <span>CONFIRMAR CANCELACIÓN</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-rw-cta rw-action-btn"
+        [disabled]="itemReg == undefined"
+        (click)="guardar()"
+        *ngIf="usuario.id == idAdmin">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR</span>
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '460px', maxWidth: '92vw' }">
+  <ng-template pTemplate="message" let-message>
+    <div class="confirm-content-wrapper">
+      <div class="confirm-badge badge-danger">
+        <i class="bx bx-error-circle"></i>
+        <span>CANCELACIÓN DE COMPRA</span>
+      </div>
+      <p class="confirm-desc">{{ message.message }}</p>
+      <div class="confirm-callout">
+        <i class="bx bx-info-circle"></i>
+        <span>Esta acción cambiará el estatus de la solicitud de compra.</span>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+
+<app-subir-factura-compra-dialog *ngIf="modalFactura" [visible]="modalFactura" (closeEvent)="modalFactura = false"
+  [Reg]="itemReg" [tipoDoc]="tipoDoc"></app-subir-factura-compra-dialog>

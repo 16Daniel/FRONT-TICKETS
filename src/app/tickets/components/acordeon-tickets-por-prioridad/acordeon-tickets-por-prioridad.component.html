@@ -1,6 +1,4 @@
-<app-tpvs-devices-table *ngIf="mostrarTpvs" [sucursal]="sucursal"></app-tpvs-devices-table>
-
-<p-accordion class="custom-branches-accordion w-full" *ngIf="!mostrarTpvs">
+<p-accordion class="custom-branches-accordion w-full">
   <p-accordionTab *ngFor="let item of ['Crítico', 'Alto', 'Medio', 'Bajo']">
     <ng-template pTemplate="header">
       <div class="branch-accordion-header priority-{{item}}">

@@ -12,7 +12,7 @@ import { MantenimientoFactoryService } from '../../../mantenimientos/services/ma
 import { ShoppingService } from '../../../pagos/services/shopping.service';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
-import { AdminComprasChatComponent } from '../../../pagos/dialogs/admin-compras-chat/admin-compras-chat.component';
+import { AdminComprasChatDialogComponent } from '../../../pagos/dialogs/admin-compras-chat-dialog/admin-compras-chat-dialog.component';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { ChatMantenimientoAudioVideoComponent } from '../../../mantenimientos/dialogs/sistemas-av/chat-mantenimiento-sys-av-dialog/chat-mantenimiento-sys-av-dialog.component';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
@@ -25,7 +25,7 @@ import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-t
     CommonModule,
     ButtonModule,
     ModalMaintenanceChatComponent,
-    AdminComprasChatComponent,
+    AdminComprasChatDialogComponent,
     ChatMantenimientoAudioVideoComponent,
     DetalleTicketDialogComponent
   ],

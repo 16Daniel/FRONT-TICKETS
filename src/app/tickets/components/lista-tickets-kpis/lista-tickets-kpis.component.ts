@@ -2,13 +2,13 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { Ticket } from '../../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { CategoriesService } from '../../../categorias/services/categories.service';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-lista-tickets-kpis',

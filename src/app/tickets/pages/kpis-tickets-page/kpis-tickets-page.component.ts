@@ -12,14 +12,14 @@ import { KpisFiltrosComponent } from '../../components/kpis-filtros/kpis-filtros
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 import { Ticket } from '../../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 import { GraficaDesempenoCategoriasComponent } from '../../components/grafica-desempeno-categorias/grafica-desempeno-categorias.component';
 import { GraficaDesempenoSucursalesComponent } from '../../components/grafica-desempeno-sucursales/grafica-desempeno-sucursales.component';
 import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-desempeno-responsables/grafica-desempeno-responsables.component';
 
 // Servicios de datos para KPIs
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
-import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 
 @Component({
   selector: 'app-kpis-tickets-page',

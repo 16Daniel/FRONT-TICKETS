@@ -13,7 +13,7 @@ import { TicketsService } from '../../services/tickets.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BitacoraService } from '../../../shared/services/bitacora.service';
-import { HistorialAlertasService } from '../../../alertas/service/historial-alertas.service';
+import { HistorialAlertasService } from '../../../shared/services/historial-alertas.service';
 import { TicketDetailHelperService } from '../../services/ticket-detail-helper.service';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 import { TicketAccionesBarComponent } from '../ticket-acciones-bar/ticket-acciones-bar.component';
