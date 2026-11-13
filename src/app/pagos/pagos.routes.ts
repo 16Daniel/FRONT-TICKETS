@@ -13,10 +13,10 @@ export const PAGOS_ROUTES: Routes = [
       },
       {
         path: 'compras',
-        title: 'Compras',
+        title: 'Requisición de Compras',
         canActivate: [permissionGuard('compras.ver')],
         loadComponent: () =>
-          import('./layout/pagos-tabs/pagos-tabs.component'),
+          import('./pages/requisicion-compras-page/requisicion-compras-page.component'),
       },
     ],
   },

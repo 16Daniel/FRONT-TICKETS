@@ -1,0 +1,100 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '48rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '75vw', '575px': '100vw' }"
+  [maximizable]="false"
+  [draggable]="false"
+  styleClass="archivos-pagos-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-folder-open text-danger"></i> Archivos Adjuntos
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="archivos-dialog-body">
+    <div class="d-flex justify-content-center p-3" *ngIf="loading">
+      <i class="bx bx-loader bx-lg bx-spin text-danger"></i>
+    </div>
+
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-file"></i>
+          <span>DOCUMENTOS ADJUNTOS ({{ links.length }})</span>
+        </div>
+      </div>
+
+      <div class="rw-empty-files" *ngIf="links.length === 0">
+        <i class="bx bx-folder-minus text-muted"></i>
+        <p class="m-0 fw-bold text-dark">No hay archivos adjuntos</p>
+        <span class="text-muted small">Esta solicitud no cuenta con documentos adjuntos actualmente.</span>
+      </div>
+
+      <div class="rw-file-list" *ngIf="links.length > 0">
+        <div class="rw-file-item" *ngFor="let item of links; let i = index">
+          <div class="rw-file-leading">
+            <div
+              class="rw-file-badge"
+              [ngClass]="{
+                'badge-pdf': esPdf(item),
+                'badge-excel': esExcel(item),
+                'badge-img': !esPdf(item) && !esExcel(item)
+              }">
+              <i class="bx bxs-file-pdf" *ngIf="esPdf(item)"></i>
+              <i class="bx bxs-file" *ngIf="esExcel(item)"></i>
+              <i class="bx bxs-file-image" *ngIf="!esPdf(item) && !esExcel(item)"></i>
+            </div>
+            <div class="rw-file-text">
+              <span class="rw-file-name" [title]="getFileNameFromUrlManual(item)">
+                {{ getFileNameFromUrlManual(item) }}
+              </span>
+              <span class="rw-file-type">
+                {{ esPdf(item) ? 'Documento PDF' : (esExcel(item) ? 'Hoja de Cálculo Excel' : 'Imagen Adjunta') }}
+              </span>
+            </div>
+          </div>
+
+          <div class="rw-file-actions">
+            <button
+              type="button"
+              class="btn-action-table btn-action-download"
+              (click)="downloadPdfDirect(item)"
+              title="Descargar / Abrir archivo">
+              <i class="bx bx-download"></i>
+            </button>
+            <button
+              type="button"
+              class="btn-action-table btn-action-danger"
+              (click)="confrimarEliminar(item, i)"
+              title="Eliminar archivo">
+              <i class="bx bx-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '460px', maxWidth: '92vw' }">
+  <ng-template pTemplate="message" let-message>
+    <div class="confirm-content-wrapper">
+      <div class="confirm-badge badge-danger">
+        <i class="bx bx-trash"></i>
+        <span>ELIMINAR ARCHIVO</span>
+      </div>
+      <p class="confirm-desc">{{ message.message }}</p>
+      <div class="confirm-callout">
+        <i class="bx bx-info-circle"></i>
+        <span>Esta acción eliminará permanentemente el archivo adjunto de la solicitud.</span>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { AgregarPagoComponent } from '../agregar-pago/agregar-pago.component';
+import { AgregarPagoDialogComponent } from '../../dialogs/agregar-pago-dialog/agregar-pago-dialog.component';
 import { AdminPagosAdicionalesTableComponent } from '../admin-pagos-adicionales-table/admin-pagos-adicionales-table.component';
 import { FiltroPagosAdicionalesComponent } from '../filtro-pagos-adicionales/filtro-pagos-adicionales.component';
 import { GraficaPagosAdicionalesComponent } from '../grafica-pagos-adicionales/grafica-pagos-adicionales.component';
@@ -11,7 +11,7 @@ import { PagoAdicional } from '../../interfaces/AdministracionCompra';
   standalone: true,
   imports: [
     CommonModule,
-    AgregarPagoComponent,
+    AgregarPagoDialogComponent,
     AdminPagosAdicionalesTableComponent,
     FiltroPagosAdicionalesComponent,
     GraficaPagosAdicionalesComponent

@@ -61,14 +61,6 @@ export const routes: Routes = [
         loadChildren: () => import('./tareas/tareas.routes').then(m => m.TAREAS_MAIN_ROUTES)
       },
       {
-        path: 'categorias',
-        loadChildren: () => import('./categorias/categorias.routes')
-      },
-      {
-        path: '',
-        loadChildren: () => import('./comites/comites.routes'),
-      },
-      {
         path: 'sin-acceso',
         title: 'Acceso Restringido',
         loadComponent: () => import('./shared/pages/sin-acceso-page/sin-acceso-page.component'),

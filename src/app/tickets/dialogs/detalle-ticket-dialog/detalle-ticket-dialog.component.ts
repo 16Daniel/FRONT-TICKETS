@@ -21,12 +21,12 @@ import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
 import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { CategoriesService } from '../../../categorias/services/categories.service';
+import { CategoriesService } from '../../services/categories.service';
 import { StatusTicketService } from '../../services/status-ticket.service';
 import { SupportTypesService } from '../../services/support-types.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { ComitesService } from '../../../comites/services/comites.service';
+import { ComitesService } from '../../services/comites.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
@@ -6,9 +6,6 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
 import { Ticket } from '../../interfaces/ticket.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 @Component({
   selector: 'app-acordeon-tickets-por-prioridad',
@@ -18,29 +15,16 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     AccordionModule,
     BadgeModule,
     CommonModule,
-    TooltipModule,
-    TpvsDevicesTableComponent
+    TooltipModule
   ],
   templateUrl: './acordeon-tickets-por-prioridad.component.html',
   styleUrl: './acordeon-tickets-por-prioridad.component.scss',
 })
-export class AcordeonTicketsPorPrioridadComponent implements OnInit {
+export class AcordeonTicketsPorPrioridadComponent {
   @Input() tickets: Ticket[] = [];
   @Input() esEspectadorActivo: boolean = false;
-  @Input() mostrarTpvs: boolean = false;
-  sucursal: Sucursal = new Sucursal;
-  userdata: any;
 
   @Output() clickEvent = new EventEmitter<Ticket>();
-
-  constructor(private branchesService: BranchesService) {
-
-  }
-
-  ngOnInit(): void {
-    this.userdata = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.branchesService.getById(this.userdata.sucursales[0].id).subscribe(sucursal => this.sucursal = sucursal);
-  }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {
     this.clickEvent.emit(ticket);

@@ -9,7 +9,7 @@ import {
   CategoriaAlerta,
   HistorialAlerta,
   HistorialAlertasService
-} from '../../../alertas/service/historial-alertas.service';
+} from '../../services/historial-alertas.service';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { Ticket } from '../../../tickets/interfaces/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';

@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
-import { buildFirebaseSwUrl } from '../../alertas/service/fcm.service';
+import { buildFirebaseSwUrl } from './fcm.service';
 
 declare global {
   interface Window {

@@ -63,3 +63,20 @@
   border: 1px solid #E2E8F0;
   color: #94A3B8;
 }
+
+@media (max-width: 575.98px) {
+  .kpi-card {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .kpi-title {
+    font-size: 0.62rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .kpi-icon-circle {
+    width: 24px;
+    height: 24px;
+    font-size: 0.85rem;
+  }
+}

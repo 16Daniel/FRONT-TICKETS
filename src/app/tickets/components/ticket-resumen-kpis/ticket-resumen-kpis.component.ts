@@ -6,7 +6,7 @@ import { Ticket } from '../../interfaces/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
-import { MiniMatrizUrgenciaComponent } from '../../../categorias/components/mini-matriz-urgencia/mini-matriz-urgencia.component';
+import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
 
 @Component({
   selector: 'app-ticket-resumen-kpis',

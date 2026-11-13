@@ -9,9 +9,9 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { ComitesService } from '../../../comites/services/comites.service';
-import { Comite } from '../../../comites/interfaces/comite';
-import { HistorialAlertasService } from '../../../alertas/service/historial-alertas.service';
+import { ComitesService } from '../../services/comites.service';
+import { Comite } from '../../interfaces/comite';
+import { HistorialAlertasService } from '../../../shared/services/historial-alertas.service';
 import { TicketDetailHelperService } from '../../services/ticket-detail-helper.service';
 
 @Component({

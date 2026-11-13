@@ -742,6 +742,88 @@ html, body {
   }
 }
 
+/* PrimeNG FileUpload - Rebel Wings Design System */
+.subir-documento-pago-dialog,
+.subir-factura-compra-dialog {
+  .p-fileupload-files,
+  .p-fileupload-row,
+  .p-fileupload-content > .p-fileupload-files {
+    display: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    overflow: hidden !important;
+  }
+}
+
+.p-fileupload {
+  .p-fileupload-buttonbar {
+    .p-fileupload-choose,
+    .p-button.p-fileupload-choose {
+      background: linear-gradient(135deg, #d3152a 0%, #b91022 100%) !important;
+      border: none !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 14px rgba(211, 21, 42, 0.28) !important;
+
+      &:not(.p-disabled):hover,
+      &:hover {
+        background: linear-gradient(135deg, #e01930 0%, #c41326 100%) !important;
+        border-color: #e01930 !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 18px rgba(211, 21, 42, 0.38) !important;
+      }
+
+      &:not(.p-disabled):active,
+      &:active {
+        background: #b91022 !important;
+        border-color: #b91022 !important;
+        color: #ffffff !important;
+      }
+
+      &.p-focus,
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.25) !important;
+      }
+    }
+  }
+
+  .p-fileupload-row {
+    button.p-button,
+    .p-button,
+    .p-button.p-button-icon-only {
+      background-color: #fef2f2 !important;
+      border: 1px solid #fecaca !important;
+      color: #ef4444 !important;
+      border-radius: 8px !important;
+      box-shadow: none !important;
+
+      .p-button-icon {
+        color: #ef4444 !important;
+      }
+
+      &:hover,
+      &:not(.p-disabled):hover {
+        background-color: #fee2e2 !important;
+        color: #dc2626 !important;
+        border-color: #fca5a5 !important;
+
+        .p-button-icon {
+          color: #dc2626 !important;
+        }
+      }
+
+      &:active,
+      &:not(.p-disabled):active {
+        background-color: #fecaca !important;
+        color: #b91c1c !important;
+      }
+    }
+  }
+}
+
 /* ==========================================================================
    Confirm Dialog - Rebel Wings Design System
    ========================================================================== */

@@ -1,0 +1,139 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '52rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '90vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="pago-adicional-detalle-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-edit text-danger"></i> Detalle del Pago
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="pago-detalle-body">
+    <div class="d-flex justify-content-center p-3" *ngIf="loading">
+      <i class="bx bx-loader bx-lg bx-spin text-danger"></i>
+    </div>
+
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-receipt"></i>
+          <span>DATOS DE LA SOLICITUD</span>
+        </div>
+      </div>
+
+      <div class="rw-form-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label">SOLICITANTE</label>
+          <input
+            class="form-control h-42"
+            type="text"
+            [(ngModel)]="formSolicitante"
+            [disabled]="usuario.id != idAdmin" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">BENEFICIARIO</label>
+          <input
+            class="form-control h-42"
+            type="text"
+            [(ngModel)]="formBeneficiario"
+            [disabled]="usuario.id != idAdmin" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">MONTO</label>
+          <input
+            class="form-control h-42"
+            type="number"
+            [(ngModel)]="formMonto"
+            [disabled]="usuario.id != idAdmin" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">JUSTIFICACIÓN</label>
+          <input
+            class="form-control h-42"
+            type="text"
+            [(ngModel)]="formJustificacion"
+            [disabled]="usuario.id != idAdmin" />
+        </div>
+
+        <div class="rw-field-item rw-field-full">
+          <label class="rw-field-label">ESTATUS</label>
+          <select
+            class="form-select h-42"
+            [(ngModel)]="estatus"
+            [disabled]="usuario.id != idAdmin">
+            <option value="0">CANCELADO</option>
+            <option value="1">POR PAGAR</option>
+            <option value="2">PAGADO</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-end gap-2">
+      <button
+        type="button"
+        class="btn btn-outline-danger rw-btn-action rw-btn-mobile-full"
+        [disabled]="itemReg == undefined"
+        (click)="solicitarCancelacion()"
+        *ngIf="itemReg!.status == '1' && itemReg!.solicitudCancelacion == false && idAdmin != usuario.id">
+        <i class="bx bx-x-circle"></i>
+        <span>CANCELAR</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-danger rw-btn-action rw-btn-mobile-full"
+        [disabled]="itemReg == undefined"
+        *ngIf="itemReg!.solicitudCancelacion && itemReg!.status != '0' && usuario.id == idAdmin"
+        (click)="confirmarCancelacion()">
+        <i class="bx bx-check"></i>
+        <span>CONFIRMAR CANCELACIÓN</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="itemReg == undefined"
+        (click)="guardar()"
+        *ngIf="usuario.id == idAdmin">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR</span>
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '460px', maxWidth: '92vw' }">
+  <ng-template pTemplate="message" let-message>
+    <div class="confirm-content-wrapper">
+      <div class="confirm-badge badge-danger">
+        <i class="bx bx-error-circle"></i>
+        <span>CANCELACIÓN DE PAGO</span>
+      </div>
+      <p class="confirm-desc">{{ message.message }}</p>
+      <div class="confirm-callout">
+        <i class="bx bx-info-circle"></i>
+        <span>Esta acción cambiará el estatus de la solicitud de pago.</span>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

@@ -17,9 +17,9 @@ import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { KpisTicketsService } from '../../services/kpis-tickets.service';
-import { MatrizUrgenciaService } from '../../../categorias/services/matriz-urgencia.service';
+import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
-import { MatrizUrgencia } from '../../../categorias/interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
 
 @Component({
   selector: 'app-sucursal-area-tab',
@@ -50,7 +50,6 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
-  mostrarTPVs: boolean = false;
 
   sucursal: Sucursal | undefined;
   usuario: Usuario;

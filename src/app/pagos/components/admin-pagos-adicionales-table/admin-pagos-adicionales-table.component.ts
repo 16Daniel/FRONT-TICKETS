@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import { Timestamp } from '@angular/fire/firestore'
 
-import { SubirDocumentoPagoAdicionalComponent } from "../../dialogs/subir-documento-pago-adicional/subir-documento-pago-adicional.component";
-import { ArchivosComponent } from "../../dialogs/Archivos/Archivos.component";
-import { AdminComprasChatComponent } from "../../dialogs/admin-compras-chat/admin-compras-chat.component";
-import { PagoAdicionalDetallesComponent } from "../../dialogs/pago-adicional-detalles/pago-adicional-detalles.component";
+import { SubirDocumentoPagoDialogComponent } from "../../dialogs/subir-documento-pago-dialog/subir-documento-pago-dialog.component";
+import { ArchivosPagosDialogComponent } from "../../dialogs/archivos-pagos-dialog/archivos-pagos-dialog.component";
+import { AdminComprasChatDialogComponent } from "../../dialogs/admin-compras-chat-dialog/admin-compras-chat-dialog.component";
+import { PagoAdicionalDetalleDialogComponent } from "../../dialogs/pago-adicional-detalle-dialog/pago-adicional-detalle-dialog.component";
 import { PagoAdicional } from '../../interfaces/AdministracionCompra';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { environment } from '../../../../environments/environments';
@@ -16,7 +17,7 @@ import { ShoppingService } from '../../services/shopping.service';
 @Component({
   selector: 'app-admin-pagos-adicionales-table',
   standalone: true,
-  imports: [CommonModule, TableModule, SubirDocumentoPagoAdicionalComponent, ArchivosComponent, AdminComprasChatComponent, PagoAdicionalDetallesComponent],
+  imports: [CommonModule, TableModule, TooltipModule, SubirDocumentoPagoDialogComponent, ArchivosPagosDialogComponent, AdminComprasChatDialogComponent, PagoAdicionalDetalleDialogComponent],
   templateUrl: './admin-pagos-adicionales-table.component.html',
   styleUrl: './admin-pagos-adicionales-table.component.scss',
 })
