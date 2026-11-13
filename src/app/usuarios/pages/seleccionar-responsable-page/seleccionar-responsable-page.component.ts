@@ -66,10 +66,25 @@ export default class SeleccionarResponsablePageComponent implements OnInit {
   async validarPin() {
     if (this.pinIngresado.length !== 4) return;
 
-    const responsable = this.responsablesService.buscarPorPin(this.pinIngresado);
+    const idUsuarioLogueado = String(this.usuario?.id ?? '').trim();
+    if (!idUsuarioLogueado) {
+      this.errorPin = 'No se encontró el usuario logueado';
+      this.pinIngresado = '';
+      return;
+    }
+
+    const responsable = this.responsablesService.responsables.find(
+      (r) =>
+        r.pin === this.pinIngresado &&
+        r.eliminado === false &&
+        String(r.idUsuario ?? '').trim() === idUsuarioLogueado
+    );
 
     if (!responsable) {
-      this.errorPin = 'PIN incorrecto';
+      const pinDeOtroUsuario = this.responsablesService.buscarPorPin(this.pinIngresado);
+      this.errorPin = pinDeOtroUsuario
+        ? 'El PIN no pertenece al usuario logueado'
+        : 'PIN incorrecto';
       this.pinIngresado = '';
       return;
     }
