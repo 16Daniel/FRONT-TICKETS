@@ -11,7 +11,7 @@ import {
   HistorialAlertasService
 } from '../../services/historial-alertas.service';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';

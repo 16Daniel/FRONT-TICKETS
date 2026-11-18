@@ -56,6 +56,7 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
 
   areas: Area[] = [];
   areaSeleccionadaId: string = 'sucursales';
+  confirmDialogTipo: 'eliminar' | 'desbloquear' = 'eliminar';
 
   usuario: Usuario;
 
@@ -72,8 +73,8 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.usersService.usuarios$.subscribe(usuarios => {
-      this.usuarios = usuarios;
+    this.subscripcionUsuarios = this.usersService.usuarios$.subscribe(usuarios => {
+      this.usuarios = usuarios.filter(u => !u.eliminado);
       if (this.usuario.idRol == '5') {
         this.usuarios = this.usuarios.filter(x => x.idArea == this.usuario.idArea);
       }
@@ -139,13 +140,16 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   }
 
   confirmaEliminacion(id: string | any) {
+    this.confirmDialogTipo = 'eliminar';
     this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: '¿Está seguro que desea eliminar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      header: '¿Eliminar usuario?',
+      message: '¿Está seguro que desea eliminar este usuario?',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      acceptIcon: 'pi pi-trash',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
       accept: () => {
         this.eliminarUsuario(id);
       },
@@ -160,8 +164,42 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   }
 
   async eliminarUsuario(idu: string) {
-    await this.documentsService.deleteDocument('usuarios', idu);
-    this.showMessage('success', 'Success', 'Eliminado correctamente');
+    try {
+      await this.usersService.updateUserDeletedStatus(idu, true);
+      this.showMessage('success', 'Success', 'Eliminado correctamente');
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+      this.showMessage('error', 'Error', 'No se pudo eliminar el usuario');
+    }
+  }
+
+  confirmaDesbloqueo(usuario: Usuario) {
+    const nombreCompleto = `${usuario.nombre} ${usuario.apellidoP} ${usuario.apellidoM}`.trim();
+    this.confirmDialogTipo = 'desbloquear';
+    this.confirmationService.confirm({
+      header: '¿Desbloquear usuario?',
+      message: `¿Está seguro que desea desbloquear a "${nombreCompleto || usuario.email}"?`,
+      acceptLabel: 'Sí, desbloquear',
+      rejectLabel: 'Cancelar',
+      acceptIcon: 'pi pi-lock-open',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
+      accept: () => {
+        this.desbloquearUsuario(usuario);
+      },
+      reject: () => { },
+    });
+  }
+
+  async desbloquearUsuario(usuario: Usuario) {
+    try {
+      await this.usersService.updateUserPinAttempts(usuario.id, 0, false);
+      this.showMessage('success', 'Usuario desbloqueado', 'El usuario fue desbloqueado y sus intentos se reiniciaron.');
+    } catch (error) {
+      console.error('Error al desbloquear usuario:', error);
+      this.showMessage('error', 'Error', 'No se pudo desbloquear el usuario');
+    }
   }
 
   obtenerRoles() {

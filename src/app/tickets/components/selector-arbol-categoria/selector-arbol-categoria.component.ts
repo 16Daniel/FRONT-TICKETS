@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { esNodoRama, obtenerHijosOrdenadosRama } from '../../helpers/arbol-categorias.helper';
 
@@ -51,7 +51,7 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
   }
 
   constructor(
-    private categoriesService: CategoriesService,
+    private categoriasService: CategoriasService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -92,7 +92,7 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
   private cargarCategorias(): void {
     this.subscripcionCategorias?.unsubscribe();
     const areaIdStr = this.idArea ? String(this.idArea) : undefined;
-    this.subscripcionCategorias = this.categoriesService.get(areaIdStr).subscribe({
+    this.subscripcionCategorias = this.categoriasService.get(areaIdStr).subscribe({
       next: (cats) => {
         this.procesarCategorias(cats);
         this.cdr.detectChanges();

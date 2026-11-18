@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { collection, Firestore, getDocs, query, where, Timestamp } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Ticket } from '../interfaces/ticket.model';
+import { Ticket } from '../models/ticket.model';
 
 export interface KpisFiltros {
   fechaInicio?: Date | null;

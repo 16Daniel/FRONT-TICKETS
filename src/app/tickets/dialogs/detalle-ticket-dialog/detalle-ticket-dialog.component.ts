@@ -15,15 +15,15 @@ import { MessageService } from 'primeng/api';
 import { TabViewModule } from 'primeng/tabview';
 import { Subscription } from 'rxjs';
 
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
-import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
+import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { CategoriesService } from '../../services/categories.service';
-import { StatusTicketService } from '../../services/status-ticket.service';
-import { SupportTypesService } from '../../services/support-types.service';
+import { CategoriasService } from '../../services/categorias.service';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { TiposSoporteService } from '../../services/tipos-soporte.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { ComitesService } from '../../services/comites.service';
@@ -79,9 +79,9 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
 
   constructor(
     private branchesService: BranchesService,
-    private categoriesService: CategoriesService,
-    private statusTicketService: StatusTicketService,
-    private supportTypesService: SupportTypesService,
+    private categoriasService: CategoriasService,
+    private estatusTicketService: EstatusTicketService,
+    private tiposSoporteService: TiposSoporteService,
     public responsablesService: ResponsablesService,
     public comitesService: ComitesService,
     private mensajesPendientesService: MensajesPendientesService,
@@ -151,7 +151,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
       });
     }
 
-    this.categoriesSub = this.categoriesService.get().subscribe({
+    this.categoriesSub = this.categoriasService.get().subscribe({
       next: (data) => {
         this.categorias = data.map((item: any) => ({
           ...item,
@@ -163,7 +163,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
       error: () => {},
     });
 
-    this.statusTicketSub = this.statusTicketService.get().subscribe({
+    this.statusTicketSub = this.estatusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTickets = (data || []).map((item: any) => ({
           ...item,
@@ -175,7 +175,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
       error: () => {},
     });
 
-    this.supportTypesSub = this.supportTypesService.get().subscribe({
+    this.supportTypesSub = this.tiposSoporteService.get().subscribe({
       next: (data) => {
         this.tiposSoporte = (data || []).map((item: any) => ({
           ...item,

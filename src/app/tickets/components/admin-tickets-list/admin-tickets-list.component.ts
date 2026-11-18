@@ -13,21 +13,19 @@ import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
-import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
-import { TipoSoporte } from '../../interfaces/tipo-soporte.model';
-import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
+import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { Categoria } from '../../models/categoria.model';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { CategoriesService } from '../../services/categories.service';
-import { SupportTypesService } from '../../services/support-types.service';
-import { TicketsPriorityService } from '../../services/tickets-priority.service';
-import { StatusTicketService } from '../../services/status-ticket.service';
+import { CategoriasService } from '../../services/categorias.service';
+import { TiposSoporteService } from '../../services/tipos-soporte.service';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
@@ -62,7 +60,6 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   sucursales: Sucursal[] = [];
   tiposSoporte: TipoSoporte[] = [];
   estatusTicket: EstatusTicket[] = [];
-  prioridadesTicket: PrioridadTicket[] = [];
   categorias: Categoria[] = [];
 
   mostrarModalTicketDetail: boolean = false;
@@ -84,7 +81,6 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   private categoriesSub?: Subscription;
   private branchesSub?: Subscription;
   private supportTypesSub?: Subscription;
-  private ticketsPrioritySub?: Subscription;
   private statusTicketSub?: Subscription;
 
   constructor(
@@ -94,10 +90,9 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     public areasService: AreasService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private categoriesService: CategoriesService,
-    private supportTypesService: SupportTypesService,
-    private ticketsPriorityService: TicketsPriorityService,
-    private statusTicketService: StatusTicketService,
+    private categoriasService: CategoriasService,
+    private tiposSoporteService: TiposSoporteService,
+    private estatusTicketService: EstatusTicketService,
     public datesHelper: DatesHelperService,
   ) {}
 
@@ -106,7 +101,6 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     this.initAreas();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
-    this.obtenerPrioridadesTicket();
     this.obtenerTiposSoporte();
     this.obtenerEstatusTicket();
     this.obtenerCategorias();
@@ -124,7 +118,6 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     this.categoriesSub?.unsubscribe();
     this.branchesSub?.unsubscribe();
     this.supportTypesSub?.unsubscribe();
-    this.ticketsPrioritySub?.unsubscribe();
     this.statusTicketSub?.unsubscribe();
   }
 
@@ -151,7 +144,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   obtenerTiposSoporte() {
-    this.supportTypesSub = this.supportTypesService.get().subscribe({
+    this.supportTypesSub = this.tiposSoporteService.get().subscribe({
       next: (data) => {
         this.tiposSoporte = data;
         this.cdr.markForCheck();
@@ -164,7 +157,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   obtenerEstatusTicket() {
-    this.statusTicketSub = this.statusTicketService.get().subscribe({
+    this.statusTicketSub = this.estatusTicketService.get().subscribe({
       next: (data) => {
         this.estatusTicket = data;
         this.cdr.markForCheck();
@@ -181,22 +174,9 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     return this.estatusTicket.find(s => String(s.id) === String(idStatus));
   }
 
-  obtenerPrioridadesTicket() {
-    this.ticketsPrioritySub = this.ticketsPriorityService.get().subscribe({
-      next: (data) => {
-        this.prioridadesTicket = data;
-        this.cdr.markForCheck();
-      },
-      error: (error) => {
-        console.log(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
   obtenerCategorias() {
     this.categoriesSub?.unsubscribe();
-    this.categoriesSub = this.categoriesService.get().subscribe({
+    this.categoriesSub = this.categoriasService.get().subscribe({
       next: (data) => {
         this.categorias = data.map((item: any) => ({
           ...item,

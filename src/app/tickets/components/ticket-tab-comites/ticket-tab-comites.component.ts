@@ -3,14 +3,14 @@ import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges }
 import { Timestamp } from '@angular/fire/firestore';
 import { AvatarModule } from 'ngx-avatars';
 import { MessageService } from 'primeng/api';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
 import { ComitesService } from '../../services/comites.service';
-import { Comite } from '../../interfaces/comite';
+import { Comite } from '../../models/comite.model';
 import { HistorialAlertasService } from '../../../shared/services/historial-alertas.service';
 import { TicketDetailHelperService } from '../../services/ticket-detail-helper.service';
 

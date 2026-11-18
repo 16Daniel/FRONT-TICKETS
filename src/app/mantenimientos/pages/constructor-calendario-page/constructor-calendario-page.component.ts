@@ -15,8 +15,8 @@ import { VisitaFiltrosToolbarComponent } from '../../components/visita-filtros-t
 import { VisitaSucursalesPicklistComponent } from '../../components/visita-sucursales-picklist/visita-sucursales-picklist.component';
 
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { Guardia } from '../../../tickets/interfaces/guardia';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Guardia } from '../../../tickets/models/guardia.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';

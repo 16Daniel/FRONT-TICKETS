@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 
 @Component({
   selector: 'app-tabla-radiografia',

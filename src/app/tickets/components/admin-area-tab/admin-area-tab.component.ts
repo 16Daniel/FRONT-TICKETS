@@ -18,7 +18,7 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -28,10 +28,11 @@ import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
+import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 
 @Component({
   selector: 'app-admin-area-tab',
@@ -248,13 +249,10 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   async obtenerTickets(): Promise<void> {
-    Swal.fire({
-      target: document.body,
-      allowOutsideClick: false,
-      icon: 'info',
-      text: 'Espere por favor...',
-      didOpen: () => Swal.showLoading(),
-      customClass: { container: 'swal-topmost' }
+    SwalRw.loading({
+      badge: 'Tickets',
+      title: 'Cargando tickets',
+      text: 'Espere por favor...'
     });
 
     this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({

@@ -8,7 +8,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
 import { TicketsService } from '../../services/tickets.service';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../../mantenimientos/interfaces/mantenimiento-sys.interface';

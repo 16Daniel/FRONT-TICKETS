@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { AcordeonTicketsPorPrioridadComponent } from '../../../tickets/components/acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
@@ -19,7 +19,7 @@ import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-
 import { KpisTicketsService } from '../../services/kpis-tickets.service';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 
 @Component({
   selector: 'app-sucursal-area-tab',

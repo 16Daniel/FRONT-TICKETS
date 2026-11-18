@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { CeldaMatrizUrgencia } from '../../interfaces/celda-matriz-urgencia.interface';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import {

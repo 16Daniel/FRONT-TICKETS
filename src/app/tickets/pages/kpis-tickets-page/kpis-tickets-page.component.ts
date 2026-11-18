@@ -11,8 +11,8 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { KpisFiltrosComponent } from '../../components/kpis-filtros/kpis-filtros.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
-import { Ticket } from '../../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { Ticket } from '../../models/ticket.model';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { GraficaDesempenoCategoriasComponent } from '../../components/grafica-desempeno-categorias/grafica-desempeno-categorias.component';
 import { GraficaDesempenoSucursalesComponent } from '../../components/grafica-desempeno-sucursales/grafica-desempeno-sucursales.component';
 import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-desempeno-responsables/grafica-desempeno-responsables.component';

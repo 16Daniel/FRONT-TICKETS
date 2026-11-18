@@ -7,10 +7,10 @@ import { VisitaItemEspecialComponent } from '../visita-item-especial/visita-item
 import { TarjetaSucursalPorVisitarComponent } from '../tarjeta-sucursal-por-visitar/tarjeta-sucursal-por-visitar.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
-import { Guardia } from '../../../tickets/interfaces/guardia';
+import { Guardia } from '../../../tickets/models/guardia.model';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 
 @Component({

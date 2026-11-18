@@ -9,20 +9,20 @@ import { Responsable } from '../../../usuarios/interfaces/responsable.interface'
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { Comite } from '../../interfaces/comite';
+import { Comite } from '../../models/comite.model';
 import { ComitesService } from '../../services/comites.service';
 import { Subscription } from 'rxjs';
 import { AvatarComponent } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-modal-comite-create',
+  selector: 'app-crear-comite-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, DialogModule, MultiSelectModule, AvatarComponent, TooltipModule],
-  templateUrl: './modal-comite-create.component.html',
-  styleUrl: './modal-comite-create.component.scss',
+  templateUrl: './crear-comite-dialog.component.html',
+  styleUrl: './crear-comite-dialog.component.scss',
 })
-export class ModalComiteCreateComponent implements OnInit, OnDestroy {
+export class CrearComiteDialogComponent implements OnInit, OnDestroy {
   @Input() mostrarModalCrearComite = false;
   @Input() comite: Comite = new Comite();
   @Input() esNuevoComite = true;

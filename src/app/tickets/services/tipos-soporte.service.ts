@@ -1,22 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EstatusTicket } from '../interfaces/estatus-ticket.model';
-import { collection, collectionData, doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { TipoSoporte } from '../models/tipo-soporte.model';
+import {
+  collection,
+  collectionData,
+  doc,
+  Firestore,
+  setDoc,
+} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StatusTicketService {
-  pathName: string = 'cat_estatus_ticket';
+export class TiposSoporteService {
+  pathName: string = 'cat_tipos_soporte';
 
   constructor(private firestore: Firestore, private http: HttpClient) {
-    // this.inicializarCatalogo()
+    // this.inicializarCatalogo();
   }
 
-  get(): Observable<EstatusTicket[] | any> {
+  get(): Observable<TipoSoporte[] | any[]> {
     const sucursalesCollection = collection(this.firestore, this.pathName);
-    return collectionData(sucursalesCollection, { idField: 'id' }); // Incluye el ID del documento
+    return collectionData(sucursalesCollection, { idField: 'id' });
   }
 
   private inicializarCatalogo() {
@@ -46,6 +52,6 @@ export class StatusTicketService {
   }
 
   private loadJson(): Observable<any> {
-    return this.http.get('/assets/catalogs/estatus-ticket.json'); // Ruta al archivo JSON
+    return this.http.get('/assets/catalogs/tipos-soporte.json'); // Ruta al archivo JSON
   }
 }

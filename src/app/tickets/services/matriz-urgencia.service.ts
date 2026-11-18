@@ -7,7 +7,7 @@ import {
   Timestamp
 } from '@angular/fire/firestore';
 import { Observable, of, shareReplay } from 'rxjs';
-import { MatrizUrgencia } from '../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../models/matriz-urgencia.model';
 import { CeldaMatrizUrgencia } from '../interfaces/celda-matriz-urgencia.interface';
 import { clasificarCuadrante } from '../helpers/matriz-criticidad.helper';
 

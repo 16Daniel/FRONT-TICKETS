@@ -9,11 +9,11 @@ import Swal from 'sweetalert2';
 
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { StatusTicketService } from '../../../tickets/services/status-ticket.service';
+import { EstatusTicketService } from '../../../tickets/services/estatus-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { UsersService } from '../../../usuarios/services/users.service';
@@ -50,7 +50,7 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
 
   constructor(
     private ticketsService: TicketsService,
-    private statusTicketsService: StatusTicketService,
+    private estatusTicketService: EstatusTicketService,
     private areasService: AreasService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
@@ -93,7 +93,7 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
   }
 
   obtenerCatalogoEstatusTickets() {
-    this.statusTicketsService
+    this.estatusTicketService
       .get()
       .subscribe((result) => (this.estatusTickets = result));
   }

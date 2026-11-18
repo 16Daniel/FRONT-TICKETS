@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { MessageService } from 'primeng/api';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { TicketDetailHelperService } from '../../services/ticket-detail-helper.service';
 import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialogs/seleccionar-usuario-especialista-dialog/seleccionar-usuario-especialista-dialog.component';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
 import { AreasService } from '../../../areas/services/areas.service';
@@ -35,7 +35,7 @@ export class TicketAccionesBarComponent {
     private ticketsService: TicketsService,
     private messageService: MessageService,
     private helper: TicketDetailHelperService,
-    private categoriesService: CategoriesService,
+    private categoriasService: CategoriasService,
     private areasService: AreasService,
     private whatsappService: WhatsappService,
     private branchesService: BranchesService,
@@ -201,7 +201,7 @@ export class TicketAccionesBarComponent {
 
     try {
       const categorias = await firstValueFrom(
-        this.categoriesService.get(String(ticket.idArea)).pipe(take(1))
+        this.categoriasService.get(String(ticket.idArea)).pipe(take(1))
       );
       const categoria = categorias.find(
         (item: Categoria) => String(item.id) === String(ticket.idCategoria)

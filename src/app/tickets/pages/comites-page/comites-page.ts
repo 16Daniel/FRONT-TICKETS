@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
-import { ModalComiteCreateComponent } from '../../dialogs/modal-comite-create/modal-comite-create.component';
+import { CrearComiteDialogComponent } from '../../dialogs/crear-comite-dialog/crear-comite-dialog.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Comite } from '../../interfaces/comite';
+import { Comite } from '../../models/comite.model';
 import { ComitesService } from '../../services/comites.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
@@ -28,7 +28,7 @@ import { AvatarComponent } from 'ngx-avatars';
       InputTextModule,
       ConfirmDialogModule,
       AvatarComponent,
-      ModalComiteCreateComponent,
+      CrearComiteDialogComponent,
       PageHeaderComponent],
   providers: [ConfirmationService, MessageService],
   templateUrl: './comites-page.html',

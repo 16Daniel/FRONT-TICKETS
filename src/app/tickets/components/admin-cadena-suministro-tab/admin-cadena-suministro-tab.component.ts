@@ -14,8 +14,8 @@ import { UserTicketsAccordionComponent } from '../../../tickets/components/user-
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';

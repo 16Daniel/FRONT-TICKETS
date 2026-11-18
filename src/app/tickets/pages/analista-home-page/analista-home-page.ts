@@ -7,8 +7,8 @@ import { TotalesSlaDashboard } from '../../components/tarjeta-rendimiento-sla/ta
 import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
-import { Ticket } from '../../interfaces/ticket.model';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
+import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 
 @Component({

@@ -21,7 +21,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { combineLatest, map, Observable } from 'rxjs';
-import { Ticket } from '../interfaces/ticket.model';
+import { Ticket } from '../models/ticket.model';
 import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
 
 @Injectable({

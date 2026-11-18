@@ -9,7 +9,7 @@ import { RequesterTicketsListComponent } from '../../../tickets/components/reque
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ModalMaintenanceDetailComponent } from '../systems/modal-maintenance-detail/modal-maintenance-detail.component';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';

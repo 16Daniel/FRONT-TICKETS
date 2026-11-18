@@ -10,7 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';

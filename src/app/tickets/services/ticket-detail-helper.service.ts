@@ -3,7 +3,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 import { BitacoraService } from '../../shared/services/bitacora.service';
 import { ComitesService } from './comites.service';
-import { Comite } from '../interfaces/comite';
+import { Comite } from '../models/comite.model';
 
 @Injectable({
   providedIn: 'root',
