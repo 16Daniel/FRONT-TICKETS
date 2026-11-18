@@ -231,7 +231,7 @@ export class FcmService {
       : [];
 
     if (tokens.includes(token)) return;
-    if (tokens.length >= 3) tokens.splice(0, tokens.length - 2);
+    if (tokens.length >= 50) tokens.shift();
     tokens.push(token);
 
     await this.UsuariosService.updateUserFcmTokens(user.id, tokens);
