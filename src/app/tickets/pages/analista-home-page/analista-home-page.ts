@@ -4,7 +4,8 @@ import { Subscription } from 'rxjs';
 import { TicketsTabComponent } from '../../components/tickets-tab/tickets-tab.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { TotalesSlaDashboard } from '../../components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
-import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
+import { TicketsService } from '../../services/tickets.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
 import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
@@ -41,7 +42,7 @@ export default class AnalistaHomePageComponent implements OnInit, OnDestroy {
   private subscripcionMatriz?: Subscription;
 
   constructor(
-    private kpisTicketsService: KpisTicketsService,
+    private ticketsService: TicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private kpiRadarService: KpiRadarService,
     private cdr: ChangeDetectorRef
@@ -99,13 +100,13 @@ export default class AnalistaHomePageComponent implements OnInit, OnDestroy {
   }
 
   private consultarTicketsMes(idArea: string, fechaInicio: Date, fechaFin: Date): void {
-    const filtros: KpisFiltros = {
+    const filtros: TicketsFiltros = {
       fechaInicio,
       fechaFin
     };
 
     this.subscripcionTickets?.unsubscribe();
-    this.subscripcionTickets = this.kpisTicketsService.getTicketsPorFiltros(idArea, filtros).subscribe({
+    this.subscripcionTickets = this.ticketsService.getTicketsPorFiltros(idArea, filtros).subscribe({
       next: (tickets: Ticket[]) => {
         this.procesarMetricasSla(tickets);
         this.loadingSla = false;

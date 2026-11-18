@@ -4,7 +4,6 @@ import { BadgeModule } from 'primeng/badge';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
-import { GraficaTickets30DiasComponent } from '../../../mantenimientos/components/grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -19,8 +18,7 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     FormsModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TpvsDevicesTableComponent,
-    GraficaTickets30DiasComponent
+    TpvsDevicesTableComponent
   ],
   templateUrl: './acordeon-tickets-por-usuario.component.html',
   styleUrl: './acordeon-tickets-por-usuario.component.scss',

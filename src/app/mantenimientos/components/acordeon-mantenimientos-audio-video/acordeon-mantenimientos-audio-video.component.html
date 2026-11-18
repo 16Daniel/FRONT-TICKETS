@@ -34,9 +34,6 @@
 
       <app-tabla-tvs-bocinas *ngIf="mostrarRadiografiaMap[item.id]" [sucursal]="item"></app-tabla-tvs-bocinas>
 
-      <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
-        [idArea]="'2'"></app-grafica-tickets-30-dias>
-
       <tabla-mantenimientos-audio-video
         *ngIf="!mostrarRadiografiaMap[item.id]"
         [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"

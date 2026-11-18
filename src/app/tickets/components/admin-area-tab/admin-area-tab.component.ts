@@ -24,12 +24,12 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { UsersService } from '../../../usuarios/services/users.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
-import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
@@ -108,7 +108,6 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     private branchesService: BranchesService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
-    private kpisTicketsService: KpisTicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private kpiRadarService: KpiRadarService
   ) {
@@ -162,10 +161,10 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   private consultarTicketsSlaMes(fechaInicio: Date, fechaFin: Date): void {
-    const filtros: KpisFiltros = { fechaInicio, fechaFin };
+    const filtros: TicketsFiltros = { fechaInicio, fechaFin };
 
     this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaTickets = this.kpisTicketsService.getTicketsPorFiltros(this.idArea, filtros).subscribe({
+    this.subscripcionSlaTickets = this.ticketsService.getTicketsPorFiltros(this.idArea, filtros).subscribe({
       next: (tickets: Ticket[]) => {
         this.ticketsSlaMes = tickets || [];
         this.procesarMetricasSla();

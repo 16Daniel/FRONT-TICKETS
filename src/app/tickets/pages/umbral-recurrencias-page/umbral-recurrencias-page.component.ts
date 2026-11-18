@@ -12,7 +12,8 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Usuario } from '../../../usuarios/interfaces/usuario.model';
 import { UsersService } from '../../../usuarios/services/users.service';
-import { UmbralTicketsService, UmbralFiltros } from '../../services/umbral-tickets.service';
+import { TicketsService } from '../../services/tickets.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { Ticket } from '../../models/ticket.model';
 import { UmbralKpisComponent } from '../../components/umbral-kpis/umbral-kpis.component';
 import { UmbralFiltrosComponent } from '../../components/umbral-filtros/umbral-filtros.component';
@@ -62,7 +63,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
     private categoriasService: CategoriasService,
     private branchesService: BranchesService,
     private usersService: UsersService,
-    private umbralTicketsService: UmbralTicketsService,
+    private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -108,14 +109,14 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   aplicarFiltros(): void {
     this.isApplyingFilters = true;
-    const filtros: UmbralFiltros = {
+    const filtros: TicketsFiltros = {
       fechaInicio: this.fechaInicio,
       fechaFin: this.fechaFin,
       idSucursales: this.sucursalesSeleccionadas.map(s => String(s.id)),
       idUsuarios: this.usuariosSeleccionados.map(u => String(u.id))
     };
 
-    this.umbralTicketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
+    this.ticketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
       next: (tickets: Ticket[]) => {
         this.tickets = tickets;
         this.isApplyingFilters = false;

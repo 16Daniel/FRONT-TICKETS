@@ -15,7 +15,6 @@ import { CheckMantenimientoSisAvComponent } from '../../dialogs/sistemas-av/chec
 import { HistorialMantenimeintoSysAvComponent } from '../../dialogs/sistemas-av/historial-mantenimiento-sys-av-dialog/historial-mantenimiento-sys-av-dialog.component';
 import { ModalMaintenanceMttoHistoryComponent } from '../../dialogs/manteinance/modal-maintenance-mtto-history/modal-maintenance-mtto-history.component';
 import { ModalMateinanceMttoCheckComponent } from '../../dialogs/manteinance/modal-mateinance-mtto-check/modal-mateinance-mtto-check.component';
-import { ModalBranchRatingComponent } from '../../../tickets/components/modal-branch-rating/modal-branch-rating.component';
 
 import { TablaMantenimientosSistemasComponent } from '../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
@@ -53,7 +52,6 @@ import { OpcionTabMantenimiento, TipoMantenimientoTab } from '../mantenimientos-
     HistorialMantenimeintoSysAvComponent,
     ModalMaintenanceMttoHistoryComponent,
     ModalMateinanceMttoCheckComponent,
-    ModalBranchRatingComponent,
     TablaMantenimientosSistemasComponent,
     TablaMantenimientosAudioVideoComponent,
     TablaMantenimientosMantenimientoComponent,
@@ -92,7 +90,6 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
   mostrarModalHistorialMantenimientos = false;
   mostrarModalHistorialMantenimientosAV = false;
   mostrarModalHistorialMantenimientosMtto = false;
-  mostrarModalRating = false;
   mostrarTPVs = false;
 
   private unsubscribeIT?: () => void;

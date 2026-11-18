@@ -16,7 +16,7 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
-import { KpisTicketsService } from '../../services/kpis-tickets.service';
+import { TicketsService } from '../../services/tickets.service';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
 import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
@@ -74,7 +74,7 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
   constructor(
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private kpisTicketsService: KpisTicketsService,
+    private ticketsService: TicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private kpiRadarService: KpiRadarService
   ) {
@@ -144,7 +144,7 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
     const idSucursales = (this.usuario.sucursales || []).map((s: any) => String(s.id));
 
     this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaTickets = this.kpisTicketsService
+    this.subscripcionSlaTickets = this.ticketsService
       .getTicketsPorFiltros(idArea, { fechaInicio, fechaFin, idSucursales })
       .subscribe({
         next: (tickets: Ticket[]) => {

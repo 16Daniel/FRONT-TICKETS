@@ -14,7 +14,6 @@ import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 import { NivelesAudioComponent } from '../niveles-audio/niveles-audio.component';
 import { TablaTvsBocinasComponent } from '../tabla-tvs-bocinas/tabla-tvs-bocinas.component';
-import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 
 @Component({
@@ -27,8 +26,7 @@ import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafic
     AccordionModule,
     TablaMantenimientosAudioVideoComponent,
     NivelesAudioComponent,
-    TablaTvsBocinasComponent,
-    GraficaTickets30DiasComponent
+    TablaTvsBocinasComponent
   ],
   templateUrl: './acordeon-mantenimientos-audio-video.component.html',
   styleUrl: './acordeon-mantenimientos-audio-video.component.scss',

@@ -13,7 +13,6 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
-import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 
 @Component({
@@ -25,8 +24,7 @@ import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafic
     CommonModule,
     FormsModule,
     AccordionModule,
-    TpvsDevicesTableComponent,
-    GraficaTickets30DiasComponent
+    TpvsDevicesTableComponent
   ],
   templateUrl: './acordeon-mantenimientos-sistemas.component.html',
   styleUrl: './acordeon-mantenimientos-sistemas.component.scss',

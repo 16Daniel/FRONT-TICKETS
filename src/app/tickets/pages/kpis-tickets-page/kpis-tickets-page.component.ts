@@ -18,7 +18,8 @@ import { GraficaDesempenoSucursalesComponent } from '../../components/grafica-de
 import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-desempeno-responsables/grafica-desempeno-responsables.component';
 
 // Servicios de datos para KPIs
-import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
+import { TicketsService } from '../../services/tickets.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 
 @Component({
@@ -67,7 +68,7 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
     private branchesService: BranchesService,
     private usersService: UsersService,
     private areasService: AreasService,
-    private kpisTicketsService: KpisTicketsService,
+    private ticketsService: TicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -138,14 +139,14 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
 
   aplicarFiltros(): void {
     this.isApplyingFilters = true;
-    const filtros: KpisFiltros = {
+    const filtros: TicketsFiltros = {
       fechaInicio: this.fechaInicio,
       fechaFin: this.fechaFin,
       idSucursales: this.sucursalesSeleccionadas.map(s => String(s.id)),
       idUsuarios: this.usuariosSeleccionados.map(u => String(u.id))
     };
 
-    this.kpisTicketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
+    this.ticketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
       next: (tickets: Ticket[]) => {
         this.tickets = tickets;
         this.isApplyingFilters = false;
