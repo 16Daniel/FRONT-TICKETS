@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 import { AuthService } from '../../services/auth.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AccessControlService } from '../../../shared/services/access-control.service';
 import { FcmService } from '../../../shared/services/fcm.service';
 import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
@@ -37,7 +37,7 @@ export default class LoginComponent {
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private router: Router,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private authService: AuthService
   ) { }
 
@@ -81,7 +81,7 @@ export default class LoginComponent {
       const user = await this.authService.login(this.email, this.pass);
 
       if (user?.user?.uid) {
-        const userd = this.usersService.getByUId(user.user.uid);
+        const userd = this.UsuariosService.getByUId(user.user.uid);
 
         if (!userd || userd.eliminado) {
           await this.authService.logout();

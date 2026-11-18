@@ -18,9 +18,9 @@ import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { Categoria } from '../../models/categoria.model';
 import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { CategoriasService } from '../../services/categorias.service';
@@ -85,7 +85,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private ticketsService: TicketsService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     public areasService: AreasService,
     private cdr: ChangeDetectorRef,
@@ -210,9 +210,9 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.initListener();
-    this.usuariosHelp = this.usersService.usuarios;
-    this.usersSub = this.usersService.usuarios$.subscribe((users) => {
+    this.UsuariosService.initListener();
+    this.usuariosHelp = this.UsuariosService.usuarios;
+    this.usersSub = this.UsuariosService.usuarios$.subscribe((users) => {
       this.usuariosHelp = users;
       this.cdr.markForCheck();
     });

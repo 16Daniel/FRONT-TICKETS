@@ -12,7 +12,7 @@ import { FirebaseStorageService } from '../../../shared/services/firebase-storag
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 @Component({

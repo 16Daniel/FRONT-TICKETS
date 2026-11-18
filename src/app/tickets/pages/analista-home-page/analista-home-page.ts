@@ -10,7 +10,7 @@ import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
 import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 
 @Component({
   selector: 'app-analista-home-page',

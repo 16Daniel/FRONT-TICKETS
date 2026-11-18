@@ -13,8 +13,8 @@ import {
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { Bitacora } from '../../interfaces/bitacora.model';
 import { BitacoraService } from '../../services/bitacora.service';
 

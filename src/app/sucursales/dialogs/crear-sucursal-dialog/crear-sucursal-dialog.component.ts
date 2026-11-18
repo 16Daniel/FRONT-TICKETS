@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { InputNumberModule } from 'primeng/inputnumber';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../interfaces/sucursal.interface';
 import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';

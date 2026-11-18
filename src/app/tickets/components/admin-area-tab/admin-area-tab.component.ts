@@ -19,13 +19,13 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
 import { Ticket } from '../../../tickets/models/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
@@ -104,7 +104,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private ticketsService: TicketsService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
@@ -305,7 +305,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsuariosPorRol(['4', '7'], this.idArea)
+    this.UsuariosService.getUsuariosPorRol(['4', '7'], this.idArea)
       .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 

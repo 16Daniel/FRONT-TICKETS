@@ -8,7 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { TareasService } from '../../services/tareas.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
@@ -16,7 +16,7 @@ import { ResponsablesService } from '../../../usuarios/services/responsables.ser
 import { SearchFilterPipe } from '../../../shared/pipes/search-filter.pipe';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 
 @Component({
   selector: 'app-tareas-archivadas-dialog',

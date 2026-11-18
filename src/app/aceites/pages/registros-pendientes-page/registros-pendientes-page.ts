@@ -10,7 +10,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
 import { EntregaAceite } from '../../models/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';

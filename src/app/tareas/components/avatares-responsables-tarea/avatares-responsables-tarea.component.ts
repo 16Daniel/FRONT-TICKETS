@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { AvatarComponent } from "ngx-avatars";
 import { TooltipModule } from 'primeng/tooltip';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { CommonModule } from '@angular/common';
 
 @Component({

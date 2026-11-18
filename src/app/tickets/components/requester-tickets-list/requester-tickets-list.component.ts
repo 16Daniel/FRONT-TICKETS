@@ -26,8 +26,8 @@ import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -87,7 +87,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   constructor(
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
     private areasService: AreasService,
@@ -194,7 +194,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => {
+    this.UsuariosService.usuarios$.subscribe(usuarios => {
       this.usuariosHelp = usuarios;
       this.cdr.detectChanges();
     });

@@ -5,10 +5,10 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Responsable } from '../../../usuarios/models/responsable.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { Comite } from '../../models/comite.model';
 import { ComitesService } from '../../services/comites.service';
 import { Subscription } from 'rxjs';
@@ -39,14 +39,14 @@ export class CrearComiteDialogComponent implements OnInit, OnDestroy {
   constructor(
     private comitesService: ComitesService,
     public areasService: AreasService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private responsablesService: ResponsablesService,
     private messageService: MessageService,
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.subscriptions.add(
-      this.usersService.usuarios$.subscribe((usuarios) => {
+      this.UsuariosService.usuarios$.subscribe((usuarios) => {
         this.usuarios = usuarios;
         this.actualizarResponsablesFiltrados();
       }),

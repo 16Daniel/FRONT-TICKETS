@@ -16,7 +16,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { Subscription } from 'rxjs';
 
 import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
@@ -25,7 +25,7 @@ import { CategoriasService } from '../../services/categorias.service';
 import { EstatusTicketService } from '../../services/estatus-ticket.service';
 import { TiposSoporteService } from '../../services/tipos-soporte.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { ComitesService } from '../../services/comites.service';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { BitacoraComponent } from '../../../shared/components/bitacora/bitacora.component';

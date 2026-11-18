@@ -10,8 +10,8 @@ import { CategoriasService } from '../../services/categorias.service';
 import { Categoria } from '../../models/categoria.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { TicketsService } from '../../services/tickets.service';
 import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { Ticket } from '../../models/ticket.model';
@@ -62,7 +62,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
     private areasService: AreasService,
     private categoriasService: CategoriasService,
     private branchesService: BranchesService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -97,7 +97,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   private cargarUsuariosPorArea(): void {
     this.subscripcionUsuarios?.unsubscribe();
-    this.subscripcionUsuarios = this.usersService.getUsuariosPorRol(['4'], this.areaSeleccionadaId).subscribe(usuarios => {
+    this.subscripcionUsuarios = this.UsuariosService.getUsuariosPorRol(['4'], this.areaSeleccionadaId).subscribe(usuarios => {
       this.usuariosRol4 = usuarios.map(u => ({
         ...u,
         nombreCompleto: `${u.nombre} ${u.apellidoP} ${u.apellidoM}`.trim()

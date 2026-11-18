@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AccessControlService } from '../../services/access-control.service';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 
 @Component({
   selector: 'app-sin-acceso-page',

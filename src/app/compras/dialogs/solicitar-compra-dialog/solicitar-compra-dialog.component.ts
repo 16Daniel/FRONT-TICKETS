@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { StatusPurchaseService } from '../../../compras/services/status-purchase.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';

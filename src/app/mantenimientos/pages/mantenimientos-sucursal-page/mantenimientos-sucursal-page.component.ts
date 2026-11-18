@@ -21,7 +21,7 @@ import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-m
 import { TablaMantenimientosMantenimientoComponent } from '../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
@@ -30,7 +30,7 @@ import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { OpcionTabMantenimiento, TipoMantenimientoTab } from '../mantenimientos-admin-page/mantenimientos-admin-page.component';
@@ -102,7 +102,7 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private maintenanceAvService: MaintenanceAvService,
     private maintenanceMtooService: MaintenanceMtooService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private datesHelper: DatesHelperService,
     private confirmationService: ConfirmationService
@@ -142,7 +142,7 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
   }
 
   obtenerUsuariosHelp(): void {
-    const sub = this.usersService.usuarios$.subscribe((usuarios) => {
+    const sub = this.UsuariosService.usuarios$.subscribe((usuarios) => {
       this.usuariosHelp = usuarios;
       this.cdr.detectChanges();
     });

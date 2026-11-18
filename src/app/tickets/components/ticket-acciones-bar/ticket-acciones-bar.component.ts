@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { MessageService } from 'primeng/api';
 import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { TicketDetailHelperService } from '../../services/ticket-detail-helper.service';
 import { SeleccionarUsuarioEspecialistaComponent } from '../../../usuarios/dialogs/seleccionar-usuario-especialista-dialog/seleccionar-usuario-especialista-dialog.component';
@@ -15,7 +15,7 @@ import { WhatsappService } from '../../../areas/services/whatsapp.service';
 import { firstValueFrom, take } from 'rxjs';
 import { environment } from '../../../../environments/environments';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 
 @Component({
   selector: 'app-ticket-acciones-bar',
@@ -39,7 +39,7 @@ export class TicketAccionesBarComponent {
     private areasService: AreasService,
     private whatsappService: WhatsappService,
     private branchesService: BranchesService,
-    private usersService: UsersService
+    private UsuariosService: UsuariosService
   ) {}
 
   get hasVisibleActions(): boolean {
@@ -233,7 +233,7 @@ export class TicketAccionesBarComponent {
       console.error('Error al obtener la sucursal para el aviso de cierre por WhatsApp:', error);
     }
 
-    const responsable = this.usersService.usuarios.find(
+    const responsable = this.UsuariosService.usuarios.find(
       usuario => String(usuario.id) === String(ticket.idResponsable)
     );
     const nombreResponsable = responsable

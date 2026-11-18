@@ -6,9 +6,9 @@ import { MessageService } from 'primeng/api';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { ComitesService } from '../../services/comites.service';
 import { Comite } from '../../models/comite.model';
 import { HistorialAlertasService } from '../../../shared/services/historial-alertas.service';
@@ -31,7 +31,7 @@ export class TicketTabComitesComponent implements OnInit, OnChanges {
     private ticketsService: TicketsService,
     private messageService: MessageService,
     private areasService: AreasService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     public responsablesService: ResponsablesService,
     public comitesService: ComitesService,
     private historialAlertasService: HistorialAlertasService,
@@ -84,7 +84,7 @@ export class TicketTabComitesComponent implements OnInit, OnChanges {
   }
 
   obtenerAreaResponsableComite(responsable: Responsable): string {
-    const usuario = this.usersService.usuarios.find(
+    const usuario = this.UsuariosService.usuarios.find(
       (item) => String(item.id) === String(responsable.idUsuario)
     );
     return this.obtenerNombreArea(usuario?.idArea);

@@ -6,8 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Responsable } from '../../../usuarios/models/responsable.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TareasArchivadasDialogComponent } from '../../dialogs/tareas-archivadas-dialog/tareas-archivadas-dialog.component';
 import { EtiquetasTareaDialogComponent } from '../../dialogs/etiquetas-tarea-dialog/etiquetas-tarea-dialog.component';
 import { CrearTareaDialogComponent } from '../../dialogs/crear-tarea-dialog/crear-tarea-dialog.component';

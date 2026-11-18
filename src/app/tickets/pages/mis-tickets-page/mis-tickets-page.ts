@@ -13,7 +13,7 @@ import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialo
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { TicketsService } from '../../services/tickets.service';
 import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 
 @Component({
   selector: 'app-mis-tickets-page',

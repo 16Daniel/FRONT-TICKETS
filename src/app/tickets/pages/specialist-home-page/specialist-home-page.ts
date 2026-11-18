@@ -8,7 +8,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import Swal from 'sweetalert2';
 
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
@@ -16,7 +16,7 @@ import { TicketsService } from '../../../tickets/services/tickets.service';
 import { EstatusTicketService } from '../../../tickets/services/estatus-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
@@ -55,7 +55,7 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private branchesService: BranchesService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private confirmationService: ConfirmationService,
     public datesHelper: DatesHelperService
   ) {
@@ -165,7 +165,7 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   onClickRechazar(ticket: Ticket) {

@@ -8,11 +8,11 @@ import { FormsModule } from '@angular/forms';
 
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
@@ -59,7 +59,7 @@ export default class CalendarioVisitasPageComponent implements OnInit {
   constructor(
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private messageService: MessageService,
     private documentService: DocumentsService,
     private areasService: AreasService,
@@ -93,7 +93,7 @@ export default class CalendarioVisitasPageComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$
+    this.UsuariosService.usuarios$
       .subscribe(usuarios => this.usuariosHelp = usuarios.filter(x => x.idRol == '4' || x.idRol == '5' || x.idRol == '7'));
   }
 

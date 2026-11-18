@@ -15,11 +15,11 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ResponsablesService } from '../../services/responsables.service';
-import { UsersService } from '../../services/users.service';
+import { UsuariosService } from '../../services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Responsable } from '../../interfaces/responsable.interface';
-import { Usuario } from '../../interfaces/usuario.model';
+import { Responsable } from '../../models/responsable.model';
+import { Usuario } from '../../models/usuario.model';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
@@ -47,7 +47,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   branchesService = inject(BranchesService);
   responsablesService = inject(ResponsablesService);
-  usersService = inject(UsersService);
+  UsuariosService = inject(UsuariosService);
   areasService = inject(AreasService);
   messageService = inject(MessageService);
   cdr = inject(ChangeDetectorRef);
@@ -91,7 +91,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
     );
 
     this.subs.add(
-      this.usersService.usuarios$.subscribe(usuarios => {
+      this.UsuariosService.usuarios$.subscribe(usuarios => {
         this.usuariosMap.clear();
         usuarios.forEach(u => {
           if (u.id) {

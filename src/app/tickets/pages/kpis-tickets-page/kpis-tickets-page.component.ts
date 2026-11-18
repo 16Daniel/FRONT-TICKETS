@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { KpisFiltrosComponent } from '../../components/kpis-filtros/kpis-filtros.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
@@ -66,7 +66,7 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private branchesService: BranchesService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private areasService: AreasService,
     private ticketsService: TicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
@@ -120,7 +120,7 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
 
   private cargarUsuarios(): void {
     // Obtenemos todos los usuarios o los filtramos según sea necesario
-    this.subscripcionUsuarios = this.usersService.usuarios$.subscribe(usuarios => {
+    this.subscripcionUsuarios = this.UsuariosService.usuarios$.subscribe(usuarios => {
       this.usuariosRol4 = usuarios.map(u => ({
         ...u,
         nombreCompleto: `${u.nombre} ${u.apellidoP} ${u.apellidoM}`.trim()

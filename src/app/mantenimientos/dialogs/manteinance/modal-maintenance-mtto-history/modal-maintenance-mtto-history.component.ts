@@ -6,9 +6,9 @@ import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
 import { MaintenanceMtooService } from '../../../services/maintenance-mtto.service';
-import { UsersService } from '../../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../../usuarios/services/usuarios.service';
 import { MantenimientoMtto } from '../../../interfaces/mantenimiento-mtto.interface';
 import { TablaMantenimientosMantenimientoComponent } from '../../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
 
@@ -41,7 +41,7 @@ export class ModalMaintenanceMttoHistoryComponent {
 
   constructor(private maintenanceService: MaintenanceMtooService,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -61,7 +61,7 @@ export class ModalMaintenanceMttoHistoryComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerUltimoMantenimiento() {

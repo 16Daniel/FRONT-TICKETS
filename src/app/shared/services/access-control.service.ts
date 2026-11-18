@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Firestore, doc, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Usuario } from '../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../usuarios/models/usuario.model';
 import { Rol } from '../../roles/interfaces/rol.model';
 import { GrupoMenuPermiso } from '../../roles/interfaces/ruta.model';
 import {

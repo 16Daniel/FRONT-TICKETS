@@ -9,13 +9,13 @@ import {
   query,
   updateDoc,
 } from '@angular/fire/firestore';
-import { Usuario } from '../interfaces/usuario.model';
+import { Usuario } from '../models/usuario.model';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UsersService {
+export class UsuariosService {
   pathName: string = 'usuarios';
 
   private _usuarios: Usuario[] = [];

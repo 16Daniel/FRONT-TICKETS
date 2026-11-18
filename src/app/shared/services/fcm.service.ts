@@ -2,8 +2,8 @@ import { Injectable, NgZone, inject, signal } from '@angular/core';
 import { Messaging, getToken, onMessage } from '@angular/fire/messaging';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environments';
-import { Usuario } from '../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../usuarios/services/users.service';
+import { Usuario } from '../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../usuarios/services/usuarios.service';
 
 const DEFAULT_FIREBASE_VAPID_KEY =
   'BDOU99-h67HcA6JeFXHbSNMu7e2yNNu3RzoMj8TM4W88jITfq7ZmPvIM1Iv-4_l2LxQcYwhqby2xGpWwzjfAnG4';
@@ -35,7 +35,7 @@ export function buildFirebaseSwUrl(): string {
 })
 export class FcmService {
   private messaging = inject(Messaging);
-  private usersService = inject(UsersService);
+  private UsuariosService = inject(UsuariosService);
   private ngZone = inject(NgZone);
   fcmToken = signal<string | null>(null);
 
@@ -234,7 +234,7 @@ export class FcmService {
     if (tokens.length >= 3) tokens.splice(0, tokens.length - 2);
     tokens.push(token);
 
-    await this.usersService.updateUserFcmTokens(user.id, tokens);
+    await this.UsuariosService.updateUserFcmTokens(user.id, tokens);
     user.fcmToken = tokens;
     localStorage.setItem('rwuserdatatk', JSON.stringify(user));
   }

@@ -5,7 +5,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 
 import { AvatarModule } from 'ngx-avatars';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
 import { FormatCommentPipe } from '../../../shared/pipes/format-comment.pipe';
 import { TareasService } from '../../services/tareas.service';
@@ -13,7 +13,7 @@ import { ResponsablesService } from '../../../usuarios/services/responsables.ser
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 
 @Component({

@@ -5,11 +5,11 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
@@ -36,7 +36,7 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
     public datesHelper: DatesHelperService,
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private areasService: AreasService,
     private messageService: MessageService,
 
@@ -103,7 +103,7 @@ export class ModalFixedAssetSelectTicketComponent implements OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usuariosHelp = this.usersService.usuarios;
+    this.usuariosHelp = this.UsuariosService.usuarios;
   }
 
   showMessage(sev: string, summ: string, det: string) {

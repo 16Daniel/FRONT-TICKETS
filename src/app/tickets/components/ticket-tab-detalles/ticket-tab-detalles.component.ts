@@ -5,7 +5,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { Ticket } from '../../models/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';

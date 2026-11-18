@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria, generateGUID } from '../../interfaces/subcategoria.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { CategoriasService } from '../../services/categorias.service';

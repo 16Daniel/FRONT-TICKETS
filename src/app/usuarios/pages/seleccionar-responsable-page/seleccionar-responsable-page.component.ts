@@ -1,10 +1,10 @@
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Responsable } from '../../interfaces/responsable.interface';
+import { Responsable } from '../../models/responsable.model';
 import { CommonModule } from '@angular/common';
 import { ResponsablesService } from '../../services/responsables.service';
-import { UsersService } from '../../services/users.service';
+import { UsuariosService } from '../../services/usuarios.service';
 import { AuthService } from '../../../auth/services/auth.service';
-import { Usuario } from '../../interfaces/usuario.model';
+import { Usuario } from '../../models/usuario.model';
 import { Router } from '@angular/router';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
@@ -23,7 +23,7 @@ import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
 })
 export default class SeleccionarResponsablePageComponent implements OnInit, OnDestroy {
   responsablesService = inject(ResponsablesService);
-  usersService = inject(UsersService);
+  UsuariosService = inject(UsuariosService);
   authService = inject(AuthService);
   accessControl = inject(AccessControlService);
 
@@ -62,7 +62,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit, OnDe
 
     const idUsuarioLogueado = String(this.usuario?.id ?? '').trim();
     if (idUsuarioLogueado) {
-      this.usuariosSub = this.usersService.usuarios$.subscribe((usuarios) => {
+      this.usuariosSub = this.UsuariosService.usuarios$.subscribe((usuarios) => {
         const usuarioFb = usuarios.find((u) => String(u.id ?? '').trim() === idUsuarioLogueado);
         if (!usuarioFb) return;
 
@@ -135,7 +135,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit, OnDe
       }
 
       try {
-        await this.usersService.updateUserPinAttempts(idUsuarioLogueado, nuevosIntentos);
+        await this.UsuariosService.updateUserPinAttempts(idUsuarioLogueado, nuevosIntentos);
         localStorage.setItem('rwuserdatatk', JSON.stringify(this.usuario));
       } catch (error) {
         console.error('Error al actualizar intentos en Firebase:', error);
@@ -151,7 +151,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit, OnDe
 
     if ((Number(this.usuario?.intentos ?? this.intentosFallidos) || 0) > 0) {
       try {
-        await this.usersService.updateUserPinAttempts(idUsuarioLogueado, 0);
+        await this.UsuariosService.updateUserPinAttempts(idUsuarioLogueado, 0);
         this.usuario.intentos = 0;
         this.intentosFallidos = 0;
         localStorage.setItem('rwuserdatatk', JSON.stringify(this.usuario));
@@ -178,7 +178,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit, OnDe
     this.errorPin = 'Usuario bloqueado por exceder el número de intentos.';
 
     try {
-      await this.usersService.updateUserPinAttempts(idUsuario, intentos, true);
+      await this.UsuariosService.updateUserPinAttempts(idUsuario, intentos, true);
     } catch (error) {
       console.error('Error al bloquear el usuario en Firebase:', error);
     }

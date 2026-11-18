@@ -10,12 +10,13 @@
     <!-- Barra Selector de Áreas por Chips -->
     <div class="areas-chips-track mb-4">
       <button 
+        *ngIf="tieneUsuariosSinArea"
         type="button" 
         class="chip-area-pill"
-        [class.is-active]="areaSeleccionadaId === 'sucursales'"
-        (click)="cambiarArea('sucursales')">
+        [class.is-active]="areaSeleccionadaId === 'sin-area'"
+        (click)="cambiarArea('sin-area')">
         <span class="area-dot"></span>
-        <span class="area-name">SUCURSALES</span>
+        <span class="area-name">SIN ÁREA</span>
       </button>
 
       <button 

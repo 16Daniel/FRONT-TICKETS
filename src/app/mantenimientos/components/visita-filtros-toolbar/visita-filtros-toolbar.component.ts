@@ -6,9 +6,9 @@ import { CalendarModule } from 'primeng/calendar';
 
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({
@@ -50,7 +50,7 @@ export class VisitaFiltrosToolbarComponent implements OnInit {
   mostrarModalActividades: boolean = false;
 
   constructor(
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private areasService: AreasService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -64,7 +64,7 @@ export class VisitaFiltrosToolbarComponent implements OnInit {
   }
 
   obtenerUsuariosHelp(): void {
-    this.usersService.getUsuariosPorRol(['4', '7', '5']).subscribe((usuarios) => {
+    this.UsuariosService.getUsuariosPorRol(['4', '7', '5']).subscribe((usuarios) => {
       this.usuariosHelp = usuarios;
       this.usuariosHelpDropDown = usuarios.filter((u) =>
         this.usuario?.idArea === '1'

@@ -10,7 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ComensalesService } from '../../services/comensales.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Timestamp } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 @Component({

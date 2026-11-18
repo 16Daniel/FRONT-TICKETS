@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { VisitaItemEspecialComponent } from '../visita-item-especial/visita-item-especial.component';
 import { TarjetaSucursalPorVisitarComponent } from '../tarjeta-sucursal-por-visitar/tarjeta-sucursal-por-visitar.component';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
