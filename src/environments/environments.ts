@@ -18,7 +18,8 @@ export const environment = {
     measurementId: 'G-ZSNCNBN2KL',
   },
   ticketsApiConfig: {
-    url: "https://localhost:7165/api/",
+    // url: "https://localhost:7165/api/",
+    url: "https://operamx.no-ip.net/back/api_tickets_desarrollo/api/",
     apiKey: "QG15czNjcjN0QXAxazN5LXJ3LXQxY2szdHMtMjAyNkA="
   },
 
@@ -34,5 +35,5 @@ export const environment = {
   idServicio: "hHqyRWm306Zmb5XADbbR",
   idDireccion: "Mcaolq7LySn81CSX4n5L",
   vapidKey: "BG3IDd16xNfinwPfKlYWKRJSIpdql9Cjt5B5Ke-nPn4q2pC9ScQLf1BCkUGcemmHMuVOKaOVjoMAQGPHP9pmdsU",
-  grupoWAGerencias: "120363412785054674@g.us"
+  grupoWAGerencias: "120363418254079903@g.us"
 };
