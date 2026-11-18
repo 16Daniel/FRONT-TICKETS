@@ -7,14 +7,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { Responsable } from '../../interfaces/responsable.interface';
+import { Responsable } from '../../models/responsable.model';
 import { ResponsablesService } from '../../services/responsables.service';
-import { UsersService } from '../../services/users.service';
+import { UsuariosService } from '../../services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { MailService, EnviarCorreoRequest } from '../../../shared/services/mail.service';
 import { ColorRandomService } from '../../../mantenimientos/services/color-random.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Usuario } from '../../interfaces/usuario.model';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-crear-responsable-dialog',
@@ -35,7 +35,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
   @Input() esNuevo: boolean = true;
   
   responsablesService = inject(ResponsablesService);
-  usersService = inject(UsersService);
+  UsuariosService = inject(UsuariosService);
   branchesService = inject(BranchesService);
   messageService = inject(MessageService);
   mailService = inject(MailService);
@@ -76,7 +76,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
     );
 
     this.subs.add(
-      this.usersService.usuarios$.subscribe({
+      this.UsuariosService.usuarios$.subscribe({
         next: (data) => {
           this.usuarios = data;
           this.filtrarUsuariosPorSucursal();

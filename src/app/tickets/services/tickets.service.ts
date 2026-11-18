@@ -20,8 +20,9 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { combineLatest, map, Observable } from 'rxjs';
-import { Ticket } from '../interfaces/ticket.model';
+import { combineLatest, from, map, Observable } from 'rxjs';
+import { Ticket } from '../models/ticket.model';
+import { TicketsFiltros } from '../interfaces/tickets-filtros.interface';
 import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
 
 @Injectable({
@@ -335,16 +336,6 @@ export class TicketsService {
     });
   }
 
-  get30LastTickets(): Observable<any[]> {
-    const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(
-      ticketsCollection,
-      where('idEstatusTicket', '==', '3'),
-      limit(30)
-    );
-    return collectionData(q, { idField: 'id' });
-  }
-
   async getByIds(idsTickets: string[]): Promise<Ticket[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
 
@@ -431,11 +422,6 @@ export class TicketsService {
     }));
   }
 
-  getAll(): Observable<Ticket[] | any[]> {
-    const sucursalesCollection = collection(this.firestore, 'tickets');
-    return collectionData(sucursalesCollection, { idField: 'id' });
-  }
-
   getTicketsPorEspecialista(idUsuarioEspecialista: string): Observable<Ticket[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
 
@@ -460,24 +446,44 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 
-  async getTicketsUltimos30Dias(idSucursal: string, idArea: string) {
-    const hoy = new Date();
-    const hace30Dias = new Date();
-    hace30Dias.setDate(hoy.getDate() - 30);
+  getTicketsPorFiltros(idArea: string, filtros: TicketsFiltros): Observable<Ticket[]> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const constraints: any[] = [
+      where('idArea', '==', idArea)
+    ];
 
-    const ticketsRef = collection(this.firestore, 'tickets');
-    const q = query(
-      ticketsRef,
-      where('idSucursal', '==', idSucursal),
-      where('idArea', '==', idArea),
-      where('fecha', '>=', Timestamp.fromDate(hace30Dias))
+    if (filtros.fechaInicio) {
+      const startOfDay = new Date(filtros.fechaInicio);
+      startOfDay.setHours(0, 0, 0, 0);
+      constraints.push(where('fecha', '>=', Timestamp.fromDate(startOfDay)));
+    }
+
+    if (filtros.fechaFin) {
+      const endOfDay = new Date(filtros.fechaFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      constraints.push(where('fecha', '<=', Timestamp.fromDate(endOfDay)));
+    }
+
+    const q = query(ticketsCollection, ...constraints);
+
+    return from(getDocs(q)).pipe(
+      map(snapshot => {
+        let tickets = snapshot.docs.map(doc => {
+          return { id: doc.id, ...doc.data() } as Ticket;
+        });
+
+        // Filtrado en memoria por sucursales
+        if (filtros.idSucursales && filtros.idSucursales.length > 0) {
+          tickets = tickets.filter(t => filtros.idSucursales!.includes(t.idSucursal));
+        }
+
+        // Filtrado en memoria por usuarios
+        if (filtros.idUsuarios && filtros.idUsuarios.length > 0) {
+          tickets = tickets.filter(t => filtros.idUsuarios!.includes(t.idUsuario));
+        }
+
+        return tickets;
+      })
     );
-
-    const snapshot = await getDocs(q);
-
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
   }
 }

@@ -4,7 +4,7 @@ import { customAlphabet } from 'nanoid';
 @Injectable({
   providedIn: 'root'
 })
-export class FolioGeneratorService {
+export class GeneradorFoliosService {
   private readonly prefijo = 'RW';
   private readonly nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPRSTUCVWXYZ', 1);
 

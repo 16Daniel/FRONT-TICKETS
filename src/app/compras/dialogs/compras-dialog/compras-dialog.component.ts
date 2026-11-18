@@ -10,12 +10,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { Compra } from '../../interfaces/compra.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { StatusPurchaseService } from '../../services/status-purchase.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 import { ComprasService } from '../../services/compras.service';
@@ -73,7 +73,7 @@ export class ComprasDialogComponent {
     private areasService: AreasService,
     private branchesService: BranchesService,
     public datesHelper: DatesHelperService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
   ) { }
 
   ngOnInit(): void {
@@ -117,7 +117,7 @@ export class ComprasDialogComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usuariosHelp = this.usersService.usuarios;
+    this.usuariosHelp = this.UsuariosService.usuarios;
     this.usuariosFiltro = this.usuariosHelp.filter(x => x.idArea == this.idArea);
   }
 

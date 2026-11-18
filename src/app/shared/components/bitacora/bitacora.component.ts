@@ -9,8 +9,8 @@ import { EditorModule } from 'primeng/editor';
 
 import { Bitacora } from '../../interfaces/bitacora.model';
 import { BitacoraService } from '../../services/bitacora.service';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Responsable } from '../../../usuarios/models/responsable.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { DatesHelperService } from '../../helpers/dates-helper.service';
 import { MentionUtils } from '../../utils/mention.utils';
 import { FirebaseStorageService } from '../../services/firebase-storage.service';

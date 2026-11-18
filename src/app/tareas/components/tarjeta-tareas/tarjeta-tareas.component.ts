@@ -13,13 +13,13 @@ import { ResponsablesService } from '../../../usuarios/services/responsables.ser
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { StatusTaskService } from '../../services/status-task.service';
 import { AvataresResponsablesTareaComponent } from "../avatares-responsables-tarea/avatares-responsables-tarea.component";
 import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { CosmicChechboxComponent } from "../cosmic-chechbox/cosmic-chechbox.component";
 
 @Component({

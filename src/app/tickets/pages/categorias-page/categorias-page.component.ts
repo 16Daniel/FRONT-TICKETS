@@ -11,17 +11,17 @@ import { Subscription } from 'rxjs';
 
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria, generateGUID } from '../../interfaces/subcategoria.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
 
 import { TarjetaGuiaMatrizComponent } from '../../components/tarjeta-guia-matriz/tarjeta-guia-matriz.component';
 import { FormularioNodoCategoriaComponent } from '../../components/formulario-nodo-categoria/formulario-nodo-categoria.component';
 import { NodoArbolCategoriaComponent } from '../../components/nodo-arbol-categoria/nodo-arbol-categoria.component';
 import { ConfiguracionMatrizUrgenciaComponent } from '../../components/configuracion-matriz-urgencia/configuracion-matriz-urgencia.component';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
@@ -68,7 +68,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private messageService: MessageService,
-    private categoriesService: CategoriesService,
+    private categoriasService: CategoriasService,
     private areasService: AreasService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private confirmationService: ConfirmationService,
@@ -125,7 +125,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
 
   private cargarCategorias(): void {
     this.subscripcionCategorias?.unsubscribe();
-    this.subscripcionCategorias = this.categoriesService.get(this.areaSeleccionadaId).subscribe({
+    this.subscripcionCategorias = this.categoriasService.get(this.areaSeleccionadaId).subscribe({
       next: (cats) => {
         this.categorias = cats;
         this.categorias.forEach((c) => this.normalizarNodo(c));
@@ -298,7 +298,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
   async guardarNuevoNodo(idPadre: string | null, datos: ResultadoFormularioNodo): Promise<void> {
     try {
       if (idPadre === null || idPadre === 'RAIZ') {
-        const nuevoSecuencial = await this.categoriesService.obtenerSecuencial();
+        const nuevoSecuencial = await this.categoriasService.obtenerSecuencial();
         const criticidadUrg = datos.criticidad || datos.impacto || (datos.score && datos.urgencia ? Math.round(datos.score / datos.urgencia) : 2);
         const urgenciaUrg = datos.urgencia || 2;
         const scoreUrg = datos.score || (criticidadUrg * urgenciaUrg);
@@ -323,7 +323,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
             alertaWhatsapp: datos.alertaWhatsapp
           } : {})
         };
-        await this.categoriesService.create(nuevaCat);
+        await this.categoriasService.create(nuevaCat);
         this.mostrarMensaje('success', 'Éxito', `Categoría "${datos.nombre}" creada.`);
       } else {
         const info = this.buscarInfoNodo(idPadre);
@@ -358,7 +358,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
         info.nodo.tipo = 'rama';
         info.nodo.activarSubcategorias = true;
 
-        await this.categoriesService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
+        await this.categoriasService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
         this.mostrarMensaje('success', 'Éxito', `Subcategoría "${datos.nombre}" agregada.`);
         this.nodosExpandidosIds.add(String(info.nodo.id));
       }
@@ -405,7 +405,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
       delete (objetivo as any).slaResp;
       delete (objetivo as any).impacto;
 
-      await this.categoriesService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
+      await this.categoriasService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
       this.mostrarMensaje('success', 'Actualizado', `"${datos.nombre}" actualizado.`);
       this.cancelarFormulario();
     } catch (err: any) {
@@ -445,9 +445,9 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
           info.nodo.eliminado = true;
 
           if (!info.padre) {
-            await this.categoriesService.delete(String(info.categoriaRaiz.id));
+            await this.categoriasService.delete(String(info.categoriaRaiz.id));
           } else {
-            await this.categoriesService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
+            await this.categoriasService.update(info.categoriaRaiz, String(info.categoriaRaiz.id));
           }
           this.mostrarMensaje('success', 'Eliminado', `"${nodo.nombre}" eliminado.`);
         } catch (err: any) {

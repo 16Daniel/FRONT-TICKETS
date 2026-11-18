@@ -5,12 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import Swal from 'sweetalert2';
 
 import { AuthService } from '../../services/auth.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AccessControlService } from '../../../shared/services/access-control.service';
 import { FcmService } from '../../../shared/services/fcm.service';
+import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +37,7 @@ export default class LoginComponent {
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private router: Router,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private authService: AuthService
   ) { }
 
@@ -71,28 +71,33 @@ export default class LoginComponent {
     this.loading = true;
     this.cdr.markForCheck();
 
-    Swal.fire({
-      target: document.body,
-      allowOutsideClick: false,
-      icon: 'info',
-      text: 'Espere por favor...',
-      didOpen: () => Swal.showLoading(),
-      customClass: {
-        container: 'swal-topmost'
-      }
+    SwalRw.loading({
+      badge: 'Autenticando',
+      title: 'Iniciando sesión',
+      text: 'Espere por favor...'
     });
 
     try {
       const user = await this.authService.login(this.email, this.pass);
 
       if (user?.user?.uid) {
-        const userd = this.usersService.getByUId(user.user.uid);
+        const userd = this.UsuariosService.getByUId(user.user.uid);
 
-        if (!userd) {
+        if (!userd || userd.eliminado) {
+          await this.authService.logout();
           this.showMessage('error', 'Error', 'Usuario no encontrado');
           this.loading = false;
           this.cdr.markForCheck();
-          Swal.close();
+          SwalRw.close();
+          return;
+        }
+
+        if (userd.bloqueado) {
+          await this.authService.logout();
+          this.showMessage('warn', 'Acceso restringido', 'Tu usuario se encuentra bloqueado. Contacta al administrador.');
+          this.loading = false;
+          this.cdr.markForCheck();
+          SwalRw.close();
           return;
         }
 
@@ -112,13 +117,13 @@ export default class LoginComponent {
       }
       this.loading = false;
       this.cdr.markForCheck();
-      Swal.close();
+      SwalRw.close();
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       this.showMessage('error', 'Error', 'Error al autenticar. Verifica tus credenciales.');
       this.loading = false;
       this.cdr.markForCheck();
-      Swal.close();
+      SwalRw.close();
     }
   }
 }

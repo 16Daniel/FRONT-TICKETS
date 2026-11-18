@@ -12,13 +12,13 @@ import { AcordeonMantenimientosSistemasComponent } from '../../components/acorde
 import { AcordeonMantenimientosAudioVideoComponent } from '../../components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { AcordeonMantenimientosMantenimientoComponent } from '../../components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
@@ -74,7 +74,7 @@ export default class MantenimientosAdminPageComponent implements OnInit, OnDestr
   constructor(
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private datesHelper: DatesHelperService,
     private maintenanceSysService: MantenimientosSistemasService,
@@ -131,7 +131,7 @@ export default class MantenimientosAdminPageComponent implements OnInit, OnDestr
   }
 
   obtenerUsuariosHelp(): void {
-    const sub = this.usersService
+    const sub = this.UsuariosService
       .getUsuariosPorRol(['4', '7'], this.idAreaActiva)
       .subscribe((usuarios) => {
         this.usuariosHelp = usuarios;

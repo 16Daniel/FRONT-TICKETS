@@ -16,18 +16,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import Swal from 'sweetalert2';
 
-import { Ticket } from '../../interfaces/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Ticket } from '../../models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Categoria } from '../../models/categoria.model';
-import { PrioridadTicket } from '../../interfaces/prioridad-ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { FolioGeneratorService } from '../../services/folio-generator.service';
-import { CategoriesService } from '../../services/categories.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { GeneradorFoliosService } from '../../services/generador-folios.service';
+import { CategoriasService } from '../../services/categorias.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { TicketsPriorityService } from '../../services/tickets-priority.service';
 import { FixedAssetsService } from '../../../activos-fijos/services/fixed-assets.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
@@ -38,9 +36,9 @@ import { SelectorArbolCategoriaComponent } from '../../components/selector-arbol
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { MensajesPendientesService } from '../../../shared/services/mensajes-pendientes.service';
 import { environment } from '../../../../environments/environments';
 
@@ -85,7 +83,6 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   private areasSub: Subscription | undefined;
   private areaInicialAsignada: boolean = false;
   categorias: Categoria[] = [];
-  prioridadesTicket: PrioridadTicket[] = [];
   formCategoria: any = null;
   private alertaWhatsappSeleccionada = false;
   catUsuariosHelp: Usuario[] = [];
@@ -162,14 +159,13 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private ticketsService: TicketsService,
-    private folioGeneratorService: FolioGeneratorService,
+    private generadorFoliosService: GeneradorFoliosService,
     private messageService: MessageService,
-    private categoriesService: CategoriesService,
+    private categoriasService: CategoriasService,
     private cdr: ChangeDetectorRef,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private areasService: AreasService,
-    private ticketsPriorityService: TicketsPriorityService,
     private fixedAssetsService: FixedAssetsService,
     private firebaseStorage: FirebaseStorageService,
     public responsablesService: ResponsablesService,
@@ -213,7 +209,6 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     this.obtenerSucursales();
     this.obtenerCategorias();
     this.obtenerUsuariosHelp();
-    this.obtenerPrioridadesTicket();
 
     // Obtener la matriz de urgencia correspondiente al área
     if (this.ticket.idArea && this.ticket.idArea !== '0') {
@@ -280,19 +275,6 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  obtenerPrioridadesTicket(): void {
-    this.ticketsPriorityService.get().subscribe({
-      next: (data) => {
-        this.prioridadesTicket = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error(error);
-        this.showMessage('error', 'Error', 'Error al procesar la solicitud');
-      },
-    });
-  }
-
   onChangeArea(): void {
     this.ticket.idCategoria = '';
     this.ticket.idSubcategoria = null;
@@ -305,7 +287,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   }
 
   obtenerCategorias(): void {
-    this.categoriesService.get().subscribe({
+    this.categoriasService.get().subscribe({
       next: (data) => {
         this.categorias = data;
         this.cdr.detectChanges();
@@ -412,7 +394,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     });
 
     const count = await this.ticketsService.obtenerSecuencialTickets();
-    const folio = this.folioGeneratorService.generarFolio(
+    const folio = this.generadorFoliosService.generarFolio(
       parseInt(String(this.ticket.idSucursal), 10),
       count
     );
@@ -738,7 +720,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   }
 
   obtenerUsuariosHelp = (): void => {
-    this.usersService.usuarios$.subscribe(usuarios => this.catUsuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.catUsuariosHelp = usuarios);
   };
 
   onHide = (): void => this.closeEvent.emit(false);

@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
-import { Ticket } from '../../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { Ticket } from '../../models/ticket.model';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { Categoria } from '../../models/categoria.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { obtenerTiempoSla } from '../../helpers/matriz-criticidad.helper';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 
 @Component({
   selector: 'app-ticket-sla-gauge',
@@ -64,7 +64,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private datesHelper: DatesHelperService,
     private matrizUrgenciaService: MatrizUrgenciaService,
-    private categoriesService: CategoriesService,
+    private categoriasService: CategoriasService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -117,7 +117,7 @@ export class TicketSlaGaugeComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     if (!this.categorias && this.categoriasLocales.length === 0) {
-      this.subCategorias = this.categoriesService.get().subscribe({
+      this.subCategorias = this.categoriasService.get().subscribe({
         next: (cats) => {
           this.categoriasLocales = cats || [];
           this.calcularMetricas();

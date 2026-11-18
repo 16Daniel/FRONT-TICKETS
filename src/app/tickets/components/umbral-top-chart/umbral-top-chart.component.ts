@@ -2,11 +2,11 @@ import { Component, Input, OnChanges, OnInit, OnDestroy, SimpleChanges } from '@
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Subscription } from 'rxjs';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { ListaTicketsKpisComponent } from '../../../tickets/components/lista-tickets-kpis/lista-tickets-kpis.component';
 import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../../../tickets/components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { KpiRadarService } from '../../../tickets/services/kpi-radar.service';
 
 @Component({

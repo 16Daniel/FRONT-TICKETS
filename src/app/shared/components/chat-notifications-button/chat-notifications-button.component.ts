@@ -6,11 +6,11 @@ import { Subscription } from 'rxjs';
 
 import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
 import { ModalMaintenanceChatComponent } from '../../../mantenimientos/dialogs/modal-maintenance-chat/modal-maintenance-chat.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { MantenimientoFactoryService } from '../../../mantenimientos/services/maintenance-factory.service';
 import { ShoppingService } from '../../../pagos/services/shopping.service';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { MensajePendiente } from '../../interfaces/mensajes-pendientes.model';
 import { AdminComprasChatDialogComponent } from '../../../pagos/dialogs/admin-compras-chat-dialog/admin-compras-chat-dialog.component';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';

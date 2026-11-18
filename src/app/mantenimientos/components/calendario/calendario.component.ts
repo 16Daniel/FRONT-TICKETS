@@ -12,13 +12,13 @@ import Swal from 'sweetalert2';
 import { VisitasService } from '../../services/visitas.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 import { GuardiasService } from '../../../tickets/services/guardias.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
@@ -76,7 +76,7 @@ export class CalendarioComponent implements OnInit {
     private mantenimientoFactory: MantenimientoFactoryService,
     private branchesService: BranchesService,
     private datesHelper: DatesHelperService,
-    private usuariosService: UsersService,
+    private usuariosService: UsuariosService,
     private maintenanceAvService: MaintenanceAvService,
     private areasService: AreasService
   ) {

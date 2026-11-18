@@ -19,7 +19,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { FormsModule } from '@angular/forms';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { CalendarModule } from 'primeng/calendar';
 import { CatalogoProveedoresTickets } from "../../dialogs/catalogo-proveedores-tickets/catalogo-proveedores-tickets";
 import pdfMake from 'pdfmake/build/pdfmake';

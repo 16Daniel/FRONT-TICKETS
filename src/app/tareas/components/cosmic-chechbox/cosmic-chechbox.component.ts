@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Timestamp } from '@angular/fire/firestore';
 
 import { Tarea } from '../../interfaces/tarea.interface';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { TareasService } from '../../services/tareas.service';
 
 @Component({

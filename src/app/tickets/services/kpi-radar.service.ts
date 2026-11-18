@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Ticket } from '../interfaces/ticket.model';
-import { MatrizUrgencia } from '../interfaces/matriz-urgencia.interface';
+import { Ticket } from '../models/ticket.model';
+import { MatrizUrgencia } from '../models/matriz-urgencia.model';
 import { RadarStats } from '../interfaces/radar-stats.interface';
 import { MatrizUrgenciaService } from './matriz-urgencia.service';
 import { DatesHelperService } from '../../shared/helpers/dates-helper.service';

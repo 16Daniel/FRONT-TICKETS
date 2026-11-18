@@ -8,7 +8,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 
 import { Proveedor } from '../../interfaces/AdministracionCompra';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ProveedoresService } from '../../services/Proveedores.service';
 
 @Component({

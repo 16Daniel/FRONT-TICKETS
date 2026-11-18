@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { AdminAreaTabComponent } from '../admin-area-tab/admin-area-tab.component';
 import { AreasService } from '../../../areas/services/areas.service';

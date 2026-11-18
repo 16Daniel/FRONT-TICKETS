@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { AvatarModule } from 'ngx-avatars';
 import { Subscription } from 'rxjs';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
 import { BitacoraService } from '../../../shared/services/bitacora.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';

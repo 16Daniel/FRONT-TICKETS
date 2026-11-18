@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import Swal from 'sweetalert2';
 import { Compra } from '../../interfaces/compra.model';
 import { ComprasService } from '../../services/compras.service';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 

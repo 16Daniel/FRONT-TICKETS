@@ -113,5 +113,5 @@
     </ng-template>
 </p-confirmDialog>
 
-<app-modal-comite-create *ngIf="mostrarModalComite" [mostrarModalCrearComite]="mostrarModalComite"
-    (closeEvent)="cerrarModalComite()" [comite]="comiteSeleccionado" [esNuevoComite]="esNuevoComite"></app-modal-comite-create>
+<app-crear-comite-dialog *ngIf="mostrarModalComite" [mostrarModalCrearComite]="mostrarModalComite"
+    (closeEvent)="cerrarModalComite()" [comite]="comiteSeleccionado" [esNuevoComite]="esNuevoComite"></app-crear-comite-dialog>

@@ -14,7 +14,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { GraficaComensalesComponent } from "../../components/grafica-comensales.component/grafica-comensales.component";
 import { DropdownModule } from 'primeng/dropdown';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 
 @Component({
   selector: 'app-comensales-page',

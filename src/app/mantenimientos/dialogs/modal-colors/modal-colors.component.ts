@@ -11,7 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { CalendarColorsService } from '../../services/calendar-colors.service';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 

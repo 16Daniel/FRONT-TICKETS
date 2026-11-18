@@ -16,7 +16,7 @@ export const USUARIOS_MAIN_ROUTES: Routes = [
     title: 'Usuarios',
     canActivate: [permissionGuard('usuarios.ver')],
     loadComponent: () =>
-      import('./pages/users-page/users-page.component'),
+      import('./pages/usuarios-page/usuarios-page.component'),
   },
   {
     path: 'responsables',

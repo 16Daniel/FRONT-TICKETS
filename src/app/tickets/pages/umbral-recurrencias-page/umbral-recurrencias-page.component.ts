@@ -6,14 +6,15 @@ import { Subscription } from 'rxjs';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 import { Categoria } from '../../models/categoria.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
-import { UmbralTicketsService, UmbralFiltros } from '../../services/umbral-tickets.service';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
+import { TicketsService } from '../../services/tickets.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
+import { Ticket } from '../../models/ticket.model';
 import { UmbralKpisComponent } from '../../components/umbral-kpis/umbral-kpis.component';
 import { UmbralFiltrosComponent } from '../../components/umbral-filtros/umbral-filtros.component';
 import { UmbralArbolComponent } from '../../components/umbral-arbol/umbral-arbol.component';
@@ -59,10 +60,10 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
   private subscripcionUsuarios?: Subscription;
   constructor(
     private areasService: AreasService,
-    private categoriesService: CategoriesService,
+    private categoriasService: CategoriasService,
     private branchesService: BranchesService,
-    private usersService: UsersService,
-    private umbralTicketsService: UmbralTicketsService,
+    private UsuariosService: UsuariosService,
+    private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -96,7 +97,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   private cargarUsuariosPorArea(): void {
     this.subscripcionUsuarios?.unsubscribe();
-    this.subscripcionUsuarios = this.usersService.getUsuariosPorRol(['4'], this.areaSeleccionadaId).subscribe(usuarios => {
+    this.subscripcionUsuarios = this.UsuariosService.getUsuariosPorRol(['4'], this.areaSeleccionadaId).subscribe(usuarios => {
       this.usuariosRol4 = usuarios.map(u => ({
         ...u,
         nombreCompleto: `${u.nombre} ${u.apellidoP} ${u.apellidoM}`.trim()
@@ -108,14 +109,14 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   aplicarFiltros(): void {
     this.isApplyingFilters = true;
-    const filtros: UmbralFiltros = {
+    const filtros: TicketsFiltros = {
       fechaInicio: this.fechaInicio,
       fechaFin: this.fechaFin,
       idSucursales: this.sucursalesSeleccionadas.map(s => String(s.id)),
       idUsuarios: this.usuariosSeleccionados.map(u => String(u.id))
     };
 
-    this.umbralTicketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
+    this.ticketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
       next: (tickets: Ticket[]) => {
         this.tickets = tickets;
         this.isApplyingFilters = false;
@@ -154,7 +155,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
 
   private cargarCategorias(): void {
     this.subscripcionCategorias?.unsubscribe();
-    this.subscripcionCategorias = this.categoriesService.get(this.areaSeleccionadaId).subscribe((cats: Categoria[]) => {
+    this.subscripcionCategorias = this.categoriasService.get(this.areaSeleccionadaId).subscribe((cats: Categoria[]) => {
       this.categoriasActuales = cats;
       this.cdr.detectChanges();
     });

@@ -14,9 +14,9 @@ import { CalendarioComponent } from '../../components/calendario/calendario.comp
 import { VisitaFiltrosToolbarComponent } from '../../components/visita-filtros-toolbar/visita-filtros-toolbar.component';
 import { VisitaSucursalesPicklistComponent } from '../../components/visita-sucursales-picklist/visita-sucursales-picklist.component';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { Guardia } from '../../../tickets/interfaces/guardia';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Guardia } from '../../../tickets/models/guardia.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
@@ -24,7 +24,7 @@ import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { VisitasService } from '../../services/visitas.service';
 import { GuardiasService } from '../../../tickets/services/guardias.service';
@@ -77,7 +77,7 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     private ticketsService: TicketsService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private visitasService: VisitasService,
     private guardiaService: GuardiasService,
@@ -163,7 +163,7 @@ export default class ContructorCalendarioPageComponent implements OnInit {
 
   private armarParticipantesChat(idUsuarioAnalista: string): ParticipanteChat[] {
     const ids = new Set<string>([idUsuarioAnalista]);
-    for (const u of this.usersService.usuarios) {
+    for (const u of this.UsuariosService.usuarios) {
       if (
         ((u.idRol == '5' || u.idRol == '1') && u.idArea == this.usuario.idArea) ||
         u.idRol == '2'

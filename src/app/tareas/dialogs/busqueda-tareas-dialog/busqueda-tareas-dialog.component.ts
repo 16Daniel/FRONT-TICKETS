@@ -12,7 +12,7 @@ import { TareasService } from '../../services/tareas.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { AvataresResponsablesTareaComponent } from '../../components/avatares-responsables-tarea/avatares-responsables-tarea.component';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 
 @Component({
   selector: 'app-busqueda-tareas-dialog',

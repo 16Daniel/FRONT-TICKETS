@@ -15,4 +15,7 @@ export class Usuario {
   controlDeAceite?: boolean | null;
   especialidad: string = '';
   fcmToken: string[] = [];
+  eliminado: boolean = false;
+  bloqueado: boolean = false;
+  intentos: number = 0;
 }

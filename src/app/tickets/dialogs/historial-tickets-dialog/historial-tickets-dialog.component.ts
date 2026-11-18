@@ -17,18 +17,18 @@ import { DropdownModule } from 'primeng/dropdown';
 
 import { DetalleTicketDialogComponent } from '../detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Categoria } from '../../models/categoria.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { UsersService } from '../../../usuarios/services/users.service';
-import { StatusTicketService } from '../../services/status-ticket.service';
-import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
 import * as XLSX from 'xlsx';
 import { PlaneacionCatService } from '../../../compras/services/planeacion.service';
 import { ProveedorPlaneacion } from '../../../compras/interfaces/ProveedorPlaneacion';
@@ -92,11 +92,11 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private categoriesService: CategoriesService,
+    private categoriasService: CategoriasService,
     private areasService: AreasService,
     private branchesService: BranchesService,
-    private usersService: UsersService,
-    private statusTicketsService: StatusTicketService,
+    private UsuariosService: UsuariosService,
+    private estatusTicketService: EstatusTicketService,
     private servicePlaneacion: PlaneacionCatService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -155,7 +155,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
   showMessage = (sev: string, summ: string, det: string) => this.messageService.add({ severity: sev, summary: summ, detail: det });
 
   obtenerCategorias() {
-    this.categoriesService.get().subscribe({
+    this.categoriasService.get().subscribe({
       next: (data) => {
         this.categorias = data;
         this.cdr.detectChanges();
@@ -180,11 +180,11 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerCatalogoEstatusTickets() {
-    this.statusTicketsService.get().subscribe(result => this.estatusTickets = result);
+    this.estatusTicketService.get().subscribe(result => this.estatusTickets = result);
   }
 
   getDate(tsmp: any): Date | null {

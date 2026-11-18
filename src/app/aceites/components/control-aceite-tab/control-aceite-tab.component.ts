@@ -9,9 +9,9 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { DocumentsService } from '../../../shared/services/documents.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -53,7 +53,7 @@ export default class ControlAceiteTabComponent implements OnInit {
     private messageService: MessageService,
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private rolesService: RolesService,
     private branchesService: BranchesService
   ) { }
@@ -98,7 +98,7 @@ export default class ControlAceiteTabComponent implements OnInit {
   }
 
   obtenerUsuarios() {
-    this.usersService.usuarios$.subscribe(usuarios => this.catusuarios = usuarios.filter(x => x.idRol == '6'));
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.catusuarios = usuarios.filter(x => x.idRol == '6'));
   }
 
   abrirModalEditarUsuario(usuario: Usuario) {

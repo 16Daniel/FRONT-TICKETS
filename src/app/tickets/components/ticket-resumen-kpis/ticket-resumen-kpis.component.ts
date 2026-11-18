@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
-import { Ticket } from '../../interfaces/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Ticket } from '../../models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
 
@@ -25,15 +25,15 @@ export class TicketResumenKpisComponent {
   @Input() ticket!: Ticket;
   @Input() categorias: any[] = [];
 
-  constructor(private usersService: UsersService) {}
+  constructor(private UsuariosService: UsuariosService) {}
 
   getResponsable(): Usuario | undefined {
     if (!this.ticket?.idResponsable) return undefined;
-    return this.usersService.usuarios.find((u) => u.id === this.ticket.idResponsable);
+    return this.UsuariosService.usuarios.find((u) => u.id === this.ticket.idResponsable);
   }
 
   getInvolucrados(): Usuario[] {
     if (!this.ticket?.idInvolucrados || !this.ticket.idInvolucrados.length) return [];
-    return this.usersService.usuarios.filter((u) => this.ticket.idInvolucrados.includes(u.id!));
+    return this.UsuariosService.usuarios.filter((u) => this.ticket.idInvolucrados.includes(u.id!));
   }
 }

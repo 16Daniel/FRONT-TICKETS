@@ -12,7 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SubirFacturaCompraDialogComponent } from '../subir-factura-compra-dialog/subir-factura-compra-dialog.component';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 
 @Component({
