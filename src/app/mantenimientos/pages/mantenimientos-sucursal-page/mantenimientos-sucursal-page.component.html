@@ -55,13 +55,6 @@
               </span>
             </label>
           </div>
-
-          <!-- <p-button
-            label="EVALUACIÓN GENERAL"
-            icon="pi pi-star"
-            styleClass="p-button-yellow action-btn-custom"
-            (click)="mostrarModalRating = true">
-          </p-button> -->
         } @else if (tipoActivo === 'AV') {
           <p-button
             class="btn-tool-wrap"
@@ -170,11 +163,6 @@
   (closeEvent)="mostrarModalManteinance = false"
   [mantenimientosActivos]="mantenimientosActivos">
 </app-modal-mateinance-mtto-check>
-
-<app-modal-branch-rating
-  [mostrarModalRating]="mostrarModalRating"
-  (closeEvent)="mostrarModalRating = false">
-</app-modal-branch-rating>
 
 <p-toast
   [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"

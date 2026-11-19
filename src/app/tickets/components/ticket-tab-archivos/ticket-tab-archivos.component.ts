@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ModalVisorImagenesComponent } from '../../../shared/dialogs/modal-visor-imagenes/modal-visor-imagenes.component';
 

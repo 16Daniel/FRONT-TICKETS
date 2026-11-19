@@ -20,7 +20,7 @@ import { Categoria } from '../models/categoria.model';
   providedIn: 'root',
 })
 
-export class CategoriesService {
+export class CategoriasService {
   pathName: string = 'cat_categorias';
 
   constructor(private firestore: Firestore) {
@@ -49,7 +49,7 @@ export class CategoriesService {
 
     const payload = JSON.parse(JSON.stringify(categoria));
     this.limpiarCamposNoDeseados(payload);
-    console.log('[CategoriesService] Payload POST create (limpio):', JSON.stringify(payload, null, 2));
+    console.log('[CategoriasService] Payload POST create (limpio):', JSON.stringify(payload, null, 2));
     await setDoc(documentRef, payload);
   }
 
@@ -91,7 +91,7 @@ export class CategoriesService {
     const documentRef = doc(this.firestore, `${this.pathName}/${idCategoria}`);
     const payload = JSON.parse(JSON.stringify(categoria));
     this.limpiarCamposNoDeseados(payload);
-    console.log(`[CategoriesService] Payload PUT update (${idCategoria}) (limpio):`, JSON.stringify(payload, null, 2));
+    console.log(`[CategoriasService] Payload PUT update (${idCategoria}) (limpio):`, JSON.stringify(payload, null, 2));
     return setDoc(documentRef, payload);
   }
 

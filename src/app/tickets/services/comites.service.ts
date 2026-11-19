@@ -12,7 +12,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { Comite } from '../interfaces/comite';
+import { Comite } from '../models/comite.model';
 
 @Injectable({
   providedIn: 'root',

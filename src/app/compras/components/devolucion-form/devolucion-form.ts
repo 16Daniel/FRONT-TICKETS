@@ -15,7 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from "primeng/toast";
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 
 @Component({
   selector: 'app-devolucion-form',

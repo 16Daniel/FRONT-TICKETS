@@ -14,8 +14,8 @@ import { PwaService } from '../../services/pwa.service';
 import { GrupoMenuPermiso } from '../../../roles/interfaces/ruta.model';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { environment } from '../../../../environments/environments';
 
 @Component({

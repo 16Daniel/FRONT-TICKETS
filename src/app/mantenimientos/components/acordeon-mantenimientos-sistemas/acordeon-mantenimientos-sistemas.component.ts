@@ -5,15 +5,14 @@ import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
-import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 
 @Component({
@@ -25,8 +24,7 @@ import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafic
     CommonModule,
     FormsModule,
     AccordionModule,
-    TpvsDevicesTableComponent,
-    GraficaTickets30DiasComponent
+    TpvsDevicesTableComponent
   ],
   templateUrl: './acordeon-mantenimientos-sistemas.component.html',
   styleUrl: './acordeon-mantenimientos-sistemas.component.scss',
@@ -45,14 +43,14 @@ export class AcordeonMantenimientosSistemasComponent {
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 
   constructor(
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private datesHelper: DatesHelperService
 
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {

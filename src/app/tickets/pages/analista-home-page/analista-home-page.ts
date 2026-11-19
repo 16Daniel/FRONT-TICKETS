@@ -1,15 +1,16 @@
 import { Component, type OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { catchError, combineLatest, of, Subscription } from 'rxjs';
 import { TicketsTabComponent } from '../../components/tickets-tab/tickets-tab.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { TotalesSlaDashboard } from '../../components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
-import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
+import { TicketsService } from '../../services/tickets.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 import { KpiRadarService } from '../../services/kpi-radar.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
-import { Ticket } from '../../interfaces/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
+import { Ticket } from '../../models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 
 @Component({
   selector: 'app-analista-home-page',
@@ -37,11 +38,10 @@ export default class AnalistaHomePageComponent implements OnInit, OnDestroy {
     slaResolucionCumplidos: 0
   };
 
-  private subscripcionTickets?: Subscription;
-  private subscripcionMatriz?: Subscription;
+  private subscripcionSla?: Subscription;
 
   constructor(
-    private kpisTicketsService: KpisTicketsService,
+    private ticketsService: TicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private kpiRadarService: KpiRadarService,
     private cdr: ChangeDetectorRef
@@ -62,8 +62,7 @@ export default class AnalistaHomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscripcionTickets?.unsubscribe();
-    this.subscripcionMatriz?.unsubscribe();
+    this.subscripcionSla?.unsubscribe();
   }
 
   private definirMesActual(): void {
@@ -82,37 +81,28 @@ export default class AnalistaHomePageComponent implements OnInit, OnDestroy {
     const now = new Date();
     const fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
     const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-
     const idArea = String(this.usuario.idArea || '1');
+    const filtros: TicketsFiltros = { fechaInicio, fechaFin };
 
-    // Cargar la matriz de urgencia del área para evaluar tiempos de SLA
-    this.subscripcionMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).subscribe({
-      next: (matriz) => {
-        this.matrizUrgenciaArea = matriz;
-        this.consultarTicketsMes(idArea, fechaInicio, fechaFin);
-      },
-      error: (err) => {
+    const matriz$ = this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).pipe(
+      catchError((err) => {
         console.error('Error al obtener matriz de urgencia:', err);
-        this.consultarTicketsMes(idArea, fechaInicio, fechaFin);
-      }
-    });
-  }
+        return of(undefined);
+      })
+    );
 
-  private consultarTicketsMes(idArea: string, fechaInicio: Date, fechaFin: Date): void {
-    const filtros: KpisFiltros = {
-      fechaInicio,
-      fechaFin
-    };
+    const tickets$ = this.ticketsService.getTicketsPorFiltrosTiempoReal(idArea, filtros);
 
-    this.subscripcionTickets?.unsubscribe();
-    this.subscripcionTickets = this.kpisTicketsService.getTicketsPorFiltros(idArea, filtros).subscribe({
-      next: (tickets: Ticket[]) => {
-        this.procesarMetricasSla(tickets);
+    this.subscripcionSla?.unsubscribe();
+    this.subscripcionSla = combineLatest([matriz$, tickets$]).subscribe({
+      next: ([matriz, tickets]) => {
+        this.matrizUrgenciaArea = matriz;
+        this.procesarMetricasSla(tickets || []);
         this.loadingSla = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al obtener tickets del mes actual para analista:', err);
+        console.error('Error al escuchar tickets del mes actual para analista:', err);
         this.loadingSla = false;
         this.cdr.detectChanges();
       }

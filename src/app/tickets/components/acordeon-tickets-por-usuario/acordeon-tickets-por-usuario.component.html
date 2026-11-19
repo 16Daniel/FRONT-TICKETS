@@ -46,8 +46,6 @@
         <div class="accordion-tables-wrapper">
             <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea == '1'"
                 [sucursal]="obtenerSucursal(item.id)!"></app-tpvs-devices-table>
-            <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
-                [idArea]="idArea"></app-grafica-tickets-30-dias>
             <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" [idArea]="idArea"
                 *ngIf="!mostrarRadiografiaMap[item.id]"></app-admin-tickets-list>
         </div>

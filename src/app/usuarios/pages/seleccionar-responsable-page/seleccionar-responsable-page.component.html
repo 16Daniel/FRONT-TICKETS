@@ -8,7 +8,7 @@
 
       <div class="pin-inputs-container" [class.shake]="errorPin">
         <input #pinInput type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" [(ngModel)]="pinIngresado"
-          (input)="onPinChange()" (keydown.enter)="validarPin()" class="hidden-input" />
+          [disabled]="bloqueando" (input)="onPinChange()" (keydown.enter)="validarPin()" class="hidden-input" />
 
         <div class="pin-dots" (click)="pinInput.focus()">
           <div *ngFor="let i of [0,1,2,3]" class="dot" [class.active]="pinIngresado.length > i">

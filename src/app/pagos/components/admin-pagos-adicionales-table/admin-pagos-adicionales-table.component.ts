@@ -9,7 +9,7 @@ import { ArchivosPagosDialogComponent } from "../../dialogs/archivos-pagos-dialo
 import { AdminComprasChatDialogComponent } from "../../dialogs/admin-compras-chat-dialog/admin-compras-chat-dialog.component";
 import { PagoAdicionalDetalleDialogComponent } from "../../dialogs/pago-adicional-detalle-dialog/pago-adicional-detalle-dialog.component";
 import { PagoAdicional } from '../../interfaces/AdministracionCompra';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { environment } from '../../../../environments/environments';
 import Swal from 'sweetalert2';
 import { ShoppingService } from '../../services/shopping.service';

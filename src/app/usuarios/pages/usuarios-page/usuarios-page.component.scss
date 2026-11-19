@@ -149,6 +149,12 @@ $rw-canvas: #f4f6fa;
     }
   }
 
+  &.btn-action-warning {
+    background-color: #fffbeb;
+    color: #d97706;
+    border-color: #fde68a;
+  }
+
   &.btn-action-info {
     background-color: #ecfeff;
     color: #0891b2;
@@ -159,5 +165,27 @@ $rw-canvas: #f4f6fa;
     background-color: #fef2f2;
     color: #ef4444;
     border-color: #fecaca;
+  }
+}
+
+.user-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  &.is-active {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+
+  &.is-blocked {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
   }
 }

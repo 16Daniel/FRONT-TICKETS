@@ -20,7 +20,7 @@ import {
 } from '../../../tickets/helpers/matriz-criticidad.helper';
 import { CuadranteInfo } from '../../interfaces/cuadrante-info.interface';
 import { EventoSeleccionMatriz } from '../../interfaces/evento-seleccion-matriz.interface';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 
 @Component({
@@ -35,6 +35,7 @@ export class SelectorMatrizCriticidadComponent implements OnInit, OnChanges, OnD
   @Input() urgencia: number = 2;
   @Input() idArea?: string;
   @Input() matrizUrgencia?: MatrizUrgencia | null;
+  @Input() mostrarEtiqueta: boolean = true;
 
   @Output() cambioSeleccion = new EventEmitter<EventoSeleccionMatriz>();
 

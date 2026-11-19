@@ -6,8 +6,8 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../../usuarios/services/users.service';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../../usuarios/services/usuarios.service';
 import { MantenimientoAudioVideo } from '../../../interfaces/mantenimiento-audio-video.interface';
 import { ModalMaintenanceDetailComponent } from "../../systems/modal-maintenance-detail/modal-maintenance-detail.component";
 import { MaintenanceAvService } from '../../../services/maintenance-av.service';
@@ -45,7 +45,7 @@ export class HistorialMantenimeintoSysAvComponent {
   constructor(
     private maintenanceAvService: MaintenanceAvService,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -100,7 +100,7 @@ export class HistorialMantenimeintoSysAvComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerUltimoMantenimiento() {

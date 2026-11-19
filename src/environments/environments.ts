@@ -18,7 +18,8 @@ export const environment = {
     measurementId: 'G-ZSNCNBN2KL',
   },
   ticketsApiConfig: {
-    url: "https://localhost:7165/api/",
+    // url: "https://localhost:7165/api/",
+    url: "https://operamx.no-ip.net/back/api_tickets_desarrollo/api/",
     apiKey: "QG15czNjcjN0QXAxazN5LXJ3LXQxY2szdHMtMjAyNkA="
   },
 

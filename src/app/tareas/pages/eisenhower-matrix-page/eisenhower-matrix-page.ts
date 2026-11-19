@@ -6,14 +6,14 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from "primeng/toast";
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { Subscription } from 'rxjs';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 import { TarjetaTareaEisenhowerComponent } from '../../components/tarjeta-tarea-eisenhower/tarjeta-tarea-eisenhower.component';

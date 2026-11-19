@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { Ticket } from '../../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { Ticket } from '../../models/ticket.model';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 
 @Component({
   selector: 'app-lista-tickets-kpis',
@@ -33,7 +33,7 @@ export class ListaTicketsKpisComponent implements OnInit, OnDestroy {
 
   constructor(
     private branchesService: BranchesService,
-    private categoriesService: CategoriesService
+    private categoriasService: CategoriasService
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +48,7 @@ export class ListaTicketsKpisComponent implements OnInit, OnDestroy {
 
     if (!this.categorias || this.categorias.length === 0) {
       this.subs.add(
-        this.categoriesService.get().subscribe({
+        this.categoriasService.get().subscribe({
           next: (data) => (this.categorias = data),
           error: (err) => console.error('Error al cargar categorías en ListaTicketsKpisComponent:', err)
         })

@@ -10,7 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { CorreosNotificacionService } from '../../../shared/services/correos-notificacion.service';
 import { NominaService } from '../../services/nomina.service';

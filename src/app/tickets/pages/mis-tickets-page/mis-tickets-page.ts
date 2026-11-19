@@ -12,8 +12,8 @@ import { RequesterTicketsListComponent } from '../../components/requester-ticket
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { TicketsService } from '../../services/tickets.service';
-import { Ticket } from '../../interfaces/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Ticket } from '../../models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 
 @Component({
   selector: 'app-mis-tickets-page',

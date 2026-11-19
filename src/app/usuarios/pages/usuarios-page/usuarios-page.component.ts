@@ -10,9 +10,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 
-import { Usuario } from '../../interfaces/usuario.model';
+import { Usuario } from '../../models/usuario.model';
 import { DocumentsService } from '../../../shared/services/documents.service';
-import { UsersService } from '../../services/users.service';
+import { UsuariosService } from '../../services/usuarios.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { Rol } from '../../../roles/interfaces/rol.model';
 import { CrearUsuarioDialogComponent } from '../../dialogs/crear-usuario-dialog/crear-usuario-dialog.component';
@@ -22,7 +22,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({
-  selector: 'app-users-page',
+  selector: 'app-usuarios-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -36,11 +36,11 @@ import { AreasService } from '../../../areas/services/areas.service';
     PageHeaderComponent
   ],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './users-page.component.html',
-  styleUrl: './users-page.component.scss'
+  templateUrl: './usuarios-page.component.html',
+  styleUrl: './usuarios-page.component.scss'
 })
 
-export default class UsersPageComponent implements OnDestroy, OnInit {
+export default class UsuariosPageComponent implements OnDestroy, OnInit {
   readonly String = String;
   mostrarModalUsuario: boolean = false;
   actualizar: boolean = false;
@@ -55,7 +55,8 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   private unsubscribe!: () => void;
 
   areas: Area[] = [];
-  areaSeleccionadaId: string = 'sucursales';
+  areaSeleccionadaId: string = 'sin-area';
+  confirmDialogTipo: 'eliminar' | 'desbloquear' = 'eliminar';
 
   usuario: Usuario;
 
@@ -64,7 +65,7 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
     private messageService: MessageService,
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private rolesService: RolesService,
     private areasService: AreasService
   ) {
@@ -72,11 +73,12 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.usersService.usuarios$.subscribe(usuarios => {
-      this.usuarios = usuarios;
+    this.subscripcionUsuarios = this.UsuariosService.usuarios$.subscribe(usuarios => {
+      this.usuarios = usuarios.filter(u => !u.eliminado);
       if (this.usuario.idRol == '5') {
         this.usuarios = this.usuarios.filter(x => x.idArea == this.usuario.idArea);
       }
+      this.asegurarAreaSeleccionadaValida();
       this.aplicarFiltroArea();
     });
     this.cargarAreas();
@@ -86,12 +88,28 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   private cargarAreas(): void {
     this.subscripcionAreas = this.areasService.areas$.subscribe((areas: Area[]) => {
       this.areas = areas.filter((a: Area) => !a.eliminado);
-      if (this.areaSeleccionadaId !== 'sucursales' && this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
-        this.areaSeleccionadaId = 'sucursales';
-      }
+      this.asegurarAreaSeleccionadaValida();
       this.aplicarFiltroArea();
       this.cdr.detectChanges();
     });
+  }
+
+  private esUsuarioSinArea(u: Usuario): boolean {
+    return !u.idArea || String(u.idArea) === '0' || String(u.idArea) === '';
+  }
+
+  get tieneUsuariosSinArea(): boolean {
+    return this.usuarios.some(u => this.esUsuarioSinArea(u));
+  }
+
+  private asegurarAreaSeleccionadaValida(): void {
+    if (this.areaSeleccionadaId === 'sin-area' && !this.tieneUsuariosSinArea && this.areas.length > 0) {
+      this.areaSeleccionadaId = String(this.areas[0].id);
+      return;
+    }
+    if (this.areaSeleccionadaId !== 'sin-area' && this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
+      this.areaSeleccionadaId = this.tieneUsuariosSinArea ? 'sin-area' : String(this.areas[0].id);
+    }
   }
 
   cambiarArea(areaId: string | number): void {
@@ -100,8 +118,8 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   }
 
   aplicarFiltroArea(): void {
-    if (this.areaSeleccionadaId === 'sucursales') {
-      this.usuariosFiltrados = this.usuarios.filter(u => !u.idArea || String(u.idArea) === '0' || String(u.idArea) === '');
+    if (this.areaSeleccionadaId === 'sin-area') {
+      this.usuariosFiltrados = this.usuarios.filter(u => this.esUsuarioSinArea(u));
     } else {
       this.usuariosFiltrados = this.usuarios.filter(u => String(u.idArea) === this.areaSeleccionadaId);
     }
@@ -139,13 +157,16 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   }
 
   confirmaEliminacion(id: string | any) {
+    this.confirmDialogTipo = 'eliminar';
     this.confirmationService.confirm({
-      header: 'Confirmación',
-      message: '¿Está seguro que desea eliminar?',
-      acceptIcon: 'pi pi-check mr-2',
-      rejectIcon: 'pi pi-times mr-2',
-      acceptButtonStyleClass: 'btn bg-p-b p-3',
-      rejectButtonStyleClass: 'btn btn-light me-3 p-3',
+      header: '¿Eliminar usuario?',
+      message: '¿Está seguro que desea eliminar este usuario?',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      acceptIcon: 'pi pi-trash',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
       accept: () => {
         this.eliminarUsuario(id);
       },
@@ -160,8 +181,42 @@ export default class UsersPageComponent implements OnDestroy, OnInit {
   }
 
   async eliminarUsuario(idu: string) {
-    await this.documentsService.deleteDocument('usuarios', idu);
-    this.showMessage('success', 'Success', 'Eliminado correctamente');
+    try {
+      await this.UsuariosService.updateUserDeletedStatus(idu, true);
+      this.showMessage('success', 'Success', 'Eliminado correctamente');
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+      this.showMessage('error', 'Error', 'No se pudo eliminar el usuario');
+    }
+  }
+
+  confirmaDesbloqueo(usuario: Usuario) {
+    const nombreCompleto = `${usuario.nombre} ${usuario.apellidoP} ${usuario.apellidoM}`.trim();
+    this.confirmDialogTipo = 'desbloquear';
+    this.confirmationService.confirm({
+      header: '¿Desbloquear usuario?',
+      message: `¿Está seguro que desea desbloquear a "${nombreCompleto || usuario.email}"?`,
+      acceptLabel: 'Sí, desbloquear',
+      rejectLabel: 'Cancelar',
+      acceptIcon: 'pi pi-lock-open',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'btn-confirm-accept',
+      rejectButtonStyleClass: 'btn-confirm-reject',
+      accept: () => {
+        this.desbloquearUsuario(usuario);
+      },
+      reject: () => { },
+    });
+  }
+
+  async desbloquearUsuario(usuario: Usuario) {
+    try {
+      await this.UsuariosService.updateUserPinAttempts(usuario.id, 0, false);
+      this.showMessage('success', 'Usuario desbloqueado', 'El usuario fue desbloqueado y sus intentos se reiniciaron.');
+    } catch (error) {
+      console.error('Error al desbloquear usuario:', error);
+      this.showMessage('error', 'Error', 'No se pudo desbloquear el usuario');
+    }
   }
 
   obtenerRoles() {

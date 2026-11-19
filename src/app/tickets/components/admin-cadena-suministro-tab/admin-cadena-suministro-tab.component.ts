@@ -14,12 +14,12 @@ import { UserTicketsAccordionComponent } from '../../../tickets/components/user-
 import { ModalTicketDetailComponent } from '../../../tickets/dialogs/modal-ticket-detail/modal-ticket-detail.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { ComprasDialogComponent } from '../../../compras/dialogs/compras-dialog/compras-dialog.component';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { EstatusTicket } from '../../../tickets/interfaces/estatus-ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { EstatusTicket } from '../../../tickets/models/estatus-ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -95,7 +95,7 @@ export class AdminCadenaSuministroTabComponent {
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private ticketsService: TicketsService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private maintenanceService: MaintenanceAvService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
@@ -251,7 +251,7 @@ export class AdminCadenaSuministroTabComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsuariosPorRol(['4', '7'], this.usuario.idArea)
+    this.UsuariosService.getUsuariosPorRol(['4', '7'], this.usuario.idArea)
       .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 

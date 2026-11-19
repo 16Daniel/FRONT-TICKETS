@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 
 @Component({
   selector: 'app-ticket-tab-descripcion',

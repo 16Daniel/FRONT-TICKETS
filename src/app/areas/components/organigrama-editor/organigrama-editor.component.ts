@@ -8,7 +8,7 @@ import { AreaOrganigrama } from '../../interfaces/area-organigrama.model';
 import { OrganigramaLegacyNode } from '../../interfaces/organigrama-legacy-node.interface';
 import { OrganigramaNodo } from '../../interfaces/organigrama-nodo.interface';
 import { AreaOrganigramaService } from '../../services/area-organigrama.service';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 
 @Component({

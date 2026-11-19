@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import {
   addDoc,
   arrayUnion,
@@ -20,8 +20,9 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { combineLatest, map, Observable } from 'rxjs';
-import { Ticket } from '../interfaces/ticket.model';
+import { combineLatest, from, map, Observable } from 'rxjs';
+import { Ticket } from '../models/ticket.model';
+import { TicketsFiltros } from '../interfaces/tickets-filtros.interface';
 import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
 
 @Injectable({
@@ -29,7 +30,7 @@ import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface
 })
 export class TicketsService {
 
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private ngZone: NgZone) { }
 
   /**
    * Elimina campos con valor undefined para evitar errores de Firestore:
@@ -132,6 +133,16 @@ export class TicketsService {
     const dataLimpia = this.sanitizarParaFirestore(data);
     delete dataLimpia.id;
     return updateDoc(documentRef, dataLimpia);
+  }
+
+  async agregarUsuariosEtiquetados(idTicket: string, idsEtiquetados: string[]): Promise<void> {
+    const idsLimpios = (idsEtiquetados || []).filter(Boolean);
+    if (!idTicket || idsLimpios.length === 0) return;
+
+    const documentRef = doc(this.firestore, `tickets/${idTicket}`);
+    await updateDoc(documentRef, {
+      usuariosEtiquetados: arrayUnion(...idsLimpios),
+    });
   }
 
   getByBranchId(idSucursal: string): Observable<any[]> {
@@ -335,16 +346,6 @@ export class TicketsService {
     });
   }
 
-  get30LastTickets(): Observable<any[]> {
-    const ticketsCollection = collection(this.firestore, 'tickets');
-    const q = query(
-      ticketsCollection,
-      where('idEstatusTicket', '==', '3'),
-      limit(30)
-    );
-    return collectionData(q, { idField: 'id' });
-  }
-
   async getByIds(idsTickets: string[]): Promise<Ticket[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
 
@@ -431,11 +432,6 @@ export class TicketsService {
     }));
   }
 
-  getAll(): Observable<Ticket[] | any[]> {
-    const sucursalesCollection = collection(this.firestore, 'tickets');
-    return collectionData(sucursalesCollection, { idField: 'id' });
-  }
-
   getTicketsPorEspecialista(idUsuarioEspecialista: string): Observable<Ticket[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
 
@@ -460,24 +456,80 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 
-  async getTicketsUltimos30Dias(idSucursal: string, idArea: string) {
-    const hoy = new Date();
-    const hace30Dias = new Date();
-    hace30Dias.setDate(hoy.getDate() - 30);
+  private buildQueryTicketsPorFiltros(idArea: string, filtros: TicketsFiltros) {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    const constraints: any[] = [
+      where('idArea', '==', idArea)
+    ];
 
-    const ticketsRef = collection(this.firestore, 'tickets');
-    const q = query(
-      ticketsRef,
-      where('idSucursal', '==', idSucursal),
-      where('idArea', '==', idArea),
-      where('fecha', '>=', Timestamp.fromDate(hace30Dias))
+    if (filtros.fechaInicio) {
+      const startOfDay = new Date(filtros.fechaInicio);
+      startOfDay.setHours(0, 0, 0, 0);
+      constraints.push(where('fecha', '>=', Timestamp.fromDate(startOfDay)));
+    }
+
+    if (filtros.fechaFin) {
+      const endOfDay = new Date(filtros.fechaFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      constraints.push(where('fecha', '<=', Timestamp.fromDate(endOfDay)));
+    }
+
+    return query(ticketsCollection, ...constraints);
+  }
+
+  private aplicarFiltrosEnMemoria(tickets: Ticket[], filtros: TicketsFiltros): Ticket[] {
+    let resultado = tickets;
+
+    // Filtrado en memoria por sucursales
+    if (filtros.idSucursales && filtros.idSucursales.length > 0) {
+      const sucursalesStr = filtros.idSucursales.map(String);
+      resultado = resultado.filter(t => sucursalesStr.includes(String(t.idSucursal)));
+    }
+
+    // Filtrado en memoria por usuarios
+    if (filtros.idUsuarios && filtros.idUsuarios.length > 0) {
+      const usuariosStr = filtros.idUsuarios.map(String);
+      resultado = resultado.filter(t => usuariosStr.includes(String(t.idUsuario)));
+    }
+
+    return resultado;
+  }
+
+  getTicketsPorFiltros(idArea: string, filtros: TicketsFiltros): Observable<Ticket[]> {
+    const q = this.buildQueryTicketsPorFiltros(idArea, filtros);
+
+    return from(getDocs(q)).pipe(
+      map(snapshot => {
+        const tickets = snapshot.docs.map(doc => {
+          return { id: doc.id, ...doc.data() } as Ticket;
+        });
+
+        return this.aplicarFiltrosEnMemoria(tickets, filtros);
+      })
     );
+  }
 
-    const snapshot = await getDocs(q);
+  getTicketsPorFiltrosTiempoReal(idArea: string, filtros: TicketsFiltros): Observable<Ticket[]> {
+    const q = this.buildQueryTicketsPorFiltros(idArea, filtros);
 
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
+    return new Observable<Ticket[]>((observer) => {
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const tickets = snapshot.docs.map(doc => {
+            return { id: doc.id, ...doc.data() } as Ticket;
+          });
+
+          const filtrados = this.aplicarFiltrosEnMemoria(tickets, filtros);
+          this.ngZone.run(() => observer.next(filtrados));
+        },
+        (error) => {
+          console.error('Error en la suscripción de tickets por filtros:', error);
+          this.ngZone.run(() => observer.error(error));
+        }
+      );
+
+      return () => unsubscribe();
+    });
   }
 }

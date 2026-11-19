@@ -10,7 +10,7 @@ import { AcordeonMantenimientosSistemasComponent } from '../../components/acorde
 import { AcordeonMantenimientosAudioVideoComponent } from '../../components/acordeon-mantenimientos-audio-video/acordeon-mantenimientos-audio-video.component';
 import { AcordeonMantenimientosMantenimientoComponent } from '../../components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';

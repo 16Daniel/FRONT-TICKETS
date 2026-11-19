@@ -19,15 +19,15 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { StatusTicketService } from '../../services/status-ticket.service';
-import { EstatusTicket } from '../../interfaces/estatus-ticket.model';
+import { EstatusTicketService } from '../../services/estatus-ticket.service';
+import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -35,7 +35,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
 import { Categoria } from '../../models/categoria.model';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriasService } from '../../services/categorias.service';
 
 @Component({
   selector: 'app-requester-tickets-list',
@@ -87,13 +87,13 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   constructor(
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
     private areasService: AreasService,
-    private statusTicketsService: StatusTicketService,
+    private estatusTicketService: EstatusTicketService,
     private branchesService: BranchesService,
-    private categoriesService: CategoriesService
+    private categoriasService: CategoriasService
   ) {
     this.obtenerCatalogoEstatusTickets();
     this.obtenerSucursales();
@@ -101,7 +101,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerCategorias() {
-    this.categoriesService.get().subscribe({
+    this.categoriasService.get().subscribe({
       next: (data) => {
         this.categorias = data.map((item: any) => ({
           ...item,
@@ -126,7 +126,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerCatalogoEstatusTickets() {
-    this.statusTicketsService
+    this.estatusTicketService
       .get()
       .subscribe((result) => {
         this.estatusTickets = result;
@@ -194,7 +194,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => {
+    this.UsuariosService.usuarios$.subscribe(usuarios => {
       this.usuariosHelp = usuarios;
       this.cdr.detectChanges();
     });

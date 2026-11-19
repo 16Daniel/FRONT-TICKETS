@@ -4,9 +4,9 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { Usuario } from '../../interfaces/usuario.model';
-import { UsersService } from '../../services/users.service';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Usuario } from '../../models/usuario.model';
+import { UsuariosService } from '../../services/usuarios.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 
@@ -29,7 +29,7 @@ export class SeleccionarUsuarioEspecialistaComponent implements OnInit {
   usuarioSeleccionado: Usuario | undefined;
 
   constructor(
-    private usuersService: UsersService,
+    private usuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private ticketsService: TicketsService,
@@ -47,7 +47,7 @@ export class SeleccionarUsuarioEspecialistaComponent implements OnInit {
   }
 
   obtenerEspecialistas() {
-    this.usuersService.getUsuariosPorRol(['7'], this.idArea)
+    this.usuariosService.getUsuariosPorRol(['7'], this.idArea)
       .subscribe(result => {
         this.usuarios = result;
         this.cdr.detectChanges();

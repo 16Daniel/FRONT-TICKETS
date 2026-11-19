@@ -6,9 +6,9 @@ import { MessageService } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { Usuario } from '../../interfaces/usuario.model';
+import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { UsersService } from '../../services/users.service';
+import { UsuariosService } from '../../services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { AreasService } from '../../../areas/services/areas.service';
@@ -38,7 +38,7 @@ export class CrearUsuarioDialogComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private rolesService: RolesService,
@@ -81,7 +81,7 @@ export class CrearUsuarioDialogComponent implements OnInit {
  */
   async guardarAutenticacionFb() {
     try {
-      const uid = await this.usersService.registerAuthFirebaseUser(
+      const uid = await this.UsuariosService.registerAuthFirebaseUser(
         this.usuario.email!,
         this.usuario.password!
       );
@@ -103,7 +103,7 @@ export class CrearUsuarioDialogComponent implements OnInit {
     this.usuario.idArea = this.usuario.idArea ? this.usuario.idArea.toString() : '';
 
     try {
-      await this.usersService.create({ ...this.usuario });
+      await this.UsuariosService.create({ ...this.usuario });
     } catch (error) {
       console.error('Error al agregar usuario:', error);
     }

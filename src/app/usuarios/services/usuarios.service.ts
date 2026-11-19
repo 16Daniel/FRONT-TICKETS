@@ -9,13 +9,13 @@ import {
   query,
   updateDoc,
 } from '@angular/fire/firestore';
-import { Usuario } from '../interfaces/usuario.model';
+import { Usuario } from '../models/usuario.model';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UsersService {
+export class UsuariosService {
   pathName: string = 'usuarios';
 
   private _usuarios: Usuario[] = [];
@@ -56,7 +56,11 @@ export class UsersService {
   }
 
   getByUId(idu: string): Usuario | null {
-    return this._usuarios.find(u => u.uid === idu) || null;
+    return (
+      this._usuarios.find((u) => u.uid === idu && !u.eliminado) ||
+      this._usuarios.find((u) => u.uid === idu) ||
+      null
+    );
   }
 
   getUsuariosPorRol(idRoles: string[], idArea?: string): Observable<Usuario[]> {
@@ -65,7 +69,7 @@ export class UsersService {
         return usuarios.filter(u => {
           const rolOk = idRoles.includes(u.idRol);
           const areaOk = idArea ? u.idArea === idArea : true;
-          return rolOk && areaOk;
+          return !u.eliminado && rolOk && areaOk;
         });
       })
     );
@@ -88,6 +92,25 @@ export class UsersService {
   async updateUserGuardStatus(userId: string, esGuardia: boolean): Promise<void> {
     const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
     return updateDoc(userRef, { esGuardia });
+  }
+
+  async updateUserBlockedStatus(userId: string, bloqueado: boolean): Promise<void> {
+    const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
+    return updateDoc(userRef, { bloqueado });
+  }
+
+  async updateUserDeletedStatus(userId: string, eliminado: boolean = true): Promise<void> {
+    const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
+    return updateDoc(userRef, { eliminado });
+  }
+
+  async updateUserPinAttempts(userId: string, intentos: number, bloqueado?: boolean): Promise<void> {
+    const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
+    const data: Partial<Usuario> = { intentos };
+    if (typeof bloqueado === 'boolean') {
+      data.bloqueado = bloqueado;
+    }
+    return updateDoc(userRef, data);
   }
 
   async updateUserFcmTokens(userId: string, fcmToken: string[]): Promise<void> {

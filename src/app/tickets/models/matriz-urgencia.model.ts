@@ -1,4 +1,4 @@
-import { CeldaMatrizUrgencia } from './celda-matriz-urgencia.interface';
+import { CeldaMatrizUrgencia } from '../interfaces/celda-matriz-urgencia.interface';
 
 export interface MatrizUrgencia {
   id?: string;

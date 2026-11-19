@@ -5,7 +5,7 @@ import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
 import { clasificarCuadrante, obtenerTiempoSla } from '../../../tickets/helpers/matriz-criticidad.helper';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { FormularioNodoCategoriaComponent } from '../formulario-nodo-categoria/formulario-nodo-categoria.component';
 import { esNodoRama, obtenerHijosOrdenadosRama } from '../../helpers/arbol-categorias.helper';
 

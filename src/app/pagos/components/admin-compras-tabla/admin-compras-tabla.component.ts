@@ -11,7 +11,7 @@ import { AdminComprasChatDialogComponent } from "../../dialogs/admin-compras-cha
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { TooltipModule } from 'primeng/tooltip';
 

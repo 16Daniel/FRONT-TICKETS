@@ -1,5 +1,5 @@
 import { Sucursal } from "../../sucursales/interfaces/sucursal.interface";
-import { Ticket } from "../../tickets/interfaces/ticket.model";
+import { Ticket } from "../../tickets/models/ticket.model";
 
 export interface SucursalProgramada extends Sucursal {
   idsTickets: String[];

@@ -5,8 +5,8 @@ import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
@@ -14,7 +14,6 @@ import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 import { NivelesAudioComponent } from '../niveles-audio/niveles-audio.component';
 import { TablaTvsBocinasComponent } from '../tabla-tvs-bocinas/tabla-tvs-bocinas.component';
-import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafica-tickets-30-dias.component';
 
 
 @Component({
@@ -27,8 +26,7 @@ import { GraficaTickets30DiasComponent } from '../grafica-tickets-30-dias/grafic
     AccordionModule,
     TablaMantenimientosAudioVideoComponent,
     NivelesAudioComponent,
-    TablaTvsBocinasComponent,
-    GraficaTickets30DiasComponent
+    TablaTvsBocinasComponent
   ],
   templateUrl: './acordeon-mantenimientos-audio-video.component.html',
   styleUrl: './acordeon-mantenimientos-audio-video.component.scss',
@@ -47,14 +45,14 @@ export class AcordeonMantenimientosAudioVideoComponent {
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
 
   constructor(
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private maintenanceAvService: MaintenanceAvService,
     private datesHelper: DatesHelperService
 
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {

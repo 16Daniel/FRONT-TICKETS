@@ -54,60 +54,53 @@
       </div>
     </div>
 
-    <!-- Selectores de Matrices y Tiempos SLA (si es hoja) -->
-    <div class="seccion-selectores-matrices mt-3" *ngIf="tipo === 'hoja'">
-      <div class="mb-3">
-        <app-selector-matriz-criticidad
-          [idArea]="idArea"
-          [matrizUrgencia]="matrizUrgencia"
-          [impacto]="impacto"
-          [urgencia]="urgencia"
-          (cambioSeleccion)="alCambiarMatriz($event)">
-        </app-selector-matriz-criticidad>
-      </div>
+    <!-- Configuración de Categoría Final (3 bloques independientes) -->
+    <div class="bloques-configuracion-hoja mt-3" *ngIf="tipo === 'hoja'">
 
-      <!-- Configuración del Tiempo de Resolución (SLA) -->
-      <div class="seccion-tiempo-resolucion mb-3">
-        <div class="encabezado-subseccion">
-          <label class="etiqueta-campo">
-            <i class="bx bx-time-five"></i> TIEMPO DE RESOLUCIÓN ESTIMADO <span class="requerido">*</span>
-          </label>
-          <span class="texto-ayuda-subseccion">
-            Define cuánto tiempo objetivo tiene el equipo técnico para resolver los tickets de esta categoría.
-          </span>
+      <!-- Bloque 1: Configuración de TA -->
+      <section class="bloque-configuracion bloque-ta">
+        <div class="encabezado-bloque">
+          <div class="encabezado-bloque-izq">
+            <div class="insignia-paso paso-ta">
+              <i class="bx bx-stopwatch"></i>
+            </div>
+            <div class="textos-encabezado-bloque">
+              <h6 class="titulo-bloque">
+                Configuración de TA <span class="subtitulo-sigla">(Tiempo para tomarlo)</span> <span class="requerido">*</span>
+              </h6>
+              <p class="descripcion-bloque">
+                Selecciona impacto y urgencia para definir la prioridad y el tiempo objetivo de atención inicial.
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div class="fila-control-tiempo">
-          <div class="grupo-input-tiempo">
-            <input 
-              type="number" 
-              min="1" 
-              max="999" 
-              [(ngModel)]="tiempoResolucion" 
-              class="input-numero-tiempo" 
-              placeholder="Ej. 24" />
-            <div class="selector-unidad-pills">
-              <button 
-                type="button" 
-                class="btn-unidad-pill" 
-                [class.is-active]="unidadResolucion === 'm'" 
-                (click)="unidadResolucion = 'm'">
-                Minutos (m)
-              </button>
-              <button 
-                type="button" 
-                class="btn-unidad-pill" 
-                [class.is-active]="unidadResolucion === 'h'" 
-                (click)="unidadResolucion = 'h'">
-                Horas (h)
-              </button>
-              <button 
-                type="button" 
-                class="btn-unidad-pill" 
-                [class.is-active]="unidadResolucion === 'd'" 
-                (click)="unidadResolucion = 'd'">
-                Días (d)
-              </button>
+        <div class="cuerpo-bloque">
+          <app-selector-matriz-criticidad
+            [idArea]="idArea"
+            [matrizUrgencia]="matrizUrgencia"
+            [impacto]="impacto"
+            [urgencia]="urgencia"
+            [mostrarEtiqueta]="false"
+            (cambioSeleccion)="alCambiarMatriz($event)">
+          </app-selector-matriz-criticidad>
+        </div>
+      </section>
+
+      <!-- Bloque 2: Configuración de TR -->
+      <section class="bloque-configuracion bloque-tr">
+        <div class="encabezado-bloque">
+          <div class="encabezado-bloque-izq">
+            <div class="insignia-paso paso-tr">
+              <i class="bx bx-time-five"></i>
+            </div>
+            <div class="textos-encabezado-bloque">
+              <h6 class="titulo-bloque">
+                Configuración de TR <span class="subtitulo-sigla">(Tiempo para resolverlo)</span> <span class="requerido">*</span>
+              </h6>
+              <p class="descripcion-bloque">
+                Define el tiempo objetivo que tiene el equipo técnico para resolver los tickets de esta categoría.
+              </p>
             </div>
           </div>
 
@@ -117,68 +110,156 @@
           </div>
         </div>
 
-        <!-- Presets de Tiempo Rápido -->
-        <div class="fila-presets-tiempo mt-2">
-          <span class="label-presets">Presets comunes:</span>
-          <div class="botones-presets">
-            <button 
-              *ngFor="let p of presetsTiempo" 
-              type="button" 
-              class="btn-preset-tiempo" 
-              [class.is-active]="esPresetActivo(p.valor, p.unidad)" 
-              (click)="seleccionarPreset(p.valor, p.unidad)">
-              {{ p.label }}
-            </button>
+        <div class="cuerpo-bloque">
+          <div class="fila-control-tiempo">
+            <div class="grupo-input-tiempo">
+              <input 
+                type="number" 
+                min="1" 
+                max="999" 
+                [(ngModel)]="tiempoResolucion" 
+                class="input-numero-tiempo" 
+                placeholder="Ej. 24" />
+              <div class="selector-unidad-pills">
+                <button 
+                  type="button" 
+                  class="btn-unidad-pill" 
+                  [class.is-active]="unidadResolucion === 'm'" 
+                  (click)="unidadResolucion = 'm'">
+                  Minutos (m)
+                </button>
+                <button 
+                  type="button" 
+                  class="btn-unidad-pill" 
+                  [class.is-active]="unidadResolucion === 'h'" 
+                  (click)="unidadResolucion = 'h'">
+                  Horas (h)
+                </button>
+                <button 
+                  type="button" 
+                  class="btn-unidad-pill" 
+                  [class.is-active]="unidadResolucion === 'd'" 
+                  (click)="unidadResolucion = 'd'">
+                  Días (d)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Presets de Tiempo Rápido -->
+          <div class="fila-presets-tiempo mt-3">
+            <span class="label-presets">Presets comunes:</span>
+            <div class="botones-presets">
+              <button 
+                *ngFor="let p of presetsTiempo" 
+                type="button" 
+                class="btn-preset-tiempo" 
+                [class.is-active]="esPresetActivo(p.valor, p.unidad)" 
+                (click)="seleccionarPreset(p.valor, p.unidad)">
+                {{ p.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bloque 3: Otras configuraciones -->
+      <section class="bloque-configuracion bloque-otras">
+        <div class="encabezado-bloque">
+          <div class="encabezado-bloque-izq">
+            <div class="insignia-paso paso-otras">
+              <i class="bx bx-slider-alt"></i>
+            </div>
+            <div class="textos-encabezado-bloque">
+              <h6 class="titulo-bloque">Otras configuraciones</h6>
+              <p class="descripcion-bloque">
+                Activa requisitos de evidencia al levantar el ticket y notificaciones automáticas por WhatsApp.
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- Opciones Adicionales de la Categoría: Evidencia y WhatsApp -->
-        <div class="opciones-adicionales-grid mt-4">
+        <div class="cuerpo-bloque">
+          <div class="lista-opciones-config">
 
-          <!-- Opción 1: Evidencia Obligatoria -->
-          <label class="tarjeta-opcion-toggle" [class.esta-activo]="evidenciaObligatoria" for="switchEvidenciaObli">
-            <div class="cuerpo-opcion">
-              <div class="icono-opcion icono-evidencia">
-                <i class="bx bx-camera"></i>
-              </div>
-              <div class="textos-opcion">
-                <span class="titulo-opcion">Evidencia obligatoria</span>
-                <span class="descripcion-opcion">Exigir adjuntar fotografía o archivo documental al levantar el ticket</span>
-              </div>
-            </div>
-            <div class="switch-wrap">
-              <input 
-                class="switch-checkbox" 
-                type="checkbox" 
-                id="switchEvidenciaObli"
-                [(ngModel)]="evidenciaObligatoria">
-              <span class="switch-slider switch-slider-evidencia"></span>
-            </div>
-          </label>
+            <!-- Opción 1: Evidencia Obligatoria + Tipo de evidencia esperada -->
+            <div class="tarjeta-opcion-config" [class.esta-activo]="evidenciaObligatoria">
+              <label class="fila-toggle-opcion" [for]="idSwitchEvidencia">
+                <div class="cuerpo-opcion">
+                  <div class="icono-opcion icono-evidencia">
+                    <i class="bx bx-camera"></i>
+                  </div>
+                  <div class="textos-opcion">
+                    <span class="titulo-opcion">Evidencia obligatoria</span>
+                    <span class="descripcion-opcion">Exigir adjuntar fotografía o archivo documental al levantar el ticket</span>
+                  </div>
+                </div>
+                <div class="switch-wrap">
+                  <input 
+                    class="switch-checkbox" 
+                    type="checkbox" 
+                    [id]="idSwitchEvidencia"
+                    [(ngModel)]="evidenciaObligatoria">
+                  <span class="switch-slider switch-slider-evidencia"></span>
+                </div>
+              </label>
 
-          <!-- Opción 2: Alerta por WhatsApp -->
-          <label class="tarjeta-opcion-toggle toggle-whatsapp" [class.esta-activo]="alertaWhatsapp" for="switchAlertaWhatsapp">
-            <div class="cuerpo-opcion">
-              <div class="icono-opcion icono-whatsapp">
-                <i class="bx bxl-whatsapp"></i>
-              </div>
-              <div class="textos-opcion">
-                <span class="titulo-opcion">Alerta por WhatsApp</span>
-                <span class="descripcion-opcion">Enviar notificación automática a grupo de WhatsApp al generarse un ticket</span>
+              <!-- Campo condicional: Tipo de evidencia esperada -->
+              <div class="panel-detalle-evidencia" *ngIf="evidenciaObligatoria">
+                <label class="etiqueta-detalle-evidencia" [for]="idInputTipoEvidencia">
+                  <i class="bx bx-file-find"></i>
+                  <span>¿Qué tipo de evidencia se espera? <span class="requerido">*</span></span>
+                </label>
+                <input
+                  type="text"
+                  [id]="idInputTipoEvidencia"
+                  [(ngModel)]="tipoEvidencia"
+                  maxlength="200"
+                  placeholder="Ej. Foto del equipo, captura de pantalla del error, ticket o factura..."
+                  class="input-tipo-evidencia"
+                  [class.es-invalido]="!tipoEvidencia.trim()"
+                  (keyup.enter)="alGuardar()" />
+                <div class="pie-campo-evidencia">
+                  <span class="mensaje-validacion-evidencia" *ngIf="!tipoEvidencia.trim()">
+                    <i class="bx bx-error-circle"></i>
+                    Especifica qué evidencia debe adjuntar el usuario para poder guardar.
+                  </span>
+                  <span class="ayuda-campo-evidencia" *ngIf="tipoEvidencia.trim()">
+                    <i class="bx bx-info-circle"></i>
+                    Esta descripción orientará al usuario sobre qué adjuntar al levantar el ticket.
+                  </span>
+                  <span class="contador-caracteres">{{ tipoEvidencia.length }}/200</span>
+                </div>
               </div>
             </div>
-            <div class="switch-wrap">
-              <input 
-                class="switch-checkbox" 
-                type="checkbox" 
-                id="switchAlertaWhatsapp"
-                [(ngModel)]="alertaWhatsapp">
-              <span class="switch-slider switch-slider-whatsapp"></span>
-            </div>
-          </label>
 
+            <!-- Opción 2: Alerta por WhatsApp -->
+            <div class="tarjeta-opcion-config toggle-whatsapp" [class.esta-activo]="alertaWhatsapp">
+              <label class="fila-toggle-opcion" [for]="idSwitchWhatsapp">
+                <div class="cuerpo-opcion">
+                  <div class="icono-opcion icono-whatsapp">
+                    <i class="bx bxl-whatsapp"></i>
+                  </div>
+                  <div class="textos-opcion">
+                    <span class="titulo-opcion">Alerta por WhatsApp</span>
+                    <span class="descripcion-opcion">Enviar notificación automática a grupo de WhatsApp al generarse un ticket</span>
+                  </div>
+                </div>
+                <div class="switch-wrap">
+                  <input 
+                    class="switch-checkbox" 
+                    type="checkbox" 
+                    [id]="idSwitchWhatsapp"
+                    [(ngModel)]="alertaWhatsapp">
+                  <span class="switch-slider switch-slider-whatsapp"></span>
+                </div>
+              </label>
+            </div>
+
+          </div>
         </div>
-      </div>
+      </section>
+
     </div>
 
     <!-- Botones Guardar / Cancelar -->
@@ -187,7 +268,7 @@
       <button 
         type="button" 
         class="btn-guardar-formulario" 
-        [disabled]="!nombre.trim()"
+        [disabled]="!formularioValido"
         (click)="alGuardar()">
         <i class="bx bx-check"></i>
         <span>{{ modo === 'editar' ? 'Guardar Cambios' : (modo === 'crear-raiz' ? 'Guardar Categoría Raíz' : 'Agregar Subcategoría') }}</span>

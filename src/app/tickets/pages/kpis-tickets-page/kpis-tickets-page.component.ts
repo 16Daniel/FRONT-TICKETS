@@ -3,22 +3,23 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { KpisFiltrosComponent } from '../../components/kpis-filtros/kpis-filtros.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
-import { Ticket } from '../../interfaces/ticket.model';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { Ticket } from '../../models/ticket.model';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 import { GraficaDesempenoCategoriasComponent } from '../../components/grafica-desempeno-categorias/grafica-desempeno-categorias.component';
 import { GraficaDesempenoSucursalesComponent } from '../../components/grafica-desempeno-sucursales/grafica-desempeno-sucursales.component';
 import { GraficaDesempenoResponsablesComponent } from '../../components/grafica-desempeno-responsables/grafica-desempeno-responsables.component';
 
 // Servicios de datos para KPIs
-import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
+import { TicketsService } from '../../services/tickets.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
 
 @Component({
@@ -65,9 +66,9 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private branchesService: BranchesService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private areasService: AreasService,
-    private kpisTicketsService: KpisTicketsService,
+    private ticketsService: TicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -119,7 +120,7 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
 
   private cargarUsuarios(): void {
     // Obtenemos todos los usuarios o los filtramos según sea necesario
-    this.subscripcionUsuarios = this.usersService.usuarios$.subscribe(usuarios => {
+    this.subscripcionUsuarios = this.UsuariosService.usuarios$.subscribe(usuarios => {
       this.usuariosRol4 = usuarios.map(u => ({
         ...u,
         nombreCompleto: `${u.nombre} ${u.apellidoP} ${u.apellidoM}`.trim()
@@ -138,14 +139,14 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
 
   aplicarFiltros(): void {
     this.isApplyingFilters = true;
-    const filtros: KpisFiltros = {
+    const filtros: TicketsFiltros = {
       fechaInicio: this.fechaInicio,
       fechaFin: this.fechaFin,
       idSucursales: this.sucursalesSeleccionadas.map(s => String(s.id)),
       idUsuarios: this.usuariosSeleccionados.map(u => String(u.id))
     };
 
-    this.kpisTicketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
+    this.ticketsService.getTicketsPorFiltros(this.areaSeleccionadaId, filtros).subscribe({
       next: (tickets: Ticket[]) => {
         this.tickets = tickets;
         this.isApplyingFilters = false;

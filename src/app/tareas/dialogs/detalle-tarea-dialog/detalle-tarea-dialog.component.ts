@@ -24,7 +24,7 @@ import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { AvatarModule } from 'ngx-avatars';
 import { SubirImgsTareasDialogComponent } from '../subir-imgs-tareas-dialog/subir-imgs-tareas-dialog.component';
 import { AvataresResponsablesTareaComponent } from "../../components/avatares-responsables-tarea/avatares-responsables-tarea.component";

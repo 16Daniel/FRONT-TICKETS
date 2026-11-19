@@ -18,7 +18,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { Observable, Subscription } from 'rxjs';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TareasService } from '../../services/tareas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
@@ -26,7 +26,7 @@ import { ResponsablesService } from '../../../usuarios/services/responsables.ser
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { Responsable } from '../../../usuarios/interfaces/responsable.interface';
+import { Responsable } from '../../../usuarios/models/responsable.model';
 import { DetalleTareaDialogComponent } from '../../dialogs/detalle-tarea-dialog/detalle-tarea-dialog.component';
 import { ContenedorTareasComponent } from '../../components/contenedor-tareas/contenedor-tareas.component';
 import { CabeceraTareasComponent } from '../../components/cabecera-tareas/cabecera-tareas.component';

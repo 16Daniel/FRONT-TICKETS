@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
 
 @Component({
   selector: 'app-mini-matriz-urgencia',

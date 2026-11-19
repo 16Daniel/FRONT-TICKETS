@@ -10,12 +10,12 @@ import { Subscription } from 'rxjs';
 
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -78,7 +78,7 @@ export class TicketsTabComponent implements OnInit {
     public cdr: ChangeDetectorRef,
     private ticketsService: TicketsService,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private notificationService: NotificationService,
     private purchaseService: ComprasService,
@@ -179,7 +179,7 @@ export class TicketsTabComponent implements OnInit {
     if (!usuario || !usuario.id) return;
 
     try {
-      await this.usersService.updateUserGuardStatus(usuario.id, usuario.esGuardia);
+      await this.UsuariosService.updateUserGuardStatus(usuario.id, usuario.esGuardia);
       localStorage.setItem('rwuserdatatk', JSON.stringify(usuario));
       window.location.reload();
     } catch (error) {

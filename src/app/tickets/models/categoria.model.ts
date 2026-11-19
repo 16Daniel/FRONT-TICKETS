@@ -10,6 +10,7 @@ export class Categoria {
   activarSubcategorias: boolean = false;
   tipo?: 'rama' | 'hoja' = 'rama';
   evidenciaObligatoria?: boolean = false;
+  tipoEvidencia?: string;
   alertaWhatsapp?: boolean = false;
   // Urgencia (3×3)
   urgencia?: number;

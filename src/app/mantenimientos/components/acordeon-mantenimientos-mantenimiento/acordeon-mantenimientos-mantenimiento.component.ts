@@ -4,8 +4,8 @@ import { Timestamp } from "@angular/fire/firestore";
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
@@ -32,13 +32,13 @@ export class AcordeonMantenimientosMantenimientoComponent {
   usuariosHelp: Usuario[] = [];
 
   constructor(
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private maintenanceMtooService: MaintenanceMtooService,
     private datesHelper: DatesHelperService
   ) { this.obtenerUsuariosHelp(); }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   ordenarSucursalesUserFecha(catsucursales: Sucursal[]): Sucursal[] {

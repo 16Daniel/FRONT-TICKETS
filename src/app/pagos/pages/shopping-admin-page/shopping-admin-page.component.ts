@@ -13,12 +13,12 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import * as XLSX from 'xlsx';
 
 import { environment } from '../../../../environments/environments';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ProveedoresComprasDialogComponent } from '../../dialogs/proveedores-compras-dialog/proveedores-compras-dialog.component';
@@ -99,7 +99,7 @@ export default class ShoppingAdminPageComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private areasService: AreasService,
-    private userServ: UsersService
+    private userServ: UsuariosService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   ngOnInit(): void {

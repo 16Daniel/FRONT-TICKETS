@@ -5,7 +5,7 @@ import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
-import { Ticket } from '../../interfaces/ticket.model';
+import { Ticket } from '../../models/ticket.model';
 
 @Component({
   selector: 'app-acordeon-tickets-por-prioridad',

@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Subscription } from 'rxjs';
+import { catchError, combineLatest, of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
@@ -18,20 +18,21 @@ import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/cr
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 
-import { Ticket } from '../../../tickets/interfaces/ticket.model';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Ticket } from '../../../tickets/models/ticket.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { KpisTicketsService, KpisFiltros } from '../../services/kpis-tickets.service';
+import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
 import { KpiRadarService } from '../../services/kpi-radar.service';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';
-import { MatrizUrgencia } from '../../interfaces/matriz-urgencia.interface';
+import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
 
 @Component({
   selector: 'app-admin-area-tab',
@@ -96,18 +97,16 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     slaResolucionCumplidos: 0
   };
   private ticketsSlaMes: Ticket[] = [];
-  private subscripcionSlaTickets?: Subscription;
-  private subscripcionSlaMatriz?: Subscription;
+  private subscripcionSla?: Subscription;
 
   constructor(
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private ticketsService: TicketsService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
-    private kpisTicketsService: KpisTicketsService,
     private matrizUrgenciaService: MatrizUrgenciaService,
     private kpiRadarService: KpiRadarService
   ) {
@@ -128,8 +127,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     if (this.subscripcionTicket) {
       this.subscripcionTicket.unsubscribe();
     }
-    this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaMatriz?.unsubscribe();
+    this.subscripcionSla?.unsubscribe();
   }
 
   private definirMesActual(): void {
@@ -146,33 +144,28 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     const now = new Date();
     const fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
     const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    const filtros: TicketsFiltros = { fechaInicio, fechaFin };
 
-    // Matriz de urgencia del área para evaluar los tiempos de SLA
-    this.subscripcionSlaMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(this.idArea).subscribe({
-      next: (matriz) => {
-        this.matrizUrgenciaArea = matriz;
-        this.consultarTicketsSlaMes(fechaInicio, fechaFin);
-      },
-      error: (err) => {
+    const matriz$ = this.matrizUrgenciaService.obtenerMatrizPorArea(this.idArea).pipe(
+      catchError((err) => {
         console.error('Error al obtener matriz de urgencia:', err);
-        this.consultarTicketsSlaMes(fechaInicio, fechaFin);
-      }
-    });
-  }
+        return of(undefined);
+      })
+    );
 
-  private consultarTicketsSlaMes(fechaInicio: Date, fechaFin: Date): void {
-    const filtros: KpisFiltros = { fechaInicio, fechaFin };
+    const tickets$ = this.ticketsService.getTicketsPorFiltrosTiempoReal(this.idArea, filtros);
 
-    this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaTickets = this.kpisTicketsService.getTicketsPorFiltros(this.idArea, filtros).subscribe({
-      next: (tickets: Ticket[]) => {
+    this.subscripcionSla?.unsubscribe();
+    this.subscripcionSla = combineLatest([matriz$, tickets$]).subscribe({
+      next: ([matriz, tickets]) => {
+        this.matrizUrgenciaArea = matriz;
         this.ticketsSlaMes = tickets || [];
         this.procesarMetricasSla();
         this.loadingSla = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al obtener tickets del mes actual para el área:', err);
+        console.error('Error al escuchar tickets del mes actual para el área:', err);
         this.loadingSla = false;
         this.cdr.detectChanges();
       }
@@ -248,13 +241,10 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   async obtenerTickets(): Promise<void> {
-    Swal.fire({
-      target: document.body,
-      allowOutsideClick: false,
-      icon: 'info',
-      text: 'Espere por favor...',
-      didOpen: () => Swal.showLoading(),
-      customClass: { container: 'swal-topmost' }
+    SwalRw.loading({
+      badge: 'Tickets',
+      title: 'Cargando tickets',
+      text: 'Espere por favor...'
     });
 
     this.subscripcionTicket = this.ticketsService.getByArea(this.idArea).subscribe({
@@ -308,7 +298,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.getUsuariosPorRol(['4', '7'], this.idArea)
+    this.UsuariosService.getUsuariosPorRol(['4', '7'], this.idArea)
       .subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 

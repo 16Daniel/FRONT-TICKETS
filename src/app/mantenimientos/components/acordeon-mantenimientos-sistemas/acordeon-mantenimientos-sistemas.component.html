@@ -31,9 +31,6 @@
     <div class="accordion-tables-wrapper">
       <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id]" [sucursal]="item"></app-tpvs-devices-table>
 
-      <app-grafica-tickets-30-dias *ngIf="mostrarRadiografiaMap[item.id]" [idSucursal]="item.id"
-        [idArea]="'1'"></app-grafica-tickets-30-dias>
-
       <app-tabla-mantenimientos-sistemas
         *ngIf="!mostrarRadiografiaMap[item.id]"
         [mantenimientos]="filtrarMantenimientoPorSucursal(item.id)"

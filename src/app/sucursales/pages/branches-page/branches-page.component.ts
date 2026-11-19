@@ -16,8 +16,8 @@ import { CrearSucursalDialogComponent } from '../../dialogs/crear-sucursal-dialo
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
-import { UsersService } from '../../../usuarios/services/users.service';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 
 @Component({
   selector: 'app-branches-page',
@@ -61,7 +61,7 @@ export default class BranchesPageComponent implements OnInit, OnDestroy {
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private areasService: AreasService,
-    private usersService: UsersService
+    private UsuariosService: UsuariosService
   ) { }
 
   ngOnInit(): void {
@@ -97,7 +97,7 @@ export default class BranchesPageComponent implements OnInit, OnDestroy {
   }
 
   private cargarUsuarios(): void {
-    this.subscripcionUsuarios = this.usersService.usuarios$.subscribe(usuarios => {
+    this.subscripcionUsuarios = this.UsuariosService.usuarios$.subscribe(usuarios => {
       this.todosUsuarios = usuarios;
       this.filtrarUsuariosSoporte();
       this.cdr.detectChanges();

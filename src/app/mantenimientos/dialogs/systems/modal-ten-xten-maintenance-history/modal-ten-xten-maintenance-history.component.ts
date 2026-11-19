@@ -7,9 +7,9 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { ModalMaintenanceDetailComponent } from '../modal-maintenance-detail/modal-maintenance-detail.component';
-import { Usuario } from '../../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../../usuarios/models/usuario.model';
 import { MantenimientosSistemasService } from '../../../services/mantenimientos-sistemas.service';
-import { UsersService } from '../../../../usuarios/services/users.service';
+import { UsuariosService } from '../../../../usuarios/services/usuarios.service';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 import { TablaMantenimientosSistemasComponent } from '../../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 
@@ -45,7 +45,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   constructor(
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private UsuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
@@ -100,7 +100,7 @@ export class ModalTenXtenMaintenanceHistoryComponent {
   }
 
   obtenerUsuariosHelp() {
-    this.usersService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.UsuariosService.usuarios$.subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerUltimoMantenimiento() {

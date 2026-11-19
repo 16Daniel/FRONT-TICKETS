@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 import { ModalFinalCommentsComponent } from '../../dialogs/modal-final-comments/modal-final-comments.component';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
-import { Usuario } from '../../../usuarios/interfaces/usuario.model';
+import { Usuario } from '../../../usuarios/models/usuario.model';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
