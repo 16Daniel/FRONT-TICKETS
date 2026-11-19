@@ -43,7 +43,13 @@ export class FormularioNodoCategoriaComponent implements OnInit {
   score: number = 4;
   prioridad: string = 'Medio';
   evidenciaObligatoria: boolean = false;
+  tipoEvidencia: string = '';
   alertaWhatsapp: boolean = false;
+
+  readonly uid = Math.random().toString(36).slice(2, 9);
+  readonly idSwitchEvidencia = `switchEvidenciaObli_${this.uid}`;
+  readonly idInputTipoEvidencia = `inputTipoEvidencia_${this.uid}`;
+  readonly idSwitchWhatsapp = `switchAlertaWhatsapp_${this.uid}`;
 
   // Configuración del Tiempo de Resolución
   tiempoResolucion: number = 24;
@@ -69,6 +75,7 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       this.score = this.nodoEditar.score || 4;
       this.prioridad = this.nodoEditar.prioridad || 'Medio';
       this.evidenciaObligatoria = this.nodoEditar.evidenciaObligatoria || false;
+      this.tipoEvidencia = this.nodoEditar.tipoEvidencia || '';
       this.alertaWhatsapp = this.nodoEditar.alertaWhatsapp || false;
 
       // Cargar tiempo de resolución configurado
@@ -155,13 +162,23 @@ export class FormularioNodoCategoriaComponent implements OnInit {
     this.prioridad = evento.prioridad;
   }
 
+  get formularioValido(): boolean {
+    if (!this.nombre.trim()) return false;
+    if (this.tipo === 'hoja' && this.evidenciaObligatoria && !this.tipoEvidencia.trim()) {
+      return false;
+    }
+    return true;
+  }
+
   alGuardar(): void {
     const nombreLimpio = this.nombre.trim();
-    if (!nombreLimpio) return;
+    if (!this.formularioValido) return;
 
     const horasRes = this.tipo === 'hoja' ? this.horasResolucionCalculadas : undefined;
     const tiempoRes = this.tipo === 'hoja' ? (Number(this.tiempoResolucion) || 24) : undefined;
     const unidadRes = this.tipo === 'hoja' ? this.unidadResolucion : undefined;
+    const requiereEvidencia = this.tipo === 'hoja' ? this.evidenciaObligatoria : false;
+    const tipoEvidenciaLimpio = requiereEvidencia ? this.tipoEvidencia.trim() : undefined;
 
     this.guardar.emit({
       nombre: nombreLimpio,
@@ -174,7 +191,8 @@ export class FormularioNodoCategoriaComponent implements OnInit {
       tiempoResolucion: tiempoRes,
       unidadResolucion: unidadRes,
       horasResolucion: horasRes,
-      evidenciaObligatoria: this.tipo === 'hoja' ? this.evidenciaObligatoria : false,
+      evidenciaObligatoria: requiereEvidencia,
+      tipoEvidencia: tipoEvidenciaLimpio,
       alertaWhatsapp: this.tipo === 'hoja' ? this.alertaWhatsapp : false
     });
   }

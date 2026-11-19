@@ -35,6 +35,7 @@ export class SelectorMatrizCriticidadComponent implements OnInit, OnChanges, OnD
   @Input() urgencia: number = 2;
   @Input() idArea?: string;
   @Input() matrizUrgencia?: MatrizUrgencia | null;
+  @Input() mostrarEtiqueta: boolean = true;
 
   @Output() cambioSeleccion = new EventEmitter<EventoSeleccionMatriz>();
 

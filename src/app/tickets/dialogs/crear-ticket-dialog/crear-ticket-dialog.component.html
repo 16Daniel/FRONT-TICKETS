@@ -155,7 +155,7 @@
     </div>
 
     <!-- Fila 5: Archivos Adjuntos -->
-    <div class="seccion-evidencias">
+    <div class="seccion-evidencias" [class.es-obligatoria]="requiereEvidencia">
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
         <label class="etiqueta-formulario m-0">
           <i class="bx bx-paperclip"></i> Archivos Adjuntos 
@@ -166,6 +166,14 @@
         <button type="button" (click)="onSeleccionarImagenes()" class="btn-adjuntar-evidencia">
           <i class="bx bx-upload"></i> Subir archivos
         </button>
+      </div>
+
+      <div class="callout-evidencia-esperada" *ngIf="requiereEvidencia && tipoEvidenciaEsperada">
+        <i class="bx bx-camera"></i>
+        <div class="callout-evidencia-texto">
+          <span class="callout-evidencia-titulo">Evidencia esperada:</span>
+          <span class="callout-evidencia-detalle">{{ tipoEvidenciaEsperada }}</span>
+        </div>
       </div>
 
       <div *ngIf="archivosPreview.length > 0" class="galeria-miniaturas">
