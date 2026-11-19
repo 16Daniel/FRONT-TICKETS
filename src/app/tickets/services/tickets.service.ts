@@ -135,6 +135,16 @@ export class TicketsService {
     return updateDoc(documentRef, dataLimpia);
   }
 
+  async agregarUsuariosEtiquetados(idTicket: string, idsEtiquetados: string[]): Promise<void> {
+    const idsLimpios = (idsEtiquetados || []).filter(Boolean);
+    if (!idTicket || idsLimpios.length === 0) return;
+
+    const documentRef = doc(this.firestore, `tickets/${idTicket}`);
+    await updateDoc(documentRef, {
+      usuariosEtiquetados: arrayUnion(...idsLimpios),
+    });
+  }
+
   getByBranchId(idSucursal: string): Observable<any[]> {
     return new Observable((observer) => {
       // Referencia a la colección

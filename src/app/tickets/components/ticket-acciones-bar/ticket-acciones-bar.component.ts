@@ -16,6 +16,8 @@ import { firstValueFrom, take } from 'rxjs';
 import { environment } from '../../../../environments/environments';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
+import { BitacoraService } from '../../../shared/services/bitacora.service';
+import { Bitacora } from '../../../shared/interfaces/bitacora.model';
 
 @Component({
   selector: 'app-ticket-acciones-bar',
@@ -39,7 +41,8 @@ export class TicketAccionesBarComponent {
     private areasService: AreasService,
     private whatsappService: WhatsappService,
     private branchesService: BranchesService,
-    private UsuariosService: UsuariosService
+    private UsuariosService: UsuariosService,
+    private bitacoraService: BitacoraService
   ) {}
 
   get hasVisibleActions(): boolean {
@@ -314,11 +317,8 @@ export class TicketAccionesBarComponent {
   }
 
   async onClickRechazar(ticket: Ticket | any): Promise<void> {
-    const confirmed = await this.helper.mostrarSwalConfirmacion(
-      'Confirmación',
-      'El estado del ticket se cambiará a "POR RESOLVER" ¿Desea continuar?'
-    );
-    if (!confirmed) return;
+    const motivo = await this.helper.mostrarSwalRechazo();
+    if (!motivo) return;
 
     ticket.idEstatusTicket = '1';
     this.ticketsService
@@ -326,8 +326,31 @@ export class TicketAccionesBarComponent {
       .then(async () => {
         await this.helper.registrarBitacoraSistema(
           ticket.id!,
-          `Soporte <b>RECHAZADO</b> por la sucursal. El ticket regresa a <b>POR RESOLVER</b>`
+          `Soporte <b>RECHAZADO</b> por la sucursal. El ticket regresa a <b>POR RESOLVER</b>.<br><b>Motivo:</b> ${motivo}`
         );
+
+        let responsable: any = null;
+        const rawResp = localStorage.getItem('responsable-tareas');
+        if (rawResp) {
+          responsable = JSON.parse(rawResp);
+        }
+
+        const bitacoraComentario: Bitacora = {
+          modulo: 'TICKETS',
+          referenciaId: ticket.id!,
+          tipo: 'COMENTARIO',
+          contenido: `<p><b>Motivo de rechazo:</b> ${motivo}</p>`,
+          autor: {
+            id: responsable?.id || this.usuario?.id || 'SUCURSAL',
+            nombre:
+              responsable?.nombre ||
+              (this.usuario ? `${this.usuario.nombre} ${this.usuario.apellidoP}`.trim() : 'Sucursal'),
+            color: responsable?.color || '#EF4444',
+          },
+          fechaCreacion: Timestamp.now(),
+        };
+        await this.bitacoraService.addEntrada(bitacoraComentario);
+
         this.showMessage('success', 'Éxito', 'Enviado correctamente');
       })
       .catch((error) => console.error(error));

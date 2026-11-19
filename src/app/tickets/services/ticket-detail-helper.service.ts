@@ -85,78 +85,250 @@ export class TicketDetailHelperService {
     return null;
   }
 
+  async mostrarSwalRechazo(): Promise<string | null> {
+    const result = await Swal.fire({
+      title: 'Rechazar Soporte',
+      html: `
+        <div class="text-start" style="font-family: inherit;">
+          <p class="text-muted mb-2" style="font-size: 0.9rem;">
+            El estado del ticket regresará a <b>POR RESOLVER</b>.
+          </p>
+          <label class="form-label fw-bold mb-1" style="font-size: 0.9rem;">Motivo de rechazo:</label>
+          <textarea id="rechazo-motivo" class="form-control" rows="3" placeholder="Ingrese el motivo por el cual rechaza el soporte..." style="border-radius: 8px;"></textarea>
+        </div>
+      `,
+      width: '500px',
+      showCancelButton: true,
+      confirmButtonColor: '#D3152A',
+      cancelButtonColor: '#1E1E24',
+      confirmButtonText: 'Rechazar Soporte',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        container: 'swal-topmost',
+      },
+      preConfirm: () => {
+        const motivo = (document.getElementById('rechazo-motivo') as HTMLTextAreaElement)?.value.trim();
+        if (!motivo) {
+          Swal.showValidationMessage('El motivo de rechazo es requerido');
+          return false;
+        }
+        return motivo;
+      },
+    });
+
+    if (result.isConfirmed && result.value) {
+      return result.value;
+    }
+    return null;
+  }
+
   async mostrarSwalCalificacion(
     title: string,
     message: string,
     confirmButtonText: string
   ): Promise<number | null> {
+    const etiquetas: Record<number, string> = {
+      1: 'Malo',
+      2: 'Regular',
+      3: 'Bueno',
+      4: 'Muy bueno',
+      5: 'Excelente',
+    };
+
     const result = await Swal.fire({
+      target: document.body,
       title,
       html: `
         <style>
-          .rating-container { display: flex; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
-          .rating-option { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; padding: 12px 8px; border: 2px solid #e2e8f0; border-radius: 12px; 
-            transition: all 0.2s ease; flex: 1; min-width: 70px; background: #ffffff;
+          .rw-star-rating-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.5rem 0 0.25rem;
           }
-          .rating-option:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
-          .rating-option.selected { border-color: #D3152A; background: #FFF1F2; box-shadow: 0 4px 6px -1px rgba(211, 21, 42, 0.1); }
-          .rating-stars { font-size: 1.2rem; line-height: 1; margin-bottom: 8px; color: #cbd5e1; letter-spacing: 1px; display: flex; }
-          .rating-option:hover .rating-stars { color: #FDB813; }
-          .rating-option.selected .rating-stars { color: #FDB813; }
-          .rating-text { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; text-align: center; }
-          .rating-option.selected .rating-text { color: #D3152A; font-weight: 800; }
+          .rw-rating-message {
+            margin: 0;
+            font-size: 0.92rem;
+            color: #475569;
+            line-height: 1.45;
+          }
+          .rw-rating-prompt {
+            margin: 0.25rem 0 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e1e24;
+          }
+          .rw-stars-row {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            padding: 0.35rem 0.75rem;
+          }
+          .rw-star-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 2.75rem;
+            line-height: 1;
+            color: #cbd5e1;
+            transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), color 0.16s ease, filter 0.16s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+          }
+          .rw-star-item.is-filled {
+            color: #fdb813;
+            filter: drop-shadow(0 3px 8px rgba(253, 184, 19, 0.35));
+          }
+          .rw-star-item.is-hovered {
+            transform: scale(1.18) translateY(-2px);
+          }
+          .rw-star-item.is-pop {
+            animation: rwStarPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          .rw-star-item:focus-visible {
+            outline: 2px solid #fdb813;
+            outline-offset: 4px;
+            border-radius: 8px;
+          }
+          .rw-rating-feedback {
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.3rem 0.95rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            transition: all 0.18s ease;
+          }
+          .rw-rating-feedback.has-value {
+            background: #fffbeb;
+            border-color: #fde68a;
+            color: #b45309;
+          }
+          @keyframes rwStarPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.26); }
+            100% { transform: scale(1); }
+          }
         </style>
-        <p class="text-muted" style="font-size: 0.95rem; margin-bottom: 5px;">${message}</p>
-        <p class="text-dark fw-bold m-0 mt-3" style="font-size: 1.05rem;">Por favor, califica la atención recibida:</p>
-        <div class="rating-container" id="custom-rating">
-          <div class="rating-option" data-value="1">
-            <div class="rating-stars">★</div>
-            <div class="rating-text">Malo</div>
+        <div class="rw-star-rating-box">
+          <p class="rw-rating-message">${message}</p>
+          <p class="rw-rating-prompt">¿Cómo calificarías la atención recibida?</p>
+          <div class="rw-stars-row" id="rw-stars-row" role="radiogroup" aria-label="Calificación con estrellas">
+            ${[1, 2, 3, 4, 5]
+              .map(
+                (n) => `
+                  <span
+                    class="rw-star-item"
+                    data-value="${n}"
+                    role="radio"
+                    aria-checked="false"
+                    aria-label="${n} ${n === 1 ? 'estrella' : 'estrellas'} - ${etiquetas[n]}"
+                    tabindex="0">
+                    <i class="bx bxs-star"></i>
+                  </span>
+                `
+              )
+              .join('')}
           </div>
-          <div class="rating-option" data-value="2">
-            <div class="rating-stars">★★</div>
-            <div class="rating-text">Regular</div>
+          <div class="rw-rating-feedback" id="rw-rating-feedback">
+            Toca una estrella para calificar
           </div>
-          <div class="rating-option" data-value="3">
-            <div class="rating-stars">★★★</div>
-            <div class="rating-text">Bueno</div>
-          </div>
-          <div class="rating-option" data-value="4">
-            <div class="rating-stars">★★★★</div>
-            <div class="rating-text">Muy<br>Bueno</div>
-          </div>
-          <div class="rating-option" data-value="5">
-            <div class="rating-stars">★★★★★</div>
-            <div class="rating-text">Excelente</div>
-          </div>
+          <input type="hidden" id="rating-value" value="" />
         </div>
-        <input type="hidden" id="rating-value" value="">
       `,
-      width: '600px',
+      width: '480px',
       showCancelButton: true,
-      confirmButtonColor: '#D3152A',
-      cancelButtonColor: '#1E1E24',
       confirmButtonText,
       cancelButtonText: 'Cancelar',
       customClass: {
         container: 'swal-topmost',
       },
-      didOpen: () => {
-        const options = document.querySelectorAll('.rating-option');
-        const input = document.getElementById('rating-value') as HTMLInputElement;
-        options.forEach((opt) => {
-          opt.addEventListener('click', () => {
-            options.forEach((o) => o.classList.remove('selected'));
-            opt.classList.add('selected');
-            input.value = opt.getAttribute('data-value') || '';
-            Swal.resetValidationMessage();
+      didOpen: (popup) => {
+        const starsRow = popup.querySelector('#rw-stars-row');
+        const stars = Array.from(popup.querySelectorAll('.rw-star-item')) as HTMLElement[];
+        const feedback = popup.querySelector('#rw-rating-feedback') as HTMLElement | null;
+        const input = popup.querySelector('#rating-value') as HTMLInputElement | null;
+        let selectedRating = 0;
+
+        const renderStars = (activeRating: number, hoveredRating = 0) => {
+          stars.forEach((star) => {
+            const val = Number(star.getAttribute('data-value') || 0);
+            star.classList.toggle('is-filled', val <= activeRating);
+            star.classList.toggle('is-hovered', hoveredRating > 0 && val <= hoveredRating);
+            star.setAttribute('aria-checked', String(selectedRating > 0 && val === selectedRating));
           });
+
+          if (feedback) {
+            if (activeRating > 0) {
+              feedback.textContent = `${activeRating} / 5 · ${etiquetas[activeRating]}`;
+              feedback.classList.add('has-value');
+            } else {
+              feedback.textContent = 'Toca una estrella para calificar';
+              feedback.classList.remove('has-value');
+            }
+          }
+        };
+
+        const selectRating = (value: number) => {
+          selectedRating = value;
+          if (input) {
+            input.value = String(value);
+          }
+          renderStars(selectedRating);
+          stars.forEach((star) => {
+            const val = Number(star.getAttribute('data-value') || 0);
+            if (val <= value) {
+              star.classList.remove('is-pop');
+              void star.offsetWidth;
+              star.classList.add('is-pop');
+            }
+          });
+          Swal.resetValidationMessage();
+        };
+
+        stars.forEach((star) => {
+          const val = Number(star.getAttribute('data-value') || 0);
+
+          star.addEventListener('mouseenter', () => {
+            renderStars(val, val);
+          });
+
+          star.addEventListener('click', () => {
+            selectRating(val);
+          });
+
+          star.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              selectRating(val);
+            } else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+              event.preventDefault();
+              const next = Math.min(5, (selectedRating || val) + 1);
+              selectRating(next);
+              stars[next - 1]?.focus();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+              event.preventDefault();
+              const prev = Math.max(1, (selectedRating || val) - 1);
+              selectRating(prev);
+              stars[prev - 1]?.focus();
+            }
+          });
+        });
+
+        starsRow?.addEventListener('mouseleave', () => {
+          renderStars(selectedRating, 0);
         });
       },
       preConfirm: () => {
-        const val = (document.getElementById('rating-value') as HTMLInputElement).value;
+        const val = (document.getElementById('rating-value') as HTMLInputElement)?.value;
         if (!val) {
           Swal.showValidationMessage('Debes seleccionar una calificación para continuar');
           return false;
