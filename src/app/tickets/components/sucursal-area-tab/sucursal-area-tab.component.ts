@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { Subscription } from 'rxjs';
+import { catchError, combineLatest, of, Subscription } from 'rxjs';
 
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { AcordeonTicketsPorPrioridadComponent } from '../../../tickets/components/acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
@@ -55,8 +55,7 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
   usuario: Usuario;
   ticket: Ticket | undefined;
 
-  private subscripcionSlaTickets?: Subscription;
-  private subscripcionSlaMatriz?: Subscription;
+  private subscripcionSla?: Subscription;
 
   // Rendimiento SLA del mes
   loadingSla: boolean = false;
@@ -88,11 +87,13 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaMatriz?.unsubscribe();
+    this.subscripcionSla?.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idArea'] && !changes['idArea'].firstChange) {
+      this.cargarDatosSlaMes();
+    }
     if (changes['esEspectadorActivo']) {
       this.cdr.detectChanges();
     }
@@ -127,37 +128,35 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
     const fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
     const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
     const idArea = String(this.idArea);
-
-    this.subscripcionSlaMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).subscribe({
-      next: (matriz) => {
-        this.matrizUrgenciaArea = matriz;
-        this.consultarTicketsMes(idArea, fechaInicio, fechaFin);
-      },
-      error: (err) => {
-        console.error('Error al obtener matriz de urgencia:', err);
-        this.consultarTicketsMes(idArea, fechaInicio, fechaFin);
-      }
-    });
-  }
-
-  private consultarTicketsMes(idArea: string, fechaInicio: Date, fechaFin: Date): void {
     const idSucursales = (this.usuario.sucursales || []).map((s: any) => String(s.id));
 
-    this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaTickets = this.ticketsService
-      .getTicketsPorFiltros(idArea, { fechaInicio, fechaFin, idSucursales })
-      .subscribe({
-        next: (tickets: Ticket[]) => {
-          this.procesarMetricasSla(tickets);
-          this.loadingSla = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error al obtener tickets del mes actual para sucursal:', err);
-          this.loadingSla = false;
-          this.cdr.detectChanges();
-        }
-      });
+    const matriz$ = this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).pipe(
+      catchError((err) => {
+        console.error('Error al obtener matriz de urgencia:', err);
+        return of(undefined);
+      })
+    );
+
+    const tickets$ = this.ticketsService.getTicketsPorFiltrosTiempoReal(idArea, {
+      fechaInicio,
+      fechaFin,
+      idSucursales
+    });
+
+    this.subscripcionSla?.unsubscribe();
+    this.subscripcionSla = combineLatest([matriz$, tickets$]).subscribe({
+      next: ([matriz, tickets]) => {
+        this.matrizUrgenciaArea = matriz;
+        this.procesarMetricasSla(tickets || []);
+        this.loadingSla = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al escuchar tickets del mes actual para sucursal:', err);
+        this.loadingSla = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   private procesarMetricasSla(tickets: Ticket[]): void {

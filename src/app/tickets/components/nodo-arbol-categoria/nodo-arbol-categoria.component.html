@@ -67,7 +67,7 @@
             <!-- Insignia Evidencia Obligatoria -->
             <span *ngIf="!esRama(nodo) && nodo.evidenciaObligatoria" 
                   class="insignia-pildora pildora-evidencia" 
-                  pTooltip="Exige adjuntar evidencia documental o fotográfica" 
+                  [pTooltip]="nodo.tipoEvidencia ? ('Evidencia esperada: ' + nodo.tipoEvidencia) : 'Exige adjuntar evidencia documental o fotográfica'" 
                   tooltipPosition="top">
               <i class="bx bx-camera"></i>
               Evidencia

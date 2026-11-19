@@ -107,7 +107,8 @@
           [modulo]="'TICKETS'" 
           [tipo]="tipoBitacoraEfectivo"
           [referenciaId]="ticket.id" 
-          [usuariosEtiquetables]="responsablesService.responsables">
+          [usuariosEtiquetables]="responsablesService.responsables"
+          (usuariosEtiquetadosChange)="onUsuariosEtiquetados($event)">
         </app-bitacora>
       </div>
     </div>

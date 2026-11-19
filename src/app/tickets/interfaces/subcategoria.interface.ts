@@ -6,6 +6,7 @@ export class Subcategoria {
     subcategorias?: Subcategoria[] = [];
     activarSubcategorias?: boolean = false;
     evidenciaObligatoria?: boolean = false;
+    tipoEvidencia?: string;
     alertaWhatsapp?: boolean = false;
     // Urgencia (3×3)
     urgencia?: number;

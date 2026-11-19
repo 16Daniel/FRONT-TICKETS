@@ -84,6 +84,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   private areaInicialAsignada: boolean = false;
   categorias: Categoria[] = [];
   formCategoria: any = null;
+  formSubcategoria: Subcategoria | null = null;
   private alertaWhatsappSeleccionada = false;
   catUsuariosHelp: Usuario[] = [];
   matrizUrgenciaLocal: MatrizUrgencia | null = null;
@@ -100,10 +101,22 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   public formProveedor: any = null; 
 
   get requiereEvidencia(): boolean {
-    const requierePorCategoria = this.formCategoria?.evidenciaObligatoria === true;
+    const requierePorCategoria =
+      this.formSubcategoria?.evidenciaObligatoria === true ||
+      this.formCategoria?.evidenciaObligatoria === true;
     const nombreCatParaValidar = this.ticket.nombreSubcategoria || this.ticket.nombreCategoria || '';
     const requierePorSuministro = this.incluirEvidenciaCadenaSuministro(nombreCatParaValidar) && String(this.ticket.idArea) === '20';
     return requierePorCategoria || requierePorSuministro;
+  }
+
+  get tipoEvidenciaEsperada(): string {
+    if (this.formSubcategoria?.evidenciaObligatoria && this.formSubcategoria.tipoEvidencia?.trim()) {
+      return this.formSubcategoria.tipoEvidencia.trim();
+    }
+    if (this.formCategoria?.evidenciaObligatoria && this.formCategoria.tipoEvidencia?.trim()) {
+      return this.formCategoria.tipoEvidencia.trim();
+    }
+    return '';
   }
 
   editorModules = {
@@ -281,6 +294,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     this.ticket.nombreCategoria = '';
     this.ticket.nombreSubcategoria = '';
     this.formCategoria = null;
+    this.formSubcategoria = null;
     this.alertaWhatsappSeleccionada = false;
     this.cargarMatrizArea(String(this.ticket.idArea));
     this.cdr.detectChanges();
@@ -301,6 +315,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   /* Selección de Categoría desde el Árbol */
   onSeleccionarCategoria(seleccion: SeleccionArbolCategoria): void {
     this.formCategoria = seleccion.categoria;
+    this.formSubcategoria = seleccion.subcategoria || null;
     this.alertaWhatsappSeleccionada =
       seleccion.categoria.alertaWhatsapp === true ||
       seleccion.subcategoria?.alertaWhatsapp === true;
@@ -333,6 +348,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
 
   onLimpiarCategoria(): void {
     this.formCategoria = null;
+    this.formSubcategoria = null;
     this.alertaWhatsappSeleccionada = false;
     this.ticket.idCategoria = '';
     this.ticket.nombreCategoria = '';
@@ -369,10 +385,13 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
       this.requiereEvidencia &&
       this.archivos.length === 0
     ) {
+      const detalleEvidencia = this.tipoEvidenciaEsperada
+        ? ` Evidencia esperada: ${this.tipoEvidenciaEsperada}.`
+        : '';
       Swal.fire({
         icon: 'warning',
         title: 'Acción requerida',
-        text: 'Para la categoría seleccionada es necesario subir evidencia obligatoriamente.',
+        text: `Para la categoría seleccionada es necesario subir evidencia obligatoriamente.${detalleEvidencia}`,
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#D3152A',
         customClass: {

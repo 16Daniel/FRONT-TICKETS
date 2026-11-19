@@ -223,6 +223,14 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
     this.tipoBitacora = tipo;
   }
 
+  onUsuariosEtiquetados(nuevosIds: string[]): void {
+    if (!this.ticket || !nuevosIds?.length) return;
+    const actuales = this.ticket.usuariosEtiquetados || [];
+    this.ticket.usuariosEtiquetados = Array.from(new Set([...actuales, ...nuevosIds]));
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+  }
+
   onHide(): void {
     this.closeEvent.emit();
   }

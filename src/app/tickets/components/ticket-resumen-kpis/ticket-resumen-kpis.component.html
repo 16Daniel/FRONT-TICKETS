@@ -52,10 +52,11 @@
           <div class="d-flex flex-wrap gap-1">
             <ngx-avatars
               *ngFor="let inv of getInvolucrados()"
-              [name]="inv.nombre + ' ' + inv.apellidoP"
+              [name]="inv.nombreCompleto"
+              [bgColor]="inv.color"
               [size]="26"
               [round]="true"
-              [pTooltip]="inv.nombre + ' ' + inv.apellidoP"
+              [pTooltip]="inv.nombreCompleto"
               tooltipPosition="top">
             </ngx-avatars>
           </div>

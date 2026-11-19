@@ -320,6 +320,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
             unidadResolucion: datos.unidadResolucion,
             horasResolucion: datos.horasResolucion,
             evidenciaObligatoria: datos.evidenciaObligatoria,
+            tipoEvidencia: datos.evidenciaObligatoria ? datos.tipoEvidencia : undefined,
             alertaWhatsapp: datos.alertaWhatsapp
           } : {})
         };
@@ -351,6 +352,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
             unidadResolucion: datos.unidadResolucion,
             horasResolucion: datos.horasResolucion,
             evidenciaObligatoria: datos.evidenciaObligatoria,
+            tipoEvidencia: datos.evidenciaObligatoria ? datos.tipoEvidencia : undefined,
             alertaWhatsapp: datos.alertaWhatsapp
           } : {})
         };
@@ -390,6 +392,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
         objetivo.unidadResolucion = datos.unidadResolucion;
         objetivo.horasResolucion = datos.horasResolucion;
         objetivo.evidenciaObligatoria = datos.evidenciaObligatoria;
+        objetivo.tipoEvidencia = datos.evidenciaObligatoria ? datos.tipoEvidencia : undefined;
         objetivo.alertaWhatsapp = datos.alertaWhatsapp;
       } else {
         objetivo.activarSubcategorias = true;
@@ -398,6 +401,7 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
         objetivo.unidadResolucion = undefined;
         objetivo.horasResolucion = undefined;
         objetivo.evidenciaObligatoria = false;
+        objetivo.tipoEvidencia = undefined;
         objetivo.alertaWhatsapp = false;
       }
       delete (objetivo as any).estimacion;
