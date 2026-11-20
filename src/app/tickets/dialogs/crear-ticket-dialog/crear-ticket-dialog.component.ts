@@ -81,6 +81,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   responsableActivo: Responsable | null = null;
   areas: Area[] = [];
   private areasSub: Subscription | undefined;
+  private usuariosSub: Subscription | undefined;
   private areaInicialAsignada: boolean = false;
   categorias: Categoria[] = [];
   formCategoria: any = null;
@@ -233,6 +234,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.areasSub?.unsubscribe();
+    this.usuariosSub?.unsubscribe();
   }
 
   obtenerAreas(): void {
@@ -720,18 +722,12 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   }
 
   obtenerIdResponsableTicket(): string {
-    let id = '';
     const areaFiltro = this.ticket.idArea && String(this.ticket.idArea) !== '0' ? this.ticket.idArea : this.idArea;
-    const usuarioResponsable = this.catUsuariosHelp.find(x => 
-      x.idRol === '4' && 
-      String(x.idArea) === String(areaFiltro) &&
-      x.sucursales && x.sucursales.some(s => String(s.id) === String(this.ticket.idSucursal))
+    const usuarioResponsable = this.UsuariosService.obtenerResponsableSucursal(
+      this.ticket.idSucursal,
+      areaFiltro
     );
-    
-    if (usuarioResponsable) {
-      id = usuarioResponsable.id;
-    }
-    return id;
+    return usuarioResponsable ? usuarioResponsable.id : '';
   }
 
   showMessage(sev: string, summ: string, det: string): void {
@@ -739,24 +735,18 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   }
 
   obtenerUsuariosHelp = (): void => {
-    this.UsuariosService.usuarios$.subscribe(usuarios => this.catUsuariosHelp = usuarios);
+    this.usuariosSub?.unsubscribe();
+    this.usuariosSub = this.UsuariosService.usuarios$.subscribe(usuarios => this.catUsuariosHelp = usuarios);
   };
 
   onHide = (): void => this.closeEvent.emit(false);
 
   obtenerResponsablesTicket(idSucursal: string, idArea: string): string[] {
-    const idsResponsables: string[] = [];
-    for (const usuario of this.catUsuariosHelp) {
-      const esRol4 = String(usuario.idRol) === '4';
-      const esMismaArea = String(usuario.idArea) === String(idArea);
-      const tieneSucursal = usuario.sucursales && usuario.sucursales.some(s => String(s.id) === String(idSucursal));
-      const esGuardia = usuario.esGuardia === true;
-
-      if (esRol4 && esMismaArea && (tieneSucursal || esGuardia)) {
-        idsResponsables.push(usuario.id);
-      }
-    }
-    return idsResponsables;
+    return this.UsuariosService.obtenerResponsablesSucursal(
+      idSucursal,
+      idArea,
+      true
+    ).map(usuario => usuario.id);
   }
 
   buscarActivoFijo(): void {

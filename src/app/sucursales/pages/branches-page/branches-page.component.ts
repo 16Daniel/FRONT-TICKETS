@@ -16,7 +16,6 @@ import { CrearSucursalDialogComponent } from '../../dialogs/crear-sucursal-dialo
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Usuario } from '../../../usuarios/models/usuario.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 
 @Component({
@@ -48,8 +47,6 @@ export default class BranchesPageComponent implements OnInit, OnDestroy {
   
   areas: Area[] = [];
   areaSeleccionadaId: string = '';
-  usuariosSoporte: Usuario[] = [];
-  todosUsuarios: Usuario[] = [];
 
   subscripcion: Subscription | undefined;
   private subscripcionAreas?: Subscription;
@@ -91,33 +88,26 @@ export default class BranchesPageComponent implements OnInit, OnDestroy {
         this.areaSeleccionadaId = String(this.areas[0].id);
       }
       
-      this.filtrarUsuariosSoporte();
       this.cdr.detectChanges();
     });
   }
 
   private cargarUsuarios(): void {
-    this.subscripcionUsuarios = this.UsuariosService.usuarios$.subscribe(usuarios => {
-      this.todosUsuarios = usuarios;
-      this.filtrarUsuariosSoporte();
+    this.subscripcionUsuarios = this.UsuariosService.usuarios$.subscribe(() => {
       this.cdr.detectChanges();
     });
   }
 
   cambiarArea(areaId: string | number): void {
     this.areaSeleccionadaId = String(areaId);
-    this.filtrarUsuariosSoporte();
-  }
-
-  filtrarUsuariosSoporte(): void {
-    this.usuariosSoporte = this.todosUsuarios.filter(u => 
-      String(u.idRol) === '4' && String(u.idArea) === this.areaSeleccionadaId
-    );
     this.cdr.detectChanges();
   }
 
   obtenerSoporte(sucursal: Sucursal): string {
-    const usuario = this.usuariosSoporte.find(u => u.sucursales?.some(s => s.id === sucursal.id));
+    const usuario = this.UsuariosService.obtenerResponsableSucursal(
+      sucursal.id,
+      this.areaSeleccionadaId
+    );
     return usuario ? `${usuario.nombre} ${usuario.apellidoP}` : 'Sin asignar';
   }
 

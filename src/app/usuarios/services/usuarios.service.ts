@@ -75,6 +75,41 @@ export class UsuariosService {
     );
   }
 
+  obtenerResponsablesSucursal(
+    idSucursal: string | number,
+    idArea: string | number,
+    incluirGuardias: boolean = false
+  ): Usuario[] {
+    if (
+      idSucursal === null ||
+      idSucursal === undefined ||
+      idSucursal === '' ||
+      idArea === null ||
+      idArea === undefined ||
+      idArea === ''
+    ) {
+      return [];
+    }
+
+    return this._usuarios.filter((u) => {
+      if (u.eliminado) return false;
+      const esRol4 = String(u.idRol) === '4';
+      const esMismaArea = String(u.idArea) === String(idArea);
+      const tieneSucursal = Boolean(
+        u.sucursales?.some((s) => String(s.id) === String(idSucursal))
+      );
+      const esGuardia = incluirGuardias && u.esGuardia === true;
+      return esRol4 && esMismaArea && (tieneSucursal || esGuardia);
+    });
+  }
+
+  obtenerResponsableSucursal(
+    idSucursal: string | number,
+    idArea: string | number
+  ): Usuario | null {
+    return this.obtenerResponsablesSucursal(idSucursal, idArea, false)[0] || null;
+  }
+
   async registerAuthFirebaseUser(email: string, password: string): Promise<string | null> {
     try {
       const userCredential = await createUserWithEmailAndPassword(
