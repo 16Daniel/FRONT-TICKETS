@@ -40,13 +40,36 @@ export class FcmService {
   fcmToken = signal<string | null>(null);
 
   async requestPermission(): Promise<string | null> {
-    const permission = await Notification.requestPermission();
+    if (typeof Notification === 'undefined') return null;
+
+    let permission: NotificationPermission;
+    try {
+      permission = Notification.permission === 'default'
+        ? await Notification.requestPermission()
+        : Notification.permission;
+    } catch (error) {
+      console.error('Error al solicitar permiso para notificaciones:', error);
+      return null;
+    }
+
     if (permission === 'granted') {
       return await this.getFcmToken();
     } else {
       console.warn('Permiso de notificaciones denegado');
       return null;
     }
+  }
+
+  async syncTokenForCurrentUser(): Promise<string | null> {
+    if (
+      typeof Notification === 'undefined' ||
+      Notification.permission !== 'granted' ||
+      !localStorage.getItem('rwuserdatatk')
+    ) {
+      return null;
+    }
+
+    return this.getFcmToken();
   }
 
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
@@ -220,23 +243,20 @@ export class FcmService {
     const storedUser = localStorage.getItem('rwuserdatatk');
     if (!storedUser) return;
 
-    const user = JSON.parse(storedUser) as Usuario;
+    let user: Usuario;
+    try {
+      user = JSON.parse(storedUser) as Usuario;
+    } catch (error) {
+      console.error('No se pudo leer el usuario de la sesión para guardar el token FCM:', error);
+      return;
+    }
+
     if (typeof user.id !== 'string' || !user.id) {
       console.error('No se puede guardar el token FCM: el usuario de la sesión no tiene un id válido.');
       return;
     }
 
-    const tokens = Array.isArray(user.fcmToken)
-      ? [...new Set(user.fcmToken.filter((storedToken) => typeof storedToken === 'string'))]
-      : [];
-
-    if (tokens.includes(token)) return;
-    if (tokens.length >= 50) tokens.shift();
-    tokens.push(token);
-
-    await this.UsuariosService.updateUserFcmTokens(user.id, tokens);
-    user.fcmToken = tokens;
-    localStorage.setItem('rwuserdatatk', JSON.stringify(user));
+    await this.UsuariosService.addUserFcmToken(user.id, token);
   }
 
   async showNativeNotification(payload: any): Promise<void> {
