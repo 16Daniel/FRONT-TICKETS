@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, OnDestroy, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -15,6 +15,7 @@ import { DatesHelperService } from '../../helpers/dates-helper.service';
 import { MentionUtils } from '../../utils/mention.utils';
 import { FirebaseStorageService } from '../../services/firebase-storage.service';
 import { MensajesPendientesService } from '../../services/mensajes-pendientes.service';
+import { TicketsService } from '../../../tickets/services/tickets.service';
 import { FileUtils } from '../../utils/file.utils';
 
 import Quill from 'quill';
@@ -35,6 +36,7 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
   @Input() referenciaId!: string;
   @Input() tipo: Bitacora['tipo'] = 'COMENTARIO';
   @Input() usuariosEtiquetables: Responsable[] = [];
+  @Output() usuariosEtiquetadosChange = new EventEmitter<string[]>();
 
   // Usuario actual (simulado o inyectado después)
   @Input() usuarioActual!: Responsable;
@@ -107,6 +109,7 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
     public datesHelper: DatesHelperService,
     private firebaseStorage: FirebaseStorageService,
     private mensajesPendientesService: MensajesPendientesService,
+    private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -209,6 +212,15 @@ export class BitacoraComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       await this.bitacoraService.addEntrada(nuevaBitacora);
+      if (usuariosEtiquetados && usuariosEtiquetados.length > 0) {
+        if (this.modulo === 'TICKETS' && this.referenciaId) {
+          await this.ticketsService.agregarUsuariosEtiquetados(
+            this.referenciaId,
+            usuariosEtiquetados
+          );
+        }
+        this.usuariosEtiquetadosChange.emit(usuariosEtiquetados);
+      }
       await this.crearAlertasMenciones(usuariosEtiquetados, nuevaBitacora.contenido);
 
       // Limpiar después de enviar

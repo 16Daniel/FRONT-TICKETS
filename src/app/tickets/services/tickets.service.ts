@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import {
   addDoc,
   arrayUnion,
@@ -30,7 +30,7 @@ import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface
 })
 export class TicketsService {
 
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private ngZone: NgZone) { }
 
   /**
    * Elimina campos con valor undefined para evitar errores de Firestore:
@@ -133,6 +133,16 @@ export class TicketsService {
     const dataLimpia = this.sanitizarParaFirestore(data);
     delete dataLimpia.id;
     return updateDoc(documentRef, dataLimpia);
+  }
+
+  async agregarUsuariosEtiquetados(idTicket: string, idsEtiquetados: string[]): Promise<void> {
+    const idsLimpios = (idsEtiquetados || []).filter(Boolean);
+    if (!idTicket || idsLimpios.length === 0) return;
+
+    const documentRef = doc(this.firestore, `tickets/${idTicket}`);
+    await updateDoc(documentRef, {
+      usuariosEtiquetados: arrayUnion(...idsLimpios),
+    });
   }
 
   getByBranchId(idSucursal: string): Observable<any[]> {
@@ -446,7 +456,7 @@ export class TicketsService {
     return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 
-  getTicketsPorFiltros(idArea: string, filtros: TicketsFiltros): Observable<Ticket[]> {
+  private buildQueryTicketsPorFiltros(idArea: string, filtros: TicketsFiltros) {
     const ticketsCollection = collection(this.firestore, 'tickets');
     const constraints: any[] = [
       where('idArea', '==', idArea)
@@ -464,26 +474,62 @@ export class TicketsService {
       constraints.push(where('fecha', '<=', Timestamp.fromDate(endOfDay)));
     }
 
-    const q = query(ticketsCollection, ...constraints);
+    return query(ticketsCollection, ...constraints);
+  }
+
+  private aplicarFiltrosEnMemoria(tickets: Ticket[], filtros: TicketsFiltros): Ticket[] {
+    let resultado = tickets;
+
+    // Filtrado en memoria por sucursales
+    if (filtros.idSucursales && filtros.idSucursales.length > 0) {
+      const sucursalesStr = filtros.idSucursales.map(String);
+      resultado = resultado.filter(t => sucursalesStr.includes(String(t.idSucursal)));
+    }
+
+    // Filtrado en memoria por usuarios
+    if (filtros.idUsuarios && filtros.idUsuarios.length > 0) {
+      const usuariosStr = filtros.idUsuarios.map(String);
+      resultado = resultado.filter(t => usuariosStr.includes(String(t.idUsuario)));
+    }
+
+    return resultado;
+  }
+
+  getTicketsPorFiltros(idArea: string, filtros: TicketsFiltros): Observable<Ticket[]> {
+    const q = this.buildQueryTicketsPorFiltros(idArea, filtros);
 
     return from(getDocs(q)).pipe(
       map(snapshot => {
-        let tickets = snapshot.docs.map(doc => {
+        const tickets = snapshot.docs.map(doc => {
           return { id: doc.id, ...doc.data() } as Ticket;
         });
 
-        // Filtrado en memoria por sucursales
-        if (filtros.idSucursales && filtros.idSucursales.length > 0) {
-          tickets = tickets.filter(t => filtros.idSucursales!.includes(t.idSucursal));
-        }
-
-        // Filtrado en memoria por usuarios
-        if (filtros.idUsuarios && filtros.idUsuarios.length > 0) {
-          tickets = tickets.filter(t => filtros.idUsuarios!.includes(t.idUsuario));
-        }
-
-        return tickets;
+        return this.aplicarFiltrosEnMemoria(tickets, filtros);
       })
     );
+  }
+
+  getTicketsPorFiltrosTiempoReal(idArea: string, filtros: TicketsFiltros): Observable<Ticket[]> {
+    const q = this.buildQueryTicketsPorFiltros(idArea, filtros);
+
+    return new Observable<Ticket[]>((observer) => {
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const tickets = snapshot.docs.map(doc => {
+            return { id: doc.id, ...doc.data() } as Ticket;
+          });
+
+          const filtrados = this.aplicarFiltrosEnMemoria(tickets, filtros);
+          this.ngZone.run(() => observer.next(filtrados));
+        },
+        (error) => {
+          console.error('Error en la suscripción de tickets por filtros:', error);
+          this.ngZone.run(() => observer.error(error));
+        }
+      );
+
+      return () => unsubscribe();
+    });
   }
 }

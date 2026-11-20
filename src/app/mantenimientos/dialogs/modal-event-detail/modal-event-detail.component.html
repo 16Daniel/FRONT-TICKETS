@@ -1,5 +1,6 @@
 <p-dialog [header]="sucursal!.nombre" [(visible)]="showModalEventeDetail" [modal]="true" [maximizable]="true"
-  (onHide)="onHide()" [style]="{ width: '90vw' }" class="custom-dialog">
+  (onHide)="onHide()" [style]="{ width: '90vw' }" [breakpoints]="{ '768px': '100vw' }"
+  styleClass="rw-dialog-mobile-fullscreen" class="custom-dialog">
   <h4 class="text-dark fw-bold text-center">{{ fecha | date:'fullDate':'':'es' | uppercase }}</h4>
 
   <h5 class="text-dark fw-bold text-center">TICKETS</h5>

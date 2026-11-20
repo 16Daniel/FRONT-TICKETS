@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Subscription } from 'rxjs';
+import { catchError, combineLatest, of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
@@ -97,8 +97,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     slaResolucionCumplidos: 0
   };
   private ticketsSlaMes: Ticket[] = [];
-  private subscripcionSlaTickets?: Subscription;
-  private subscripcionSlaMatriz?: Subscription;
+  private subscripcionSla?: Subscription;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -128,8 +127,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     if (this.subscripcionTicket) {
       this.subscripcionTicket.unsubscribe();
     }
-    this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaMatriz?.unsubscribe();
+    this.subscripcionSla?.unsubscribe();
   }
 
   private definirMesActual(): void {
@@ -146,33 +144,28 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     const now = new Date();
     const fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
     const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-
-    // Matriz de urgencia del área para evaluar los tiempos de SLA
-    this.subscripcionSlaMatriz = this.matrizUrgenciaService.obtenerMatrizPorArea(this.idArea).subscribe({
-      next: (matriz) => {
-        this.matrizUrgenciaArea = matriz;
-        this.consultarTicketsSlaMes(fechaInicio, fechaFin);
-      },
-      error: (err) => {
-        console.error('Error al obtener matriz de urgencia:', err);
-        this.consultarTicketsSlaMes(fechaInicio, fechaFin);
-      }
-    });
-  }
-
-  private consultarTicketsSlaMes(fechaInicio: Date, fechaFin: Date): void {
     const filtros: TicketsFiltros = { fechaInicio, fechaFin };
 
-    this.subscripcionSlaTickets?.unsubscribe();
-    this.subscripcionSlaTickets = this.ticketsService.getTicketsPorFiltros(this.idArea, filtros).subscribe({
-      next: (tickets: Ticket[]) => {
+    const matriz$ = this.matrizUrgenciaService.obtenerMatrizPorArea(this.idArea).pipe(
+      catchError((err) => {
+        console.error('Error al obtener matriz de urgencia:', err);
+        return of(undefined);
+      })
+    );
+
+    const tickets$ = this.ticketsService.getTicketsPorFiltrosTiempoReal(this.idArea, filtros);
+
+    this.subscripcionSla?.unsubscribe();
+    this.subscripcionSla = combineLatest([matriz$, tickets$]).subscribe({
+      next: ([matriz, tickets]) => {
+        this.matrizUrgenciaArea = matriz;
         this.ticketsSlaMes = tickets || [];
         this.procesarMetricasSla();
         this.loadingSla = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al obtener tickets del mes actual para el área:', err);
+        console.error('Error al escuchar tickets del mes actual para el área:', err);
         this.loadingSla = false;
         this.cdr.detectChanges();
       }

@@ -1,5 +1,6 @@
 <p-dialog [header]="!esNuevaSucursal ? 'ACTUALIZAR SUCURSAL' : 'CREAR SUCURSAL'" [(visible)]="mostrarModalCrearSucursal"
-  [modal]="true" [style]="{ 'width': '800px', 'max-width': '95vw' }" [maximizable]="true" (onHide)="onHide()">
+  [modal]="true" [style]="{ 'width': '800px', 'max-width': '95vw' }" [breakpoints]="{ '768px': '100vw' }"
+  [maximizable]="true" styleClass="rw-dialog-mobile-fullscreen" (onHide)="onHide()">
   
   <form #form="ngForm" (ngSubmit)="enviar(form)" class="mt-3">
     <div class="row gy-4">
