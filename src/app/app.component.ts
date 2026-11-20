@@ -16,11 +16,7 @@ export class AppComponent {
   private fcmService = inject(FcmService);
 
   ngOnInit() {
-    this.requestPermission();
+    this.fcmService.syncTokenForCurrentUser();
     this.fcmService.listenMessages().subscribe();
-  }
-
-  requestPermission() {
-    this.fcmService.requestPermission();
   }
 }
