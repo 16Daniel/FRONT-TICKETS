@@ -18,15 +18,16 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   // console.log('[firebase-messaging-sw.js] Notificación recibida en background: ', payload);
-
   // Si el payload viene como data-only (sin bloque notification), mostramos la notificación nativa manualmente
   if (!payload.notification && (payload.data?.title || payload.data?.body)) {
     const scopeUrl = self.registration && self.registration.scope ? self.registration.scope : '/';
     const iconUrl = new URL('assets/icons/icon-192x192.png', scopeUrl).toString();
+    const iconBadge = new URL('assets/icons/pwa-icon-72x72.png', scopeUrl).toString();
+    
     self.registration.showNotification(payload.data.title || 'Rebel Wings', {
       body: payload.data.body || '',
       icon: iconUrl,
-      badge: iconUrl,
+      badge: iconBadge,
       data: payload.data,
     });
   }
