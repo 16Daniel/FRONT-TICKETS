@@ -1,6 +1,6 @@
 <p-dialog [header]="!esNuevoUsuario ? 'ACTUALIZAR USUARIO' : 'CREAR USUARIO'" [(visible)]="mostrarModalCrearUsuario"
-    [modal]="true" [style]="{ 'width': '800px', 'max-width': '95vw' }" [maximizable]="true" (onHide)="onHide()"
-    styleClass="dialog-modern">
+    [modal]="true" [style]="{ 'width': '800px', 'max-width': '95vw' }" [breakpoints]="{ '768px': '100vw' }"
+    [maximizable]="true" (onHide)="onHide()" styleClass="dialog-modern rw-dialog-mobile-fullscreen">
     <form #form="ngForm" (ngSubmit)="enviar(form)" class="mt-3">
         
         <div class="row gy-4">

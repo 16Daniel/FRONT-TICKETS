@@ -2,8 +2,9 @@
   [header]="esNuevoComite ? 'CREAR COMITÉ' : 'ACTUALIZAR COMITÉ'"
   [(visible)]="mostrarModalCrearComite"
   [modal]="true"
-  [breakpoints]="{ '768px': '95vw', '560px': '100vw' }"
+  [breakpoints]="{ '991px': '90vw', '768px': '100vw' }"
   [style]="{ width: '42rem', maxWidth: '95vw' }"
+  styleClass="rw-dialog-mobile-fullscreen"
   (onHide)="onHide()">
 
   <form #form="ngForm" (ngSubmit)="enviar(form)" class="mt-3">
