@@ -268,12 +268,13 @@ export class FcmService {
     const iconUrl =
       payload?.notification?.icon ||
       new URL('assets/icons/icon-192x192.png', document.baseURI).toString();
+      const iconBadge = new URL('assets/icons/pwa-icon-72x72.png', document.baseURI).toString();
     const image = payload?.notification?.image;
 
     const options: NotificationOptions & { image?: string } = {
       body,
       icon: iconUrl,
-      badge: iconUrl,
+      badge: iconBadge,
       data: payload?.data || payload,
     };
     if (image) {
