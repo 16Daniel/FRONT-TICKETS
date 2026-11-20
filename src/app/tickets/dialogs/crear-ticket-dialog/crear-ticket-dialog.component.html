@@ -3,10 +3,10 @@
   [modal]="true" 
   [(visible)]="mostrarModalGenerateTicket" 
   [style]="{ width: '52rem' }"
-  [breakpoints]="{ '1199px': '80vw', '575px': '95vw' }" 
+  [breakpoints]="{ '1199px': '80vw', '768px': '100vw' }" 
   [maximizable]="true" 
   (onHide)="onHide()"
-  styleClass="modal-ticket-rw">
+  styleClass="modal-ticket-rw rw-dialog-mobile-fullscreen">
 
   <form #form="ngForm" (ngSubmit)="enviarTicket(form)" class="formulario-ticket">
 
