@@ -32,6 +32,7 @@ export interface CategoriaAlerta {
   id: string;
   categoria: string;
   nombre: string;
+  descripcion:string; 
 }
 
 interface PushNotificationRequest {
