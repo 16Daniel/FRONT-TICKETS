@@ -50,7 +50,7 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
     return [
       { label: 'Todos los tipos', value: '' },
       ...this.categorias.map(tipo => ({
-        label: tipo.nombre || tipo.categoria,
+        label: tipo.descripcion || tipo.categoria,
         value: tipo.id
       }))
     ];
@@ -228,7 +228,7 @@ export class AlertNotificationsButtonComponent implements OnInit, OnDestroy {
 
   obtenerNombreTipo(idAlerta: string): string {
     const categoria = this.categorias.find(tipo => tipo.id === idAlerta);
-    if (categoria) return categoria.nombre || categoria.categoria || 'Alerta';
+    if (categoria) return categoria.descripcion || categoria.categoria || 'Alerta';
     return 'Alerta';
   }
 

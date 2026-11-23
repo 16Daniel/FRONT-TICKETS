@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import {
   addDoc,
+  arrayUnion,
   collection,
   doc,
   Firestore,
@@ -229,9 +230,9 @@ export class UsuariosService {
     return updateDoc(userRef, data);
   }
 
-  async updateUserFcmTokens(userId: string, fcmToken: string[]): Promise<void> {
+  async addUserFcmToken(userId: string, fcmToken: string): Promise<void> {
     const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
-    return updateDoc(userRef, { fcmToken });
+    return updateDoc(userRef, { fcmToken: arrayUnion(fcmToken) });
   }
 
   async getUsuarioById(id: string): Promise<Usuario | null> {

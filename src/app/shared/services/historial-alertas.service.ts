@@ -32,6 +32,7 @@ export interface CategoriaAlerta {
   id: string;
   categoria: string;
   nombre: string;
+  descripcion:string; 
 }
 
 interface PushNotificationRequest {
@@ -207,7 +208,10 @@ export class HistorialAlertasService {
       )
     ]);
 
-    const ticket = ticketSnapshot.data() as { idSucursal?: unknown } | undefined;
+    const ticket = ticketSnapshot.data() as {
+      idSucursal?: unknown;
+      folio?: unknown;
+    } | undefined;
     if (!ticketSnapshot.exists() || ticket?.idSucursal === undefined || ticket.idSucursal === null) {
       throw new Error(`No se pudo obtener la sucursal del ticket ${alerta.ticketId} para enviar la notificación.`);
     }
@@ -243,7 +247,7 @@ export class HistorialAlertasService {
     ));
     const request: PushNotificationRequest = {
       Titulo: titulo,
-      Mensaje: `Tienes un nuevo ticket en alerta. Sucursal: ${sucursal.nombre}.`,
+      Mensaje: `${ticket.folio}\n${sucursal.nombre}.`,
       tokens,
       usuarios
     };
