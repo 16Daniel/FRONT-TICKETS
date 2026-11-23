@@ -33,6 +33,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() responsable: Responsable = new Responsable;
   @Input() esNuevo: boolean = true;
+  @Input() bloquearUsuarioYSucursal: boolean = false;
   
   responsablesService = inject(ResponsablesService);
   UsuariosService = inject(UsuariosService);
@@ -55,8 +56,8 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
     
     // Solo asignamos si es nuevo (aunque desde el padre ya se puede enviar seteado)
     if (this.esNuevo) {
-      if (this.usuario.sucursales?.length > 0 && (!this.responsable.idSucursal || this.responsable.idSucursal === 'todos')) {
-        this.responsable.idSucursal = this.usuario.sucursales[0].id;
+      if (this.usuario.idSucursal && (!this.responsable.idSucursal || this.responsable.idSucursal === 'todos')) {
+        this.responsable.idSucursal = this.usuario.idSucursal;
       }
       this.responsable.esGlobal = false;
       this.responsable.color = this.colorRandomService.generarColor();
@@ -69,7 +70,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.sucursales = data;
           this.sucursalesMap.clear();
-          data.forEach(s => this.sucursalesMap.set(s.id!, s.nombre));
+          data.forEach(s => this.sucursalesMap.set(String(s.id!), s.nombre));
           this.cdr.detectChanges();
         }
       })
@@ -95,24 +96,31 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
   }
 
   filtrarUsuariosPorSucursal() {
-    if (!this.responsable.idSucursal) {
+    if (!this.responsable.idSucursal && !this.bloquearUsuarioYSucursal) {
       this.usuariosFiltrados = [];
       this.responsable.idUsuario = '';
       return;
     }
 
-    this.usuariosFiltrados = this.usuarios
+    const filtrados = this.usuarios
       .filter(u =>
-        u.sucursales?.some(s => String(s.id) === String(this.responsable.idSucursal))
+        !u.eliminado &&
+        (
+          String(u.idSucursal) === String(this.responsable.idSucursal) ||
+          (this.bloquearUsuarioYSucursal && String(u.id) === String(this.responsable.idUsuario))
+        )
       )
       .map(u => ({
         ...u,
         nombreCompleto: `${u.nombre || ''} ${u.apellidoP || ''} ${u.apellidoM || ''}`.trim()
       }));
 
+    this.usuariosFiltrados = filtrados;
+
     if (
+      !this.bloquearUsuarioYSucursal &&
       this.responsable.idUsuario &&
-      !this.usuariosFiltrados.some(u => u.id === this.responsable.idUsuario)
+      !this.usuariosFiltrados.some(u => String(u.id) === String(this.responsable.idUsuario))
     ) {
       this.responsable.idUsuario = '';
     }
@@ -126,6 +134,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
 
     this.cargando = true;
     try {
+      this.responsable.correo = (this.responsable.correo || '').trim().toLowerCase();
       if (!this.responsable.color || this.responsable.color === '#000000') {
         this.responsable.color = this.colorRandomService.generarColor();
       }
@@ -198,7 +207,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
   enviarCorreo(responsable: Responsable, pin: string) {
     const request: EnviarCorreoRequest = {
       titulo: `Tu PIN ha sido generado`,
-      body: this.generatePinEmailHtml(responsable.nombre, this.sucursalesMap.get(responsable.idSucursal)!, pin),
+      body: this.generatePinEmailHtml(responsable.nombre, this.sucursalesMap.get(String(responsable.idSucursal)) || '', pin),
       destinatario: responsable.correo
     };
 

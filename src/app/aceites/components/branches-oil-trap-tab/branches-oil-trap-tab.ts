@@ -138,7 +138,7 @@ export class BranchesOilTrapTab implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.sucursal = this.obtenerSucursalporId(this.usuario.sucursales[0].id);
+        this.sucursal = this.obtenerSucursalporId(this.usuario.idSucursal);
         this.consultarEntregas();
         this.consultarEntregasH();
         this.cdr.detectChanges();
@@ -187,7 +187,7 @@ export class BranchesOilTrapTab implements OnInit {
         this.showMessage('success', 'Success', 'Guardado correctamente');
         this.formCantidad = 0;
         this.formcomentarios = "";
-        this.sucursal = this.obtenerSucursalporId(this.usuario.sucursales[0].id);
+        this.sucursal = this.obtenerSucursalporId(this.usuario.idSucursal);
         this.consultarEntregas();
         this.consultarEntregasH();
         this.cdr.detectChanges();

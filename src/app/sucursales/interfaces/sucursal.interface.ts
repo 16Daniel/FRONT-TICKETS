@@ -8,6 +8,7 @@ export class Sucursal {
   idFront?: number | null;
   controlDeAceite?: boolean | null;
   claUbicacion?: number | number;
+
   tabletas?: Dispositivo[] = [];
   tabletasRequeridas?: number = 0;
   tpvs?: Dispositivo[] = [];

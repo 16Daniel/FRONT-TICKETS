@@ -70,7 +70,7 @@ export default class ResponsablesPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+    this.idSucursalSeleccionada = this.usuario.idSucursal;
 
     this.subs.add(
       this.branchesService.get().subscribe({

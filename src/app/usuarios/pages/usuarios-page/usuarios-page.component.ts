@@ -20,6 +20,8 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 
 @Component({
   selector: 'app-usuarios-page',
@@ -43,6 +45,9 @@ import { AreasService } from '../../../areas/services/areas.service';
 export default class UsuariosPageComponent implements OnDestroy, OnInit {
   readonly String = String;
   mostrarModalUsuario: boolean = false;
+  mostrarModalSucursales: boolean = false;
+  usuarioSucursalesModal: Usuario | null = null;
+  sucursalesModalLista: { idSucursal: string; nombre: string; esPrincipal: boolean }[] = [];
   actualizar: boolean = false;
   usuarios: Usuario[] = [];
   usuariosFiltrados: Usuario[] = [];
@@ -52,9 +57,13 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   esNuevoUsuario: boolean = false;
   subscripcionUsuarios: Subscription | undefined;
   private subscripcionAreas?: Subscription;
+  private subscripcionSucursales?: Subscription;
+  private subscripcionSoporte?: Subscription;
+  private subscripcionRoles?: Subscription;
   private unsubscribe!: () => void;
 
   areas: Area[] = [];
+  sucursalesMap: Record<string, string> = {};
   areaSeleccionadaId: string = 'sin-area';
   confirmDialogTipo: 'eliminar' | 'desbloquear' = 'eliminar';
 
@@ -67,7 +76,9 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     private confirmationService: ConfirmationService,
     private UsuariosService: UsuariosService,
     private rolesService: RolesService,
-    private areasService: AreasService
+    private areasService: AreasService,
+    private branchesService: BranchesService,
+    private usuarioSucursalService: UsuarioSucursalService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -82,7 +93,28 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
       this.aplicarFiltroArea();
     });
     this.cargarAreas();
+    this.cargarSucursales();
+    this.cargarSoporteSucursales();
     this.obtenerRoles();
+  }
+
+  private cargarSucursales(): void {
+    this.subscripcionSucursales = this.branchesService.get().subscribe((sucursales) => {
+      const mapa: Record<string, string> = {};
+      for (const s of sucursales) {
+        mapa[String(s.id)] = s.nombre;
+      }
+      this.sucursalesMap = mapa;
+      this.actualizarSucursalesModal();
+      this.cdr.detectChanges();
+    });
+  }
+
+  private cargarSoporteSucursales(): void {
+    this.subscripcionSoporte = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+      this.actualizarSucursalesModal();
+      this.cdr.detectChanges();
+    });
   }
 
   private cargarAreas(): void {
@@ -133,9 +165,92 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     if (this.subscripcionAreas) {
       this.subscripcionAreas.unsubscribe();
     }
+    if (this.subscripcionSucursales) {
+      this.subscripcionSucursales.unsubscribe();
+    }
+    if (this.subscripcionSoporte) {
+      this.subscripcionSoporte.unsubscribe();
+    }
+    if (this.subscripcionRoles) {
+      this.subscripcionRoles.unsubscribe();
+    }
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+  }
+
+  obtenerSucursalesSoporte(usuario: Usuario): string[] {
+    if (String(usuario.idRol) !== '4' || !usuario.id) return [];
+    const ids = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+      'SOPORTE',
+      String(usuario.id),
+      usuario.idArea
+    );
+    return ids
+      .map((id) => this.sucursalesMap[id] || `Sucursal #${id}`)
+      .sort((a, b) => a.localeCompare(b));
+  }
+
+  obtenerTooltipSoporte(usuario: Usuario): string {
+    if (String(usuario.idRol) !== '4' || !usuario.id) {
+      return 'Sin sucursales de soporte asignadas';
+    }
+    const detalle = this.usuarioSucursalService.obtenerDetalleSucursalesPorUsuario(
+      'SOPORTE',
+      String(usuario.id),
+      usuario.idArea
+    );
+    if (detalle.length === 0) {
+      return 'Sin sucursales de soporte asignadas';
+    }
+    return detalle
+      .map((item) => {
+        const nombre = this.sucursalesMap[item.idSucursal] || `Sucursal #${item.idSucursal}`;
+        return item.esPrincipal ? `${nombre} (Principal)` : nombre;
+      })
+      .sort((a, b) => a.localeCompare(b))
+      .join(', ');
+  }
+
+  abrirModalSucursalesAsignadas(usuario: Usuario): void {
+    this.usuarioSucursalesModal = usuario;
+    this.actualizarSucursalesModal();
+    this.mostrarModalSucursales = true;
+    this.cdr.detectChanges();
+  }
+
+  cerrarModalSucursales(): void {
+    this.mostrarModalSucursales = false;
+    this.usuarioSucursalesModal = null;
+    this.sucursalesModalLista = [];
+  }
+
+  private actualizarSucursalesModal(): void {
+    if (!this.usuarioSucursalesModal?.id) {
+      this.sucursalesModalLista = [];
+      return;
+    }
+    const detalle = this.usuarioSucursalService.obtenerDetalleSucursalesPorUsuario(
+      'SOPORTE',
+      String(this.usuarioSucursalesModal.id),
+      this.usuarioSucursalesModal.idArea
+    );
+    this.sucursalesModalLista = detalle
+      .map((item) => ({
+        idSucursal: item.idSucursal,
+        nombre: this.sucursalesMap[item.idSucursal] || `Sucursal #${item.idSucursal}`,
+        esPrincipal: item.esPrincipal,
+      }))
+      .sort((a, b) => {
+        if (a.esPrincipal !== b.esPrincipal) return a.esPrincipal ? -1 : 1;
+        return a.nombre.localeCompare(b.nombre);
+      });
+  }
+
+  obtenerNombreArea(idArea: string | number | undefined): string {
+    if (!idArea) return 'Sin área';
+    const area = this.areas.find((a) => String(a.id) === String(idArea));
+    return area ? area.nombre : 'Sin área';
   }
 
   abrirModalCrearUsuario() {
@@ -183,6 +298,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   async eliminarUsuario(idu: string) {
     try {
       await this.UsuariosService.updateUserDeletedStatus(idu, true);
+      await this.usuarioSucursalService.quitarRelacionesDeUsuario(idu);
       this.showMessage('success', 'Success', 'Eliminado correctamente');
     } catch (error) {
       console.error('Error al eliminar usuario:', error);
@@ -220,7 +336,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   }
 
   obtenerRoles() {
-    this.rolesService.get().subscribe({
+    this.subscripcionRoles = this.rolesService.get().subscribe({
       next: (data) => {
         this.roles = data;
         this.cdr.detectChanges();

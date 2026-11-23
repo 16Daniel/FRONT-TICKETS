@@ -108,7 +108,9 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
     private confirmationService: ConfirmationService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario?.sucursales?.[0];
+    this.sucursal = this.usuario?.idSucursal
+      ? ({ id: String(this.usuario.idSucursal), nombre: '' } as Sucursal)
+      : undefined;
   }
 
   ngOnInit(): void {

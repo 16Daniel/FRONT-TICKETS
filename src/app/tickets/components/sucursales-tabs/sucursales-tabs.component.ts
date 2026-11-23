@@ -58,7 +58,9 @@ export class SucursalesTabsComponent implements OnDestroy, OnInit {
     private areasService: AreasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario.sucursales[0];
+    this.sucursal = this.usuario?.idSucursal
+      ? ({ id: String(this.usuario.idSucursal), nombre: '' } as Sucursal)
+      : new Sucursal();
     this.obtenerTicketsPorSucursal(this.sucursal?.id);
     this.obtenerSucursales();
   }
@@ -97,7 +99,7 @@ export class SucursalesTabsComponent implements OnDestroy, OnInit {
   obtenerSucursales() {
     this.sucursalesService.get().subscribe(result => {
       this.sucursales = result;
-      this.sucursal = this.sucursales.filter(x => x.id == this.usuario.sucursales[0].id)[0];
+      this.sucursal = this.sucursales.filter(x => String(x.id) == String(this.usuario.idSucursal))[0];
       this.cdr.detectChanges();
 
     });

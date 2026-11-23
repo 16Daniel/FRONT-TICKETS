@@ -7,19 +7,6 @@
       title="Catálogo de Sucursales">
     </app-page-header>
 
-    <!-- Barra Selector de Áreas por Chips -->
-    <div class="areas-chips-track mb-4">
-      <button 
-        *ngFor="let area of areas" 
-        type="button" 
-        class="chip-area-pill"
-        [class.is-active]="String(area.id) === areaSeleccionadaId"
-        (click)="cambiarArea(area.id)">
-        <span class="area-dot"></span>
-        <span class="area-name">{{ area.nombre }}</span>
-      </button>
-    </div>
-
     <!-- Barra de Herramientas y Filtros -->
     <div class="branches-toolbar-bar mb-4">
       <div class="toolbar-left">
@@ -54,9 +41,6 @@
               <tr>
                   <th>ID</th>
                   <th>NOMBRE</th>
-                  <th>ID FRONT</th>
-                  <th>CLA UBICACIÓN</th>
-                  <th>SOPORTE</th>
                   <th style="width: 120px; text-align: center;">ACCIONES</th>
               </tr>
           </ng-template>
@@ -64,9 +48,6 @@
               <tr [pSelectableRow]="sucursal">
                   <td>{{ sucursal.id }}</td>
                   <td>{{ sucursal.nombre }}</td>
-                  <td>{{ sucursal.idFront }}</td>
-                  <td>{{ sucursal.claUbicacion }}</td>
-                  <td>{{ obtenerSoporte(sucursal) }}</td>
                   <td>
                       <div class="d-flex justify-content-start align-items-center gap-2" style="justify-content: center !important;">
                           <button class="btn-action-table btn-action-info" (click)="abrirModalEditarSucursal(sucursal)"

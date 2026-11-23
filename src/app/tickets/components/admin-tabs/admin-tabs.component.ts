@@ -32,7 +32,9 @@ export class AdminTabsComponent implements OnInit, OnDestroy {
     private areasService: AreasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario.sucursales[0];
+    this.sucursal = this.usuario?.idSucursal
+      ? ({ id: String(this.usuario.idSucursal), nombre: '' } as Sucursal)
+      : new Sucursal();
   }
 
   ngOnInit() {

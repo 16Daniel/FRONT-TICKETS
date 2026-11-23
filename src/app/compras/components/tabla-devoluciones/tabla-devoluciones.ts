@@ -108,7 +108,7 @@ export default class tablaDevolucionesComponent implements OnInit {
     this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
-        this.sucursal = this.usuario.sucursales[0].id; 
+        this.sucursal = this.usuario.idSucursal; 
         this.cdr.detectChanges();
       },
       error: (error) => {

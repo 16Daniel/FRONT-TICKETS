@@ -16,6 +16,7 @@ import { ChatNotificationsButtonComponent } from '../chat-notifications-button/c
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Responsable } from '../../../usuarios/models/responsable.model';
+import { BranchesService } from '../../../sucursales/services/branches.service';
 import { environment } from '../../../../environments/environments';
 
 @Component({
@@ -53,13 +54,17 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   public gruposMenuVisibles$: Observable<GrupoMenuPermiso[]> = this.accessControl.gruposMenuVisibles$;
   private routerSub?: Subscription;
   private pwaUpdateSub?: Subscription;
+  private sucursalSub?: Subscription;
+  private idSucursalCargada: string = '';
+  private nombreSucursalUsuario: string = '';
 
   constructor(
     public cdr: ChangeDetectorRef,
     private router: Router,
     public documentsService: DocumentsService,
     public accessControl: AccessControlService,
-    public pwaService: PwaService
+    public pwaService: PwaService,
+    private branchesService: BranchesService
   ) {
     this.cargarUsuarios();
   }
@@ -84,12 +89,22 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.responsableTarea = this.responsable;
 
     if (this.usuario) {
-      if (this.usuario.idRol == '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
-        this.tituloBanner = this.usuario.sucursales[0].nombre;
+      if (this.usuario.idRol == '2' && this.usuario.idSucursal) {
+        const idSucursal = String(this.usuario.idSucursal);
+        this.tituloBanner =
+          this.nombreSucursalUsuario ||
+          `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
+        this.cargarNombreSucursal(idSucursal);
       } else {
+        this.sucursalSub?.unsubscribe();
+        this.idSucursalCargada = '';
+        this.nombreSucursalUsuario = '';
         this.tituloBanner = `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
       }
     } else {
+      this.sucursalSub?.unsubscribe();
+      this.idSucursalCargada = '';
+      this.nombreSucursalUsuario = '';
       this.tituloBanner = '';
     }
 
@@ -97,10 +112,23 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  private cargarNombreSucursal(idSucursal: string): void {
+    if (this.idSucursalCargada === idSucursal) return;
+    this.idSucursalCargada = idSucursal;
+    this.sucursalSub?.unsubscribe();
+    this.sucursalSub = this.branchesService.getById(idSucursal).subscribe((sucursal) => {
+      if (sucursal?.nombre) {
+        this.nombreSucursalUsuario = sucursal.nombre;
+        this.tituloBanner = sucursal.nombre;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
   get nombreCuenta(): string {
     if (!this.usuario) return '';
-    if (this.usuario.idRol === '2' && this.usuario.sucursales && this.usuario.sucursales.length > 0) {
-      return this.usuario.sucursales[0].nombre;
+    if (this.usuario.idRol === '2' && this.nombreSucursalUsuario) {
+      return this.nombreSucursalUsuario;
     }
     return `${this.usuario.nombre || ''} ${this.usuario.apellidoP || ''}`.trim();
   }
@@ -146,6 +174,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     }
     this.routerSub?.unsubscribe();
     this.pwaUpdateSub?.unsubscribe();
+    this.sucursalSub?.unsubscribe();
   }
 
   togglePin(): void {

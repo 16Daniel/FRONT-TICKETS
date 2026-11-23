@@ -48,7 +48,6 @@ export default class CapturaInventarioDiarioPageComponent implements OnInit {
     public datepipe: DatePipe,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    //this.idSucursal = this.usuario.sucursales[0].idFront!;
     this.idSucursal = 2; // pruebas
     let nombreItem = "rwtkInventarioUbicaciones" + this.idSucursal;
     this.jdata = localStorage.getItem(nombreItem);

@@ -78,7 +78,9 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
     private kpiRadarService: KpiRadarService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario.sucursales[0];
+    this.sucursal = this.usuario?.idSucursal
+      ? ({ id: String(this.usuario.idSucursal), nombre: '' } as Sucursal)
+      : undefined;
   }
 
   ngOnInit() {
@@ -128,7 +130,7 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
     const fechaInicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
     const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
     const idArea = String(this.idArea);
-    const idSucursales = (this.usuario.sucursales || []).map((s: any) => String(s.id));
+    const idSucursales = this.usuario.idSucursal ? [String(this.usuario.idSucursal)] : [];
 
     const matriz$ = this.matrizUrgenciaService.obtenerMatrizPorArea(idArea).pipe(
       catchError((err) => {

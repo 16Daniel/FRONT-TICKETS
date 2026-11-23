@@ -10,6 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
@@ -45,7 +46,8 @@ export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
 
   constructor(
     private firebaseStorage: FirebaseStorageService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private usuariosService: UsuariosService
   ) {}
 
   ngOnInit(): void {
@@ -75,17 +77,11 @@ export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
   }
 
   obtenerResponsablesUC(idSucursal: string): string {
-    let idr = '';
-    for (let item of this.usuariosHelp) {
-      const existeSucursal = item.sucursales.some(
-        (sucursal) => sucursal.id == idSucursal
-      );
-      if (existeSucursal) {
-        idr = item.nombre + ' ' + item.apellidoP;
-      }
-    }
-
-    return idr;
+    const responsable = this.usuariosService.obtenerResponsableSucursal(
+      idSucursal,
+      this.idArea
+    );
+    return responsable ? `${responsable.nombre} ${responsable.apellidoP}`.trim() : '';
   }
 
   obtenerColorTexto(value: number): string {

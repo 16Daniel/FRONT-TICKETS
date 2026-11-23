@@ -59,7 +59,7 @@ export class EisenhowerMatrixPageComponent implements OnInit {
   ) {
     this.statustaskService.estatus$.subscribe(catEstatus => this.catEstatusTareas = catEstatus)
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+    this.idSucursalSeleccionada = this.usuario.idSucursal;
   }
 
   ngOnInit(): void {

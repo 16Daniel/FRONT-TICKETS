@@ -53,7 +53,7 @@ export default class MermasPageComponent implements OnInit {
         this.sucursales = this.sucursales.filter(x => x.idFront);
 
         if (this.usuario.idRol == "2" && this.usuario.id != this.idServicio) {
-          let suc = this.sucursales.filter(x => x.id == this.usuario.sucursales[0].id);
+          let suc = this.sucursales.filter(x => String(x.id) == String(this.usuario.idSucursal));
           if (suc.length > 0) { this.sucursalesSel.push(suc[0]); }
         }
         this.cdr.detectChanges();

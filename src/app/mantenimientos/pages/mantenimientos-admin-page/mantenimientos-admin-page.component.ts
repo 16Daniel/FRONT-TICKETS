@@ -20,6 +20,7 @@ import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface
 
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
@@ -76,6 +77,7 @@ export default class MantenimientosAdminPageComponent implements OnInit, OnDestr
     private messageService: MessageService,
     private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
+    private usuarioSucursalService: UsuarioSucursalService,
     private datesHelper: DatesHelperService,
     private maintenanceSysService: MantenimientosSistemasService,
     private maintenanceAvService: MaintenanceAvService,
@@ -88,6 +90,11 @@ export default class MantenimientosAdminPageComponent implements OnInit, OnDestr
     this.configurarTabsPorUsuario();
     this.obtenerSucursalesYMantenimientos();
     this.obtenerUsuariosHelp();
+    this.subs.push(
+      this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+        this.cdr.detectChanges();
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -236,10 +243,14 @@ export default class MantenimientosAdminPageComponent implements OnInit, OnDestr
 
   sucursalesMantenimeintosActivos(areaIdToCheck: string): Sucursal[] {
     if (this.usergroup !== undefined) {
-      const idsSucursalesUsuario = this.usergroup?.sucursales.map((s) => String(s.id));
+      const idsSucursalesUsuario = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+        'SOPORTE',
+        String(this.usergroup.id),
+        this.usergroup.idArea || areaIdToCheck
+      );
       return this.sucursales.filter(
         (sucursal) =>
-          idsSucursalesUsuario?.includes(String(sucursal.id)) &&
+          idsSucursalesUsuario.includes(String(sucursal.id)) &&
           Array.isArray(sucursal.activoMantenimientos) &&
           sucursal.activoMantenimientos.includes(areaIdToCheck)
       );

@@ -198,11 +198,10 @@ async elimarConteo(id:string)
             this.sucursalesrw.push({id:item.id!,nombre:item.nombre}); 
           }  
 
-            let suc = this.usuario.sucursales[0];
-            if(suc != undefined)
-              { 
-                let temp = this.sucursalesrw.filter(x=>x.id! == suc.id!); 
-                if(temp.length>0){ this.sucursalSel = temp[0];  }
+            const idSucursal = this.usuario.idSucursal;
+            if (idSucursal) {
+                let temp = this.sucursalesrw.filter(x => String(x.id) == String(idSucursal));
+                if (temp.length > 0) { this.sucursalSel = temp[0]; }
               }
 
         this.cdr.detectChanges();
