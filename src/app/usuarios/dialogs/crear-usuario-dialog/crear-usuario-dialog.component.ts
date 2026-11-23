@@ -6,21 +6,34 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
+import { TooltipModule } from 'primeng/tooltip';
+import Swal from 'sweetalert2';
 
 import { Usuario } from '../../models/usuario.model';
+import { Responsable } from '../../models/responsable.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { UsuariosService } from '../../services/usuarios.service';
+import { ResponsablesService } from '../../services/responsables.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Rol } from '../../../roles/interfaces/rol.model';
+import { CrearResponsableDialogComponent } from '../crear-responsable-dialog/crear-responsable-dialog.component';
 
 @Component({
   selector: 'app-crear-usuario-dialog',
   standalone: true,
-  imports: [DialogModule, FormsModule, MultiSelectModule, CommonModule, DropdownModule],
+  imports: [
+    DialogModule,
+    FormsModule,
+    MultiSelectModule,
+    CommonModule,
+    DropdownModule,
+    TooltipModule,
+    CrearResponsableDialogComponent
+  ],
   templateUrl: './crear-usuario-dialog.component.html',
   styleUrl: './crear-usuario-dialog.component.scss'
 })
@@ -35,6 +48,11 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   sucursalesChoferIds: string[] = [];
   roles: Rol[] = [];
   areas: Area[] = [];
+  responsablesUsuario: Responsable[] = [];
+  mostrarModalResponsable: boolean = false;
+  esNuevoResponsable: boolean = true;
+  responsableSeleccionado: Responsable = new Responsable();
+  regenerandoPinId: string | null = null;
 
   usuarioEnSesion: Usuario;
   private rolOriginal: string = '';
@@ -44,10 +62,12 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   private sucursalesSub?: Subscription;
   private rolesSub?: Subscription;
   private usuarioSucursalSub?: Subscription;
+  private responsablesSub?: Subscription;
 
   constructor(
     private messageService: MessageService,
     private UsuariosService: UsuariosService,
+    private responsablesService: ResponsablesService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
     private usuarioSucursalService: UsuarioSucursalService,
@@ -64,6 +84,9 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
 
     if (!this.choferCedis) {
       this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
+      if (!this.esNuevoUsuario && this.usuario.id) {
+        this.cargarResponsablesUsuario();
+      }
     } else if (this.usuario.id) {
       this.usuarioSucursalSub = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
         if (this.sucursalesChoferCargadas) return;
@@ -93,6 +116,102 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.sucursalesSub?.unsubscribe();
     this.rolesSub?.unsubscribe();
     this.usuarioSucursalSub?.unsubscribe();
+    this.responsablesSub?.unsubscribe();
+  }
+
+  private cargarResponsablesUsuario(): void {
+    this.responsablesService.initListener();
+    this.responsablesSub?.unsubscribe();
+    this.responsablesSub = this.responsablesService.responsables$.subscribe((responsables) => {
+      this.responsablesUsuario = responsables
+        .filter((r) => !r.eliminado && String(r.idUsuario) === String(this.usuario.id))
+        .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+      this.cdr.detectChanges();
+    });
+  }
+
+  abrirModalAgregarResponsable(): void {
+    if (!this.usuario.id || !this.usuario.idSucursal) return;
+    const nuevo = new Responsable();
+    nuevo.idUsuario = String(this.usuario.id);
+    nuevo.idSucursal = String(this.usuario.idSucursal);
+    this.responsableSeleccionado = nuevo;
+    this.esNuevoResponsable = true;
+    this.mostrarModalResponsable = true;
+    this.cdr.detectChanges();
+  }
+
+  abrirModalEditarResponsable(responsable: Responsable): void {
+    this.responsableSeleccionado = { ...responsable };
+    this.esNuevoResponsable = false;
+    this.mostrarModalResponsable = true;
+    this.cdr.detectChanges();
+  }
+
+  cerrarModalResponsable(): void {
+    this.mostrarModalResponsable = false;
+    this.responsableSeleccionado = new Responsable();
+    this.cdr.detectChanges();
+  }
+
+  obtenerInicialesResponsable(nombre: string): string {
+    const partes = (nombre || '').trim().split(/\s+/).filter(Boolean);
+    if (partes.length === 0) return '?';
+    if (partes.length === 1) return partes[0].charAt(0).toUpperCase();
+    return (partes[0].charAt(0) + partes[1].charAt(0)).toUpperCase();
+  }
+
+  async regenerarPinResponsable(responsable: Responsable): Promise<void> {
+    if (!responsable.id || this.regenerandoPinId) return;
+
+    const confirmacion = await Swal.fire({
+      title: '¿Regenerar PIN?',
+      text: `Se generará un nuevo PIN para "${responsable.nombre}" y se enviará a ${responsable.correo}. El PIN anterior dejará de funcionar.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, regenerar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d3152a',
+      cancelButtonColor: '#6c757d',
+      reverseButtons: true,
+      customClass: {
+        container: 'swal-topmost',
+      },
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    this.regenerandoPinId = responsable.id;
+    this.cdr.detectChanges();
+
+    try {
+      const nuevoPin = await this.responsablesService.generarPinUnico();
+      await this.responsablesService.update({ pin: nuevoPin }, responsable.id);
+      responsable.pin = nuevoPin;
+      this.showMessage('success', 'Actualizado', 'PIN regenerado');
+
+      const nombreSucursal =
+        this.sucursales.find(
+          (s: any) => String(s.id) === String(responsable.idSucursal || this.usuario.idSucursal)
+        )?.nombre || '';
+
+      this.responsablesService
+        .enviarCorreoPin(responsable, nombreSucursal, nuevoPin)
+        .subscribe({
+          next: () => {
+            this.showMessage('success', 'Success', 'Email enviado');
+          },
+          error: (err) => {
+            console.error('Error al enviar correo', err);
+          },
+        });
+    } catch (error) {
+      console.error('Error al regenerar PIN:', error);
+      this.showMessage('error', 'Error', 'No se pudo regenerar el PIN');
+    } finally {
+      this.regenerandoPinId = null;
+      this.cdr.detectChanges();
+    }
   }
 
   async enviar(form: NgForm) {

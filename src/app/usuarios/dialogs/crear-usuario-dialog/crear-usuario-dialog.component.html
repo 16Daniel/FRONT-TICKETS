@@ -213,6 +213,84 @@
                 </div>
             </div>
 
+            <!-- Sección de Responsables PIN -->
+            <div class="col-12" *ngIf="!choferCedis">
+                <div class="responsables-section-card">
+                    <div class="responsables-section-header">
+                        <div class="responsables-header-left">
+                            <label class="rw-form-label m-0">Responsables PIN</label>
+                            <span *ngIf="!esNuevoUsuario" class="responsables-count-pill">
+                                {{ responsablesUsuario.length }}
+                            </span>
+                        </div>
+                        <button
+                            *ngIf="!esNuevoUsuario && usuario.id"
+                            type="button"
+                            class="btn-add-responsable"
+                            [disabled]="!usuario.idSucursal"
+                            [pTooltip]="!usuario.idSucursal ? 'Selecciona primero una sucursal/departamento' : 'Agregar nuevo responsable PIN'"
+                            tooltipPosition="top"
+                            (click)="abrirModalAgregarResponsable()">
+                            <i class="bx bx-user-plus"></i>
+                            <span>Agregar responsable</span>
+                        </button>
+                    </div>
+
+                    <div *ngIf="esNuevoUsuario" class="responsables-hint-box">
+                        <i class="bx bx-info-circle"></i>
+                        <span>Guarda primero el usuario para poder ver y agregar sus responsables PIN desde aquí.</span>
+                    </div>
+
+                    <ng-container *ngIf="!esNuevoUsuario">
+                        <div *ngIf="responsablesUsuario.length > 0; else sinResponsablesTpl" class="responsables-list">
+                            <div *ngFor="let resp of responsablesUsuario" class="responsable-item-row">
+                                <div class="responsable-item-left">
+                                    <div class="responsable-avatar" [style.background-color]="resp.color || '#64748b'">
+                                        {{ obtenerInicialesResponsable(resp.nombre) }}
+                                    </div>
+                                    <div class="responsable-info">
+                                        <span class="responsable-nombre">{{ resp.nombre }}</span>
+                                        <span class="responsable-meta">
+                                            {{ resp.posicion || 'Sin puesto' }} · {{ resp.correo }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="responsable-item-actions">
+                                    <span class="responsable-pin-badge" pTooltip="PIN de acceso" tooltipPosition="top">
+                                        <i class="bx bx-key"></i>
+                                        <span>{{ resp.pin || '----' }}</span>
+                                    </span>
+                                    <button
+                                        type="button"
+                                        class="btn-edit-responsable"
+                                        [disabled]="regenerandoPinId === resp.id"
+                                        pTooltip="Regenerar PIN"
+                                        tooltipPosition="top"
+                                        (click)="regenerarPinResponsable(resp)">
+                                        <i class="bx bx-refresh" [class.bx-spin]="regenerandoPinId === resp.id"></i>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn-edit-responsable"
+                                        pTooltip="Editar responsable"
+                                        tooltipPosition="top"
+                                        (click)="abrirModalEditarResponsable(resp)">
+                                        <i class="bx bx-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-template #sinResponsablesTpl>
+                            <div class="responsables-empty-box">
+                                <i class="bx bx-key"></i>
+                                <span>Este usuario aún no tiene responsables PIN registrados.</span>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </div>
+            </div>
+
         </div>
 
         <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">
@@ -225,3 +303,12 @@
 
     </form>
 </p-dialog>
+
+<app-crear-responsable-dialog
+    *ngIf="mostrarModalResponsable"
+    [mostrarModal]="mostrarModalResponsable"
+    [responsable]="responsableSeleccionado"
+    [esNuevo]="esNuevoResponsable"
+    [bloquearUsuarioYSucursal]="true"
+    (closeEvent)="cerrarModalResponsable()">
+</app-crear-responsable-dialog>
