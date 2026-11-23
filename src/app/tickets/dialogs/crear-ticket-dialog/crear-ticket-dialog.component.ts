@@ -280,7 +280,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
           const sucEncontrada = data.find(s => String(s.id) === String(this.activoFijo!.idSucursal));
           this.ticket.idSucursal = sucEncontrada ? sucEncontrada.id : this.activoFijo.idSucursal;
         } else {
-          const idSucursalUsuario = this.UsuariosService.obtenerIdSucursalUsuario(this.usuarioActivo);
+          const idSucursalUsuario = this.usuarioActivo?.idSucursal ? String(this.usuarioActivo.idSucursal) : '';
           if (idSucursalUsuario) {
             const sucUsuario = data.find(s => String(s.id) === idSucursalUsuario);
             this.ticket.idSucursal = sucUsuario ? sucUsuario.id : idSucursalUsuario;

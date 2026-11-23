@@ -66,17 +66,6 @@ export class UsuariosService {
     return updateDoc(userRef, payload);
   }
 
-  obtenerIdSucursalUsuario(usuario: Usuario | null | undefined): string {
-    if (!usuario) return '';
-    if (usuario.idSucursal !== undefined && usuario.idSucursal !== null && String(usuario.idSucursal).trim() !== '') {
-      return String(usuario.idSucursal);
-    }
-    if (usuario.sucursales && usuario.sucursales.length > 0 && usuario.sucursales[0]?.id !== undefined) {
-      return String(usuario.sucursales[0].id);
-    }
-    return '';
-  }
-
   getByUId(idu: string): Usuario | null {
     return (
       this._usuarios.find((u) => u.uid === idu && !u.eliminado) ||
@@ -200,17 +189,6 @@ export class UsuariosService {
     }
 
     return responsables;
-  }
-
-  obtenerSucursalesSoporteAnalista(
-    idUsuario: string,
-    idArea?: string | number
-  ): string[] {
-    return this.usuarioSucursalService.obtenerSucursalesPorUsuario(
-      'SOPORTE',
-      idUsuario,
-      idArea
-    );
   }
 
   async registerAuthFirebaseUser(email: string, password: string): Promise<string | null> {

@@ -1,5 +1,3 @@
-import { Sucursal } from "../../sucursales/interfaces/sucursal.interface";
-
 export class Usuario {
   id?: string | any;
   nombre: string = '';
@@ -10,7 +8,6 @@ export class Usuario {
   password: string = '';
   uid: string = '';
   idSucursal: string = '';
-  sucursales: Sucursal[] = [];
   esGuardia: boolean = false;
   idArea: string | any;
   controlDeAceite?: boolean | null;

@@ -63,7 +63,7 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.usuario.idArea = this.usuario.idArea ? String(this.usuario.idArea) : '';
 
     if (!this.choferCedis) {
-      this.usuario.idSucursal = this.UsuariosService.obtenerIdSucursalUsuario(this.usuario);
+      this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
     } else if (this.usuario.id) {
       this.usuarioSucursalSub = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
         if (this.sucursalesChoferCargadas) return;
