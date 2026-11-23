@@ -100,7 +100,6 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.responsableTarea = JSON.parse(localStorage.getItem('responsable-tareas')!);
-    // this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
   }
 
   ngOnInit(): void {
