@@ -12,7 +12,7 @@ export const USUARIOS_ROOT_ROUTES: Routes = [
 
 export const USUARIOS_MAIN_ROUTES: Routes = [
   {
-    path: 'users',
+    path: 'usuarios',
     title: 'Usuarios',
     canActivate: [permissionGuard('usuarios.ver')],
     loadComponent: () =>

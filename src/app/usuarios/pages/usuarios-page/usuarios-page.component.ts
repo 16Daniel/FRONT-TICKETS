@@ -45,6 +45,9 @@ import { UsuarioSucursalService } from '../../../sucursales/services/usuario-suc
 export default class UsuariosPageComponent implements OnDestroy, OnInit {
   readonly String = String;
   mostrarModalUsuario: boolean = false;
+  mostrarModalSucursales: boolean = false;
+  usuarioSucursalesModal: Usuario | null = null;
+  sucursalesModalLista: { idSucursal: string; nombre: string; esPrincipal: boolean }[] = [];
   actualizar: boolean = false;
   usuarios: Usuario[] = [];
   usuariosFiltrados: Usuario[] = [];
@@ -102,12 +105,14 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
         mapa[String(s.id)] = s.nombre;
       }
       this.sucursalesMap = mapa;
+      this.actualizarSucursalesModal();
       this.cdr.detectChanges();
     });
   }
 
   private cargarSoporteSucursales(): void {
     this.subscripcionSoporte = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+      this.actualizarSucursalesModal();
       this.cdr.detectChanges();
     });
   }
@@ -205,6 +210,47 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
       })
       .sort((a, b) => a.localeCompare(b))
       .join(', ');
+  }
+
+  abrirModalSucursalesAsignadas(usuario: Usuario): void {
+    this.usuarioSucursalesModal = usuario;
+    this.actualizarSucursalesModal();
+    this.mostrarModalSucursales = true;
+    this.cdr.detectChanges();
+  }
+
+  cerrarModalSucursales(): void {
+    this.mostrarModalSucursales = false;
+    this.usuarioSucursalesModal = null;
+    this.sucursalesModalLista = [];
+  }
+
+  private actualizarSucursalesModal(): void {
+    if (!this.usuarioSucursalesModal?.id) {
+      this.sucursalesModalLista = [];
+      return;
+    }
+    const detalle = this.usuarioSucursalService.obtenerDetalleSucursalesPorUsuario(
+      'SOPORTE',
+      String(this.usuarioSucursalesModal.id),
+      this.usuarioSucursalesModal.idArea
+    );
+    this.sucursalesModalLista = detalle
+      .map((item) => ({
+        idSucursal: item.idSucursal,
+        nombre: this.sucursalesMap[item.idSucursal] || `Sucursal #${item.idSucursal}`,
+        esPrincipal: item.esPrincipal,
+      }))
+      .sort((a, b) => {
+        if (a.esPrincipal !== b.esPrincipal) return a.esPrincipal ? -1 : 1;
+        return a.nombre.localeCompare(b.nombre);
+      });
+  }
+
+  obtenerNombreArea(idArea: string | number | undefined): string {
+    if (!idArea) return 'Sin área';
+    const area = this.areas.find((a) => String(a.id) === String(idArea));
+    return area ? area.nombre : 'Sin área';
   }
 
   abrirModalCrearUsuario() {

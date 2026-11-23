@@ -65,7 +65,7 @@
                   <th>CORREO</th>
                   <th>ROL</th>
                   <th style="width: 130px; text-align: center;">ESTADO</th>
-                  <th style="width: 150px; text-align: center;">ACCIONES</th>
+                  <th style="width: 180px; text-align: center;">ACCIONES</th>
               </tr>
           </ng-template>
           <ng-template pTemplate="body" let-usuario>
@@ -81,6 +81,10 @@
                   </td>
                   <td>
                       <div class="d-flex justify-content-center align-items-center gap-2">
+                          <button *ngIf="String(usuario.idRol) === '4'" class="btn-action-table btn-action-branches" (click)="abrirModalSucursalesAsignadas(usuario)"
+                              pTooltip="VER SUCURSALES ASIGNADAS" tooltipPosition="top">
+                              <i class="bx bx-store-alt"></i>
+                          </button>
                           <button *ngIf="usuario.bloqueado" class="btn-action-table btn-action-warning" (click)="confirmaDesbloqueo(usuario)"
                               pTooltip="DESBLOQUEAR" tooltipPosition="top">
                               <i class="bx bx-lock-open-alt"></i>
@@ -137,3 +141,54 @@
 
 <app-crear-usuario-dialog *ngIf="mostrarModalUsuario" [mostrarModalCrearUsuario]="mostrarModalUsuario"
     (closeEvent)="cerrarModalUsuario()" [usuario]="usuarioSeleccionado" [esNuevoUsuario]="esNuevoUsuario"></app-crear-usuario-dialog>
+
+<p-dialog
+    header="SUCURSALES ASIGNADAS"
+    [(visible)]="mostrarModalSucursales"
+    [modal]="true"
+    [style]="{ width: '540px', maxWidth: '94vw' }"
+    styleClass="dialog-modern rw-dialog-mobile-fullscreen"
+    (onHide)="cerrarModalSucursales()">
+    <div *ngIf="usuarioSucursalesModal" class="assigned-branches-modal">
+        <div class="analyst-summary-card">
+            <div class="analyst-summary-left">
+                <div class="analyst-icon-wrap">
+                    <i class="bx bx-support"></i>
+                </div>
+                <div class="analyst-meta">
+                    <span class="analyst-name">
+                        {{ usuarioSucursalesModal.nombre }} {{ usuarioSucursalesModal.apellidoP }} {{ usuarioSucursalesModal.apellidoM }}
+                    </span>
+                    <span class="analyst-area">
+                        {{ obtenerNombreArea(usuarioSucursalesModal.idArea) }}
+                    </span>
+                </div>
+            </div>
+            <span class="branches-total-pill">
+                {{ sucursalesModalLista.length }} {{ sucursalesModalLista.length === 1 ? 'sucursal' : 'sucursales' }}
+            </span>
+        </div>
+
+        <div *ngIf="sucursalesModalLista.length > 0; else sinSucursalesAsignadasTpl" class="assigned-branches-list">
+            <div *ngFor="let suc of sucursalesModalLista" class="assigned-branch-row" [class.is-principal]="suc.esPrincipal">
+                <div class="assigned-branch-left">
+                    <div class="branch-row-icon">
+                        <i class="bx bx-store-alt"></i>
+                    </div>
+                    <span class="branch-row-name">{{ suc.nombre }}</span>
+                </div>
+                <span class="branch-role-pill" [ngClass]="suc.esPrincipal ? 'is-principal' : 'is-support'">
+                    <i class="bx" [ngClass]="suc.esPrincipal ? 'bxs-star' : 'bx-user-check'"></i>
+                    {{ suc.esPrincipal ? 'Principal' : 'Soporte' }}
+                </span>
+            </div>
+        </div>
+
+        <ng-template #sinSucursalesAsignadasTpl>
+            <div class="assigned-branches-empty">
+                <i class="bx bx-store"></i>
+                <p>Este analista aún no tiene sucursales de soporte asignadas.</p>
+            </div>
+        </ng-template>
+    </div>
+</p-dialog>
