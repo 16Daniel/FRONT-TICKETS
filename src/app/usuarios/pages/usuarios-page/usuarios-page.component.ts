@@ -21,7 +21,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { SoporteSucursalesService } from '../../../sucursales/services/soporte-sucursales.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 
 @Component({
   selector: 'app-usuarios-page',
@@ -75,7 +75,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     private rolesService: RolesService,
     private areasService: AreasService,
     private branchesService: BranchesService,
-    private soporteSucursalesService: SoporteSucursalesService
+    private usuarioSucursalService: UsuarioSucursalService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -107,7 +107,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   }
 
   private cargarSoporteSucursales(): void {
-    this.subscripcionSoporte = this.soporteSucursalesService.soporteSucursales$.subscribe(() => {
+    this.subscripcionSoporte = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
       this.cdr.detectChanges();
     });
   }
@@ -176,7 +176,8 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
 
   obtenerSucursalesSoporte(usuario: Usuario): string[] {
     if (String(usuario.idRol) !== '4' || !usuario.id) return [];
-    const ids = this.soporteSucursalesService.obtenerSucursalesPorAnalista(
+    const ids = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+      'SOPORTE',
       String(usuario.id),
       usuario.idArea
     );
@@ -189,7 +190,8 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     if (String(usuario.idRol) !== '4' || !usuario.id) {
       return 'Sin sucursales de soporte asignadas';
     }
-    const detalle = this.soporteSucursalesService.obtenerDetalleSucursalesPorAnalista(
+    const detalle = this.usuarioSucursalService.obtenerDetalleSucursalesPorUsuario(
+      'SOPORTE',
       String(usuario.id),
       usuario.idArea
     );
@@ -250,7 +252,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   async eliminarUsuario(idu: string) {
     try {
       await this.UsuariosService.updateUserDeletedStatus(idu, true);
-      await this.soporteSucursalesService.quitarSoporteDeUsuario(idu);
+      await this.usuarioSucursalService.quitarRelacionesDeUsuario(idu);
       this.showMessage('success', 'Success', 'Eliminado correctamente');
     } catch (error) {
       console.error('Error al eliminar usuario:', error);

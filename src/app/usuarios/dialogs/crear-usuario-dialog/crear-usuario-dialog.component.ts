@@ -11,7 +11,7 @@ import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { UsuariosService } from '../../services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { SoporteSucursalesService } from '../../../sucursales/services/soporte-sucursales.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
@@ -32,22 +32,25 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   @Input() esNuevoUsuario: boolean = true;
   @Input() choferCedis: boolean = false;
   sucursales: Sucursal[] | any[] = [];
+  sucursalesChoferIds: string[] = [];
   roles: Rol[] = [];
   areas: Area[] = [];
 
   usuarioEnSesion: Usuario;
   private rolOriginal: string = '';
   private areaOriginal: string = '';
+  private sucursalesChoferCargadas: boolean = false;
   private areasSub?: Subscription;
   private sucursalesSub?: Subscription;
   private rolesSub?: Subscription;
+  private usuarioSucursalSub?: Subscription;
 
   constructor(
     private messageService: MessageService,
     private UsuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
-    private soporteSucursalesService: SoporteSucursalesService,
+    private usuarioSucursalService: UsuarioSucursalService,
     private rolesService: RolesService,
     private areasService: AreasService,
   ) {
@@ -61,6 +64,17 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
 
     if (!this.choferCedis) {
       this.usuario.idSucursal = this.UsuariosService.obtenerIdSucursalUsuario(this.usuario);
+    } else if (this.usuario.id) {
+      this.usuarioSucursalSub = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+        if (this.sucursalesChoferCargadas) return;
+        this.sucursalesChoferIds = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+          'RECOLECCION_ACEITE',
+          String(this.usuario.id),
+          this.usuario.idArea
+        );
+        this.sucursalesChoferCargadas = true;
+        this.cdr.detectChanges();
+      });
     }
 
     this.rolOriginal = this.usuario.idRol;
@@ -78,6 +92,7 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.areasSub?.unsubscribe();
     this.sucursalesSub?.unsubscribe();
     this.rolesSub?.unsubscribe();
+    this.usuarioSucursalSub?.unsubscribe();
   }
 
   async enviar(form: NgForm) {
@@ -89,12 +104,7 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.choferCedis) {
-      this.usuario.sucursales = (this.usuario.sucursales || []).map((sucursal: any) => ({
-        id: String(sucursal.id),
-        nombre: sucursal.nombre,
-      })) as any;
-    } else {
+    if (!this.choferCedis) {
       this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
     }
 
@@ -130,7 +140,15 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.usuario.idSucursal = this.usuario.idSucursal ? this.usuario.idSucursal.toString() : '';
 
     try {
-      await this.UsuariosService.create({ ...this.usuario });
+      const nuevoId = await this.UsuariosService.create({ ...this.usuario });
+      if (this.choferCedis && nuevoId) {
+        await this.usuarioSucursalService.guardarSucursalesDeUsuario(
+          'RECOLECCION_ACEITE',
+          this.usuario.idArea,
+          nuevoId,
+          this.sucursalesChoferIds
+        );
+      }
     } catch (error) {
       console.error('Error al agregar usuario:', error);
     }
@@ -147,13 +165,25 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     try {
       await this.UsuariosService.update(this.usuario.id, { ...this.usuario });
 
+      if (this.choferCedis) {
+        await this.usuarioSucursalService.guardarSucursalesDeUsuario(
+          'RECOLECCION_ACEITE',
+          this.usuario.idArea,
+          String(this.usuario.id),
+          this.sucursalesChoferIds
+        );
+      }
+
       const dejoDeSerAnalistaDelArea =
         this.rolOriginal === '4' &&
         (String(this.usuario.idRol) !== '4' ||
           String(this.usuario.idArea) !== this.areaOriginal);
 
       if (dejoDeSerAnalistaDelArea) {
-        await this.soporteSucursalesService.quitarSoporteDeUsuario(this.usuario.id);
+        await this.usuarioSucursalService.quitarRelacionesDeUsuario(
+          this.usuario.id,
+          'SOPORTE'
+        );
       }
 
       this.cdr.detectChanges();

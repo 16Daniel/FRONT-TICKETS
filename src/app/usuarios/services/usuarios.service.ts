@@ -11,7 +11,7 @@ import {
 } from '@angular/fire/firestore';
 import { Usuario } from '../models/usuario.model';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { SoporteSucursalesService } from '../../sucursales/services/soporte-sucursales.service';
+import { UsuarioSucursalService } from '../../sucursales/services/usuario-sucursal.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +33,7 @@ export class UsuariosService {
   constructor(
     private firestore: Firestore,
     private auth: Auth,
-    private soporteSucursalesService: SoporteSucursalesService
+    private usuarioSucursalService: UsuarioSucursalService
   ) {
     this.initListener();
   }
@@ -129,7 +129,8 @@ export class UsuariosService {
     idSucursal: string | number,
     idArea: string | number
   ): Usuario | null {
-    const idResponsable = this.soporteSucursalesService.obtenerIdResponsable(
+    const idResponsable = this.usuarioSucursalService.obtenerIdResponsable(
+      'SOPORTE',
       idSucursal,
       idArea
     );
@@ -138,7 +139,8 @@ export class UsuariosService {
       if (principal) return principal;
     }
 
-    const idsSoporte = this.soporteSucursalesService.obtenerIdsUsuariosSoporte(
+    const idsSoporte = this.usuarioSucursalService.obtenerIdsUsuarios(
+      'SOPORTE',
       idSucursal,
       idArea
     );
@@ -175,7 +177,8 @@ export class UsuariosService {
 
     agregarSiNoExiste(this.obtenerResponsableSucursal(idSucursal, idArea));
 
-    const idsSoporte = this.soporteSucursalesService.obtenerIdsUsuariosSoporte(
+    const idsSoporte = this.usuarioSucursalService.obtenerIdsUsuarios(
+      'SOPORTE',
       idSucursal,
       idArea
     );
@@ -203,7 +206,8 @@ export class UsuariosService {
     idUsuario: string,
     idArea?: string | number
   ): string[] {
-    return this.soporteSucursalesService.obtenerSucursalesPorAnalista(
+    return this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+      'SOPORTE',
       idUsuario,
       idArea
     );

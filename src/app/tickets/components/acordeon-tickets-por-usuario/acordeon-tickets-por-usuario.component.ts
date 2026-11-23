@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { BadgeModule } from 'primeng/badge';
 import { CommonModule } from '@angular/common';
@@ -8,6 +9,7 @@ import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 
 @Component({
   selector: 'app-acordeon-tickets-por-usuario',
@@ -23,7 +25,7 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
   templateUrl: './acordeon-tickets-por-usuario.component.html',
   styleUrl: './acordeon-tickets-por-usuario.component.scss',
 })
-export class AcordeonTicketsPorUsuarioComponent implements OnInit {
+export class AcordeonTicketsPorUsuarioComponent implements OnInit, OnDestroy {
   @Input() tickets: Ticket[] = [];
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
@@ -31,13 +33,50 @@ export class AcordeonTicketsPorUsuarioComponent implements OnInit {
   
   usuario: Usuario | any;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
+  private usuarioSucursalSub?: Subscription;
 
-  constructor() { }
+  constructor(
+    private usuarioSucursalService: UsuarioSucursalService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   activeIndex: number = -1;
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
     this.sucursales.forEach(s => this.mostrarRadiografiaMap[s.id] = false);
+    this.usuarioSucursalSub = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.usuarioSucursalSub?.unsubscribe();
+  }
+
+  obtenerSucursalesDeUsuarioAgrupacion(): Sucursal[] {
+    if (!this.usuarioAgrupacion) return [];
+
+    if (String(this.usuarioAgrupacion.idRol) === '7') {
+      return this.sucursales;
+    }
+
+    if (String(this.usuarioAgrupacion.idRol) === '4') {
+      const areaId = this.idArea || this.usuarioAgrupacion.idArea;
+      const idsSoporte = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+        'SOPORTE',
+        String(this.usuarioAgrupacion.id),
+        areaId
+      );
+      return this.sucursales.filter(s => idsSoporte.includes(String(s.id)));
+    }
+
+    if (this.usuarioAgrupacion.idSucursal) {
+      return this.sucursales.filter(
+        s => String(s.id) === String(this.usuarioAgrupacion.idSucursal)
+      );
+    }
+
+    return [];
   }
 
   filtrarTicketsPorSucursal(idSucursal: number | any) {
@@ -91,11 +130,11 @@ export class AcordeonTicketsPorUsuarioComponent implements OnInit {
   }
 
   ordenarSucursalesUser(sucursales: Sucursal[]): Sucursal[] {
-    let sucursalesFiltradas = sucursales;
+    let sucursalesFiltradas = [...sucursales];
 
     if (this.usuarioAgrupacion?.idRol === '7') {
-      sucursalesFiltradas = sucursales.filter(sucursal =>
-        this.tickets.some(tk => tk.idSucursal === sucursal.id)
+      sucursalesFiltradas = sucursalesFiltradas.filter(sucursal =>
+        this.tickets.some(tk => String(tk.idSucursal) === String(sucursal.id))
       );
     }
 

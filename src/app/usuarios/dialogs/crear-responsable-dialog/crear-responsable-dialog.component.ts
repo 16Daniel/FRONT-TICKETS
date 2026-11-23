@@ -103,7 +103,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
 
     this.usuariosFiltrados = this.usuarios
       .filter(u =>
-        u.sucursales?.some(s => String(s.id) === String(this.responsable.idSucursal))
+        !u.eliminado && String(u.idSucursal) === String(this.responsable.idSucursal)
       )
       .map(u => ({
         ...u,

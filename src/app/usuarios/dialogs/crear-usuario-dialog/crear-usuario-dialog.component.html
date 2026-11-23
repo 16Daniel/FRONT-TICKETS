@@ -9,12 +9,12 @@
                 <input class="form-control rw-input" type="text" placeholder="Escribe el nombre"
                     [(ngModel)]="usuario.nombre" name="nombre"
                     [ngClass]="{'p-invalid': formNombreCtrl.invalid && formNombreCtrl.touched}" #formNombreCtrl="ngModel"
-                    required [disabled]="choferCedis" minlength="3" maxlength="50">
+                    required [disabled]="choferCedis" minlength="2" maxlength="50">
                 <small *ngIf="formNombreCtrl.errors?.['required'] && formNombreCtrl.touched" class="p-error d-block mt-1">
                     Campo requerido.
                 </small>
                 <small *ngIf="formNombreCtrl.errors?.['minlength'] && formNombreCtrl.touched" class="p-error d-block mt-1">
-                    Mínimo 3 caracteres.
+                    Mínimo 2 caracteres.
                 </small>
             </div>
             
@@ -28,7 +28,7 @@
                     Campo requerido.
                 </small>
                 <small *ngIf="formApellidoPCtrl.errors?.['minlength'] && formApellidoPCtrl.touched" class="p-error d-block mt-1">
-                    Mínimo 5 caracteres.
+                    Mínimo 3 caracteres.
                 </small>
             </div>
 
@@ -42,7 +42,7 @@
                     Campo requerido.
                 </small>
                 <small *ngIf="formapellidoMCtrl.errors?.['minlength'] && formapellidoMCtrl.touched" class="p-error d-block mt-1">
-                    Mínimo 5 caracteres.
+                    Mínimo 3 caracteres.
                 </small>
             </div>
 
@@ -170,8 +170,8 @@
 
             <div class="col-12" *ngIf="choferCedis">
                 <label class="rw-form-label">Sucursales Asignadas</label>
-                <p-multiSelect [style]="{'width':'100%'}" [options]="sucursales" name="sucursales" styleClass="rw-dropdown"
-                    [(ngModel)]="usuario.sucursales" optionLabel="nombre" dataKey="id" #formsucursalesCtrl="ngModel" appendTo="body"
+                <p-multiSelect [style]="{'width':'100%'}" [options]="sucursales" name="sucursalesChofer" styleClass="rw-dropdown"
+                    [(ngModel)]="sucursalesChoferIds" optionLabel="nombre" optionValue="id" #formsucursalesCtrl="ngModel" appendTo="body"
                     placeholder="Selecciona las sucursales"
                     [ngClass]="{'p-invalid': formsucursalesCtrl.invalid && formsucursalesCtrl.touched}" required />
                 <small *ngIf="formsucursalesCtrl.invalid && formsucursalesCtrl.touched" class="p-error d-block mt-1">
@@ -180,12 +180,35 @@
             </div>
 
             <div class="col-12" *ngIf="choferCedis == false">
-                <div class="d-flex align-items-center p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                    <div class="form-check form-switch m-0 d-flex align-items-center gap-3">
-                        <input class="form-check-input m-0" type="checkbox" role="switch" id="controldeaceite"
-                            style="width: 3.5rem; height: 2rem; cursor: pointer;" name="controldeaceite"
-                            [(ngModel)]="usuario.controlDeAceite">
-                        <label class="form-check-label rw-form-label m-0" for="controldeaceite" style="cursor: pointer; margin-bottom: 0 !important;">¿CONTROL DE ACEITE?</label>
+                <div class="tarjeta-switch-aceite" [class.is-active]="usuario.controlDeAceite">
+                    <div class="switch-info-group">
+                        <div class="switch-icon-circle">
+                            <i class="bx bx-droplet"></i>
+                        </div>
+                        <div class="switch-text-content">
+                            <label class="switch-title" for="controldeaceite">
+                                ¿Control de aceite?
+                            </label>
+                            <span class="switch-helper">
+                                Habilita el acceso y seguimiento del módulo de control de aceite para este usuario.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="status-pill" [ngClass]="usuario.controlDeAceite ? 'status-active' : 'status-inactive'">
+                            <span class="status-dot"></span>
+                            {{ usuario.controlDeAceite ? 'ACTIVO' : 'INACTIVO' }}
+                        </span>
+                        <div class="form-check form-switch m-0 d-flex align-items-center">
+                            <input
+                                class="form-check-input switch-rw m-0"
+                                type="checkbox"
+                                role="switch"
+                                id="controldeaceite"
+                                name="controldeaceite"
+                                [(ngModel)]="usuario.controlDeAceite">
+                        </div>
                     </div>
                 </div>
             </div>

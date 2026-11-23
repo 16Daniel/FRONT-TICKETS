@@ -17,7 +17,7 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { SoporteSucursalesService } from '../../../sucursales/services/soporte-sucursales.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ComprasService } from '../../../compras/services/compras.service';
@@ -83,7 +83,7 @@ export class TicketsTabComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
-    private soporteSucursalesService: SoporteSucursalesService,
+    private usuarioSucursalService: UsuarioSucursalService,
     private notificationService: NotificationService,
     private purchaseService: ComprasService,
   ) {
@@ -199,14 +199,15 @@ export class TicketsTabComponent implements OnInit, OnDestroy {
     this.subscriptionSucursales?.unsubscribe();
     this.subscriptionSucursales = combineLatest([
       this.branchesService.get(),
-      this.soporteSucursalesService.soporteSucursales$,
+      this.usuarioSucursalService.usuarioSucursal$,
     ]).subscribe(([result]) => {
       this.todasSucursales = result;
 
       if (this.usuario.esGuardia) {
         this.sucursales = result;
       } else {
-        const idsSoporte = this.soporteSucursalesService.obtenerSucursalesPorAnalista(
+        const idsSoporte = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+          'SOPORTE',
           String(this.usuario.id),
           this.usuario.idArea
         );

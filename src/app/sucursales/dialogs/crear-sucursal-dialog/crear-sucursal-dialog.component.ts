@@ -13,7 +13,7 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
-import { SoporteSucursalesService } from '../../../sucursales/services/soporte-sucursales.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { Sucursal } from '../../interfaces/sucursal.interface';
 import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
 
@@ -59,7 +59,7 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
     private branchesService: BranchesService,
     private areasService: AreasService,
     private usuariosService: UsuariosService,
-    private soporteSucursalesService: SoporteSucursalesService
+    private usuarioSucursalService: UsuarioSucursalService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }
 
   async ngOnInit() {
@@ -125,7 +125,7 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
   }
 
   private cargarSoporteExistente(): void {
-    this.soporteSub = this.soporteSucursalesService.soporteSucursales$.subscribe(() => {
+    this.soporteSub = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
       this.sincronizarBorradoresNoModificados();
       this.cdr.detectChanges();
     });
@@ -165,10 +165,11 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
       }
 
       const idsValidos = new Set((this.analistasPorArea[areaId] || []).map((a) => a.id));
-      const idsGuardados = this.soporteSucursalesService
-        .obtenerIdsUsuariosSoporte(this.idSucursalEditar, areaId)
+      const idsGuardados = this.usuarioSucursalService
+        .obtenerIdsUsuarios('SOPORTE', this.idSucursalEditar, areaId)
         .filter((id) => idsValidos.has(id));
-      const principalGuardado = this.soporteSucursalesService.obtenerIdResponsable(
+      const principalGuardado = this.usuarioSucursalService.obtenerIdResponsable(
+        'SOPORTE',
         this.idSucursalEditar,
         areaId
       );
@@ -254,7 +255,8 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
       const borrador = this.soporteBorradorPorArea[areaId];
       if (!borrador) continue;
       tareas.push(
-        this.soporteSucursalesService.guardarSoporte(
+        this.usuarioSucursalService.guardarPorSucursal(
+          'SOPORTE',
           areaId,
           idSucursal,
           borrador.idsUsuarios,
