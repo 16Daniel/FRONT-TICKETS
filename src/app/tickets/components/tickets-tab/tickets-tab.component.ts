@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -6,7 +6,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { PriorityTicketsAccordionAnalystComponent } from '../priority-tickets-accordion-analyst/priority-tickets-accordion-analyst.component';
@@ -17,6 +17,7 @@ import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SoporteSucursalesService } from '../../../sucursales/services/soporte-sucursales.service';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { ComprasService } from '../../../compras/services/compras.service';
@@ -48,7 +49,7 @@ import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-
   templateUrl: './tickets-tab.component.html',
   styleUrl: './tickets-tab.component.scss'
 })
-export class TicketsTabComponent implements OnInit {
+export class TicketsTabComponent implements OnInit, OnDestroy {
   @Input() totalesSla?: TotalesSlaDashboard;
   @Input() loadingSla: boolean = false;
   @Input() mesNombre: string = '';
@@ -65,6 +66,8 @@ export class TicketsTabComponent implements OnInit {
   todosLosTickets: Ticket[] = [];
   areas: Area[] = [];
   subscriptiontk: Subscription | undefined;
+  private subscriptionSucursales?: Subscription;
+  private subscriptionCompras?: Subscription;
   usuario: Usuario;
   selectedtk: Ticket | undefined;
   loading: boolean = false;
@@ -80,11 +83,14 @@ export class TicketsTabComponent implements OnInit {
     private messageService: MessageService,
     private UsuariosService: UsuariosService,
     private branchesService: BranchesService,
+    private soporteSucursalesService: SoporteSucursalesService,
     private notificationService: NotificationService,
     private purchaseService: ComprasService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario.sucursales[0];
+    this.sucursal = this.usuario?.idSucursal
+      ? ({ id: String(this.usuario.idSucursal), nombre: '' } as Sucursal)
+      : undefined;
   }
 
 
@@ -96,14 +102,16 @@ export class TicketsTabComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.subscriptiontk != undefined) {
-      this.subscriptiontk.unsubscribe();
-    }
+    this.subscriptiontk?.unsubscribe();
+    this.subscriptionSucursales?.unsubscribe();
+    this.subscriptionCompras?.unsubscribe();
   }
 
   obtenerCompras() {
-    this.purchaseService.getByUser(this.usuario.id).subscribe(result => {
+    this.subscriptionCompras?.unsubscribe();
+    this.subscriptionCompras = this.purchaseService.getByUser(this.usuario.id).subscribe(result => {
       this.compras = result;
+      this.cdr.detectChanges();
     });
   }
 
@@ -188,18 +196,27 @@ export class TicketsTabComponent implements OnInit {
   }
 
   obtenerSucursales() {
-    this.branchesService.get().subscribe(result => {
+    this.subscriptionSucursales?.unsubscribe();
+    this.subscriptionSucursales = combineLatest([
+      this.branchesService.get(),
+      this.soporteSucursalesService.soporteSucursales$,
+    ]).subscribe(([result]) => {
       this.todasSucursales = result;
 
       if (this.usuario.esGuardia) {
         this.sucursales = result;
       } else {
-        const idsUsuario = this.usuario.sucursales.map(s => s.id);
+        const idsSoporte = this.soporteSucursalesService.obtenerSucursalesPorAnalista(
+          String(this.usuario.id),
+          this.usuario.idArea
+        );
 
         this.sucursales = result.filter(sucursal =>
-          idsUsuario.includes(sucursal.id)
+          idsSoporte.includes(String(sucursal.id))
         );
       }
+
+      this.cdr.detectChanges();
     });
   }
 }

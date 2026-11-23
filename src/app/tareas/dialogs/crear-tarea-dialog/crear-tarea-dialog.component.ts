@@ -82,7 +82,7 @@ export class CrearTareaDialogComponent implements OnInit {
     private responsablesService: ResponsablesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.tarea.idSucursal = this.usuario.sucursales[0].id;
+    this.tarea.idSucursal = this.usuario.idSucursal;
   }
 
   ngOnInit(): void {

@@ -200,7 +200,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
           id: item.id.toString()
         }));
 
-        this.activoFijo.idSucursal = this.esNuevoActivoFijo ? parseInt(this.usuario.sucursales[0].id).toString()
+        this.activoFijo.idSucursal = this.esNuevoActivoFijo ? (this.usuario.idSucursal ? String(this.usuario.idSucursal) : '')
           : this.activoFijo.idSucursal;
         this.cdr.detectChanges();
       },

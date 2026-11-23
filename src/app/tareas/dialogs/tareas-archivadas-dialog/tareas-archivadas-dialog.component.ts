@@ -52,7 +52,7 @@ export class TareasArchivadasDialogComponent implements OnInit {
 
   constructor() {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.idSucursalSeleccionada = this.usuario.sucursales[0].id;
+    this.idSucursalSeleccionada = this.usuario.idSucursal;
   }
 
   ngOnInit(): void {

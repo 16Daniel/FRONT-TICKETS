@@ -55,8 +55,8 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
     
     // Solo asignamos si es nuevo (aunque desde el padre ya se puede enviar seteado)
     if (this.esNuevo) {
-      if (this.usuario.sucursales?.length > 0 && (!this.responsable.idSucursal || this.responsable.idSucursal === 'todos')) {
-        this.responsable.idSucursal = this.usuario.sucursales[0].id;
+      if (this.usuario.idSucursal && (!this.responsable.idSucursal || this.responsable.idSucursal === 'todos')) {
+        this.responsable.idSucursal = this.usuario.idSucursal;
       }
       this.responsable.esGlobal = false;
       this.responsable.color = this.colorRandomService.generarColor();

@@ -20,6 +20,8 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
+import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SoporteSucursalesService } from '../../../sucursales/services/soporte-sucursales.service';
 
 @Component({
   selector: 'app-usuarios-page',
@@ -52,9 +54,13 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   esNuevoUsuario: boolean = false;
   subscripcionUsuarios: Subscription | undefined;
   private subscripcionAreas?: Subscription;
+  private subscripcionSucursales?: Subscription;
+  private subscripcionSoporte?: Subscription;
+  private subscripcionRoles?: Subscription;
   private unsubscribe!: () => void;
 
   areas: Area[] = [];
+  sucursalesMap: Record<string, string> = {};
   areaSeleccionadaId: string = 'sin-area';
   confirmDialogTipo: 'eliminar' | 'desbloquear' = 'eliminar';
 
@@ -67,7 +73,9 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     private confirmationService: ConfirmationService,
     private UsuariosService: UsuariosService,
     private rolesService: RolesService,
-    private areasService: AreasService
+    private areasService: AreasService,
+    private branchesService: BranchesService,
+    private soporteSucursalesService: SoporteSucursalesService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -82,7 +90,26 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
       this.aplicarFiltroArea();
     });
     this.cargarAreas();
+    this.cargarSucursales();
+    this.cargarSoporteSucursales();
     this.obtenerRoles();
+  }
+
+  private cargarSucursales(): void {
+    this.subscripcionSucursales = this.branchesService.get().subscribe((sucursales) => {
+      const mapa: Record<string, string> = {};
+      for (const s of sucursales) {
+        mapa[String(s.id)] = s.nombre;
+      }
+      this.sucursalesMap = mapa;
+      this.cdr.detectChanges();
+    });
+  }
+
+  private cargarSoporteSucursales(): void {
+    this.subscripcionSoporte = this.soporteSucursalesService.soporteSucursales$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
   }
 
   private cargarAreas(): void {
@@ -133,9 +160,49 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     if (this.subscripcionAreas) {
       this.subscripcionAreas.unsubscribe();
     }
+    if (this.subscripcionSucursales) {
+      this.subscripcionSucursales.unsubscribe();
+    }
+    if (this.subscripcionSoporte) {
+      this.subscripcionSoporte.unsubscribe();
+    }
+    if (this.subscripcionRoles) {
+      this.subscripcionRoles.unsubscribe();
+    }
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+  }
+
+  obtenerSucursalesSoporte(usuario: Usuario): string[] {
+    if (String(usuario.idRol) !== '4' || !usuario.id) return [];
+    const ids = this.soporteSucursalesService.obtenerSucursalesPorAnalista(
+      String(usuario.id),
+      usuario.idArea
+    );
+    return ids
+      .map((id) => this.sucursalesMap[id] || `Sucursal #${id}`)
+      .sort((a, b) => a.localeCompare(b));
+  }
+
+  obtenerTooltipSoporte(usuario: Usuario): string {
+    if (String(usuario.idRol) !== '4' || !usuario.id) {
+      return 'Sin sucursales de soporte asignadas';
+    }
+    const detalle = this.soporteSucursalesService.obtenerDetalleSucursalesPorAnalista(
+      String(usuario.id),
+      usuario.idArea
+    );
+    if (detalle.length === 0) {
+      return 'Sin sucursales de soporte asignadas';
+    }
+    return detalle
+      .map((item) => {
+        const nombre = this.sucursalesMap[item.idSucursal] || `Sucursal #${item.idSucursal}`;
+        return item.esPrincipal ? `${nombre} (Principal)` : nombre;
+      })
+      .sort((a, b) => a.localeCompare(b))
+      .join(', ');
   }
 
   abrirModalCrearUsuario() {
@@ -183,6 +250,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   async eliminarUsuario(idu: string) {
     try {
       await this.UsuariosService.updateUserDeletedStatus(idu, true);
+      await this.soporteSucursalesService.quitarSoporteDeUsuario(idu);
       this.showMessage('success', 'Success', 'Eliminado correctamente');
     } catch (error) {
       console.error('Error al eliminar usuario:', error);
@@ -220,7 +288,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   }
 
   obtenerRoles() {
-    this.rolesService.get().subscribe({
+    this.subscripcionRoles = this.rolesService.get().subscribe({
       next: (data) => {
         this.roles = data;
         this.cdr.detectChanges();

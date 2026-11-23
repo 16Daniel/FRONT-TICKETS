@@ -9,6 +9,7 @@ export class Usuario {
   email: string = '';
   password: string = '';
   uid: string = '';
+  idSucursal: string = '';
   sucursales: Sucursal[] = [];
   esGuardia: boolean = false;
   idArea: string | any;

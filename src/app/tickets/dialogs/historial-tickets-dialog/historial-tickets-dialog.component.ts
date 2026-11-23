@@ -107,7 +107,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
     this.areas = this.areasService.areas;
     this.branchesService.get().subscribe(sucursales => {
       this.sucursales = sucursales;
-      this.idsucursales = [this.usuario.sucursales[0].id];
+      this.idsucursales = this.usuario.idSucursal ? [String(this.usuario.idSucursal)] : [];
     });
     this.obtenerUsuariosHelp();
     this.obtenerCatalogoEstatusTickets();

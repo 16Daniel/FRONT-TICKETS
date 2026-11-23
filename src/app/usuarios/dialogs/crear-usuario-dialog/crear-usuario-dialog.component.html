@@ -130,10 +130,48 @@
                 </small>
             </div>
 
-            <div class="col-12">
+            <div class="col-12 col-md-6" *ngIf="!choferCedis">
+                <label class="rw-form-label">Sucursal / Departamento</label>
+                <p-dropdown
+                    [options]="sucursales"
+                    [(ngModel)]="usuario.idSucursal"
+                    name="idSucursal"
+                    optionValue="id"
+                    optionLabel="nombre"
+                    [filter]="true"
+                    filterBy="nombre"
+                    [showClear]="true"
+                    placeholder="Selecciona la sucursal o departamento"
+                    [style]="{ width: '100%' }"
+                    #formSucursalCtrl="ngModel"
+                    styleClass="rw-dropdown"
+                    appendTo="body"
+                    [ngClass]="{'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched}"
+                    required>
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="d-flex align-items-center gap-2">
+                            <div>{{ selectedOption.nombre }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-suc pTemplate="item">
+                        <div class="d-flex align-items-center gap-2">
+                            <div>{{ suc.nombre }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                <small *ngIf="formSucursalCtrl.invalid && formSucursalCtrl.touched" class="p-error d-block mt-1">
+                    Campo requerido.
+                </small>
+                <div *ngIf="usuario.idRol == '4'" class="soporte-info-hint mt-2">
+                    <i class="bx bx-info-circle"></i>
+                    <span>Las sucursales a las que este analista brinda soporte se asignan desde el módulo de <strong>Sucursales</strong>.</span>
+                </div>
+            </div>
+
+            <div class="col-12" *ngIf="choferCedis">
                 <label class="rw-form-label">Sucursales Asignadas</label>
                 <p-multiSelect [style]="{'width':'100%'}" [options]="sucursales" name="sucursales" styleClass="rw-dropdown"
-                    [(ngModel)]="usuario.sucursales" optionLabel="nombre" #formsucursalesCtrl="ngModel" appendTo="body"
+                    [(ngModel)]="usuario.sucursales" optionLabel="nombre" dataKey="id" #formsucursalesCtrl="ngModel" appendTo="body"
                     placeholder="Selecciona las sucursales"
                     [ngClass]="{'p-invalid': formsucursalesCtrl.invalid && formsucursalesCtrl.touched}" required />
                 <small *ngIf="formsucursalesCtrl.invalid && formsucursalesCtrl.touched" class="p-error d-block mt-1">

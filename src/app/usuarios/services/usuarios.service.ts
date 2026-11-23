@@ -11,6 +11,7 @@ import {
 } from '@angular/fire/firestore';
 import { Usuario } from '../models/usuario.model';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import { SoporteSucursalesService } from '../../sucursales/services/soporte-sucursales.service';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,11 @@ export class UsuariosService {
     return this._usuarios;
   }
 
-  constructor(private firestore: Firestore, private auth: Auth) {
+  constructor(
+    private firestore: Firestore,
+    private auth: Auth,
+    private soporteSucursalesService: SoporteSucursalesService
+  ) {
     this.initListener();
   }
 
@@ -55,6 +60,23 @@ export class UsuariosService {
     return docRef.id;
   }
 
+  async update(userId: string, data: Partial<Usuario>): Promise<void> {
+    const { id, ...payload } = data as any;
+    const userRef = doc(this.firestore, `${this.pathName}/${userId}`);
+    return updateDoc(userRef, payload);
+  }
+
+  obtenerIdSucursalUsuario(usuario: Usuario | null | undefined): string {
+    if (!usuario) return '';
+    if (usuario.idSucursal !== undefined && usuario.idSucursal !== null && String(usuario.idSucursal).trim() !== '') {
+      return String(usuario.idSucursal);
+    }
+    if (usuario.sucursales && usuario.sucursales.length > 0 && usuario.sucursales[0]?.id !== undefined) {
+      return String(usuario.sucursales[0].id);
+    }
+    return '';
+  }
+
   getByUId(idu: string): Usuario | null {
     return (
       this._usuarios.find((u) => u.uid === idu && !u.eliminado) ||
@@ -75,6 +97,59 @@ export class UsuariosService {
     );
   }
 
+  obtenerAnalistasPorArea(idArea: string | number): Usuario[] {
+    if (idArea === null || idArea === undefined || idArea === '') {
+      return [];
+    }
+
+    return this._usuarios.filter(
+      (u) =>
+        !u.eliminado &&
+        String(u.idRol) === '4' &&
+        String(u.idArea) === String(idArea)
+    );
+  }
+
+  private buscarAnalistaActivoPorId(
+    idUsuario: string,
+    idArea: string | number
+  ): Usuario | null {
+    return (
+      this._usuarios.find(
+        (u) =>
+          String(u.id) === String(idUsuario) &&
+          !u.eliminado &&
+          String(u.idRol) === '4' &&
+          String(u.idArea) === String(idArea)
+      ) || null
+    );
+  }
+
+  obtenerResponsableSucursal(
+    idSucursal: string | number,
+    idArea: string | number
+  ): Usuario | null {
+    const idResponsable = this.soporteSucursalesService.obtenerIdResponsable(
+      idSucursal,
+      idArea
+    );
+    if (idResponsable) {
+      const principal = this.buscarAnalistaActivoPorId(idResponsable, idArea);
+      if (principal) return principal;
+    }
+
+    const idsSoporte = this.soporteSucursalesService.obtenerIdsUsuariosSoporte(
+      idSucursal,
+      idArea
+    );
+    for (const idUsuario of idsSoporte) {
+      const analista = this.buscarAnalistaActivoPorId(idUsuario, idArea);
+      if (analista) return analista;
+    }
+
+    return null;
+  }
+
   obtenerResponsablesSucursal(
     idSucursal: string | number,
     idArea: string | number,
@@ -91,23 +166,47 @@ export class UsuariosService {
       return [];
     }
 
-    return this._usuarios.filter((u) => {
-      if (u.eliminado) return false;
-      const esRol4 = String(u.idRol) === '4';
-      const esMismaArea = String(u.idArea) === String(idArea);
-      const tieneSucursal = Boolean(
-        u.sucursales?.some((s) => String(s.id) === String(idSucursal))
+    const responsables: Usuario[] = [];
+    const agregarSiNoExiste = (usuario: Usuario | null) => {
+      if (usuario && !responsables.some((r) => String(r.id) === String(usuario.id))) {
+        responsables.push(usuario);
+      }
+    };
+
+    agregarSiNoExiste(this.obtenerResponsableSucursal(idSucursal, idArea));
+
+    const idsSoporte = this.soporteSucursalesService.obtenerIdsUsuariosSoporte(
+      idSucursal,
+      idArea
+    );
+    for (const idUsuario of idsSoporte) {
+      agregarSiNoExiste(this.buscarAnalistaActivoPorId(idUsuario, idArea));
+    }
+
+    if (incluirGuardias) {
+      const guardias = this._usuarios.filter(
+        (u) =>
+          !u.eliminado &&
+          String(u.idRol) === '4' &&
+          String(u.idArea) === String(idArea) &&
+          u.esGuardia === true
       );
-      const esGuardia = incluirGuardias && u.esGuardia === true;
-      return esRol4 && esMismaArea && (tieneSucursal || esGuardia);
-    });
+      for (const guardia of guardias) {
+        agregarSiNoExiste(guardia);
+      }
+    }
+
+    return responsables;
   }
 
-  obtenerResponsableSucursal(
-    idSucursal: string | number,
-    idArea: string | number
-  ): Usuario | null {
-    return this.obtenerResponsablesSucursal(idSucursal, idArea, false)[0] || null;
+  obtenerSucursalesSoporteAnalista(
+    idUsuario: string,
+    idArea?: string | number
+  ): string[] {
+    return this.soporteSucursalesService.obtenerSucursalesPorAnalista(
+      idUsuario,
+      idArea
+    );
   }
 
   async registerAuthFirebaseUser(email: string, password: string): Promise<string | null> {

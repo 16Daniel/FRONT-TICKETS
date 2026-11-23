@@ -189,3 +189,30 @@ $rw-canvas: #f4f6fa;
     border: 1px solid #fecaca;
   }
 }
+
+.user-branch-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.user-support-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  cursor: default;
+
+  &.is-empty {
+    background-color: #f8fafc;
+    color: #64748b;
+    border-color: #e2e8f0;
+  }
+}

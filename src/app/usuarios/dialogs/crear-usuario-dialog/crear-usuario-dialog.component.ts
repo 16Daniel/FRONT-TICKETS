@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -10,9 +11,9 @@ import { Usuario } from '../../models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { UsuariosService } from '../../services/usuarios.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SoporteSucursalesService } from '../../../sucursales/services/soporte-sucursales.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { DocumentsService } from '../../../shared/services/documents.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Rol } from '../../../roles/interfaces/rol.model';
 
@@ -24,39 +25,59 @@ import { Rol } from '../../../roles/interfaces/rol.model';
   styleUrl: './crear-usuario-dialog.component.scss'
 })
 
-export class CrearUsuarioDialogComponent implements OnInit {
+export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   @Input() mostrarModalCrearUsuario: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() usuario: Usuario = new Usuario;
   @Input() esNuevoUsuario: boolean = true;
-  @Input() choferCedis: boolean = false
+  @Input() choferCedis: boolean = false;
   sucursales: Sucursal[] | any[] = [];
   roles: Rol[] = [];
   areas: Area[] = [];
 
   usuarioEnSesion: Usuario;
+  private rolOriginal: string = '';
+  private areaOriginal: string = '';
+  private areasSub?: Subscription;
+  private sucursalesSub?: Subscription;
+  private rolesSub?: Subscription;
 
   constructor(
     private messageService: MessageService,
     private UsuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
+    private soporteSucursalesService: SoporteSucursalesService,
     private rolesService: RolesService,
     private areasService: AreasService,
-    private documentsService: DocumentsService,
   ) {
     this.usuario = this.usuario.idRol ? this.usuario : new Usuario;
     this.usuarioEnSesion = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-
   }
 
   ngOnInit(): void {
-    this.areas = this.areasService.areas;
+    this.usuario.idRol = this.usuario.idRol ? String(this.usuario.idRol) : '';
+    this.usuario.idArea = this.usuario.idArea ? String(this.usuario.idArea) : '';
+
+    if (!this.choferCedis) {
+      this.usuario.idSucursal = this.UsuariosService.obtenerIdSucursalUsuario(this.usuario);
+    }
+
+    this.rolOriginal = this.usuario.idRol;
+    this.areaOriginal = this.usuario.idArea;
+
+    this.obtenerAreas();
     this.obtenerSucursales();
     this.obtenerRoles();
     if (this.usuarioEnSesion.idRol == '5')
-      this.usuario.idArea = this.usuarioEnSesion.idArea;
+      this.usuario.idArea = String(this.usuarioEnSesion.idArea || '');
     this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.areasSub?.unsubscribe();
+    this.sucursalesSub?.unsubscribe();
+    this.rolesSub?.unsubscribe();
   }
 
   async enviar(form: NgForm) {
@@ -68,9 +89,14 @@ export class CrearUsuarioDialogComponent implements OnInit {
       return;
     }
 
-    this.usuario.sucursales.forEach(sucursal => {
-      delete sucursal.activoMantenimientos;
-    });
+    if (this.choferCedis) {
+      this.usuario.sucursales = (this.usuario.sucursales || []).map((sucursal: any) => ({
+        id: String(sucursal.id),
+        nombre: sucursal.nombre,
+      })) as any;
+    } else {
+      this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
+    }
 
     this.esNuevoUsuario ? this.guardarAutenticacionFb() : this.actualizarUsuario();
   }
@@ -101,6 +127,7 @@ export class CrearUsuarioDialogComponent implements OnInit {
   async guardarUsuario(uid: string) {
     this.usuario.uid = uid;
     this.usuario.idArea = this.usuario.idArea ? this.usuario.idArea.toString() : '';
+    this.usuario.idSucursal = this.usuario.idSucursal ? this.usuario.idSucursal.toString() : '';
 
     try {
       await this.UsuariosService.create({ ...this.usuario });
@@ -113,19 +140,29 @@ export class CrearUsuarioDialogComponent implements OnInit {
     this.showMessage('success', 'Success', 'Guardado correctamente');
   }
 
-  actualizarUsuario() {
+  async actualizarUsuario() {
     this.usuario.idArea = this.usuario.idArea ? this.usuario.idArea.toString() : '';
+    this.usuario.idSucursal = this.usuario.idSucursal ? this.usuario.idSucursal.toString() : '';
 
-    this.documentsService
-      .updateDoc('usuarios', this.usuario)
-      .then(() => {
-        this.cdr.detectChanges();
-        this.closeEvent.emit(false); // Cerrar modal
-        this.showMessage('success', 'Success', 'Enviado correctamente');
-      })
-      .catch((error) =>
-        console.error('Error al actualizar los comentarios:', error)
-      );
+    try {
+      await this.UsuariosService.update(this.usuario.id, { ...this.usuario });
+
+      const dejoDeSerAnalistaDelArea =
+        this.rolOriginal === '4' &&
+        (String(this.usuario.idRol) !== '4' ||
+          String(this.usuario.idArea) !== this.areaOriginal);
+
+      if (dejoDeSerAnalistaDelArea) {
+        await this.soporteSucursalesService.quitarSoporteDeUsuario(this.usuario.id);
+      }
+
+      this.cdr.detectChanges();
+      this.closeEvent.emit(false); // Cerrar modal
+      this.showMessage('success', 'Success', 'Enviado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el usuario:', error);
+      this.showMessage('error', 'Error', 'No se pudo actualizar el usuario');
+    }
   }
 
   onHide() {
@@ -136,15 +173,20 @@ export class CrearUsuarioDialogComponent implements OnInit {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
+  obtenerAreas() {
+    this.areasService.initListener();
+    this.areasSub = this.areasService.areas$.subscribe((areas: Area[]) => {
+      this.areas = areas
+        .filter((a: Area) => !a.eliminado)
+        .map((a: Area) => ({ ...a, id: String(a.id) }));
+      this.cdr.detectChanges();
+    });
+  }
+
   obtenerSucursales() {
-    this.branchesService.get().subscribe({
+    this.sucursalesSub = this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data.map((item: any) => ({ nombre: item.nombre, id: item.id.toString() }));
-
-        this.sucursales.forEach(sucursal => {
-          delete sucursal.activoMantenimientos;
-        });
-
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -155,7 +197,7 @@ export class CrearUsuarioDialogComponent implements OnInit {
   }
 
   obtenerRoles() {
-    this.rolesService.get().subscribe({
+    this.rolesSub = this.rolesService.get().subscribe({
       next: (data) => {
         this.roles = data.map((item: any) => ({
           ...item,
