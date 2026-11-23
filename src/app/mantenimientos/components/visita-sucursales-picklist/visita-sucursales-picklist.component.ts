@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PickListModule } from 'primeng/picklist';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { Guardia } from '../../../tickets/models/guardia.model';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 
 @Component({
   selector: 'app-visita-sucursales-picklist',
@@ -25,7 +26,7 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
   templateUrl: './visita-sucursales-picklist.component.html',
   styleUrl: './visita-sucursales-picklist.component.scss',
 })
-export class VisitaSucursalesPicklistComponent implements OnChanges {
+export class VisitaSucursalesPicklistComponent implements OnInit, OnChanges, OnDestroy {
   @Input() sucursales: Sucursal[] = [];
   @Input() sucursalesOrdenadas: Sucursal[] = [];
   @Output() sucursalesOrdenadasChange = new EventEmitter<Sucursal[]>();
@@ -46,11 +47,26 @@ export class VisitaSucursalesPicklistComponent implements OnChanges {
   ultimosMantenimientos: MantenimientoSys[] = [];
   private ordenarxmantenimiento: boolean = false;
   private subMantenimientos?: Subscription;
+  private subUsuarioSucursal?: Subscription;
 
   constructor(
     private mantenimientoFactory: MantenimientoFactoryService,
+    private usuarioSucursalService: UsuarioSucursalService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+    this.subUsuarioSucursal = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+      if (this.usuarioSeleccionado && this.sucursales.length > 0) {
+        this.construirListasSucursales();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subMantenimientos?.unsubscribe();
+    this.subUsuarioSucursal?.unsubscribe();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursales'] && this.sucursales.length > 0 && this.usuarioActual) {
@@ -58,6 +74,7 @@ export class VisitaSucursalesPicklistComponent implements OnChanges {
     }
 
     if (
+      changes['sucursales'] ||
       changes['usuarioSeleccionado'] ||
       changes['registroDeVisita'] ||
       changes['registroDeGuardia']
@@ -94,15 +111,21 @@ export class VisitaSucursalesPicklistComponent implements OnChanges {
       return;
     }
 
+    const areaId = this.usuarioSeleccionado.idArea || this.usuarioActual?.idArea;
+    const idsSucursalesUsuario = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+      'SOPORTE',
+      String(this.usuarioSeleccionado.id),
+      areaId
+    );
+    const sucursalesUsuario = this.sucursales.filter((sucursal) =>
+      idsSucursalesUsuario.includes(String(sucursal.id))
+    );
     const sucursalesDisponibles = this.sucursales.filter(
-      (sucursal) =>
-        !this.usuarioSeleccionado!.sucursales.some(
-          (sucursalUsuario) => sucursalUsuario.id === sucursal.id
-        )
+      (sucursal) => !idsSucursalesUsuario.includes(String(sucursal.id))
     );
 
     let sucursalesDelUsuarioOrdenadas = this.ordenarSucursalesUser([
-      ...this.usuarioSeleccionado.sucursales,
+      ...sucursalesUsuario,
     ]);
 
     if (
@@ -111,7 +134,7 @@ export class VisitaSucursalesPicklistComponent implements OnChanges {
     ) {
       this.ordenarxmantenimiento = true;
       sucursalesDelUsuarioOrdenadas = this.ordenarSucursalesUser([
-        ...this.usuarioSeleccionado.sucursales,
+        ...sucursalesUsuario,
       ]);
       this.ordenarxmantenimiento = false;
     }

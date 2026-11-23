@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { combineLatest, Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -13,6 +14,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { EntregaAceite } from '../../models/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -24,7 +26,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
   providers: [MessageService],
   templateUrl: './recoleccion-aceite-page.component.html',
 })
-export default class RecoleccionAceitePageComponent implements OnInit {
+export default class RecoleccionAceitePageComponent implements OnInit, OnDestroy {
   public TodasLasEntregas: EntregaAceite[] = [];
   public TodasLasEntregasTA: EntregaAceite[] = [];
   public entregas: EntregaAceite[] = [];
@@ -44,10 +46,14 @@ export default class RecoleccionAceitePageComponent implements OnInit {
   esTrampadeAceite: boolean = false;
    public mostrarModalHistorial: boolean = false;
 
+  private sucursalesSub?: Subscription;
+  private intervaloRef?: ReturnType<typeof setInterval>;
+
   constructor(
     public aceiteService: AceiteService,
     public cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
+    private usuarioSucursalService: UsuarioSucursalService,
     private messageService: MessageService) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -55,10 +61,17 @@ export default class RecoleccionAceitePageComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerSucursales();
 
-    setInterval(() => {
+    this.intervaloRef = setInterval(() => {
       this.consultarEntregas();
     }, 60000);
 
+  }
+
+  ngOnDestroy(): void {
+    this.sucursalesSub?.unsubscribe();
+    if (this.intervaloRef) {
+      clearInterval(this.intervaloRef);
+    }
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -71,10 +84,9 @@ export default class RecoleccionAceitePageComponent implements OnInit {
       next: (data) => {
         this.entregas = [];
         this.TodasLasEntregas = data;
-        let sucursalesusuario = this.usuario.sucursales;
-        for (let item of sucursalesusuario) {
-          let suc = this.sucursales.filter(x => x.id == item.id)[0];
-          let temp = this.TodasLasEntregas.filter(x => x.idSucursal == suc.idFront);
+        const sucursalesUsuario = this.obtenerSucursaleUsuario();
+        for (const suc of sucursalesUsuario) {
+          const temp = this.TodasLasEntregas.filter(x => x.idSucursal == suc.idFront);
           this.entregas = [...this.entregas, ...temp];
         }
         this.loading = false;
@@ -94,10 +106,9 @@ export default class RecoleccionAceitePageComponent implements OnInit {
       next: (data) => {
         this.entregasTA = [];
         this.TodasLasEntregasTA = data;
-        let sucursalesusuario = this.usuario.sucursales;
-        for (let item of sucursalesusuario) {
-          let suc = this.sucursales.filter(x => x.id == item.id)[0];
-          let temp = this.TodasLasEntregasTA.filter(x => x.idSucursal == suc.idFront);
+        const sucursalesUsuario = this.obtenerSucursaleUsuario();
+        for (const suc of sucursalesUsuario) {
+          const temp = this.TodasLasEntregasTA.filter(x => x.idSucursal == suc.idFront);
           this.entregasTA = [...this.entregasTA, ...temp];
         }
         this.loading = false;
@@ -139,14 +150,18 @@ export default class RecoleccionAceitePageComponent implements OnInit {
 
   obtenerSucursales() {
     this.loading = true;
-    this.branchesService.get().subscribe({
-      next: (data) => {
+    this.sucursalesSub?.unsubscribe();
+    this.sucursalesSub = combineLatest([
+      this.branchesService.get(),
+      this.usuarioSucursalService.usuarioSucursal$,
+    ]).subscribe({
+      next: ([data]) => {
         this.sucursales = data;
         this.loading = false;
         this.consultarEntregas();
         this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: () => {
         this.loading = false;
       },
     });
@@ -231,15 +246,13 @@ export default class RecoleccionAceitePageComponent implements OnInit {
     this.mostrarModalHistorial = true; 
   }
 
-  obtenerSucursaleUsuario():Sucursal[]
-  {
-    let arr:Sucursal[] = [];
-    for(let item of this.usuario.sucursales)
-      {
-          var temp = this.sucursales.filter(x=>x.id == item.id)
-          if(temp.length>0){ arr.push(temp[0])}
-      }
-    return arr; 
+  obtenerSucursaleUsuario(): Sucursal[] {
+    const idsAsignadas = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+      'RECOLECCION_ACEITE',
+      String(this.usuario.id),
+      this.usuario.idArea
+    );
+    return this.sucursales.filter((s) => idsAsignadas.includes(String(s.id)));
   }
   buscarRegistros()
   {

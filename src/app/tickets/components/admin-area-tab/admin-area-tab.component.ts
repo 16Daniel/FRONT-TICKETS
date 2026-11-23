@@ -111,7 +111,9 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     private kpiRadarService: KpiRadarService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.sucursal = this.usuario.sucursales[0];
+    this.sucursal = this.usuario?.idSucursal
+      ? ({ id: String(this.usuario.idSucursal), nombre: '' } as Sucursal)
+      : undefined;
   }
 
   ngOnInit() {

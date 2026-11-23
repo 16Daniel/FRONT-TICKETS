@@ -49,7 +49,7 @@ export class HistorialMantenimeintoSysAvComponent {
     private cdr: ChangeDetectorRef,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.idSucursal = this.usuario.sucursales[0].id;
+    this.idSucursal = this.usuario.idSucursal;
     if (this.idSucursal) {
       this.obtenerUltimoMantenimiento();
     }

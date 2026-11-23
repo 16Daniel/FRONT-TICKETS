@@ -184,7 +184,7 @@ export const GRUPOS_MENU_PERMISOS: GrupoMenuPermiso[] = [
       {
         idMenu: 'admin_usuarios',
         titulo: 'Usuarios',
-        ruta: '/main/users',
+        ruta: '/main/usuarios',
         icono: 'bx bx-user',
         permisoVista: 'usuarios.ver',
       },

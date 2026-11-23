@@ -1,5 +1,5 @@
 <p-accordion class="custom-branches-accordion w-full" [activeIndex]="activeIndex">
-    <p-accordionTab *ngFor="let item of ordenarSucursalesUser(usuarioAgrupacion.sucursales)">
+    <p-accordionTab *ngFor="let item of ordenarSucursalesUser(obtenerSucursalesDeUsuarioAgrupacion())">
 
         <ng-template pTemplate="header">
             <div class="branch-accordion-header" [ngClass]="obtenerClaseEstado(contarTickets(item.id))">

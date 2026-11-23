@@ -68,7 +68,6 @@ export class CabeceraTareasComponent {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
-    this.mostrarResponsables = this.usuario.sucursales.filter(x => x.nombre === 'SISTEMAS').length > 0;
 
     this.responsablesService.responsables$.subscribe(() => {
       // this.actualizarResponsables();

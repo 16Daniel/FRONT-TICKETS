@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
@@ -31,7 +32,9 @@ export class TarjetaSucursalPorVisitarComponent {
   usuario: Usuario;
   porcentaje$: Promise<number> | any;
 
-  constructor(private mantenimientoFactory: MantenimientoFactoryService
+  constructor(
+    private mantenimientoFactory: MantenimientoFactoryService,
+    private usuarioSucursalService: UsuarioSucursalService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
@@ -61,11 +64,14 @@ export class TarjetaSucursalPorVisitarComponent {
   }
 
   asignadaAlUsuario(idSucursal: string): boolean {
-    if (this.usuarioSeleccionado!.sucursales.some(sucursalUsuario => sucursalUsuario.id === idSucursal)) {
-      return true;
-    } else {
-      return false;
-    }
+    if (!this.usuarioSeleccionado?.id) return false;
+    const areaId = this.usuarioSeleccionado.idArea || this.usuario?.idArea;
+    const ids = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+      'SOPORTE',
+      String(this.usuarioSeleccionado.id),
+      areaId
+    );
+    return ids.includes(String(idSucursal));
   }
 
   async obtenerPorcentajeDeUltimoMantenimiento(idSucursal: string) {

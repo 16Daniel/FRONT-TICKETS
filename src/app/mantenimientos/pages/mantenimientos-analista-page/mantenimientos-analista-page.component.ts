@@ -17,6 +17,7 @@ import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-vi
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
@@ -55,10 +56,13 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
   loading = false;
 
   private subs: Subscription[] = [];
+  private mttoSubs: Subscription[] = [];
+  private ultimoIdsSucursalesKey: string = '';
 
   constructor(
     public cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
+    private usuarioSucursalService: UsuarioSucursalService,
     private datesHelper: DatesHelperService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private mantenimientosAvService: MaintenanceAvService,
@@ -70,11 +74,17 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
   ngOnInit(): void {
     this.configurarTabsPorUsuario();
     this.obtenerSucursales();
-    this.obtenerUltimosMantenimientos();
+    this.subs.push(
+      this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+        this.obtenerUltimosMantenimientos();
+        this.cdr.detectChanges();
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.subs.forEach((s) => s.unsubscribe());
+    this.mttoSubs.forEach((s) => s.unsubscribe());
   }
 
   private configurarTabsPorUsuario(): void {
@@ -112,9 +122,28 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
   }
 
   obtenerUltimosMantenimientos(): void {
-    const sucursales: Sucursal[] = this.usuario?.sucursales || [];
-    const idsSucursales: string[] = sucursales.map((s) => s.id);
-    if (idsSucursales.length === 0) return;
+    const idsSucursales: string[] = this.usuario?.id
+      ? this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+          'SOPORTE',
+          String(this.usuario.id),
+          this.usuario.idArea
+        )
+      : [];
+    const key = [...idsSucursales].sort().join(',');
+    if (key === this.ultimoIdsSucursalesKey) return;
+    this.ultimoIdsSucursalesKey = key;
+
+    this.mttoSubs.forEach((s) => s.unsubscribe());
+    this.mttoSubs = [];
+
+    if (idsSucursales.length === 0) {
+      this.ultimosmantenimientosAV = [];
+      this.ultimosmantenimientosSistemas = [];
+      this.ultimosmantenimientosMtto = [];
+      this.loading = false;
+      this.cdr.detectChanges();
+      return;
+    }
 
     this.loading = true;
 
@@ -136,7 +165,7 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
           this.loading = false;
           this.cdr.detectChanges();
         });
-      this.subs.push(subAV);
+      this.mttoSubs.push(subAV);
 
       const subSys = this.mantenimientosSistemasService
         .getUltimosMantenimientos(idsSucursales)
@@ -155,7 +184,7 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
           this.loading = false;
           this.cdr.detectChanges();
         });
-      this.subs.push(subSys);
+      this.mttoSubs.push(subSys);
     }
 
     if (this.usuario?.idArea == '4' || this.usuario?.idRol == '1') {
@@ -176,13 +205,19 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
           this.loading = false;
           this.cdr.detectChanges();
         });
-      this.subs.push(subMtto);
+      this.mttoSubs.push(subMtto);
     }
   }
 
   sucursalesMantenimeintosActivos(areaIdToCheck?: string): Sucursal[] {
     const areaCheck = areaIdToCheck || String(this.usuario?.idArea || '1');
-    const idsSucursalesUsuario = (this.usuario?.sucursales || []).map((s) => String(s.id));
+    const idsSucursalesUsuario = this.usuario?.id
+      ? this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+          'SOPORTE',
+          String(this.usuario.id),
+          this.usuario.idArea
+        )
+      : [];
     return this.todasSucursales.filter(
       (sucursal) =>
         idsSucursalesUsuario.includes(String(sucursal.id)) &&

@@ -58,7 +58,7 @@ export default class SeleccionarResponsablePageComponent implements OnInit, OnDe
     }
 
     this.intentosFallidos = Number(this.usuario?.intentos ?? 0) || 0;
-    this.idSucursalSeleccionada = this.usuario?.sucursales?.[0]?.id || '';
+    this.idSucursalSeleccionada = this.usuario?.idSucursal || '';
 
     const idUsuarioLogueado = String(this.usuario?.id ?? '').trim();
     if (idUsuarioLogueado) {

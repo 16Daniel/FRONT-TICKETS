@@ -408,7 +408,7 @@ export default class StaffControlPageComponent implements OnInit {
       this.sucursales = await this.branchesService.getOnce();
       this.sucursales.filter(x => x.idFront && x.claUbicacion);
       if (this.usuario.idRol == '2') {
-        let suc = this.sucursales.filter(x => x.id == this.usuario.sucursales[0].id)[0];
+        let suc = this.sucursales.filter(x => String(x.id) == String(this.usuario.idSucursal))[0];
         this.sucursalSel = suc;
       } else {
         this.sucursalSel = this.sucursales[0];

@@ -60,8 +60,7 @@ export class AgregarCompraDialogComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.userdata.idRol == '2' && this.userdata.id != this.idServicio) {
-      const suc = this.userdata.sucursales[0];
-      const temp = this.sucursales.filter((x) => x.id == suc.id)[0];
+      const temp = this.sucursales.filter((x) => String(x.id) == String(this.userdata.idSucursal))[0];
       this.FormSucursal = temp;
     }
 
@@ -131,8 +130,7 @@ export class AgregarCompraDialogComponent implements OnInit {
     this.FormSucursal = undefined;
 
     if (this.userdata.idRol == '2' && this.userdata.id != this.idServicio) {
-      const suc = this.userdata.sucursales[0];
-      const temp = this.sucursales.filter((x) => x.id == suc.id)[0];
+      const temp = this.sucursales.filter((x) => String(x.id) == String(this.userdata.idSucursal))[0];
       this.FormSucursal = temp;
     }
   }
@@ -183,7 +181,7 @@ export class AgregarCompraDialogComponent implements OnInit {
       sucursales: this.getDistinctSucursalIds(articulosdata),
       regiones: this.obtenerDistintasRegiones(articulosdata),
       validado: this.userdata.idRol == '2' ? (this.userdata.id == this.idServicio ? 1 : 0) : 1,
-      idSucursalSolicitante: this.userdata.idRol == '2' ? this.userdata.sucursales[0].id : null,
+      idSucursalSolicitante: this.userdata.idRol == '2' ? this.userdata.idSucursal : null,
       validacionServico: validacionServico,
     };
 
