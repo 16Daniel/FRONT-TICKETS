@@ -39,17 +39,38 @@ export class AdminTabsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.areasSub = this.areasService.areas$.subscribe((areas) => {
-      let filteredAreas = areas.filter(a => a.activarTickets === true);
+      let filteredAreas = areas.filter(a => a.activarTickets === true && !a.eliminado);
+      const idRol = String(this.usuario?.idRol || '');
+      const esDireccion = idRol === '9';
+      const puedeVerTodasLasAreas = idRol === '1' || esDireccion;
 
-      if (this.usuario.idRol !== '1') {
-        filteredAreas = filteredAreas.filter(a => a.id === this.usuario.idArea);
+      if (!puedeVerTodasLasAreas) {
+        filteredAreas = filteredAreas.filter(a => String(a.id) === String(this.usuario.idArea));
+      }
+
+      if (esDireccion) {
+        const tabGlobal: Area = {
+          id: '0',
+          nombre: 'Global',
+          activarTickets: true,
+          eliminado: false,
+        } as Area;
+        filteredAreas = [tabGlobal, ...filteredAreas];
       }
 
       this.areasTicket = filteredAreas;
       
       if (this.areasTicket.length > 0) {
-        this.areaSeleccionadaId = this.areasTicket[0].id;
-        this.tabsActivos[this.areasTicket[0].nombre] = true;
+        const seleccionSigueValida = this.areasTicket.some(
+          a => String(a.id) === String(this.areaSeleccionadaId)
+        );
+        if (!seleccionSigueValida) {
+          this.areaSeleccionadaId = this.areasTicket[0].id;
+        }
+        const areaActiva = this.areasTicket.find(
+          a => String(a.id) === String(this.areaSeleccionadaId)
+        ) || this.areasTicket[0];
+        this.tabsActivos[String(areaActiva.id)] = true;
       }
       this.cdr.detectChanges();
     });
@@ -63,6 +84,6 @@ export class AdminTabsComponent implements OnInit, OnDestroy {
 
   cambiarArea(area: Area) {
     this.areaSeleccionadaId = area.id;
-    this.tabsActivos[area.nombre] = true;
+    this.tabsActivos[String(area.id)] = true;
   }
 }

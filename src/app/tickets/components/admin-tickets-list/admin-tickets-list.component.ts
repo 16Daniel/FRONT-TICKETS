@@ -182,7 +182,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
           ...item,
           id: item.id.toString()
         }));
-        if (this.idArea && this.idArea.trim() !== '') {
+        if (this.idArea && this.idArea.trim() !== '' && String(this.idArea) !== '0') {
           this.categorias = this.categorias.filter(x => String(x.idArea) === String(this.idArea));
         }
         this.cdr.markForCheck();
@@ -192,6 +192,12 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
+  }
+
+  obtenerNombreArea(idArea?: string): string {
+    if (!idArea) return 'SIN ÁREA';
+    const area = this.areas.find(a => String(a.id) === String(idArea));
+    return area ? area.nombre : idArea;
   }
 
   obtenerNombreResponsable(id: string): string {

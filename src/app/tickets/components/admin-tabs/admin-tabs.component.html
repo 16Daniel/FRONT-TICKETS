@@ -15,7 +15,7 @@
 <div class="tab-content-container">
   <ng-container *ngFor="let area of areasTicket">
     <div [hidden]="areaSeleccionadaId !== area.id">
-      <ng-container *ngIf="tabsActivos[area.nombre]">
+      <ng-container *ngIf="tabsActivos[area.id]">
         <app-admin-area-tab [idArea]="area.id" [areaName]="area.nombre"></app-admin-area-tab>
       </ng-container>
     </div>

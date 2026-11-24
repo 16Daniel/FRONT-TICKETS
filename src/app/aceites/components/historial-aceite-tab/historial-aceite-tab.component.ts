@@ -1,35 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
-import { TabViewModule } from 'primeng/tabview';
 import { MessageService } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
-import { MultiSelectModule } from "primeng/multiselect";
+import { MultiSelectModule } from 'primeng/multiselect';
 
-import { ReporteAceiteTab } from "../reporte-aceite-tab/reporte-aceite-tab";
+import { ReporteAceiteTab } from '../reporte-aceite-tab/reporte-aceite-tab';
 import { AceiteService } from '../../services/aceite.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { EntregaAceite } from '../../models/aceite.model';
+
+export type SubTabHistorialId = 'ACEITE' | 'TRAMPA' | 'REPORTE';
+
 @Component({
-  selector: 'app-historial-aceite',
+  selector: 'app-historial-aceite-tab',
   standalone: true,
   imports: [
     CommonModule,
-    TabViewModule,
     TableModule,
     CalendarModule,
-    DropdownModule,
     FormsModule,
     MultiSelectModule,
-    ReporteAceiteTab
+    ReporteAceiteTab,
   ],
-  templateUrl: './historial-aceite.html',
-  styleUrl: './historial-aceite.scss',
+  templateUrl: './historial-aceite-tab.component.html',
+  styleUrl: './historial-aceite-tab.component.scss',
 })
-export class HistorialAceite implements OnInit {
+export class HistorialAceiteTabComponent implements OnInit {
   fechaini: Date = new Date();
   fechafin: Date = new Date();
   @Input() sucursales: Sucursal[] = [];
@@ -37,125 +36,111 @@ export class HistorialAceite implements OnInit {
   public loading: boolean = false;
   public entregasH: EntregaAceite[] = [];
   public entregasTAH: EntregaAceite[] = [];
+  public tabActivo: SubTabHistorialId = 'ACEITE';
 
   constructor(
     public aceiteService: AceiteService,
     public cdr: ChangeDetectorRef,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+  ) { }
 
   ngOnInit(): void { }
 
-  showMessage(sev: string, summ: string, det: string) {
+  seleccionarTab(tab: SubTabHistorialId): void {
+    this.tabActivo = tab;
+  }
+
+  showMessage(sev: string, summ: string, det: string): void {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  buscarRegistros() {
-    this.loading = true
-    let temp: number[] = [];
-    for (let item of this.sucursalesSel) {
-      temp.push(item.idFront!);
-    }
-    let idf = JSON.stringify(temp);
+  buscarRegistros(): void {
+    this.loading = true;
+    const temp = this.sucursalesSel.map(item => item.idFront!);
+    const idf = JSON.stringify(temp);
+
     this.aceiteService.getEntregasCedisH(idf, this.fechaini, this.fechafin).subscribe({
       next: (data) => {
         this.entregasH = data;
-        this.loading = false,
-          this.cdr.detectChanges();
+        this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         this.loading = false;
         console.log(error);
+        this.cdr.detectChanges();
       },
     });
   }
 
-  buscarRegistrosTA() {
-    this.loading = true
-    let temp: number[] = [];
-    for (let item of this.sucursalesSel) {
-      temp.push(item.idFront!);
-    }
-    let idf = JSON.stringify(temp);
+  buscarRegistrosTA(): void {
+    this.loading = true;
+    const temp = this.sucursalesSel.map(item => item.idFront!);
+    const idf = JSON.stringify(temp);
+
     this.aceiteService.getEntregasCedisTAH(idf, this.fechaini, this.fechafin).subscribe({
       next: (data) => {
         this.entregasTAH = data;
-        this.loading = false,
-          this.cdr.detectChanges();
+        this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         this.loading = false;
         console.log(error);
+        this.cdr.detectChanges();
       },
     });
   }
 
-  exportarExcel(estrampa: boolean) {
-    debugger
+  exportarExcel(estrampa: boolean): void {
     this.loading = true;
-
-    let data = estrampa ? this.entregasTAH : this.entregasH;
+    const data = estrampa ? this.entregasTAH : this.entregasH;
 
     this.aceiteService.exportarHistorialEntregas(data).subscribe({
-      next: data => {
+      next: (response) => {
         this.loading = false;
         this.cdr.detectChanges();
-        const base64String = data.archivoBase64; // Aquí debes colocar tu cadena base64 del archivo Excel
-
-        // Decodificar la cadena base64
+        const base64String = response.archivoBase64;
         const binaryString = window.atob(base64String);
-
-        // Convertir a un array de bytes
         const bytes = new Uint8Array(binaryString.length);
         for (let i = 0; i < binaryString.length; i++) {
           bytes[i] = binaryString.charCodeAt(i);
         }
 
-        // Crear un Blob con los datos binarios
-        const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-        // Crear una URL para el Blob
+        const blob = new Blob([bytes], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
         const url = window.URL.createObjectURL(blob);
-
-        // Crear un enlace para la descarga
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'HISTORIAL ENTREGAS DE ACEITE.xlsx'; // Establecer el nombre del archivo
+        link.download = estrampa
+          ? 'HISTORIAL ENTREGAS TRAMPA DE GRASA.xlsx'
+          : 'HISTORIAL ENTREGAS DE ACEITE.xlsx';
         document.body.appendChild(link);
-
-        // Hacer clic en el enlace para iniciar la descarga
         link.click();
-
-        // Limpiar la URL y el enlace después de la descarga
         window.URL.revokeObjectURL(url);
         document.body.removeChild(link);
       },
-      error: error => {
+      error: (error) => {
         this.loading = false;
         this.showMessage('error', 'Error', 'Error al generar el archivo de excel');
         console.log(error);
-
-      }
+        this.cdr.detectChanges();
+      },
     });
   }
 
   obtenerNombreSucursal(idSucursal: number): string {
-    let str = '';
-    let temp = this.sucursales.filter((x) => x.idFront == idSucursal);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
+    const found = this.sucursales.find((x) => x.idFront == idSucursal);
+    return found ? found.nombre : '';
   }
 
   getDate(tsmp: Timestamp | any): Date {
     try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
-      return date;
+      const firestoreTimestamp = tsmp;
+      return firestoreTimestamp.toDate();
     } catch {
       return tsmp;
     }
   }
-
 }

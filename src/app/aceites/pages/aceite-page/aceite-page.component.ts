@@ -1,24 +1,28 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, type OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Timestamp } from '@angular/fire/firestore';
-import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { TooltipModule } from 'primeng/tooltip';
+import { Subscription } from 'rxjs';
 
 import ControlAceiteTabComponent from '../../components/control-aceite-tab/control-aceite-tab.component';
-import { AgregarRecoleccionComponent } from '../../dialogs/agregar-recoleccion.component/agregar-recoleccion.component';
-import { HistorialAceite } from '../../components/historial-aceite/historial-aceite';
+import { AgregarRecoleccionDialogComponent } from '../../dialogs/agregar-recoleccion-dialog/agregar-recoleccion-dialog.component';
+import { HistorialAceiteTabComponent } from '../../components/historial-aceite-tab/historial-aceite-tab.component';
 import { AceiteService } from '../../services/aceite.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
 import { EntregaAceite } from '../../models/aceite.model';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { RegistrosPendientesPageComponent } from '../registros-pendientes-page/registros-pendientes-page';
+import { RegistrosPendientesTabComponent } from '../../components/registros-pendientes-tab/registros-pendientes-tab.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+
+export type TabAceiteId = 'PENDIENTES' | 'POR_VALIDAR' | 'HISTORIAL' | 'CONFIGURACION';
 
 @Component({
   selector: 'app-aceite-page',
@@ -27,29 +31,30 @@ import { RegistrosPendientesPageComponent } from '../registros-pendientes-page/r
     CommonModule,
     FormsModule,
     TableModule,
-    TabViewModule,
     ToastModule,
     DialogModule,
     CalendarModule,
     DropdownModule,
+    TooltipModule,
     ControlAceiteTabComponent,
-    AgregarRecoleccionComponent,
-    HistorialAceite,
-    RegistrosPendientesPageComponent,
-    MultiSelectModule
+    AgregarRecoleccionDialogComponent,
+    HistorialAceiteTabComponent,
+    RegistrosPendientesTabComponent,
+    MultiSelectModule,
+    PageHeaderComponent
   ],
   providers: [MessageService],
   templateUrl: './aceite-page.component.html',
   styleUrl: './aceite-page.component.scss',
 })
-export default class AceitPageComponent implements OnInit {
+export default class AceitPageComponent implements OnInit, OnDestroy {
   public entregas: EntregaAceite[] = [];
   public entregasTodo: EntregaAceite[] = [];
   public mostrarModalValidacion: boolean = false;
   public sucursales: Sucursal[] = [];
   public sucursalesSel: Sucursal[] = [];
   public sucursalSel: Sucursal | undefined;
-  public formcomentarios: string = "";
+  public formcomentarios: string = '';
   public itemEntrega: EntregaAceite | undefined;
   public tipoActualizacion: number = 0;
   public loading: boolean = false;
@@ -57,18 +62,62 @@ export default class AceitPageComponent implements OnInit {
 
   trampadeAceite: boolean = false;
 
+  readonly tabs: { id: TabAceiteId; label: string; icono: string }[] = [
+    { id: 'PENDIENTES', label: 'PENDIENTES', icono: 'bx bx-time-five' },
+    { id: 'POR_VALIDAR', label: 'POR VALIDAR', icono: 'bx bx-check-double' },
+    { id: 'HISTORIAL', label: 'HISTORIAL', icono: 'bx bx-history' },
+    { id: 'CONFIGURACION', label: 'CONFIGURACIÓN', icono: 'bx bx-cog' },
+  ];
+
+  tabActivo: TabAceiteId = 'PENDIENTES';
+  tabsActivados: Record<TabAceiteId, boolean> = {
+    PENDIENTES: true,
+    POR_VALIDAR: false,
+    HISTORIAL: false,
+    CONFIGURACION: false,
+  };
+
+  private branchesSub?: Subscription;
+  private intervalRef?: ReturnType<typeof setInterval>;
+
   constructor(
     public aceiteService: AceiteService,
     public cdr: ChangeDetectorRef,
     private branchesService: BranchesService,
-    private messageService: MessageService) { }
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
     this.obtenerSucursales();
 
-    setInterval(() => {
+    this.intervalRef = setInterval(() => {
       this.consultarEntregas();
     }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    this.branchesSub?.unsubscribe();
+    if (this.intervalRef) {
+      clearInterval(this.intervalRef);
+    }
+  }
+
+  cambiarTab(tabId: TabAceiteId): void {
+    this.tabActivo = tabId;
+    this.tabsActivados[tabId] = true;
+    this.cdr.detectChanges();
+  }
+
+  get totalBajoMeta(): number {
+    return this.entregas.filter((r) => r.intercambio == 1).length;
+  }
+
+  get totalOptimo(): number {
+    return this.entregas.filter((r) => r.intercambio == 2).length;
+  }
+
+  get totalExcedente(): number {
+    return this.entregas.filter((r) => r.intercambio == 3).length;
   }
 
   showMessage(sev: string, summ: string, det: string) {
@@ -88,6 +137,7 @@ export default class AceitPageComponent implements OnInit {
       error: (error) => {
         console.log(error);
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -100,9 +150,8 @@ export default class AceitPageComponent implements OnInit {
 
   getDate(tsmp: Timestamp | any): Date {
     try {
-      // Supongamos que tienes un timestamp llamado 'firestoreTimestamp'
-      const firestoreTimestamp = tsmp; // Ejemplo
-      const date = firestoreTimestamp.toDate(); // Convierte a Date
+      const firestoreTimestamp = tsmp;
+      const date = firestoreTimestamp.toDate();
       return date;
     } catch {
       return tsmp;
@@ -110,66 +159,66 @@ export default class AceitPageComponent implements OnInit {
   }
 
   obtenerNombreSucursal(idSucursal: number): string {
-    let str = '';
-    let temp = this.sucursales.filter((x) => x.idFront == idSucursal);
-    if (temp.length > 0) {
-      str = temp[0].nombre;
-    }
-    return str;
+    const temp = this.sucursales.find((x) => x.idFront == idSucursal);
+    return temp ? temp.nombre : '';
   }
 
   obtenerSucursales() {
     this.loading = true;
-    this.branchesService.get().subscribe({
+    this.branchesSub?.unsubscribe();
+    this.branchesSub = this.branchesService.get().subscribe({
       next: (data) => {
-        this.sucursales = data;
-        this.sucursales = this.sucursales.filter(x => x.idFront && x.idFront > -1);
+        this.sucursales = data.filter((x) => x.idFront && x.idFront > -1);
         this.sucursalesSel = [...this.sucursales];
         this.loading = false;
         this.consultarEntregas();
         this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: () => {
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }
 
   actualizarEntrega() {
-    if (this.formcomentarios == "") {
-      this.showMessage('info', 'info', 'Favor de agregar un comentario');
+    if (this.formcomentarios.trim() === '') {
+      this.showMessage('info', 'Información', 'Favor de agregar un comentario');
       return;
     }
     if (this.tipoActualizacion == 1) {
       this.loading = true;
       this.aceiteService.ValidacionCedis(this.itemEntrega!.id, this.formcomentarios).subscribe({
-        next: (data) => {
+        next: () => {
           this.mostrarModalValidacion = false;
-          this.showMessage('success', 'Success', 'Guardado correctamente');
-          this.formcomentarios = "";
+          this.showMessage('success', 'Correcto', 'Guardado correctamente');
+          this.formcomentarios = '';
           this.consultarEntregas();
           this.cdr.detectChanges();
         },
-        error: (error) => {
-
+        error: () => {
+          this.loading = false;
+          this.showMessage('error', 'Error', 'No se pudo guardar la validación');
+          this.cdr.detectChanges();
         },
       });
     } else {
       this.loading = true;
       this.aceiteService.RechazoCedis(this.itemEntrega!.id, this.formcomentarios).subscribe({
-        next: (data) => {
+        next: () => {
           this.mostrarModalValidacion = false;
-          this.showMessage('success', 'Success', 'Guardado correctamente');
-          this.formcomentarios = "";
+          this.showMessage('success', 'Correcto', 'Guardado correctamente');
+          this.formcomentarios = '';
           this.consultarEntregas();
           this.cdr.detectChanges();
         },
-        error: (error) => {
-
+        error: () => {
+          this.loading = false;
+          this.showMessage('error', 'Error', 'No se pudo guardar el rechazo');
+          this.cdr.detectChanges();
         },
       });
     }
-
   }
 
   abrirModalagregarRecoleccion() {
@@ -179,66 +228,52 @@ export default class AceitPageComponent implements OnInit {
 
   abrirModalagregarRecoleccionTA() {
     this.modalAgregarRecoleccion = true;
-    this.trampadeAceite = true
+    this.trampadeAceite = true;
   }
 
   filtrar() {
-
     this.entregas = [];
-    for (let item of this.sucursalesSel) {
-      let data = this.entregasTodo.filter(x => x.idSucursal == item.idFront!);
+    for (const item of this.sucursalesSel) {
+      const data = this.entregasTodo.filter((x) => x.idSucursal == item.idFront!);
       this.entregas.push(...data);
     }
-
+    this.cdr.detectChanges();
   }
 
-    exportarExcel(estrampa: boolean) {
-    debugger
+  exportarExcel(estrampa: boolean) {
     this.loading = true;
 
-    let data = this.entregas;
+    const data = this.entregas;
 
     this.aceiteService.exportarHistorialEntregas(data).subscribe({
-      next: data => {
+      next: (resp) => {
         this.loading = false;
         this.cdr.detectChanges();
-        const base64String = data.archivoBase64; // Aquí debes colocar tu cadena base64 del archivo Excel
-
-        // Decodificar la cadena base64
+        const base64String = resp.archivoBase64;
         const binaryString = window.atob(base64String);
-
-        // Convertir a un array de bytes
         const bytes = new Uint8Array(binaryString.length);
         for (let i = 0; i < binaryString.length; i++) {
           bytes[i] = binaryString.charCodeAt(i);
         }
 
-        // Crear un Blob con los datos binarios
-        const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-        // Crear una URL para el Blob
+        const blob = new Blob([bytes], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
         const url = window.URL.createObjectURL(blob);
-
-        // Crear un enlace para la descarga
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'ENTREGAS DE ACEITE POR VALIDAR.xlsx'; // Establecer el nombre del archivo
+        link.download = 'ENTREGAS DE ACEITE POR VALIDAR.xlsx';
         document.body.appendChild(link);
-
-        // Hacer clic en el enlace para iniciar la descarga
         link.click();
-
-        // Limpiar la URL y el enlace después de la descarga
         window.URL.revokeObjectURL(url);
         document.body.removeChild(link);
       },
-      error: error => {
+      error: (error) => {
         this.loading = false;
         this.showMessage('error', 'Error', 'Error al generar el archivo de excel');
         console.log(error);
-
-      }
+        this.cdr.detectChanges();
+      },
     });
   }
-
 }

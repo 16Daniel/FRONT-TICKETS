@@ -61,7 +61,10 @@ export class AcordeonTicketsPorUsuarioComponent implements OnInit, OnDestroy {
     }
 
     if (String(this.usuarioAgrupacion.idRol) === '4') {
-      const areaId = this.idArea || this.usuarioAgrupacion.idArea;
+      const areaId =
+        this.idArea && String(this.idArea) !== '0'
+          ? this.idArea
+          : this.usuarioAgrupacion.idArea;
       const idsSoporte = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
         'SOPORTE',
         String(this.usuarioAgrupacion.id),
