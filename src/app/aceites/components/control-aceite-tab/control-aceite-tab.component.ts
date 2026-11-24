@@ -14,9 +14,10 @@ import { DocumentsService } from '../../../shared/services/documents.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { BranchesService } from '../../../sucursales/services/branches.service';
+import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
 import { Rol } from '../../../roles/interfaces/rol.model';
-import { CrearUsuarioDialogComponent } from '../../../usuarios/dialogs/crear-usuario-dialog/crear-usuario-dialog.component';
+import { AsignarSucursalesAceiteDialogComponent } from '../../dialogs/asignar-sucursales-aceite-dialog/asignar-sucursales-aceite-dialog.component';
 
 @Component({
   selector: 'app-control-aceite-tab',
@@ -27,7 +28,7 @@ import { CrearUsuarioDialogComponent } from '../../../usuarios/dialogs/crear-usu
     MultiSelectModule,
     TableModule,
     TooltipModule,
-    CrearUsuarioDialogComponent,
+    AsignarSucursalesAceiteDialogComponent,
     ToastModule,
     ConfirmDialogModule,
   ],
@@ -39,16 +40,15 @@ export default class ControlAceiteTabComponent implements OnInit, OnDestroy {
   public sucursales: Sucursal[] = [];
   public sucursalesSel: Sucursal[] = [];
   public loading: boolean = false;
-  mostrarModalUsuario: boolean = false;
-  actualizar: boolean = false;
-  catusuarios: Usuario[] = [];
-  usuariosel: Usuario | undefined;
-  roles: Rol[] = [];
-  usuarioSeleccionado: Usuario | any = new Usuario();
-  esNuevoUsuario: boolean = false;
+  public mostrarModalAsignarSucursales: boolean = false;
+  public catusuarios: Usuario[] = [];
+  public roles: Rol[] = [];
+  public usuarioSeleccionado: Usuario | null = null;
 
+  private sucursalNombreMap: Record<string, string> = {};
   private subscripcionUsuarios?: Subscription;
   private subscripcionRoles?: Subscription;
+  private subscripcionRelaciones?: Subscription;
 
   constructor(
     public documentsService: DocumentsService,
@@ -58,17 +58,23 @@ export default class ControlAceiteTabComponent implements OnInit, OnDestroy {
     private usuariosService: UsuariosService,
     private rolesService: RolesService,
     private branchesService: BranchesService,
+    private usuarioSucursalService: UsuarioSucursalService,
   ) { }
 
   ngOnInit(): void {
+    this.usuarioSucursalService.initListener();
     this.obtenerSucursales();
     this.obtenerUsuarios();
     this.obtenerRoles();
+    this.subscripcionRelaciones = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
     this.subscripcionUsuarios?.unsubscribe();
     this.subscripcionRoles?.unsubscribe();
+    this.subscripcionRelaciones?.unsubscribe();
   }
 
   async obtenerSucursales(): Promise<void> {
@@ -76,6 +82,12 @@ export default class ControlAceiteTabComponent implements OnInit, OnDestroy {
     try {
       this.sucursales = await this.branchesService.getOnce();
       this.sucursalesSel = this.sucursales.filter(suc => suc.controlDeAceite === true);
+      this.sucursalNombreMap = {};
+      for (const suc of this.sucursales) {
+        if (suc.id !== undefined && suc.id !== null) {
+          this.sucursalNombreMap[String(suc.id)] = suc.nombre;
+        }
+      }
     } catch (error) {
       console.log(error);
       this.showMessage('error', 'Error', 'Error al cargar las sucursales');
@@ -96,9 +108,19 @@ export default class ControlAceiteTabComponent implements OnInit, OnDestroy {
     return (n + a).toUpperCase() || 'U';
   }
 
-  abrirModalCrearUsuario(): void {
-    this.esNuevoUsuario = true;
-    this.mostrarModalUsuario = true;
+  obtenerSucursalesAsignadasIds(usuario: Usuario): string[] {
+    if (!usuario?.id) return [];
+    return this.usuarioSucursalService.obtenerSucursalesPorUsuario(
+      'RECOLECCION_ACEITE',
+      String(usuario.id),
+      usuario.idArea
+    );
+  }
+
+  obtenerTooltipSucursales(usuario: Usuario): string {
+    const ids = this.obtenerSucursalesAsignadasIds(usuario);
+    if (ids.length === 0) return 'Sin sucursales asignadas';
+    return ids.map(id => this.sucursalNombreMap[id] || id).join(', ');
   }
 
   showMessage(sev: string, summ: string, det: string): void {
@@ -113,15 +135,19 @@ export default class ControlAceiteTabComponent implements OnInit, OnDestroy {
     });
   }
 
-  abrirModalEditarUsuario(usuario: Usuario): void {
-    this.esNuevoUsuario = false;
+  abrirModalAsignarSucursales(usuario: Usuario): void {
     this.usuarioSeleccionado = usuario;
-    this.mostrarModalUsuario = true;
+    this.mostrarModalAsignarSucursales = true;
   }
 
-  cerrarModalUsuario(): void {
-    this.mostrarModalUsuario = false;
-    this.usuarioSeleccionado = new Usuario();
+  cerrarModalAsignarSucursales(): void {
+    this.mostrarModalAsignarSucursales = false;
+    this.usuarioSeleccionado = null;
+  }
+
+  onSucursalesAsignadasGuardadas(): void {
+    this.showMessage('success', 'Correcto', 'Sucursales asignadas actualizadas correctamente');
+    this.cdr.detectChanges();
   }
 
   obtenerRoles(): void {

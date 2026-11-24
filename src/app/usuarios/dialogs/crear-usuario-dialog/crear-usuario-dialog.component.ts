@@ -4,7 +4,6 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
@@ -28,7 +27,6 @@ import { CrearResponsableDialogComponent } from '../crear-responsable-dialog/cre
   imports: [
     DialogModule,
     FormsModule,
-    MultiSelectModule,
     CommonModule,
     DropdownModule,
     TooltipModule,
@@ -43,9 +41,7 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   @Output() closeEvent = new EventEmitter<boolean>();
   @Input() usuario: Usuario = new Usuario;
   @Input() esNuevoUsuario: boolean = true;
-  @Input() choferCedis: boolean = false;
   sucursales: Sucursal[] | any[] = [];
-  sucursalesChoferIds: string[] = [];
   roles: Rol[] = [];
   areas: Area[] = [];
   responsablesUsuario: Responsable[] = [];
@@ -57,11 +53,9 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   usuarioEnSesion: Usuario;
   private rolOriginal: string = '';
   private areaOriginal: string = '';
-  private sucursalesChoferCargadas: boolean = false;
   private areasSub?: Subscription;
   private sucursalesSub?: Subscription;
   private rolesSub?: Subscription;
-  private usuarioSucursalSub?: Subscription;
   private responsablesSub?: Subscription;
 
   constructor(
@@ -81,23 +75,10 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.usuario.idRol = this.usuario.idRol ? String(this.usuario.idRol) : '';
     this.usuario.idArea = this.usuario.idArea ? String(this.usuario.idArea) : '';
+    this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
 
-    if (!this.choferCedis) {
-      this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
-      if (!this.esNuevoUsuario && this.usuario.id) {
-        this.cargarResponsablesUsuario();
-      }
-    } else if (this.usuario.id) {
-      this.usuarioSucursalSub = this.usuarioSucursalService.usuarioSucursal$.subscribe(() => {
-        if (this.sucursalesChoferCargadas) return;
-        this.sucursalesChoferIds = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
-          'RECOLECCION_ACEITE',
-          String(this.usuario.id),
-          this.usuario.idArea
-        );
-        this.sucursalesChoferCargadas = true;
-        this.cdr.detectChanges();
-      });
+    if (!this.esNuevoUsuario && this.usuario.id) {
+      this.cargarResponsablesUsuario();
     }
 
     this.rolOriginal = this.usuario.idRol;
@@ -115,7 +96,6 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.areasSub?.unsubscribe();
     this.sucursalesSub?.unsubscribe();
     this.rolesSub?.unsubscribe();
-    this.usuarioSucursalSub?.unsubscribe();
     this.responsablesSub?.unsubscribe();
   }
 
@@ -223,9 +203,7 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.choferCedis) {
-      this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
-    }
+    this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
 
     this.esNuevoUsuario ? this.guardarAutenticacionFb() : this.actualizarUsuario();
   }
@@ -259,15 +237,7 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.usuario.idSucursal = this.usuario.idSucursal ? this.usuario.idSucursal.toString() : '';
 
     try {
-      const nuevoId = await this.UsuariosService.create({ ...this.usuario });
-      if (this.choferCedis && nuevoId) {
-        await this.usuarioSucursalService.guardarSucursalesDeUsuario(
-          'RECOLECCION_ACEITE',
-          this.usuario.idArea,
-          nuevoId,
-          this.sucursalesChoferIds
-        );
-      }
+      await this.UsuariosService.create({ ...this.usuario });
     } catch (error) {
       console.error('Error al agregar usuario:', error);
     }
@@ -283,15 +253,6 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
 
     try {
       await this.UsuariosService.update(this.usuario.id, { ...this.usuario });
-
-      if (this.choferCedis) {
-        await this.usuarioSucursalService.guardarSucursalesDeUsuario(
-          'RECOLECCION_ACEITE',
-          this.usuario.idArea,
-          String(this.usuario.id),
-          this.sucursalesChoferIds
-        );
-      }
 
       const dejoDeSerAnalistaDelArea =
         this.rolOriginal === '4' &&

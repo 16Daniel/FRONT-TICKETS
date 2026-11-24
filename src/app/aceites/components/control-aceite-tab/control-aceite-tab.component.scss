@@ -150,6 +150,30 @@ $status-info-bg: #eff6ff;
   font-weight: 700;
 }
 
+.sucursales-count-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.24rem 0.7rem;
+  border-radius: 999px;
+  background-color: #f0fdf4;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  i {
+    font-size: 0.95rem;
+  }
+
+  &.is-empty {
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+  }
+}
+
 .btn-rw-edit {
   display: inline-flex;
   align-items: center;
