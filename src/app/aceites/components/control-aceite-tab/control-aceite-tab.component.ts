@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -29,13 +29,13 @@ import { CrearUsuarioDialogComponent } from '../../../usuarios/dialogs/crear-usu
     TooltipModule,
     CrearUsuarioDialogComponent,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './control-aceite-tab.component.html',
   styleUrl: './control-aceite-tab.component.scss',
 })
-export default class ControlAceiteTabComponent implements OnInit {
+export default class ControlAceiteTabComponent implements OnInit, OnDestroy {
   public sucursales: Sucursal[] = [];
   public sucursalesSel: Sucursal[] = [];
   public loading: boolean = false;
@@ -44,76 +44,89 @@ export default class ControlAceiteTabComponent implements OnInit {
   catusuarios: Usuario[] = [];
   usuariosel: Usuario | undefined;
   roles: Rol[] = [];
-  usuarioSeleccionado: Usuario | any = new Usuario;
+  usuarioSeleccionado: Usuario | any = new Usuario();
   esNuevoUsuario: boolean = false;
-  subscripcionUsuarios: Subscription | undefined;
-  private unsubscribe!: () => void;
+
+  private subscripcionUsuarios?: Subscription;
+  private subscripcionRoles?: Subscription;
+
   constructor(
     public documentsService: DocumentsService,
     private messageService: MessageService,
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private UsuariosService: UsuariosService,
+    private usuariosService: UsuariosService,
     private rolesService: RolesService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
   ) { }
+
   ngOnInit(): void {
     this.obtenerSucursales();
     this.obtenerUsuarios();
     this.obtenerRoles();
   }
 
-  async obtenerSucursales() {
+  ngOnDestroy(): void {
+    this.subscripcionUsuarios?.unsubscribe();
+    this.subscripcionRoles?.unsubscribe();
+  }
 
+  async obtenerSucursales(): Promise<void> {
     this.loading = true;
     try {
       this.sucursales = await this.branchesService.getOnce();
-      for (let suc of this.sucursales) {
-        if (suc.controlDeAceite == true) {
-          this.sucursalesSel.push(suc);
-        }
-      }
+      this.sucursalesSel = this.sucursales.filter(suc => suc.controlDeAceite === true);
+    } catch (error) {
+      console.log(error);
+      this.showMessage('error', 'Error', 'Error al cargar las sucursales');
+    } finally {
       this.loading = false;
       this.cdr.detectChanges();
-    } catch (error) {
     }
   }
 
   obtenerNombreRol(idRol: string): string {
-    let name = '';
-    let rol = this.roles.filter((x) => x.id == idRol);
-    if (rol.length > 0) {
-      name = rol[0].nombre;
-    }
-    return name;
+    const rol = this.roles.find((x) => x.id == idRol);
+    return rol ? rol.nombre : '';
   }
 
-  abrirModalCrearUsuario() {
+  obtenerIniciales(usuario: Usuario): string {
+    const n = (usuario.nombre || '').trim().charAt(0);
+    const a = (usuario.apellidoP || '').trim().charAt(0);
+    return (n + a).toUpperCase() || 'U';
+  }
+
+  abrirModalCrearUsuario(): void {
     this.esNuevoUsuario = true;
     this.mostrarModalUsuario = true;
   }
 
-  showMessage(sev: string, summ: string, det: string) {
+  showMessage(sev: string, summ: string, det: string): void {
     this.messageService.add({ severity: sev, summary: summ, detail: det });
   }
 
-  obtenerUsuarios() {
-    this.UsuariosService.usuarios$.subscribe(usuarios => this.catusuarios = usuarios.filter(x => x.idRol == '6'));
+  obtenerUsuarios(): void {
+    this.subscripcionUsuarios?.unsubscribe();
+    this.subscripcionUsuarios = this.usuariosService.usuarios$.subscribe((usuarios) => {
+      this.catusuarios = usuarios.filter(x => x.idRol == '6');
+      this.cdr.detectChanges();
+    });
   }
 
-  abrirModalEditarUsuario(usuario: Usuario) {
+  abrirModalEditarUsuario(usuario: Usuario): void {
     this.esNuevoUsuario = false;
     this.usuarioSeleccionado = usuario;
     this.mostrarModalUsuario = true;
   }
 
-  cerrarModalUsuario() {
+  cerrarModalUsuario(): void {
     this.mostrarModalUsuario = false;
-    this.usuarioSeleccionado = new Usuario;
+    this.usuarioSeleccionado = new Usuario();
   }
 
-  obtenerRoles() {
-    this.rolesService.get().subscribe({
+  obtenerRoles(): void {
+    this.subscripcionRoles?.unsubscribe();
+    this.subscripcionRoles = this.rolesService.get().subscribe({
       next: (data) => {
         this.roles = data;
         this.cdr.detectChanges();
@@ -125,25 +138,24 @@ export default class ControlAceiteTabComponent implements OnInit {
     });
   }
 
-
-  async actualizarSucursales() {
-
+  async actualizarSucursales(): Promise<void> {
     this.loading = true;
-    let sucursales = [...this.sucursales];
-    for (let suc of sucursales) {
-      suc.controlDeAceite = false;
+    try {
+      const selectedIds = new Set(this.sucursalesSel.map(s => s.id));
+      const sucursalesActualizadas = this.sucursales.map(suc => ({
+        ...suc,
+        controlDeAceite: selectedIds.has(suc.id),
+      }));
+
+      await this.branchesService.updateMultiple(sucursalesActualizadas);
+      await this.obtenerSucursales();
+      this.showMessage('success', 'Correcto', 'Sucursales actualizadas correctamente');
+    } catch (error) {
+      console.log(error);
+      this.showMessage('error', 'Error', 'Error al actualizar las sucursales');
+    } finally {
+      this.loading = false;
+      this.cdr.detectChanges();
     }
-    await this.branchesService.updateMultiple(sucursales);
-
-    for (let suc of this.sucursalesSel) {
-      suc.controlDeAceite = true;
-    }
-    await this.branchesService.updateMultiple(sucursales);
-
-    this.obtenerSucursales();
-
-    this.showMessage('success', 'Success', 'Enviado correctamente');
-    this.loading = false;
   }
-
 }

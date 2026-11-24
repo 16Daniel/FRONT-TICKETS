@@ -1,0 +1,219 @@
+/* Rebel Wings Brand Design Tokens (DESIGN-SYSTEM.md) */
+$rw-primary: #d3152a;
+$rw-primary-soft: #fff1f2;
+$rw-dark: #1e1e24;
+$status-info: #0f62fe;
+$status-info-bg: #eff6ff;
+
+.control-aceite-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.control-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.rw-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rw-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $rw-dark;
+
+  i {
+    font-size: 1.2rem;
+    color: $rw-primary;
+  }
+}
+
+.rw-counter-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background-color: $rw-primary-soft;
+  border: 1px solid #fecdd3;
+  color: $rw-primary;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.sucursales-config-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sucursales-field {
+  flex: 1 1 320px;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rw-field-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+:host ::ng-deep .rw-multiselect {
+  min-height: 44px !important;
+  border-radius: 10px !important;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+
+  .p-multiselect-label {
+    font-size: 0.88rem;
+    color: #334155;
+  }
+
+  &:hover,
+  &.p-focus {
+    border-color: $rw-primary !important;
+    background-color: #ffffff !important;
+  }
+}
+
+.btn-rw-cta {
+  height: 44px;
+
+  &:disabled {
+    background: #cbd5e1;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Tabla de Usuarios CEDIS
+   ========================================================================== */
+.user-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: $rw-primary-soft;
+  border: 1px solid #fecdd3;
+  color: $rw-primary;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+  background-color: $status-info-bg;
+  border: 1px solid #bfdbfe;
+  color: $status-info;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.btn-rw-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.38rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid #bfdbfe;
+  background-color: $status-info-bg;
+  color: $status-info;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+
+  i {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background-color: $status-info;
+    border-color: $status-info;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+}
+
+.control-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: #64748b;
+
+  i {
+    font-size: 2.4rem;
+    color: #cbd5e1;
+  }
+
+  h6 {
+    margin: 0;
+    font-weight: 800;
+    color: $rw-dark;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 640px) {
+  .control-card {
+    padding: 1rem;
+  }
+
+  .rw-btn-mobile-full {
+    width: 100%;
+  }
+}

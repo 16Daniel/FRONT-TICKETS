@@ -20,6 +20,9 @@ export type TotalesSlaAnalista = TotalesSlaDashboard;
   styleUrl: './tarjeta-rendimiento-sla.component.scss'
 })
 export class TarjetaRendimientoSlaComponent {
+  private static nextId = 0;
+  readonly uid = ++TarjetaRendimientoSlaComponent.nextId;
+
   @Input() totales: TotalesSlaDashboard = {
     totalTickets: 0,
     totalTerminados: 0,
@@ -40,9 +43,9 @@ export class TarjetaRendimientoSlaComponent {
   }
 
   getGradientId(value: number): string {
-    if (value >= 90) return 'grad-sla-success';
-    if (value >= 75) return 'grad-sla-warning';
-    return 'grad-sla-danger';
+    if (value >= 90) return `grad-sla-success-${this.uid}`;
+    if (value >= 75) return `grad-sla-warning-${this.uid}`;
+    return `grad-sla-danger-${this.uid}`;
   }
 
   getCalificacionPromedio(): number {

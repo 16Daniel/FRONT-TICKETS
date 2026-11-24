@@ -1,0 +1,335 @@
+<!-- Sub-tabs en cápsulas Rebel Wings -->
+<div class="subtabs-bar mb-4">
+  <div class="subtabs-pills" role="tablist">
+    <button
+      type="button"
+      class="chip-area-pill"
+      [class.is-active]="tabActivo === 'ACEITE'"
+      (click)="seleccionarTab('ACEITE')">
+      <span class="area-dot"></span>
+      <span>ACEITE</span>
+      <span class="tab-count-badge" *ngIf="entregasH.length > 0">{{ entregasH.length }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="chip-area-pill"
+      [class.is-active]="tabActivo === 'TRAMPA'"
+      (click)="seleccionarTab('TRAMPA')">
+      <span class="area-dot"></span>
+      <span>TRAMPA DE GRASA</span>
+      <span class="tab-count-badge" *ngIf="entregasTAH.length > 0">{{ entregasTAH.length }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="chip-area-pill"
+      [class.is-active]="tabActivo === 'REPORTE'"
+      (click)="seleccionarTab('REPORTE')">
+      <span class="area-dot"></span>
+      <span>REPORTE RECOLECCIÓN ACEITE</span>
+    </button>
+  </div>
+
+  <span class="loading-status-pill" *ngIf="loading">
+    <i class="bx bx-loader-alt bx-spin"></i>
+    <span>Consultando...</span>
+  </span>
+</div>
+
+<!-- ====================================================================
+     SUB-TAB 1: ACEITE
+     ==================================================================== -->
+<div [hidden]="tabActivo !== 'ACEITE'">
+  <div class="historial-filter-card mb-4">
+    <div class="filter-grid">
+      <div class="filter-item">
+        <label class="rw-form-label" for="fechaIniAceite">Fecha inicio</label>
+        <p-calendar
+          [(ngModel)]="fechaini"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          inputId="fechaIniAceite"
+          dateFormat="dd/mm/yy"
+          appendTo="body"
+          styleClass="rw-calendar"
+          [style]="{ width: '100%' }">
+        </p-calendar>
+      </div>
+
+      <div class="filter-item">
+        <label class="rw-form-label" for="fechaFinAceite">Fecha fin</label>
+        <p-calendar
+          [(ngModel)]="fechafin"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          inputId="fechaFinAceite"
+          dateFormat="dd/mm/yy"
+          appendTo="body"
+          styleClass="rw-calendar"
+          [style]="{ width: '100%' }">
+        </p-calendar>
+      </div>
+
+      <div class="filter-item filter-item-sucursales">
+        <label class="rw-form-label">Sucursales</label>
+        <p-multiSelect
+          [options]="sucursales"
+          [(ngModel)]="sucursalesSel"
+          [filter]="true"
+          optionLabel="nombre"
+          [maxSelectedLabels]="2"
+          selectedItemsLabel="{0} sucursales"
+          placeholder="Seleccionar sucursales..."
+          appendTo="body"
+          styleClass="rw-multiselect"
+          [style]="{ width: '100%' }">
+        </p-multiSelect>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn-rw-filter" [disabled]="loading" (click)="buscarRegistros()">
+          <i class="bx bx-search"></i>
+          <span>BUSCAR</span>
+        </button>
+
+        <button
+          type="button"
+          class="btn-rw-excel"
+          [disabled]="loading || entregasH.length === 0"
+          (click)="exportarExcel(false)">
+          <i class="bx bx-spreadsheet"></i>
+          <span>EXCEL</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="historial-panel-card">
+    <p-table
+      [value]="entregasH"
+      [tableStyle]="{ 'min-width': '68rem' }"
+      styleClass="p-datatable-gridlines table-tk historial-table"
+      [scrollable]="true"
+      scrollHeight="56vh">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>FOLIO</th>
+          <th>SUCURSAL</th>
+          <th>FECHA</th>
+          <th>FECHA RECOLECCIÓN</th>
+          <th class="text-center">ENTREGA CEDIS</th>
+          <th class="text-center">ENTREGA SUCURSAL</th>
+          <th class="text-center">75%</th>
+          <th class="text-center">ESTATUS</th>
+          <th class="text-center">DIFERENCIA</th>
+          <th>COMENTARIOS CEDIS</th>
+          <th>COMENTARIOS SUCURSAL</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr
+          class="historial-row"
+          [ngClass]="{
+            'row-danger': record.intercambio == 1,
+            'row-success': record.intercambio == 2,
+            'row-warning': record.intercambio == 3
+          }">
+          <td class="fw-bold text-dark">{{ record.folio || '-' }}</td>
+          <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
+          <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            @if (record.fechaRecoleccion == null) {
+              {{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}
+            } @else {
+              {{ getDate(record.fechaRecoleccion) | date: 'dd/MM/yyyy hh:mm a' }}
+            }
+          </td>
+          <td class="text-center fw-semibold">{{ record.entregaCedis || '-' }}</td>
+          <td class="text-center fw-semibold">{{ record.entregaSucursal || '-' }}</td>
+          <td class="text-center fw-bold">{{ record.porcentaje75 * 100 | number: '1.0-0' }}%</td>
+          <td class="text-center">
+            <span *ngIf="record.intercambio == 1" class="status-pill status-danger">
+              <i class="bx bx-minus-circle"></i>
+              <span>Bajo</span>
+            </span>
+            <span *ngIf="record.intercambio == 2" class="status-pill status-success">
+              <i class="bx bx-check-circle"></i>
+              <span>Óptimo</span>
+            </span>
+            <span *ngIf="record.intercambio == 3" class="status-pill status-warning">
+              <i class="bx bx-plus-circle"></i>
+              <span>Excedente</span>
+            </span>
+          </td>
+          <td class="text-center fw-bold">{{ record.diferencia || '0' }}</td>
+          <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+          <td class="comment-cell">{{ record.comentariosSucursal || '-' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="11">
+            <div class="historial-empty-state">
+              <i class="bx bx-history"></i>
+              <h6>Sin registros en el historial de aceite</h6>
+              <p>Selecciona un rango de fechas y sucursales, luego presiona BUSCAR.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- ====================================================================
+     SUB-TAB 2: TRAMPA DE GRASA
+     ==================================================================== -->
+<div [hidden]="tabActivo !== 'TRAMPA'">
+  <div class="historial-filter-card mb-4">
+    <div class="filter-grid">
+      <div class="filter-item">
+        <label class="rw-form-label" for="fechaIniTrampa">Fecha inicio</label>
+        <p-calendar
+          [(ngModel)]="fechaini"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          inputId="fechaIniTrampa"
+          dateFormat="dd/mm/yy"
+          appendTo="body"
+          styleClass="rw-calendar"
+          [style]="{ width: '100%' }">
+        </p-calendar>
+      </div>
+
+      <div class="filter-item">
+        <label class="rw-form-label" for="fechaFinTrampa">Fecha fin</label>
+        <p-calendar
+          [(ngModel)]="fechafin"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          inputId="fechaFinTrampa"
+          dateFormat="dd/mm/yy"
+          appendTo="body"
+          styleClass="rw-calendar"
+          [style]="{ width: '100%' }">
+        </p-calendar>
+      </div>
+
+      <div class="filter-item filter-item-sucursales">
+        <label class="rw-form-label">Sucursales</label>
+        <p-multiSelect
+          [options]="sucursales"
+          [(ngModel)]="sucursalesSel"
+          [filter]="true"
+          optionLabel="nombre"
+          [maxSelectedLabels]="2"
+          selectedItemsLabel="{0} sucursales"
+          placeholder="Seleccionar sucursales..."
+          appendTo="body"
+          styleClass="rw-multiselect"
+          [style]="{ width: '100%' }">
+        </p-multiSelect>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn-rw-filter" [disabled]="loading" (click)="buscarRegistrosTA()">
+          <i class="bx bx-search"></i>
+          <span>BUSCAR</span>
+        </button>
+
+        <button
+          type="button"
+          class="btn-rw-excel"
+          [disabled]="loading || entregasTAH.length === 0"
+          (click)="exportarExcel(true)">
+          <i class="bx bx-spreadsheet"></i>
+          <span>EXCEL</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="historial-panel-card">
+    <p-table
+      [value]="entregasTAH"
+      [tableStyle]="{ 'min-width': '62rem' }"
+      styleClass="p-datatable-gridlines table-tk historial-table"
+      [scrollable]="true"
+      scrollHeight="56vh">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>FOLIO</th>
+          <th>SUCURSAL</th>
+          <th>FECHA</th>
+          <th>FECHA RECOLECCIÓN</th>
+          <th class="text-center">ENTREGA SUCURSAL</th>
+          <th class="text-center">75%</th>
+          <th class="text-center">ESTATUS</th>
+          <th class="text-center">DIFERENCIA</th>
+          <th>COMENTARIOS CEDIS</th>
+          <th>COMENTARIOS SUCURSAL</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr
+          class="historial-row"
+          [ngClass]="{
+            'row-danger': record.intercambio == 1,
+            'row-success': record.intercambio == 2,
+            'row-warning': record.intercambio == 3
+          }">
+          <td class="fw-bold text-dark">{{ record.folio || '-' }}</td>
+          <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
+          <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            @if (record.fechaRecoleccion == null) {
+              {{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}
+            } @else {
+              {{ getDate(record.fechaRecoleccion) | date: 'dd/MM/yyyy hh:mm a' }}
+            }
+          </td>
+          <td class="text-center fw-semibold">{{ record.entregaSucursal || '-' }}</td>
+          <td class="text-center fw-bold">{{ record.porcentaje75 * 100 | number: '1.0-0' }}%</td>
+          <td class="text-center">
+            <span *ngIf="record.intercambio == 1" class="status-pill status-danger">
+              <i class="bx bx-minus-circle"></i>
+              <span>Bajo</span>
+            </span>
+            <span *ngIf="record.intercambio == 2" class="status-pill status-success">
+              <i class="bx bx-check-circle"></i>
+              <span>Óptimo</span>
+            </span>
+            <span *ngIf="record.intercambio == 3" class="status-pill status-warning">
+              <i class="bx bx-plus-circle"></i>
+              <span>Excedente</span>
+            </span>
+          </td>
+          <td class="text-center fw-bold">{{ record.diferencia || '0' }}</td>
+          <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+          <td class="comment-cell">{{ record.comentariosSucursal || '-' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10">
+            <div class="historial-empty-state">
+              <i class="bx bx-filter-alt"></i>
+              <h6>Sin registros en el historial de trampa de grasa</h6>
+              <p>Selecciona un rango de fechas y sucursales, luego presiona BUSCAR.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- ====================================================================
+     SUB-TAB 3: REPORTE RECOLECCIÓN ACEITE
+     ==================================================================== -->
+<div [hidden]="tabActivo !== 'REPORTE'">
+  <div class="historial-panel-card">
+    <app-reporte-aceite-tab [sucursales]="sucursales"></app-reporte-aceite-tab>
+  </div>
+</div>

@@ -1,60 +1,133 @@
-<div class="p-3">
-    <p>SUCURSALES HABILITADAS</p>,
-<p-multiSelect
-    [options]="sucursales"
-    [(ngModel)]="sucursalesSel"
-    [filter]="true"
-    optionLabel="nombre"
-    placeholder="SELECCIONAR SUCURSALES"
-    [style]="{width:'100%'}"
-    />
+<div class="control-aceite-stack">
+  <!-- Tarjeta 1: Sucursales Habilitadas -->
+  <div class="control-card">
+    <div class="rw-card-header">
+      <div class="rw-card-title">
+        <i class="bx bx-store-alt"></i>
+        <span>SUCURSALES HABILITADAS PARA CONTROL DE ACEITE</span>
+      </div>
+      <span class="rw-counter-pill">
+        {{ sucursalesSel.length }} / {{ sucursales.length }} activas
+      </span>
+    </div>
 
+    <div class="sucursales-config-row">
+      <div class="sucursales-field">
+        <label class="rw-field-label">SUCURSALES</label>
+        <p-multiSelect
+          [options]="sucursales"
+          [(ngModel)]="sucursalesSel"
+          [filter]="true"
+          optionLabel="nombre"
+          [maxSelectedLabels]="5"
+          selectedItemsLabel="{0} sucursales seleccionadas"
+          placeholder="Seleccionar sucursales..."
+          appendTo="body"
+          styleClass="rw-multiselect"
+          [style]="{ width: '100%' }">
+        </p-multiSelect>
+      </div>
 
+      <button
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="loading"
+        (click)="actualizarSucursales()">
+        <i class="bx" [ngClass]="loading ? 'bx-loader-alt bx-spin' : 'bx-save'"></i>
+        <span>{{ loading ? 'GUARDANDO...' : 'GUARDAR' }}</span>
+      </button>
+    </div>
+  </div>
 
-<div class="d-flex justify-content-end mt-3">
-    <button class="btn bg-p-b p-3" (click)="actualizarSucursales()" ><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
+  <!-- Tarjeta 2: Usuarios CEDIS -->
+  <div class="control-card">
+    <div class="rw-card-header">
+      <div class="rw-card-title">
+        <i class="bx bx-group"></i>
+        <span>USUARIOS CEDIS</span>
+      </div>
+      <span class="rw-counter-pill">
+        {{ catusuarios.length }} {{ catusuarios.length === 1 ? 'usuario' : 'usuarios' }}
+      </span>
+    </div>
+
+    <p-table
+      [value]="catusuarios"
+      [tableStyle]="{ 'min-width': '44rem' }"
+      styleClass="p-datatable-gridlines table-tk control-table"
+      [scrollable]="true"
+      scrollHeight="54vh">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>NOMBRE</th>
+          <th>CORREO</th>
+          <th class="text-center">ROL</th>
+          <th class="text-center">ACCIONES</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-usuario>
+        <tr [pSelectableRow]="usuario">
+          <td>
+            <div class="user-cell">
+              <span class="user-avatar">{{ obtenerIniciales(usuario) }}</span>
+              <span class="fw-semibold text-dark">
+                {{ usuario.nombre }} {{ usuario.apellidoP }} {{ usuario.apellidoM }}
+              </span>
+            </div>
+          </td>
+          <td class="text-muted">{{ usuario.email }}</td>
+          <td class="text-center">
+            <span class="role-pill">{{ obtenerNombreRol(usuario.idRol) || 'CEDIS' }}</span>
+          </td>
+          <td class="text-center">
+            <button
+              type="button"
+              class="btn-rw-edit"
+              pTooltip="Editar usuario"
+              tooltipPosition="top"
+              (click)="abrirModalEditarUsuario(usuario)">
+              <i class="bx bx-edit"></i>
+              <span>Editar</span>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">
+            <div class="control-empty-state">
+              <i class="bx bx-user-x"></i>
+              <h6>Sin usuarios CEDIS registrados</h6>
+              <p>No se encontraron usuarios con rol CEDIS para mostrar.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
 
-<div class="mt-3 p-3">
-<p>USUARIOS CEDIS</p>
- <p-table [value]="catusuarios" [tableStyle]="{ 'min-width': '10rem', padding: '10px' }"
-                styleClass="p-datatable-gridlines table-tk" [scrollable]="true" scrollHeight="62vh">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>NOMBRE</th>
-                        <th>CORREO</th>
-                        <th>ROL</th>
-                        <th>ACCIONES</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-usuario>
-                    <tr [pSelectableRow]="usuario">
-                        <td>{{usuario.nombre}} {{usuario.apellidoP}} {{usuario.apellidoM}}</td>
-                        <td>{{usuario.email}}</td>
-                        <td>{{obtenerNombreRol(usuario.idRol)}}</td>
-                        <td>
-                            <button class="btn btn-primary me-3" (click)="abrirModalEditarUsuario(usuario)"><i
-                                    class='bx bx-edit bx-sm' pTooltip="EDITAR" tooltipPosition="top"></i></button>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>
 
-</div>
-</div>
-
-
-
-<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
-    [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-    [showTransformOptions]="'translateX(100%)'"></p-toast>
 <p-confirmDialog>
-    <ng-template pTemplate="message" let-message>
-        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
-            <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
-            <p>{{ message.message }}</p>
-        </div>
-    </ng-template>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+      <p>{{ message.message }}</p>
+    </div>
+  </ng-template>
 </p-confirmDialog>
-<app-crear-usuario-dialog *ngIf="mostrarModalUsuario" [mostrarModalCrearUsuario]="mostrarModalUsuario"
-    (closeEvent)="cerrarModalUsuario()" [usuario]="usuarioSeleccionado" [esNuevoUsuario]="esNuevoUsuario" [choferCedis]="true"></app-crear-usuario-dialog>
+
+<app-crear-usuario-dialog
+  *ngIf="mostrarModalUsuario"
+  [mostrarModalCrearUsuario]="mostrarModalUsuario"
+  (closeEvent)="cerrarModalUsuario()"
+  [usuario]="usuarioSeleccionado"
+  [esNuevoUsuario]="esNuevoUsuario"
+  [choferCedis]="true">
+</app-crear-usuario-dialog>
