@@ -9,8 +9,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 
 import { AceiteService } from '../../services/aceite.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 
 @Component({
   selector: 'app-agregar-entrega-dialog',
@@ -32,7 +32,7 @@ export class AgregarEntregaDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private messageService: MessageService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private cdr: ChangeDetectorRef,
     public aceiteService: AceiteService
   ) { }

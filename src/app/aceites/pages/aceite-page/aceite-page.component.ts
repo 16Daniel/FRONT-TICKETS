@@ -16,9 +16,9 @@ import ControlAceiteTabComponent from '../../components/control-aceite-tab/contr
 import { AgregarRecoleccionDialogComponent } from '../../dialogs/agregar-recoleccion-dialog/agregar-recoleccion-dialog.component';
 import { HistorialAceiteTabComponent } from '../../components/historial-aceite-tab/historial-aceite-tab.component';
 import { AceiteService } from '../../services/aceite.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { EntregaAceite } from '../../models/aceite.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { RegistrosPendientesTabComponent } from '../../components/registros-pendientes-tab/registros-pendientes-tab.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
@@ -83,7 +83,7 @@ export default class AceitPageComponent implements OnInit, OnDestroy {
   constructor(
     public aceiteService: AceiteService,
     public cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private messageService: MessageService
   ) { }
 

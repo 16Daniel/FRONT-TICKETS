@@ -3,9 +3,9 @@ import { environment } from '../../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { SucursalRegion } from '../interfaces/sucursal-region.interface';
-import { PreciosAyc } from '../interfaces/precios-ayc.interface';
-import { colorPrecioayc } from '../interfaces/color-precio-ayc.interface';
+import { SucursalRegion } from '../models/sucursal-region.model';
+import { PreciosAyc } from '../models/precios-ayc.model';
+import { colorPrecioayc } from '../models/color-precio-ayc.model';
 
 @Injectable({
   providedIn: 'root'

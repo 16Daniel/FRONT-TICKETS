@@ -1,6 +1,6 @@
 import { Component, input, Input, type OnInit } from '@angular/core';
 import { HistorailPersonal } from '../../interfaces/Nomina';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SelectButtonModule } from 'primeng/selectbutton';

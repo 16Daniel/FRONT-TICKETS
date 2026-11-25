@@ -13,10 +13,10 @@ import { Timestamp } from '@angular/fire/firestore';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { EntregaAceite } from '../../models/aceite.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
@@ -52,7 +52,7 @@ export default class RecoleccionAceitePageComponent implements OnInit, OnDestroy
   constructor(
     public aceiteService: AceiteService,
     public cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private usuarioSucursalService: UsuarioSucursalService,
     private messageService: MessageService) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

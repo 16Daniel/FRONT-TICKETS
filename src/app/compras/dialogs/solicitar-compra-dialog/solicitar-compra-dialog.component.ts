@@ -12,10 +12,10 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { StatusPurchaseService } from '../../../compras/services/status-purchase.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { EstatusCompra } from '../../interfaces/estatus-compras.model';
 import { ComprasService } from '../../services/compras.service';
 import { SubirImgsComprasDialogComponent } from '../subir-imgs-compras-dialog/subir-imgs-compras-dialog.component';
@@ -61,7 +61,7 @@ export class SolicitarCompraDialogComponent implements OnInit {
     private statusPurchaseService: StatusPurchaseService,
     private cdr: ChangeDetectorRef,
     private areasService: AreasService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     public datesHelper: DatesHelperService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

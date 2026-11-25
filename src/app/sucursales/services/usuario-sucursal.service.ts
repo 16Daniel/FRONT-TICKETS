@@ -13,7 +13,7 @@ import {
 import {
   TipoUsuarioSucursal,
   UsuarioSucursal,
-} from '../interfaces/usuario-sucursal.interface';
+} from '../models/usuario-sucursal.model';
 
 @Injectable({
   providedIn: 'root',

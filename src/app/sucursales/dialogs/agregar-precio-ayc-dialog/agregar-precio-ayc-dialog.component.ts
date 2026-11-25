@@ -6,9 +6,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
 import { PreciosaycService } from '../../services/preciosayc.service';
-import { PreciosAyc } from '../../interfaces/precios-ayc.interface';
-import { colorPrecioayc } from '../../interfaces/color-precio-ayc.interface';
-import { SucursalRegion } from '../../interfaces/sucursal-region.interface';
+import { PreciosAyc } from '../../models/precios-ayc.model';
+import { colorPrecioayc } from '../../models/color-precio-ayc.model';
+import { SucursalRegion } from '../../models/sucursal-region.model';
 
 @Component({
   selector: 'app-modal-agregar-precio-ayc',

@@ -16,10 +16,10 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { NotificationService } from '../../../shared/services/notification.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicitar-compra-dialog/solicitar-compra-dialog.component';
@@ -82,7 +82,7 @@ export class TicketsTabComponent implements OnInit, OnDestroy {
     private ticketsService: TicketsService,
     private messageService: MessageService,
     private UsuariosService: UsuariosService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private usuarioSucursalService: UsuarioSucursalService,
     private notificationService: NotificationService,
     private purchaseService: ComprasService,

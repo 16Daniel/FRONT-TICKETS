@@ -9,7 +9,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 
 import { ReporteAceiteTab } from '../reporte-aceite-tab/reporte-aceite-tab';
 import { AceiteService } from '../../services/aceite.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { EntregaAceite } from '../../models/aceite.model';
 
 export type SubTabHistorialId = 'ACEITE' | 'TRAMPA' | 'REPORTE';

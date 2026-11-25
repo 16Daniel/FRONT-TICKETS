@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 
 @Component({
@@ -21,7 +21,7 @@ export class NivelesAudioComponent {
 
   constructor(
     private firebaseStorage: FirebaseStorageService,
-    private branchesService: BranchesService
+    private branchesService: SucursalesService
   ) {}
 
   async onFileSelected(event: any) {

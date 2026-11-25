@@ -6,7 +6,7 @@ import { sucursalesComensales } from '../../interfaces/ConteoComensales';
 import { ComensalesService } from '../../services/comensales.service';
 import Swal from 'sweetalert2';
 import { TableModule } from 'primeng/table';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 @Component({
   selector: 'app-sucursales-dialog',
   standalone: true,

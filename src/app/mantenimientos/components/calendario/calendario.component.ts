@@ -17,10 +17,10 @@ import { Ticket } from '../../../tickets/models/ticket.model';
 import { GuardiasService } from '../../../tickets/services/guardias.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { TicketsService } from '../../../tickets/services/tickets.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
@@ -74,7 +74,7 @@ export class CalendarioComponent implements OnInit {
     private documentService: DocumentsService,
     private ticketsService: TicketsService,
     private mantenimientoFactory: MantenimientoFactoryService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private datesHelper: DatesHelperService,
     private usuariosService: UsuariosService,
     private maintenanceAvService: MaintenanceAvService,

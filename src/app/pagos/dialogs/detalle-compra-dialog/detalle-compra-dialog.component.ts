@@ -11,7 +11,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SubirFacturaCompraDialogComponent } from '../subir-factura-compra-dialog/subir-factura-compra-dialog.component';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 

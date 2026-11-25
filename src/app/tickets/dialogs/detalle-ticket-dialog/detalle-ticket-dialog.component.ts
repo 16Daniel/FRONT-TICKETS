@@ -20,7 +20,7 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { EstatusTicketService } from '../../services/estatus-ticket.service';
 import { TiposSoporteService } from '../../services/tipos-soporte.service';
@@ -78,7 +78,7 @@ export class DetalleTicketDialogComponent implements OnInit, OnChanges, OnDestro
   private branchesSub?: Subscription;
 
   constructor(
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private categoriasService: CategoriasService,
     private estatusTicketService: EstatusTicketService,
     private tiposSoporteService: TiposSoporteService,

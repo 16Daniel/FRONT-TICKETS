@@ -20,7 +20,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 
 @Component({
@@ -77,7 +77,7 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     private UsuariosService: UsuariosService,
     private rolesService: RolesService,
     private areasService: AreasService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private usuarioSucursalService: UsuarioSucursalService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

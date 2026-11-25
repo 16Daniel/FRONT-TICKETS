@@ -8,8 +8,8 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { CategoriasService } from '../../services/categorias.service';
 import { Categoria } from '../../models/categoria.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { TicketsService } from '../../services/tickets.service';
@@ -61,7 +61,7 @@ export class UmbralRecurrenciasPageComponent implements OnInit, OnDestroy {
   constructor(
     private areasService: AreasService,
     private categoriasService: CategoriasService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private UsuariosService: UsuariosService,
     private ticketsService: TicketsService,
     private cdr: ChangeDetectorRef

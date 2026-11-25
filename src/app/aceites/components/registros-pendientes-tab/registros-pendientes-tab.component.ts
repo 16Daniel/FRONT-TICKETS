@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
 import { EntregaAceite } from '../../models/aceite.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 export type SubTabPendientesId = 'ACEITE' | 'TRAMPA';
 

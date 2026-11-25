@@ -13,11 +13,11 @@ import { Responsable } from '../../models/responsable.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { UsuariosService } from '../../services/usuarios.service';
 import { ResponsablesService } from '../../services/responsables.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { RolesService } from '../../../roles/services/roles.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Rol } from '../../../roles/interfaces/rol.model';
 import { CrearResponsableDialogComponent } from '../crear-responsable-dialog/crear-responsable-dialog.component';
 
@@ -63,7 +63,7 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     private UsuariosService: UsuariosService,
     private responsablesService: ResponsablesService,
     private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private usuarioSucursalService: UsuarioSucursalService,
     private rolesService: RolesService,
     private areasService: AreasService,

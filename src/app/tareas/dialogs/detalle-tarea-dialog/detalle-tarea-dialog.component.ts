@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { FormatCommentPipe } from '../../../shared/pipes/format-comment.pipe';
 import { Area } from '../../../areas/interfaces/area.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
@@ -20,7 +20,7 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { EnviarCorreoRequest, MailService } from '../../../shared/services/mail.service';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { EstatusTarea } from '../../interfaces/estatus-tarea.interface';
 import { EstatusEisenhower } from '../../interfaces/estatus-eisenhower.interface';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
@@ -88,7 +88,7 @@ export class DetalleTareaDialogComponent implements OnInit {
   tareasRelacionadas: Tarea[] = [];
 
   private cdr = inject(ChangeDetectorRef);
-  private branchesService = inject(BranchesService);
+  private branchesService = inject(SucursalesService);
   private tareasService = inject(TareasService);
   private messageService = inject(MessageService);
   private statusTaskService = inject(StatusTaskService);

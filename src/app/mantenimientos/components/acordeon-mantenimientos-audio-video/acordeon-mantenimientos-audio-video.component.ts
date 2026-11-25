@@ -8,7 +8,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";

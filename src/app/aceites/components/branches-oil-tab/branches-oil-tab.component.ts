@@ -15,9 +15,9 @@ import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { BranchesOilTrapTab } from "../branches-oil-trap-tab/branches-oil-trap-tab";
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { AceiteService } from '../../services/aceite.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { EntregaAceite } from '../../models/aceite.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 @Component({
   selector: 'app-branches-oil-tab',
@@ -61,7 +61,7 @@ export class BranchesOilTabComponent implements OnInit {
     public aceiteService: AceiteService,
     private confirmationService: ConfirmationService,
     public cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private messageService: MessageService) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }

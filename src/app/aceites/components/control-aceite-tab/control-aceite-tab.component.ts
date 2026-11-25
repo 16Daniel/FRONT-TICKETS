@@ -13,9 +13,9 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { RolesService } from '../../../roles/services/roles.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Rol } from '../../../roles/interfaces/rol.model';
 import { AsignarSucursalesAceiteDialogComponent } from '../../dialogs/asignar-sucursales-aceite-dialog/asignar-sucursales-aceite-dialog.component';
 
@@ -57,7 +57,7 @@ export default class ControlAceiteTabComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private usuariosService: UsuariosService,
     private rolesService: RolesService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private usuarioSucursalService: UsuarioSucursalService,
   ) { }
 

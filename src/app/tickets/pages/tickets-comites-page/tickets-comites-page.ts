@@ -8,8 +8,8 @@ import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { Comite } from '../../models/comite.model';
 import { ComitesService } from '../../services/comites.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -51,7 +51,7 @@ export class TicketsComitesPage implements OnInit, OnDestroy {
   constructor(
     private comitesService: ComitesService,
     private ticketsService: TicketsService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
   ) {}
 
   obtenerSucursalesConTickets(tickets: Ticket[]): Sucursal[] {

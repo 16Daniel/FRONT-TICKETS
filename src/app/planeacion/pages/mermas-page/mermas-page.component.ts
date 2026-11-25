@@ -10,8 +10,8 @@ import * as XLSX from 'xlsx';
 
 import { environment } from '../../../../environments/environments';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Merma } from '../../interfaces/Merma';
 import { PlaneacionService } from '../../services/Planeacion.service';
 
@@ -34,7 +34,7 @@ export default class MermasPageComponent implements OnInit {
   public resumido: boolean = true;
   public usuario: Usuario;
   public idServicio: string = environment.idServicio;
-  constructor(private branchesService: BranchesService,
+  constructor(private branchesService: SucursalesService,
     private cdr: ChangeDetectorRef,
     private apiserv: PlaneacionService
   ) {

@@ -12,7 +12,7 @@ import {
   where
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { DispositivosSucursal } from '../interfaces/dispositivos-sucursal.interface';
+import { DispositivosSucursal } from '../models/dispositivos-sucursal.model';
 
 @Injectable({
   providedIn: 'root'

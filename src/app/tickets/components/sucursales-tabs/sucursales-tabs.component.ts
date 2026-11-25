@@ -8,8 +8,8 @@ import { Subscription } from 'rxjs';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { SucursalAreaTabComponent } from '../sucursal-area-tab/sucursal-area-tab.component';
 import { Area } from '../../../areas/interfaces/area.model';
@@ -54,7 +54,7 @@ export class SucursalesTabsComponent implements OnDestroy, OnInit {
   constructor(
     private ticketsService: TicketsService,
     public cdr: ChangeDetectorRef,
-    private sucursalesService: BranchesService,
+    private sucursalesService: SucursalesService,
     private areasService: AreasService
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

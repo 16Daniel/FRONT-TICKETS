@@ -9,12 +9,12 @@ import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { TareasService } from '../../services/tareas.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { SearchFilterPipe } from '../../../shared/pipes/search-filter.pipe';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Responsable } from '../../../usuarios/models/responsable.model';
 
@@ -44,7 +44,7 @@ export class TareasArchivadasDialogComponent implements OnInit {
   responsables: Responsable[] = [];
   textoBusqueda?: string;
 
-  branchesService = inject(BranchesService);
+  branchesService = inject(SucursalesService);
   tasksService = inject(TareasService);
   public datesHelper = inject(DatesHelperService);
   cdr = inject(ChangeDetectorRef);
