@@ -3,7 +3,7 @@ import { Component, EventEmitter, HostListener, Input, Output } from '@angular/c
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
-import { Dispositivo } from '../../../../activos-fijos/interfaces/dispositivo.interface';
+import { Dispositivo } from '../../../interfaces/dispositivo.model';
 
 export interface EvidenciaSysAv {
   evidenciaUrls?: string[];

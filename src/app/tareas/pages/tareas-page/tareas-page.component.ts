@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DashboardTasksPageComponent } from '../dashboard-tasks-page/dashboard-tasks-page';
 import { EisenhowerMatrixPageComponent } from '../eisenhower-matrix-page/eisenhower-matrix-page';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 @Component({
   selector: 'app-tareas-page',

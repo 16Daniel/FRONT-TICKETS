@@ -22,7 +22,7 @@ import { TablaMantenimientosMantenimientoComponent } from '../../components/tabl
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
@@ -31,7 +31,7 @@ import { MantenimientosSistemasService } from '../../services/mantenimientos-sis
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { MaintenanceMtooService } from '../../services/maintenance-mtto.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { OpcionTabMantenimiento, TipoMantenimientoTab } from '../mantenimientos-admin-page/mantenimientos-admin-page.component';
 
@@ -103,7 +103,7 @@ export default class MantenimientosSucursalPageComponent implements OnInit, OnDe
     private maintenanceAvService: MaintenanceAvService,
     private maintenanceMtooService: MaintenanceMtooService,
     private UsuariosService: UsuariosService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private datesHelper: DatesHelperService,
     private confirmationService: ConfirmationService
   ) {

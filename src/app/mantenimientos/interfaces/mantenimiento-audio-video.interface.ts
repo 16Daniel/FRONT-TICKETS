@@ -1,7 +1,7 @@
 import { Timestamp } from "@angular/fire/firestore";
 import { Comentario } from "../../shared/interfaces/comentario-chat.model";
 import { ParticipanteChat } from "../../shared/interfaces/participante-chat.model";
-import { Dispositivo } from "../../activos-fijos/interfaces/dispositivo.interface";
+import { Dispositivo } from "./dispositivo.model";
 
 export interface MantenimientoAudioVideo {
   id?: string | any;

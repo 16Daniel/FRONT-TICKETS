@@ -7,6 +7,7 @@
             <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global"
                 tooltipPosition="top">PROMESA</th>
             <th>FECHA</th>
+            <th *ngIf="idArea === '0'">ÁREA</th>
             <th>CATEGORÍA / RUTA</th>
             <th>ESTATUS</th>
             <th>SOLICITANTE</th>
@@ -38,6 +39,11 @@
                 </div>
             </td>
             <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
+            </td>
+            <td *ngIf="idArea === '0'" class="text-center">
+                <span class="badge bg-light text-dark border fw-bold text-uppercase" style="font-size: 0.72rem;">
+                    {{ obtenerNombreArea(tk.idArea) }}
+                </span>
             </td>
             <td class="text-center">
                 <span class="fw-bold" style="font-size: 0.85rem;">

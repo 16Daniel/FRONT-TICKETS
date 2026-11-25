@@ -23,7 +23,7 @@ import {
 import { combineLatest, from, map, Observable } from 'rxjs';
 import { Ticket } from '../models/ticket.model';
 import { TicketsFiltros } from '../interfaces/tickets-filtros.interface';
-import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
+import { ActivoFijo } from '../../activos-fijos/models/activo-fijo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -74,14 +74,21 @@ export class TicketsService {
 
   getByArea(idArea: string): Observable<any[]> {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const q1 = query(ticketsCollection,
-      where('idEstatusTicket', 'not-in', ['3']), where('idArea', '==', idArea));
+    const filtrarPorArea = Boolean(idArea && String(idArea) !== '0');
 
-    const q2 = query(ticketsCollection,
+    const filtrosQ1: any[] = [where('idEstatusTicket', 'not-in', ['3'])];
+    const filtrosQ2: any[] = [
       where('idEstatusTicket', '==', '3'),
-      where('validacionAdmin', '==', false),
-      where('idArea', '==', idArea)
-    );
+      where('validacionAdmin', '==', false)
+    ];
+
+    if (filtrarPorArea) {
+      filtrosQ1.push(where('idArea', '==', idArea));
+      filtrosQ2.push(where('idArea', '==', idArea));
+    }
+
+    const q1 = query(ticketsCollection, ...filtrosQ1);
+    const q2 = query(ticketsCollection, ...filtrosQ2);
 
     // Convertir ambas consultas a Observables
     const query1$ = collectionData(q1, { idField: 'id' });
@@ -458,9 +465,11 @@ export class TicketsService {
 
   private buildQueryTicketsPorFiltros(idArea: string, filtros: TicketsFiltros) {
     const ticketsCollection = collection(this.firestore, 'tickets');
-    const constraints: any[] = [
-      where('idArea', '==', idArea)
-    ];
+    const constraints: any[] = [];
+
+    if (idArea && String(idArea) !== '0') {
+      constraints.push(where('idArea', '==', idArea));
+    }
 
     if (filtros.fechaInicio) {
       const startOfDay = new Date(filtros.fechaInicio);

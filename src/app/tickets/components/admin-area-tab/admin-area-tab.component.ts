@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { catchError, combineLatest, of, Subscription } from 'rxjs';
+import { catchError, combineLatest, map, of, Subscription, switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
@@ -21,12 +21,13 @@ import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { AreasService } from '../../../areas/services/areas.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
@@ -88,6 +89,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   loadingSla: boolean = false;
   mesActualNombre: string = '';
   matrizUrgenciaArea?: MatrizUrgencia;
+  private matricesPorArea = new Map<string, MatrizUrgencia>();
   totalesSla: TotalesSlaDashboard = {
     totalTickets: 0,
     totalTerminados: 0,
@@ -98,13 +100,21 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   };
   private ticketsSlaMes: Ticket[] = [];
   private subscripcionSla?: Subscription;
+  private subscripcionSucursales?: Subscription;
+  private subscripcionUsuarios?: Subscription;
+  private subscripcionCompras?: Subscription;
+
+  get esVistaGlobal(): boolean {
+    return String(this.idArea) === '0';
+  }
 
   constructor(
     public cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private ticketsService: TicketsService,
     private UsuariosService: UsuariosService,
-    private branchesService: BranchesService,
+    private areasService: AreasService,
+    private branchesService: SucursalesService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
     private matrizUrgenciaService: MatrizUrgenciaService,
@@ -126,10 +136,11 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscripcionTicket) {
-      this.subscripcionTicket.unsubscribe();
-    }
+    this.subscripcionTicket?.unsubscribe();
     this.subscripcionSla?.unsubscribe();
+    this.subscripcionSucursales?.unsubscribe();
+    this.subscripcionUsuarios?.unsubscribe();
+    this.subscripcionCompras?.unsubscribe();
   }
 
   private definirMesActual(): void {
@@ -148,19 +159,38 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     const fechaFin = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
     const filtros: TicketsFiltros = { fechaInicio, fechaFin };
 
-    const matriz$ = this.matrizUrgenciaService.obtenerMatrizPorArea(this.idArea).pipe(
-      catchError((err) => {
-        console.error('Error al obtener matriz de urgencia:', err);
-        return of(undefined);
-      })
-    );
+    const matrices$ = this.esVistaGlobal
+      ? this.areasService.areas$.pipe(
+          switchMap((areas) => {
+            const activas = areas.filter((a) => a.activarTickets === true && !a.eliminado);
+            if (activas.length === 0) return of([] as MatrizUrgencia[]);
+            return combineLatest(
+              activas.map((a) =>
+                this.matrizUrgenciaService.obtenerMatrizPorArea(String(a.id), a.nombre).pipe(
+                  catchError(() => of(this.matrizUrgenciaService.obtenerMatrizPredeterminada(String(a.id), a.nombre)))
+                )
+              )
+            );
+          })
+        )
+      : this.matrizUrgenciaService.obtenerMatrizPorArea(this.idArea).pipe(
+          map((m) => (m ? [m] : [])),
+          catchError((err) => {
+            console.error('Error al obtener matriz de urgencia:', err);
+            return of([] as MatrizUrgencia[]);
+          })
+        );
 
     const tickets$ = this.ticketsService.getTicketsPorFiltrosTiempoReal(this.idArea, filtros);
 
     this.subscripcionSla?.unsubscribe();
-    this.subscripcionSla = combineLatest([matriz$, tickets$]).subscribe({
-      next: ([matriz, tickets]) => {
-        this.matrizUrgenciaArea = matriz;
+    this.subscripcionSla = combineLatest([matrices$, tickets$]).subscribe({
+      next: ([matrices, tickets]) => {
+        this.matricesPorArea.clear();
+        for (const m of matrices) {
+          this.matricesPorArea.set(String(m.idArea), m);
+        }
+        this.matrizUrgenciaArea = this.esVistaGlobal ? undefined : matrices[0];
         this.ticketsSlaMes = tickets || [];
         this.procesarMetricasSla();
         this.loadingSla = false;
@@ -172,6 +202,13 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  private obtenerMatrizDeTicket(t: Ticket): MatrizUrgencia | undefined {
+    if (this.esVistaGlobal) {
+      return this.matricesPorArea.get(String(t.idArea));
+    }
+    return this.matrizUrgenciaArea;
   }
 
   /** Misma regla que la vista del analista: responsable o involucrado (o toda el área si es guardia). */
@@ -191,9 +228,10 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   get tituloSla(): string {
-    return this.usergroup
-      ? `Rendimiento de ${this.usergroup.nombre} ${this.usergroup.apellidoP}`
-      : 'Rendimiento general del mes';
+    if (this.usergroup) {
+      return `Rendimiento de ${this.usergroup.nombre} ${this.usergroup.apellidoP}`;
+    }
+    return this.esVistaGlobal ? 'Rendimiento global del mes' : 'Rendimiento general del mes';
   }
 
   private procesarMetricasSla(): void {
@@ -211,7 +249,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     let slaResolucionCumplidos = 0;
 
     terminados.forEach(t => {
-      const evalSla = this.kpiRadarService.evaluarSlaTicket(t, this.matrizUrgenciaArea);
+      const evalSla = this.kpiRadarService.evaluarSlaTicket(t, this.obtenerMatrizDeTicket(t));
       if (evalSla.atencion) {
         slaAtencionCumplidos++;
       }
@@ -287,7 +325,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   obtenerSucursales() {
-    this.branchesService.get().subscribe({
+    this.subscripcionSucursales = this.branchesService.get().subscribe({
       next: (data) => {
         this.sucursales = data;
         this.cdr.detectChanges();
@@ -300,12 +338,14 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   }
 
   obtenerUsuariosHelp() {
-    this.UsuariosService.getUsuariosPorRol(['4', '7'], this.idArea)
-      .subscribe(usuarios => this.usuariosHelp = usuarios);
+    this.subscripcionUsuarios = this.UsuariosService.getUsuariosPorRol(
+      ['4', '7'],
+      this.esVistaGlobal ? undefined : this.idArea
+    ).subscribe(usuarios => this.usuariosHelp = usuarios);
   }
 
   obtenerCompras() {
-    this.purchaseService.getByArea(this.idArea).subscribe(result => {
+    this.subscripcionCompras = this.purchaseService.getByArea(this.idArea).subscribe(result => {
       this.compras = result;
     });
   }
@@ -358,7 +398,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     }
     const impacto = Math.min(3, Math.max(1, t.criticidad || 2));
     const urgencia = Math.min(3, Math.max(1, t.urgencia || 2));
-    const celda = this.matrizUrgenciaService.obtenerCelda(this.matrizUrgenciaArea, impacto, urgencia);
+    const celda = this.matrizUrgenciaService.obtenerCelda(this.obtenerMatrizDeTicket(t), impacto, urgencia);
     return celda?.horas ?? 24;
   }
 

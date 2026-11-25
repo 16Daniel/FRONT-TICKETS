@@ -1,0 +1,331 @@
+/* Rebel Wings Brand Design Tokens (DESIGN-SYSTEM.md) */
+$rw-primary: #d3152a;
+$rw-primary-soft: #fff1f2;
+$rw-dark: #1e1e24;
+
+/* Semáforo de Datos (DESIGN-SYSTEM.md) */
+$status-danger: #ef4444;
+$status-danger-bg: #fff1f2;
+$status-warning: #f59e0b;
+$status-warning-bg: #fffbeb;
+$status-success: #10b981;
+$status-success-bg: #f0fdf4;
+$status-info: #0f62fe;
+$status-info-bg: #eff6ff;
+
+/* ==========================================================================
+   Barra de Sub-tabs en Cápsulas
+   ========================================================================== */
+.subtabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 0.55rem 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.subtabs-pills {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.tab-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background-color: $rw-primary-soft;
+  color: $rw-primary;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-left: 0.2rem;
+}
+
+.loading-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background-color: $status-info-bg;
+  border: 1px solid #bfdbfe;
+  color: $status-info;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Tarjeta de Filtros
+   ========================================================================== */
+.historial-filter-card {
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(220px, 1.4fr) auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.rw-form-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.btn-rw-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 44px;
+  padding: 0 1.25rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #d3152a 0%, #b91022 100%);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(211, 21, 42, 0.24);
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(211, 21, 42, 0.32);
+  }
+
+  &:disabled {
+    background: #cbd5e1;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+.btn-rw-excel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 44px;
+  padding: 0 1.15rem;
+  border-radius: 10px;
+  border: 1px solid #a7f3d0;
+  background-color: $status-success-bg;
+  color: #059669;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 1.15rem;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $status-success;
+    border-color: $status-success;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+:host ::ng-deep .rw-calendar {
+  width: 100%;
+
+  .p-inputtext {
+    width: 100%;
+    height: 44px;
+    border-radius: 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    background-color: #f8fafc !important;
+    color: #334155;
+    font-weight: 600;
+    font-size: 0.88rem;
+
+    &:hover,
+    &:focus {
+      border-color: $rw-primary !important;
+      background-color: #ffffff !important;
+      box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.1) !important;
+    }
+  }
+}
+
+:host ::ng-deep .rw-multiselect {
+  min-height: 44px !important;
+  border-radius: 10px !important;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+
+  .p-multiselect-label {
+    font-size: 0.88rem;
+    color: #334155;
+  }
+
+  &:hover,
+  &.p-focus {
+    border-color: $rw-primary !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* ==========================================================================
+   Panel de Tablas
+   ========================================================================== */
+.historial-panel-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.historial-row {
+  transition: background-color 0.15s ease;
+
+  &.row-danger td:first-child {
+    box-shadow: inset 5px 0 0 0 $status-danger;
+  }
+
+  &.row-success td:first-child {
+    box-shadow: inset 5px 0 0 0 $status-success;
+  }
+
+  &.row-warning td:first-child {
+    box-shadow: inset 5px 0 0 0 $status-warning;
+  }
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  i {
+    font-size: 0.95rem;
+  }
+
+  &.status-danger {
+    background-color: $status-danger-bg;
+    color: $status-danger;
+    border: 1px solid #fecaca;
+  }
+
+  &.status-success {
+    background-color: $status-success-bg;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+
+  &.status-warning {
+    background-color: $status-warning-bg;
+    color: #d97706;
+    border: 1px solid #fde68a;
+  }
+}
+
+.comment-cell {
+  max-width: 220px;
+  color: #475569;
+  font-size: 0.84rem;
+}
+
+.historial-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #64748b;
+
+  i {
+    font-size: 2.5rem;
+    color: #cbd5e1;
+  }
+
+  h6 {
+    margin: 0;
+    font-weight: 800;
+    color: $rw-dark;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filter-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 640px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-actions {
+    width: 100%;
+
+    button {
+      flex: 1 1 auto;
+    }
+  }
+}

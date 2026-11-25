@@ -21,13 +21,13 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { TiposSoporteService } from '../../services/tipos-soporte.service';
 import { EstatusTicketService } from '../../services/estatus-ticket.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
 
@@ -86,7 +86,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private ticketsService: TicketsService,
     private UsuariosService: UsuariosService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     public areasService: AreasService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
@@ -182,7 +182,7 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
           ...item,
           id: item.id.toString()
         }));
-        if (this.idArea && this.idArea.trim() !== '') {
+        if (this.idArea && this.idArea.trim() !== '' && String(this.idArea) !== '0') {
           this.categorias = this.categorias.filter(x => String(x.idArea) === String(this.idArea));
         }
         this.cdr.markForCheck();
@@ -192,6 +192,12 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
         this.showMessage('error', 'Error', 'Error al procesar la solicitud');
       },
     });
+  }
+
+  obtenerNombreArea(idArea?: string): string {
+    if (!idArea) return 'SIN ÁREA';
+    const area = this.areas.find(a => String(a.id) === String(idArea));
+    return area ? area.nombre : idArea;
   }
 
   obtenerNombreResponsable(id: string): string {

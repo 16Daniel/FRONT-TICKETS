@@ -1,0 +1,360 @@
+/* Rebel Wings Brand Design Tokens (DESIGN-SYSTEM.md) */
+$rw-primary: #d3152a;
+$rw-primary-soft: #fff1f2;
+$rw-dark: #1e1e24;
+$rw-canvas: #f4f6fa;
+$status-success: #10b981;
+$status-success-bg: #f0fdf4;
+
+:host ::ng-deep .asignar-sucursales-aceite-dialog {
+  .p-dialog-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.15rem 1.5rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+
+  .p-dialog-content {
+    background: $rw-canvas;
+    padding: 1.25rem 1.5rem;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+}
+
+.modal-custom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 1.5rem;
+}
+
+.asignar-sucursales-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.rw-user-summary-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 0.95rem 1.15rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.user-summary-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.user-summary-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: $rw-primary-soft;
+  border: 1px solid #fecdd3;
+  color: $rw-primary;
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.user-summary-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: $rw-dark;
+}
+
+.user-summary-email {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.rw-count-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background-color: $rw-primary-soft;
+  border: 1px solid #fecdd3;
+  color: $rw-primary;
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.rw-form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.rw-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rw-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $rw-dark;
+
+  i {
+    font-size: 1.15rem;
+    color: $rw-primary;
+  }
+}
+
+.quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.btn-quick-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #475569;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: $rw-primary;
+    background-color: $rw-primary-soft;
+    color: $rw-primary;
+  }
+
+  &.btn-quick-clear:hover {
+    border-color: #94a3b8;
+    background-color: #f1f5f9;
+    color: $rw-dark;
+  }
+}
+
+.rw-field-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rw-field-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+:host ::ng-deep .rw-multiselect-h42 {
+  min-height: 42px !important;
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #ffffff !important;
+  display: flex;
+  align-items: center;
+
+  .p-multiselect-label {
+    font-size: 0.9rem;
+    color: $rw-dark;
+  }
+
+  &:hover,
+  &.p-focus {
+    border-color: $rw-primary !important;
+    box-shadow: 0 0 0 3px rgba(211, 21, 42, 0.1) !important;
+  }
+}
+
+.sucursal-option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.option-oil-badge {
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background-color: $status-success-bg;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.selected-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 0.25rem 0;
+}
+
+.sucursal-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.45rem 0.32rem 0.65rem;
+  border-radius: 999px;
+  background-color: $rw-canvas;
+  border: 1px solid #e2e8f0;
+  color: $rw-dark;
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  > i {
+    font-size: 0.95rem;
+    color: $rw-primary;
+  }
+}
+
+.chip-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: $rw-primary-soft;
+    color: $rw-primary;
+  }
+}
+
+.empty-selection-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  font-size: 0.82rem;
+
+  i {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+}
+
+.btn-rw-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    border-color: #94a3b8;
+    background-color: #f8fafc;
+    color: $rw-dark;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-rw-cta:disabled {
+  background: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 575.98px) {
+  :host ::ng-deep .asignar-sucursales-aceite-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+
+    .p-dialog-header {
+      padding: 0.85rem 1rem;
+      border-radius: 0;
+    }
+
+    .p-dialog-content {
+      padding: 0.85rem !important;
+      border-radius: 0;
+    }
+  }
+
+  .rw-form-card,
+  .rw-user-summary-card {
+    padding: 0.9rem;
+    border-radius: 14px;
+  }
+
+  .rw-btn-mobile-full {
+    flex: 1 1 auto;
+    height: 42px;
+    justify-content: center;
+  }
+}

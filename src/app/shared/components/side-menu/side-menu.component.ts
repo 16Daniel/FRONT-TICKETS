@@ -16,7 +16,7 @@ import { ChatNotificationsButtonComponent } from '../chat-notifications-button/c
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Responsable } from '../../../usuarios/models/responsable.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { environment } from '../../../../environments/environments';
 
 @Component({
@@ -64,7 +64,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     public documentsService: DocumentsService,
     public accessControl: AccessControlService,
     public pwaService: PwaService,
-    private branchesService: BranchesService
+    private branchesService: SucursalesService
   ) {
     this.cargarUsuarios();
   }

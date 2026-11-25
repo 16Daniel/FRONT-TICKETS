@@ -9,9 +9,9 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from "primeng/toast";
 import { DropdownModule } from "primeng/dropdown";
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { NominaService } from '../../services/nomina.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { HistorailPersonal, Marcajes, PuestoNomina } from '../../interfaces/Nomina';
 import { GraficasIncidencias } from "../../components/graficas-incidencias/graficas-incidencias";
 
@@ -46,7 +46,7 @@ export default class HistorialPersonalPageComponent implements OnInit {
   };
 
 
-  constructor(private branchesService: BranchesService,
+  constructor(private branchesService: SucursalesService,
     public cdr: ChangeDetectorRef,
     public apiserv: NominaService,
     private messageService: MessageService,

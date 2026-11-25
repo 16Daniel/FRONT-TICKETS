@@ -1,0 +1,104 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="mostrarModalAgregar"
+  [style]="{ width: '50rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '90vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="agregar-entrega-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-droplet text-danger"></i> Agregar Entrega de Aceite
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="agregar-entrega-body">
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-package"></i>
+          <span>DATOS DE LA ENTREGA</span>
+        </div>
+        <span class="rw-date-pill" *ngIf="formFecha">
+          <i class="bx bx-calendar-check"></i>
+          {{ formFecha | date: 'dd/MM/yyyy' }}
+        </span>
+      </div>
+
+      <div class="rw-form-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label">FECHA DE ENTREGA</label>
+          <div class="calendar-card-wrap">
+            <p-calendar
+              styleClass="rw-inline-calendar w-100"
+              [(ngModel)]="formFecha"
+              [inline]="true"
+              [showWeek]="true">
+            </p-calendar>
+          </div>
+        </div>
+
+        <div class="rw-fields-stack">
+          <div class="rw-field-item">
+            <label class="rw-field-label">SUCURSAL</label>
+            <p-dropdown
+              [options]="sucursales"
+              [(ngModel)]="sucursal"
+              name="sucursal"
+              optionLabel="nombre"
+              [filter]="true"
+              filterBy="nombre"
+              [showClear]="true"
+              placeholder="Selecciona una sucursal..."
+              appendTo="body"
+              styleClass="rw-dropdown-h42 w-100"
+              [style]="{ width: '100%' }">
+              <ng-template pTemplate="selectedItem" let-selectedOption>
+                <div class="d-flex align-items-center gap-2">
+                  <div>{{ selectedOption.nombre }}</div>
+                </div>
+              </ng-template>
+              <ng-template let-dep pTemplate="item">
+                <div class="d-flex align-items-center gap-2">
+                  <div>{{ dep.nombre }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+
+          <div class="rw-field-item">
+            <label class="rw-field-label" for="cantidadAceiteInput">CANTIDAD DE ACEITE (LITROS)</label>
+            <input
+              id="cantidadAceiteInput"
+              type="number"
+              min="0"
+              class="form-control h-42"
+              placeholder="0"
+              [(ngModel)]="formCantidad" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="!sucursal || !formFecha || formCantidad <= 0">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR ENTREGA</span>
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>

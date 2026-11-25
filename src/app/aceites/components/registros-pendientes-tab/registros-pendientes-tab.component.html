@@ -1,0 +1,218 @@
+<!-- Tarjetas KPI Semánticas (Flotando sobre el lienzo #F4F6FA) -->
+<div class="pendientes-kpi-grid mb-4">
+  <div class="kpi-card kpi-info">
+    <div class="kpi-icon"><i class="bx bx-droplet"></i></div>
+    <div class="kpi-meta">
+      <span class="kpi-label">Aceite Pendiente</span>
+      <span class="kpi-value">{{ entregas.length }}</span>
+    </div>
+  </div>
+
+  <div class="kpi-card kpi-admin">
+    <div class="kpi-icon"><i class="bx bx-filter-alt"></i></div>
+    <div class="kpi-meta">
+      <span class="kpi-label">Trampa de Grasa</span>
+      <span class="kpi-value">{{ entregasTA.length }}</span>
+    </div>
+  </div>
+
+  <div class="kpi-card kpi-warning">
+    <div class="kpi-icon"><i class="bx bx-time-five"></i></div>
+    <div class="kpi-meta">
+      <span class="kpi-label">Por Validar</span>
+      <span class="kpi-value">{{ totalPorValidar }}</span>
+    </div>
+  </div>
+
+  <div class="kpi-card kpi-danger">
+    <div class="kpi-icon"><i class="bx bx-x-circle"></i></div>
+    <div class="kpi-meta">
+      <span class="kpi-label">Rechazados</span>
+      <span class="kpi-value">{{ totalRechazados }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Barra de Filtros -->
+<div class="pendientes-filter-card mb-4">
+  <div class="filter-field-group">
+    <label class="rw-form-label mb-1">Sucursales</label>
+    <p-multiSelect
+      [options]="sucursales"
+      [(ngModel)]="sucursalesSel"
+      [filter]="true"
+      optionLabel="nombre"
+      [maxSelectedLabels]="3"
+      selectedItemsLabel="{0} sucursales seleccionadas"
+      placeholder="Seleccionar sucursales..."
+      appendTo="body"
+      styleClass="rw-multiselect"
+      [style]="{ width: '100%' }">
+    </p-multiSelect>
+  </div>
+
+  <div class="filter-actions-group">
+    <span class="loading-status-pill" *ngIf="loading">
+      <i class="bx bx-loader-alt bx-spin"></i>
+      <span>Actualizando...</span>
+    </span>
+
+    <button type="button" class="btn-rw-filter" (click)="filtrar()">
+      <i class="bx bx-search"></i>
+      <span>FILTRAR</span>
+    </button>
+  </div>
+</div>
+
+<!-- Contenedor Principal de Tablas con Sub-tabs en Cápsulas -->
+<div class="pendientes-panel-card">
+  <div class="subtabs-header mb-3">
+    <div class="subtabs-pills" role="tablist">
+      <button
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tabActivo === 'ACEITE'"
+        (click)="seleccionarTab('ACEITE')">
+        <span class="area-dot"></span>
+        <span>ACEITE</span>
+        <span class="tab-count-badge">{{ entregas.length }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tabActivo === 'TRAMPA'"
+        (click)="seleccionarTab('TRAMPA')">
+        <span class="area-dot"></span>
+        <span>TRAMPA DE GRASA</span>
+        <span class="tab-count-badge">{{ entregasTA.length }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla: ACEITE -->
+  <div [hidden]="tabActivo !== 'ACEITE'">
+    <p-table
+      [value]="entregas"
+      [tableStyle]="{ 'min-width': '54rem' }"
+      styleClass="p-datatable-gridlines table-tk pendientes-table"
+      [scrollable]="true"
+      scrollHeight="58vh">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>FOLIO</th>
+          <th>SUCURSAL</th>
+          <th>FECHA</th>
+          <th class="text-center">ENTREGA CEDIS</th>
+          <th>COMENTARIOS CEDIS</th>
+          <th class="text-center">ESTATUS</th>
+          <th class="text-center">ACCIONES</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr
+          class="pendiente-row"
+          [ngClass]="record.comentariosCedis == null ? 'row-warning' : 'row-danger'">
+          <td class="fw-bold text-dark">{{ record.folio || '-' }}</td>
+          <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
+          <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
+          <td class="text-center fw-semibold">{{ record.entregaCedis || '-' }}</td>
+          <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+          <td class="text-center">
+            <span *ngIf="record.comentariosCedis == null" class="status-pill status-warning">
+              <i class="bx bx-time-five"></i>
+              <span>Por validar</span>
+            </span>
+            <span *ngIf="record.comentariosCedis != null" class="status-pill status-danger">
+              <i class="bx bx-x-circle"></i>
+              <span>Rechazado</span>
+            </span>
+          </td>
+          <td class="text-center">
+            <button
+              type="button"
+              class="btn-rw-delete"
+              pTooltip="Eliminar registro"
+              tooltipPosition="top"
+              (click)="confirmarEliminacion(record.id)">
+              <i class="bx bx-trash"></i>
+              <span>Eliminar</span>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">
+            <div class="pendientes-empty-state">
+              <i class="bx bx-droplet"></i>
+              <h6>Sin registros pendientes de aceite</h6>
+              <p>No se encontraron recolecciones pendientes para las sucursales seleccionadas.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Tabla: TRAMPA DE GRASA -->
+  <div [hidden]="tabActivo !== 'TRAMPA'">
+    <p-table
+      [value]="entregasTA"
+      [tableStyle]="{ 'min-width': '48rem' }"
+      styleClass="p-datatable-gridlines table-tk pendientes-table"
+      [scrollable]="true"
+      scrollHeight="58vh">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>SUCURSAL</th>
+          <th>FECHA</th>
+          <th>COMENTARIOS CEDIS</th>
+          <th class="text-center">ESTATUS</th>
+          <th class="text-center">ACCIONES</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr
+          class="pendiente-row"
+          [ngClass]="record.comentariosCedis == null ? 'row-warning' : 'row-danger'">
+          <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
+          <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy' }}</td>
+          <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+          <td class="text-center">
+            <span *ngIf="record.comentariosCedis == null" class="status-pill status-warning">
+              <i class="bx bx-time-five"></i>
+              <span>Por validar</span>
+            </span>
+            <span *ngIf="record.comentariosCedis != null" class="status-pill status-danger">
+              <i class="bx bx-x-circle"></i>
+              <span>Rechazado</span>
+            </span>
+          </td>
+          <td class="text-center">
+            <button
+              type="button"
+              class="btn-rw-delete"
+              pTooltip="Eliminar registro"
+              tooltipPosition="top"
+              (click)="confirmarEliminacionTA(record.id)">
+              <i class="bx bx-trash"></i>
+              <span>Eliminar</span>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <div class="pendientes-empty-state">
+              <i class="bx bx-filter-alt"></i>
+              <h6>Sin registros pendientes de trampa de grasa</h6>
+              <p>No se encontraron registros pendientes para las sucursales seleccionadas.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 
-import { BranchesService } from '../../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../../sucursales/interfaces/sucursal.interface';
+import { SucursalesService } from '../../../../sucursales/services/sucursales.service';
+import { Sucursal } from '../../../../sucursales/models/sucursal.model';
 import { MantenimientoSys } from '../../../interfaces/mantenimiento-sys.interface';
 
 @Component({
@@ -17,7 +17,7 @@ export class ModalTenXtenMaintenanceNewComponent implements OnInit {
   sucursales: Sucursal[] = [];
 
   constructor(
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private cdr: ChangeDetectorRef,
   ) { }
 

@@ -17,8 +17,8 @@ import { ProveedorPlaneacion } from '../../interfaces/ProveedorPlaneacion';
 import { PlaneacionCatService } from '../../services/planeacion.service';
 import { DropdownModule } from "primeng/dropdown";
 import { FormsModule } from '@angular/forms';
-import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { CalendarModule } from 'primeng/calendar';
 import { CatalogoProveedoresTickets } from "../../dialogs/catalogo-proveedores-tickets/catalogo-proveedores-tickets";
@@ -71,7 +71,7 @@ export default class tablaDevolucionesComponent implements OnInit {
   public urlApiPlaneacion: string = environment.planeacionApiConfig.url;
 
 
-  constructor(public cdr: ChangeDetectorRef,private branchesService: BranchesService,private http: HttpClient)
+  constructor(public cdr: ChangeDetectorRef,private branchesService: SucursalesService,private http: HttpClient)
   {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }

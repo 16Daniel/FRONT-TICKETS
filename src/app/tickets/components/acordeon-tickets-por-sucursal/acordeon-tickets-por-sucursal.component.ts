@@ -9,12 +9,12 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { Ticket } from '../../models/ticket.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 @Component({
   selector: 'app-acordeon-tickets-por-sucursal',
@@ -46,7 +46,7 @@ export class AcordeonTicketsPorSucursalComponent implements OnInit, OnChanges {
 
   constructor(
     private firebaseStorage: FirebaseStorageService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private usuariosService: UsuariosService
   ) {}
 

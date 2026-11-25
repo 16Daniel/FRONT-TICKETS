@@ -24,8 +24,8 @@ import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { EstatusTicketService } from '../../services/estatus-ticket.service';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
@@ -94,7 +94,7 @@ export class HistorialTicketsDialogComponent implements OnDestroy, OnInit {
     private messageService: MessageService,
     private categoriasService: CategoriasService,
     private areasService: AreasService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private UsuariosService: UsuariosService,
     private estatusTicketService: EstatusTicketService,
     private servicePlaneacion: PlaneacionCatService,

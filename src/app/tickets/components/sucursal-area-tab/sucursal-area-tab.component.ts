@@ -11,7 +11,7 @@ import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-t
 import { AcordeonTicketsPorPrioridadComponent } from '../../../tickets/components/acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { CrearTicketDialogComponent } from '../../dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';

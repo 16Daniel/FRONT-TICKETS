@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 
@@ -61,7 +61,10 @@ export class AcordeonTicketsPorUsuarioComponent implements OnInit, OnDestroy {
     }
 
     if (String(this.usuarioAgrupacion.idRol) === '4') {
-      const areaId = this.idArea || this.usuarioAgrupacion.idArea;
+      const areaId =
+        this.idArea && String(this.idArea) !== '0'
+          ? this.idArea
+          : this.usuarioAgrupacion.idArea;
       const idsSoporte = this.usuarioSucursalService.obtenerSucursalesPorUsuario(
         'SOPORTE',
         String(this.usuarioAgrupacion.id),

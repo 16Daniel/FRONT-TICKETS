@@ -1,0 +1,143 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '46rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '90vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="asignar-sucursales-aceite-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-droplet text-danger"></i> Asignar Sucursales — Control de Aceite
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="asignar-sucursales-body" *ngIf="usuario">
+    <!-- Tarjeta resumen del usuario -->
+    <div class="rw-user-summary-card">
+      <div class="user-summary-left">
+        <span class="user-summary-avatar">{{ inicialesUsuario }}</span>
+        <div class="user-summary-info">
+          <span class="user-summary-name">{{ nombreCompletoUsuario }}</span>
+          <span class="user-summary-email">{{ usuario.email }}</span>
+        </div>
+      </div>
+
+      <span class="rw-count-pill">
+        <i class="bx bx-store-alt"></i>
+        <span>
+          {{ sucursalesSeleccionadasIds.length }}
+          {{ sucursalesSeleccionadasIds.length === 1 ? 'sucursal' : 'sucursales' }}
+        </span>
+      </span>
+    </div>
+
+    <!-- Tarjeta de selección de sucursales -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-map-pin"></i>
+          <span>SUCURSALES DE RECOLECCIÓN</span>
+        </div>
+
+        <div class="quick-actions">
+          <button
+            *ngIf="totalHabilitadasAceite > 0"
+            type="button"
+            class="btn-quick-action"
+            pTooltip="Seleccionar únicamente las sucursales habilitadas para control de aceite"
+            tooltipPosition="top"
+            (click)="seleccionarSoloHabilitadas()">
+            <i class="bx bx-check-double"></i>
+            <span>Habilitadas ({{ totalHabilitadasAceite }})</span>
+          </button>
+
+          <button
+            *ngIf="sucursalesSeleccionadasIds.length > 0"
+            type="button"
+            class="btn-quick-action btn-quick-clear"
+            (click)="limpiarSeleccion()">
+            <i class="bx bx-x"></i>
+            <span>Limpiar</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="rw-field-item">
+        <label class="rw-field-label">SELECCIONAR SUCURSALES ASIGNADAS</label>
+        <p-multiSelect
+          [options]="sucursalesOpciones"
+          [(ngModel)]="sucursalesSeleccionadasIds"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre"
+          [showClear]="true"
+          [maxSelectedLabels]="3"
+          selectedItemsLabel="{0} sucursales seleccionadas"
+          placeholder="Busca y selecciona las sucursales..."
+          emptyMessage="Sin sucursales disponibles"
+          emptyFilterMessage="Sin coincidencias"
+          appendTo="body"
+          styleClass="rw-multiselect-h42 w-100"
+          [style]="{ width: '100%' }">
+          <ng-template let-suc pTemplate="item">
+            <div class="sucursal-option-row">
+              <span>{{ suc.nombre }}</span>
+              <span *ngIf="suc.controlDeAceite" class="option-oil-badge">Aceite activo</span>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+
+      <!-- Chips de sucursales asignadas -->
+      <div class="selected-chips-section mt-3">
+        <div *ngIf="sucursalesSeleccionadasIds.length > 0; else sinSucursalesTpl" class="selected-chips-grid">
+          <span *ngFor="let sucId of sucursalesSeleccionadasIds" class="sucursal-chip">
+            <i class="bx bx-store-alt"></i>
+            <span>{{ obtenerNombreSucursal(sucId) }}</span>
+            <button
+              type="button"
+              class="chip-remove-btn"
+              pTooltip="Quitar sucursal"
+              tooltipPosition="top"
+              (click)="quitarSucursal(sucId)">
+              <i class="bx bx-x"></i>
+            </button>
+          </span>
+        </div>
+
+        <ng-template #sinSucursalesTpl>
+          <div class="empty-selection-box">
+            <i class="bx bx-info-circle"></i>
+            <span>Este usuario no tiene sucursales asignadas para recolección de aceite.</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Pie de acciones -->
+    <div class="d-flex justify-content-end gap-2">
+      <button
+        type="button"
+        class="btn-rw-secondary"
+        [disabled]="guardando"
+        (click)="onHide()">
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="guardando"
+        (click)="guardar()">
+        <i class="bx" [ngClass]="guardando ? 'bx-loader-alt bx-spin' : 'bx-save'"></i>
+        <span>{{ guardando ? 'GUARDANDO...' : 'GUARDAR ASIGNACIÓN' }}</span>
+      </button>
+    </div>
+  </div>
+</p-dialog>

@@ -6,11 +6,11 @@ import { permissionGuard } from '../shared/guards/permission.guard';
  */
 export const ACTIVOS_FIJOS_MAIN_ROUTES: Routes = [
   {
-    path: 'fixed-assets',
+    path: 'activos-fijos',
     title: 'Activos fijos',
     canActivate: [permissionGuard('activos_fijos.ver')],
     loadComponent: () =>
-      import('./pages/fixed-assets-page/fixed-assets-page.component'),
+      import('./pages/activos-fijos-page/activos-fijos-page.component'),
   },
 ];
 
@@ -19,11 +19,11 @@ export const ACTIVOS_FIJOS_MAIN_ROUTES: Routes = [
  */
 export const ACTIVOS_FIJOS_ROOT_ROUTES: Routes = [
   {
-    path: 'fixed-assets/detail/:referencia',
+    path: 'activos-fijos/detalle/:referencia',
     title: 'Detalle del activo fijo',
     canActivate: [permissionGuard('activos_fijos.ver')],
     loadComponent: () =>
-      import('./pages/fixed-assets-detail-page/fixed-assets-detail-page.component'),
+      import('./pages/activo-fijo-detalle-page/activo-fijo-detalle-page.component'),
   },
 ];
 

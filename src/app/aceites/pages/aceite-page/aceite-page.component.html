@@ -1,117 +1,273 @@
-<div class="p-3">
-<h3 class="text-center mt-3 mb-3">CONTROL DE ACEITE</h3>
+<div class="aceite-page-wrapper">
+  <div class="aceite-content-container">
 
-<div class="d-flex justify-content-center p-3" *ngIf="loading">
-     <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
-</div>
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header
+      subtitle="OPERACIÓN Y LOGÍSTICA"
+      title="Control de Aceite">
+    </app-page-header>
 
-<button class="btn bg-p-b m-3 p-3" (click)="abrirModalagregarRecoleccion()">AGREGAR RECOLECCIÓN DE ACEITE QUEMADO</button>
-
-<button class="btn bg-p-b m-3 p-3" (click)="abrirModalagregarRecoleccionTA()">AGREGAR RECOLECCIÓN RESIDUO TRAMPA DE GRASA</button>
-
-<p-tabView>
-
-  <p-tabPanel header="PENDIENTES">
-       <app-registros-pendientes-page *ngIf="sucursales.length>0" [sucursales]="sucursales"></app-registros-pendientes-page>
-  </p-tabPanel>
-
-  <p-tabPanel header="POR VALIDAR">
-
-
-     <div class="row justify-content-center mb-3">
-        <div>
-           <div class="d-flex flex-column justify-items-center align-items-center h-100">
-             <p>SUCURSALES&nbsp;</p>
-           </div>
-        </div>
-        <div class="col-6">
-             <p-multiSelect
-                [options]="sucursales"
-                [(ngModel)]="sucursalesSel"
-                [filter]="true"
-                optionLabel="nombre"
-                placeholder="SELECCIONAR SUCURSALES"
-                [style]="{width:'100%'}"
-                />
-        </div>
-        <div class="col-auto">
-            <button class="btn btn-warning h-42" (click)="filtrar()"><i class='bx bx-search'></i>&nbsp;filtrar</button>
-        </div>
-           <div class="col-auto">
-        <button class="btn btn-success" [disabled]="entregas.length == 0" (click)="exportarExcel(false)"><img
-            width="24" height="24" src="https://img.icons8.com/fluency/40/microsoft-excel-2019.png"
-            alt="microsoft-excel-2019" />&nbsp;EXCEL</button>
-      </div>
-   </div>
-
-    <p-table [value]="entregas" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header">
-        <tr>
-          <th>FOLIO</th>
-          <th>SUCURSAL</th>
-          <th>FECHA</th>
-          <th>ENTREGA CEDIS</th>
-          <th>ENTREGA SUCURSAL</th>
-          <th>75%</th>
-          <th>ESTATUS</th>
-          <th>DIFERENCIA</th>
-          <th>COMENTARIOS CEDIS</th>
-          <th>COMENTARIOS SUCURSAL</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-record>
-         <tr class="bg-opacity-25" [ngClass]="{
-        'bg-danger': record.intercambio == 1,
-        'bg-success': record.intercambio == 2,
-        'bg-warning': record.intercambio == 3
-        }">
-          <td>{{record.folio}}</td>
-            <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
-            <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
-          <td>{{ record.entregaCedis || '' }}</td>
-          <td>{{ record.entregaSucursal || '' }}</td>
-          <td>{{ record.porcentaje75*100 | number:'1.0-0' }}%</td>
-                    <td *ngIf="record.intercambio == 1"><i class='bx bx-minus-circle bx-sm' style="color:red"></i></td>
-                 <td *ngIf="record.intercambio == 2"><i class='bx bx-check-circle bx-sm' style="color:rgb(44, 189, 0)"></i></td>
-                  <td *ngIf="record.intercambio == 3"><i class='bx bx-plus-circle bx-sm' style="color:rgb(255, 153, 0)"></i></td>
-          <td>{{ record.diferencia || '' }}</td>
-          <td>{{ record.comentariosCedis || '' }}</td>
-          <td>{{ record.comentariosSucursal || '' }}</td>
-        </tr>
-    </ng-template>
-</p-table>
-  </p-tabPanel>
-
-  <p-tabPanel header="HISTORIAL">
-       <app-historial-aceite [sucursales]="sucursales"></app-historial-aceite>
-  </p-tabPanel>
-
-   <p-tabPanel header="CONFIGURACIÓN">
-    <app-control-aceite-tab></app-control-aceite-tab>
-   </p-tabPanel>
-</p-tabView>
-
-</div>
-
-
-<p-dialog [header]="tipoActualizacion == 1? 'VALIDAR RECOLECCIÓN':'RECHAZAR RECOLECCIÓN'" [modal]="true" [(visible)]="mostrarModalValidacion" [style]="{ width: '70rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-    <div class="p-3" style="min-height: 400px;">
-
-        <div class="col-12 mt-3">
-          <p>COMENTARIOS</p>
-          <textarea class="form-control p-3" [(ngModel)]="formcomentarios"></textarea>
-        </div>
-        <div class="col-12 mt-3">
-          <button class="btn btn-success" (click)="actualizarEntrega()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
-        </div>
+    <!-- Selector de Secciones por Chips (DESIGN-SYSTEM.md) -->
+    <div class="areas-chips-track mb-4">
+      <button
+        *ngFor="let tab of tabs"
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tabActivo === tab.id"
+        (click)="cambiarTab(tab.id)">
+        <i [class]="tab.icono"></i>
+        <span class="area-name">{{ tab.label }}</span>
+        <span
+          *ngIf="tab.id === 'POR_VALIDAR' && entregas.length > 0"
+          class="tab-count-badge">
+          {{ entregas.length }}
+        </span>
+      </button>
     </div>
+
+    <!-- Barra de Acciones Principales (Flotando sobre el lienzo) -->
+    <div class="aceite-actions-bar mb-4">
+      <div class="actions-left">
+        <button
+          type="button"
+          class="btn-rw-cta"
+          (click)="abrirModalagregarRecoleccion()">
+          <i class="bx bx-droplet"></i>
+          <span>RECOLECCIÓN DE ACEITE QUEMADO</span>
+        </button>
+
+        <button
+          type="button"
+          class="btn-rw-secondary"
+          (click)="abrirModalagregarRecoleccionTA()">
+          <i class="bx bx-filter-alt"></i>
+          <span>RESIDUO TRAMPA DE GRASA</span>
+        </button>
+      </div>
+
+      <div class="actions-right" *ngIf="loading">
+        <span class="loading-status-pill">
+          <i class="bx bx-loader-alt bx-spin"></i>
+          <span>Actualizando...</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         TAB 1: PENDIENTES
+         ================================================================ -->
+    <div [hidden]="tabActivo !== 'PENDIENTES'" *ngIf="tabsActivados.PENDIENTES">
+      <app-registros-pendientes-tab
+        *ngIf="sucursales.length > 0"
+        [sucursales]="sucursales">
+      </app-registros-pendientes-tab>
+    </div>
+
+    <!-- ================================================================
+         TAB 2: POR VALIDAR
+         ================================================================ -->
+    <div [hidden]="tabActivo !== 'POR_VALIDAR'" *ngIf="tabsActivados.POR_VALIDAR">
+      <!-- Tarjetas KPI Semánticas (Flotando sobre el lienzo #F4F6FA) -->
+      <div class="aceite-kpi-grid mb-4">
+        <div class="kpi-card kpi-info">
+          <div class="kpi-icon"><i class="bx bx-receipt"></i></div>
+          <div class="kpi-meta">
+            <span class="kpi-label">Total por Validar</span>
+            <span class="kpi-value">{{ entregas.length }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-danger">
+          <div class="kpi-icon"><i class="bx bx-minus-circle"></i></div>
+          <div class="kpi-meta">
+            <span class="kpi-label">Debajo del 75%</span>
+            <span class="kpi-value">{{ totalBajoMeta }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-success">
+          <div class="kpi-icon"><i class="bx bx-check-circle"></i></div>
+          <div class="kpi-meta">
+            <span class="kpi-label">En Rango Óptimo</span>
+            <span class="kpi-value">{{ totalOptimo }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-warning">
+          <div class="kpi-icon"><i class="bx bx-plus-circle"></i></div>
+          <div class="kpi-meta">
+            <span class="kpi-label">Con Excedente</span>
+            <span class="kpi-value">{{ totalExcedente }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros -->
+      <div class="aceite-filter-card mb-4">
+        <div class="filter-field-group">
+          <label class="rw-form-label mb-1">Sucursales</label>
+          <p-multiSelect
+            [options]="sucursales"
+            [(ngModel)]="sucursalesSel"
+            [filter]="true"
+            optionLabel="nombre"
+            [maxSelectedLabels]="3"
+            selectedItemsLabel="{0} sucursales seleccionadas"
+            placeholder="Seleccionar sucursales..."
+            appendTo="body"
+            styleClass="rw-multiselect"
+            [style]="{ width: '100%' }">
+          </p-multiSelect>
+        </div>
+
+        <div class="filter-actions-group">
+          <button type="button" class="btn-rw-filter" (click)="filtrar()">
+            <i class="bx bx-search"></i>
+            <span>FILTRAR</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn-rw-excel"
+            [disabled]="entregas.length === 0"
+            (click)="exportarExcel(false)">
+            <i class="bx bx-spreadsheet"></i>
+            <span>EXPORTAR EXCEL</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla de Entregas por Validar -->
+      <div class="aceite-panel-card">
+        <p-table
+          [value]="entregas"
+          [tableStyle]="{ 'min-width': '62rem' }"
+          styleClass="p-datatable-gridlines table-tk aceite-table"
+          [scrollable]="true"
+          scrollHeight="60vh">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>FOLIO</th>
+              <th>SUCURSAL</th>
+              <th>FECHA</th>
+              <th class="text-center">ENTREGA CEDIS</th>
+              <th class="text-center">ENTREGA SUCURSAL</th>
+              <th class="text-center">75%</th>
+              <th class="text-center">ESTATUS</th>
+              <th class="text-center">DIFERENCIA</th>
+              <th>COMENTARIOS CEDIS</th>
+              <th>COMENTARIOS SUCURSAL</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-record>
+            <tr
+              class="aceite-row"
+              [ngClass]="{
+                'row-danger': record.intercambio == 1,
+                'row-success': record.intercambio == 2,
+                'row-warning': record.intercambio == 3
+              }">
+              <td class="fw-bold text-dark">{{ record.folio }}</td>
+              <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
+              <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+              <td class="text-center fw-semibold">{{ record.entregaCedis || '-' }}</td>
+              <td class="text-center fw-semibold">{{ record.entregaSucursal || '-' }}</td>
+              <td class="text-center fw-bold">{{ record.porcentaje75 * 100 | number: '1.0-0' }}%</td>
+              <td class="text-center">
+                <span *ngIf="record.intercambio == 1" class="status-pill status-danger">
+                  <i class="bx bx-minus-circle"></i>
+                  <span>Bajo</span>
+                </span>
+                <span *ngIf="record.intercambio == 2" class="status-pill status-success">
+                  <i class="bx bx-check-circle"></i>
+                  <span>Óptimo</span>
+                </span>
+                <span *ngIf="record.intercambio == 3" class="status-pill status-warning">
+                  <i class="bx bx-plus-circle"></i>
+                  <span>Excedente</span>
+                </span>
+              </td>
+              <td class="text-center fw-bold">{{ record.diferencia || '0' }}</td>
+              <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+              <td class="comment-cell">{{ record.comentariosSucursal || '-' }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="10">
+                <div class="aceite-empty-state">
+                  <i class="bx bx-droplet"></i>
+                  <h6>Sin entregas por validar</h6>
+                  <p>No se encontraron registros para las sucursales seleccionadas.</p>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         TAB 3: HISTORIAL
+         ================================================================ -->
+    <div [hidden]="tabActivo !== 'HISTORIAL'" *ngIf="tabsActivados.HISTORIAL">
+      <app-historial-aceite-tab [sucursales]="sucursales"></app-historial-aceite-tab>
+    </div>
+
+    <!-- ================================================================
+         TAB 4: CONFIGURACIÓN
+         ================================================================ -->
+    <div [hidden]="tabActivo !== 'CONFIGURACION'" *ngIf="tabsActivados.CONFIGURACION">
+      <app-control-aceite-tab></app-control-aceite-tab>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal de Validación / Rechazo -->
+<p-dialog
+  [header]="tipoActualizacion == 1 ? 'VALIDAR RECOLECCIÓN' : 'RECHAZAR RECOLECCIÓN'"
+  [modal]="true"
+  [(visible)]="mostrarModalValidacion"
+  [style]="{ width: '560px', maxWidth: '95vw' }"
+  [breakpoints]="{ '768px': '100vw' }"
+  styleClass="dialog-modern rw-dialog-mobile-fullscreen">
+  <div class="validacion-modal-body">
+    <div class="mb-3">
+      <label class="rw-form-label" for="comentariosValidacion">Comentarios</label>
+      <textarea
+        id="comentariosValidacion"
+        rows="4"
+        class="form-control rw-textarea"
+        placeholder="Escribe los comentarios de validación o rechazo..."
+        [(ngModel)]="formcomentarios">
+      </textarea>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+      <button type="button" class="btn-rw-secondary" (click)="mostrarModalValidacion = false">
+        Cancelar
+      </button>
+      <button type="button" class="btn-rw-cta" (click)="actualizarEntrega()">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR</span>
+      </button>
+    </div>
+  </div>
 </p-dialog>
 
+<app-agregar-recoleccion-dialog
+  *ngIf="modalAgregarRecoleccion"
+  [visible]="modalAgregarRecoleccion"
+  (closeEvent)="modalAgregarRecoleccion = false"
+  [sucursales]="sucursales"
+  [trampaDeAceite]="trampadeAceite">
+</app-agregar-recoleccion-dialog>
 
-<app-agregar-recoleccion *ngIf="modalAgregarRecoleccion" [visible]="modalAgregarRecoleccion"
-(closeEvent)="modalAgregarRecoleccion = false" [sucursales]="sucursales" [trampaDeAceite]="trampadeAceite"></app-agregar-recoleccion>
-
-<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
-  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'">
+</p-toast>

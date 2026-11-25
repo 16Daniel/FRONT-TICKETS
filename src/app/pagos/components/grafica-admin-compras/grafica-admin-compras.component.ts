@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { AdministracionCompra } from '../../interfaces/AdministracionCompra';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';

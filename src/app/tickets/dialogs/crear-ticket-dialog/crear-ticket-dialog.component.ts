@@ -24,14 +24,14 @@ import { TicketsService } from '../../services/tickets.service';
 import { GeneradorFoliosService } from '../../services/generador-folios.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { FixedAssetsService } from '../../../activos-fijos/services/fixed-assets.service';
+import { ActivosFijosService } from '../../../activos-fijos/services/activos-fijos.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
-import { ActivoFijo } from '../../../activos-fijos/interfaces/activo-fijo.interface';
+import { ActivoFijo } from '../../../activos-fijos/models/activo-fijo.model';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { SelectorArbolCategoriaComponent } from '../../components/selector-arbol-categoria/selector-arbol-categoria.component';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
@@ -178,9 +178,9 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     private categoriasService: CategoriasService,
     private cdr: ChangeDetectorRef,
     private UsuariosService: UsuariosService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private areasService: AreasService,
-    private fixedAssetsService: FixedAssetsService,
+    private fixedAssetsService: ActivosFijosService,
     private firebaseStorage: FirebaseStorageService,
     public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService,

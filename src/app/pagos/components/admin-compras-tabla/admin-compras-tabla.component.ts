@@ -9,7 +9,7 @@ import { ArchivosPagosDialogComponent } from "../../dialogs/archivos-pagos-dialo
 import { DetalleCompraDialogComponent } from "../../dialogs/detalle-compra-dialog/detalle-compra-dialog.component";
 import { AdminComprasChatDialogComponent } from "../../dialogs/admin-compras-chat-dialog/admin-compras-chat-dialog.component";
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';

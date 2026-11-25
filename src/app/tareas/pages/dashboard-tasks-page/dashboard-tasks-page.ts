@@ -20,10 +20,10 @@ import { Observable, Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TareasService } from '../../services/tareas.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { LabelsTasksService } from '../../services/labels-tasks.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { EtiquetaTarea } from '../../interfaces/etiqueta-tarea.interface';
 import { Tarea } from '../../interfaces/tarea.interface';
 import { Responsable } from '../../../usuarios/models/responsable.model';
@@ -94,7 +94,7 @@ export class DashboardTasksPageComponent implements OnInit, OnDestroy {
     private tareasService: TareasService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private labelsTasksService: LabelsTasksService,
     private raskResponsibleService: ResponsablesService
   ) {

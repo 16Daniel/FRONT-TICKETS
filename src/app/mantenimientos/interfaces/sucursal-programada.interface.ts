@@ -1,4 +1,4 @@
-import { Sucursal } from "../../sucursales/interfaces/sucursal.interface";
+import { Sucursal } from "../../sucursales/models/sucursal.model";
 import { Ticket } from "../../tickets/models/ticket.model";
 
 export interface SucursalProgramada extends Sucursal {

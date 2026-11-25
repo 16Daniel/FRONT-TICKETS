@@ -2,10 +2,10 @@ import { Component, type OnInit, OnDestroy, ChangeDetectorRef } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { KpisFiltrosComponent } from '../../components/kpis-filtros/kpis-filtros.component';
@@ -65,7 +65,7 @@ export default class KpisTicketsPageComponent implements OnInit, OnDestroy {
   private subscripcionMatriz?: Subscription;
 
   constructor(
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private UsuariosService: UsuariosService,
     private areasService: AreasService,
     private ticketsService: TicketsService,

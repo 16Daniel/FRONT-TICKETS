@@ -5,13 +5,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { StatusTpvsDevicesService } from '../../../activos-fijos/services/status-tpvs-devices.service';
-import { ModalColorEstatusDispositivoTpvComponent } from '../../../activos-fijos/dialogs/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
-import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
-import { EstatusTPV } from '../../../activos-fijos/interfaces/estatus-tpv.interface';
+import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.service';
+import { ModalColorEstatusDispositivoTpvComponent } from '../../dialogs/modal-color-estatus-dispositivo-tpv/modal-color-estatus-dispositivo-tpv.component';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
+import { Dispositivo } from '../../interfaces/dispositivo.model';
+import { EstatusTPV } from '../../interfaces/estatus-tpv.interface';
 import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
-import { DispositivosSucursal } from '../../../sucursales/interfaces/dispositivos-sucursal.interface';
+import { DispositivosSucursal } from '../../../sucursales/models/dispositivos-sucursal.model';
 
 @Component({
   selector: 'app-tabla-tvs-bocinas',
