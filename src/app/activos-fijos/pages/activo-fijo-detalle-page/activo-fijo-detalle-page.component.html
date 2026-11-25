@@ -234,19 +234,19 @@
   [showTransformOptions]="'translateX(100%)'">
 </p-toast>
 
-<app-modal-fixed-asset-tickets
+<app-tickets-activo-fijo-dialog
   *ngIf="mostrarModalTickets"
   [mostrarModalDetalleActivoFijo]="mostrarModalTickets"
   [activoFijo]="activo"
   (closeEvent)="mostrarModalTickets = false">
-</app-modal-fixed-asset-tickets>
+</app-tickets-activo-fijo-dialog>
 
-<app-modal-fixed-asset-maintenance
+<app-mantenimientos-activo-fijo-dialog
   *ngIf="mostrarModalMantenimientos"
   [mostrarModal]="mostrarModalMantenimientos"
   [activoFijo]="activo"
   (closeEvent)="mostrarModalMantenimientos = false">
-</app-modal-fixed-asset-maintenance>
+</app-mantenimientos-activo-fijo-dialog>
 
 <app-crear-ticket-dialog
   *ngIf="mostrarModalGenerateTicket"

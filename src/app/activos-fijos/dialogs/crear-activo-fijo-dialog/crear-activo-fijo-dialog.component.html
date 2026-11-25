@@ -1,0 +1,314 @@
+<p-dialog
+  [(visible)]="mostrarModalCrearActivoFijo"
+  [modal]="true"
+  [style]="{ width: '56rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '92vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="crear-activo-fijo-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-package text-danger"></i>
+        <span>{{ esNuevoActivoFijo ? 'Crear Activo Fijo' : 'Actualizar Activo Fijo' }}</span>
+      </h4>
+      <span *ngIf="!esNuevoActivoFijo && activoFijo?.referencia" class="rw-ref-pill">
+        {{ activoFijo.referencia }}
+      </span>
+    </div>
+  </ng-template>
+
+  <form #form="ngForm" (ngSubmit)="enviar(form)" class="crear-activo-body">
+    <!-- Tarjeta 1: Ubicación y Clasificación -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-map-pin"></i>
+          <span>UBICACIÓN Y CLASIFICACIÓN</span>
+        </div>
+      </div>
+
+      <div class="rw-form-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label">SUCURSAL / DEPARTAMENTO</label>
+          <p-dropdown
+            [options]="sucursales"
+            [(ngModel)]="activoFijo.idSucursal"
+            name="sucursal"
+            [optionValue]="'id'"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Seleccionar sucursal..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }"
+            #formSucursalCtrl="ngModel"
+            [ngClass]="{ 'p-invalid': formSucursalCtrl.invalid && formSucursalCtrl.touched }"
+            required>
+          </p-dropdown>
+          <small *ngIf="formSucursalCtrl.invalid && formSucursalCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">ÁREA</label>
+          <p-dropdown
+            [options]="areas"
+            [(ngModel)]="activoFijo.idArea"
+            [optionValue]="'id'"
+            name="area"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Seleccionar área..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }"
+            #formAreaCtrl="ngModel"
+            [ngClass]="{ 'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched }"
+            required
+            [disabled]="true">
+          </p-dropdown>
+          <small *ngIf="formAreaCtrl.invalid && formAreaCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">LOCACIÓN</label>
+          <p-dropdown
+            [options]="areasActivosFijos"
+            [(ngModel)]="activoFijo.idAreaActivoFijo"
+            [optionValue]="'id'"
+            name="areaActivoFijo"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Seleccionar locación..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }"
+            #formareaActivoFijoCtrl="ngModel"
+            [ngClass]="{ 'p-invalid': formareaActivoFijoCtrl.invalid && formareaActivoFijoCtrl.touched }"
+            required>
+          </p-dropdown>
+          <small *ngIf="formareaActivoFijoCtrl.invalid && formareaActivoFijoCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">CATEGORÍA</label>
+          <p-dropdown
+            [options]="categoriasActivosFijos"
+            [(ngModel)]="activoFijo.idCategoriaActivoFijo"
+            [optionValue]="'id'"
+            name="categoriaActivoFijo"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Seleccionar categoría..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }"
+            #formCategoriaActivoFijoCtrl="ngModel"
+            [ngClass]="{ 'p-invalid': formCategoriaActivoFijoCtrl.invalid && formCategoriaActivoFijoCtrl.touched }"
+            required>
+          </p-dropdown>
+          <small *ngIf="formCategoriaActivoFijoCtrl.invalid && formCategoriaActivoFijoCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">ESTATUS / CONDICIÓN</label>
+          <p-dropdown
+            [options]="estatusActivosFijos"
+            [(ngModel)]="activoFijo.idEstatusActivoFijo"
+            [optionValue]="'id'"
+            name="estatusActivoFijo"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Seleccionar estatus..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }"
+            #formEstatusActivoFijo="ngModel"
+            [ngClass]="{ 'p-invalid': formEstatusActivoFijo.invalid && formEstatusActivoFijo.touched }"
+            required>
+          </p-dropdown>
+          <small *ngIf="formEstatusActivoFijo.invalid && formEstatusActivoFijo.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label">UBICACIÓN</label>
+          <p-dropdown
+            [options]="ubicacionesActivosFijos"
+            [(ngModel)]="activoFijo.idUbicacionActivoFijo"
+            [optionValue]="'id'"
+            name="ubicacionesActivosFijos"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Seleccionar ubicación..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }"
+            #formUbicacionesActivosFijosCtrl="ngModel"
+            [ngClass]="{ 'p-invalid': formUbicacionesActivosFijosCtrl.invalid && formUbicacionesActivosFijosCtrl.touched }"
+            required>
+          </p-dropdown>
+          <small *ngIf="formUbicacionesActivosFijosCtrl.invalid && formUbicacionesActivosFijosCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta 2: Información del Activo -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-detail"></i>
+          <span>INFORMACIÓN DEL ACTIVO</span>
+        </div>
+      </div>
+
+      <div class="rw-form-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label" for="noSerieInput">NO. SERIE</label>
+          <input
+            id="noSerieInput"
+            class="form-control h-42"
+            type="text"
+            placeholder="Escribe el número de serie"
+            [(ngModel)]="activoFijo.noSerie"
+            name="noSerie"
+            [ngClass]="{ 'p-invalid': formNoSerieCtrl.invalid && formNoSerieCtrl.touched }"
+            #formNoSerieCtrl="ngModel">
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label" for="costoInput">COSTO</label>
+          <input
+            id="costoInput"
+            class="form-control h-42"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+            [(ngModel)]="activoFijo.costo"
+            name="costo"
+            [ngClass]="{ 'p-invalid': formCostoCtrl.invalid && formCostoCtrl.touched }"
+            #formCostoCtrl="ngModel"
+            required>
+          <small *ngIf="formCostoCtrl.invalid && formCostoCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="rw-field-item rw-field-full">
+          <label class="rw-field-label" for="descripcionInput">DESCRIPCIÓN</label>
+          <input
+            id="descripcionInput"
+            class="form-control h-42"
+            type="text"
+            placeholder="Describe el activo fijo..."
+            [(ngModel)]="activoFijo.descripcion"
+            name="descripcion"
+            [ngClass]="{ 'p-invalid': formDescripcionCtrl.invalid && formDescripcionCtrl.touched }"
+            #formDescripcionCtrl="ngModel"
+            required>
+          <small *ngIf="formDescripcionCtrl.invalid && formDescripcionCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <div class="rw-field-item rw-field-full" *ngIf="!esNuevoActivoFijo">
+          <label class="rw-field-label" for="referenciaInput">REFERENCIA</label>
+          <input
+            id="referenciaInput"
+            class="form-control h-42"
+            type="text"
+            placeholder="Escribe la referencia"
+            [(ngModel)]="activoFijo.referencia"
+            name="referencia"
+            [ngClass]="{ 'p-invalid': formReferenciaCtrl.invalid && formReferenciaCtrl.touched }"
+            #formReferenciaCtrl="ngModel"
+            required>
+          <small *ngIf="formReferenciaCtrl.invalid && formReferenciaCtrl.touched" class="p-error">
+            Campo requerido.
+          </small>
+        </div>
+
+        <!-- Switch ¿Es freidora? (solo área 4) -->
+        <div class="rw-field-item rw-field-full" *ngIf="usuario.idArea == '4'">
+          <div class="tarjeta-switch-freidora" [class.is-active]="activoFijo.esFreidora">
+            <div class="switch-info-group">
+              <div class="switch-icon-circle">
+                <i class="bx bx-flame"></i>
+              </div>
+              <div class="switch-text-content">
+                <label class="switch-title" for="switchEsFreidora">
+                  ¿Es freidora?
+                </label>
+                <span class="switch-helper">
+                  Marca este equipo si forma parte del inventario operativo de freidoras de la sucursal.
+                </span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+              <span class="status-pill" [ngClass]="activoFijo.esFreidora ? 'status-active' : 'status-inactive'">
+                <span class="status-dot"></span>
+                {{ activoFijo.esFreidora ? 'SÍ' : 'NO' }}
+              </span>
+              <div class="form-check form-switch m-0 d-flex align-items-center">
+                <input
+                  class="form-check-input switch-rw m-0"
+                  type="checkbox"
+                  role="switch"
+                  id="switchEsFreidora"
+                  name="esFreidora"
+                  [(ngModel)]="activoFijo.esFreidora">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie de acciones -->
+    <div class="d-flex justify-content-end gap-2">
+      <button
+        type="button"
+        class="btn-rw-secondary"
+        [disabled]="guardando"
+        (click)="onHide()">
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="guardando">
+        <i class="bx" [ngClass]="guardando ? 'bx-loader-alt bx-spin' : (esNuevoActivoFijo ? 'bx-check-circle' : 'bx-save')"></i>
+        <span *ngIf="esNuevoActivoFijo">{{ guardando ? 'GUARDANDO...' : 'CREAR ACTIVO FIJO' }}</span>
+        <span *ngIf="!esNuevoActivoFijo">{{ guardando ? 'ACTUALIZANDO...' : 'GUARDAR CAMBIOS' }}</span>
+      </button>
+    </div>
+  </form>
+</p-dialog>

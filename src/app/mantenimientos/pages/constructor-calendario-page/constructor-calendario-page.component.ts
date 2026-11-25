@@ -30,7 +30,7 @@ import { VisitasService } from '../../services/visitas.service';
 import { GuardiasService } from '../../../tickets/services/guardias.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { MantenimientoFactoryService } from '../../services/maintenance-factory.service';
-import { FixedAssetsService } from '../../../activos-fijos/services/fixed-assets.service';
+import { ActivosFijosService } from '../../../activos-fijos/services/activos-fijos.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
@@ -83,7 +83,7 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,
     private mantenimientoFactory: MantenimientoFactoryService,
-    private fixedAssetsService: FixedAssetsService,
+    private fixedAssetsService: ActivosFijosService,
     private maintenanceAvService: MaintenanceAvService,
     private dispositivosSucursalesService: DispositivosSucursalesService,
     private datesHelper: DatesHelperService

@@ -13,13 +13,13 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { ActivoFijo } from '../interfaces/activo-fijo.interface';
+import { ActivoFijo } from '../models/activo-fijo.model';
 import { MantenimientoActivoFijo } from '../../mantenimientos/interfaces/mantenimiento-activo-fijo.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FixedAssetsService {
+export class ActivosFijosService {
   pathName: string = 'activos_fijos';
 
   constructor(private firestore: Firestore) { }

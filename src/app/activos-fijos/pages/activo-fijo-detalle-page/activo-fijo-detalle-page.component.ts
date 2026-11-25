@@ -6,39 +6,39 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
 import { CrearTicketDialogComponent } from '../../../tickets/dialogs/crear-ticket-dialog/crear-ticket-dialog.component';
-import { ModalFixedAssetTicketsComponent } from '../../dialogs/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
-import { ModalFixedAssetMaintenanceComponent } from '../../dialogs/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
-import { FixedAssetsService } from '../../services/fixed-assets.service';
+import { TicketsActivoFijoDialogComponent } from '../../dialogs/tickets-activo-fijo-dialog/tickets-activo-fijo-dialog.component';
+import { MantenimientosActivoFijoDialogComponent } from '../../dialogs/mantenimientos-activo-fijo-dialog/mantenimientos-activo-fijo-dialog.component';
+import { ActivosFijosService } from '../../services/activos-fijos.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { AreasFixedAssetsService } from '../../services/areas-fixed-assets.service';
-import { CategoriesFixedAssetsService } from '../../services/categories-activos-fijos.service';
-import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
-import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
-import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
+import { AreasActivosFijosService } from '../../services/areas-activos-fijos.service';
+import { CategoriasActivosFijosService } from '../../services/categorias-activos-fijos.service';
+import { EstatusActivosFijosService } from '../../services/estatus-activos-fijos.service';
+import { UbicacionesActivosFijosService } from '../../services/ubicaciones-activos-fijos.service';
+import { ActivoFijo } from '../../models/activo-fijo.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
-import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.interface';
-import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.interface';
-import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.interface';
-import { EstatusActivoFijo } from '../../interfaces/estatus-activo-fijo.interface';
+import { AreaActivoFijo } from '../../models/area-activo-fijo.model';
+import { CategoriaActivoFijo } from '../../models/categoria-activo-fijo.model';
+import { UbicacionActivoFijo } from '../../models/ubicacion-activo-fijo.model';
+import { EstatusActivoFijo } from '../../models/estatus-activo-fijo.model';
 
 @Component({
-  selector: 'app-fixed-assets-detail-page',
+  selector: 'app-activo-fijo-detalle-page',
   standalone: true,
   imports: [
     ToastModule,
     CommonModule,
-    ModalFixedAssetTicketsComponent,
-    ModalFixedAssetMaintenanceComponent,
+    TicketsActivoFijoDialogComponent,
+    MantenimientosActivoFijoDialogComponent,
     ButtonModule,
     CrearTicketDialogComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './fixed-assets-detail-page.component.html',
-  styleUrl: './fixed-assets-detail-page.component.scss'
+  templateUrl: './activo-fijo-detalle-page.component.html',
+  styleUrl: './activo-fijo-detalle-page.component.scss'
 })
 
-export default class FixedAssetsDetailPageComponent implements OnInit {
+export default class ActivoFijoDetallePageComponent implements OnInit {
   activo: ActivoFijo = new ActivoFijo;
   mostrarModalMantenimientos: boolean = false;
   mostrarModalTickets: boolean = false;
@@ -51,15 +51,15 @@ export default class FixedAssetsDetailPageComponent implements OnInit {
   estatusActivosFijos: EstatusActivoFijo[] = [];
 
   constructor(
-    private fixedAssetsService: FixedAssetsService,
+    private fixedAssetsService: ActivosFijosService,
     private route: ActivatedRoute,
     private messageService: MessageService,
     private branchesService: SucursalesService,
     private areasService: AreasService,
-    private areasFixedAssetsService: AreasFixedAssetsService,
-    private categoriesFixedAssetsService: CategoriesFixedAssetsService,
-    private statusFixedAssetsService: StatusFixedAssetsService,
-    private locationsFixedAssetsService: LocationsFixedAssetsService,
+    private areasFixedAssetsService: AreasActivosFijosService,
+    private categoriesFixedAssetsService: CategoriasActivosFijosService,
+    private statusFixedAssetsService: EstatusActivosFijosService,
+    private locationsFixedAssetsService: UbicacionesActivosFijosService,
   ) { }
 
   ngOnInit(): void {

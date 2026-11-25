@@ -1,4 +1,4 @@
-import { Dispositivo } from "../../activos-fijos/interfaces/dispositivo.interface";
+import { Dispositivo } from "../../mantenimientos/interfaces/dispositivo.model";
 
 export class Sucursal {
   id?: string | any;

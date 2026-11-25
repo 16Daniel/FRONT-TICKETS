@@ -15,7 +15,7 @@ import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { Sucursal } from '../../models/sucursal.model';
-import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
+import { Dispositivo } from '../../../mantenimientos/interfaces/dispositivo.model';
 
 interface BorradorSoporteArea {
   idsUsuarios: string[];

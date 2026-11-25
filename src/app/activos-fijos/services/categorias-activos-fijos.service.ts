@@ -12,12 +12,12 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { CategoriaActivoFijo } from '../interfaces/categoria-activo-fijo.interface';
+import { CategoriaActivoFijo } from '../models/categoria-activo-fijo.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoriesFixedAssetsService {
+export class CategoriasActivosFijosService {
   pathName: string = 'cat_categorias_activos_fijos';
 
   constructor(private firestore: Firestore) { }

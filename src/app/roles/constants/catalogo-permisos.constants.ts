@@ -242,7 +242,7 @@ export const GRUPOS_MENU_PERMISOS: GrupoMenuPermiso[] = [
       {
         idMenu: 'operaciones_activos_fijos',
         titulo: 'Activos fijos',
-        ruta: '/main/fixed-assets',
+        ruta: '/main/activos-fijos',
         icono: 'bx bx-package',
         permisoVista: 'activos_fijos.ver',
       },

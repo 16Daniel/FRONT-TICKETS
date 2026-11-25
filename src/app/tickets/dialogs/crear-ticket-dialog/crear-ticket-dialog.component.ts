@@ -26,10 +26,10 @@ import { CategoriasService } from '../../services/categorias.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { FixedAssetsService } from '../../../activos-fijos/services/fixed-assets.service';
+import { ActivosFijosService } from '../../../activos-fijos/services/activos-fijos.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
-import { ActivoFijo } from '../../../activos-fijos/interfaces/activo-fijo.interface';
+import { ActivoFijo } from '../../../activos-fijos/models/activo-fijo.model';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { SelectorArbolCategoriaComponent } from '../../components/selector-arbol-categoria/selector-arbol-categoria.component';
@@ -180,7 +180,7 @@ export class CrearTicketDialogComponent implements OnInit, OnDestroy {
     private UsuariosService: UsuariosService,
     private branchesService: SucursalesService,
     private areasService: AreasService,
-    private fixedAssetsService: FixedAssetsService,
+    private fixedAssetsService: ActivosFijosService,
     private firebaseStorage: FirebaseStorageService,
     public responsablesService: ResponsablesService,
     private bitacoraService: BitacoraService,

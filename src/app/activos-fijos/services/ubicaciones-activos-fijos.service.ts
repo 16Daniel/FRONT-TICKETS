@@ -11,13 +11,13 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { UbicacionActivoFijo } from '../interfaces/ubicacion-activo-fijo.interface';
+import { UbicacionActivoFijo } from '../models/ubicacion-activo-fijo.model';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class LocationsFixedAssetsService {
+export class UbicacionesActivosFijosService {
   pathName: string = 'cat_ubicaciones_activos_fijos';
 
   constructor(private firestore: Firestore) { }

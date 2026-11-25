@@ -1,0 +1,152 @@
+<p-dialog
+  [(visible)]="mostrarModal"
+  [modal]="true"
+  [style]="{ width: '76rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '94vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="seleccionar-ticket-activo-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-link text-danger"></i> Seleccionar Ticket del Activo Fijo
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="select-ticket-body">
+    <!-- Tarjeta resumen del activo fijo -->
+    <div class="rw-asset-summary-card" *ngIf="activoFijo">
+      <div class="asset-summary-left">
+        <span class="asset-icon-wrap">
+          <i class="bx bx-package"></i>
+        </span>
+        <div class="asset-summary-info">
+          <span class="asset-ref">{{ activoFijo.referencia || 'Sin referencia' }}</span>
+          <span class="asset-desc">
+            {{ activoFijo.descripcion || 'Sin descripción' }}
+          </span>
+        </div>
+      </div>
+
+      <span class="rw-count-pill">
+        <i class="bx" [ngClass]="loading ? 'bx-loader-alt bx-spin' : 'bx-receipt'"></i>
+        <span>
+          {{ loading ? 'Cargando...' : tickets.length + (tickets.length === 1 ? ' disponible' : ' disponibles') }}
+        </span>
+      </span>
+    </div>
+
+    <!-- Tarjeta contenedora de la tabla -->
+    <div class="rw-table-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-list-check"></i>
+          <span>TICKETS ASOCIADOS AL ACTIVO FIJO</span>
+        </div>
+        <span class="rw-card-hint" *ngIf="!loading && tickets.length > 0">
+          Haz clic en una fila para ver el detalle o presiona Seleccionar para vincularlo
+        </span>
+      </div>
+
+      <div *ngIf="loading" class="rw-state-box">
+        <i class="bx bx-loader-alt bx-spin"></i>
+        <h6>Consultando tickets...</h6>
+        <p>Buscando tickets disponibles para vincular al mantenimiento.</p>
+      </div>
+
+      <p-table
+        *ngIf="!loading"
+        [value]="tickets"
+        [tableStyle]="{ 'min-width': '58rem' }"
+        styleClass="p-datatable-gridlines table-tk select-ticket-table"
+        [scrollable]="true"
+        scrollHeight="52vh"
+        selectionMode="single"
+        [(selection)]="ticketSeleccionado"
+        (onRowSelect)="mostrarModalTicketDetail = true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 90px;" class="text-center">PRIORIDAD</th>
+            <th>FOLIO</th>
+            <th>FECHA</th>
+            <th>ÁREA</th>
+            <th>SOLICITANTE</th>
+            <th>RESPONSABLE</th>
+            <th>CATEGORÍA</th>
+            <th>SUBCATEGORÍA</th>
+            <th style="width: 145px;" class="text-center">ACCIÓN</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ticket>
+          <tr
+            [pSelectableRow]="ticket"
+            class="ticket-row"
+            [ngClass]="{ 'row-warning': ticket.idEstatusTicket == '7' && ticketSeleccionado !== ticket }">
+            <td class="text-center">
+              <span
+                class="priority-indicator"
+                [pTooltip]="obtenerNombrePrioridad(ticket.idPrioridadTicket)"
+                tooltipPosition="top">
+                <i
+                  *ngIf="ticket.idPrioridadTicket == '1'"
+                  class="bx bxs-hot"
+                  style="color: #ef4444;">
+                </i>
+                <i
+                  *ngIf="ticket.idPrioridadTicket != '1'"
+                  class="bx bxs-circle"
+                  [style.color]="obtenerBackgroundColorPrioridad(ticket.idPrioridadTicket)">
+                </i>
+              </span>
+            </td>
+            <td class="fw-bold text-dark">{{ ticket.folio }}</td>
+            <td>{{ datesHelper.getDate(ticket.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+            <td>{{ obtenerNombreArea(ticket.idArea) || '-' }}</td>
+            <td class="fw-semibold">{{ ticket.solicitante | uppercase }}</td>
+            <td>{{ obtenerNombreResponsable(ticket.idResponsableFinaliza) || '-' }}</td>
+            <td>{{ ticket.nombreCategoria || '-' }}</td>
+            <td>{{ ticket.idSubcategoria == null ? 'N/A' : ticket.nombreSubcategoria }}</td>
+            <td class="text-center">
+              <button
+                type="button"
+                class="btn-rw-select"
+                pTooltip="Seleccionar este ticket"
+                tooltipPosition="top"
+                (click)="onSeleccionarTicket(ticket, $event)">
+                <i class="bx bx-check-circle"></i>
+                <span>Seleccionar</span>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="9">
+              <div class="rw-state-box">
+                <i class="bx bx-receipt"></i>
+                <h6>Sin tickets disponibles</h6>
+                <p>No hay tickets activos asociados a este activo fijo para vincular.</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn-rw-secondary rw-btn-mobile-full" (click)="onHide()">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<app-detalle-ticket-dialog
+  *ngIf="mostrarModalTicketDetail"
+  [ticket]="ticketSeleccionado"
+  [showModalTicketDetail]="mostrarModalTicketDetail"
+  (closeEvent)="mostrarModalTicketDetail = false">
+</app-detalle-ticket-dialog>

@@ -23,7 +23,7 @@ import {
 import { combineLatest, from, map, Observable } from 'rxjs';
 import { Ticket } from '../models/ticket.model';
 import { TicketsFiltros } from '../interfaces/tickets-filtros.interface';
-import { ActivoFijo } from '../../activos-fijos/interfaces/activo-fijo.interface';
+import { ActivoFijo } from '../../activos-fijos/models/activo-fijo.model';
 
 @Injectable({
   providedIn: 'root',

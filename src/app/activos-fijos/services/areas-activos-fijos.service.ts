@@ -11,12 +11,12 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { AreaActivoFijo } from '../interfaces/area-activo-fijo.interface';
+import { AreaActivoFijo } from '../models/area-activo-fijo.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AreasFixedAssetsService {
+export class AreasActivosFijosService {
   pathName: string = 'cat_areas_activos_fijos';
 
   constructor(private firestore: Firestore) { }

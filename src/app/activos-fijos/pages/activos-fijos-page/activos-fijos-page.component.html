@@ -1,0 +1,402 @@
+<div class="activos-page-wrapper">
+  <div class="activos-content-container">
+
+    <!-- Encabezado de Página Reutilizable -->
+    <app-page-header
+      subtitle="PATRIMONIO Y EQUIPAMIENTO"
+      title="Control de Activos Fijos">
+    </app-page-header>
+
+    <!-- Tarjetas KPI Semánticas (Flotando sobre el lienzo #F4F6FA) -->
+    <div class="activos-kpi-grid mb-4">
+      <div class="kpi-card kpi-info">
+        <div class="kpi-icon"><i class="bx bx-package"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">Activos Registrados</span>
+          <span class="kpi-value">{{ activosVisibles.length }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-success">
+        <div class="kpi-icon"><i class="bx bx-dollar-circle"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">Valor Total Activos</span>
+          <span class="kpi-value">{{ costoTotalFiltrado | currency }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-warning">
+        <div class="kpi-icon"><i class="bx bx-wrench"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">Costo Mantenimientos</span>
+          <span class="kpi-value">{{ costoMantenimientosFiltrado | currency }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-danger">
+        <div class="kpi-icon"><i class="bx bx-error-circle"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">Estado Crítico</span>
+          <span class="kpi-value">{{ totalCriticos }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Herramientas y Acciones Principales -->
+    <div class="activos-toolbar-bar mb-4">
+      <div class="toolbar-left">
+        <div class="search-input-wrapper">
+          <i class="bx bx-search search-icon"></i>
+          <input
+            type="text"
+            [(ngModel)]="textoBusquedaReferencia"
+            placeholder="Buscar por referencia o no. serie..."
+            class="activos-search-input" />
+          <button
+            *ngIf="textoBusquedaReferencia"
+            type="button"
+            class="search-clear-btn"
+            pTooltip="Limpiar búsqueda"
+            tooltipPosition="top"
+            (click)="textoBusquedaReferencia = ''">
+            <i class="bx bx-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar-right">
+        <button
+          type="button"
+          class="btn-rw-excel"
+          [disabled]="activosVisibles.length === 0"
+          (click)="exportToExcel()">
+          <i class="bx bx-spreadsheet"></i>
+          <span>EXPORTAR EXCEL</span>
+        </button>
+
+        <button
+          type="button"
+          class="btn-rw-cta"
+          (click)="abrirModalCrearActivoFijo()">
+          <i class="bx bx-plus"></i>
+          <span>AGREGAR ACTIVO</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tarjeta de Filtros de Búsqueda -->
+    <div class="activos-filter-card mb-4">
+      <div class="filter-card-header">
+        <div class="filter-card-title">
+          <i class="bx bx-filter-alt"></i>
+          <span>FILTROS DE BÚSQUEDA</span>
+        </div>
+
+        <div class="filter-actions-group">
+          <button
+            type="button"
+            class="btn-rw-secondary"
+            *ngIf="hayFiltrosActivos"
+            (click)="limpiarFiltros()">
+            <i class="bx bx-eraser"></i>
+            <span>LIMPIAR</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn-rw-filter"
+            (click)="filtrarActivosFijos()">
+            <i class="bx bx-search"></i>
+            <span>APLICAR FILTROS</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="filters-grid">
+        <div class="filter-field">
+          <label class="rw-form-label">Sucursal / Departamento</label>
+          <p-dropdown
+            [options]="sucursales"
+            [(ngModel)]="idSucursalFiltro"
+            name="sucursal"
+            optionValue="id"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Todas..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }">
+          </p-dropdown>
+        </div>
+
+        <div class="filter-field">
+          <label class="rw-form-label">Área</label>
+          <p-dropdown
+            [options]="areasService.areas"
+            [(ngModel)]="idAreaFiltro"
+            name="area"
+            optionValue="id"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Todas..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }">
+          </p-dropdown>
+        </div>
+
+        <div class="filter-field">
+          <label class="rw-form-label">Locación</label>
+          <p-dropdown
+            [options]="areasActivosFijos"
+            [(ngModel)]="idLocacionFiltro"
+            name="locacion"
+            optionValue="id"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Todas..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }">
+          </p-dropdown>
+        </div>
+
+        <div class="filter-field">
+          <label class="rw-form-label">Categoría</label>
+          <p-dropdown
+            [options]="categoriasActivosFijos"
+            [(ngModel)]="idCategoriaFiltro"
+            name="categoria"
+            optionValue="id"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Todas..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }">
+          </p-dropdown>
+        </div>
+
+        <div class="filter-field">
+          <label class="rw-form-label">Condición</label>
+          <p-dropdown
+            [options]="estatusActivosFijos"
+            [(ngModel)]="idEstatusFiltro"
+            name="condicion"
+            optionValue="id"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Todas..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }">
+          </p-dropdown>
+        </div>
+
+        <div class="filter-field">
+          <label class="rw-form-label">Ubicación</label>
+          <p-dropdown
+            [options]="ubicacionesActivosFijos"
+            [(ngModel)]="idUbicacionFiltro"
+            name="ubicacion"
+            optionValue="id"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            placeholder="Todas..."
+            appendTo="body"
+            styleClass="rw-dropdown-h42 w-100"
+            [style]="{ width: '100%' }">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenedor Principal (Tabla de Activos Fijos) -->
+    <div class="activos-panel-card">
+      <div class="table-card-header mb-3">
+        <div class="table-title-group">
+          <i class="bx bx-list-ul"></i>
+          <span>LISTA DE ACTIVOS FIJOS</span>
+          <span class="table-count-pill">{{ activosVisibles.length }}</span>
+        </div>
+
+        <div class="legend-pills">
+          <span class="legend-item legend-success"><span class="dot"></span>Nuevo</span>
+          <span class="legend-item legend-warning"><span class="dot"></span>Usado</span>
+          <span class="legend-item legend-admin"><span class="dot"></span>Reparación / Instalar</span>
+          <span class="legend-item legend-danger"><span class="dot"></span>Descompuesto / Mant. &ge; Costo</span>
+        </div>
+      </div>
+
+      <p-table
+        [value]="activosFijosFiltrados | buscarPorReferencia: textoBusquedaReferencia"
+        [tableStyle]="{ 'min-width': '78rem' }"
+        styleClass="p-datatable-gridlines table-tk activos-table"
+        [scrollable]="true"
+        scrollHeight="58vh">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>REFERENCIA</th>
+            <th>NO. SERIE</th>
+            <th>DESCRIPCIÓN</th>
+            <th>SUCURSAL</th>
+            <th>ÁREA</th>
+            <th>LOCACIÓN</th>
+            <th>CATEGORÍA</th>
+            <th class="text-center"># MANT</th>
+            <th class="text-center">CONDICIÓN</th>
+            <th>UBICACIÓN</th>
+            <th class="text-end">COSTO</th>
+            <th class="text-end">COSTO MANT.</th>
+            <th class="text-center" style="width: 170px;">ACCIONES</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-activo>
+          <tr
+            [pSelectableRow]="activo"
+            class="activo-row"
+            [ngClass]="'row-' + obtenerTipoEstadoRow(activo)">
+            <td class="fw-bold text-dark">{{ activo.referencia }}</td>
+            <td class="text-muted">{{ activo.noSerie || '-' }}</td>
+            <td class="desc-cell">{{ activo.descripcion }}</td>
+            <td class="fw-semibold">{{ nombreSucursal(activo.idSucursal) || '-' }}</td>
+            <td>{{ nombreArea(activo.idArea) || '-' }}</td>
+            <td>{{ nombreAreaActivoFijo(activo.idAreaActivoFijo) || '-' }}</td>
+            <td>{{ nombreCategoriaActivoFijo(activo.idCategoriaActivoFijo) || '-' }}</td>
+            <td class="text-center">
+              <span class="mant-count-pill">{{ activo.mantenimientos?.length || 0 }}</span>
+            </td>
+            <td class="text-center">
+              <span
+                class="status-pill"
+                [ngClass]="'status-' + obtenerTipoEstadoRow(activo)">
+                {{ nombreEstatusActivoFijo(activo.idEstatusActivoFijo) || '-' }}
+              </span>
+            </td>
+            <td>{{ nombreUbicacionActivoFijo(activo.idUbicacionActivoFijo) || '-' }}</td>
+            <td class="text-end fw-semibold text-dark">{{ activo.costo | currency }}</td>
+            <td class="text-end">
+              <span
+                class="fw-bold"
+                [class.text-danger]="esMantenimientoExcedido(activo)"
+                [pTooltip]="esMantenimientoExcedido(activo) ? 'El costo de mantenimiento iguala o supera el costo del activo' : ''"
+                tooltipPosition="top">
+                {{ getCostoTotalMantenimientos(activo) | currency }}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex justify-content-center align-items-center gap-2">
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-neutral"
+                  (click)="mostrarTickets(activo)"
+                  pTooltip="Ver tickets"
+                  tooltipPosition="top">
+                  <i class="bx bx-receipt"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-warning"
+                  (click)="abrirModalMantenimientos(activo)"
+                  pTooltip="Ver mantenimientos"
+                  tooltipPosition="top">
+                  <i class="bx bx-wrench"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-info"
+                  (click)="abrirModalEditarActivoFijo(activo)"
+                  pTooltip="Editar activo"
+                  tooltipPosition="top">
+                  <i class="bx bx-edit"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-danger"
+                  (click)="confirmaEliminacion(activo.id)"
+                  pTooltip="Eliminar activo"
+                  tooltipPosition="top">
+                  <i class="bx bx-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="13">
+              <div class="activos-empty-state">
+                <i class="bx bx-package"></i>
+                <h6>Sin activos fijos encontrados</h6>
+                <p>No hay registros que coincidan con los filtros seleccionados.</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+</div>
+
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'">
+</p-toast>
+
+<p-confirmDialog
+  styleClass="dialog-confirm-rw"
+  [style]="{ width: '460px', maxWidth: '92vw' }">
+  <ng-template pTemplate="message" let-message>
+    <div class="confirm-content-wrapper">
+      <div class="confirm-badge badge-danger">
+        <i class="bx bx-trash"></i>
+        <span>ELIMINAR ACTIVO FIJO</span>
+      </div>
+      <p class="confirm-desc">{{ message.message }}</p>
+      <div class="confirm-callout">
+        <i class="bx bx-info-circle"></i>
+        <span>El activo fijo quedará marcado como eliminado del catálogo operativo.</span>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+
+<app-crear-activo-fijo-dialog
+  *ngIf="mostrarModalActivoFijo"
+  [mostrarModalCrearActivoFijo]="mostrarModalActivoFijo"
+  (closeEvent)="cerrarModalActivoFijo()"
+  [activoFijo]="activoFijoSeleccionada"
+  [esNuevoActivoFijo]="esNuevoActivoFijo">
+</app-crear-activo-fijo-dialog>
+
+<app-tickets-activo-fijo-dialog
+  *ngIf="mostrarModalTickets"
+  [mostrarModalDetalleActivoFijo]="mostrarModalTickets"
+  [activoFijo]="activoFijoSeleccionada"
+  (closeEvent)="mostrarModalTickets = false">
+</app-tickets-activo-fijo-dialog>
+
+<app-mantenimientos-activo-fijo-dialog
+  *ngIf="mostrarModalMantenimientos"
+  [mostrarModal]="mostrarModalMantenimientos"
+  [activoFijo]="activoFijoSeleccionada"
+  (closeEvent)="mostrarModalMantenimientos = false">
+</app-mantenimientos-activo-fijo-dialog>

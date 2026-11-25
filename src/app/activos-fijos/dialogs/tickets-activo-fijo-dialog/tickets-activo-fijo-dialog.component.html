@@ -1,0 +1,87 @@
+<p-dialog
+  [(visible)]="mostrarModalDetalleActivoFijo"
+  [modal]="true"
+  [style]="{ width: '76rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '94vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="fixed-asset-tickets-dialog"
+  (onHide)="onHide()">
+
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-receipt text-danger"></i> Tickets del Activo Fijo
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="asset-tickets-body">
+    <!-- Tarjeta resumen del activo fijo -->
+    <div class="rw-asset-summary-card" *ngIf="activoFijo">
+      <div class="asset-summary-left">
+        <span class="asset-icon-wrap">
+          <i class="bx bx-package"></i>
+        </span>
+        <div class="asset-summary-info">
+          <span class="asset-ref">{{ activoFijo.referencia || 'Sin referencia' }}</span>
+          <span class="asset-desc">
+            {{ activoFijo.descripcion || 'Sin descripción' }}
+            <ng-container *ngIf="activoFijo.noSerie"> · Serie: {{ activoFijo.noSerie }}</ng-container>
+          </span>
+        </div>
+      </div>
+
+      <span class="rw-count-pill">
+        <i class="bx" [ngClass]="loading ? 'bx-loader-alt bx-spin' : 'bx-receipt'"></i>
+        <span>
+          {{ loading ? 'Cargando...' : tickets.length + (tickets.length === 1 ? ' ticket' : ' tickets') }}
+        </span>
+      </span>
+    </div>
+
+    <!-- Tarjeta contenedora de la tabla -->
+    <div class="rw-table-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-list-ul"></i>
+          <span>HISTORIAL DE TICKETS ASOCIADOS</span>
+        </div>
+        <span class="rw-card-hint" *ngIf="!loading && tickets.length > 0">
+          Selecciona una fila para consultar el detalle del ticket
+        </span>
+      </div>
+
+      <div *ngIf="loading" class="rw-state-box">
+        <i class="bx bx-loader-alt bx-spin"></i>
+        <h6>Consultando tickets...</h6>
+        <p>Obteniendo los tickets asociados a este activo fijo.</p>
+      </div>
+
+      <app-requester-tickets-list
+        *ngIf="!loading && tickets.length > 0"
+        [tickets]="tickets"
+        (clickEvent)="abrirModalDetalleTicket($event)">
+      </app-requester-tickets-list>
+
+      <div *ngIf="!loading && tickets.length === 0" class="rw-state-box">
+        <i class="bx bx-receipt"></i>
+        <h6>Sin tickets registrados</h6>
+        <p>Este activo fijo aún no cuenta con tickets asociados.</p>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn-rw-secondary rw-btn-mobile-full" (click)="onHide()">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<app-detalle-ticket-dialog
+  *ngIf="mostrarModalTicketDetail"
+  [ticket]="ticket"
+  [showModalTicketDetail]="mostrarModalTicketDetail"
+  (closeEvent)="mostrarModalTicketDetail = false">
+</app-detalle-ticket-dialog>

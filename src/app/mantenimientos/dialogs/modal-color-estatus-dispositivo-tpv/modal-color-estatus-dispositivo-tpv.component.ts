@@ -10,7 +10,7 @@ import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.ser
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
-import { Dispositivo } from '../../interfaces/dispositivo.interface';
+import { Dispositivo } from '../../interfaces/dispositivo.model';
 import { EstatusTPV } from '../../interfaces/estatus-tpv.interface';
 
 @Component({

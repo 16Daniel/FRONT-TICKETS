@@ -11,12 +11,12 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { EstatusActivoFijo } from '../interfaces/estatus-activo-fijo.interface';
+import { EstatusActivoFijo } from '../models/estatus-activo-fijo.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StatusFixedAssetsService {
+export class EstatusActivosFijosService {
   pathName: string = 'cat_estatus_activos_fijos';
 
   constructor(private firestore: Firestore) { }
