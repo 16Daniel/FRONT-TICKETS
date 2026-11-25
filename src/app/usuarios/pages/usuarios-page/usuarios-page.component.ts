@@ -14,7 +14,7 @@ import { Usuario } from '../../models/usuario.model';
 import { DocumentsService } from '../../../shared/services/documents.service';
 import { UsuariosService } from '../../services/usuarios.service';
 import { RolesService } from '../../../roles/services/roles.service';
-import { Rol } from '../../../roles/interfaces/rol.model';
+import { Rol } from '../../../roles/models/rol.model';
 import { CrearUsuarioDialogComponent } from '../../dialogs/crear-usuario-dialog/crear-usuario-dialog.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 

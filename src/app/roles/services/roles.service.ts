@@ -10,8 +10,12 @@ import {
   getDocs,
   setDoc,
 } from '@angular/fire/firestore';
-import { Rol } from '../interfaces/rol.model';
-import { normalizarRolFirestore, normalizarRutaInicio } from '../constants/catalogo-permisos.constants';
+import { Rol } from '../models/rol.model';
+import {
+  normalizarRolFirestore,
+  normalizarRutaInicio,
+  sanearReglasAreaPorPermiso,
+} from '../constants/catalogo-permisos.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -62,13 +66,17 @@ export class RolesService {
   }
 
   /**
-   * Actualiza un rol existente en Firestore guardando su configuración y permisos de menú
+   * Actualiza un rol existente en Firestore guardando su configuración, permisos y reglas por área
    */
   async update(rol: Partial<Rol>, idRol: string | number): Promise<void> {
     const idStr = String(idRol);
     const docRef = doc(this.firestore, `${this.pathName}/${idStr}`);
     const payload = this.construirPayloadRol(rol, idStr);
-    await setDoc(docRef, payload, { merge: true });
+    // Se usa mergeFields en lugar de merge: true para reemplazar el mapa reglasAreaPorPermiso completo
+    // y permitir eliminar reglas de área previamente guardadas.
+    await setDoc(docRef, payload, {
+      mergeFields: ['id', 'nombre', 'descripcion', 'rutaInicio', 'permisos', 'reglasAreaPorPermiso'],
+    });
   }
 
   /**
@@ -80,12 +88,16 @@ export class RolesService {
   }
 
   private construirPayloadRol(rol: Partial<Rol>, id: string): Record<string, any> {
+    const permisos = Array.isArray(rol.permisos) ? [...new Set(rol.permisos)] : [];
+    const reglasAreaPorPermiso = sanearReglasAreaPorPermiso(rol.reglasAreaPorPermiso, permisos);
+
     return {
       id,
       nombre: (rol.nombre || '').trim().toUpperCase(),
       descripcion: (rol.descripcion || '').trim(),
       rutaInicio: normalizarRutaInicio(rol.rutaInicio),
-      permisos: Array.isArray(rol.permisos) ? [...new Set(rol.permisos)] : [],
+      permisos,
+      reglasAreaPorPermiso,
     };
   }
 
@@ -99,11 +111,21 @@ export class RolesService {
           descripcion: item.descripcion,
           rutaInicio: item.rutaInicio,
           permisos: item.permisos,
+          reglasAreaPorPermiso: item.reglasAreaPorPermiso,
         });
         await setDoc(
           doc(rolesCollection, item.id.toString()),
           this.construirPayloadRol(normalizado, item.id.toString()),
-          { merge: true }
+          {
+            mergeFields: [
+              'id',
+              'nombre',
+              'descripcion',
+              'rutaInicio',
+              'permisos',
+              'reglasAreaPorPermiso',
+            ],
+          }
         );
       }
     } catch (error) {

@@ -7,7 +7,7 @@ export const ROLES_MAIN_ROUTES: Routes = [
     title: 'Roles de usuarios',
     canActivate: [permissionGuard('roles.ver')],
     loadComponent: () =>
-      import('./pages/roles-page/roles-pages.component'),
+      import('./pages/roles-page/roles-page.component'),
   },
 ];
 
