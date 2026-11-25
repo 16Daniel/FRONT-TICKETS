@@ -78,6 +78,8 @@ export class ModalAreaCreateComponent {
       ticketCerrado: false,
       superaTA: false,
       superaTR: false,
+      taPorVencer: false,
+      trPorVencer: false,
       ...(this.area.notificacionesTicket ?? {}),
     } satisfies AreaNotificationSettings;
     this.obtenerGruposWhatsapp();
