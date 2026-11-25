@@ -18,7 +18,7 @@ import { UsuarioSucursalService } from '../../../sucursales/services/usuario-suc
 import { RolesService } from '../../../roles/services/roles.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
-import { Rol } from '../../../roles/interfaces/rol.model';
+import { Rol } from '../../../roles/models/rol.model';
 import { CrearResponsableDialogComponent } from '../crear-responsable-dialog/crear-responsable-dialog.component';
 
 @Component({

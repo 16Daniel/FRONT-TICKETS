@@ -9,23 +9,32 @@ import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
 
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { AreasService } from '../../../areas/services/areas.service';
+import { Area } from '../../../areas/interfaces/area.model';
 import { RolesService } from '../../services/roles.service';
-import { Rol } from '../../interfaces/rol.model';
+import { ModoReglaArea, ReglaAreaPermiso, Rol } from '../../models/rol.model';
+import { GrupoMenuPermiso } from '../../interfaces/grupo-menu-permiso.interface';
+import { MenuPermisoItem } from '../../interfaces/menu-permiso-item.interface';
+import { OpcionRutaInicio } from '../../interfaces/opcion-ruta-inicio.interface';
 import {
-  GrupoMenuPermiso,
-  MenuPermisoItem,
-  OpcionRutaInicio,
-} from '../../interfaces/ruta.model';
-import {
+  evaluarPermisoParaArea,
   GRUPOS_MENU_PERMISOS,
+  normalizarIdArea,
   normalizarRutaInicio,
   obtenerTodosLosMenusCatalogo,
   obtenerTodosLosPermisosCatalogo,
   RUTA_INICIO_DEFECTO,
   RUTAS_INICIO_DISPONIBLES,
+  sanearReglasAreaPorPermiso,
 } from '../../constants/catalogo-permisos.constants';
+
+interface OpcionSimuladorArea {
+  label: string;
+  value: string | null;
+}
 
 @Component({
   selector: 'app-roles-page',
@@ -39,6 +48,7 @@ import {
     TooltipModule,
     ToastModule,
     ConfirmDialogModule,
+    DialogModule,
     PageHeaderComponent,
   ],
   providers: [MessageService, ConfirmationService],
@@ -47,6 +57,7 @@ import {
 })
 export default class RolesPageComponent implements OnInit, OnDestroy {
   public catroles: Rol[] = [];
+  public areasCatalogo: Area[] = [];
   public loading: boolean = true;
   public guardando: boolean = false;
 
@@ -54,6 +65,8 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
   public busquedaRol: string = '';
   public busquedaPermiso: string = '';
   public grupoFiltroId: string = 'TODOS';
+  public soloConReglaArea: boolean = false;
+  public areaSimuladaId: string | null = null;
 
   // Estado del editor en el panel derecho
   public modoCreacion: boolean = false;
@@ -69,27 +82,48 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
 
   // Set reactivo en memoria para manipular los permisos de menú con O(1)
   public permisosSeleccionados: Set<string> = new Set<string>();
+  // Mapa reactivo en memoria para las reglas de alcance por área
+  public reglasAreaSeleccionadas: Map<string, ReglaAreaPermiso> = new Map<string, ReglaAreaPermiso>();
+
+  // Estado del modal de configuración de regla por área
+  public modalReglaVisible: boolean = false;
+  public modalReglaTipo: 'menu' | 'grupo' = 'menu';
+  public modalMenuObjetivo: MenuPermisoItem | null = null;
+  public modalGrupoObjetivo: GrupoMenuPermiso | null = null;
+  public modalModo: ModoReglaArea = 'SOLO_AREAS';
+  public modalAreasSeleccionadas: Set<string> = new Set<string>();
+  public modalBusquedaArea: string = '';
 
   // Catálogos constantes para la vista
   public readonly gruposCatalogo: GrupoMenuPermiso[] = GRUPOS_MENU_PERMISOS;
   public readonly rutasInicioOpciones: OpcionRutaInicio[] = RUTAS_INICIO_DISPONIBLES;
-  public readonly totalMenusSistema: number = obtenerTodosLosMenusCatalogo().length;
+  private readonly todosLosMenus: MenuPermisoItem[] = obtenerTodosLosMenusCatalogo();
+  public readonly totalMenusSistema: number = this.todosLosMenus.length;
 
+  public opcionesSimuladorArea: OpcionSimuladorArea[] = [
+    { label: 'Modo edición (todas las áreas)', value: null },
+  ];
+
+  private areasMap: Map<string, Area> = new Map<string, Area>();
   private rolesSub?: Subscription;
+  private areasSub?: Subscription;
 
   constructor(
     private messageService: MessageService,
     public cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private rolesService: RolesService
+    private rolesService: RolesService,
+    private areasService: AreasService
   ) {}
 
   ngOnInit(): void {
+    this.cargarAreas();
     this.getRoles();
   }
 
   ngOnDestroy(): void {
     this.rolesSub?.unsubscribe();
+    this.areasSub?.unsubscribe();
   }
 
   private crearFormularioVacio() {
@@ -99,6 +133,30 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
       descripcion: '',
       rutaInicio: RUTA_INICIO_DEFECTO,
     };
+  }
+
+  private cargarAreas(): void {
+    this.areasSub?.unsubscribe();
+    this.areasSub = this.areasService.areas$.subscribe((areas) => {
+      const ordenadas = [...(areas || [])].sort((a, b) =>
+        (a.nombre || '').localeCompare(b.nombre || '', 'es', { sensitivity: 'base' })
+      );
+      this.areasCatalogo = ordenadas;
+      this.areasMap = new Map(ordenadas.map((a) => [normalizarIdArea(a.id), a]));
+      this.opcionesSimuladorArea = [
+        { label: 'Modo edición (todas las áreas)', value: null },
+        ...ordenadas.map((a) => ({
+          label: `Simular área: ${a.nombre}`,
+          value: normalizarIdArea(a.id),
+        })),
+      ];
+
+      if (this.areaSimuladaId && !this.areasMap.has(this.areaSimuladaId)) {
+        this.areaSimuladaId = null;
+      }
+
+      this.cdr.detectChanges();
+    });
   }
 
   getRoles(): void {
@@ -148,7 +206,7 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Grupos y menús filtrados por el buscador y el selector de grupo
+   * Grupos y menús filtrados por el buscador, selector de grupo y filtro de reglas de área
    */
   get gruposFiltrados(): GrupoMenuPermiso[] {
     const term = this.busquedaPermiso.trim().toLowerCase();
@@ -156,13 +214,22 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
     return this.gruposCatalogo
       .filter((g) => this.grupoFiltroId === 'TODOS' || g.idGrupo === this.grupoFiltroId)
       .map((grupo) => {
-        if (!term) return grupo;
-        const menusCoincidentes = grupo.menus.filter(
-          (m) =>
+        const menusCoincidentes = grupo.menus.filter((m) => {
+          const coincideTexto =
+            !term ||
             m.titulo.toLowerCase().includes(term) ||
             m.ruta.toLowerCase().includes(term) ||
-            m.permisoVista.toLowerCase().includes(term)
-        );
+            m.permisoVista.toLowerCase().includes(term) ||
+            this.obtenerNombresAreasRegla(m.permisoVista).some((n) =>
+              n.toLowerCase().includes(term)
+            );
+
+          const coincideFiltroRegla =
+            !this.soloConReglaArea || this.tieneReglaArea(m.permisoVista);
+
+          return coincideTexto && coincideFiltroRegla;
+        });
+
         return {
           ...grupo,
           menus: menusCoincidentes,
@@ -189,6 +256,9 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
     this.rolSeleccionadoId = null;
     this.formRol = this.crearFormularioVacio();
     this.permisosSeleccionados = new Set<string>();
+    this.reglasAreaSeleccionadas = new Map<string, ReglaAreaPermiso>();
+    this.areaSimuladaId = null;
+    this.soloConReglaArea = false;
     this.cdr.detectChanges();
   }
 
@@ -200,6 +270,17 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
       rutaInicio: normalizarRutaInicio(rol.rutaInicio),
     };
     this.permisosSeleccionados = new Set<string>(rol.permisos || []);
+
+    const reglasLimpias = sanearReglasAreaPorPermiso(
+      rol.reglasAreaPorPermiso,
+      this.permisosSeleccionados
+    );
+    this.reglasAreaSeleccionadas = new Map<string, ReglaAreaPermiso>(
+      Object.entries(reglasLimpias).map(([permiso, regla]) => [
+        permiso,
+        { modo: regla.modo, areasIds: [...regla.areasIds] },
+      ])
+    );
   }
 
   // =========================================================================
@@ -219,6 +300,7 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
     }
     if (this.permisosSeleccionados.has(menu.permisoVista)) {
       this.permisosSeleccionados.delete(menu.permisoVista);
+      this.reglasAreaSeleccionadas.delete(menu.permisoVista);
     } else {
       this.permisosSeleccionados.add(menu.permisoVista);
     }
@@ -233,6 +315,7 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
     for (const menu of grupo.menus) {
       if (todoActivo) {
         this.permisosSeleccionados.delete(menu.permisoVista);
+        this.reglasAreaSeleccionadas.delete(menu.permisoVista);
       } else {
         this.permisosSeleccionados.add(menu.permisoVista);
       }
@@ -248,6 +331,10 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
     return grupo.menus.filter((m) => this.permisosSeleccionados.has(m.permisoVista)).length;
   }
 
+  contarReglasAreaEnGrupo(grupo: GrupoMenuPermiso): number {
+    return grupo.menus.filter((m) => this.tieneReglaArea(m.permisoVista)).length;
+  }
+
   /**
    * Acciones masivas sobre todos los menús del rol actual
    */
@@ -258,6 +345,296 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
 
   limpiarTodosLosPermisos(): void {
     this.permisosSeleccionados.clear();
+    this.reglasAreaSeleccionadas.clear();
+    this.soloConReglaArea = false;
+    this.cdr.detectChanges();
+  }
+
+  // =========================================================================
+  // Lógica de Reglas por Área y Simulador
+  // =========================================================================
+
+  tieneReglaArea(permiso: string): boolean {
+    return this.permisosSeleccionados.has(permiso) && this.reglasAreaSeleccionadas.has(permiso);
+  }
+
+  obtenerReglaArea(permiso: string): ReglaAreaPermiso | null {
+    if (!this.permisosSeleccionados.has(permiso)) return null;
+    return this.reglasAreaSeleccionadas.get(permiso) || null;
+  }
+
+  obtenerNombreArea(idArea: string): string {
+    const area = this.areasMap.get(normalizarIdArea(idArea));
+    return area?.nombre || `Área #${idArea} (inactiva)`;
+  }
+
+  esAreaInactiva(idArea: string): boolean {
+    return !this.areasMap.has(normalizarIdArea(idArea));
+  }
+
+  obtenerNombresAreasRegla(permiso: string): string[] {
+    const regla = this.obtenerReglaArea(permiso);
+    if (!regla) return [];
+    return regla.areasIds.map((id) => this.obtenerNombreArea(id));
+  }
+
+  obtenerReglasComoObjeto(): Record<string, ReglaAreaPermiso> {
+    const obj: Record<string, ReglaAreaPermiso> = {};
+    this.reglasAreaSeleccionadas.forEach((regla, permiso) => {
+      if (this.permisosSeleccionados.has(permiso) && regla.areasIds.length > 0) {
+        obj[permiso] = {
+          modo: regla.modo,
+          areasIds: [...regla.areasIds],
+        };
+      }
+    });
+    return obj;
+  }
+
+  esMenuVisibleEnAreaSimulada(menu: MenuPermisoItem): boolean {
+    if (!this.areaSimuladaId) {
+      return this.tienePermiso(menu.permisoVista);
+    }
+    return evaluarPermisoParaArea(
+      menu.permisoVista,
+      this.permisosSeleccionados,
+      this.obtenerReglasComoObjeto(),
+      this.areaSimuladaId
+    );
+  }
+
+  esMenuRestringidoEnAreaSimulada(menu: MenuPermisoItem): boolean {
+    return (
+      !!this.areaSimuladaId &&
+      this.tienePermiso(menu.permisoVista) &&
+      !this.esMenuVisibleEnAreaSimulada(menu)
+    );
+  }
+
+  get nombreAreaSimulada(): string {
+    return this.areaSimuladaId ? this.obtenerNombreArea(this.areaSimuladaId) : '';
+  }
+
+  get rutaInicioTieneRestriccionArea(): boolean {
+    const menuInicio = this.todosLosMenus.find((m) => m.ruta === this.formRol.rutaInicio);
+    return menuInicio ? this.tieneReglaArea(menuInicio.permisoVista) : false;
+  }
+
+  quitarReglaMenu(menu: MenuPermisoItem, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.reglasAreaSeleccionadas.delete(menu.permisoVista);
+    if (this.totalReglasAreaFormulario === 0) {
+      this.soloConReglaArea = false;
+    }
+    this.cdr.detectChanges();
+  }
+
+  // =========================================================================
+  // Modal de Configuración de Regla por Área (Menú individual o Grupo)
+  // =========================================================================
+
+  abrirModalReglaMenu(menu: MenuPermisoItem, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!this.permisosSeleccionados.has(menu.permisoVista)) {
+      this.permisosSeleccionados.add(menu.permisoVista);
+    }
+
+    this.modalReglaTipo = 'menu';
+    this.modalMenuObjetivo = menu;
+    this.modalGrupoObjetivo = null;
+    this.modalBusquedaArea = '';
+
+    const reglaActual = this.reglasAreaSeleccionadas.get(menu.permisoVista);
+    if (reglaActual) {
+      this.modalModo = reglaActual.modo;
+      this.modalAreasSeleccionadas = new Set<string>(reglaActual.areasIds);
+    } else {
+      this.modalModo = 'SOLO_AREAS';
+      this.modalAreasSeleccionadas = new Set<string>();
+    }
+
+    this.modalReglaVisible = true;
+    this.cdr.detectChanges();
+  }
+
+  abrirModalReglaGrupo(grupo: GrupoMenuPermiso): void {
+    const menusActivos = grupo.menus.filter((m) => this.permisosSeleccionados.has(m.permisoVista));
+    if (menusActivos.length === 0) {
+      this.showMessage(
+        'info',
+        'Sin menús activos',
+        `Activa al menos una opción del grupo "${grupo.tituloGrupo}" para configurar su alcance por área.`
+      );
+      return;
+    }
+
+    this.modalReglaTipo = 'grupo';
+    this.modalGrupoObjetivo = grupo;
+    this.modalMenuObjetivo = null;
+    this.modalBusquedaArea = '';
+
+    // Si algún menú activo del grupo ya tiene regla, pre-cargar la primera como referencia
+    const primeraRegla = menusActivos
+      .map((m) => this.reglasAreaSeleccionadas.get(m.permisoVista))
+      .find((r) => !!r);
+
+    if (primeraRegla) {
+      this.modalModo = primeraRegla.modo;
+      this.modalAreasSeleccionadas = new Set<string>(primeraRegla.areasIds);
+    } else {
+      this.modalModo = 'SOLO_AREAS';
+      this.modalAreasSeleccionadas = new Set<string>();
+    }
+
+    this.modalReglaVisible = true;
+    this.cdr.detectChanges();
+  }
+
+  get modalAreasFiltradas(): { id: string; nombre: string; inactiva: boolean }[] {
+    const term = this.modalBusquedaArea.trim().toLowerCase();
+    const lista: { id: string; nombre: string; inactiva: boolean }[] = this.areasCatalogo.map(
+      (a) => ({
+        id: normalizarIdArea(a.id),
+        nombre: a.nombre || `Área #${a.id}`,
+        inactiva: false,
+      })
+    );
+
+    // Mostrar también IDs huérfanos que hayan quedado guardados en la regla para poder desmarcarlos
+    this.modalAreasSeleccionadas.forEach((id) => {
+      if (!this.areasMap.has(id)) {
+        lista.push({
+          id,
+          nombre: `Área #${id} (inactiva)`,
+          inactiva: true,
+        });
+      }
+    });
+
+    if (!term) return lista;
+    return lista.filter(
+      (item) => item.nombre.toLowerCase().includes(term) || item.id.toLowerCase().includes(term)
+    );
+  }
+
+  get modalTieneReglaPrevia(): boolean {
+    if (this.modalReglaTipo === 'menu' && this.modalMenuObjetivo) {
+      return this.tieneReglaArea(this.modalMenuObjetivo.permisoVista);
+    }
+    if (this.modalReglaTipo === 'grupo' && this.modalGrupoObjetivo) {
+      return this.contarReglasAreaEnGrupo(this.modalGrupoObjetivo) > 0;
+    }
+    return false;
+  }
+
+  get modalPuedeAplicar(): boolean {
+    if (this.modalModo === 'TODAS') return true;
+    return this.modalAreasSeleccionadas.size > 0;
+  }
+
+  get modalTituloObjetivo(): string {
+    if (this.modalReglaTipo === 'menu' && this.modalMenuObjetivo) {
+      return this.modalMenuObjetivo.titulo;
+    }
+    if (this.modalReglaTipo === 'grupo' && this.modalGrupoObjetivo) {
+      const activos = this.contarMenusActivosEnGrupo(this.modalGrupoObjetivo);
+      return `Grupo ${this.modalGrupoObjetivo.tituloGrupo} (${activos} menús activos)`;
+    }
+    return '';
+  }
+
+  get modalResumenTexto(): string {
+    const rolNombre = (this.formRol.nombre || 'ESTE ROL').trim().toUpperCase();
+    const objetivo =
+      this.modalReglaTipo === 'menu' && this.modalMenuObjetivo
+        ? `la pantalla "${this.modalMenuObjetivo.titulo}"`
+        : `los menús activos del grupo "${this.modalGrupoObjetivo?.tituloGrupo || ''}"`;
+
+    if (this.modalModo === 'TODAS') {
+      return `Todos los usuarios con rol ${rolNombre} podrán ver ${objetivo}, sin importar su área.`;
+    }
+
+    if (this.modalAreasSeleccionadas.size === 0) {
+      return 'Selecciona al menos un área para definir esta regla.';
+    }
+
+    const nombres = Array.from(this.modalAreasSeleccionadas).map((id) =>
+      this.obtenerNombreArea(id)
+    );
+    const listaTexto =
+      nombres.length <= 3
+        ? nombres.join(', ')
+        : `${nombres.slice(0, 3).join(', ')} y ${nombres.length - 3} más`;
+
+    if (this.modalModo === 'SOLO_AREAS') {
+      return `Los usuarios con rol ${rolNombre} verán ${objetivo} únicamente si pertenecen a: ${listaTexto}.`;
+    }
+
+    return `Todos los usuarios con rol ${rolNombre} verán ${objetivo}, excepto quienes pertenezcan a: ${listaTexto}.`;
+  }
+
+  toggleAreaEnModal(idArea: string): void {
+    if (this.modalAreasSeleccionadas.has(idArea)) {
+      this.modalAreasSeleccionadas.delete(idArea);
+    } else {
+      this.modalAreasSeleccionadas.add(idArea);
+    }
+    this.cdr.detectChanges();
+  }
+
+  seleccionarTodasAreasModal(): void {
+    for (const area of this.areasCatalogo) {
+      const id = normalizarIdArea(area.id);
+      if (id) this.modalAreasSeleccionadas.add(id);
+    }
+    this.cdr.detectChanges();
+  }
+
+  limpiarAreasModal(): void {
+    this.modalAreasSeleccionadas.clear();
+    this.cdr.detectChanges();
+  }
+
+  restablecerReglaATodasEnModal(): void {
+    this.modalModo = 'TODAS';
+    this.aplicarReglaModal();
+  }
+
+  aplicarReglaModal(): void {
+    if (!this.modalPuedeAplicar) return;
+
+    const permisosObjetivo: string[] = [];
+    if (this.modalReglaTipo === 'menu' && this.modalMenuObjetivo) {
+      permisosObjetivo.push(this.modalMenuObjetivo.permisoVista);
+    } else if (this.modalReglaTipo === 'grupo' && this.modalGrupoObjetivo) {
+      for (const menu of this.modalGrupoObjetivo.menus) {
+        if (this.permisosSeleccionados.has(menu.permisoVista)) {
+          permisosObjetivo.push(menu.permisoVista);
+        }
+      }
+    }
+
+    const areasIds = Array.from(this.modalAreasSeleccionadas);
+    for (const permiso of permisosObjetivo) {
+      if (this.modalModo === 'TODAS' || areasIds.length === 0) {
+        this.reglasAreaSeleccionadas.delete(permiso);
+      } else {
+        this.reglasAreaSeleccionadas.set(permiso, {
+          modo: this.modalModo,
+          areasIds: [...areasIds],
+        });
+      }
+    }
+
+    if (this.totalReglasAreaFormulario === 0) {
+      this.soloConReglaArea = false;
+    }
+
+    this.modalReglaVisible = false;
     this.cdr.detectChanges();
   }
 
@@ -266,13 +643,29 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
   // =========================================================================
 
   get totalMenusActivosFormulario(): number {
-    const todosMenus = obtenerTodosLosMenusCatalogo();
-    return todosMenus.filter((m) => this.permisosSeleccionados.has(m.permisoVista)).length;
+    return this.todosLosMenus.filter((m) => this.permisosSeleccionados.has(m.permisoVista)).length;
+  }
+
+  get totalReglasAreaFormulario(): number {
+    return this.todosLosMenus.filter((m) => this.tieneReglaArea(m.permisoVista)).length;
+  }
+
+  get totalMenusVisiblesAreaSimulada(): number {
+    if (!this.areaSimuladaId) return this.totalMenusActivosFormulario;
+    return this.todosLosMenus.filter((m) => this.esMenuVisibleEnAreaSimulada(m)).length;
   }
 
   contarMenusActivosDeRol(rol: Rol): number {
     const set = new Set(rol.permisos || []);
-    return obtenerTodosLosMenusCatalogo().filter((m) => set.has(m.permisoVista)).length;
+    return this.todosLosMenus.filter((m) => set.has(m.permisoVista)).length;
+  }
+
+  contarReglasAreaDeRol(rol: Rol): number {
+    if (!rol.reglasAreaPorPermiso) return 0;
+    const set = new Set(rol.permisos || []);
+    return Object.entries(rol.reglasAreaPorPermiso).filter(
+      ([permiso, regla]) => set.has(permiso) && regla?.areasIds?.length > 0
+    ).length;
   }
 
   // =========================================================================
@@ -294,6 +687,7 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
       descripcion: (this.formRol.descripcion || '').trim(),
       rutaInicio: this.formRol.rutaInicio,
       permisos: Array.from(this.permisosSeleccionados),
+      reglasAreaPorPermiso: this.obtenerReglasComoObjeto(),
     };
 
     try {
@@ -302,7 +696,7 @@ export default class RolesPageComponent implements OnInit, OnDestroy {
         this.showMessage(
           'success',
           'Rol actualizado',
-          `Los permisos de "${nombre}" se guardaron en Firebase correctamente.`
+          `Los permisos y reglas por área de "${nombre}" se guardaron en Firebase correctamente.`
         );
       } else {
         const nuevoId = await this.rolesService.create(payload);

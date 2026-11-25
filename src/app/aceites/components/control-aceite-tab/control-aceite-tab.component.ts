@@ -16,7 +16,7 @@ import { RolesService } from '../../../roles/services/roles.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
-import { Rol } from '../../../roles/interfaces/rol.model';
+import { Rol } from '../../../roles/models/rol.model';
 import { AsignarSucursalesAceiteDialogComponent } from '../../dialogs/asignar-sucursales-aceite-dialog/asignar-sucursales-aceite-dialog.component';
 
 @Component({

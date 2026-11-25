@@ -1,4 +1,4 @@
-import { OpcionRutaInicio } from '../interfaces/ruta.model';
+import { OpcionRutaInicio } from '../interfaces/opcion-ruta-inicio.interface';
 
 export const RUTA_INICIO_DEFECTO = '/main/home-sucursal';
 

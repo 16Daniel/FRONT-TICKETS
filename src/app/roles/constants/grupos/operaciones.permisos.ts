@@ -1,4 +1,4 @@
-import { GrupoMenuPermiso } from '../../interfaces/ruta.model';
+import { GrupoMenuPermiso } from '../../interfaces/grupo-menu-permiso.interface';
 
 export const GRUPO_PERMISOS_OPERACIONES: GrupoMenuPermiso = {
   idGrupo: 'operaciones',

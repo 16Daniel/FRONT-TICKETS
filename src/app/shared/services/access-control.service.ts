@@ -3,14 +3,22 @@ import { Firestore, doc, onSnapshot, Unsubscribe } from '@angular/fire/firestore
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Usuario } from '../../usuarios/models/usuario.model';
-import { Rol } from '../../roles/interfaces/rol.model';
-import { GrupoMenuPermiso } from '../../roles/interfaces/ruta.model';
+import { Rol } from '../../roles/models/rol.model';
+import { GrupoMenuPermiso } from '../../roles/interfaces/grupo-menu-permiso.interface';
 import {
   GRUPOS_MENU_PERMISOS,
+  normalizarIdArea,
   normalizarRutaInicio,
   obtenerTodosLosMenusCatalogo,
+  resolverPermisosEfectivos,
   RUTA_INICIO_DEFECTO,
 } from '../../roles/constants/catalogo-permisos.constants';
+
+interface CachePermisosRol {
+  idRol: string;
+  idArea: string;
+  permisos: string[];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +30,7 @@ export class AccessControlService implements OnDestroy {
 
   private rolUnsubscribe: Unsubscribe | null = null;
   private currentRolId: string | null = null;
+  private currentAreaId: string | null = null;
 
   private _isLoaded: boolean = false;
   private _loadPromise: Promise<void> | null = null;
@@ -59,17 +68,29 @@ export class AccessControlService implements OnDestroy {
   }
 
   /**
-   * Carga los permisos desde cache de localStorage para renderizar de inmediato sin parpadeo
+   * Carga los permisos desde cache de localStorage si coinciden con el rol y área
+   * del usuario en sesión para renderizar de inmediato sin parpadeo.
    */
   private cargarPermisosIniciales(): Set<string> {
     if (typeof window === 'undefined') return new Set<string>();
     try {
+      const usuario = this.obtenerUsuarioSesion();
+      const idRolSesion = usuario?.idRol ? String(usuario.idRol).trim() : null;
+      const idAreaSesion = normalizarIdArea(usuario?.idArea);
+      if (!idRolSesion) return new Set<string>();
+
       const cached = localStorage.getItem(this.storagePermisosKey);
       if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed)) {
+        const parsed = JSON.parse(cached) as Partial<CachePermisosRol> | string[];
+        if (
+          parsed &&
+          !Array.isArray(parsed) &&
+          parsed.idRol === idRolSesion &&
+          parsed.idArea === idAreaSesion &&
+          Array.isArray(parsed.permisos)
+        ) {
           this._isLoaded = true;
-          return new Set<string>(parsed);
+          return new Set<string>(parsed.permisos);
         }
       }
     } catch {
@@ -97,11 +118,13 @@ export class AccessControlService implements OnDestroy {
   }
 
   /**
-   * Lee el usuario actual de localStorage y comienza a escuchar su rol en Firebase
+   * Lee el usuario actual de localStorage y comienza a escuchar su rol en Firebase,
+   * evaluando los permisos base junto con las reglas por área del usuario.
    */
   public inicializarEscuchaUsuario(): void {
     const usuario = this.obtenerUsuarioSesion();
     const idRol = usuario?.idRol ? String(usuario.idRol).trim() : null;
+    const idArea = normalizarIdArea(usuario?.idArea);
 
     if (!idRol) {
       this.limpiarPermisos();
@@ -109,12 +132,21 @@ export class AccessControlService implements OnDestroy {
       return;
     }
 
-    if (idRol === this.currentRolId && this.rolUnsubscribe) {
+    if (idRol === this.currentRolId && idArea === this.currentAreaId && this.rolUnsubscribe) {
       return;
     }
 
+    const cambioContexto =
+      this.currentRolId !== null &&
+      (this.currentRolId !== idRol || this.currentAreaId !== idArea);
+
     this.currentRolId = idRol;
+    this.currentAreaId = idArea;
     this.desuscribirRol();
+
+    if (cambioContexto) {
+      this._isLoaded = false;
+    }
 
     if (!this._isLoaded) {
       this._loadPromise = new Promise<void>((resolve) => {
@@ -135,13 +167,18 @@ export class AccessControlService implements OnDestroy {
         (snap) => {
           if (snap.exists()) {
             const data = snap.data() as Rol;
-            const permisosArr = Array.isArray(data.permisos) ? data.permisos : [];
+            const permisosBase = Array.isArray(data.permisos) ? data.permisos : [];
+            const permisosEfectivos = resolverPermisosEfectivos(
+              permisosBase,
+              data.reglasAreaPorPermiso,
+              idArea
+            );
             const rutaInicio = normalizarRutaInicio(data.rutaInicio);
 
-            this.actualizarPermisos(permisosArr, rutaInicio);
+            this.actualizarPermisos(permisosEfectivos, rutaInicio, idRol, idArea);
           } else {
             // El rol no existe o no tiene datos aún
-            this.actualizarPermisos([], RUTA_INICIO_DEFECTO);
+            this.actualizarPermisos([], RUTA_INICIO_DEFECTO, idRol, idArea);
           }
 
           this._isLoaded = true;
@@ -169,14 +206,20 @@ export class AccessControlService implements OnDestroy {
     }
   }
 
-  private actualizarPermisos(permisos: string[], rutaInicio: string): void {
+  private actualizarPermisos(
+    permisos: string[],
+    rutaInicio: string,
+    idRol: string,
+    idArea: string
+  ): void {
     const set = new Set<string>(permisos);
     this._permisosSubject.next(set);
     this._rutaInicioSubject.next(rutaInicio);
 
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem(this.storagePermisosKey, JSON.stringify(permisos));
+        const cache: CachePermisosRol = { idRol, idArea, permisos };
+        localStorage.setItem(this.storagePermisosKey, JSON.stringify(cache));
         localStorage.setItem(this.storageRutaInicioKey, rutaInicio);
       } catch {
         // Ignorar excepciones de almacenamiento
@@ -187,6 +230,7 @@ export class AccessControlService implements OnDestroy {
   public limpiarPermisos(): void {
     this.desuscribirRol();
     this.currentRolId = null;
+    this.currentAreaId = null;
     this._isLoaded = false;
     this._permisosSubject.next(new Set<string>());
     this._rutaInicioSubject.next(RUTA_INICIO_DEFECTO);

@@ -1,4 +1,4 @@
-import { GrupoMenuPermiso } from '../../interfaces/ruta.model';
+import { GrupoMenuPermiso } from '../../interfaces/grupo-menu-permiso.interface';
 import { GRUPO_PERMISOS_ADMINISTRACION } from './administracion.permisos';
 import { GRUPO_PERMISOS_CUPONES } from './cupones.permisos';
 import { GRUPO_PERMISOS_MANTENIMIENTOS } from './mantenimientos.permisos';

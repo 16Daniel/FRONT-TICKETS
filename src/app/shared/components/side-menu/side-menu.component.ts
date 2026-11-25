@@ -11,7 +11,7 @@ import { AvatarModule } from 'ngx-avatars';
 import { DocumentsService } from '../../services/documents.service';
 import { AccessControlService } from '../../services/access-control.service';
 import { PwaService } from '../../services/pwa.service';
-import { GrupoMenuPermiso } from '../../../roles/interfaces/ruta.model';
+import { GrupoMenuPermiso } from '../../../roles/interfaces/grupo-menu-permiso.interface';
 import { ChatNotificationsButtonComponent } from '../chat-notifications-button/chat-notifications-button.component';
 import { AlertNotificationsButtonComponent } from '../alert-notifications-button/alert-notifications-button.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
