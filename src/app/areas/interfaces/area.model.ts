@@ -6,6 +6,8 @@ export interface AreaNotificationSettings {
   ticketCerrado: boolean;
   superaTA: boolean;
   superaTR: boolean;
+  taPorVencer: boolean;
+  trPorVencer: boolean;
 }
 
 export class Area {
@@ -22,6 +24,8 @@ export class Area {
     ticketCerrado: false,
     superaTA: false,
     superaTR: false,
+    taPorVencer: false,
+    trPorVencer: false,
   };
   organigrama?: OrganigramaNode[];
 }
