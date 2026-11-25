@@ -15,10 +15,10 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { EstatusTicketService } from '../../../tickets/services/estatus-ticket.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Comentario } from '../../../shared/interfaces/comentario-chat.model';
 
 @Component({
@@ -54,7 +54,7 @@ export default class SpecialistHomePageComponent implements OnInit, OnChanges {
     private areasService: AreasService,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private UsuariosService: UsuariosService,
     private confirmationService: ConfirmationService,
     public datesHelper: DatesHelperService

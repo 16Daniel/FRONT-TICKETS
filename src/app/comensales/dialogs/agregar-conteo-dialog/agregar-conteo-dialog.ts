@@ -8,7 +8,7 @@ import { ConteoComensales, sucursalCompetencia, sucursalesComensales } from '../
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { ComensalesService } from '../../services/comensales.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Timestamp } from '@angular/fire/firestore';
@@ -42,7 +42,7 @@ usuario: Usuario;
 public turnoSel:any; 
 
 constructor(public comensalesService:ComensalesService,public cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,)
+    private branchesService: SucursalesService,)
 {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); 
 }

@@ -6,7 +6,7 @@ import { UsuarioSucursalService } from '../../../sucursales/services/usuario-suc
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { SucursalProgramada } from '../../interfaces/sucursal-programada.interface';
 
 @Component({

@@ -20,9 +20,9 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MaintenanceAvService } from '../../../mantenimientos/services/maintenance-av.service';
 import { MantenimientoAudioVideo } from '../../../mantenimientos/interfaces/mantenimiento-audio-video.interface';
 import { MantenimientosSistemasService } from '../../../mantenimientos/services/mantenimientos-sistemas.service';
@@ -96,7 +96,7 @@ export class AdminCadenaSuministroTabComponent {
     private messageService: MessageService,
     private ticketsService: TicketsService,
     private UsuariosService: UsuariosService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private maintenanceService: MaintenanceAvService,
     private mantenimientosSistemasService: MantenimientosSistemasService,
     private maintenanceAvService: MaintenanceAvService,

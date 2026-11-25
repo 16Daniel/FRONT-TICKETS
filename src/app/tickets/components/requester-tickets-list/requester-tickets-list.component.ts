@@ -29,8 +29,8 @@ import { Area } from '../../../areas/interfaces/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.component';
 import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz-urgencia.component';
@@ -92,7 +92,7 @@ export class RequesterTicketsListComponent implements OnInit, OnChanges {
     private ticketsService: TicketsService,
     private areasService: AreasService,
     private estatusTicketService: EstatusTicketService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private categoriasService: CategoriasService
   ) {
     this.obtenerCatalogoEstatusTickets();

@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 
 import { PreciosaycService } from '../../services/preciosayc.service';
-import { colorPrecioayc } from '../../interfaces/color-precio-ayc.interface';
+import { colorPrecioayc } from '../../models/color-precio-ayc.model';
 
 @Component({
   selector: 'app-precios-ayc-dialog',

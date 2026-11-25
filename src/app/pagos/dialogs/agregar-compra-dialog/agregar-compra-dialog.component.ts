@@ -11,7 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import Swal from 'sweetalert2';
 
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';

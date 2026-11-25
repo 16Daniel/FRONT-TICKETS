@@ -12,9 +12,9 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
-import { Sucursal } from '../../interfaces/sucursal.interface';
+import { Sucursal } from '../../models/sucursal.model';
 import { Dispositivo } from '../../../activos-fijos/interfaces/dispositivo.interface';
 
 interface BorradorSoporteArea {
@@ -56,7 +56,7 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
   constructor(
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private areasService: AreasService,
     private usuariosService: UsuariosService,
     private usuarioSucursalService: UsuarioSucursalService

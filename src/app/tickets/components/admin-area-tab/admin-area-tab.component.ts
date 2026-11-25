@@ -21,13 +21,13 @@ import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { ComprasService } from '../../../compras/services/compras.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { SwalRw } from '../../../shared/helpers/swal-rw.helper';
@@ -114,7 +114,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     private ticketsService: TicketsService,
     private UsuariosService: UsuariosService,
     private areasService: AreasService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private purchaseService: ComprasService,
     private datesHelper: DatesHelperService,
     private matrizUrgenciaService: MatrizUrgenciaService,

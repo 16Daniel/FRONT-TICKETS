@@ -9,14 +9,14 @@ import { CrearTicketDialogComponent } from '../../../tickets/dialogs/crear-ticke
 import { ModalFixedAssetTicketsComponent } from '../../dialogs/modal-fixed-asset-tickets/modal-fixed-asset-tickets.component';
 import { ModalFixedAssetMaintenanceComponent } from '../../dialogs/modal-fixed-asset-maintenance/modal-fixed-asset-maintenance.component';
 import { FixedAssetsService } from '../../services/fixed-assets.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { AreasFixedAssetsService } from '../../services/areas-fixed-assets.service';
 import { CategoriesFixedAssetsService } from '../../services/categories-activos-fijos.service';
 import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
 import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.interface';
 import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.interface';
 import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.interface';
@@ -54,7 +54,7 @@ export default class FixedAssetsDetailPageComponent implements OnInit {
     private fixedAssetsService: FixedAssetsService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private areasService: AreasService,
     private areasFixedAssetsService: AreasFixedAssetsService,
     private categoriesFixedAssetsService: CategoriesFixedAssetsService,

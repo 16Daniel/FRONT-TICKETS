@@ -10,10 +10,10 @@ import Swal from 'sweetalert2';
 import { Responsable } from '../../models/responsable.model';
 import { ResponsablesService } from '../../services/responsables.service';
 import { UsuariosService } from '../../services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { MailService, EnviarCorreoRequest } from '../../../shared/services/mail.service';
 import { ColorRandomService } from '../../../mantenimientos/services/color-random.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Usuario } from '../../models/usuario.model';
 
 @Component({
@@ -37,7 +37,7 @@ export class CrearResponsableDialogComponent implements OnInit, OnDestroy {
   
   responsablesService = inject(ResponsablesService);
   UsuariosService = inject(UsuariosService);
-  branchesService = inject(BranchesService);
+  branchesService = inject(SucursalesService);
   messageService = inject(MessageService);
   mailService = inject(MailService);
   colorRandomService = inject(ColorRandomService);

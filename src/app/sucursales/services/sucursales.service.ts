@@ -14,12 +14,12 @@ import {
   writeBatch,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Sucursal } from '../interfaces/sucursal.interface';
+import { Sucursal } from '../models/sucursal.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BranchesService {
+export class SucursalesService {
   pathName: string = 'cat_sucursales';
 
   constructor(private firestore: Firestore) { }

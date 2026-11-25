@@ -11,12 +11,12 @@ import { AcordeonMantenimientosAudioVideoComponent } from '../../components/acor
 import { AcordeonMantenimientosMantenimientoComponent } from '../../components/acordeon-mantenimientos-mantenimiento/acordeon-mantenimientos-mantenimiento.component';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-video.interface';
 import { MantenimientoMtto } from '../../interfaces/mantenimiento-mtto.interface';
 
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
@@ -61,7 +61,7 @@ export default class MantenimientosAnalistaPageComponent implements OnInit, OnDe
 
   constructor(
     public cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private usuarioSucursalService: UsuarioSucursalService,
     private datesHelper: DatesHelperService,
     private mantenimientosSistemasService: MantenimientosSistemasService,

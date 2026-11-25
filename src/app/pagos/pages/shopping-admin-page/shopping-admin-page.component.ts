@@ -16,11 +16,11 @@ import { environment } from '../../../../environments/environments';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { ShoppingService } from '../../services/shopping.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AdministracionCompra, ArticuloCompra, Proveedor } from '../../interfaces/AdministracionCompra';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { ProveedoresComprasDialogComponent } from '../../dialogs/proveedores-compras-dialog/proveedores-compras-dialog.component';
 import { AgregarCompraDialogComponent } from '../../dialogs/agregar-compra-dialog/agregar-compra-dialog.component';
 import { GraficaAdminComprasComponent } from '../../components/grafica-admin-compras/grafica-admin-compras.component';
@@ -97,7 +97,7 @@ export default class ShoppingAdminPageComponent implements OnInit {
   constructor(
     private shopServ: ShoppingService,
     private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private areasService: AreasService,
     private userServ: UsuariosService
   ) { this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!); }

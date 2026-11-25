@@ -1,4 +1,4 @@
-import { Sucursal } from "../../sucursales/interfaces/sucursal.interface";
+import { Sucursal } from "../../sucursales/models/sucursal.model";
 
 export interface UsuarioLogin {
   id: string;

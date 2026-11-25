@@ -11,7 +11,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AgregarConteoDialog } from "../../dialogs/agregar-conteo-dialog/agregar-conteo-dialog";
 import { Timestamp } from '@angular/fire/firestore';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { GraficaComensalesComponent } from "../../components/grafica-comensales.component/grafica-comensales.component";
 import { DropdownModule } from 'primeng/dropdown';
 import { Usuario } from '../../../usuarios/models/usuario.model';
@@ -40,7 +40,7 @@ public loading:boolean = false;
 public usuario: Usuario;
 public arr_turnos:any[] = [{id:1,nombre:'MATUTINO'},{id:2,nombre:'VESPERTINO'}];
 public turnoSel:any; 
-constructor(public comensalesService:ComensalesService, private branchesService: BranchesService,public cdr: ChangeDetectorRef)
+constructor(public comensalesService:ComensalesService, private branchesService: SucursalesService,public cdr: ChangeDetectorRef)
 {
    this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);
 }

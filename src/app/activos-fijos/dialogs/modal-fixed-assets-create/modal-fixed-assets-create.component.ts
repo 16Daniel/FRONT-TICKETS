@@ -8,14 +8,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Area } from '../../../areas/interfaces/area.model';
 import { FixedAssetsService } from '../../services/fixed-assets.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { AreasFixedAssetsService } from '../../services/areas-fixed-assets.service';
 import { CategoriesFixedAssetsService } from '../../services/categories-activos-fijos.service';
 import { StatusFixedAssetsService } from '../../services/status-fixed-assets.service';
 import { LocationsFixedAssetsService } from '../../services/locations-fixed-assets.service';
 import { ActivoFijo } from '../../interfaces/activo-fijo.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { AreaActivoFijo } from '../../interfaces/area-activo-fijo.interface';
 import { CategoriaActivoFijo } from '../../interfaces/categoria-activo-fijo.interface';
 import { UbicacionActivoFijo } from '../../interfaces/ubicacion-activo-fijo.interface';
@@ -48,7 +48,7 @@ export class ModalFixedAssetsCreateComponent implements OnInit {
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private fixedAssetsService: FixedAssetsService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private areasService: AreasService,
     private areasFixedAssetsService: AreasFixedAssetsService,
     private categoriesFixedAssetsService: CategoriesFixedAssetsService,

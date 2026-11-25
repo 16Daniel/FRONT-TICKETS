@@ -18,14 +18,14 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Guardia } from '../../../tickets/models/guardia.model';
 import { Area } from '../../../areas/interfaces/area.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { VisitasService } from '../../services/visitas.service';
 import { GuardiasService } from '../../../tickets/services/guardias.service';
 import { DocumentsService } from '../../../shared/services/documents.service';
@@ -78,7 +78,7 @@ export default class ContructorCalendarioPageComponent implements OnInit {
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private UsuariosService: UsuariosService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private visitasService: VisitasService,
     private guardiaService: GuardiasService,
     private documentService: DocumentsService,

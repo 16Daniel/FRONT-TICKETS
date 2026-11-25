@@ -7,7 +7,7 @@ import { TicketSlaGaugeComponent } from '../ticket-sla-gauge/ticket-sla-gauge.co
 import { DetalleTicketDialogComponent } from '../../dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { CategoriasService } from '../../services/categorias.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class ListaTicketsKpisComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   constructor(
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private categoriasService: CategoriasService
   ) {}
 

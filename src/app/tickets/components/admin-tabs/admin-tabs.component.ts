@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { AdminAreaTabComponent } from '../admin-area-tab/admin-area-tab.component';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Area } from '../../../areas/interfaces/area.model';

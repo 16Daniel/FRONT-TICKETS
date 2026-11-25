@@ -11,11 +11,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { CorreosNotificacionService } from '../../../shared/services/correos-notificacion.service';
 import { NominaService } from '../../services/nomina.service';
 import { Correonotificacion, EmpleadoHorario, Marcajes, PuestoNomina, TurnodbNomina } from '../../interfaces/Nomina';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { environment } from '../../../../environments/environments';
 @Component({
   selector: 'app-staff-control-page',
@@ -51,7 +51,7 @@ export default class StaffControlPageComponent implements OnInit {
     public apiserv: NominaService,
     public correoService: CorreosNotificacionService,
     private messageService: MessageService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private confirmationService: ConfirmationService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('rwuserdatatk')!);

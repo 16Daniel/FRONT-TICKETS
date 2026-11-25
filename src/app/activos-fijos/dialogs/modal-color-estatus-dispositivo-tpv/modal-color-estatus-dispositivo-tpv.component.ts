@@ -7,9 +7,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
 import { StatusTpvsDevicesService } from '../../services/status-tpvs-devices.service';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Dispositivo } from '../../interfaces/dispositivo.interface';
 import { EstatusTPV } from '../../interfaces/estatus-tpv.interface';
 
@@ -32,7 +32,7 @@ export class ModalColorEstatusDispositivoTpvComponent implements OnInit {
 
   constructor(
     private statusService: StatusTpvsDevicesService,
-    private branchesServices: BranchesService,
+    private branchesServices: SucursalesService,
     private dispositivosSucursalesService: DispositivosSucursalesService
   ) { }
 

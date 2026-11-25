@@ -14,7 +14,7 @@ import { AreasService } from '../../../areas/services/areas.service';
 import { WhatsappService } from '../../../areas/services/whatsapp.service';
 import { firstValueFrom, take } from 'rxjs';
 import { environment } from '../../../../environments/environments';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { BitacoraService } from '../../../shared/services/bitacora.service';
 import { Bitacora } from '../../../shared/interfaces/bitacora.model';
@@ -40,7 +40,7 @@ export class TicketAccionesBarComponent {
     private categoriasService: CategoriasService,
     private areasService: AreasService,
     private whatsappService: WhatsappService,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private UsuariosService: UsuariosService,
     private bitacoraService: BitacoraService
   ) {}

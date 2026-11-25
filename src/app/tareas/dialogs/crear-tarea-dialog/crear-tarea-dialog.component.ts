@@ -7,12 +7,12 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { BranchesService } from '../../../sucursales/services/branches.service';
+import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { TareasService } from '../../services/tareas.service';
 import { FirebaseStorageService } from '../../../shared/services/firebase-storage.service';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
 import { Tarea } from '../../interfaces/tarea.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Responsable } from '../../../usuarios/models/responsable.model';
 import { AvatarModule } from 'ngx-avatars';
 import { TooltipModule } from 'primeng/tooltip';
@@ -76,7 +76,7 @@ export class CrearTareaDialogComponent implements OnInit {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private branchesService: BranchesService,
+    private branchesService: SucursalesService,
     private tareasService: TareasService,
     private firebaseStorage: FirebaseStorageService,
     private responsablesService: ResponsablesService

@@ -17,7 +17,7 @@ import { DocumentsService } from '../../../shared/services/documents.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 

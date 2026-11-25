@@ -205,7 +205,7 @@ export const GRUPOS_MENU_PERMISOS: GrupoMenuPermiso[] = [
       {
         idMenu: 'admin_sucursales',
         titulo: 'Sucursales',
-        ruta: '/main/branches',
+        ruta: '/main/sucursales',
         icono: 'bx bx-store-alt',
         permisoVista: 'sucursales.ver',
       },

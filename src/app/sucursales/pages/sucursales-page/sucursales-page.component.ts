@@ -10,13 +10,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { BranchesService } from '../../services/branches.service';
-import { Sucursal } from '../../interfaces/sucursal.interface';
+import { SucursalesService } from '../../services/sucursales.service';
+import { Sucursal } from '../../models/sucursal.model';
 import { CrearSucursalDialogComponent } from '../../dialogs/crear-sucursal-dialog/crear-sucursal-dialog.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
-  selector: 'app-branches-page',
+  selector: 'app-sucursales-page',
   standalone: true,
   imports: [
     FormsModule,
@@ -31,11 +31,11 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
     PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './branches-page.component.html',
-  styleUrl: './branches-page.component.scss'
+  templateUrl: './sucursales-page.component.html',
+  styleUrl: './sucursales-page.component.scss'
 })
 
-export default class BranchesPageComponent implements OnInit, OnDestroy {
+export default class SucursalesPageComponent implements OnInit, OnDestroy {
   esNuevaSucursal: boolean = false;
   mostrarModalSucursal: boolean = false;
   sucursales: Sucursal[] = [];
@@ -44,7 +44,7 @@ export default class BranchesPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private confirmationService: ConfirmationService,
-    private branchesServicce: BranchesService,
+    private branchesServicce: SucursalesService,
     public cdr: ChangeDetectorRef,
     private messageService: MessageService
   ) { }

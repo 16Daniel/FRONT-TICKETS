@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
 import { AceiteService } from '../../services/aceite.service';
-import { Sucursal } from '../../../sucursales/interfaces/sucursal.interface';
+import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
 @Component({
   selector: 'app-agregar-recoleccion-dialog',
