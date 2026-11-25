@@ -309,6 +309,40 @@
                 name="notificarSuperaTR"
                 [(ngModel)]="area.notificacionesTicket.superaTR">
             </div>
+
+            <div class="notificacion-opcion" [class.is-active]="area.notificacionesTicket.taPorVencer">
+              <div class="notificacion-opcion-info">
+                <span class="notificacion-opcion-icon"><i class="bx bx-time-five"></i></span>
+                <span>
+                  <label class="notificacion-opcion-titulo" for="notificarTAPorVencer">TA por vencer</label>
+                  <small>Enviar una notificación 15 minutos antes de que venza el TA del ticket.</small>
+                </span>
+              </div>
+              <input
+                class="form-check-input switch-rw"
+                type="checkbox"
+                role="switch"
+                id="notificarTAPorVencer"
+                name="notificarTAPorVencer"
+                [(ngModel)]="area.notificacionesTicket.taPorVencer">
+            </div>
+
+            <div class="notificacion-opcion" [class.is-active]="area.notificacionesTicket.trPorVencer">
+              <div class="notificacion-opcion-info">
+                <span class="notificacion-opcion-icon"><i class="bx bx-time-five"></i></span>
+                <span>
+                  <label class="notificacion-opcion-titulo" for="notificarTRPorVencer">TR por vencer</label>
+                  <small>Enviar una notificación 15 minutos antes de que venza el TR del ticket.</small>
+                </span>
+              </div>
+              <input
+                class="form-check-input switch-rw"
+                type="checkbox"
+                role="switch"
+                id="notificarTRPorVencer"
+                name="notificarTRPorVencer"
+                [(ngModel)]="area.notificacionesTicket.trPorVencer">
+            </div>
           </div>
         </div>
       </p-tabPanel>
