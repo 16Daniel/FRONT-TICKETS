@@ -23,9 +23,11 @@
   <div class="actions-toolbar-row mb-4">
     <div class="actions-buttons-container">
       <p-button 
-        class="btn-crear-wrap"
+        class="btn-crear-wrap btn-crear-ticket-wrap"
         label="CREAR TICKET" 
         icon="pi pi-plus" 
+        ariaLabel="CREAR TICKET"
+        title="CREAR TICKET"
         styleClass="p-button-primary action-btn-custom"
         (click)="mostrarModalGenerateTicket = true; ticketRapido = false">
       </p-button>
@@ -110,15 +112,43 @@
     </div>
   </p-overlayPanel>
 
+  <div class="ticket-grouping-toolbar">
+    <div class="ticket-grouping-switch">
+      <span class="ticket-grouping-caption">Agrupar por:</span>
+      <span [class.is-active]="!agruparPorPrioridad">Sucursales</span>
+      <div class="form-check form-switch m-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="agruparPorPrioridad"
+          name="agruparPorPrioridad"
+          [ngModel]="agruparPorPrioridad"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="cambiarAgrupacionPorPrioridad($event)"
+          aria-label="Cambiar agrupación entre sucursales y prioridad">
+      </div>
+      <span [class.is-active]="agruparPorPrioridad">Prioridad</span>
+    </div>
+  </div>
+
   <!-- Accordions Content -->
-  <div *ngIf="usergroup == undefined" class="mt-2">
+  <div *ngIf="usergroup == undefined && !agruparPorPrioridad" class="mt-2">
     <app-acordeon-tickets-por-sucursal [tickets]="tickets" [sucursales]="sucursales"
       [idArea]="idArea"></app-acordeon-tickets-por-sucursal>
   </div>
 
   <div *ngIf="usergroup != undefined" class="mt-2">
     <app-acordeon-tickets-por-usuario [tickets]="tickets" [usuarioAgrupacion]="usergroup" [sucursales]="sucursales"
-      [idArea]="idArea"></app-acordeon-tickets-por-usuario>
+      [idArea]="idArea" [agruparPorPrioridad]="agruparPorPrioridad"></app-acordeon-tickets-por-usuario>
+  </div>
+
+  <div *ngIf="usergroup == undefined && agruparPorPrioridad" class="mt-2">
+    <app-acordeon-tickets-por-prioridad
+      [tickets]="tickets"
+      [idArea]="idArea"
+      [esAdmin]="true">
+    </app-acordeon-tickets-por-prioridad>
   </div>
 
   <div class="d-flex flex-column align-items-center gap-3 bg-white m-4 justify-content-center p-5 shadow-sm rounded-3"

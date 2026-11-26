@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 
 import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
 import { AcordeonTicketsPorUsuarioComponent } from '../../../tickets/components/acordeon-tickets-por-usuario/acordeon-tickets-por-usuario.component';
+import { AcordeonTicketsPorPrioridadComponent } from '../../../tickets/components/acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
@@ -48,6 +49,7 @@ import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
     HistorialTicketsDialogComponent,
     AcordeonTicketsPorSucursalComponent,
     AcordeonTicketsPorUsuarioComponent,
+    AcordeonTicketsPorPrioridadComponent,
     DetalleTicketDialogComponent,
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
@@ -82,6 +84,8 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   usuario: Usuario;
   sucursal: Sucursal | undefined;
   usergroup: Usuario | undefined;
+  agruparPorPrioridad: boolean = false;
+  private actualizandoAgrupacion = false;
   filtroActivo: 'slaAtencion' | 'slaResolucion' | 'desbloqueo' | 'panico' | null = null;
 
   subscripcionTicket: Subscription | undefined;
@@ -357,6 +361,31 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
     this.aplicarFiltrosVista();
     this.procesarMetricasSla();
     this.cdr.detectChanges();
+  }
+
+  cambiarAgrupacionPorPrioridad(agrupar: boolean): void {
+    if (this.actualizandoAgrupacion || agrupar === this.agruparPorPrioridad) return;
+
+    this.actualizandoAgrupacion = true;
+    SwalRw.loading({
+      badge: 'Tickets',
+      title: 'Actualizando vista',
+      text: `Organizando tickets por ${agrupar ? 'prioridad' : 'sucursales'}...`
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        try {
+          this.agruparPorPrioridad = agrupar;
+          this.cdr.detectChanges();
+        } finally {
+          requestAnimationFrame(() => {
+            SwalRw.close();
+            this.actualizandoAgrupacion = false;
+          });
+        }
+      });
+    });
   }
 
   agruparPorSucursal() {

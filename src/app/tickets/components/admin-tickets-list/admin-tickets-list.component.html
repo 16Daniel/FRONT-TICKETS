@@ -6,6 +6,7 @@
         <tr class="text-center">
             <th pTooltip="Tiempos SLA (Matriz de Urgencia y Tiempo de Resolución), Matriz 3×3 y Score Global"
                 tooltipPosition="top">PROMESA</th>
+            <th *ngIf="mostrarSucursal">SUCURSAL</th>
             <th>FECHA</th>
             <th *ngIf="idArea === '0'">ÁREA</th>
             <th>CATEGORÍA / RUTA</th>
@@ -37,6 +38,9 @@
                         class="badge-especialista"> ✚
                     </div>
                 </div>
+            </td>
+            <td *ngIf="mostrarSucursal" class="text-center">
+                {{ obtenerNombreSucursal(tk.idSucursal) }}
             </td>
             <td class="text-center">{{ datesHelper.getDate(tk.fecha) | date: 'dd/MM/yyyy hh:mm a' }}
             </td>

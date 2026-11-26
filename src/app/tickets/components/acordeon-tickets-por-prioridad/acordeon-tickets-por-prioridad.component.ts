@@ -5,6 +5,7 @@ import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { RequesterTicketsListComponent } from '../requester-tickets-list/requester-tickets-list.component';
+import { AdminTicketsListComponent } from '../admin-tickets-list/admin-tickets-list.component';
 import { Ticket } from '../../models/ticket.model';
 
 @Component({
@@ -12,6 +13,7 @@ import { Ticket } from '../../models/ticket.model';
   standalone: true,
   imports: [
     RequesterTicketsListComponent,
+    AdminTicketsListComponent,
     AccordionModule,
     BadgeModule,
     CommonModule,
@@ -23,6 +25,8 @@ import { Ticket } from '../../models/ticket.model';
 export class AcordeonTicketsPorPrioridadComponent {
   @Input() tickets: Ticket[] = [];
   @Input() esEspectadorActivo: boolean = false;
+  @Input() esAdmin: boolean = false;
+  @Input() idArea: string = '';
 
   @Output() clickEvent = new EventEmitter<Ticket>();
 
@@ -66,12 +70,21 @@ export class AcordeonTicketsPorPrioridadComponent {
   }
 
   obtenerTicketsFiltrados(prioridad: string): Ticket[] {
-    return this.tickets.filter((tk) => this.obtenerPrioridadTicket(tk) === prioridad);
+    return this.tickets.filter((tk) =>
+      String(tk.idEstatusTicket) !== '3' && this.obtenerPrioridadTicket(tk) === prioridad
+    );
+  }
+
+  obtenerTicketsPorValidar(): Ticket[] {
+    return this.tickets.filter((tk) =>
+      String(tk.idEstatusTicket) === '3' && tk.validacionAdmin === false
+    );
   }
 
   verificarTicketsPorValidar(tickets: Ticket[]) {
-    let result = tickets.filter(x => x.idEstatusTicket == '7');
-    return result.length > 0;
+    return tickets.some((ticket) =>
+      String(ticket.idEstatusTicket) === '3' && ticket.validacionAdmin === true
+    );
   }
 
 }
