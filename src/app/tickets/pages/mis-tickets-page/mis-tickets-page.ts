@@ -40,6 +40,7 @@ export default class MisTicketsPageComponent implements OnInit, OnDestroy {
   ticketSeleccionado: Ticket | undefined;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalGenerateTicket: boolean = false;
+  ticketRapido: boolean = false;
   loading: boolean = false;
   filtroTexto: string = '';
 
@@ -117,7 +118,8 @@ export default class MisTicketsPageComponent implements OnInit, OnDestroy {
     this.mostrarModalTicketDetail = true;
   }
 
-  abrirModalCrearTicket(): void {
+  abrirModalCrearTicket(ticketRapido: boolean = false): void {
+    this.ticketRapido = ticketRapido;
     this.mostrarModalGenerateTicket = true;
   }
 

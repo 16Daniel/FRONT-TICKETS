@@ -71,6 +71,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   compras: Compra[] = [];
 
   mostrarModalGenerateTicket: boolean = false;
+  ticketRapido: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalHistorial: boolean = false;
   mostrarAgrupacion: boolean = false;
