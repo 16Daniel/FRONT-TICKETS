@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { AcordeonTicketsPorSucursalComponent } from '../../../tickets/components/acordeon-tickets-por-sucursal/acordeon-tickets-por-sucursal.component';
 import { AcordeonTicketsPorUsuarioComponent } from '../../../tickets/components/acordeon-tickets-por-usuario/acordeon-tickets-por-usuario.component';
 import { AcordeonTicketsPorPrioridadComponent } from '../../../tickets/components/acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
+import { AdminAreaGroupingPanelComponent } from '../../../tickets/components/admin-area-grouping-panel/admin-area-grouping-panel.component';
 import { DetalleTicketDialogComponent } from '../../../tickets/dialogs/detalle-ticket-dialog/detalle-ticket-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../../../tickets/components/iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
@@ -23,6 +24,7 @@ import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
+import { Area } from '../../../areas/interfaces/area.model';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';
@@ -50,6 +52,7 @@ import { MatrizUrgencia } from '../../models/matriz-urgencia.model';
     AcordeonTicketsPorSucursalComponent,
     AcordeonTicketsPorUsuarioComponent,
     AcordeonTicketsPorPrioridadComponent,
+    AdminAreaGroupingPanelComponent,
     DetalleTicketDialogComponent,
     IconosNotificacionesTicketsComponent,
     ComprasDialogComponent,
@@ -69,6 +72,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   ticket: Ticket | undefined;
   
   sucursales: Sucursal[] = [];
+  areasParaAgrupar: Area[] = [];
   usuariosHelp: Usuario[] = [];
   compras: Compra[] = [];
 
@@ -105,6 +109,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   };
   private ticketsSlaMes: Ticket[] = [];
   private subscripcionSla?: Subscription;
+  private subscripcionAreas?: Subscription;
   private subscripcionSucursales?: Subscription;
   private subscripcionUsuarios?: Subscription;
   private subscripcionCompras?: Subscription;
@@ -134,6 +139,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.definirMesActual();
     this.obtenerTickets();
+    this.obtenerAreasParaAgrupar();
     this.obtenerUsuariosHelp();
     this.obtenerSucursales();
     this.obtenerCompras();
@@ -143,6 +149,7 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscripcionTicket?.unsubscribe();
     this.subscripcionSla?.unsubscribe();
+    this.subscripcionAreas?.unsubscribe();
     this.subscripcionSucursales?.unsubscribe();
     this.subscripcionUsuarios?.unsubscribe();
     this.subscripcionCompras?.unsubscribe();
@@ -347,6 +354,14 @@ export class AdminAreaTabComponent implements OnInit, OnDestroy {
       ['4', '7'],
       this.esVistaGlobal ? undefined : this.idArea
     ).subscribe(usuarios => this.usuariosHelp = usuarios);
+  }
+
+  private obtenerAreasParaAgrupar(): void {
+    this.subscripcionAreas = this.areasService.areas$.subscribe(areas => {
+      this.areasParaAgrupar = areas
+        .filter(area => area.activarTickets === true && !area.eliminado)
+        .sort((a, b) => a.nombre.localeCompare(b.nombre));
+    });
   }
 
   obtenerCompras() {
