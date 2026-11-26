@@ -17,7 +17,11 @@ import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
 import { CategoriasService } from '../../services/categorias.service';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
-import { esNodoRama, obtenerHijosOrdenadosRama } from '../../helpers/arbol-categorias.helper';
+import {
+  crearSeleccionArbolCategoria,
+  esNodoRama,
+  obtenerHijosOrdenadosRama,
+} from '../../helpers/arbol-categorias.helper';
 
 @Component({
   selector: 'app-selector-arbol-categoria',
@@ -264,37 +268,8 @@ export class SelectorArbolCategoriaComponent implements OnInit, OnChanges, OnDes
       rutaNombres = encontrada ? encontrada.nombres : [raiz.nombre, nodo.nombre];
     }
 
-    const esSub = String(raiz.id) !== String(nodo.id);
-    const rutaCompleta = rutaNombres.join(' › ');
-
-    const critUrg = nodo.criticidad || (nodo as any).impacto || 2;
-    const urgUrg = nodo.urgencia || 2;
-    const scUrg = nodo.score || (critUrg * urgUrg);
-    const pUrg = nodo.prioridad || 'Medio';
-
-    const scGlobal = (nodo as any).scoreGlobal || scUrg;
-
-    const tiempoRes = nodo.tiempoResolucion || raiz.tiempoResolucion;
-    const unidadRes = nodo.unidadResolucion || raiz.unidadResolucion || 'h';
-    const horasRes = nodo.horasResolucion || raiz.horasResolucion || (tiempoRes ? (unidadRes === 'm' ? Math.round((tiempoRes / 60) * 100) / 100 : (unidadRes === 'd' ? tiempoRes * 24 : tiempoRes)) : undefined);
-
     this.nodoSeleccionadoId = String(nodo.id);
-    this.nodoSeleccionado = {
-      categoria: raiz,
-      subcategoria: esSub ? (nodo as Subcategoria) : undefined,
-      idCategoria: String(raiz.id),
-      idSubcategoria: esSub ? String(nodo.id) : null,
-      nombreCategoria: raiz.nombre,
-      nombreSubcategoria: esSub ? nodo.nombre : null,
-      rutaCompleta,
-      prioridad: pUrg as any,
-      score: scUrg,
-      criticidad: critUrg,
-      urgencia: urgUrg,
-      tiempoResolucion: tiempoRes,
-      unidadResolucion: unidadRes,
-      horasResolucion: horasRes
-    };
+    this.nodoSeleccionado = crearSeleccionArbolCategoria(nodo, raiz, rutaNombres);
 
     this.alSeleccionar.emit(this.nodoSeleccionado);
   }

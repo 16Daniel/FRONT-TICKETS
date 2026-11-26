@@ -1,0 +1,38 @@
+<div class="selector-categorias-rapidas">
+  <div class="selector-rapido-encabezado">
+    <div class="selector-rapido-titulo">
+      <i class="bx bx-bolt-circle"></i>
+      <span>Selecciona una categoría rápida</span>
+    </div>
+    <p>Se muestran las categorías del área habilitadas para ticket rápido.</p>
+  </div>
+
+  <div *ngIf="opciones.length === 0" class="selector-rapido-vacio">
+    <i class="bx bx-info-circle"></i>
+    <span>No hay categorías rápidas disponibles para esta área.</span>
+  </div>
+
+  <div *ngIf="opciones.length > 0" class="selector-rapido-tarjetas">
+    <button
+      *ngFor="let opcion of opciones"
+      type="button"
+      class="tarjeta-categoria-rapida"
+      [class.esta-seleccionada]="nodoSeleccionadoId === String(opcion.nodo.id)"
+      [attr.aria-pressed]="nodoSeleccionadoId === String(opcion.nodo.id)"
+      (click)="seleccionar(opcion)">
+      <span class="tarjeta-rapida-icono"><i class="bx bx-category-alt"></i></span>
+      <span class="tarjeta-rapida-texto">
+        <strong>{{ opcion.nodo.nombre }}</strong>
+        <small>{{ opcion.rutaCompleta }}</small>
+      </span>
+      <i class="bx bx-chevron-right tarjeta-rapida-flecha"></i>
+    </button>
+  </div>
+
+  <div *ngIf="rutaSeleccionada" class="selector-rapido-seleccion">
+    <span><i class="bx bx-check-circle"></i> Seleccionada: {{ rutaSeleccionada }}</span>
+    <button type="button" class="selector-rapido-limpiar" (click)="limpiarSeleccion()">
+      Cambiar selección
+    </button>
+  </div>
+</div>

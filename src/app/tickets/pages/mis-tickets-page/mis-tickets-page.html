@@ -22,7 +22,16 @@
           label="CREAR TICKET" 
           icon="pi pi-plus" 
           styleClass="p-button-primary action-btn-custom"
-          (click)="abrirModalCrearTicket()">
+          (click)="abrirModalCrearTicket(false)">
+        </p-button>
+        <p-button
+          class="btn-crear-wrap btn-ticket-rapido-wrap"
+          label="TICKET RÁPIDO"
+          icon="pi pi-bolt"
+          ariaLabel="TICKET RÁPIDO"
+          title="TICKET RÁPIDO"
+          styleClass="action-btn-custom btn-ticket-rapido"
+          (click)="abrirModalCrearTicket(true)">
         </p-button>
       </div>
     </div>
@@ -84,6 +93,7 @@
 <app-crear-ticket-dialog
   *ngIf="mostrarModalGenerateTicket"
   [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
+  [ticketrapido]="ticketRapido"
   (closeEvent)="alCerrarModalCrearTicket($event)">
 </app-crear-ticket-dialog>
 

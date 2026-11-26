@@ -89,11 +89,20 @@
 
     <!-- Fila 2: Selector Interactivo de Árbol de Categorías -->
     <div class="seccion-bloque-arbol">
-      <app-selector-arbol-categoria
+      <app-selector-categorias-rapidas
+        *ngIf="ticketrapido; else selectorArbolCategoria"
         [idArea]="ticket.idArea"
+        [categorias]="categorias"
         (alSeleccionar)="onSeleccionarCategoria($event)"
         (alLimpiar)="onLimpiarCategoria()">
-      </app-selector-arbol-categoria>
+      </app-selector-categorias-rapidas>
+      <ng-template #selectorArbolCategoria>
+        <app-selector-arbol-categoria
+          [idArea]="ticket.idArea"
+          (alSeleccionar)="onSeleccionarCategoria($event)"
+          (alLimpiar)="onLimpiarCategoria()">
+        </app-selector-arbol-categoria>
+      </ng-template>
     </div>
 
     <!-- Fila 3: Solicitante -->
