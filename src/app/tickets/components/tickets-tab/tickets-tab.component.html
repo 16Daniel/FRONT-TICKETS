@@ -34,9 +34,8 @@
         label="CREAR TICKET" 
         icon="pi pi-plus" 
         styleClass="p-button-primary action-btn-custom"
-        (click)="mostrarModalGenerateTicket = true">
+        (click)="mostrarModalGenerateTicket = true; ticketRapido = false">
       </p-button>
-
       <!-- Toggles for Guardia -->
       <div class="switches-toggle-group">
         <span class="switches-title">
@@ -60,6 +59,16 @@
         <i class="bx bx-shield-quarter"></i>
         <span>GUARDIA ACTIVA</span>
       </span>
+
+      <p-button
+        class="btn-crear-wrap btn-ticket-rapido-wrap"
+        label="TICKET RÁPIDO"
+        icon="pi pi-bolt"
+        ariaLabel="TICKET RÁPIDO"
+        title="TICKET RÁPIDO"
+        styleClass="action-btn-custom btn-ticket-rapido"
+        (click)="mostrarModalGenerateTicket = true; ticketRapido = true">
+      </p-button>
 
       <!-- <p-button 
         label="HISTORIAL TICKETS" 
@@ -106,7 +115,8 @@
   (closeEvent)="mostrarModalCompras = false"></app-solicitar-compra-dialog>
 
 <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="usuario.idArea"></app-crear-ticket-dialog>
+  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="usuario.idArea"
+  [ticketrapido]="ticketRapido"></app-crear-ticket-dialog>
 
 <app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="itemtk"
   [showModalTicketDetail]="mostrarModalTicketDetail"

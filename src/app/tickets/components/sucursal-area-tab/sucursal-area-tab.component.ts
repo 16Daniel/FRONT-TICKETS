@@ -47,6 +47,7 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
   @Input() esEspectadorActivo: boolean = false;
 
   mostrarModalGenerateTicket: boolean = false;
+  ticketRapido: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
@@ -191,7 +192,8 @@ export class SucursalAreaTabComponent implements OnInit, OnDestroy {
     return result.length > 0;
   }
 
-  onClickGenerarTicket() {
+  onClickGenerarTicket(ticketRapido: boolean = false) {
+    this.ticketRapido = ticketRapido;
     if (this.verificarTicketsPorValidar(this.tickets)) {
       this.confirmationService.confirm({
         header: 'IMPORTANTE',

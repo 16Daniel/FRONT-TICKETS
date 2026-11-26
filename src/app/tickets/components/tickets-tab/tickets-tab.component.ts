@@ -55,6 +55,7 @@ export class TicketsTabComponent implements OnInit, OnDestroy {
   @Input() mesNombre: string = '';
 
   mostrarModalGenerateTicket: boolean = false;
+  ticketRapido: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalTicketDetail: boolean = false;
   mostrarModalHistorial: boolean = false;
