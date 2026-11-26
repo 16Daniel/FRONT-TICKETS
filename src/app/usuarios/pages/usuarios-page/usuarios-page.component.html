@@ -20,7 +20,7 @@
       </button>
 
       <button 
-        *ngFor="let area of areas" 
+        *ngFor="let area of areasVisibles" 
         type="button" 
         class="chip-area-pill"
         [class.is-active]="String(area.id) === areaSeleccionadaId"

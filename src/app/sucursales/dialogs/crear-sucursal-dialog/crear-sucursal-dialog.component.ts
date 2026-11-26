@@ -92,13 +92,21 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
     this.soporteSub?.unsubscribe();
   }
 
+  get esRolAdministradorGlobal(): boolean {
+    return String(this.usuario?.idRol ?? '').trim() === '1';
+  }
+
+  get idAreaUsuarioSesion(): string {
+    return String(this.usuario?.idArea ?? '').trim();
+  }
+
   private cargarAreas(): void {
     this.areasService.initListener();
     this.areasSub = this.areasService.areas$.subscribe((areas: Area[]) => {
       let areasActivas = areas.filter((a: Area) => !a.eliminado);
-      if (String(this.usuario?.idRol) === '5') {
+      if (!this.esRolAdministradorGlobal) {
         areasActivas = areasActivas.filter(
-          (a: Area) => String(a.id) === String(this.usuario.idArea)
+          (a: Area) => String(a.id) === this.idAreaUsuarioSesion
         );
       }
       this.areas = areasActivas;
@@ -185,7 +193,11 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
   }
 
   cambiarAreaSoporte(areaId: string | number): void {
-    this.areaSoporteSeleccionadaId = String(areaId);
+    const areaDestino = String(areaId);
+    if (!this.esRolAdministradorGlobal && areaDestino !== this.idAreaUsuarioSesion) {
+      return;
+    }
+    this.areaSoporteSeleccionadaId = areaDestino;
     if (!this.soporteBorradorPorArea[this.areaSoporteSeleccionadaId]) {
       this.soporteBorradorPorArea[this.areaSoporteSeleccionadaId] = {
         idsUsuarios: [],
@@ -252,6 +264,9 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
 
     const tareas: Promise<void>[] = [];
     for (const areaId of this.areasModificadas) {
+      if (!this.esRolAdministradorGlobal && areaId !== this.idAreaUsuarioSesion) {
+        continue;
+      }
       const borrador = this.soporteBorradorPorArea[areaId];
       if (!borrador) continue;
       tareas.push(
