@@ -28,6 +28,7 @@
         [tickets]="obtenerTicketsFiltrados(item)"
         (clickEvent)="abrirModalDetalleTicket($event)"
         [mostrarEstrellas]="false"
+        [mostrarSucursal]="mostrarSucursal"
         [esEspectadorActivo]="esEspectadorActivo">
       </app-requester-tickets-list>
     </div>
@@ -67,6 +68,7 @@
         [tickets]="obtenerTicketsPorValidar()"
         (clickEvent)="abrirModalDetalleTicket($event)"
         [mostrarEstrellas]="false"
+        [mostrarSucursal]="mostrarSucursal"
         [esEspectadorActivo]="esEspectadorActivo">
       </app-requester-tickets-list>
     </div>

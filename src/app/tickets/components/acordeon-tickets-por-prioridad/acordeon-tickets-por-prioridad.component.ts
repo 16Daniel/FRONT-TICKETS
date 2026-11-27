@@ -26,6 +26,7 @@ export class AcordeonTicketsPorPrioridadComponent {
   @Input() tickets: Ticket[] = [];
   @Input() esEspectadorActivo: boolean = false;
   @Input() esAdmin: boolean = false;
+  @Input() mostrarSucursal: boolean = false;
   @Input() idArea: string = '';
 
   @Output() clickEvent = new EventEmitter<Ticket>();
