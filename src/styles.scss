@@ -1456,9 +1456,9 @@ html, body {
 .p-button.btn-ticket-rapido {
   display: inline-flex;
   align-items: center;
-  background: #eff6ff !important;
-  border: 1px solid #bfdbfe !important;
-  color: #2563eb !important;
+  background: #2563eb !important;
+  border: 1px solid #2563eb !important;
+  color: #ffffff !important;
   box-shadow: 0 3px 10px rgba(37, 99, 235, 0.14) !important;
   font-weight: 800 !important;
   letter-spacing: 0.025em;
@@ -1466,7 +1466,7 @@ html, body {
 
   .p-button-label,
   .p-button-icon {
-    color: #2563eb !important;
+    color: #ffffff !important;
   }
 
   .p-button-icon {
@@ -1474,9 +1474,9 @@ html, body {
   }
 
   &:hover {
-    background: #dbeafe !important;
-    border-color: #93c5fd !important;
-    color: #2563eb !important;
+    background: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+    color: #ffffff !important;
     box-shadow: 0 5px 14px rgba(37, 99, 235, 0.22) !important;
     transform: translateY(-1px);
   }
@@ -1491,6 +1491,29 @@ p-button.btn-ticket-rapido-wrap {
 }
 
 @media (max-width: 768px) {
+  p-button.btn-crear-ticket-wrap {
+    display: flex !important;
+    flex: 0 0 42px !important;
+    width: 42px !important;
+    min-width: 42px !important;
+  }
+
+  p-button.btn-crear-ticket-wrap .p-button {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+
+  p-button.btn-crear-ticket-wrap .p-button-label {
+    display: none !important;
+  }
+
+  p-button.btn-crear-ticket-wrap .p-button-icon {
+    margin: 0 !important;
+  }
+
   p-button.btn-ticket-rapido-wrap {
     display: flex !important;
     flex: 0 0 42px !important;

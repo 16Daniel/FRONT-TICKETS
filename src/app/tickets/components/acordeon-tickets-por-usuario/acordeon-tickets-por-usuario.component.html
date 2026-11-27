@@ -1,4 +1,11 @@
-<p-accordion class="custom-branches-accordion w-full" [activeIndex]="activeIndex">
+<app-acordeon-tickets-por-prioridad
+    *ngIf="agruparPorPrioridad"
+    [tickets]="obtenerTicketsAgrupadosPorPrioridad()"
+    [idArea]="idArea"
+    [esAdmin]="true">
+</app-acordeon-tickets-por-prioridad>
+
+<p-accordion *ngIf="!agruparPorPrioridad" class="custom-branches-accordion w-full" [activeIndex]="activeIndex">
     <p-accordionTab *ngFor="let item of ordenarSucursalesUser(obtenerSucursalesDeUsuarioAgrupacion())">
 
         <ng-template pTemplate="header">

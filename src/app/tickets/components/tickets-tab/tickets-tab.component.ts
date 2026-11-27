@@ -26,6 +26,7 @@ import { SolicitarCompraDialogComponent } from '../../../compras/dialogs/solicit
 import { HistorialTicketsDialogComponent } from '../../dialogs/historial-tickets-dialog/historial-tickets-dialog.component';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
+import { AcordeonTicketsPorPrioridadComponent } from '../acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
 
 @Component({
   selector: 'app-tickets-tab',
@@ -43,7 +44,8 @@ import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../tarjeta-
     PriorityTicketsAccordionAnalystComponent,
     SolicitarCompraDialogComponent,
     IconosNotificacionesTicketsComponent,
-    TarjetaRendimientoSlaComponent
+    TarjetaRendimientoSlaComponent,
+    AcordeonTicketsPorPrioridadComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tickets-tab.component.html',
@@ -77,6 +79,7 @@ export class TicketsTabComponent implements OnInit, OnDestroy {
   sucursales: Sucursal[] = [];
   todasSucursales: Sucursal[] = [];
   compras: Compra[] = [];
+  agruparPorPrioridad: boolean = false;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -166,6 +169,17 @@ export class TicketsTabComponent implements OnInit, OnDestroy {
 
   private obtenerTiempoTicket(t: Ticket): number {
     return t.fecha?.toDate ? t.fecha.toDate().getTime() : (t.fecha ? new Date(t.fecha).getTime() : 0);
+  }
+
+  get ticketsDeSucursalesAsignadas(): Ticket[] {
+    return this.tickets.filter(ticket =>
+      this.sucursales.some(sucursal => String(sucursal.id) === String(ticket.idSucursal))
+    );
+  }
+
+  cambiarAgrupacionPorPrioridad(agrupar: boolean): void {
+    this.agruparPorPrioridad = agrupar;
+    this.cdr.detectChanges();
   }
 
   abrirModalDetalleTicket(ticket: Ticket | any) {

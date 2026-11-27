@@ -56,6 +56,7 @@ import { MiniMatrizUrgenciaComponent } from '../mini-matriz-urgencia/mini-matriz
 export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() tickets: Ticket[] = [];
   @Input() mostrarAccionValidar: boolean = true;
+  @Input() mostrarSucursal: boolean = false;
 
   sucursales: Sucursal[] = [];
   tiposSoporte: TipoSoporte[] = [];
@@ -198,6 +199,17 @@ export class AdminTicketsListComponent implements OnInit, OnDestroy, OnChanges {
     if (!idArea) return 'SIN ÁREA';
     const area = this.areas.find(a => String(a.id) === String(idArea));
     return area ? area.nombre : idArea;
+  }
+
+  obtenerNombreSucursal(idSucursal?: string | number | { id?: string | number; nombre?: string } | null): string {
+    if (idSucursal == null || idSucursal === '') return 'SIN SUCURSAL';
+    if (typeof idSucursal === 'object' && idSucursal.nombre) return idSucursal.nombre;
+
+    const id = typeof idSucursal === 'object' ? idSucursal.id : idSucursal;
+    if (id == null || id === '') return 'SIN SUCURSAL';
+
+    const sucursal = this.sucursales.find(item => String(item.id) === String(id));
+    return sucursal?.nombre || `Sucursal ${id}`;
   }
 
   obtenerNombreResponsable(id: string): string {

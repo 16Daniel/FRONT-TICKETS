@@ -13,13 +13,43 @@
           <span class="branch-title text-uppercase">{{ item }}</span>
         </div>
 
-        <!-- Action / Alert Badges -->
-        <div class="branch-actions-indicators">
-          
+      </div>
+    </ng-template>
 
-          <span class="indicator-badge badge-new" 
-            *ngIf="verificarTicketsPorValidar(obtenerTicketsFiltrados(item))" 
-            pTooltip="TICKET LISTO" tooltipPosition="top">
+    <div class="accordion-tables-wrapper">
+      <app-admin-tickets-list
+        *ngIf="esAdmin"
+        [tickets]="obtenerTicketsFiltrados(item)"
+        [idArea]="idArea"
+        [mostrarSucursal]="true">
+      </app-admin-tickets-list>
+      <app-requester-tickets-list
+        *ngIf="!esAdmin"
+        [tickets]="obtenerTicketsFiltrados(item)"
+        (clickEvent)="abrirModalDetalleTicket($event)"
+        [mostrarEstrellas]="false"
+        [mostrarSucursal]="mostrarSucursal"
+        [esEspectadorActivo]="esEspectadorActivo">
+      </app-requester-tickets-list>
+    </div>
+  </p-accordionTab>
+
+  <p-accordionTab>
+    <ng-template pTemplate="header">
+      <div class="branch-accordion-header priority-por-validar">
+        <div class="branch-info-group">
+          <div class="branch-count-badge">
+            {{ obtenerTicketsPorValidar().length }}
+          </div>
+          <span class="branch-title text-uppercase">Por validar</span>
+        </div>
+
+        <div class="branch-actions-indicators">
+          <span
+            class="indicator-badge badge-new"
+            *ngIf="verificarTicketsPorValidar(obtenerTicketsPorValidar())"
+            pTooltip="PENDIENTE VALIDACIÓN"
+            tooltipPosition="top">
             <i class="bx bx-check-double bx-tada"></i>
           </span>
         </div>
@@ -27,10 +57,18 @@
     </ng-template>
 
     <div class="accordion-tables-wrapper">
-      <app-requester-tickets-list 
-        [tickets]="obtenerTicketsFiltrados(item)"
-        (clickEvent)="abrirModalDetalleTicket($event)" 
-        [mostrarEstrellas]="false" 
+      <app-admin-tickets-list
+        *ngIf="esAdmin"
+        [tickets]="obtenerTicketsPorValidar()"
+        [idArea]="idArea"
+        [mostrarSucursal]="true">
+      </app-admin-tickets-list>
+      <app-requester-tickets-list
+        *ngIf="!esAdmin"
+        [tickets]="obtenerTicketsPorValidar()"
+        (clickEvent)="abrirModalDetalleTicket($event)"
+        [mostrarEstrellas]="false"
+        [mostrarSucursal]="mostrarSucursal"
         [esEspectadorActivo]="esEspectadorActivo">
       </app-requester-tickets-list>
     </div>
