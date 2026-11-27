@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { CategoriasService } from '../../services/categorias.service';

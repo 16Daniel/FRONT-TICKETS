@@ -10,7 +10,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import ModalEventDetailComponent from '../../dialogs/modal-event-detail/modal-event-detail.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { DocumentsService } from '../../../shared/services/documents.service';

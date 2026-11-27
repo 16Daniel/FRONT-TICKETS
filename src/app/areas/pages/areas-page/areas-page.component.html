@@ -85,5 +85,5 @@
     </ng-template>
 </p-confirmDialog>
 
-<app-modal-area-create *ngIf="mostrarModalArea" [mostrarModalCrearArea]="mostrarModalArea"
-    (closeEvent)="cerrarModalArea()" [area]="areaSeleccionada" [esNuevaArea]="esNuevaArea"></app-modal-area-create>
+<app-crear-area-dialog *ngIf="mostrarModalArea" [mostrarModalCrearArea]="mostrarModalArea"
+    (closeEvent)="cerrarModalArea()" [area]="areaSeleccionada" [esNuevaArea]="esNuevaArea"></app-crear-area-dialog>

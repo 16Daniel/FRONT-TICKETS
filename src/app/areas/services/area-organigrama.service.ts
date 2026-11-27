@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
-import { AreaOrganigrama } from '../interfaces/area-organigrama.model';
+import { AreaOrganigrama } from '../models/area-organigrama.model';
 
 @Injectable({
   providedIn: 'root',

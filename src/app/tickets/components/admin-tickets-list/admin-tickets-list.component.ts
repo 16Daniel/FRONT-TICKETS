@@ -17,7 +17,7 @@ import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { TipoSoporte } from '../../models/tipo-soporte.model';
 import { Categoria } from '../../models/categoria.model';
 import { Ticket } from '../../models/ticket.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { TicketsService } from '../../services/tickets.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';

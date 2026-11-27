@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 
 import { ModalVisorVariasImagenesComponent } from '../../../shared/dialogs/modal-visor-varias-imagenes/modal-visor-varias-imagenes.component';
 import { FormatCommentPipe } from '../../../shared/pipes/format-comment.pipe';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { TareasService } from '../../services/tareas.service';
 import { StatusTaskService } from '../../services/status-task.service';

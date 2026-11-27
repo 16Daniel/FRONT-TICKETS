@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, type OnInit } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { itemConteo } from '../../interfaces/ConteoComensales';
+import { itemConteo } from '../../interfaces/item-conteo.interface';
 @Component({
   selector: 'app-grafica-comensales',
   standalone: true,

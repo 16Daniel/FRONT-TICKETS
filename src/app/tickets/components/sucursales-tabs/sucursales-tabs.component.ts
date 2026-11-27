@@ -12,7 +12,7 @@ import { SucursalesService } from '../../../sucursales/services/sucursales.servi
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { IconosNotificacionesTicketsComponent } from '../iconos-notificaciones-tickets/iconos-notificaciones-tickets.component';
 import { SucursalAreaTabComponent } from '../sucursal-area-tab/sucursal-area-tab.component';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 
 @Component({

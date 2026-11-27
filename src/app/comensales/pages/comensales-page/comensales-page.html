@@ -1,103 +1,306 @@
-<h3 class="text-center mt-3">CONTEO DE COMENSALES</h3>
+<div class="comensales-page-wrapper">
+  <div class="comensales-content-container">
 
- <div class="d-flex justify-content-center p-3" *ngIf="loading">
-    <i class="bx bx-loader bx-lg bx-spin" style="color: rgb(0, 153, 255)"></i>
-  </div>
+    <!-- Encabezado y Botonera de Acciones Principales -->
+    <div class="comensales-top-bar mb-4">
+      <app-page-header
+        subtitle="Monitoreo Operativo y Competencia"
+        title="Conteo de Comensales">
+      </app-page-header>
 
+      <div class="header-actions-group">
+        <button
+          *ngIf="puedeGestionarCompetencia"
+          type="button"
+          class="btn-rw-secondary"
+          (click)="abrirModalSucursales()">
+          <i class="bx bx-building"></i>
+          <span>COMPETENCIA</span>
+        </button>
 
-  <div class="row">
-    <div class="col-md-3">
-      <p>FECHA INICIO</p>
-      <p-calendar [(ngModel)]="fechaini" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-        [style]="{width:'100%'}" />
+        <button
+          *ngIf="puedeAgregarConteo"
+          type="button"
+          class="btn-rw-cta"
+          (click)="abrirModalAgregarConteo()">
+          <i class="bx bx-plus-circle"></i>
+          <span>AGREGAR CONTEO</span>
+        </button>
+      </div>
     </div>
-    <div class="col-md-3">
-      <p>FECHA FIN</p>
-      <p-calendar [(ngModel)]="fechafin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-        [style]="{width:'100%'}" />
-    </div>
 
-    <div class="col-md-3">
-      <p>SUCURSAL</p>
-     <p-dropdown [options]="sucursalesrw" [(ngModel)]="sucursalSel" name="sucursal" optionLabel="nombre" [filter]="true"
-            filterBy="nombre" [showClear]="false" placeholder="SELECCIONAR SUCURSAL"
-            [style]="{width:'100%'}">
+    <!-- Tarjeta de Filtros Homologados -->
+    <div class="comensales-filter-card mb-4">
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-sm-6 col-lg-3">
+          <label class="rw-form-label" for="comensales-fecha-ini">FECHA INICIO</label>
+          <p-calendar
+            [(ngModel)]="fechaini"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="comensales-fecha-ini"
+            dateFormat="dd/mm/yy"
+            styleClass="rw-calendar w-100"
+            [style]="{ width: '100%' }" />
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+          <label class="rw-form-label" for="comensales-fecha-fin">FECHA FIN</label>
+          <p-calendar
+            [(ngModel)]="fechafin"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="comensales-fecha-fin"
+            dateFormat="dd/mm/yy"
+            styleClass="rw-calendar w-100"
+            [style]="{ width: '100%' }" />
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+          <label class="rw-form-label">SUCURSAL</label>
+          <p-dropdown
+            [options]="sucursalesrw"
+            [(ngModel)]="sucursalSel"
+            name="sucursal"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="false"
+            placeholder="Seleccionar sucursal"
+            styleClass="table-select-custom rw-filter-dropdown"
+            [style]="{ width: '100%' }"
+            appendTo="body">
             <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption.nombre }}</div>
-                </div>
+              <div class="dropdown-option-row" *ngIf="selectedOption">
+                <i class="bx bx-store-alt text-muted"></i>
+                <span class="text-truncate">{{ selectedOption.nombre }}</span>
+              </div>
             </ng-template>
             <ng-template let-dep pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ dep.nombre }}</div>
-                </div>
+              <div class="dropdown-option-row">
+                <span>{{ dep.nombre }}</span>
+              </div>
             </ng-template>
-             </p-dropdown>
+          </p-dropdown>
+        </div>
+
+        <div class="col-12 col-sm-4 col-lg-2">
+          <label class="rw-form-label">TURNO</label>
+          <p-dropdown
+            [options]="arr_turnos"
+            [(ngModel)]="turnoSel"
+            optionLabel="nombre"
+            placeholder="Todos"
+            [showClear]="true"
+            styleClass="table-select-custom rw-filter-dropdown"
+            [style]="{ width: '100%' }"
+            appendTo="body" />
+        </div>
+
+        <div class="col-12 col-sm-2 col-lg-1 d-grid">
+          <button
+            type="button"
+            class="btn-rw-cta btn-search-filter"
+            (click)="filtrar()"
+            [disabled]="!fechaini || !fechafin || !sucursalSel || loading">
+            <i class="bx" [ngClass]="loading ? 'bx-loader-alt bx-spin' : 'bx-search'"></i>
+            <span class="d-lg-none">BUSCAR</span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="col-md-2">
-        <p>TURNO</p>
-               <p-dropdown 
-                [options]="arr_turnos" 
-                [(ngModel)]="turnoSel" 
-                optionLabel="nombre" 
-                placeholder="SELECCIONAR TURNO" 
-                [showClear]="true"
-                [style]="{width:'100%'}"
-    />
+    <!-- Tarjetas KPI Flotantes sobre Lienzo #F4F6FA -->
+    <div class="comensales-kpi-grid mb-4" *ngIf="!loading && dataConteos.length > 0">
+      <div class="kpi-floating-card kpi-info">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-clipboard"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Registros RW</span>
+          <span class="kpi-value">{{ totalRegistrosRW }}</span>
+          <span class="kpi-sub">conteos capturados</span>
+        </div>
+      </div>
+
+      <div class="kpi-floating-card kpi-success">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-group"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Comensales RW</span>
+          <span class="kpi-value">{{ totalComensalesRW }}</span>
+          <span class="kpi-sub">acumulado sucursal</span>
+        </div>
+      </div>
+
+      <div class="kpi-floating-card kpi-warning">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-chair"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Mesas RW</span>
+          <span class="kpi-value">{{ totalMesasRW }}</span>
+          <span class="kpi-sub">ocupación acumulada</span>
+        </div>
+      </div>
+
+      <div class="kpi-floating-card kpi-purple">
+        <div class="kpi-icon-wrap">
+          <i class="bx bx-trending-up"></i>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-label">Comensales Competencia</span>
+          <span class="kpi-value">{{ totalComensalesCompetencia }}</span>
+          <span class="kpi-sub">referencia en zona</span>
+        </div>
+      </div>
     </div>
 
-    <div class="col-md-1">
-      <p>&nbsp;</p><button class="btn btn-warning p-2 h-42" (click)="filtrar()" [disabled]="fechaini == undefined || fechafin == undefined || sucursalSel == undefined"><i
-          class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
+    <!-- Loader -->
+    <div class="loading-state-card mb-4" *ngIf="loading">
+      <i class="bx bx-loader-alt bx-spin loading-icon"></i>
+      <span>Consultando registros de comensales...</span>
     </div>
-  </div>
 
-  <div class="m-3" *ngIf="dataConteos.length>0">
-  <app-grafica-comensales [fechaIni]="fechaini" [fechaFin]="fechafin" [data]="dataConteos">
-  </app-grafica-comensales>
-  
-</div>
+    <!-- Gráfica Comparativa -->
+    <div class="chart-card-container mb-4" *ngIf="!loading && dataConteos.length > 0">
+      <div class="chart-card-header">
+        <div class="chart-title-group">
+          <div class="chart-icon-box">
+            <i class="bx bx-area"></i>
+          </div>
+          <div>
+            <h5 class="chart-title m-0">Comparativo de Comensales</h5>
+            <small class="chart-subtitle">
+              {{ sucursalSel?.nombre }} · Del {{ fechaini | date:'dd/MM/yyyy' }} al {{ fechafin | date:'dd/MM/yyyy' }}
+            </small>
+          </div>
+        </div>
+      </div>
 
-  <div class="d-flex justify-content-start mt-3 gap-3">
-     <button class="btn bg-p-b p-3" (click)="abrirModalAgregarConteo()" *ngIf="usuario.idArea == '15' || usuario.idRol == '1'"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR CONTEO</button>
-            <button class="btn bg-p-b p-3" (click)="abrirModalSucursales()"><i class='bx bx-building' *ngIf="usuario.idArea == '1' || usuario.idRol == '1'"></i>&nbsp;COMPETENCIA</button>
- </div>
+      <div class="chart-body">
+        <app-grafica-comensales
+          [fechaIni]="fechaini"
+          [fechaFin]="fechafin"
+          [data]="dataConteos">
+        </app-grafica-comensales>
+      </div>
+    </div>
 
-
-<div class="m-3">
-<p-table [value]="dataConteos" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header">
-        <tr>
+    <!-- Tabla con Filas como Tarjetas Flotantes (.table-tk) -->
+    <div class="comensales-table-wrapper" *ngIf="!loading && dataConteos.length > 0">
+      <p-table
+        [value]="dataConteos"
+        [tableStyle]="{ 'min-width': '52rem' }"
+        styleClass="table-tk">
+        <ng-template pTemplate="header">
+          <tr>
             <th>FECHA</th>
             <th>HORA</th>
             <th>TURNO</th>
-            <th>SUCURSAL</th>
+            <th class="text-start">SUCURSAL</th>
+            <th>ORIGEN</th>
             <th>MESAS</th>
             <th>COMENSALES</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-item>
-        <tr>
-            <td>{{ getDate(item.fecha) | date:'dd/MM/yyyy' }}</td>
-            <td>{{ getDate(item.fecha) | date:'HH:mm' }}</td>
-            <td>{{item.turno}}</td>
-            <td>{{ item.nombreSuc }}</td>
-            <td>{{ item.mesas }}</td>
-            <td>{{ item.comensales }}</td>
-                        <th> <button class="btn btn-primary" (click)="abrirmodalEditar(item.idReg)" *ngIf="item.id != undefined"> 
-                <i class='bx bxs-edit bx-sm' ></i>
-                </button></th>
-              <th> <button class="btn btn-danger" (click)="confirmacionEliminar(item.idReg)" *ngIf="item.id != undefined"> 
-                <i class='bx bx-trash bx-sm'></i>
-                </button></th>
-        </tr>
-    </ng-template>
-</p-table>
+            <th style="width: 120px;">ACCIONES</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+          <tr [class.is-competencia-row]="item.id === undefined">
+            <td class="text-center fw-semibold">
+              {{ getDate(item.fecha) | date:'dd/MM/yyyy' }}
+            </td>
+            <td class="text-center text-muted fw-semibold">
+              {{ getDate(item.fecha) | date:'HH:mm' }}
+            </td>
+            <td class="text-center">
+              <span
+                class="turno-badge"
+                *ngIf="item.turno; else sinTurnoTpl"
+                [class.is-matutino]="item.turno === 'MATUTINO'"
+                [class.is-vespertino]="item.turno === 'VESPERTINO'">
+                <i class="bx" [ngClass]="item.turno === 'MATUTINO' ? 'bx-sun' : 'bx-moon'"></i>
+                <span>{{ item.turno }}</span>
+              </span>
+              <ng-template #sinTurnoTpl>
+                <span class="text-muted">—</span>
+              </ng-template>
+            </td>
+            <td>
+              <span class="branch-name-cell">{{ item.nombreSuc }}</span>
+            </td>
+            <td class="text-center">
+              <span
+                class="origen-badge"
+                [class.is-rw]="item.id !== undefined"
+                [class.is-comp]="item.id === undefined">
+                {{ item.id !== undefined ? 'Rebel Wings' : 'Competencia' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <span class="metric-pill">{{ item.mesas }}</span>
+            </td>
+            <td class="text-center">
+              <span class="metric-pill is-highlight">{{ item.comensales }}</span>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center align-items-center gap-2" *ngIf="item.id !== undefined">
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-info"
+                  (click)="abrirmodalEditar(item.idReg)"
+                  pTooltip="Editar conteo"
+                  tooltipPosition="top">
+                  <i class="bx bxs-edit"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-danger"
+                  (click)="confirmacionEliminar(item.idReg)"
+                  pTooltip="Eliminar conteo"
+                  tooltipPosition="top">
+                  <i class="bx bx-trash"></i>
+                </button>
+              </div>
+              <span class="text-muted small" *ngIf="item.id === undefined">—</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Estado Vacío / Inicial -->
+    <div class="empty-state-card" *ngIf="!loading && dataConteos.length === 0">
+      <div class="empty-icon-circle">
+        <i class="bx" [ngClass]="busquedaRealizada ? 'bx-search-alt' : 'bx-bar-chart-alt-2'"></i>
+      </div>
+      <h5 class="empty-title">
+        {{ busquedaRealizada ? 'Sin registros para los filtros seleccionados' : 'Consulta el historial de comensales' }}
+      </h5>
+      <p class="empty-desc">
+        {{
+          busquedaRealizada
+            ? 'Intenta ampliar el rango de fechas, cambiar de turno o seleccionar otra sucursal.'
+            : 'Selecciona un rango de fechas, sucursal y turno, luego presiona el botón de búsqueda para visualizar la gráfica y el detalle.'
+        }}
+      </p>
+    </div>
+
+  </div>
 </div>
 
-<app-sucursales-dialog *ngIf="verModalSucursales"  [verModalSucursales]="verModalSucursales" (closeEvent)="verModalSucursales = false"></app-sucursales-dialog>
-<app-agregar-conteo-dialog *ngIf="verModalAgregarConteo"  [verModalAgregarConteo]="verModalAgregarConteo"  [arr_turnos]="arr_turnos"
-(closeEvent)="verModalAgregarConteo = false" [itemConteo]="itemConteo"></app-agregar-conteo-dialog>
+<app-sucursales-dialog
+  *ngIf="verModalSucursales"
+  [verModalSucursales]="verModalSucursales"
+  (closeEvent)="verModalSucursales = false">
+</app-sucursales-dialog>
+
+<app-agregar-conteo-dialog
+  *ngIf="verModalAgregarConteo"
+  [verModalAgregarConteo]="verModalAgregarConteo"
+  [arr_turnos]="arr_turnos"
+  [itemConteo]="itemConteo"
+  (closeEvent)="verModalAgregarConteo = false">
+</app-agregar-conteo-dialog>

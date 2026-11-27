@@ -4,7 +4,7 @@ import { TreeNode } from 'primeng/api';
 import { OrganizationChartModule } from 'primeng/organizationchart';
 import { Subscription } from 'rxjs';
 import { AvatarModule } from 'ngx-avatars';
-import { AreaOrganigrama } from '../../interfaces/area-organigrama.model';
+import { AreaOrganigrama } from '../../models/area-organigrama.model';
 import { OrganigramaLegacyNode } from '../../interfaces/organigrama-legacy-node.interface';
 import { OrganigramaNodo } from '../../interfaces/organigrama-nodo.interface';
 import { AreaOrganigramaService } from '../../services/area-organigrama.service';

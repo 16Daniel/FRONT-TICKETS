@@ -24,7 +24,7 @@ import { Ticket } from '../../../tickets/models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Compra } from '../../../compras/interfaces/compra.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 
 import { TicketsService } from '../../../tickets/services/tickets.service';
 import { TicketsFiltros } from '../../interfaces/tickets-filtros.interface';

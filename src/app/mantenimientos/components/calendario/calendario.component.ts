@@ -26,7 +26,7 @@ import { ColorUsuario } from '../../interfaces/color-usuario.interface';
 import { MantenimientosSistemasService } from '../../services/mantenimientos-sistemas.service';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 
 @Component({
   selector: 'app-calendario',
