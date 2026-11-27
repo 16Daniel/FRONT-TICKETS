@@ -9,6 +9,46 @@ $rw-canvas: #f4f6fa;
   max-width: 100%;
 }
 
+.ticket-grouping-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.ticket-grouping-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  .ticket-grouping-caption {
+    color: #1e1e24;
+    font-weight: 800;
+  }
+
+  span.is-active {
+    color: $rw-primary;
+  }
+
+  .form-check-input {
+    width: 2.25rem;
+    height: 1.2rem;
+    margin: 0;
+    cursor: pointer;
+
+    &:checked {
+      background-color: $rw-primary;
+      border-color: $rw-primary;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.15rem rgba(211, 21, 42, 0.16);
+    }
+  }
+}
+
 .active-view-badge {
   background-color: #fef3c7;
   color: #92400e;

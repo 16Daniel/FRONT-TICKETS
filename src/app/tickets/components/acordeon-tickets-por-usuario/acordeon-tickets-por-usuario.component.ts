@@ -10,6 +10,7 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
+import { AcordeonTicketsPorPrioridadComponent } from '../acordeon-tickets-por-prioridad/acordeon-tickets-por-prioridad.component';
 
 @Component({
   selector: 'app-acordeon-tickets-por-usuario',
@@ -20,7 +21,8 @@ import { UsuarioSucursalService } from '../../../sucursales/services/usuario-suc
     FormsModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TpvsDevicesTableComponent
+    TpvsDevicesTableComponent,
+    AcordeonTicketsPorPrioridadComponent
   ],
   templateUrl: './acordeon-tickets-por-usuario.component.html',
   styleUrl: './acordeon-tickets-por-usuario.component.scss',
@@ -30,6 +32,7 @@ export class AcordeonTicketsPorUsuarioComponent implements OnInit, OnDestroy {
   @Input() usuarioAgrupacion: Usuario = new Usuario();
   @Input() sucursales: Sucursal[] = [];
   @Input() idArea: string = '';
+  @Input() agruparPorPrioridad: boolean = false;
   
   usuario: Usuario | any;
   mostrarRadiografiaMap: { [idSucursal: string]: boolean } = {};
@@ -146,6 +149,13 @@ export class AcordeonTicketsPorUsuarioComponent implements OnInit, OnDestroy {
       const ticketsB = this.contarTickets(b.id);
       return ticketsB - ticketsA;
     });
+  }
+
+  obtenerTicketsAgrupadosPorPrioridad(): Ticket[] {
+    const idsSucursales = new Set(
+      this.obtenerSucursalesDeUsuarioAgrupacion().map((sucursal) => String(sucursal.id))
+    );
+    return this.tickets.filter((ticket) => idsSucursales.has(String(ticket.idSucursal)));
   }
 
   verificarTicketsNuevos(tickets: Ticket[]) {

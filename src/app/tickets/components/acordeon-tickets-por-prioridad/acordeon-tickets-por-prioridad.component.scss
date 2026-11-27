@@ -111,6 +111,17 @@
       border: 1px solid #86EFAC;
     }
   }
+
+  &.priority-por-validar {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+    border-color: rgba(139, 92, 246, 0.3);
+    &::before { background-color: #8b5cf6; }
+    .branch-count-badge {
+      background-color: #ede9fe;
+      color: #5b21b6;
+      border: 1px solid #c4b5fd;
+    }
+  }
 }
 
 .branch-info-group {

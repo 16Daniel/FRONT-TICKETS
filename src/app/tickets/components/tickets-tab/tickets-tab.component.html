@@ -30,9 +30,11 @@
   <div class="actions-toolbar-row mb-4">
     <div class="actions-buttons-container">
       <p-button 
-        class="btn-crear-wrap"
+        class="btn-crear-wrap btn-crear-ticket-wrap"
         label="CREAR TICKET" 
         icon="pi pi-plus" 
+        ariaLabel="CREAR TICKET"
+        title="CREAR TICKET"
         styleClass="p-button-primary action-btn-custom"
         (click)="mostrarModalGenerateTicket = true; ticketRapido = false">
       </p-button>
@@ -103,9 +105,39 @@
     }
   </div>
 
-  <div *ngIf="tickets.length > 0" class="p-1 mt-4">
+  <div class="ticket-grouping-toolbar">
+    <div class="ticket-grouping-switch">
+      <span class="ticket-grouping-caption">Agrupar por:</span>
+      <span [class.is-active]="!agruparPorPrioridad">Sucursales</span>
+      <div class="form-check form-switch m-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="agruparPorPrioridadAnalista"
+          name="agruparPorPrioridadAnalista"
+          [ngModel]="agruparPorPrioridad"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="cambiarAgrupacionPorPrioridad($event)"
+          aria-label="Cambiar agrupación entre sucursales y prioridad">
+      </div>
+      <span [class.is-active]="agruparPorPrioridad">Prioridad</span>
+    </div>
+  </div>
+
+  <div *ngIf="tickets.length > 0 && !agruparPorPrioridad" class="p-1 mt-2">
     <app-priority-tickets-accordion-analyst [tickets]="tickets" [sucursales]="sucursales"
       (clickEvent)="abrirModalDetalleTicket($event)" [idArea]="usuario.idArea"></app-priority-tickets-accordion-analyst>
+  </div>
+
+  <div *ngIf="tickets.length > 0 && agruparPorPrioridad" class="p-1 mt-2">
+    <app-acordeon-tickets-por-prioridad
+      [tickets]="ticketsDeSucursalesAsignadas"
+      [idArea]="usuario.idArea"
+      [esAdmin]="false"
+      [mostrarSucursal]="true"
+      (clickEvent)="abrirModalDetalleTicket($event)">
+    </app-acordeon-tickets-por-prioridad>
   </div>
 
 </div>
