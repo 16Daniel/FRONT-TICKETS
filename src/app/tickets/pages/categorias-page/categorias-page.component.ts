@@ -75,14 +75,27 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
+  get esRolAdministradorGlobal(): boolean {
+    return String(this.usuario?.idRol ?? '').trim() === '1';
+  }
+
+  get idAreaUsuarioSesion(): string {
+    return String(this.usuario?.idArea ?? '').trim();
+  }
+
   ngOnInit(): void {
     const rawUser = localStorage.getItem('rwuserdatatk');
     if (rawUser) {
       this.usuario = JSON.parse(rawUser);
     }
+    if (!this.esRolAdministradorGlobal) {
+      this.areaSeleccionadaId = this.idAreaUsuarioSesion;
+    }
     this.cargarAreas();
-    this.cargarCategorias();
-    this.cargarMatrizArea();
+    if (this.areaSeleccionadaId) {
+      this.cargarCategorias();
+      this.cargarMatrizArea();
+    }
   }
 
   ngOnDestroy(): void {
@@ -94,7 +107,14 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
   /* Carga de Datos */
   private cargarAreas(): void {
     this.subscripcionAreas = this.areasService.areas$.subscribe((areas: Area[]) => {
-      this.areas = areas.filter((a: Area) => !a.eliminado && a.activarTickets === true);
+      let areasActivas = areas.filter((a: Area) => !a.eliminado && a.activarTickets === true);
+      if (!this.esRolAdministradorGlobal) {
+        areasActivas = areasActivas.filter(
+          (a: Area) => String(a.id) === this.idAreaUsuarioSesion
+        );
+      }
+      this.areas = areasActivas;
+
       if (this.areas.length > 0 && !this.areas.some((a: Area) => String(a.id) === this.areaSeleccionadaId)) {
         this.areaSeleccionadaId = String(this.areas[0].id);
         this.cargarCategorias();
@@ -159,7 +179,11 @@ export default class CategoriasPageComponent implements OnInit, OnDestroy {
 
   /* Selector de Área */
   cambiarArea(areaId: string | number): void {
-    this.areaSeleccionadaId = String(areaId);
+    const areaDestino = String(areaId);
+    if (!this.esRolAdministradorGlobal && areaDestino !== this.idAreaUsuarioSesion) {
+      return;
+    }
+    this.areaSeleccionadaId = areaDestino;
     this.idNodoParaAgregar = null;
     this.idNodoEnEdicion = null;
     this.nodosExpandidosIds.clear();

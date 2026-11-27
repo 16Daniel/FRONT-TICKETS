@@ -109,9 +109,9 @@
 
             <div class="col-12 col-md-6">
                 <label class="rw-form-label">Área Asignada</label>
-                <p-dropdown [disabled]="usuarioEnSesion.idRol == '5'" [options]="areas"
+                <p-dropdown [disabled]="!esRolAdministradorGlobal" [options]="areas"
                     [(ngModel)]="usuario.idArea" name="area" optionValue="id" optionLabel="nombre" [filter]="true"
-                    filterBy="nombre" [showClear]="true" placeholder="Selecciona el área" [style]="{width:'100%'}"
+                    filterBy="nombre" [showClear]="esRolAdministradorGlobal" placeholder="Selecciona el área" [style]="{width:'100%'}"
                     #formAreaCtrl="ngModel" styleClass="rw-dropdown" appendTo="body" [ngClass]="{'p-invalid': formAreaCtrl.invalid && formAreaCtrl.touched}"
                     required>
                     <ng-template pTemplate="selectedItem" let-selectedOption>
@@ -169,40 +169,6 @@
                 <div *ngIf="usuario.idRol == '6'" class="soporte-info-hint mt-2">
                     <i class="bx bx-info-circle"></i>
                     <span>Las sucursales de recolección de aceite para este usuario CEDIS se asignan desde el módulo de <strong>Aceites (Configuración)</strong>.</span>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="tarjeta-switch-aceite" [class.is-active]="usuario.controlDeAceite">
-                    <div class="switch-info-group">
-                        <div class="switch-icon-circle">
-                            <i class="bx bx-droplet"></i>
-                        </div>
-                        <div class="switch-text-content">
-                            <label class="switch-title" for="controldeaceite">
-                                ¿Control de aceite?
-                            </label>
-                            <span class="switch-helper">
-                                Habilita el acceso y seguimiento del módulo de control de aceite para este usuario.
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="status-pill" [ngClass]="usuario.controlDeAceite ? 'status-active' : 'status-inactive'">
-                            <span class="status-dot"></span>
-                            {{ usuario.controlDeAceite ? 'ACTIVO' : 'INACTIVO' }}
-                        </span>
-                        <div class="form-check form-switch m-0 d-flex align-items-center">
-                            <input
-                                class="form-check-input switch-rw m-0"
-                                type="checkbox"
-                                role="switch"
-                                id="controldeaceite"
-                                name="controldeaceite"
-                                [(ngModel)]="usuario.controlDeAceite">
-                        </div>
-                    </div>
                 </div>
             </div>
 

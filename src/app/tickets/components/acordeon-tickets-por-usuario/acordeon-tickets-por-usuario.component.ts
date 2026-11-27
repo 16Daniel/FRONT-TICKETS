@@ -8,7 +8,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { Ticket } from '../../models/ticket.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
-import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
+import { TablaDispositivosSucursalComponent } from '../../../mantenimientos/components/tabla-dispositivos-sucursal/tabla-dispositivos-sucursal.component';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { UsuarioSucursalService } from '../../../sucursales/services/usuario-suc
     FormsModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TpvsDevicesTableComponent
+    TablaDispositivosSucursalComponent
   ],
   templateUrl: './acordeon-tickets-por-usuario.component.html',
   styleUrl: './acordeon-tickets-por-usuario.component.scss',

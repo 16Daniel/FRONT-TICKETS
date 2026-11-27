@@ -13,7 +13,7 @@ import { MantenimientoAudioVideo } from '../../interfaces/mantenimiento-audio-vi
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
 import { TablaMantenimientosAudioVideoComponent } from "../tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component";
 import { NivelesAudioComponent } from '../niveles-audio/niveles-audio.component';
-import { TablaTvsBocinasComponent } from '../tabla-tvs-bocinas/tabla-tvs-bocinas.component';
+import { TablaDispositivosSucursalComponent } from '../tabla-dispositivos-sucursal/tabla-dispositivos-sucursal.component';
 
 
 @Component({
@@ -26,7 +26,7 @@ import { TablaTvsBocinasComponent } from '../tabla-tvs-bocinas/tabla-tvs-bocinas
     AccordionModule,
     TablaMantenimientosAudioVideoComponent,
     NivelesAudioComponent,
-    TablaTvsBocinasComponent
+    TablaDispositivosSucursalComponent
   ],
   templateUrl: './acordeon-mantenimientos-audio-video.component.html',
   styleUrl: './acordeon-mantenimientos-audio-video.component.scss',

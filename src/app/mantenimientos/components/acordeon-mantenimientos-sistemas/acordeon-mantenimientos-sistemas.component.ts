@@ -12,7 +12,7 @@ import { DatesHelperService } from '../../../shared/helpers/dates-helper.service
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { MantenimientoSys } from '../../interfaces/mantenimiento-sys.interface';
 import { TablaMantenimientosSistemasComponent } from '../tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
-import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
+import { TablaDispositivosSucursalComponent } from '../tabla-dispositivos-sucursal/tabla-dispositivos-sucursal.component';
 
 
 @Component({
@@ -24,7 +24,7 @@ import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-d
     CommonModule,
     FormsModule,
     AccordionModule,
-    TpvsDevicesTableComponent
+    TablaDispositivosSucursalComponent
   ],
   templateUrl: './acordeon-mantenimientos-sistemas.component.html',
   styleUrl: './acordeon-mantenimientos-sistemas.component.scss',

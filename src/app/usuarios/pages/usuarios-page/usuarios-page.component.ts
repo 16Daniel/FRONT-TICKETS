@@ -84,10 +84,16 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.esRolAdministradorGlobal) {
+      this.areaSeleccionadaId = this.idAreaUsuarioSesion;
+    }
+
     this.subscripcionUsuarios = this.UsuariosService.usuarios$.subscribe(usuarios => {
       this.usuarios = usuarios.filter(u => !u.eliminado);
-      if (this.usuario.idRol == '5') {
-        this.usuarios = this.usuarios.filter(x => x.idArea == this.usuario.idArea);
+      if (!this.esRolAdministradorGlobal) {
+        this.usuarios = this.usuarios.filter(
+          (x) => String(x.idArea ?? '').trim() === this.idAreaUsuarioSesion
+        );
       }
       this.asegurarAreaSeleccionadaValida();
       this.aplicarFiltroArea();
@@ -126,15 +132,35 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
     });
   }
 
+  get esRolAdministradorGlobal(): boolean {
+    return String(this.usuario?.idRol ?? '').trim() === '1';
+  }
+
+  get idAreaUsuarioSesion(): string {
+    return String(this.usuario?.idArea ?? '').trim();
+  }
+
+  get areasVisibles(): Area[] {
+    if (this.esRolAdministradorGlobal) {
+      return this.areas;
+    }
+    return this.areas.filter((a: Area) => String(a.id) === this.idAreaUsuarioSesion);
+  }
+
   private esUsuarioSinArea(u: Usuario): boolean {
     return !u.idArea || String(u.idArea) === '0' || String(u.idArea) === '';
   }
 
   get tieneUsuariosSinArea(): boolean {
-    return this.usuarios.some(u => this.esUsuarioSinArea(u));
+    return this.esRolAdministradorGlobal && this.usuarios.some(u => this.esUsuarioSinArea(u));
   }
 
   private asegurarAreaSeleccionadaValida(): void {
+    if (!this.esRolAdministradorGlobal) {
+      this.areaSeleccionadaId = this.idAreaUsuarioSesion;
+      return;
+    }
+
     if (this.areaSeleccionadaId === 'sin-area' && !this.tieneUsuariosSinArea && this.areas.length > 0) {
       this.areaSeleccionadaId = String(this.areas[0].id);
       return;
@@ -145,6 +171,11 @@ export default class UsuariosPageComponent implements OnDestroy, OnInit {
   }
 
   cambiarArea(areaId: string | number): void {
+    if (!this.esRolAdministradorGlobal) {
+      this.areaSeleccionadaId = this.idAreaUsuarioSesion;
+      this.aplicarFiltroArea();
+      return;
+    }
     this.areaSeleccionadaId = String(areaId);
     this.aplicarFiltroArea();
   }

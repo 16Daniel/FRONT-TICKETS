@@ -108,8 +108,6 @@ export class SucursalesService {
   private serializeSucursal(sucursal: Sucursal): any {
     return {
       ...sucursal,
-      tabletas: sucursal.tabletas!.map(t => ({ ...t })),
-      tpvs: sucursal.tpvs!.map(t => ({ ...t }))
     };
   }
 

@@ -29,7 +29,11 @@
     </div>
 
     <div class="accordion-tables-wrapper">
-      <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id]" [sucursal]="item"></app-tpvs-devices-table>
+      <app-tabla-dispositivos-sucursal
+        *ngIf="mostrarRadiografiaMap[item.id]"
+        [sucursal]="item"
+        idArea="1">
+      </app-tabla-dispositivos-sucursal>
 
       <app-tabla-mantenimientos-sistemas
         *ngIf="!mostrarRadiografiaMap[item.id]"
