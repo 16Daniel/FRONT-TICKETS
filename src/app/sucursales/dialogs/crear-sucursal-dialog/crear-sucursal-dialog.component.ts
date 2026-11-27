@@ -4,7 +4,6 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -15,7 +14,6 @@ import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';
 import { Sucursal } from '../../models/sucursal.model';
-import { Dispositivo } from '../../../mantenimientos/interfaces/dispositivo.model';
 
 interface BorradorSoporteArea {
   idsUsuarios: string[];
@@ -25,7 +23,7 @@ interface BorradorSoporteArea {
 @Component({
   selector: 'app-crear-sucursal-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogModule, InputNumberModule, MultiSelectModule, TooltipModule],
+  imports: [CommonModule, FormsModule, DialogModule, MultiSelectModule, TooltipModule],
   templateUrl: './crear-sucursal-dialog.component.html',
   styleUrl: './crear-sucursal-dialog.component.scss'
 })
@@ -39,8 +37,6 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
   @Input() areaInicialId: string = '';
   idSucursalEditar: string = '';
   usuario: Usuario;
-  cantidadTabletas: number = 0;
-  cantidadTPVs: number = 0;
 
   areas: Area[] = [];
   areaSoporteSeleccionadaId: string = '';
@@ -65,21 +61,12 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (!this.esNuevaSucursal) {
       this.idSucursalEditar = String(this.sucursal.id);
-      if (!this.sucursal.tabletas) this.sucursal.tabletas = [];
-      if (!this.sucursal.tpvs) this.sucursal.tpvs = [];
-      if (!this.sucursal.tabletasRequeridas) this.sucursal.tabletasRequeridas = 0;
-      if (!this.sucursal.tpvsRequeridos) this.sucursal.tpvsRequeridos = 0;
     }
 
     if (this.esNuevaSucursal) {
-      if (!this.sucursal.tabletas) this.sucursal.tabletas = [];
-      if (!this.sucursal.tpvs) this.sucursal.tpvs = [];
       this.sucursal.id = await this.branchesService.obtenerSecuencial();
       this.cdr.detectChanges();
     }
-
-    this.cantidadTabletas = this.sucursal.tabletas?.length || 0;
-    this.cantidadTPVs = this.sucursal.tpvs?.length || 0;
 
     this.cargarAreas();
     this.cargarUsuarios();
@@ -349,24 +336,6 @@ export class CrearSucursalDialogComponent implements OnInit, OnDestroy {
       sucursal.activoMantenimientos.splice(index, 1);
     } else {
       sucursal.activoMantenimientos.push(this.usuario.idArea);
-    }
-  }
-
-  onTabletasChange(cantidad: number) {
-    while (this.sucursal.tabletas.length < cantidad) {
-      this.sucursal.tabletas.push(new Dispositivo());
-    }
-    while (this.sucursal.tabletas.length > cantidad) {
-      this.sucursal.tabletas.pop();
-    }
-  }
-
-  onTPVsChange(cantidad: number) {
-    while (this.sucursal.tpvs.length < cantidad) {
-      this.sucursal.tpvs.push(new Dispositivo());
-    }
-    while (this.sucursal.tpvs.length > cantidad) {
-      this.sucursal.tpvs.pop();
     }
   }
 }

@@ -96,7 +96,7 @@
       @if (tipoActivo === 'TI') {
         @if (mostrarTPVs && sucursal) {
           <div class="tpvs-table-scroll">
-            <app-tpvs-devices-table [sucursal]="sucursal"></app-tpvs-devices-table>
+            <app-tabla-dispositivos-sucursal [sucursal]="sucursal" idArea="1"></app-tabla-dispositivos-sucursal>
           </div>
         } @else {
           <app-tabla-mantenimientos-sistemas

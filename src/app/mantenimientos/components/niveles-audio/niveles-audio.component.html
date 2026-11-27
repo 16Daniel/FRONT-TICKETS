@@ -1,24 +1,82 @@
-<div class="mt-3 p-3 border rounded shadow-sm bg-light">
-  <h6 class="fw-bold mb-2 text-primary">
-    <i class="fas fa-volume-up me-2"></i>Niveles de Audio
-  </h6>
-  <p class="text-muted small mb-3">
-    Sube o visualiza imágenes que sirvan como ejemplo de cómo deben estar correctamente nivelados los equipos de audio en esta sucursal.
-  </p>
+<section class="audio-levels-card">
+  <div class="audio-levels-header">
+    <div class="audio-levels-info">
+      <div class="audio-icon-box">
+        <i class="bx bx-slider-alt"></i>
+      </div>
 
-  <div class="d-flex gap-2 align-items-center">
-    <!-- Input para subir (oculto y accionado por botón) -->
-    <input type="file" #fileInputNiveles multiple accept="image/*" class="d-none" (change)="onFileSelected($event)">
+      <div class="audio-text-group">
+        <div class="audio-title-row">
+          <h4 class="audio-title">Niveles de Audio</h4>
+          <span
+            class="audio-count-pill"
+            [class.has-images]="totalImagenes > 0">
+            <span class="pill-dot"></span>
+            <span>
+              {{ totalImagenes }} {{ totalImagenes === 1 ? 'imagen' : 'imágenes' }}
+            </span>
+          </span>
+        </div>
 
-    <button class="btn btn-outline-primary btn-sm" (click)="fileInputNiveles.click()">
-      <i class="fas fa-upload me-1"></i> Subir imágenes
+        <p class="audio-subtitle">
+          Sube o visualiza imágenes que sirvan como ejemplo de cómo deben estar correctamente nivelados los equipos de audio en esta sucursal.
+        </p>
+      </div>
+    </div>
+
+    <div class="audio-levels-actions">
+      <!-- Input oculto para selección múltiple -->
+      <input
+        type="file"
+        #fileInputNiveles
+        multiple
+        accept="image/*"
+        class="d-none"
+        (change)="onFileSelected($event)" />
+
+      <button
+        type="button"
+        class="btn-rw-secondary"
+        [disabled]="totalImagenes === 0"
+        (click)="verImagenes()">
+        <i class="bx bx-images"></i>
+        <span>Ver imágenes ({{ totalImagenes }})</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-rw-cta"
+        (click)="fileInputNiveles.click()">
+        <i class="bx bx-cloud-upload"></i>
+        <span>Subir imágenes</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Vista previa rápida de miniaturas cuando existen imágenes -->
+  <div class="audio-thumbs-strip" *ngIf="totalImagenes > 0">
+    <button
+      *ngFor="let imgUrl of imagenesAudio.slice(0, 5); let i = index"
+      type="button"
+      class="audio-thumb-item"
+      (click)="verImagenes()"
+      [title]="'Ver imagen de referencia ' + (i + 1)">
+      <img [src]="imgUrl" [alt]="'Nivel de audio ' + (i + 1)" loading="lazy" />
+      <span class="thumb-overlay">
+        <i class="bx bx-zoom-in"></i>
+      </span>
     </button>
 
-    <button class="btn btn-outline-danger btn-sm" (click)="verImagenes()" [disabled]="!sucursal.imagenesNivelesAudio || sucursal.imagenesNivelesAudio.length === 0">
-      <i class="fas fa-images me-1"></i> Ver imágenes ({{ sucursal.imagenesNivelesAudio?.length || 0 }})
+    <button
+      *ngIf="totalImagenes > 5"
+      type="button"
+      class="audio-thumb-more"
+      (click)="verImagenes()">
+      <span>+{{ totalImagenes - 5 }}</span>
+      <small>más</small>
     </button>
   </div>
-</div>
+</section>
 
 <app-modal-visor-varias-imagenes
   *ngIf="mostrarVisorImagenes"

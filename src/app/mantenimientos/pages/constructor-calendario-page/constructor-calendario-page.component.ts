@@ -33,7 +33,7 @@ import { MantenimientoFactoryService } from '../../services/maintenance-factory.
 import { ActivosFijosService } from '../../../activos-fijos/services/activos-fijos.service';
 import { DatesHelperService } from '../../../shared/helpers/dates-helper.service';
 import { MaintenanceAvService } from '../../services/maintenance-av.service';
-import { DispositivosSucursalesService } from '../../../sucursales/services/dispositivos-sucursales.service';
+import { DispositivosSucursalesService } from '../../services/dispositivos-sucursales.service';
 
 @Component({
   selector: 'app-constructor-calendario-page',
@@ -262,8 +262,12 @@ export default class ContructorCalendarioPageComponent implements OnInit {
   ): Promise<void> {
     if (this.usuario.idArea == '1') {
       const dispDoc = await this.dispositivosSucursalesService.getOnceBySucursalId(sucursal.id);
-      const tvs = (dispDoc?.tvs ?? []).map((tv) => ({ dispositivo: tv, evidenciaUrls: [] }));
-      const bocinas = (dispDoc?.bocinas ?? []).map((b) => ({ dispositivo: b, evidenciaUrls: [] }));
+      const tvs = this.dispositivosSucursalesService
+        .obtenerPorTipo(dispDoc, 'tv')
+        .map((tv) => ({ dispositivo: tv, evidenciaUrls: [] }));
+      const bocinas = this.dispositivosSucursalesService
+        .obtenerPorTipo(dispDoc, 'bocina')
+        .map((b) => ({ dispositivo: b, evidenciaUrls: [] }));
 
       await this.maintenanceAvService.create({
         idSucursal: String(sucursal.id),

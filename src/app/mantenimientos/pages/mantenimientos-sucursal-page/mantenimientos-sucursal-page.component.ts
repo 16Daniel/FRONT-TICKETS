@@ -19,7 +19,7 @@ import { ModalMateinanceMttoCheckComponent } from '../../dialogs/manteinance/mod
 import { TablaMantenimientosSistemasComponent } from '../../components/tabla-mantenimientos-sistemas/tabla-mantenimientos-sistemas.component';
 import { TablaMantenimientosAudioVideoComponent } from '../../components/tabla-mantenimientos-audio-video/tabla-mantenimientos-audio-video.component';
 import { TablaMantenimientosMantenimientoComponent } from '../../components/tabla-mantenimientos-mantenimiento/tabla-mantenimientos-mantenimiento.component';
-import { TpvsDevicesTableComponent } from '../../../sucursales/components/tpvs-devices-table/tpvs-devices-table.component';
+import { TablaDispositivosSucursalComponent } from '../../components/tabla-dispositivos-sucursal/tabla-dispositivos-sucursal.component';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
@@ -55,7 +55,7 @@ import { OpcionTabMantenimiento, TipoMantenimientoTab } from '../mantenimientos-
     TablaMantenimientosSistemasComponent,
     TablaMantenimientosAudioVideoComponent,
     TablaMantenimientosMantenimientoComponent,
-    TpvsDevicesTableComponent,
+    TablaDispositivosSucursalComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './mantenimientos-sucursal-page.component.html',

@@ -1,0 +1,278 @@
+<div class="devices-dashboard" *ngIf="!isLoading">
+  <div
+    class="device-section"
+    *ngFor="let tipo of tiposDisponibles; trackBy: trackByTipoId">
+
+    <!-- Cabecera de Sección por Tipo -->
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-icon-box">
+          <i [class]="tipo.icono"></i>
+        </div>
+        <div class="section-heading-text">
+          <h4 class="section-title">{{ tipo.nombre }}</h4>
+          <span class="section-count-pill">
+            {{ obtenerDispositivosPorTipo(tipo.id).length }}
+            {{ obtenerDispositivosPorTipo(tipo.id).length === 1 ? 'equipo' : 'equipos' }}
+          </span>
+        </div>
+      </div>
+
+      <button
+        *ngIf="puedeGestionar"
+        type="button"
+        class="btn-rw-add"
+        (click)="abrirModalCrear(tipo)">
+        <i class="bx bx-plus"></i>
+        <span>Agregar {{ tipo.nombreSingular }}</span>
+      </button>
+    </div>
+
+    <!-- Grilla de Tarjetas Flotantes -->
+    <div
+      class="devices-grid"
+      *ngIf="obtenerDispositivosPorTipo(tipo.id) as listaDispositivos">
+
+      <div
+        class="device-card"
+        *ngFor="let disp of listaDispositivos; trackBy: trackByDispositivoId"
+        (click)="abrirModalDetalleOEdicion(disp)"
+        [pTooltip]="puedeGestionar ? 'Clic para editar dispositivo' : 'Clic para ver detalle'"
+        tooltipPosition="top">
+
+        <!-- Barra superior de semáforo de estatus (separada del color corporativo) -->
+        <div
+          class="device-status-strip"
+          [style.backgroundColor]="getColorEstatus(disp.estatus)">
+        </div>
+
+        <button
+          *ngIf="puedeGestionar"
+          type="button"
+          class="btn-remove"
+          (click)="eliminarDispositivo(disp, $event)"
+          pTooltip="Eliminar dispositivo"
+          tooltipPosition="top">
+          <i class="bx bx-trash"></i>
+        </button>
+
+        <div class="device-card-body">
+          <div class="device-card-top">
+            <div class="device-type-icon">
+              <i [class]="tipo.icono"></i>
+            </div>
+            <div class="device-title-wrap">
+              <span class="device-name" [title]="disp.nombre">{{ disp.nombre }}</span>
+              <span
+                class="device-meta"
+                *ngIf="obtenerMetaDispositivo(disp)"
+                [title]="obtenerMetaDispositivo(disp)">
+                {{ obtenerMetaDispositivo(disp) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="device-card-footer">
+            <span class="device-status-pill">
+              <span
+                class="status-dot"
+                [style.backgroundColor]="getColorEstatus(disp.estatus)">
+              </span>
+              <span class="status-label">{{ getNombreEstatus(disp.estatus) }}</span>
+            </span>
+
+            <span class="device-serial" *ngIf="disp.numeroSerie" [title]="'Serie: ' + disp.numeroSerie">
+              <i class="bx bx-barcode"></i>
+              <span>{{ disp.numeroSerie }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vacío por tipo -->
+      <div class="device-empty" *ngIf="listaDispositivos.length === 0">
+        <i [class]="tipo.icono + ' empty-icon'"></i>
+        <span>No hay {{ tipo.nombre | lowercase }} registrados en esta sucursal.</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal PrimeNG para Crear / Editar / Ver Dispositivo -->
+<p-dialog
+  [(visible)]="mostrarModalDispositivo"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  appendTo="body"
+  [style]="{ width: '560px', maxWidth: '94vw' }"
+  styleClass="rw-device-dialog rw-dialog-mobile-fullscreen"
+  (onHide)="cerrarModal()">
+
+  <ng-template pTemplate="header">
+    <div class="device-modal-header">
+      <div class="modal-icon-box">
+        <i [class]="tipoSeleccionadoModal?.icono || 'bx bx-devices'"></i>
+      </div>
+      <div>
+        <h5 class="modal-title-text m-0">{{ tituloModal }}</h5>
+        <small class="modal-subtitle-text">{{ sucursal.nombre }}</small>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="device-modal-form">
+    <div class="row g-3">
+      <!-- Tipo de Dispositivo -->
+      <div class="col-12 col-sm-6">
+        <label class="rw-form-label">TIPO DE DISPOSITIVO *</label>
+        <p-dropdown
+          [options]="tiposDisponibles"
+          [(ngModel)]="formDispositivo.tipoId"
+          optionLabel="nombreSingular"
+          optionValue="id"
+          [disabled]="!puedeGestionar"
+          placeholder="Selecciona un tipo"
+          [style]="{ width: '100%' }"
+          styleClass="table-select-custom rw-device-dropdown"
+          appendTo="body">
+          <ng-template pTemplate="selectedItem" let-selected>
+            <div class="dropdown-item-row" *ngIf="selected">
+              <i [class]="selected.icono"></i>
+              <span>{{ selected.nombreSingular }}</span>
+            </div>
+          </ng-template>
+          <ng-template let-item pTemplate="item">
+            <div class="dropdown-item-row">
+              <i [class]="item.icono"></i>
+              <span>{{ item.nombreSingular }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+      <!-- Estatus con indicador de color -->
+      <div class="col-12 col-sm-6">
+        <label class="rw-form-label">ESTATUS *</label>
+        <p-dropdown
+          [options]="estatusLista"
+          [(ngModel)]="formDispositivo.estatus"
+          optionLabel="nombre"
+          optionValue="id"
+          [disabled]="!puedeGestionar"
+          placeholder="Selecciona estatus"
+          [style]="{ width: '100%' }"
+          styleClass="table-select-custom rw-device-dropdown"
+          appendTo="body">
+          <ng-template pTemplate="selectedItem" let-selected>
+            <div class="dropdown-item-row" *ngIf="selected">
+              <span class="status-color-swatch" [style.backgroundColor]="selected.color"></span>
+              <span>{{ selected.nombre }}</span>
+            </div>
+          </ng-template>
+          <ng-template let-item pTemplate="item">
+            <div class="dropdown-item-row">
+              <span class="status-color-swatch" [style.backgroundColor]="item.color"></span>
+              <span>{{ item.nombre }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+      <!-- Nombre -->
+      <div class="col-12">
+        <label class="rw-form-label">NOMBRE / UBICACIÓN *</label>
+        <input
+          type="text"
+          class="form-control rw-input"
+          [(ngModel)]="formDispositivo.nombre"
+          [disabled]="!puedeGestionar"
+          [placeholder]="tipoSeleccionadoModal?.placeholderNombre || 'Ej. Equipo principal'"
+          maxlength="80" />
+      </div>
+
+      <!-- Marca -->
+      <div class="col-12 col-sm-6" *ngIf="tieneCampoOpcional('marca')">
+        <label class="rw-form-label">MARCA</label>
+        <input
+          type="text"
+          class="form-control rw-input"
+          [(ngModel)]="formDispositivo.marca"
+          [disabled]="!puedeGestionar"
+          [placeholder]="tipoSeleccionadoModal?.placeholderMarca || 'Ej. Samsung, JBL'"
+          maxlength="60" />
+      </div>
+
+      <!-- Pulgadas (solo tipos que lo habiliten, ej. TVs) -->
+      <div class="col-12 col-sm-6" *ngIf="tieneCampoOpcional('pulgadas')">
+        <label class="rw-form-label">PULGADAS</label>
+        <input
+          type="text"
+          class="form-control rw-input"
+          [(ngModel)]="formDispositivo.pulgadas"
+          [disabled]="!puedeGestionar"
+          placeholder='Ej. 55"'
+          maxlength="20" />
+      </div>
+
+      <!-- Modelo -->
+      <div class="col-12 col-sm-6" *ngIf="tieneCampoOpcional('modelo')">
+        <label class="rw-form-label">MODELO</label>
+        <input
+          type="text"
+          class="form-control rw-input"
+          [(ngModel)]="formDispositivo.modelo"
+          [disabled]="!puedeGestionar"
+          [placeholder]="tipoSeleccionadoModal?.placeholderModelo || 'Ej. UN55TU7000'"
+          maxlength="60" />
+      </div>
+
+      <!-- Número de Serie -->
+      <div class="col-12 col-sm-6" *ngIf="tieneCampoOpcional('numeroSerie')">
+        <label class="rw-form-label">NÚMERO DE SERIE</label>
+        <input
+          type="text"
+          class="form-control rw-input"
+          [(ngModel)]="formDispositivo.numeroSerie"
+          [disabled]="!puedeGestionar"
+          placeholder="Ej. SN123456789"
+          maxlength="80" />
+      </div>
+
+      <!-- Comentarios -->
+      <div class="col-12" *ngIf="tieneCampoOpcional('comentarios')">
+        <label class="rw-form-label">COMENTARIOS</label>
+        <textarea
+          rows="3"
+          class="form-control rw-input rw-textarea"
+          [(ngModel)]="formDispositivo.comentarios"
+          [disabled]="!puedeGestionar"
+          placeholder="Observaciones técnicas, ubicación exacta o notas adicionales...">
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="device-modal-footer">
+      <button
+        type="button"
+        class="btn-rw-secondary"
+        (click)="cerrarModal()">
+        {{ puedeGestionar ? 'Cancelar' : 'Cerrar' }}
+      </button>
+
+      <button
+        *ngIf="puedeGestionar"
+        type="button"
+        class="btn-rw-cta"
+        [disabled]="guardando || !formDispositivo.nombre.trim()"
+        (click)="guardarDispositivo()">
+        <i class="bx" [ngClass]="guardando ? 'bx-loader-alt bx-spin' : 'bx-check-circle'"></i>
+        <span>{{ guardando ? 'Guardando...' : (esNuevoDispositivo ? 'Registrar' : 'Guardar cambios') }}</span>
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>

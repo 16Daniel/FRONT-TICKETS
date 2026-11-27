@@ -1,1 +1,282 @@
-/* Estilos para niveles-audio.component */
+/* ==========================================================================
+   Rebel Wings Design System Tokens (DESIGN-SYSTEM.md)
+   ========================================================================== */
+$rw-primary: #d3152a;
+$rw-primary-dark: #b91022;
+$rw-dark: #1e1e24;
+$rw-canvas: #f4f6fa;
+$rw-soft-red: #fff1f2;
+$rw-border: #e2e8f0;
+$rw-border-input: #cbd5e1;
+$rw-text-muted: #64748b;
+$rw-success: #10b981;
+$rw-success-bg: #f0fdf4;
+
+.audio-levels-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  border: 1px solid $rw-border;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  padding: 1.05rem 1.2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.audio-levels-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.audio-levels-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  flex: 1;
+  min-width: 240px;
+}
+
+.audio-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: $rw-soft-red;
+  color: $rw-primary;
+  border: 1px solid #fecdd3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.audio-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.audio-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.audio-title {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: $rw-dark;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.audio-count-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.16rem 0.6rem;
+  border-radius: 999px;
+  background-color: $rw-canvas;
+  border: 1px solid $rw-border;
+  color: $rw-text-muted;
+
+  .pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #94a3b8;
+  }
+
+  &.has-images {
+    background-color: $rw-success-bg;
+    border-color: #bbf7d0;
+    color: #059669;
+
+    .pill-dot {
+      background-color: $rw-success;
+    }
+  }
+}
+
+.audio-subtitle {
+  font-size: 0.8rem;
+  color: $rw-text-muted;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.audio-levels-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.btn-rw-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  background: linear-gradient(135deg, $rw-primary 0%, $rw-primary-dark 100%);
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(211, 21, 42, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+  i {
+    font-size: 1.05rem;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(211, 21, 42, 0.3);
+  }
+}
+
+.btn-rw-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  background-color: #ffffff;
+  color: $rw-dark;
+  border: 1px solid $rw-border-input;
+  padding: 0.48rem 0.95rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.16s ease;
+
+  i {
+    font-size: 1.05rem;
+    color: #475569;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $rw-canvas;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f8fafc;
+    color: #94a3b8;
+
+    i {
+      color: #94a3b8;
+    }
+  }
+}
+
+/* Franja de miniaturas */
+.audio-thumbs-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding-top: 0.85rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.audio-thumb-item {
+  position: relative;
+  width: 68px;
+  height: 52px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid $rw-border;
+  overflow: hidden;
+  background-color: $rw-canvas;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(30, 30, 36, 0.48);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $rw-primary;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    .thumb-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.audio-thumb-more {
+  width: 68px;
+  height: 52px;
+  border-radius: 10px;
+  border: 1.5px dashed $rw-border-input;
+  background-color: $rw-canvas;
+  color: $rw-dark;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: all 0.16s ease;
+
+  span {
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+
+  small {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: $rw-text-muted;
+  }
+
+  &:hover {
+    border-color: $rw-primary;
+    background-color: $rw-soft-red;
+    color: $rw-primary;
+
+    small {
+      color: $rw-primary;
+    }
+  }
+}

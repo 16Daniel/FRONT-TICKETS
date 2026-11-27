@@ -44,8 +44,11 @@
         </div>
 
         <div class="accordion-tables-wrapper">
-            <app-tpvs-devices-table *ngIf="mostrarRadiografiaMap[item.id] && idArea == '1'"
-                [sucursal]="obtenerSucursal(item.id)!"></app-tpvs-devices-table>
+            <app-tabla-dispositivos-sucursal
+                *ngIf="mostrarRadiografiaMap[item.id] && idArea == '1'"
+                [sucursal]="obtenerSucursal(item.id)!"
+                idArea="1">
+            </app-tabla-dispositivos-sucursal>
             <app-admin-tickets-list [tickets]="filtrarTicketsPorSucursal(item.id)" [idArea]="idArea"
                 *ngIf="!mostrarRadiografiaMap[item.id]"></app-admin-tickets-list>
         </div>
