@@ -21,7 +21,7 @@ import { AcordeonTicketsPorPrioridadComponent } from '../acordeon-tickets-por-pr
     FormsModule,
     AccordionModule,
     AdminTicketsListComponent,
-    TpvsDevicesTableComponent,
+    TablaDispositivosSucursalComponent,
     AcordeonTicketsPorPrioridadComponent
   ],
   templateUrl: './acordeon-tickets-por-usuario.component.html',
