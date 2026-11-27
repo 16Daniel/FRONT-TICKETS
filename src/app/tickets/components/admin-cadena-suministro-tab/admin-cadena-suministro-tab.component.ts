@@ -64,6 +64,7 @@ import { CatalogoProveedoresTickets } from "../../../compras/dialogs/catalogo-pr
 export class AdminCadenaSuministroTabComponent {
   tickets: Ticket[] = [];
   mostrarModalGenerateTicket: boolean = false;
+  ticketRapido: boolean = false;
   mostrarMantenimientos: boolean = false;
   mostrarModalFilterTickets: boolean = false;
   mostrarModalHistorial: boolean = false;

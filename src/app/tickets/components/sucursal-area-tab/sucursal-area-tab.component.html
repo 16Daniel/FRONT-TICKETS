@@ -19,7 +19,11 @@
 <div class="actions-toolbar-row mt-3 mb-4">
   <div class="actions-buttons-container justify-content-start flex-wrap gap-2">
     <!-- General Actions -->
-    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary action-btn-custom" (click)="onClickGenerarTicket()"></p-button>
+    <p-button label="CREAR TICKET" icon="pi pi-plus" styleClass="p-button-primary action-btn-custom"
+      (click)="onClickGenerarTicket(false)"></p-button>
+    <p-button class="btn-crear-wrap btn-ticket-rapido-wrap" label="TICKET RÁPIDO" icon="pi pi-bolt"
+      ariaLabel="TICKET RÁPIDO" title="TICKET RÁPIDO" styleClass="action-btn-custom btn-ticket-rapido"
+      (click)="onClickGenerarTicket(true)"></p-button>
 
     <!-- <p-button *ngIf="usuario.idRol == '2'" label="HISTORIAL TICKETS" icon="pi pi-history" styleClass="p-button-warning action-btn-custom"
       (click)="mostrarModalHistorial = true">
@@ -35,7 +39,8 @@
 </div>
 
 <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>
+  (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"
+  [ticketrapido]="ticketRapido"></app-crear-ticket-dialog>
 
 <app-detalle-ticket-dialog *ngIf="mostrarModalTicketDetail" [ticket]="ticket"
   [showModalTicketDetail]="mostrarModalTicketDetail"

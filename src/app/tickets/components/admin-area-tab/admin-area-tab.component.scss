@@ -257,7 +257,7 @@ $rw-canvas: #f4f6fa;
       flex: 1 1 auto;
       display: flex;
 
-      ::ng-deep .action-btn-custom {
+      ::ng-deep .action-btn-custom:not(.btn-ticket-rapido) {
         width: 100%;
         height: 42px !important;
         justify-content: center;

@@ -27,7 +27,7 @@
         label="CREAR TICKET" 
         icon="pi pi-plus" 
         styleClass="p-button-primary action-btn-custom"
-        (click)="mostrarModalGenerateTicket = true">
+        (click)="mostrarModalGenerateTicket = true; ticketRapido = false">
       </p-button>
 
       <p-button 
@@ -44,6 +44,16 @@
         icon="pi pi-filter" 
         label="FILTROS" 
         styleClass="p-button-danger action-btn-custom btn-icon-mobile">
+      </p-button>
+
+      <p-button
+        class="btn-crear-wrap btn-ticket-rapido-wrap"
+        label="TICKET RÁPIDO"
+        icon="pi pi-bolt"
+        ariaLabel="TICKET RÁPIDO"
+        title="TICKET RÁPIDO"
+        styleClass="action-btn-custom btn-ticket-rapido"
+        (click)="mostrarModalGenerateTicket = true; ticketRapido = true">
       </p-button>
 
       <!-- <p-button 
@@ -126,7 +136,7 @@
     (closeEvent)="mostrarModalTicketDetail = false"></app-detalle-ticket-dialog>
 
   <app-crear-ticket-dialog *ngIf="mostrarModalGenerateTicket" [mostrarModalGenerateTicket]="mostrarModalGenerateTicket"
-    (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea"></app-crear-ticket-dialog>
+    (closeEvent)="mostrarModalGenerateTicket = false" [idArea]="idArea" [ticketrapido]="ticketRapido"></app-crear-ticket-dialog>
 
   <app-historial-tickets-dialog *ngIf="mostrarModalHistorial" [showModalHistorial]="mostrarModalHistorial"
     (closeEvent)="mostrarModalHistorial = false" [idArea]="idArea"></app-historial-tickets-dialog>

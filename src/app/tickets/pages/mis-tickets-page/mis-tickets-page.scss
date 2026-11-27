@@ -126,7 +126,7 @@ $status-info-bg: #eff6ff;
       width: 100%;
     }
 
-    ::ng-deep .action-btn-custom {
+    ::ng-deep .action-btn-custom:not(.btn-ticket-rapido) {
       width: 100% !important;
       height: 42px !important;
       justify-content: center !important;

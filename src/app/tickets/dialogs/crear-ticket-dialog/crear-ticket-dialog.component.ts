@@ -33,6 +33,7 @@ import { ActivoFijo } from '../../../activos-fijos/models/activo-fijo.model';
 import { ParticipanteChat } from '../../../shared/interfaces/participante-chat.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { SelectorArbolCategoriaComponent } from '../../components/selector-arbol-categoria/selector-arbol-categoria.component';
+import { SelectorCategoriasRapidasComponent } from '../../components/selector-categorias-rapidas/selector-categorias-rapidas.component';
 import { SeleccionArbolCategoria } from '../../interfaces/seleccion-arbol-categoria.interface';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ResponsablesService } from '../../../usuarios/services/responsables.service';
@@ -65,7 +66,8 @@ Quill.register('modules/magicUrl', MagicUrl);
     FormsModule,
     CommonModule,
     EditorModule,
-    SelectorArbolCategoriaComponent
+    SelectorArbolCategoriaComponent,
+    SelectorCategoriasRapidasComponent,
   ],
   templateUrl: './crear-ticket-dialog.component.html',
   styleUrl: './crear-ticket-dialog.component.scss',
@@ -73,6 +75,7 @@ Quill.register('modules/magicUrl', MagicUrl);
 export class CrearTicketDialogComponent implements OnInit, OnDestroy {
   @Input() mostrarModalGenerateTicket: boolean = false;
   @Input() idArea: string = '0';
+  @Input() ticketrapido: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   ticket: Ticket = new Ticket();
