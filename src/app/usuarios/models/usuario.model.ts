@@ -10,7 +10,6 @@ export class Usuario {
   idSucursal: string = '';
   esGuardia: boolean = false;
   idArea: string | any;
-  controlDeAceite?: boolean | null;
   especialidad: string = '';
   fcmToken: string[] = [];
   eliminado: boolean = false;

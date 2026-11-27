@@ -41,41 +41,6 @@
           [(ngModel)]="sucursal.claUbicacion" name="claubicacion">
       </div>
 
-      <!--
-      <div class="col-12 col-md-6">
-        <label class="rw-form-label">TABLETAS REQUERIDAS</label>
-        <p-inputNumber [(ngModel)]="sucursal.tabletasRequeridas" name="tabletasRequeridas" mode="decimal"
-          [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
-          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
-          class="contador-gris w-100 d-block"></p-inputNumber>
-      </div>
-      
-      <div class="col-12 col-md-6">
-        <label class="rw-form-label">CANTIDAD DE TABLETAS</label>
-        <p-inputNumber [(ngModel)]="cantidadTabletas" (ngModelChange)="onTabletasChange($event)" name="cantidadTabletas"
-          mode="decimal" [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
-          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
-          class="contador-gris w-100 d-block" [max]="sucursal.tabletasRequeridas">
-        </p-inputNumber>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <label class="rw-form-label">PUNTOS DE VENTA REQUERIDOS</label>
-        <p-inputNumber [(ngModel)]="sucursal.tpvsRequeridos" name="tpvsRequeridos" mode="decimal" [showButtons]="true"
-          buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="0"
-          [inputStyle]="{ width: '100%', height: '48px' }" class="contador-gris w-100 d-block"></p-inputNumber>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <label class="rw-form-label">CANTIDAD DE PUNTOS DE VENTA</label>
-        <p-inputNumber [(ngModel)]="cantidadTPVs" (ngModelChange)="onTPVsChange($event)" name="cantidadTPVs"
-          mode="decimal" [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
-          decrementButtonIcon="pi pi-minus" [min]="0" [inputStyle]="{ width: '100%', height: '48px' }"
-          class="contador-gris w-100 d-block" [max]="sucursal.tpvsRequeridos">
-        </p-inputNumber>
-      </div>
-      -->
-
       <!-- Configuración de Usuarios de Soporte por Área -->
       <div class="col-12" *ngIf="areas.length > 0">
         <div class="soporte-config-card">

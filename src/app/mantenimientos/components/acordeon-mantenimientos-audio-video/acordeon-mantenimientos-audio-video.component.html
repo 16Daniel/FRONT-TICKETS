@@ -32,7 +32,11 @@
       <!-- SECCION: NIVELES DE AUDIO -->
       <app-niveles-audio [sucursal]="item" *ngIf="mostrarRadiografiaMap[item.id]"></app-niveles-audio>
 
-      <app-tabla-tvs-bocinas *ngIf="mostrarRadiografiaMap[item.id]" [sucursal]="item"></app-tabla-tvs-bocinas>
+      <app-tabla-dispositivos-sucursal
+        *ngIf="mostrarRadiografiaMap[item.id]"
+        [sucursal]="item"
+        idArea="2">
+      </app-tabla-dispositivos-sucursal>
 
       <tabla-mantenimientos-audio-video
         *ngIf="!mostrarRadiografiaMap[item.id]"

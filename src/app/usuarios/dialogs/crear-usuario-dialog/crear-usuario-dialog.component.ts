@@ -72,10 +72,22 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.usuarioEnSesion = JSON.parse(localStorage.getItem('rwuserdatatk')!);
   }
 
+  get esRolAdministradorGlobal(): boolean {
+    return String(this.usuarioEnSesion?.idRol ?? '').trim() === '1';
+  }
+
+  get idAreaUsuarioSesion(): string {
+    return String(this.usuarioEnSesion?.idArea ?? '').trim();
+  }
+
   ngOnInit(): void {
     this.usuario.idRol = this.usuario.idRol ? String(this.usuario.idRol) : '';
     this.usuario.idArea = this.usuario.idArea ? String(this.usuario.idArea) : '';
     this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
+
+    if (!this.esRolAdministradorGlobal) {
+      this.usuario.idArea = this.idAreaUsuarioSesion;
+    }
 
     if (!this.esNuevoUsuario && this.usuario.id) {
       this.cargarResponsablesUsuario();
@@ -87,8 +99,6 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
     this.obtenerAreas();
     this.obtenerSucursales();
     this.obtenerRoles();
-    if (this.usuarioEnSesion.idRol == '5')
-      this.usuario.idArea = String(this.usuarioEnSesion.idArea || '');
     this.cdr.detectChanges();
   }
 
@@ -203,6 +213,9 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.usuario.idArea = this.esRolAdministradorGlobal
+      ? (this.usuario.idArea ? String(this.usuario.idArea) : '')
+      : this.idAreaUsuarioSesion;
     this.usuario.idSucursal = this.usuario.idSucursal ? String(this.usuario.idSucursal) : '';
 
     this.esNuevoUsuario ? this.guardarAutenticacionFb() : this.actualizarUsuario();
@@ -286,9 +299,12 @@ export class CrearUsuarioDialogComponent implements OnInit, OnDestroy {
   obtenerAreas() {
     this.areasService.initListener();
     this.areasSub = this.areasService.areas$.subscribe((areas: Area[]) => {
-      this.areas = areas
+      const activas = areas
         .filter((a: Area) => !a.eliminado)
         .map((a: Area) => ({ ...a, id: String(a.id) }));
+      this.areas = this.esRolAdministradorGlobal
+        ? activas
+        : activas.filter((a: Area) => String(a.id) === this.idAreaUsuarioSesion);
       this.cdr.detectChanges();
     });
   }

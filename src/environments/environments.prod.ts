@@ -33,5 +33,5 @@ export const environment = {
     idServicio: "0Ax05ndesDcThRJKW6K0",
     idDireccion: "Mcaolq7LySn81CSX4n5L",
     vapidKey: "BEBP3KmAlDVIFD8lndVQNONumIE-J3KwV08P3hnduQ46Wo7HPhKmqjgup3dMKEuX_ZVpp4j212Fzrer3bU1e_vY",
-    grupoWAGerencias: "120363412785054674@g.us"
+    grupoWAGerencias: "120363418254079903@g.us"
 };
