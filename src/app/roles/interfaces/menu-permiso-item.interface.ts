@@ -1,10 +1,3 @@
-export interface Ruta {
-  id: string;
-  ruta: string;
-  descripcion: string;
-  icon: string | null;
-}
-
 export interface MenuPermisoItem {
   /** Identificador único del menú */
   idMenu: string;
@@ -22,18 +15,4 @@ export interface MenuPermisoItem {
   esAccionExterna?: boolean;
   /** Tipo de validador externo en caso de aplicar */
   tipoAccionExterna?: 'cupones' | 'consumos';
-}
-
-export interface GrupoMenuPermiso {
-  idGrupo: string;
-  tituloGrupo: string;
-  iconoGrupo: string;
-  descripcionGrupo: string;
-  menus: MenuPermisoItem[];
-}
-
-export interface OpcionRutaInicio {
-  label: string;
-  value: string;
-  descripcion: string;
 }

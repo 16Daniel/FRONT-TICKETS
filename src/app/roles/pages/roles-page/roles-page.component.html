@@ -4,7 +4,7 @@
     <!-- Encabezado de Página Reutilizable -->
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
       <app-page-header
-        subtitle="Control de Accesos a Menús"
+        subtitle="Control de Accesos por Rol y Área"
         title="Administración de Roles y Permisos">
       </app-page-header>
     </div>
@@ -58,6 +58,10 @@
                 <i class="bx bx-menu"></i>
                 {{ totalMenusActivosFormulario }} / {{ totalMenusSistema }} menús
               </span>
+              <span class="meta-pill status-area" *ngIf="totalReglasAreaFormulario > 0">
+                <i class="bx bx-sitemap"></i>
+                {{ totalReglasAreaFormulario }} por área
+              </span>
               <span class="meta-pill status-draft">En edición</span>
             </div>
           </div>
@@ -84,6 +88,14 @@
               <span class="meta-pill" pTooltip="Opciones de menú guardadas en Firebase para este rol" tooltipPosition="top">
                 <i class="bx bx-menu"></i>
                 {{ contarMenusActivosDeRol(rol) }} / {{ totalMenusSistema }} menús
+              </span>
+              <span
+                class="meta-pill status-area"
+                *ngIf="contarReglasAreaDeRol(rol) > 0"
+                pTooltip="Pantallas con restricción o excepción por área en este rol"
+                tooltipPosition="top">
+                <i class="bx bx-sitemap"></i>
+                {{ contarReglasAreaDeRol(rol) }} por área
               </span>
             </div>
           </div>
@@ -118,10 +130,34 @@
                 {{ formRol.nombre || 'SIN NOMBRE DEFINIDO' }}
               </h5>
             </div>
+
             <div class="editor-summary-counters mt-1">
-              <span>
-                <strong>{{ totalMenusActivosFormulario }}</strong> de {{ totalMenusSistema }} opciones de menú habilitadas
-              </span>
+              <ng-container *ngIf="!areaSimuladaId; else simulacionCounterTpl">
+                <span>
+                  <strong>{{ totalMenusActivosFormulario }}</strong> de {{ totalMenusSistema }} opciones de menú habilitadas
+                </span>
+                <ng-container *ngIf="totalReglasAreaFormulario > 0">
+                  <span class="dot-sep">•</span>
+                  <span class="area-rules-summary-badge">
+                    <i class="bx bx-sitemap"></i>
+                    {{ totalReglasAreaFormulario }} con regla por área
+                  </span>
+                </ng-container>
+              </ng-container>
+
+              <ng-template #simulacionCounterTpl>
+                <span class="sim-active-pill">
+                  <i class="bx bx-show"></i>
+                  Simulando <strong>{{ nombreAreaSimulada }}</strong>:
+                  <strong>{{ totalMenusVisiblesAreaSimulada }}</strong> de {{ totalMenusSistema }} pantallas visibles
+                </span>
+                <button
+                  type="button"
+                  class="btn-exit-sim"
+                  (click)="areaSimuladaId = null">
+                  Salir de simulación
+                </button>
+              </ng-template>
             </div>
           </div>
 
@@ -191,6 +227,10 @@
                   </div>
                 </ng-template>
               </p-dropdown>
+              <small class="route-area-hint" *ngIf="rutaInicioTieneRestriccionArea">
+                <i class="bx bx-info-circle"></i>
+                Esta ruta tiene regla por área: los usuarios de áreas excluidas irán automáticamente a su primera pantalla permitida.
+              </small>
             </div>
 
             <!-- Descripción -->
@@ -206,15 +246,15 @@
           </div>
         </div>
 
-        <!-- Bloque 2: Acceso a Opciones del Menú por Grupo -->
+        <!-- Bloque 2: Acceso a Opciones del Menú por Grupo y Área -->
         <div class="config-card-section mt-4">
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 pb-3 border-bottom">
             <div class="section-heading">
               <i class="bx bx-shield-quarter"></i>
               <div>
-                <h6 class="m-0">2. Accesos a Opciones del Menú</h6>
+                <h6 class="m-0">2. Accesos a Opciones del Menú y Reglas por Área</h6>
                 <small class="text-muted">
-                  Habilita qué opciones del menú lateral podrá ver y abrir este rol.
+                  Habilita qué pantallas puede ver el rol y, cuando lo necesites, limita o excluye áreas específicas en cada opción.
                 </small>
               </div>
             </div>
@@ -238,15 +278,46 @@
             </div>
           </div>
 
-          <!-- Filtros de la Matriz (Búsqueda + Píldoras de Grupo) -->
-          <div class="matrix-filter-bar my-3">
-            <div class="search-input-wrapper">
-              <i class="bx bx-search search-icon"></i>
-              <input
-                type="text"
-                [(ngModel)]="busquedaPermiso"
-                placeholder="Filtrar opción de menú o ruta (ej. compras, usuarios, aceite)..."
-                class="roles-search-input" />
+          <!-- Filtros de la Matriz + Simulador por Área -->
+          <div class="matrix-toolbar my-3">
+            <div class="matrix-toolbar-top">
+              <div class="search-input-wrapper flex-grow-1">
+                <i class="bx bx-search search-icon"></i>
+                <input
+                  type="text"
+                  [(ngModel)]="busquedaPermiso"
+                  placeholder="Filtrar por pantalla, ruta o nombre de área..."
+                  class="roles-search-input w-100" />
+              </div>
+
+              <!-- Simulador de vista por área -->
+              <div class="area-simulator-box">
+                <i class="bx bx-show simulator-icon" [class.is-active]="!!areaSimuladaId"></i>
+                <p-dropdown
+                  [options]="opcionesSimuladorArea"
+                  [(ngModel)]="areaSimuladaId"
+                  optionLabel="label"
+                  optionValue="value"
+                  [filter]="true"
+                  filterBy="label"
+                  placeholder="Simular por área..."
+                  styleClass="rw-sim-dropdown"
+                  appendTo="body">
+                </p-dropdown>
+              </div>
+
+              <!-- Filtro rápido de pantallas con regla de área -->
+              <button
+                type="button"
+                class="btn-filter-area-rules"
+                [class.active]="soloConReglaArea"
+                [disabled]="totalReglasAreaFormulario === 0 && !soloConReglaArea"
+                (click)="soloConReglaArea = !soloConReglaArea"
+                pTooltip="Mostrar únicamente las opciones que tienen condición por área"
+                tooltipPosition="top">
+                <i class="bx bx-sitemap"></i>
+                <span>Con regla de área ({{ totalReglasAreaFormulario }})</span>
+              </button>
             </div>
 
             <div class="group-filter-pills">
@@ -269,8 +340,25 @@
             </div>
           </div>
 
+          <!-- Banner informativo cuando el simulador está activo -->
+          <div class="simulation-banner mb-3" *ngIf="areaSimuladaId">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <i class="bx bx-show-alt fs-5"></i>
+              <span>
+                Previsualizando el acceso efectivo para un usuario con rol
+                <strong>{{ formRol.nombre || 'SIN NOMBRE' }}</strong> del área
+                <strong>{{ nombreAreaSimulada }}</strong>.
+                Puedes seguir editando switches y reglas en tiempo real.
+              </span>
+            </div>
+            <button type="button" class="btn-banner-reset" (click)="areaSimuladaId = null">
+              <i class="bx bx-x"></i>
+              <span>Volver a vista general</span>
+            </button>
+          </div>
+
           <!-- Grupos de Menús -->
-          <div class="matrix-groups-list">
+          <div class="matrix-groups-list" *ngIf="gruposFiltrados.length > 0; else emptyMatrixTpl">
             <div
               *ngFor="let grupo of gruposFiltrados"
               class="permission-group-card">
@@ -282,24 +370,43 @@
                     <i [class]="grupo.iconoGrupo"></i>
                   </div>
                   <div>
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
                       <h6 class="group-title m-0">{{ grupo.tituloGrupo }}</h6>
                       <span class="group-count-badge">
                         {{ contarMenusActivosEnGrupo(grupo) }} / {{ grupo.menus.length }} menús
+                      </span>
+                      <span
+                        class="group-area-badge"
+                        *ngIf="contarReglasAreaEnGrupo(grupo) > 0">
+                        <i class="bx bx-sitemap"></i>
+                        {{ contarReglasAreaEnGrupo(grupo) }} por área
                       </span>
                     </div>
                     <small class="text-muted">{{ grupo.descripcionGrupo }}</small>
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  class="btn-toggle-group"
-                  [class.all-active]="esGrupoCompletamenteActivo(grupo)"
-                  (click)="toggleGrupoCompleto(grupo)">
-                  <i class="bx" [ngClass]="esGrupoCompletamenteActivo(grupo) ? 'bx-check-square' : 'bx-square'"></i>
-                  <span>{{ esGrupoCompletamenteActivo(grupo) ? 'Desmarcar grupo' : 'Activar todo el grupo' }}</span>
-                </button>
+                <div class="group-header-actions">
+                  <button
+                    type="button"
+                    class="btn-group-area-rule"
+                    [disabled]="contarMenusActivosEnGrupo(grupo) === 0"
+                    (click)="abrirModalReglaGrupo(grupo)"
+                    [pTooltip]="contarMenusActivosEnGrupo(grupo) === 0 ? 'Activa al menos un menú del grupo para configurar reglas por área' : 'Aplicar una regla de área a todos los menús activos de este grupo'"
+                    tooltipPosition="top">
+                    <i class="bx bx-sitemap"></i>
+                    <span>Regla al grupo</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn-toggle-group"
+                    [class.all-active]="esGrupoCompletamenteActivo(grupo)"
+                    (click)="toggleGrupoCompleto(grupo)">
+                    <i class="bx" [ngClass]="esGrupoCompletamenteActivo(grupo) ? 'bx-check-square' : 'bx-square'"></i>
+                    <span>{{ esGrupoCompletamenteActivo(grupo) ? 'Desmarcar grupo' : 'Activar todo el grupo' }}</span>
+                  </button>
+                </div>
               </div>
 
               <!-- Lista de Menús dentro del Grupo -->
@@ -307,13 +414,16 @@
                 <div
                   *ngFor="let menu of grupo.menus"
                   class="menu-permission-item"
-                  [class.menu-enabled]="tienePermiso(menu.permisoVista)">
+                  [class.menu-enabled]="tienePermiso(menu.permisoVista)"
+                  [class.has-area-rule]="tieneReglaArea(menu.permisoVista)"
+                  [class.sim-visible]="areaSimuladaId && esMenuVisibleEnAreaSimulada(menu)"
+                  [class.sim-blocked]="esMenuRestringidoEnAreaSimulada(menu)">
 
                   <!-- Cabecera del Menú (Switch de Acceso / Vista) -->
                   <div class="menu-item-header" (click)="toggleMenuVista(menu)">
                     <div class="menu-item-info">
                       <i [class]="menu.icono + ' menu-item-icon'"></i>
-                      <div>
+                      <div class="min-w-0">
                         <div class="d-flex align-items-center gap-2 flex-wrap">
                           <span class="menu-item-title">{{ menu.titulo }}</span>
                           <code class="menu-route-tag">{{ menu.ruta }}</code>
@@ -340,11 +450,119 @@
                     </div>
                   </div>
 
+                  <!-- Franja Compacta de Alcance por Área (solo visible cuando el menú está permitido) -->
+                  <div
+                    *ngIf="tienePermiso(menu.permisoVista)"
+                    class="menu-scope-bar"
+                    [class.scope-solo]="obtenerReglaArea(menu.permisoVista)?.modo === 'SOLO_AREAS'"
+                    [class.scope-excepto]="obtenerReglaArea(menu.permisoVista)?.modo === 'EXCEPTO_AREAS'">
+
+                    <ng-container *ngIf="obtenerReglaArea(menu.permisoVista) as regla; else todasLasAreasTpl">
+                      <div class="scope-content">
+                        <span
+                          class="scope-mode-tag"
+                          [class.tag-solo]="regla.modo === 'SOLO_AREAS'"
+                          [class.tag-excepto]="regla.modo === 'EXCEPTO_AREAS'">
+                          <i class="bx" [ngClass]="regla.modo === 'SOLO_AREAS' ? 'bx-target-lock' : 'bx-block'"></i>
+                          {{ regla.modo === 'SOLO_AREAS' ? 'Solo en:' : 'Excepto:' }}
+                        </span>
+
+                        <div class="scope-chips">
+                          <span
+                            *ngFor="let areaId of regla.areasIds.slice(0, 3)"
+                            class="area-chip"
+                            [class.chip-inactive]="esAreaInactiva(areaId)">
+                            {{ obtenerNombreArea(areaId) }}
+                          </span>
+                          <span
+                            *ngIf="regla.areasIds.length > 3"
+                            class="area-chip chip-more"
+                            [pTooltip]="obtenerNombresAreasRegla(menu.permisoVista).join(', ')"
+                            tooltipPosition="top">
+                            +{{ regla.areasIds.length - 3 }} más
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="scope-actions">
+                        <span
+                          *ngIf="areaSimuladaId"
+                          class="sim-status-tag"
+                          [class.is-ok]="esMenuVisibleEnAreaSimulada(menu)"
+                          [class.is-blocked]="esMenuRestringidoEnAreaSimulada(menu)">
+                          <i class="bx" [ngClass]="esMenuVisibleEnAreaSimulada(menu) ? 'bx-check' : 'bx-hide'"></i>
+                          {{ esMenuVisibleEnAreaSimulada(menu) ? 'Visible' : 'Oculta' }}
+                        </span>
+
+                        <button
+                          type="button"
+                          class="btn-scope-edit"
+                          (click)="abrirModalReglaMenu(menu, $event)"
+                          pTooltip="Editar áreas permitidas o excluidas"
+                          tooltipPosition="top">
+                          <i class="bx bx-edit-alt"></i>
+                          <span>Editar</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          class="btn-scope-clear"
+                          (click)="quitarReglaMenu(menu, $event)"
+                          pTooltip="Quitar restricción (aplicar a todas las áreas)"
+                          tooltipPosition="top">
+                          <i class="bx bx-x"></i>
+                        </button>
+                      </div>
+                    </ng-container>
+
+                    <ng-template #todasLasAreasTpl>
+                      <div class="scope-content">
+                        <span class="scope-all-label">
+                          <i class="bx bx-globe"></i>
+                          Todas las áreas
+                        </span>
+                      </div>
+
+                      <div class="scope-actions">
+                        <span
+                          *ngIf="areaSimuladaId"
+                          class="sim-status-tag is-ok">
+                          <i class="bx bx-check"></i>
+                          Visible
+                        </span>
+
+                        <button
+                          type="button"
+                          class="btn-scope-add"
+                          (click)="abrirModalReglaMenu(menu, $event)">
+                          <i class="bx bx-filter-alt"></i>
+                          <span>Filtrar por área</span>
+                        </button>
+                      </div>
+                    </ng-template>
+
+                  </div>
+
                 </div>
               </div>
 
             </div>
           </div>
+
+          <ng-template #emptyMatrixTpl>
+            <div class="empty-matrix-box">
+              <i class="bx bx-filter-alt"></i>
+              <h6 class="mt-2 mb-1">No hay opciones de menú que coincidan con los filtros</h6>
+              <p class="text-muted mb-3">Prueba limpiando el texto de búsqueda o cambiando los filtros activos.</p>
+              <button
+                type="button"
+                class="btn-quick-matrix"
+                (click)="busquedaPermiso = ''; grupoFiltroId = 'TODOS'; soloConReglaArea = false">
+                <i class="bx bx-reset"></i>
+                <span>Limpiar filtros</span>
+              </button>
+            </div>
+          </ng-template>
 
         </div>
 
@@ -355,7 +573,7 @@
           <div class="text-center text-muted">
             <i class="bx bx-shield-quarter fs-1 mb-2"></i>
             <h5>Selecciona un rol de la lista o crea uno nuevo</h5>
-            <p class="mb-0">Desde aquí podrás configurar su pantalla de inicio y sus permisos de acceso al menú.</p>
+            <p class="mb-0">Desde aquí podrás configurar su pantalla de inicio, sus accesos al menú y sus reglas por área.</p>
           </div>
         </section>
       </ng-template>
@@ -364,6 +582,167 @@
 
   </div>
 </div>
+
+<!-- =========================================================================
+     MODAL: Configuración de Alcance por Área (Menú individual o Grupo)
+     ========================================================================= -->
+<p-dialog
+  [(visible)]="modalReglaVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  [style]="{ width: '540px', maxWidth: '94vw' }"
+  styleClass="rw-area-rule-dialog">
+
+  <ng-template pTemplate="header">
+    <div class="area-modal-header">
+      <div class="area-modal-icon">
+        <i class="bx bx-sitemap"></i>
+      </div>
+      <div>
+        <h6 class="m-0 fw-bold">Alcance por área</h6>
+        <small class="text-muted">{{ modalTituloObjetivo }}</small>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="area-modal-body">
+    <!-- Paso 1: Selector segmentado de modo -->
+    <label class="rw-form-label mb-2">¿QUIÉNES DE ESTE ROL PUEDEN VER ESTA OPCIÓN?</label>
+    <div class="mode-selector-grid">
+      <button
+        type="button"
+        class="mode-option-btn"
+        [class.active]="modalModo === 'TODAS'"
+        (click)="modalModo = 'TODAS'">
+        <i class="bx bx-globe"></i>
+        <span class="mode-title">Todas las áreas</span>
+        <small class="mode-sub">Sin restricción</small>
+      </button>
+
+      <button
+        type="button"
+        class="mode-option-btn mode-solo"
+        [class.active]="modalModo === 'SOLO_AREAS'"
+        (click)="modalModo = 'SOLO_AREAS'">
+        <i class="bx bx-target-lock"></i>
+        <span class="mode-title">Solo áreas</span>
+        <small class="mode-sub">Únicamente elegidas</small>
+      </button>
+
+      <button
+        type="button"
+        class="mode-option-btn mode-excepto"
+        [class.active]="modalModo === 'EXCEPTO_AREAS'"
+        (click)="modalModo = 'EXCEPTO_AREAS'">
+        <i class="bx bx-block"></i>
+        <span class="mode-title">Excepto áreas</span>
+        <small class="mode-sub">Todas menos elegidas</small>
+      </button>
+    </div>
+
+    <!-- Paso 2: Checklist buscable de áreas (solo cuando modo != TODAS) -->
+    <div class="area-checklist-section mt-3" *ngIf="modalModo !== 'TODAS'">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+        <label class="rw-form-label m-0">
+          {{ modalModo === 'SOLO_AREAS' ? 'SELECCIONA LAS ÁREAS PERMITIDAS' : 'SELECCIONA LAS ÁREAS EXCLUIDAS' }}
+          ({{ modalAreasSeleccionadas.size }})
+        </label>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-link-mini" (click)="seleccionarTodasAreasModal()">
+            Seleccionar todas
+          </button>
+          <span class="text-muted">·</span>
+          <button type="button" class="btn-link-mini text-danger" (click)="limpiarAreasModal()">
+            Limpiar
+          </button>
+        </div>
+      </div>
+
+      <div class="search-input-wrapper w-100 mb-2">
+        <i class="bx bx-search search-icon"></i>
+        <input
+          type="text"
+          [(ngModel)]="modalBusquedaArea"
+          placeholder="Buscar área..."
+          class="roles-search-input w-100" />
+      </div>
+
+      <div class="areas-checklist-grid" *ngIf="modalAreasFiltradas.length > 0; else emptyAreasModalTpl">
+        <button
+          *ngFor="let area of modalAreasFiltradas"
+          type="button"
+          class="area-check-card"
+          [class.is-selected]="modalAreasSeleccionadas.has(area.id)"
+          [class.is-excepto]="modalModo === 'EXCEPTO_AREAS' && modalAreasSeleccionadas.has(area.id)"
+          [class.is-inactive]="area.inactiva"
+          (click)="toggleAreaEnModal(area.id)">
+          <span class="area-check-box">
+            <i class="bx bx-check" *ngIf="modalAreasSeleccionadas.has(area.id)"></i>
+          </span>
+          <span class="area-check-name text-truncate" [title]="area.nombre">
+            {{ area.nombre }}
+          </span>
+        </button>
+      </div>
+
+      <ng-template #emptyAreasModalTpl>
+        <div class="text-center text-muted py-3 small">
+          No se encontraron áreas con ese criterio.
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Paso 3: Resumen en lenguaje natural -->
+    <div
+      class="area-rule-summary-box mt-3"
+      [class.summary-solo]="modalModo === 'SOLO_AREAS' && modalAreasSeleccionadas.size > 0"
+      [class.summary-excepto]="modalModo === 'EXCEPTO_AREAS' && modalAreasSeleccionadas.size > 0"
+      [class.summary-warn]="modalModo !== 'TODAS' && modalAreasSeleccionadas.size === 0">
+      <i
+        class="bx"
+        [ngClass]="
+          modalModo !== 'TODAS' && modalAreasSeleccionadas.size === 0
+            ? 'bx-error-circle'
+            : 'bx-info-circle'
+        "></i>
+      <span>{{ modalResumenTexto }}</span>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="area-modal-footer">
+      <div>
+        <button
+          *ngIf="modalTieneReglaPrevia"
+          type="button"
+          class="btn-link-reset"
+          (click)="restablecerReglaATodasEnModal()">
+          <i class="bx bx-reset"></i>
+          <span>Restablecer a todas</span>
+        </button>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button
+          type="button"
+          class="btn-secondary-outline"
+          (click)="modalReglaVisible = false">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn-rw-cta btn-sm-cta"
+          [disabled]="!modalPuedeAplicar"
+          (click)="aplicarReglaModal()">
+          <i class="bx bx-check"></i>
+          <span>Aplicar regla</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
 
 <!-- Toast & Confirm Dialog -->
 <p-toast
