@@ -15,7 +15,7 @@ import { WhatsappService } from '../../services/whatsapp.service';
 import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
-  selector: 'app-escalation-manager',
+  selector: 'app-gestor-escalaciones',
   standalone: true,
   imports: [CommonModule,
     FormsModule,
@@ -25,10 +25,10 @@ import { DropdownModule } from 'primeng/dropdown';
     TagModule,
     DividerModule,
     DropdownModule],
-  templateUrl: './escalation-manager.component.html',
-  styleUrl: './escalation-manager.component.scss',
+  templateUrl: './gestor-escalaciones.component.html',
+  styleUrl: './gestor-escalaciones.component.scss',
 })
-export class EscalationManagerComponent implements OnInit {
+export class GestorEscalacionesComponent implements OnInit {
  levels = model<EscalationLevel[]>([]);
  gruposWhatsapp = signal<GrupoWhatsapp[]>([]);
  grupoNuevosTickets = model<string>();

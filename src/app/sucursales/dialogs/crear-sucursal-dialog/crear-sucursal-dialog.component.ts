@@ -8,7 +8,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';

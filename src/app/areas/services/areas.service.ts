@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Area } from '../interfaces/area.model';
+import { Area } from '../models/area.model';
 import {
   collection,
   doc,
@@ -14,7 +14,7 @@ import {
   where,
   writeBatch,
 } from '@angular/fire/firestore';
-import { AreaOrganigrama } from '../interfaces/area-organigrama.model';
+import { AreaOrganigrama } from '../models/area-organigrama.model';
 
 @Injectable({
   providedIn: 'root',

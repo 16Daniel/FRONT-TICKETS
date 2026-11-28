@@ -23,7 +23,7 @@ export const GRUPO_PERMISOS_OPERACIONES: GrupoMenuPermiso = {
     {
       idMenu: 'operaciones_compras',
       titulo: 'Requisición de compra',
-      ruta: '/administracion/compras',
+      ruta: '/main/requisicion-compras',
       icono: 'bx bx-shopping-bag',
       permisoVista: 'compras.ver',
     },
@@ -37,14 +37,14 @@ export const GRUPO_PERMISOS_OPERACIONES: GrupoMenuPermiso = {
     {
       idMenu: 'operaciones_inventario',
       titulo: 'Inventario',
-      ruta: '/inventario/captura',
+      ruta: '/main/captura-inventario',
       icono: 'bx bx-clipboard',
       permisoVista: 'inventario.captura.ver',
     },
     {
       idMenu: 'operaciones_recoleccion_aceite',
       titulo: 'Recolección de aceite',
-      ruta: '/cedis/recoleccion',
+      ruta: '/main/recoleccion-aceite',
       icono: 'bx bxs-droplet',
       permisoVista: 'aceites.recoleccion.ver',
     },

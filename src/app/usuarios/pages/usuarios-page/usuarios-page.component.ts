@@ -18,7 +18,7 @@ import { Rol } from '../../../roles/models/rol.model';
 import { CrearUsuarioDialogComponent } from '../../dialogs/crear-usuario-dialog/crear-usuario-dialog.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuarioSucursalService } from '../../../sucursales/services/usuario-sucursal.service';

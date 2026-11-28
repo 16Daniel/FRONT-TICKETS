@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria, generateGUID } from '../../interfaces/subcategoria.interface';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { ResultadoFormularioNodo } from '../../interfaces/resultado-formulario-nodo.interface';

@@ -5,22 +5,22 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { TabViewModule } from 'primeng/tabview';
 import { DropdownModule } from 'primeng/dropdown';
-import { Area, AreaNotificationSettings } from '../../interfaces/area.model';
+import { Area, AreaNotificationSettings } from '../../models/area.model';
 import { GrupoWhatsapp } from '../../interfaces/grupo-whatsapp.interface';
-import { AreaOrganigrama } from '../../../areas/interfaces/area-organigrama.model';
+import { AreaOrganigrama } from '../../../areas/models/area-organigrama.model';
 import { AreasService } from '../../../areas/services/areas.service';
 import { WhatsappService } from '../../services/whatsapp.service';
 import { OrganigramaEditorComponent } from '../../components/organigrama-editor/organigrama-editor.component';
 
 @Component({
-  selector: 'app-modal-area-create',
+  selector: 'app-crear-area-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, DialogModule, TabViewModule, DropdownModule, OrganigramaEditorComponent],
-  templateUrl: './modal-area-create.component.html',
-  styleUrl: './modal-area-create.component.scss'
+  templateUrl: './crear-area-dialog.component.html',
+  styleUrl: './crear-area-dialog.component.scss'
 })
 
-export class ModalAreaCreateComponent {
+export class CrearAreaDialogComponent {
 
   @Input() mostrarModalCrearArea: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();

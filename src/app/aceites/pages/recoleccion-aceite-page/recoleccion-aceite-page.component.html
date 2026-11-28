@@ -1,184 +1,542 @@
-<div class="p-3 bg-white">
-<h3 class="text-center mt-3 mb-3">RECOLECCIÓN DE ACEITE</h3>
+<div class="aceite-page-wrapper">
+  <div class="aceite-content-container">
 
+    <!-- Encabezado y Acción Historial -->
+    <div class="recoleccion-top-bar mb-4">
+      <app-page-header
+        subtitle="OPERACIÓN Y LOGÍSTICA CEDIS"
+        title="Recolección de Aceite">
+      </app-page-header>
 
-<p-tabView>
-    <p-tabPanel header="RECOLECCIÓN DE ACEITE">
-        <button class="btn bg-warning p-2 rounded-3" (click)="abrirModalHistorial()">HISTORIAL</button>
-          <p-table [value]="entregas" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header"> 
-        <tr>
-          <th>FOLIO</th>
-          <th>SUCURSAL</th>
-          <th>FECHA</th>
-          <th>ENTREGA CEDIS</th>
-          <th>ENTREGA SUCURSAL</th>
-          <th>75%</th>
-          <th>ESTATUS</th>
-          <th>DIFERENCIA</th>
-          <th>COMENTARIOS CEDIS</th>
-          <th>COMENTARIOS SUCURSAL</th>
-          <th></th>
-           <th></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-record>
-         <tr class="bg-opacity-25" [ngClass]="{
-        'bg-danger': record.intercambio == 1,
-        'bg-success': record.intercambio == 2,
-        'bg-warning': record.intercambio == 3
-        }">
-            <td>{{record.folio}}</td>
-            <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
+      <div class="top-actions-right">
+        <span class="loading-status-pill" *ngIf="loading">
+          <i class="bx bx-loader-alt bx-spin"></i>
+          <span>Actualizando...</span>
+        </span>
+
+        <button
+          type="button"
+          class="btn-rw-secondary"
+          (click)="abrirModalHistorial()">
+          <i class="bx bx-history"></i>
+          <span>HISTORIAL</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Selector de Secciones por Chips (DESIGN-SYSTEM.md) -->
+    <div class="areas-chips-track mb-4">
+      <button
+        *ngFor="let tab of tabs"
+        type="button"
+        class="chip-area-pill"
+        [class.is-active]="tabActivo === tab.id"
+        (click)="cambiarTab(tab.id)">
+        <i [class]="tab.icono"></i>
+        <span class="area-name">{{ tab.label }}</span>
+        <span
+          *ngIf="tab.id === 'ACEITE' && entregas.length > 0"
+          class="tab-count-badge">
+          {{ entregas.length }}
+        </span>
+        <span
+          *ngIf="tab.id === 'TRAMPA' && entregasTA.length > 0"
+          class="tab-count-badge">
+          {{ entregasTA.length }}
+        </span>
+      </button>
+    </div>
+
+    <!-- Tarjetas KPI Semánticas (Flotando sobre #F4F6FA) -->
+    <div class="aceite-kpi-grid mb-4">
+      <div class="kpi-card kpi-info">
+        <div class="kpi-icon"><i class="bx bx-receipt"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">Total por Validar</span>
+          <span class="kpi-value">{{ entregasActivas.length }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-danger">
+        <div class="kpi-icon"><i class="bx bx-minus-circle"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">Debajo del 75%</span>
+          <span class="kpi-value">{{ totalBajoMeta }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-success">
+        <div class="kpi-icon"><i class="bx bx-check-circle"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">En Rango Óptimo</span>
+          <span class="kpi-value">{{ totalOptimo }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-warning">
+        <div class="kpi-icon"><i class="bx bx-plus-circle"></i></div>
+        <div class="kpi-meta">
+          <span class="kpi-label">Con Excedente</span>
+          <span class="kpi-value">{{ totalExcedente }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         TAB 1: RECOLECCIÓN DE ACEITE
+         ================================================================ -->
+    <div class="aceite-panel-card" *ngIf="tabActivo === 'ACEITE'">
+      <p-table
+        [value]="entregas"
+        [tableStyle]="{ 'min-width': '68rem' }"
+        styleClass="table-tk aceite-table"
+        [scrollable]="true"
+        scrollHeight="60vh">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>FOLIO</th>
+            <th>SUCURSAL</th>
+            <th>FECHA</th>
+            <th class="text-center">ENTREGA CEDIS</th>
+            <th class="text-center">ENTREGA SUCURSAL</th>
+            <th class="text-center">75%</th>
+            <th class="text-center">ESTATUS</th>
+            <th class="text-center">DIFERENCIA</th>
+            <th>COMENTARIOS CEDIS</th>
+            <th>COMENTARIOS SUCURSAL</th>
+            <th class="text-center" style="width: 110px;">ACCIONES</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-record>
+          <tr
+            class="aceite-row"
+            [ngClass]="{
+              'row-danger': record.intercambio == 1,
+              'row-success': record.intercambio == 2,
+              'row-warning': record.intercambio == 3
+            }">
+            <td class="fw-bold text-dark">{{ record.folio }}</td>
+            <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
             <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
-          <td>{{ record.entregaCedis || '' }}</td>
-          <td>{{ record.entregaSucursal || '' }}</td>
-          <td>{{ record.porcentaje75*100  | number:'1.0-0' }}%</td>
-                         <td *ngIf="record.intercambio == 1"><i class='bx bx-minus-circle bx-sm' style="color:red"></i></td>
-                 <td *ngIf="record.intercambio == 2"><i class='bx bx-check-circle bx-sm' style="color:rgb(44, 189, 0)"></i></td>
-                  <td *ngIf="record.intercambio == 3"><i class='bx bx-plus-circle bx-sm' style="color:rgb(255, 153, 0)"></i></td>
-          <td>{{ record.diferencia || '' }}</td>
-          <td>{{ record.comentariosCedis || '' }}</td>
-          <td>{{ record.comentariosSucursal || '' }}</td>
-          <td><button class="btn btn-success" (click)="abrirmodalValidacion(record,1,false)"><i class='bx bx-check-circle bx-sm'></i></button></td>
-           <td><button class="btn btn-danger" (click)="abrirmodalValidacion(record,2,false)"><i class='bx bx-x-circle bx-sm' ></i></button></td>
-        </tr>
-    </ng-template>
-</p-table>
-    </p-tabPanel>
-    <p-tabPanel header="RECOLECCIÓN TRAMPA DE GRASA">
-          <p-table [value]="entregasTA" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header">
-        <tr>
-         <th>FOLIO</th>
-          <th>SUCURSAL</th>
-          <th>FECHA</th>
-          <th>ENTREGA CEDIS</th>
-          <th>ENTREGA SUCURSAL</th>
-          <th>75%</th>
-          <th>ESTATUS</th>
-          <th>DIFERENCIA</th>
-          <th>COMENTARIOS CEDIS</th>
-          <th>COMENTARIOS SUCURSAL</th>
-          <th></th>
-           <th></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-record>
-         <tr class="bg-opacity-25" [ngClass]="{
-        'bg-danger': record.intercambio == 1,
-        'bg-success': record.intercambio == 2,
-        'bg-warning': record.intercambio == 3
-        }">
-            <td>{{record.folio}}</td>
-            <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
+            <td class="text-center fw-semibold">{{ record.entregaCedis || '-' }}</td>
+            <td class="text-center fw-semibold">{{ record.entregaSucursal || '-' }}</td>
+            <td class="text-center fw-bold">{{ record.porcentaje75 * 100 | number: '1.0-0' }}%</td>
+            <td class="text-center">
+              <span *ngIf="record.intercambio == 1" class="status-pill status-danger">
+                <i class="bx bx-minus-circle"></i>
+                <span>Bajo</span>
+              </span>
+              <span *ngIf="record.intercambio == 2" class="status-pill status-success">
+                <i class="bx bx-check-circle"></i>
+                <span>Óptimo</span>
+              </span>
+              <span *ngIf="record.intercambio == 3" class="status-pill status-warning">
+                <i class="bx bx-plus-circle"></i>
+                <span>Excedente</span>
+              </span>
+            </td>
+            <td class="text-center fw-bold">{{ record.diferencia || '0' }}</td>
+            <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+            <td class="comment-cell">{{ record.comentariosSucursal || '-' }}</td>
+            <td>
+              <div class="d-flex justify-content-center align-items-center gap-2">
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-validate"
+                  (click)="abrirmodalValidacion(record, 1, false)"
+                  pTooltip="Validar recolección"
+                  tooltipPosition="top">
+                  <i class="bx bx-check-circle"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-reject"
+                  (click)="abrirmodalValidacion(record, 2, false)"
+                  pTooltip="Rechazar recolección"
+                  tooltipPosition="top">
+                  <i class="bx bx-x-circle"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="11">
+              <div class="aceite-empty-state">
+                <i class="bx bx-droplet"></i>
+                <h6>Sin recolecciones de aceite pendientes</h6>
+                <p>No hay entregas pendientes de validar para tus sucursales asignadas.</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- ================================================================
+         TAB 2: RECOLECCIÓN TRAMPA DE GRASA
+         ================================================================ -->
+    <div class="aceite-panel-card" *ngIf="tabActivo === 'TRAMPA'">
+      <p-table
+        [value]="entregasTA"
+        [tableStyle]="{ 'min-width': '68rem' }"
+        styleClass="table-tk aceite-table"
+        [scrollable]="true"
+        scrollHeight="60vh">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>FOLIO</th>
+            <th>SUCURSAL</th>
+            <th>FECHA</th>
+            <th class="text-center">ENTREGA CEDIS</th>
+            <th class="text-center">ENTREGA SUCURSAL</th>
+            <th class="text-center">75%</th>
+            <th class="text-center">ESTATUS</th>
+            <th class="text-center">DIFERENCIA</th>
+            <th>COMENTARIOS CEDIS</th>
+            <th>COMENTARIOS SUCURSAL</th>
+            <th class="text-center" style="width: 110px;">ACCIONES</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-record>
+          <tr
+            class="aceite-row"
+            [ngClass]="{
+              'row-danger': record.intercambio == 1,
+              'row-success': record.intercambio == 2,
+              'row-warning': record.intercambio == 3
+            }">
+            <td class="fw-bold text-dark">{{ record.folio }}</td>
+            <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
             <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
-          <td>{{ record.entregaCedis || '' }}</td>
-          <td>{{ record.entregaSucursal || '' }}</td>
-          <td>{{ record.porcentaje75*100  | number:'1.0-0' }}%</td>
-                         <td *ngIf="record.intercambio == 1"><i class='bx bx-minus-circle bx-sm' style="color:red"></i></td>
-                 <td *ngIf="record.intercambio == 2"><i class='bx bx-check-circle bx-sm' style="color:rgb(44, 189, 0)"></i></td>
-                  <td *ngIf="record.intercambio == 3"><i class='bx bx-plus-circle bx-sm' style="color:rgb(255, 153, 0)"></i></td>
-          <td>{{ record.diferencia || '' }}</td>
-          <td>{{ record.comentariosCedis || '' }}</td>
-          <td>{{ record.comentariosSucursal || '' }}</td>
-          <td><button class="btn btn-success" (click)="abrirmodalValidacion(record,1,true)"><i class='bx bx-check-circle bx-sm'></i></button></td>
-           <td><button class="btn btn-danger" (click)="abrirmodalValidacion(record,2,true)"><i class='bx bx-x-circle bx-sm' ></i></button></td>
-        </tr>
-    </ng-template>
-</p-table>
-    </p-tabPanel>
-</p-tabView>
+            <td class="text-center fw-semibold">{{ record.entregaCedis || '-' }}</td>
+            <td class="text-center fw-semibold">{{ record.entregaSucursal || '-' }}</td>
+            <td class="text-center fw-bold">{{ record.porcentaje75 * 100 | number: '1.0-0' }}%</td>
+            <td class="text-center">
+              <span *ngIf="record.intercambio == 1" class="status-pill status-danger">
+                <i class="bx bx-minus-circle"></i>
+                <span>Bajo</span>
+              </span>
+              <span *ngIf="record.intercambio == 2" class="status-pill status-success">
+                <i class="bx bx-check-circle"></i>
+                <span>Óptimo</span>
+              </span>
+              <span *ngIf="record.intercambio == 3" class="status-pill status-warning">
+                <i class="bx bx-plus-circle"></i>
+                <span>Excedente</span>
+              </span>
+            </td>
+            <td class="text-center fw-bold">{{ record.diferencia || '0' }}</td>
+            <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+            <td class="comment-cell">{{ record.comentariosSucursal || '-' }}</td>
+            <td>
+              <div class="d-flex justify-content-center align-items-center gap-2">
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-validate"
+                  (click)="abrirmodalValidacion(record, 1, true)"
+                  pTooltip="Validar recolección"
+                  tooltipPosition="top">
+                  <i class="bx bx-check-circle"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-reject"
+                  (click)="abrirmodalValidacion(record, 2, true)"
+                  pTooltip="Rechazar recolección"
+                  tooltipPosition="top">
+                  <i class="bx bx-x-circle"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
 
-<p *ngIf="entregas.length == 0" class="mt-3 text-center">SIN REGISTROS</p>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="11">
+              <div class="aceite-empty-state">
+                <i class="bx bx-filter-alt"></i>
+                <h6>Sin recolecciones de trampa de grasa pendientes</h6>
+                <p>No hay entregas pendientes de validar para tus sucursales asignadas.</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
 
+  </div>
 </div>
 
+<!-- ======================================================================
+     MODAL: VALIDAR / RECHAZAR RECOLECCIÓN
+     ====================================================================== -->
+<p-dialog
+  [modal]="true"
+  [(visible)]="mostrarModalValidacion"
+  [style]="{ width: '40rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '90vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="recoleccion-rw-dialog"
+  (onHide)="mostrarModalValidacion = false">
 
-<p-dialog [header]="tipoActualizacion == 1? 'VALIDAR RECOLECCIÓN':'RECHAZAR RECOLECCIÓN'" [modal]="true" [(visible)]="mostrarModalValidacion" [style]="{ width: '70rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-    <div class="p-3" style="min-height: 400px;">
-       <p *ngIf="!esTrampadeAceite" >ACEITE</p>
-       <p *ngIf="esTrampadeAceite" >TRAMPA DE GRASA</p>
-        <div class="col-12 mt-3">
-          <p>COMENTARIOS</p>
-          <textarea class="form-control p-3" [(ngModel)]="formcomentarios"></textarea>
-        </div>
-        <div class="col-12 mt-3">
-          <button *ngIf="!esTrampadeAceite" class="btn btn-success" (click)="actualizarEntrega()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
-          <button *ngIf="esTrampadeAceite" class="btn btn-success" (click)="actualizarEntregaTA()"><i class='bx bx-save'></i>&nbsp;GUARDAR</button>
-        </div>
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i
+          class="bx"
+          [ngClass]="tipoActualizacion == 1 ? 'bx-check-circle text-success' : 'bx-x-circle text-danger'">
+        </i>
+        <span>{{ tipoActualizacion == 1 ? 'Validar Recolección' : 'Rechazar Recolección' }}</span>
+      </h4>
+      <span class="rw-type-pill" [class.is-trampa]="esTrampadeAceite">
+        {{ esTrampadeAceite ? 'TRAMPA DE GRASA' : 'ACEITE QUEMADO' }}
+      </span>
     </div>
+  </ng-template>
+
+  <div class="rw-dialog-body">
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-comment-detail"></i>
+          <span>OBSERVACIONES DE VALIDACIÓN</span>
+        </div>
+        <span class="folio-pill" *ngIf="itemEntrega">
+          Folio #{{ itemEntrega.folio }} · {{ obtenerNombreSucursal(itemEntrega.idSucursal) }}
+        </span>
+      </div>
+
+      <div class="rw-field-item">
+        <label class="rw-field-label" for="comentariosCedisValidacion">COMENTARIOS *</label>
+        <textarea
+          id="comentariosCedisValidacion"
+          rows="4"
+          class="form-control rw-textarea"
+          placeholder="Escribe los comentarios de validación o rechazo..."
+          [(ngModel)]="formcomentarios">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <button
+        type="button"
+        class="btn-rw-secondary rw-btn-mobile-full"
+        (click)="mostrarModalValidacion = false">
+        Cancelar
+      </button>
+
+      <button
+        *ngIf="!esTrampadeAceite"
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="!formcomentarios.trim() || loading"
+        (click)="actualizarEntrega()">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR</span>
+      </button>
+
+      <button
+        *ngIf="esTrampadeAceite"
+        type="button"
+        class="btn-rw-cta rw-btn-mobile-full"
+        [disabled]="!formcomentarios.trim() || loading"
+        (click)="actualizarEntregaTA()">
+        <i class="bx bx-save"></i>
+        <span>GUARDAR</span>
+      </button>
+    </div>
+  </div>
 </p-dialog>
 
+<!-- ======================================================================
+     MODAL: HISTORIAL RECOLECCIÓN DE ACEITE
+     ====================================================================== -->
+<p-dialog
+  [modal]="true"
+  [(visible)]="mostrarModalHistorial"
+  [style]="{ width: '78rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '92vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="recoleccion-rw-dialog"
+  (onHide)="mostrarModalHistorial = false">
 
-<p-dialog [header]="'HISTORIAL RECOLECCIÓN DE ACEITE'" [modal]="true" [(visible)]="mostrarModalHistorial" [style]="{ width: '90%' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
-    <div class="row">
-      <div class="col-md-3">
-        <p>FECHA INICIO</p>
-        <p-calendar [(ngModel)]="fechaini" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-          [style]="{width:'100%'}" appendTo="body"/>
-      </div>
-      <div class="col-md-3">
-        <p>FECHA FIN</p>
-        <p-calendar [(ngModel)]="fechafin" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-          [style]="{width:'100%'}" appendTo="body" />
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-history text-danger"></i>
+        <span>Historial de Recolección de Aceite</span>
+      </h4>
+    </div>
+  </ng-template>
+
+  <div class="rw-dialog-body">
+    <!-- Filtros -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-filter-alt"></i>
+          <span>FILTROS DE BÚSQUEDA</span>
+        </div>
       </div>
 
-      <div class="col-md-3">
-        <p>SUCURSAL</p>
-        <p-multiSelect [options]="obtenerSucursaleUsuario()" [(ngModel)]="sucursalesSel" [filter]="true" optionLabel="nombre"
-          placeholder="SELECCIONAR SUCURSALES" [style]="{width:'100%'}"   appendTo="body" />
-      </div>
+      <div class="historial-filter-grid">
+        <div class="rw-field-item">
+          <label class="rw-field-label" for="hist-fecha-ini">FECHA INICIO</label>
+          <p-calendar
+            [(ngModel)]="fechaini"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="hist-fecha-ini"
+            dateFormat="dd/mm/yy"
+            styleClass="rw-calendar"
+            [style]="{ width: '100%' }"
+            appendTo="body" />
+        </div>
 
-      <div class="col-md-3">
-        <p>&nbsp;</p><button class="btn btn-warning p-2" (click)="buscarRegistros()"><i
-            class='bx bx-search'></i>&nbsp;BUSCAR</button>&nbsp;
+        <div class="rw-field-item">
+          <label class="rw-field-label" for="hist-fecha-fin">FECHA FIN</label>
+          <p-calendar
+            [(ngModel)]="fechafin"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="hist-fecha-fin"
+            dateFormat="dd/mm/yy"
+            styleClass="rw-calendar"
+            [style]="{ width: '100%' }"
+            appendTo="body" />
+        </div>
+
+        <div class="rw-field-item rw-field-sucursales">
+          <label class="rw-field-label">SUCURSAL</label>
+          <p-multiSelect
+            [options]="obtenerSucursaleUsuario()"
+            [(ngModel)]="sucursalesSel"
+            [filter]="true"
+            optionLabel="nombre"
+            [maxSelectedLabels]="2"
+            selectedItemsLabel="{0} sucursales"
+            placeholder="Seleccionar sucursales..."
+            styleClass="rw-multiselect"
+            [style]="{ width: '100%' }"
+            appendTo="body" />
+        </div>
+
+        <div class="rw-field-item">
+          <label class="rw-field-label d-none d-md-block">&nbsp;</label>
+          <button
+            type="button"
+            class="btn-rw-cta rw-btn-mobile-full"
+            [disabled]="loadingHistorial"
+            (click)="buscarRegistros()">
+            <i class="bx" [ngClass]="loadingHistorial ? 'bx-loader-alt bx-spin' : 'bx-search'"></i>
+            <span>{{ loadingHistorial ? 'BUSCANDO...' : 'BUSCAR' }}</span>
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="mt-3">
-        <p-table [value]="entregasH" [tableStyle]="{ 'min-width': '50rem' }">
-            <ng-template pTemplate="header"> 
-                <tr>
-                <th>FOLIO</th>
-                <th>SUCURSAL</th>
-                <th>FECHA</th>
-                <th>ENTREGA CEDIS</th>
-                <th>ENTREGA SUCURSAL</th>
-                <th>75%</th>
-                <th>ESTATUS</th>
-                <th>DIFERENCIA</th>
-                <th>COMENTARIOS CEDIS</th>
-                <th>COMENTARIOS SUCURSAL</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-record>
-                <tr class="bg-opacity-25" [ngClass]="{
-                'bg-danger': record.intercambio == 1,
-                'bg-success': record.intercambio == 2,
-                'bg-warning': record.intercambio == 3
-                }">
-                    <td>{{record.folio}}</td>
-                    <td>{{obtenerNombreSucursal(record.idSucursal)}}</td>
-                    <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
-                <td>{{ record.entregaCedis || '' }}</td>
-                <td>{{ record.entregaSucursal || '' }}</td>
-                <td>{{ record.porcentaje75*100  | number:'1.0-0' }}%</td>
-                                <td *ngIf="record.intercambio == 1"><i class='bx bx-minus-circle bx-sm' style="color:red"></i></td>
-                        <td *ngIf="record.intercambio == 2"><i class='bx bx-check-circle bx-sm' style="color:rgb(44, 189, 0)"></i></td>
-                        <td *ngIf="record.intercambio == 3"><i class='bx bx-plus-circle bx-sm' style="color:rgb(255, 153, 0)"></i></td>
-                <td>{{ record.diferencia || '' }}</td>
-                <td>{{ record.comentariosCedis || '' }}</td>
-                <td>{{ record.comentariosSucursal || '' }}</td>
-                </tr>
-            </ng-template>
-                </p-table>
+    <!-- Resultados del Historial -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-table"></i>
+          <span>RESULTADOS</span>
+        </div>
+        <span class="rw-type-pill" *ngIf="entregasH.length > 0">
+          {{ entregasH.length }} {{ entregasH.length === 1 ? 'registro' : 'registros' }}
+        </span>
+      </div>
+
+      <p-table
+        [value]="entregasH"
+        [tableStyle]="{ 'min-width': '62rem' }"
+        styleClass="table-tk aceite-table"
+        [scrollable]="true"
+        scrollHeight="48vh">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>FOLIO</th>
+            <th>SUCURSAL</th>
+            <th>FECHA</th>
+            <th class="text-center">ENTREGA CEDIS</th>
+            <th class="text-center">ENTREGA SUCURSAL</th>
+            <th class="text-center">75%</th>
+            <th class="text-center">ESTATUS</th>
+            <th class="text-center">DIFERENCIA</th>
+            <th>COMENTARIOS CEDIS</th>
+            <th>COMENTARIOS SUCURSAL</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-record>
+          <tr
+            class="aceite-row"
+            [ngClass]="{
+              'row-danger': record.intercambio == 1,
+              'row-success': record.intercambio == 2,
+              'row-warning': record.intercambio == 3
+            }">
+            <td class="fw-bold text-dark">{{ record.folio }}</td>
+            <td class="fw-semibold">{{ obtenerNombreSucursal(record.idSucursal) }}</td>
+            <td>{{ getDate(record.fecha) | date: 'dd/MM/yyyy hh:mm a' }}</td>
+            <td class="text-center fw-semibold">{{ record.entregaCedis || '-' }}</td>
+            <td class="text-center fw-semibold">{{ record.entregaSucursal || '-' }}</td>
+            <td class="text-center fw-bold">{{ record.porcentaje75 * 100 | number: '1.0-0' }}%</td>
+            <td class="text-center">
+              <span *ngIf="record.intercambio == 1" class="status-pill status-danger">
+                <i class="bx bx-minus-circle"></i>
+                <span>Bajo</span>
+              </span>
+              <span *ngIf="record.intercambio == 2" class="status-pill status-success">
+                <i class="bx bx-check-circle"></i>
+                <span>Óptimo</span>
+              </span>
+              <span *ngIf="record.intercambio == 3" class="status-pill status-warning">
+                <i class="bx bx-plus-circle"></i>
+                <span>Excedente</span>
+              </span>
+            </td>
+            <td class="text-center fw-bold">{{ record.diferencia || '0' }}</td>
+            <td class="comment-cell">{{ record.comentariosCedis || '-' }}</td>
+            <td class="comment-cell">{{ record.comentariosSucursal || '-' }}</td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="10">
+              <div class="aceite-empty-state">
+                <i class="bx bx-search-alt"></i>
+                <h6>{{ historialConsultado ? 'Sin registros en este rango' : 'Consulta el historial' }}</h6>
+                <p>
+                  {{
+                    historialConsultado
+                      ? 'No se encontraron recolecciones con los filtros seleccionados.'
+                      : 'Selecciona el rango de fechas y sucursales, luego presiona BUSCAR.'
+                  }}
+                </p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
+  </div>
 </p-dialog>
 
-
-<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}" [showTransformOptions]="'translateY(100%)'"
-  [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"
-  [showTransformOptions]="'translateX(100%)'"></p-toast>
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+  [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'"
+  [showTransformOptions]="'translateX(100%)'">
+</p-toast>

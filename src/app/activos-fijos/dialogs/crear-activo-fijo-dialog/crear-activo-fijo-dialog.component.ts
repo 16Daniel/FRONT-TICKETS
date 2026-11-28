@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { ActivosFijosService } from '../../services/activos-fijos.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';

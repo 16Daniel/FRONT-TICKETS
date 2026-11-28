@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Categoria } from '../../models/categoria.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { Subcategoria } from '../../interfaces/subcategoria.interface';
 import { TarjetaRendimientoSlaComponent, TotalesSlaDashboard } from '../../../tickets/components/tarjeta-rendimiento-sla/tarjeta-rendimiento-sla.component';
 import { MatrizUrgenciaService } from '../../services/matriz-urgencia.service';

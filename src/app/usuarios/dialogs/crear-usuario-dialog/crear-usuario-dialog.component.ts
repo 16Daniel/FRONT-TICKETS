@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 
 import { Usuario } from '../../models/usuario.model';
 import { Responsable } from '../../models/responsable.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { UsuariosService } from '../../services/usuarios.service';
 import { ResponsablesService } from '../../services/responsables.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';

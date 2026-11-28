@@ -14,7 +14,7 @@ import * as XLSX from 'xlsx';
 
 import { environment } from '../../../../environments/environments';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { ShoppingService } from '../../services/shopping.service';
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { AreasService } from '../../../areas/services/areas.service';

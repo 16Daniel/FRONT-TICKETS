@@ -19,7 +19,7 @@ import { DetalleTicketDialogComponent } from '../detalle-ticket-dialog/detalle-t
 import { RequesterTicketsListComponent } from '../../components/requester-tickets-list/requester-tickets-list.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Categoria } from '../../models/categoria.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { Ticket } from '../../models/ticket.model';
 import { TicketsService } from '../../services/tickets.service';
 import { CategoriasService } from '../../services/categorias.service';
