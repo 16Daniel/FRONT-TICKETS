@@ -61,6 +61,18 @@ export const routes: Routes = [
         loadChildren: () => import('./tareas/tareas.routes').then(m => m.TAREAS_MAIN_ROUTES)
       },
       {
+        path: '',
+        loadChildren: () => import('./pagos/pagos.routes').then(m => m.PAGOS_MAIN_ROUTES),
+      },
+      {
+        path: '',
+        loadChildren: () => import('./nomina/nomina.routes').then(m => m.NOMINA_MAIN_ROUTES),
+      },
+      {
+        path: '',
+        loadChildren: () => import('./planeacion/planeacion.routes').then(m => m.PLANEACION_MAIN_ROUTES),
+      },
+      {
         path: 'sin-acceso',
         title: 'Acceso Restringido',
         loadComponent: () => import('./shared/pages/sin-acceso-page/sin-acceso-page.component'),
@@ -75,27 +87,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./nomina/nomina.routes')
-  },
-  {
-    path: '',
-    canActivate: [AuthGuard],
     loadChildren: () => import('./activos-fijos/activos-fijos.routes').then(m => m.ACTIVOS_FIJOS_ROOT_ROUTES),
-  },
-  {
-    path: '',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./aceites/aceites.routes').then(m => m.ACEITES_ROOT_ROUTES),
-  },
-  {
-    path: '',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./pagos/pagos.routes')
-  },
-  {
-    path: '',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./planeacion/planeacion.routes')
   },
   {
     path: '',

@@ -38,13 +38,13 @@ export const RUTAS_INICIO_DISPONIBLES: OpcionRutaInicio[] = [
     descripcion: 'Listado directo de tickets del usuario',
   },
   {
-    label: 'Recolección de Aceite CEDIS (/cedis/recoleccion)',
-    value: '/cedis/recoleccion',
+    label: 'Recolección de Aceite CEDIS (/main/recoleccion-aceite)',
+    value: '/main/recoleccion-aceite',
     descripcion: 'Vista operativa de recolección de aceite para rutas CEDIS',
   },
   {
-    label: 'Control de Personal en Sucursal (/nomina/control-de-personal)',
-    value: '/nomina/control-de-personal',
+    label: 'Control de Personal en Sucursal (/main/control-de-personal)',
+    value: '/main/control-de-personal',
     descripcion: 'Tablero de control y bitácora de personal',
   },
 ];
