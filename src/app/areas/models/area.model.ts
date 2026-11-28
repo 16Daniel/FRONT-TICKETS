@@ -1,5 +1,5 @@
-import { EscalationLevel } from './escalation-level.interface';
-import { OrganigramaNode } from './organigrama-node.interface';
+import { EscalationLevel } from '../interfaces/escalation-level.interface';
+import { OrganigramaNode } from '../interfaces/organigrama-node.interface';
 
 export interface AreaNotificationSettings {
   ticketCreado: boolean;

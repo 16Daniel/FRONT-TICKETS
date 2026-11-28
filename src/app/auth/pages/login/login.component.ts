@@ -105,14 +105,6 @@ export default class LoginComponent {
         this.accessControl.inicializarEscuchaUsuario();
         this.fcmService.requestPermission();
 
-        // if (userd.idRol === '6') {
-        //   this.router.navigate(['/cedis/recoleccion']);
-        //   this.loading = false;
-        //   this.cdr.markForCheck();
-        //   Swal.close();
-        //   return;
-        // }
-
         this.router.navigate(['/usuarios/selecciona-responsable']);
       }
       this.loading = false;

@@ -7,7 +7,7 @@ import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { KpisFiltrosComponent } from '../../components/kpis-filtros/kpis-filtros.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 

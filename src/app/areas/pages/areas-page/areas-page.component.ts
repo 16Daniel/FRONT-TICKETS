@@ -10,9 +10,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Subscription } from 'rxjs';
 
-import { Area } from '../../interfaces/area.model';
+import { Area } from '../../models/area.model';
 import { AreasService } from '../../services/areas.service';
-import { ModalAreaCreateComponent } from '../../dialogs/modal-area-create/modal-area-create.component';
+import { CrearAreaDialogComponent } from '../../dialogs/crear-area-dialog/crear-area-dialog.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
@@ -27,7 +27,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
     TooltipModule,
     InputTextModule,
     ConfirmDialogModule,
-    ModalAreaCreateComponent,
+    CrearAreaDialogComponent,
     PageHeaderComponent
   ],
   providers: [ConfirmationService, MessageService],

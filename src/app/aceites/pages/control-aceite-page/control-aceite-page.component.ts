@@ -25,7 +25,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 export type TabAceiteId = 'PENDIENTES' | 'POR_VALIDAR' | 'HISTORIAL' | 'CONFIGURACION';
 
 @Component({
-  selector: 'app-aceite-page',
+  selector: 'app-control-aceite-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -44,10 +44,10 @@ export type TabAceiteId = 'PENDIENTES' | 'POR_VALIDAR' | 'HISTORIAL' | 'CONFIGUR
     PageHeaderComponent
   ],
   providers: [MessageService],
-  templateUrl: './aceite-page.component.html',
-  styleUrl: './aceite-page.component.scss',
+  templateUrl: './control-aceite-page.component.html',
+  styleUrl: './control-aceite-page.component.scss',
 })
-export default class AceitPageComponent implements OnInit, OnDestroy {
+export default class ControlAceitePageComponent implements OnInit, OnDestroy {
   public entregas: EntregaAceite[] = [];
   public entregasTodo: EntregaAceite[] = [];
   public mostrarModalValidacion: boolean = false;

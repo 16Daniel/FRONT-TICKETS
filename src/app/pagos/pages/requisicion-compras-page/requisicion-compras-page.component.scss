@@ -3,13 +3,13 @@ $rw-canvas: #f4f6fa;
 :host {
   display: block;
   background-color: $rw-canvas;
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
 }
 
 .dashboard-page-wrapper {
   background-color: $rw-canvas;
-  min-height: 100vh;
-  padding: 5.5rem 1.5rem 2.5rem;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem 1.5rem 2.5rem;
   width: 100%;
 }
 
@@ -20,7 +20,7 @@ $rw-canvas: #f4f6fa;
 
 @media (max-width: 768px) {
   .dashboard-page-wrapper {
-    padding: 5rem 0.75rem 1.5rem;
+    padding: 1rem 0.75rem 1.5rem;
   }
 
   :host ::ng-deep .btn-rw-cta {

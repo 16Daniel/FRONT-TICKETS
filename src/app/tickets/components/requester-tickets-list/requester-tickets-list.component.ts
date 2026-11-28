@@ -25,7 +25,7 @@ import { EstatusTicketService } from '../../services/estatus-ticket.service';
 import { EstatusTicket } from '../../models/estatus-ticket.model';
 import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
 
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SideMenuComponent } from '../../../shared/components/side-menu/side-menu.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { ViaticosTabComponent } from '../../components/viaticos-tab/viaticos-tab.component';
 import { BonosTabComponent } from '../../components/bonos-tab/bonos-tab.component';
@@ -22,7 +21,6 @@ interface OpcionTabRequisicion {
   standalone: true,
   imports: [
     CommonModule,
-    SideMenuComponent,
     PageHeaderComponent,
     ShoppingAdminPageComponent,
     ViaticosTabComponent,

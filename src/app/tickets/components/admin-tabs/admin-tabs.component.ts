@@ -6,7 +6,7 @@ import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { AdminAreaTabComponent } from '../admin-area-tab/admin-area-tab.component';
 import { AreasService } from '../../../areas/services/areas.service';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 
 @Component({
   selector: 'app-admin-tabs',

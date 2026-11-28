@@ -17,7 +17,7 @@ import { VisitaSucursalesPicklistComponent } from '../../components/visita-sucur
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Ticket } from '../../../tickets/models/ticket.model';
 import { Guardia } from '../../../tickets/models/guardia.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 import { ComentarioVisita } from '../../interfaces/comentario-visita.interface';
 import { VisitaProgramada } from '../../interfaces/visita-programada.interface';

@@ -1,36 +1,109 @@
-<p-dialog 
-    header="SUCURSALES" 
-    [modal]="true"
-    [(visible)]="verModalSucursales" 
-    [style]="{ width: '70rem' }" 
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
-    [maximizable]="true"
-    (onHide)="onHide()">
+<p-dialog
+  [modal]="true"
+  [(visible)]="verModalSucursales"
+  [style]="{ width: '48rem', maxWidth: '95vw' }"
+  [breakpoints]="{ '1199px': '90vw', '575px': '100vw' }"
+  [maximizable]="true"
+  [draggable]="false"
+  styleClass="sucursales-comp-dialog"
+  (onHide)="onHide()">
 
-       
-    <div class="m-3">
-        <input type="text" class="form-control" [(ngModel)]="formnombreSucursal">
-        <button class="btn btn-success bp-3 mt-3" (click)="agregarSucursal()"><i class='bx bx-plus-circle'></i>&nbsp;AGREGAR</button>
+  <ng-template pTemplate="header">
+    <div class="modal-custom-header">
+      <h4 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <i class="bx bx-building text-danger"></i> Sucursales de Competencia
+      </h4>
+      <span class="rw-header-pill">
+        {{ sucursalesComensalesdata.length }}
+        {{ sucursalesComensalesdata.length === 1 ? 'registrada' : 'registradas' }}
+      </span>
+    </div>
+  </ng-template>
+
+  <div class="sucursales-comp-body">
+    <!-- Tarjeta 1: Nueva Sucursal -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-plus-circle"></i>
+          <span>AGREGAR NUEVA SUCURSAL</span>
+        </div>
+      </div>
+
+      <div class="rw-add-row">
+        <div class="rw-field-item flex-grow-1">
+          <label class="rw-field-label" for="input-nueva-competencia">NOMBRE DE LA SUCURSAL</label>
+          <input
+            id="input-nueva-competencia"
+            type="text"
+            class="form-control h-42 text-uppercase"
+            placeholder="Ej. Wingstop Satélite"
+            [(ngModel)]="formnombreSucursal"
+            (keyup.enter)="agregarSucursal()" />
+        </div>
+
+        <button
+          type="button"
+          class="btn-rw-cta rw-btn-mobile-full"
+          [disabled]="!formnombreSucursal.trim() || guardando"
+          (click)="agregarSucursal()">
+          <i class="bx" [ngClass]="guardando ? 'bx-loader-alt bx-spin' : 'bx-plus-circle'"></i>
+          <span>{{ guardando ? 'GUARDANDO...' : 'AGREGAR' }}</span>
+        </button>
+      </div>
     </div>
 
-<p-table [value]="sucursalesComensalesdata" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header">
-        <tr>
-            <th>SUCURSAL</th>
-            <th>
-            </th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-item>
-        <tr>
-            <td> <input class=" form-control" [(ngModel)]="item.nombre" (blur)="actualizarNombre(item)"></td>
-            <th> <button class="btn btn-danger" (click)="confirmacionEliminar(item.id!)">
-                <i class='bx bx-trash bx-sm'></i>
-                </button></th>
-                
-        </tr>
-    </ng-template>
-</p-table>
+    <!-- Tarjeta 2: Catálogo Registrado -->
+    <div class="rw-form-card">
+      <div class="rw-card-header">
+        <div class="rw-card-title">
+          <i class="bx bx-list-ul"></i>
+          <span>CATÁLOGO DE COMPETENCIA</span>
+        </div>
+        <small class="text-muted">Edita el nombre y sal del campo para guardar</small>
+      </div>
 
+      <div class="branches-scroll" *ngIf="sucursalesComensalesdata.length > 0; else sinCompetidoresTpl">
+        <p-table
+          [value]="sucursalesComensalesdata"
+          [tableStyle]="{ 'min-width': '26rem' }"
+          styleClass="table-tk">
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="text-start">SUCURSAL</th>
+              <th style="width: 80px;">ELIMINAR</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>
+                <input
+                  type="text"
+                  class="form-control h-42 text-uppercase"
+                  [(ngModel)]="item.nombre"
+                  (blur)="actualizarNombre(item)" />
+              </td>
+              <td class="text-center">
+                <button
+                  type="button"
+                  class="btn-action-table btn-action-danger"
+                  (click)="confirmacionEliminar(item.id!)"
+                  pTooltip="Eliminar sucursal"
+                  tooltipPosition="top">
+                  <i class="bx bx-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <ng-template #sinCompetidoresTpl>
+        <div class="rw-empty-inline">
+          <i class="bx bx-building"></i>
+          <span>No hay sucursales de competencia registradas aún.</span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </p-dialog>

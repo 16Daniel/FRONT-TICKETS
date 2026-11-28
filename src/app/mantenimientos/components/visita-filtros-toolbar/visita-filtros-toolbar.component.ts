@@ -7,7 +7,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ModalColorsComponent } from '../../dialogs/modal-colors/modal-colors.component';
 import { ModalActivityComponent } from '../../dialogs/modal-activity/modal-activity.component';
 import { Usuario } from '../../../usuarios/models/usuario.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { AreasService } from '../../../areas/services/areas.service';
 

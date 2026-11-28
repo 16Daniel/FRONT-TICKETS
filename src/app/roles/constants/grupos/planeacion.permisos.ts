@@ -9,14 +9,14 @@ export const GRUPO_PERMISOS_PLANEACION: GrupoMenuPermiso = {
     {
       idMenu: 'planeacion_diccionario',
       titulo: 'Diccionario',
-      ruta: '/planeacion/diccionario',
+      ruta: '/main/diccionario',
       icono: 'bx bx-book-open',
       permisoVista: 'planeacion.diccionario.ver',
     },
     {
       idMenu: 'planeacion_mermas',
       titulo: 'Mermas',
-      ruta: '/planeacion/mermas',
+      ruta: '/main/mermas',
       icono: 'bx bx-trash',
       permisoVista: 'planeacion.mermas.ver',
     },

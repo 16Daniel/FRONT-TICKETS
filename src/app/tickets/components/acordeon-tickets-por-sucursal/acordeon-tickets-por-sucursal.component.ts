@@ -12,7 +12,7 @@ import { FirebaseStorageService } from '../../../shared/services/firebase-storag
 import { SucursalesService } from '../../../sucursales/services/sucursales.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { Ticket } from '../../models/ticket.model';
-import { Area } from '../../../areas/interfaces/area.model';
+import { Area } from '../../../areas/models/area.model';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { Sucursal } from '../../../sucursales/models/sucursal.model';
 
